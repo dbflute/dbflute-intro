@@ -1,0 +1,29 @@
+apply plugin: 'java'
+
+tasks.withType(AbstractCompile) {
+    sourceCompatibility = versions.jdk
+    targetCompatibility = versions.jdk
+}
+
+// methodParameters generate
+compileJava {
+    options.compilerArgs << '-parameters'
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+   classifier = 'javadoc'
+   javadoc.failOnError = false
+   from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}

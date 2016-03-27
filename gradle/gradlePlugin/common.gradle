@@ -1,0 +1,10 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = versions.gradle
+}
+
+tasks.withType(SourceTask) each {
+    try {
+        it.options.encoding = encoding
+    } catch (ignore) {
+    }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "dbflute-intro",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "1.5.3",
+    "angular-animate": "1.5.3",
+    "angular-cookies": "1.5.3",
+    "angular-touch": "1.5.3",
+    "angular-sanitize": "1.5.3",
+    "angular-ui-router": "1.0.0alpha0",
+    "angular-bootstrap": "0.14.3",
+    "angular-translate": "2.11.0",
+    "angular-translate-storage-cookie": "2.11.0",
+    "angular-translate-storage-local": "2.11.0",
+    "angular-translate-loader-static-files": "2.11.0",
+    "angular-translate-handler-log": "2.11.0",
+    "ngstorage": "0.3.10"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.5.3"
+  },
+  "resolutions": {
+    "angular": "1.5.3"
+  }
+}

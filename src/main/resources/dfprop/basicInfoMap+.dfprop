@@ -1,0 +1,6 @@
+map:{
+    ; database = @database@
+    ; targetLanguage = @targetLanguage@
+    ; targetContainer =@targetContainer@
+    ; packageBase = @packageBase@
+}

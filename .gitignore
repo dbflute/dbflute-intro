@@ -1,0 +1,45 @@
+# common
+.DS_Store
+bin/
+build/
+target/
+work/
+tmp/
+temp/
+log/
+*.lck
+*.log
+*.swp
+.cvsignore
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Java
+classes/
+*.class
+
+# Gradle
+.gradle/
+/gradle-app.setting
+/gradle/launch4j/mac
+/gradle/launch4j/win
+
+# Middleware
+localdb/
+localap/
+
+# DBFlute
+latest-data.zip
+/dbflute_*
+/dbflute-intro.jar
+/dbflute-intro.war
+
+# node
+node_modules/
+bower_components/
+.sass-cache/
+.tmp/
+dist/

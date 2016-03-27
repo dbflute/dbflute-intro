@@ -1,0 +1,88 @@
+node {
+    version = versions.node
+    download = true
+}
+
+task bowerInstall(type: NodeTask) {
+    script = project.file('node_modules/bower/bin/bower')
+    args = ['install']
+}
+
+task upgradePackageDependencies(type: NodeTask) {
+    script = project.file('node_modules/npm-check-updates/bin/npm-check-updates')
+    args = ['-u', '--packageFile', file('package.json')]
+}
+
+task upgradeBowerDependencies(type: NodeTask) {
+    script = project.file('node_modules/bower-check-updates/bin/bower-check-updates')
+    args = ['-u']
+}
+
+task upgradeDependencies {
+}
+tasks['upgradeBowerDependencies'].dependsOn(['upgradePackageDependencies'])
+tasks['upgradeDependencies'].dependsOn(['upgradePackageDependencies', 'upgradeBowerDependencies'])
+
+task manifest(dependsOn: gulp_build) << {
+    def scmBranch = 'unknown'
+    def scmRevision = 'unknown'
+
+    try {
+        scmBranch = 'git branch --contains'.execute().text.trim() - '* '
+        scmRevision = 'git rev-parse HEAD'.execute().text.trim()
+    } catch (Exception e) {
+    }
+
+    def json = new groovy.json.JsonBuilder()
+    json (
+        [
+            'Implementation-Title': applicationName,
+            'Implementation-Version': project.version,
+            'SCM-Branch': scmBranch,
+            'SCM-Revision': scmRevision,
+            'Build-Timestamp': new java.text.SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date()),
+            'Jenkins-Build-Number': System.getenv()['BUILD_NUMBER'] ?: ''
+        ]
+    )
+
+    file('dist/manifest.json').text = json.toString()
+}
+
+task cacheKey(dependsOn: gulp_build) << {
+    def scmRevision = 'unknown'
+
+    try {
+        scmRevision = 'git rev-parse HEAD'.execute().text.trim()
+    } catch (Exception e) {
+    }
+
+    def json = new groovy.json.JsonBuilder()
+    json (
+        [
+            'cacheKey': scmRevision
+        ]
+    )
+
+    file('dist/cacheKey.json').text = json.toString()
+}
+
+['classes' : ['gulp_build', 'manifest', 'cacheKey'], 'clean' : 'gulp_clean'].each {
+    if (!tasks.findByName(it.key)) {
+        task(it.key) {
+
+        }
+    }
+
+    tasks[it.key].dependsOn(it.value)
+}
+
+tasks['bowerInstall'].dependsOn(['npmInstall'])
+tasks['refreshResource'].dependsOn(['npmInstall', 'bowerInstall'])
+
+npmInstall << {
+    // gradle経由でbower-check-updatesした場合、process.stdin.isTTYの結果が正しくなくなるため、処理変更
+    def boweCheckUpdatesJsFile = file("node_modules/bower-check-updates/lib/bower-check-updates.js");
+    if (boweCheckUpdatesJsFile.exists()) {
+        boweCheckUpdatesJsFile.text = boweCheckUpdatesJsFile.text.replace('!process.stdin.isTTY', 'false')
+    }
+}

@@ -1,0 +1,14 @@
+map:{
+    ; aliasDelimiterInDbComment = @aliasDelimiterInDbComment@
+    ; isDbCommentOnAliasBasis = @isDbCommentOnAliasBasis@
+    ; isCheckColumnDefOrderDiff = @isCheckColumnDefOrderDiff@
+    ; isCheckDbCommentDiff = @isCheckDbCommentDiff@
+    ; isCheckProcedureDiff = @isCheckProcedureDiff@
+
+    ; loadDataReverseMap = map:{
+        ; recordLimit = -1
+        ; isReplaceSchemaDirectUse = false
+        ; isOverrideExistingDataFile = false
+        ; isSynchronizeOriginDate = false
+    }
+}

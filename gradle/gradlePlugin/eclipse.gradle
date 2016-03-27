@@ -1,0 +1,58 @@
+apply plugin: 'eclipse'
+
+eclipse {
+//  pathVariables 'GRADLE_USER_HOME': gradle.gradleUserHomeDir
+    classpath {
+        downloadSources=true
+        file.whenMerged { cp ->
+            cp.entries.findAll {
+                it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.path.startsWith('src/test/')
+            }*.output = sourceSets.test.output.classesDir.path - (projectDir.path + File.separator)
+            cp.entries.findAll {
+                it.path.contains('JRE_CONTAINER')
+            }*.path = "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${versions.jdk}"
+        }
+    }
+}
+
+tasks.eclipseJdt {
+    assert "org.eclipse.jdt.core.prefs" == outputFile.name
+    ext.originalOutputFile = outputFile
+    outputFile = (outputFile.absolutePath + ".tmp") as File
+}
+tasks.eclipseJdt << {
+    assert "org.eclipse.jdt.core.prefs.tmp" == outputFile.name
+    assert "org.eclipse.jdt.core.prefs" == ext.originalOutputFile.name
+    List lines = outputFile.readLines(encoding)
+    Collections.sort(lines)
+    ext.originalOutputFile.withWriter(encoding) { writer ->
+        lines.each { line ->
+            writer << line
+            writer << "\r\n"
+        }
+    }
+    assert outputFile.delete()
+}
+
+eclipse {
+    jdt {
+        sourceCompatibility = versions.jdk
+        targetCompatibility = versions.jdk
+
+        file {
+            withProperties { properties ->
+                def formatter = new XmlSlurper().parse('./gradle/eclipse/formatter.xml')
+
+                formatter.profile.setting.each {
+                    properties.put(it.@id as String, it.@value as String)
+                }
+
+                properties.put('org.eclipse.jdt.core.compiler.codegen.targetPlatform', compileJava.sourceCompatibility)
+                properties.put('org.eclipse.jdt.core.compiler.source', compileJava.sourceCompatibility)
+                properties.put('org.eclipse.jdt.core.compiler.compliance', compileJava.targetCompatibility)
+            }
+        }
+    }
+}
+
+tasks['eclipse'].dependsOn('cleanEclipse')
