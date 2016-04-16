@@ -1,0 +1,6 @@
+map:{
+    ; database = mysql
+    ; targetLanguage = java
+    ; targetContainer =lasta_di
+    ; packageBase = org.dbflute.intro.dbflute
+}
