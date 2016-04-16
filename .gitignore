@@ -17,6 +17,9 @@ log/
 .classpath
 .settings/
 
+# IntelliJ
+.idea/
+
 # Java
 classes/
 *.class
