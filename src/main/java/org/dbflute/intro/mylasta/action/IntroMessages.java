@@ -15,14 +15,14 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.dbflute.intro.mylasta.action.DbfluteLabels;
+import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.web.ruts.message.ActionMessage;
 
 /**
  * The keys for message.
  * @author FreeGen
  */
-public class DbfluteMessages extends DbfluteLabels {
+public class IntroMessages extends IntroLabels {
 
     /** The serial version UID for object serialization. (Default) */
     private static final long serialVersionUID = 1L;
@@ -297,7 +297,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsAssertFalseMessage(String property) {
+    public IntroMessages addConstraintsAssertFalseMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_AssertFalse_MESSAGE));
         return this;
@@ -311,7 +311,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsAssertTrueMessage(String property) {
+    public IntroMessages addConstraintsAssertTrueMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_AssertTrue_MESSAGE));
         return this;
@@ -326,7 +326,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsDecimalMaxMessage(String property, String value) {
+    public IntroMessages addConstraintsDecimalMaxMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_DecimalMax_MESSAGE, value));
         return this;
@@ -341,7 +341,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsDecimalMinMessage(String property, String value) {
+    public IntroMessages addConstraintsDecimalMinMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_DecimalMin_MESSAGE, value));
         return this;
@@ -357,7 +357,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param fraction The parameter fraction for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsDigitsMessage(String property, String integer, String fraction) {
+    public IntroMessages addConstraintsDigitsMessage(String property, String integer, String fraction) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Digits_MESSAGE, integer, fraction));
         return this;
@@ -371,7 +371,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsFutureMessage(String property) {
+    public IntroMessages addConstraintsFutureMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Future_MESSAGE));
         return this;
@@ -386,7 +386,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsMaxMessage(String property, String value) {
+    public IntroMessages addConstraintsMaxMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Max_MESSAGE, value));
         return this;
@@ -401,7 +401,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsMinMessage(String property, String value) {
+    public IntroMessages addConstraintsMinMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Min_MESSAGE, value));
         return this;
@@ -415,7 +415,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsNotNullMessage(String property) {
+    public IntroMessages addConstraintsNotNullMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_NotNull_MESSAGE));
         return this;
@@ -429,7 +429,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsNullMessage(String property) {
+    public IntroMessages addConstraintsNullMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Null_MESSAGE));
         return this;
@@ -443,7 +443,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsPastMessage(String property) {
+    public IntroMessages addConstraintsPastMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Past_MESSAGE));
         return this;
@@ -458,7 +458,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param regexp The parameter regexp for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsPatternMessage(String property, String regexp) {
+    public IntroMessages addConstraintsPatternMessage(String property, String regexp) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Pattern_MESSAGE, regexp));
         return this;
@@ -474,7 +474,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param max The parameter max for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsSizeMessage(String property, String min, String max) {
+    public IntroMessages addConstraintsSizeMessage(String property, String min, String max) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Size_MESSAGE, min, max));
         return this;
@@ -489,7 +489,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsCreditCardNumberMessage(String property) {
+    public IntroMessages addConstraintsCreditCardNumberMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_CreditCardNumber_MESSAGE));
         return this;
@@ -504,7 +504,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param type The parameter type for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsEanMessage(String property, String type) {
+    public IntroMessages addConstraintsEanMessage(String property, String type) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_EAN_MESSAGE, type));
         return this;
@@ -518,7 +518,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsEmailMessage(String property) {
+    public IntroMessages addConstraintsEmailMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Email_MESSAGE));
         return this;
@@ -534,7 +534,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param max The parameter max for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsLengthMessage(String property, String min, String max) {
+    public IntroMessages addConstraintsLengthMessage(String property, String min, String max) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Length_MESSAGE, min, max));
         return this;
@@ -549,7 +549,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsLuhnCheckMessage(String property, String value) {
+    public IntroMessages addConstraintsLuhnCheckMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_LuhnCheck_MESSAGE, value));
         return this;
@@ -564,7 +564,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsMod10CheckMessage(String property, String value) {
+    public IntroMessages addConstraintsMod10CheckMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Mod10Check_MESSAGE, value));
         return this;
@@ -579,7 +579,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsMod11CheckMessage(String property, String value) {
+    public IntroMessages addConstraintsMod11CheckMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Mod11Check_MESSAGE, value));
         return this;
@@ -595,7 +595,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param modType The parameter modType for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsModCheckMessage(String property, String value, String modType) {
+    public IntroMessages addConstraintsModCheckMessage(String property, String value, String modType) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_ModCheck_MESSAGE, value, modType));
         return this;
@@ -609,7 +609,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsNotBlankMessage(String property) {
+    public IntroMessages addConstraintsNotBlankMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_NotBlank_MESSAGE));
         return this;
@@ -623,7 +623,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsNotEmptyMessage(String property) {
+    public IntroMessages addConstraintsNotEmptyMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_NotEmpty_MESSAGE));
         return this;
@@ -638,7 +638,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param script The parameter script for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsParametersScriptAssertMessage(String property, String script) {
+    public IntroMessages addConstraintsParametersScriptAssertMessage(String property, String script) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_ParametersScriptAssert_MESSAGE, script));
         return this;
@@ -654,7 +654,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param max The parameter max for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsRangeMessage(String property, String min, String max) {
+    public IntroMessages addConstraintsRangeMessage(String property, String min, String max) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Range_MESSAGE, min, max));
         return this;
@@ -668,7 +668,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsSafeHtmlMessage(String property) {
+    public IntroMessages addConstraintsSafeHtmlMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_SafeHtml_MESSAGE));
         return this;
@@ -683,7 +683,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param script The parameter script for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsScriptAssertMessage(String property, String script) {
+    public IntroMessages addConstraintsScriptAssertMessage(String property, String script) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_ScriptAssert_MESSAGE, script));
         return this;
@@ -697,7 +697,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsUrlMessage(String property) {
+    public IntroMessages addConstraintsUrlMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_URL_MESSAGE));
         return this;
@@ -711,7 +711,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsRequiredMessage(String property) {
+    public IntroMessages addConstraintsRequiredMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_Required_MESSAGE));
         return this;
@@ -726,7 +726,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param propertyType The parameter propertyType for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addConstraintsTypeAnyMessage(String property, String propertyType) {
+    public IntroMessages addConstraintsTypeAnyMessage(String property, String propertyType) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(CONSTRAINTS_TypeAny_MESSAGE, propertyType));
         return this;
@@ -742,7 +742,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorMinPeopleNumMessage(String property, String value) {
+    public IntroMessages addAppValidatorMinPeopleNumMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_MinPeopleNum_MESSAGE, value));
         return this;
@@ -757,7 +757,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorMaxPeopleNumMessage(String property, String value) {
+    public IntroMessages addAppValidatorMaxPeopleNumMessage(String property, String value) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_MaxPeopleNum_MESSAGE, value));
         return this;
@@ -772,7 +772,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param min The parameter min for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorMinSizeMessage(String property, String min) {
+    public IntroMessages addAppValidatorMinSizeMessage(String property, String min) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_MinSize_MESSAGE, min));
         return this;
@@ -787,7 +787,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param max The parameter max for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorMaxSizeMessage(String property, String max) {
+    public IntroMessages addAppValidatorMaxSizeMessage(String property, String max) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_MaxSize_MESSAGE, max));
         return this;
@@ -802,7 +802,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param min The parameter min for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorMinSizeCollectionMessage(String property, String min) {
+    public IntroMessages addAppValidatorMinSizeCollectionMessage(String property, String min) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_MinSizeCollection_MESSAGE, min));
         return this;
@@ -817,7 +817,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param max The parameter max for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorMaxSizeCollectionMessage(String property, String max) {
+    public IntroMessages addAppValidatorMaxSizeCollectionMessage(String property, String max) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_MaxSizeCollection_MESSAGE, max));
         return this;
@@ -832,7 +832,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param equals The parameter equals for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorEqualsSizeMessage(String property, String equals) {
+    public IntroMessages addAppValidatorEqualsSizeMessage(String property, String equals) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_EqualsSize_MESSAGE, equals));
         return this;
@@ -846,7 +846,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorKatakanaMessage(String property) {
+    public IntroMessages addAppValidatorKatakanaMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_Katakana_MESSAGE));
         return this;
@@ -860,7 +860,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorTelMessage(String property) {
+    public IntroMessages addAppValidatorTelMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_Tel_MESSAGE));
         return this;
@@ -874,7 +874,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorZipCodeMessage(String property) {
+    public IntroMessages addAppValidatorZipCodeMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ZipCode_MESSAGE));
         return this;
@@ -888,7 +888,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorAlphaNumMixMessage(String property) {
+    public IntroMessages addAppValidatorAlphaNumMixMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_AlphaNumMix_MESSAGE));
         return this;
@@ -902,7 +902,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorBankAccountNameMessage(String property) {
+    public IntroMessages addAppValidatorBankAccountNameMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_BankAccountName_MESSAGE));
         return this;
@@ -916,7 +916,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorPasswordMismatchMessage(String property) {
+    public IntroMessages addAppValidatorPasswordMismatchMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_Password_Mismatch_MESSAGE));
         return this;
@@ -930,7 +930,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorShopAnyRequiredMessage(String property) {
+    public IntroMessages addAppValidatorShopAnyRequiredMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ShopAnyRequired_MESSAGE));
         return this;
@@ -944,7 +944,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorShopNotHideMessage(String property) {
+    public IntroMessages addAppValidatorShopNotHideMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ShopNotHide_MESSAGE));
         return this;
@@ -958,7 +958,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorWeekCdDuplicateMessage(String property) {
+    public IntroMessages addAppValidatorWeekCdDuplicateMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_WeekCd_DUPLICATE_MESSAGE));
         return this;
@@ -972,7 +972,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReservePeopleNumMessage(String property) {
+    public IntroMessages addAppValidatorReservePeopleNumMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReservePeopleNum_MESSAGE));
         return this;
@@ -986,7 +986,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveStatusCdReserveFixMessage(String property) {
+    public IntroMessages addAppValidatorReserveStatusCdReserveFixMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveStatusCdReserveFix_MESSAGE));
         return this;
@@ -1000,7 +1000,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveShopCandidateDuplicateMessage(String property) {
+    public IntroMessages addAppValidatorReserveShopCandidateDuplicateMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveShopCandidate_DUPLICATE_MESSAGE));
         return this;
@@ -1014,7 +1014,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveShopCandidateRequiredMessage(String property) {
+    public IntroMessages addAppValidatorReserveShopCandidateRequiredMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveShopCandidate_REQUIRED_MESSAGE));
         return this;
@@ -1028,7 +1028,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorPriorityDuplicateMessage(String property) {
+    public IntroMessages addAppValidatorPriorityDuplicateMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_Priority_DUPLICATE_MESSAGE));
         return this;
@@ -1042,7 +1042,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorSeatOnlyAndCourseMessage(String property) {
+    public IntroMessages addAppValidatorSeatOnlyAndCourseMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_SeatOnlyAndCourse_MESSAGE));
         return this;
@@ -1057,7 +1057,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorSeatOnlyReserveMessage(String property, String arg0) {
+    public IntroMessages addAppValidatorSeatOnlyReserveMessage(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_SeatOnlyReserve_MESSAGE, arg0));
         return this;
@@ -1071,7 +1071,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorNoticeMessageMessage(String property) {
+    public IntroMessages addAppValidatorNoticeMessageMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_NoticeMessage_MESSAGE));
         return this;
@@ -1085,7 +1085,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveLogTypeCdMessage(String property) {
+    public IntroMessages addAppValidatorReserveLogTypeCdMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveLogTypeCd_MESSAGE));
         return this;
@@ -1099,7 +1099,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveShopDataInvalidMessage(String property) {
+    public IntroMessages addAppValidatorReserveShopDataInvalidMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveShopData_INVALID_MESSAGE));
         return this;
@@ -1113,7 +1113,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveCourseDataInvalidMessage(String property) {
+    public IntroMessages addAppValidatorReserveCourseDataInvalidMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveCourseData_INVALID_MESSAGE));
         return this;
@@ -1127,7 +1127,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveCourseEffectiveTimeOutsideMessage(String property) {
+    public IntroMessages addAppValidatorReserveCourseEffectiveTimeOutsideMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveCourseEffectiveTime_OUTSIDE_MESSAGE));
         return this;
@@ -1141,7 +1141,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorReserveShopCandidateEntryFailedMessage(String property) {
+    public IntroMessages addAppValidatorReserveShopCandidateEntryFailedMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ReserveShopCandidate_ENTRY_FAILED_MESSAGE));
         return this;
@@ -1155,7 +1155,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorCourseCsvDataSizeMismatchMessage(String property) {
+    public IntroMessages addAppValidatorCourseCsvDataSizeMismatchMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_CourseCsvDataSize_MISMATCH_MESSAGE));
         return this;
@@ -1169,7 +1169,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorImageDataNotFoundMessage(String property) {
+    public IntroMessages addAppValidatorImageDataNotFoundMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_ImageData_NOT_FOUND_MESSAGE));
         return this;
@@ -1183,7 +1183,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorXTypeBooleanMessage(String property) {
+    public IntroMessages addAppValidatorXTypeBooleanMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_XTypeBoolean_MESSAGE));
         return this;
@@ -1197,7 +1197,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorLocalTimeFormatMessage(String property) {
+    public IntroMessages addAppValidatorLocalTimeFormatMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_LocalTimeFormat_MESSAGE));
         return this;
@@ -1211,7 +1211,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppValidatorLocalDateTimeFormatMessage(String property) {
+    public IntroMessages addAppValidatorLocalDateTimeFormatMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_VALIDATOR_LocalDateTimeFormat_MESSAGE));
         return this;
@@ -1226,7 +1226,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppConverterValidMessage(String property) {
+    public IntroMessages addAppConverterValidMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_CONVERTER_Valid_MESSAGE));
         return this;
@@ -1240,7 +1240,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppConverterNumberMessage(String property) {
+    public IntroMessages addAppConverterNumberMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_CONVERTER_Number_MESSAGE));
         return this;
@@ -1254,7 +1254,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppConverterDateMessage(String property) {
+    public IntroMessages addAppConverterDateMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_CONVERTER_Date_MESSAGE));
         return this;
@@ -1268,7 +1268,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppConverterTimeMessage(String property) {
+    public IntroMessages addAppConverterTimeMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_CONVERTER_Time_MESSAGE));
         return this;
@@ -1282,7 +1282,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addAppConverterDateTimeMessage(String property) {
+    public IntroMessages addAppConverterDateTimeMessage(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(APP_CONVERTER_DateTime_MESSAGE));
         return this;
@@ -1298,7 +1298,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsNumber(String property, String arg0) {
+    public IntroMessages addErrorsNumber(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_NUMBER, arg0));
         return this;
@@ -1313,7 +1313,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsSameValue(String property, String arg0) {
+    public IntroMessages addErrorsSameValue(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_SAME_VALUE, arg0));
         return this;
@@ -1328,7 +1328,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsGreaterThan(String property, String arg0) {
+    public IntroMessages addErrorsGreaterThan(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_GREATER_THAN, arg0));
         return this;
@@ -1343,7 +1343,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsLessThan(String property, String arg0) {
+    public IntroMessages addErrorsLessThan(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_LESS_THAN, arg0));
         return this;
@@ -1358,7 +1358,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsGreaterEquals(String property, String arg0) {
+    public IntroMessages addErrorsGreaterEquals(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_GREATER_EQUALS, arg0));
         return this;
@@ -1373,7 +1373,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsLessEquals(String property, String arg0) {
+    public IntroMessages addErrorsLessEquals(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_LESS_EQUALS, arg0));
         return this;
@@ -1388,7 +1388,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsRequiredAtLeastOne(String property, String arg0) {
+    public IntroMessages addErrorsRequiredAtLeastOne(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_REQUIRED_AT_LEAST_ONE, arg0));
         return this;
@@ -1404,7 +1404,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg1 The parameter arg1 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsRequiredOr(String property, String arg0, String arg1) {
+    public IntroMessages addErrorsRequiredOr(String property, String arg0, String arg1) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_REQUIRED_OR, arg0, arg1));
         return this;
@@ -1420,7 +1420,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param arg1 The parameter arg1 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsUploadSize(String property, String arg0, String arg1) {
+    public IntroMessages addErrorsUploadSize(String property, String arg0, String arg1) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_UPLOAD_SIZE, arg0, arg1));
         return this;
@@ -1435,7 +1435,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsEmptyLogin(String property) {
+    public IntroMessages addErrorsEmptyLogin(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_EMPTY_LOGIN));
         return this;
@@ -1449,7 +1449,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAlreadyExists(String property) {
+    public IntroMessages addErrorsAlreadyExists(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_ALREADY_EXISTS));
         return this;
@@ -1464,7 +1464,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsLoginFailure(String property) {
+    public IntroMessages addErrorsLoginFailure(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_LOGIN_FAILURE));
         return this;
@@ -1478,7 +1478,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAppIllegalTransition(String property) {
+    public IntroMessages addErrorsAppIllegalTransition(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_ILLEGAL_TRANSITION));
         return this;
@@ -1492,7 +1492,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAppDbAlreadyDeleted(String property) {
+    public IntroMessages addErrorsAppDbAlreadyDeleted(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_DB_ALREADY_DELETED));
         return this;
@@ -1506,7 +1506,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAppDbAlreadyUpdated(String property) {
+    public IntroMessages addErrorsAppDbAlreadyUpdated(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_DB_ALREADY_UPDATED));
         return this;
@@ -1520,7 +1520,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAppDbAlreadyExists(String property) {
+    public IntroMessages addErrorsAppDbAlreadyExists(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_DB_ALREADY_EXISTS));
         return this;
@@ -1534,7 +1534,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAppSystemError(String property) {
+    public IntroMessages addErrorsAppSystemError(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_SYSTEM_ERROR));
         return this;
@@ -1548,7 +1548,7 @@ public class DbfluteMessages extends DbfluteLabels {
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
      */
-    public DbfluteMessages addErrorsAppDatabaseConnection(String property) {
+    public IntroMessages addErrorsAppDatabaseConnection(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_DATABASE_CONNECTION));
         return this;

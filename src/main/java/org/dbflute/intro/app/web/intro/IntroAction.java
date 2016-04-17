@@ -20,14 +20,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
-import org.dbflute.intro.app.web.base.DbfluteIntroBaseAction;
+import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author p1us2er0
  */
-public class IntroAction extends DbfluteIntroBaseAction {
+public class IntroAction extends IntroBaseAction {
 
     @Resource
     protected DbFluteIntroLogic dbFluteIntroLogic;

@@ -22,12 +22,12 @@ import org.lastaflute.core.security.SecurityResourceProvider;
 /**
  * @author p1us2er0
  */
-public class DbfluteSecurityResourceProvider implements SecurityResourceProvider {
+public class IntroSecurityResourceProvider implements SecurityResourceProvider {
 
     protected final InvertibleCryptographer primaryInvertibleCryptographer;
     protected final OneWayCryptographer primaryOneWayCryptographer;
 
-    public DbfluteSecurityResourceProvider(InvertibleCryptographer primaryInvertibleCryptographer,
+    public IntroSecurityResourceProvider(InvertibleCryptographer primaryInvertibleCryptographer,
             OneWayCryptographer primaryOneWayCryptographer) {
         this.primaryInvertibleCryptographer = primaryInvertibleCryptographer;
         this.primaryOneWayCryptographer = primaryOneWayCryptographer;

@@ -46,7 +46,7 @@ import org.dbflute.infra.dfprop.DfPropFile;
 import org.dbflute.intro.app.def.DatabaseInfoDef;
 import org.dbflute.intro.app.logic.simple.DbFluteEngineLogic;
 import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
-import org.dbflute.intro.mylasta.direction.DbfluteConfig;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.intro.mylasta.exception.DatabaseConnectionException;
 import org.dbflute.intro.mylasta.util.ZipUtil;
 import org.dbflute.util.DfStringUtil;
@@ -58,17 +58,17 @@ import org.dbflute.util.DfStringUtil;
 public class DbFluteClientLogic {
 
     @Resource
-    private DbfluteConfig dbfluteConfig;
+    private IntroConfig introConfig;
 
     public Map<String, Map<?, ?>> getClassificationMap() {
         Map<String, Map<?, ?>> classificationMap = new LinkedHashMap<String, Map<?, ?>>();
 
-        Map<String, String> targetLanguageMap = Stream.of(dbfluteConfig.getTargetLanguage().split(",")).collect(
+        Map<String, String> targetLanguageMap = Stream.of(introConfig.getTargetLanguage().split(",")).collect(
                 Collectors.toMap(targetLanguage -> targetLanguage, targetLanguage -> targetLanguage, (u, v) -> v,
                         LinkedHashMap::new));
         classificationMap.put("targetLanguageMap", targetLanguageMap);
 
-        Map<String, String> targetContainerMap = Stream.of(dbfluteConfig.getTargetContainer().split(",")).collect(
+        Map<String, String> targetContainerMap = Stream.of(introConfig.getTargetContainer().split(",")).collect(
                 Collectors.toMap(targetContainer -> targetContainer, targetContainer -> targetContainer, (u, v) -> v,
                         LinkedHashMap::new));
         classificationMap.put("targetContainerMap", targetContainerMap);

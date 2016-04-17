@@ -13,16 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.mylasta.action;
+package org.dbflute.intro.unit;
 
-import org.dbflute.intro.mylasta.action.DbfluteMessages;
+import java.io.File;
+
+import org.dbflute.utflute.lastaflute.WebContainerTestCase;
 
 /**
- * The keys for message.
- * @author FreeGen
+ * @author t-awane
  */
-public class DbfluteIntroLabels extends DbfluteMessages {
+public abstract class IntroBaseTestCase extends WebContainerTestCase {
 
-    /** The serial version UID for object serialization. (Default) */
-    private static final long serialVersionUID = 1L;
+    @Override
+    protected File getProjectDir() {
+        return getTestCaseBuildDir().getParentFile().getParentFile().getParentFile();
+    }
 }

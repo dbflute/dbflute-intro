@@ -21,7 +21,7 @@ import org.lastaflute.core.direction.exception.ConfigPropertyNotFoundException;
 /**
  * @author FreeGen
  */
-public interface DbfluteEnv {
+public interface IntroEnv {
 
     /** The key of the configuration. e.g. hot */
     String lasta_di_SMART_DEPLOY_MODE = "lasta_di.smart.deploy.mode";
@@ -123,41 +123,41 @@ public interface DbfluteEnv {
      * The simple implementation for configuration.
      * @author FreeGen
      */
-    public static class SimpleImpl extends ObjectiveConfig implements DbfluteEnv {
+    public static class SimpleImpl extends ObjectiveConfig implements IntroEnv {
 
         /** The serial version UID for object serialization. (Default) */
         private static final long serialVersionUID = 1L;
 
         public String getLastaDiSmartDeployMode() {
-            return get(DbfluteEnv.lasta_di_SMART_DEPLOY_MODE);
+            return get(IntroEnv.lasta_di_SMART_DEPLOY_MODE);
         }
 
         public String getDevelopmentHere() {
-            return get(DbfluteEnv.DEVELOPMENT_HERE);
+            return get(IntroEnv.DEVELOPMENT_HERE);
         }
 
         public boolean isDevelopmentHere() {
-            return is(DbfluteEnv.DEVELOPMENT_HERE);
+            return is(IntroEnv.DEVELOPMENT_HERE);
         }
 
         public String getEnvironmentTitle() {
-            return get(DbfluteEnv.ENVIRONMENT_TITLE);
+            return get(IntroEnv.ENVIRONMENT_TITLE);
         }
 
         public String getFrameworkDebug() {
-            return get(DbfluteEnv.FRAMEWORK_DEBUG);
+            return get(IntroEnv.FRAMEWORK_DEBUG);
         }
 
         public boolean isFrameworkDebug() {
-            return is(DbfluteEnv.FRAMEWORK_DEBUG);
+            return is(IntroEnv.FRAMEWORK_DEBUG);
         }
 
         public String getTimeAdjustTimeMillis() {
-            return get(DbfluteEnv.TIME_ADJUST_TIME_MILLIS);
+            return get(IntroEnv.TIME_ADJUST_TIME_MILLIS);
         }
 
         public Long getTimeAdjustTimeMillisAsLong() {
-            return getAsLong(DbfluteEnv.TIME_ADJUST_TIME_MILLIS);
+            return getAsLong(IntroEnv.TIME_ADJUST_TIME_MILLIS);
         }
     }
 }

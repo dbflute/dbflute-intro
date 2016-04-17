@@ -15,7 +15,7 @@
  */
 package org.dbflute.intro.mylasta;
 
-import org.dbflute.intro.unit.DbfluteIntroBaseTestCase;
+import org.dbflute.intro.unit.IntroBaseTestCase;
 import org.dbflute.utflute.lastaflute.police.ActionComponentPolice;
 import org.dbflute.utflute.lastaflute.police.HotDeployDestroyerPolice;
 import org.dbflute.utflute.lastaflute.police.NonActionExtendsActionPolice;
@@ -25,7 +25,7 @@ import org.dbflute.utflute.lastaflute.police.WebPackageNinjaReferencePolice;
 /**
  * @author t-awane
  */
-public class DbfluteIntroActionDefTest extends DbfluteIntroBaseTestCase {
+public class IntroActionDefTest extends IntroBaseTestCase {
 
     /**
      * コンポーネントをテストします。

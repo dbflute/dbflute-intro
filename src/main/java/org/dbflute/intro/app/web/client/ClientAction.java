@@ -33,7 +33,7 @@ import org.dbflute.intro.app.logic.dbfluteclient.DbFluteClientLogic;
 import org.dbflute.intro.app.logic.dbfluteclient.OptionParam;
 import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
 import org.dbflute.intro.app.logic.simple.DbFluteTaskLogic;
-import org.dbflute.intro.app.web.base.DbfluteIntroBaseAction;
+import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
@@ -47,7 +47,7 @@ import org.lastaflute.web.servlet.request.ResponseManager;
 /**
  * @author p1us2er0
  */
-public class ClientAction extends DbfluteIntroBaseAction {
+public class ClientAction extends IntroBaseAction {
 
     @Resource
     private DbFluteClientLogic dbFluteClientLogic;

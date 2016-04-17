@@ -15,36 +15,47 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import java.util.Locale;
+import java.util.TimeZone;
 
 import org.dbflute.optional.OptionalObject;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.ruts.process.ActionRuntime;
 import org.lastaflute.web.servlet.request.RequestManager;
-import org.lastaflute.web.servlet.request.UserLocaleProcessProvider;
+import org.lastaflute.web.servlet.request.UserTimeZoneProcessProvider;
 
 /**
  * @author p1us2er0
  */
-public class DbfluteUserLocaleProcessProvider implements UserLocaleProcessProvider {
+public class IntroUserTimeZoneProcessProvider implements UserTimeZoneProcessProvider {
+
+    public static final TimeZone centralTimeZone = TimeZone.getDefault();
 
     @Override
-    public boolean isAcceptCookieLocale() {
+    public boolean isUseTimeZoneHandling() {
         return false;
     }
 
     @Override
-    public OptionalThing<Locale> findBusinessLocale(ActionRuntime runtime, RequestManager requestManager) {
-        return OptionalObject.empty(); // to next determination
+    public boolean isAcceptCookieTimeZone() {
+        return false;
     }
 
     @Override
-    public OptionalThing<Locale> getRequestedLocale(RequestManager requestManager) {
-        return OptionalObject.empty(); // means browser default
+    public OptionalThing<TimeZone> findBusinessTimeZone(ActionRuntime runtime, RequestManager requestManager) {
+        return OptionalObject.empty();
+    }
+
+    @Override
+    public TimeZone getRequestedTimeZone(RequestManager requestManager) { // not null
+        return centralTimeZone; // you can change it if you like
     }
 
     @Override
     public String toString() {
-        return "{acceptCookieLocale=" + isAcceptCookieLocale() + "}";
+        final StringBuilder sb = new StringBuilder();
+        sb.append("{useTimeZoneHandling=").append(isUseTimeZoneHandling());
+        sb.append(", acceptCookieTimeZone=").append(isAcceptCookieTimeZone());
+        sb.append("}");
+        return sb.toString();
     }
 }

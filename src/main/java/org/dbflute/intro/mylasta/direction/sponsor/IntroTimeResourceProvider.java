@@ -17,7 +17,7 @@ package org.dbflute.intro.mylasta.direction.sponsor;
 
 import java.util.Date;
 
-import org.dbflute.intro.mylasta.direction.DbfluteConfig;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.lastaflute.core.time.BusinessTimeHandler;
 import org.lastaflute.core.time.RelativeDateScript;
 import org.lastaflute.core.time.TimeManager;
@@ -27,19 +27,19 @@ import org.lastaflute.core.time.TypicalBusinessTimeHandler;
 /**
  * @author p1us2er0
  */
-public class DbfluteTimeResourceProvider implements TimeResourceProvider {
+public class IntroTimeResourceProvider implements TimeResourceProvider {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final DbfluteConfig dbfluteConfig;
+    protected final IntroConfig introConfig;
     protected final RelativeDateScript script = new RelativeDateScript();
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DbfluteTimeResourceProvider(DbfluteConfig dbfluteConfig) {
-        this.dbfluteConfig = dbfluteConfig;
+    public IntroTimeResourceProvider(IntroConfig introConfig) {
+        this.introConfig = introConfig;
     }
 
     // ===================================================================================
@@ -49,7 +49,7 @@ public class DbfluteTimeResourceProvider implements TimeResourceProvider {
         return new TypicalBusinessTimeHandler(() -> {
             return timeManager.currentMillis();
         }, () -> {
-            return DbfluteUserTimeZoneProcessProvider.centralTimeZone;
+            return IntroUserTimeZoneProcessProvider.centralTimeZone;
         });
     }
 
@@ -62,12 +62,12 @@ public class DbfluteTimeResourceProvider implements TimeResourceProvider {
     //                                                                     Time Adjustment
     //                                                                     ===============
     public boolean isAdjustAbsoluteMode() { // *1
-        final String exp = dbfluteConfig.getTimeAdjustTimeMillis();
+        final String exp = introConfig.getTimeAdjustTimeMillis();
         return exp.startsWith("$"); // means absolute e.g. $(2014/07/10)
     }
 
     public long provideAdjustTimeMillis() { // *1
-        final String exp = dbfluteConfig.getTimeAdjustTimeMillis();
+        final String exp = introConfig.getTimeAdjustTimeMillis();
         try {
             return doProvideAdjustTimeMillis(exp);
         } catch (RuntimeException e) {
@@ -84,7 +84,7 @@ public class DbfluteTimeResourceProvider implements TimeResourceProvider {
             final Date resolved = script.resolveRelativeDate(exp, new Date(current));
             return resolved.getTime() - current;
         } else { // should be millisecond as relative
-            return dbfluteConfig.getTimeAdjustTimeMillisAsLong();
+            return introConfig.getTimeAdjustTimeMillisAsLong();
         }
     }
     // *1: called per called for dynamic change in development

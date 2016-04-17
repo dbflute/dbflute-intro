@@ -15,29 +15,29 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import org.dbflute.intro.mylasta.direction.DbfluteConfig;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.lastaflute.core.security.InvertibleCryptographer;
 import org.lastaflute.web.servlet.cookie.CookieResourceProvider;
 
 /**
  * @author p1us2er0
  */
-public class DbfluteCookieResourceProvider implements CookieResourceProvider {
+public class IntroCookieResourceProvider implements CookieResourceProvider {
 
-    protected final DbfluteConfig dbfluteConfig;
+    protected final IntroConfig introConfig;
     protected final InvertibleCryptographer cookieCipher;
 
-    public DbfluteCookieResourceProvider(DbfluteConfig dbfluteConfig, InvertibleCryptographer cookieCipher) {
-        this.dbfluteConfig = dbfluteConfig;
+    public IntroCookieResourceProvider(IntroConfig introConfig, InvertibleCryptographer cookieCipher) {
+        this.introConfig = introConfig;
         this.cookieCipher = cookieCipher;
     }
 
     public String provideDefaultPath() {
-        return dbfluteConfig.getCookieDefaultPath();
+        return introConfig.getCookieDefaultPath();
     }
 
     public Integer provideDefaultExpire() {
-        return dbfluteConfig.getCookieDefaultExpireAsInteger();
+        return introConfig.getCookieDefaultExpireAsInteger();
     }
 
     public InvertibleCryptographer provideCipher() {

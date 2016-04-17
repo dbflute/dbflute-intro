@@ -15,15 +15,15 @@
  */
 package org.dbflute.intro.mylasta.direction;
 
-import org.dbflute.intro.mylasta.direction.DbfluteEnv;
+import org.dbflute.intro.mylasta.direction.IntroEnv;
 import org.lastaflute.core.direction.exception.ConfigPropertyNotFoundException;
 
 /**
  * @author FreeGen
  */
-public interface DbfluteConfig extends DbfluteEnv {
+public interface IntroConfig extends IntroEnv {
 
-    /** The key of the configuration. e.g. should be overridden by each domain */
+    /** The key of the configuration. e.g. DbfluteIntro */
     String DOMAIN_TITLE = "domain.title";
 
     /** The key of the configuration. e.g. / */
@@ -74,8 +74,7 @@ public interface DbfluteConfig extends DbfluteEnv {
 
     /**
      * Get the value for the key 'domain.title'. <br>
-     * The value is, e.g. should be overridden by each domain <br>
-     * comment: The title of domain the application for logging
+     * The value is, e.g. DbfluteIntro <br>
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
     String getDomainTitle();
@@ -217,77 +216,77 @@ public interface DbfluteConfig extends DbfluteEnv {
      * The simple implementation for configuration.
      * @author FreeGen
      */
-    public static class SimpleImpl extends DbfluteEnv.SimpleImpl implements DbfluteConfig {
+    public static class SimpleImpl extends IntroEnv.SimpleImpl implements IntroConfig {
 
         /** The serial version UID for object serialization. (Default) */
         private static final long serialVersionUID = 1L;
 
         public String getDomainTitle() {
-            return get(DbfluteConfig.DOMAIN_TITLE);
+            return get(IntroConfig.DOMAIN_TITLE);
         }
 
         public String getCookieDefaultPath() {
-            return get(DbfluteConfig.COOKIE_DEFAULT_PATH);
+            return get(IntroConfig.COOKIE_DEFAULT_PATH);
         }
 
         public String getCookieDefaultExpire() {
-            return get(DbfluteConfig.COOKIE_DEFAULT_EXPIRE);
+            return get(IntroConfig.COOKIE_DEFAULT_EXPIRE);
         }
 
         public Integer getCookieDefaultExpireAsInteger() {
-            return getAsInteger(DbfluteConfig.COOKIE_DEFAULT_EXPIRE);
+            return getAsInteger(IntroConfig.COOKIE_DEFAULT_EXPIRE);
         }
 
         public String getCookieEternalExpire() {
-            return get(DbfluteConfig.COOKIE_ETERNAL_EXPIRE);
+            return get(IntroConfig.COOKIE_ETERNAL_EXPIRE);
         }
 
         public Integer getCookieEternalExpireAsInteger() {
-            return getAsInteger(DbfluteConfig.COOKIE_ETERNAL_EXPIRE);
+            return getAsInteger(IntroConfig.COOKIE_ETERNAL_EXPIRE);
         }
 
         public String getPagingPageSize() {
-            return get(DbfluteConfig.PAGING_PAGE_SIZE);
+            return get(IntroConfig.PAGING_PAGE_SIZE);
         }
 
         public Integer getPagingPageSizeAsInteger() {
-            return getAsInteger(DbfluteConfig.PAGING_PAGE_SIZE);
+            return getAsInteger(IntroConfig.PAGING_PAGE_SIZE);
         }
 
         public String getPagingPageRangeSize() {
-            return get(DbfluteConfig.PAGING_PAGE_RANGE_SIZE);
+            return get(IntroConfig.PAGING_PAGE_RANGE_SIZE);
         }
 
         public Integer getPagingPageRangeSizeAsInteger() {
-            return getAsInteger(DbfluteConfig.PAGING_PAGE_RANGE_SIZE);
+            return getAsInteger(IntroConfig.PAGING_PAGE_RANGE_SIZE);
         }
 
         public String getPagingPageRangeFillLimit() {
-            return get(DbfluteConfig.PAGING_PAGE_RANGE_FILL_LIMIT);
+            return get(IntroConfig.PAGING_PAGE_RANGE_FILL_LIMIT);
         }
 
         public boolean isPagingPageRangeFillLimit() {
-            return is(DbfluteConfig.PAGING_PAGE_RANGE_FILL_LIMIT);
+            return is(IntroConfig.PAGING_PAGE_RANGE_FILL_LIMIT);
         }
 
         public String getMinimumYear() {
-            return get(DbfluteConfig.MINIMUM_YEAR);
+            return get(IntroConfig.MINIMUM_YEAR);
         }
 
         public Integer getMinimumYearAsInteger() {
-            return getAsInteger(DbfluteConfig.MINIMUM_YEAR);
+            return getAsInteger(IntroConfig.MINIMUM_YEAR);
         }
 
         public String getDbflutePublicPropertiesUrl() {
-            return get(DbfluteConfig.DBFLUTE_PUBLIC_PROPERTIES_URL);
+            return get(IntroConfig.DBFLUTE_PUBLIC_PROPERTIES_URL);
         }
 
         public String getTargetLanguage() {
-            return get(DbfluteConfig.TARGET_LANGUAGE);
+            return get(IntroConfig.TARGET_LANGUAGE);
         }
 
         public String getTargetContainer() {
-            return get(DbfluteConfig.TARGET_CONTAINER);
+            return get(IntroConfig.TARGET_CONTAINER);
         }
     }
 }

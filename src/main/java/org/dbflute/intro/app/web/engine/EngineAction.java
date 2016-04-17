@@ -21,14 +21,14 @@ import java.util.Properties;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.simple.DbFluteEngineLogic;
-import org.dbflute.intro.app.web.base.DbfluteIntroBaseAction;
+import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author p1us2er0
  */
-public class EngineAction extends DbfluteIntroBaseAction {
+public class EngineAction extends IntroBaseAction {
 
     @Resource
     protected DbFluteEngineLogic dbFluteEngineLogic;

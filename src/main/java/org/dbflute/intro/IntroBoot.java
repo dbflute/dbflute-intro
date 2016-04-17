@@ -20,7 +20,7 @@ import org.dbflute.jetty.JettyBoot;
 /**
  * @author p1us2er0
  */
-public class DbfluteIntroBoot {
+public class IntroBoot {
 
     protected static final int DEFAULT_PORT = 9000;
 

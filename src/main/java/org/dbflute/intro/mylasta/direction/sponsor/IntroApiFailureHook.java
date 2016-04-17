@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.dbflute.intro.mylasta.action.DbfluteIntroMessages;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.intro.mylasta.bean.ErrorBean;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfCollectionUtil;
@@ -45,9 +45,9 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author p1us2er0
  */
-public class DbfluteApiFailureHook implements ApiFailureHook {
+public class IntroApiFailureHook implements ApiFailureHook {
 
-    private static final String GLOBAL_PROPERTY_KEY = DbfluteIntroMessages.GLOBAL_PROPERTY_KEY;
+    private static final String GLOBAL_PROPERTY_KEY = IntroMessages.GLOBAL_PROPERTY_KEY;
 
     @Override
     public ApiResponse handleValidationError(ApiFailureResource resource) {
@@ -76,7 +76,7 @@ public class DbfluteApiFailureHook implements ApiFailureHook {
             return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_NOT_FOUND));
         }
 
-        DbfluteIntroMessages dbfluteIntroMessages = new DbfluteIntroMessages();
+        IntroMessages introMessages = new IntroMessages();
         if (cause instanceof RequestJsonParseFailureException) {
             RequestJsonParseFailureException requestJsonParseFailureException = (RequestJsonParseFailureException) cause;
             Throwable parseFailureCause = requestJsonParseFailureException.getCause();
@@ -84,39 +84,39 @@ public class DbfluteApiFailureHook implements ApiFailureHook {
                 JsonPropertyParseFailureException jsonPropertyParseFailureException = (JsonPropertyParseFailureException) parseFailureCause;
                 String propertyPath = jsonPropertyParseFailureException.getPropertyPath();
                 if (parseFailureCause instanceof JsonPropertyNumberParseFailureException) {
-                    dbfluteIntroMessages.addAppConverterNumberMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
+                    introMessages.addAppConverterNumberMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
                 } else if (parseFailureCause instanceof JsonPropertyDateTimeParseFailureException) {
                     Class<?> propertyType = jsonPropertyParseFailureException.getPropertyType();
                     if (LocalDate.class.isAssignableFrom(propertyType)) {
-                        dbfluteIntroMessages.addAppConverterDateMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
+                        introMessages.addAppConverterDateMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
                     } else if (LocalTime.class.isAssignableFrom(propertyType)) {
-                        dbfluteIntroMessages.addAppConverterTimeMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
+                        introMessages.addAppConverterTimeMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
                     } else if (LocalDateTime.class.isAssignableFrom(propertyType)) {
-                        dbfluteIntroMessages.addAppConverterDateTimeMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
+                        introMessages.addAppConverterDateTimeMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
                     } else {
-                        dbfluteIntroMessages.addAppConverterValidMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
+                        introMessages.addAppConverterValidMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
                     }
                 } else {
-                    dbfluteIntroMessages.addAppConverterValidMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
+                    introMessages.addAppConverterValidMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
                 }
             } else {
-                dbfluteIntroMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
+                introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
             }
         } else {
-            dbfluteIntroMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
+            introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
         }
 
         Map<String, List<String>> messages =
-                geMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), dbfluteIntroMessages);
+                geMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
         return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_BAD_REQUEST));
     }
 
     @Override
     public OptionalThing<ApiResponse> handleServerException(ApiFailureResource resource, Throwable cause) {
-        DbfluteIntroMessages dbfluteIntroMessages = new DbfluteIntroMessages();
-        dbfluteIntroMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
+        IntroMessages introMessages = new IntroMessages();
+        introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
         Map<String, List<String>> messages =
-                geMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), dbfluteIntroMessages);
+                geMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
         return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
     }
 

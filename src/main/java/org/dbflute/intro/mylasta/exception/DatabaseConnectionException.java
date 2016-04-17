@@ -15,7 +15,7 @@
  */
 package org.dbflute.intro.mylasta.exception;
 
-import org.dbflute.intro.mylasta.action.DbfluteMessages;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.lastaflute.core.exception.LaApplicationException;
 
 /**
@@ -30,7 +30,7 @@ public class DatabaseConnectionException extends LaApplicationException {
      */
     public DatabaseConnectionException(String debugMsg) {
         super(debugMsg);
-        saveMessage(DbfluteMessages.ERRORS_APP_DATABASE_CONNECTION, new Object[0]);
+        saveMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION, new Object[0]);
     }
 
     /**
@@ -40,6 +40,6 @@ public class DatabaseConnectionException extends LaApplicationException {
      */
     public DatabaseConnectionException(String debugMsg, Throwable cause) {
         super(debugMsg, cause);
-        saveMessage(DbfluteMessages.ERRORS_APP_DATABASE_CONNECTION, new Object[0]);
+        saveMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION, new Object[0]);
     }
 }

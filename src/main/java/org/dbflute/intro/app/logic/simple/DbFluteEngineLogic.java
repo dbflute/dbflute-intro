@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.mylasta.direction.DbfluteConfig;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.intro.mylasta.util.ZipUtil;
 import org.dbflute.util.DfStringUtil;
 
@@ -46,7 +46,7 @@ public class DbFluteEngineLogic {
     private static final String CLIENT_TEMPLATE_PATH = "/client-template/dbflute_dfclient.zip";
 
     @Resource
-    private DbfluteConfig dbfluteConfig;
+    private IntroConfig introConfig;
 
     private Properties publicProperties;
 
@@ -58,7 +58,7 @@ public class DbFluteEngineLogic {
 
         publicProperties = new Properties();
         try {
-            URL url = new URL(dbfluteConfig.getDbflutePublicPropertiesUrl());
+            URL url = new URL(introConfig.getDbflutePublicPropertiesUrl());
             publicProperties.load(url.openStream());
         } catch (IOException e) {
             throw new RuntimeException(e);

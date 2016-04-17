@@ -15,12 +15,12 @@
  */
 package org.dbflute.intro.mylasta;
 
-import org.dbflute.intro.unit.DbfluteIntroBaseTestCase;
+import org.dbflute.intro.unit.IntroBaseTestCase;
 
 /**
  * @author t-awane
  */
-public class DbfluteIntroLastaDocTest extends DbfluteIntroBaseTestCase {
+public class IntroLastaDocTest extends IntroBaseTestCase {
 
     /**
      * ドキュメントをテストします。

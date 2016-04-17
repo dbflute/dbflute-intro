@@ -31,13 +31,8 @@ map:{
     ; domainPackage = org.dbflute.intro
 
     # settings for common project of all web applications
-    ; commonMap = map:{
-        ; path = ../../dbflute-intro
-        ; freeGenList = list:{ env ; config ; label ; message ; mail ; template ; doc }
-        ; propertiesHtmlList = list:{ env ; config ; label ; message }
-    }
     ; appMap = map:{
-        ; dbfluteIntro = map:{
+        ; intro = map:{
             ; path = ../../dbflute-intro
             ; freeGenList = list:{ env ; config ; label ; message ; doc }
             ; propertiesHtmlList = list:{ env ; config ; label ; message }

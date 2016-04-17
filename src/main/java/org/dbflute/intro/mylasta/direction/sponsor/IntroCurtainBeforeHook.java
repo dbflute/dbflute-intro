@@ -26,7 +26,7 @@ import org.lastaflute.core.direction.FwAssistantDirector;
 /**
  * @author p1us2er0
  */
-public class DbfluteCurtainBeforeHook implements CurtainBeforeHook {
+public class IntroCurtainBeforeHook implements CurtainBeforeHook {
 
     public void hook(FwAssistantDirector assistantDirector) {
         processDBFluteSystem();
@@ -35,7 +35,7 @@ public class DbfluteCurtainBeforeHook implements CurtainBeforeHook {
     protected void processDBFluteSystem() {
         DBFluteSystem.unlock();
         DBFluteSystem.setFinalTimeZoneProvider(new DfFinalTimeZoneProvider() {
-            protected final TimeZone provided = DbfluteUserTimeZoneProcessProvider.centralTimeZone;
+            protected final TimeZone provided = IntroUserTimeZoneProcessProvider.centralTimeZone;
 
             public TimeZone provide() {
                 return provided;

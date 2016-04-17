@@ -15,47 +15,36 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import java.util.TimeZone;
+import java.util.Locale;
 
 import org.dbflute.optional.OptionalObject;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.ruts.process.ActionRuntime;
 import org.lastaflute.web.servlet.request.RequestManager;
-import org.lastaflute.web.servlet.request.UserTimeZoneProcessProvider;
+import org.lastaflute.web.servlet.request.UserLocaleProcessProvider;
 
 /**
  * @author p1us2er0
  */
-public class DbfluteUserTimeZoneProcessProvider implements UserTimeZoneProcessProvider {
-
-    public static final TimeZone centralTimeZone = TimeZone.getDefault();
+public class IntroUserLocaleProcessProvider implements UserLocaleProcessProvider {
 
     @Override
-    public boolean isUseTimeZoneHandling() {
+    public boolean isAcceptCookieLocale() {
         return false;
     }
 
     @Override
-    public boolean isAcceptCookieTimeZone() {
-        return false;
+    public OptionalThing<Locale> findBusinessLocale(ActionRuntime runtime, RequestManager requestManager) {
+        return OptionalObject.empty(); // to next determination
     }
 
     @Override
-    public OptionalThing<TimeZone> findBusinessTimeZone(ActionRuntime runtime, RequestManager requestManager) {
-        return OptionalObject.empty();
-    }
-
-    @Override
-    public TimeZone getRequestedTimeZone(RequestManager requestManager) { // not null
-        return centralTimeZone; // you can change it if you like
+    public OptionalThing<Locale> getRequestedLocale(RequestManager requestManager) {
+        return OptionalObject.empty(); // means browser default
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("{useTimeZoneHandling=").append(isUseTimeZoneHandling());
-        sb.append(", acceptCookieTimeZone=").append(isAcceptCookieTimeZone());
-        sb.append("}");
-        return sb.toString();
+        return "{acceptCookieLocale=" + isAcceptCookieLocale() + "}";
     }
 }

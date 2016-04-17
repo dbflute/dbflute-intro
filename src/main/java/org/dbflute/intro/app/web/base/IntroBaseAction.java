@@ -24,21 +24,34 @@ import javax.annotation.Resource;
 
 import org.dbflute.helper.HandyDate;
 import org.dbflute.hook.AccessContext;
-import org.dbflute.intro.mylasta.direction.DbfluteConfig;
+import org.dbflute.intro.mylasta.action.IntroMessages;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.db.dbflute.accesscontext.AccessContextArranger;
 import org.lastaflute.db.dbflute.accesscontext.AccessContextResource;
 import org.lastaflute.web.TypicalAction;
 import org.lastaflute.web.login.LoginManager;
+import org.lastaflute.web.login.UserBean;
 import org.lastaflute.web.response.ActionResponse;
 import org.lastaflute.web.ruts.process.ActionRuntime;
 import org.lastaflute.web.servlet.request.RequestManager;
 import org.lastaflute.web.token.CsrfManager;
+import org.lastaflute.web.validation.ActionValidator;
+import org.lastaflute.web.validation.LaValidatableApi;
 
 /**
  * @author p1us2er0
  */
-public abstract class DbfluteBaseAction extends TypicalAction {
+public abstract class IntroBaseAction extends TypicalAction implements LaValidatableApi<IntroMessages> {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    /** The application type for Front, e.g. used by access context. */
+    protected static final String APP_TYPE = "DbfluteIntro";
+
+    /** The user type for Member, e.g. used by access context. */
+    protected static final String USER_TYPE = "None";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -51,7 +64,7 @@ public abstract class DbfluteBaseAction extends TypicalAction {
     private CsrfManager csrfManager;
 
     @Resource
-    private DbfluteConfig dbfluteConfig;
+    private IntroConfig introConfig;
 
     // ===================================================================================
     //                                                                               Hook
@@ -76,7 +89,7 @@ public abstract class DbfluteBaseAction extends TypicalAction {
     // #app_customize you can customize the god-hand callback
     @Override
     public ActionResponse hookBefore(ActionRuntime runtime) { // application may override
-        if (!dbfluteConfig.isDevelopmentHere()) {
+        if (!introConfig.isDevelopmentHere()) {
             Method executeMethod = runtime.getExecuteMethod();
             if (runtime.isApiExecute() && !executeMethod.isAnnotationPresent(CsrfTokenVerifySkip.class)) {
                 csrfManager.verifyToken();
@@ -98,6 +111,25 @@ public abstract class DbfluteBaseAction extends TypicalAction {
         return OptionalThing.empty(); // #app_customize if empty, login is unused
     }
 
+    @Override
+    protected String myAppType() { // for framework
+        return APP_TYPE;
+    }
+
+    /**
+     * Get the bean of login user on session. (for application)
+     * @return The optional thing of found user bean. (NotNull, EmptyAllowed: when not login)
+     */
+    @Override
+    protected OptionalThing<? extends UserBean<?>> getUserBean() { // application may call
+        return OptionalThing.empty();
+    }
+
+    @Override
+    protected OptionalThing<String> myUserType() { // for framework
+        return OptionalThing.of(USER_TYPE); // #app_customize return empty if login is unused
+    }
+
     // ===================================================================================
     //                                                                      Access Context
     //                                                                      ==============
@@ -112,8 +144,16 @@ public abstract class DbfluteBaseAction extends TypicalAction {
         };
     }
 
-    // #app_customize you can customize the user trace style
-    protected abstract String buildAccessUserTrace(AccessContextResource resource);
+    protected String buildAccessUserTrace(AccessContextResource resource) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(resource.getModuleName());
+        final String trace = sb.toString();
+        final int traceColumnSize = 200;
+        if (trace.length() > traceColumnSize) {
+            return trace.substring(0, traceColumnSize);
+        }
+        return trace;
+    }
 
     // #app_customize you can customize the user trace style
     private String buildAccessProcessTrace(AccessContextResource resource) {
@@ -135,6 +175,20 @@ public abstract class DbfluteBaseAction extends TypicalAction {
     }
 
     // ===================================================================================
+    //                                                                          Validation
+    //                                                                          ==========
+    @SuppressWarnings("unchecked")
+    @Override
+    public ActionValidator<IntroMessages> createValidator() {
+        return super.createValidator();
+    }
+
+    @Override
+    public IntroMessages createMessages() { // application may call
+        return new IntroMessages(); // overriding to change return type to concrete-class
+    }
+
+    // ===================================================================================
     //                                                                              Paging
     //                                                                              ======
     // #app_customize you can customize the paging navigation logic
@@ -143,7 +197,7 @@ public abstract class DbfluteBaseAction extends TypicalAction {
      * @return The integer as page size. (NotZero, NotMinus)
      */
     protected int getPagingPageSize() { // application may call
-        return dbfluteConfig.getPagingPageSizeAsInteger();
+        return introConfig.getPagingPageSizeAsInteger();
     }
 
     // ===================================================================================

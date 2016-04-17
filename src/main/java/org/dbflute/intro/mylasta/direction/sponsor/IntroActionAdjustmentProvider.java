@@ -28,7 +28,7 @@ import org.lastaflute.web.ruts.config.ActionMapping;
 /**
  * @author p1us2er0
  */
-public class DbfluteActionAdjustmentProvider implements ActionAdjustmentProvider {
+public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
     private static final int INDEXED_PROPERTY_SIZE_LIMIT = 200; // hard coding for now
 
