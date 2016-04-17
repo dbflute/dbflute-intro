@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<!-- _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_ -->
+<!-- Maihama logging property settings for All Environments -->
+<!-- _/_/_/_/_/_/_/_/_/_/_ -->
+<included>
+  <property resource="maihama_env.properties" />
+  <property resource="maihama_env_${lasta.env}.properties" />
+  <property resource="maihama_config.properties" />
+  <property name="domain.name" value="${domain.name:-dbfluteintro}"/>
+  <property name="log.level" value="${log.level:-debug}"/>
+  <property name="log.pattern" value="%d [%t] %-5p \\(%C{0}@%M\\(\\):%L\\) - %m%n"/>
+  <property name="log.file.basedir" value="${log.file.basedir:-/tmp/lastaflute/undefinedbasedir}"/>
+  <property name="backup.date.suffix" value="_%d{yyyyMMdd}"/>
+  <property name="backup.max.history" value="180"/>
+</included>
