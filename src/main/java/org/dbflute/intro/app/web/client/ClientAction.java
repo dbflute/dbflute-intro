@@ -15,17 +15,6 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.dbfluteclient.ClientParam;
 import org.dbflute.intro.app.logic.dbfluteclient.DatabaseParam;
@@ -44,8 +33,21 @@ import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.response.StreamResponse;
 import org.lastaflute.web.servlet.request.ResponseManager;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * @author p1us2er0
+ * @author deco
  */
 public class ClientAction extends IntroBaseAction {
 
@@ -253,6 +255,24 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public StreamResponse historyhtml(String project) {
         return createHtmlStreamResponse(calcFile(project, "history"));
+    }
+
+    @Execute
+    public JsonResponse<List<ClientDfpropBean>> dfprop(String project) throws IOException {
+        File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
+        File[] files = dfpropDir.listFiles();
+        if (files == null || files.length == 0) {
+            throw new FileNotFoundException("not found dfprop files. dir=" + dfpropDir);
+        }
+
+        ArrayList<ClientDfpropBean> result = new ArrayList<>();
+        for (File file : files) {
+            if (!file.getName().endsWith(".dfprop")) {
+                continue;
+            }
+            result.add(new ClientDfpropBean(file));
+        }
+        return asJson(result);
     }
 
     protected File calcFile(String project, String type) {

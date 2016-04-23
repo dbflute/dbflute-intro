@@ -51,6 +51,7 @@
   "LABEL_CHECK_PROCEDURE_DIFF" : "差分判定でプロシージャをチェック",
   "LABEL_GENERATE_PROCEDURE_PARAMETER_BEAN" : "プロシージャ自動生成",
   "LABEL_SCHEMA_SYNC_CHECK" : "他のDB環境",
+  "LABEL_DFPROP": "dfprop",
 
   "LABEL_USE_SYSTEM_PROXIES" : "システムのプロキシ設定利用",
   "LABEL_PROXY_HOST" : "ホスト",

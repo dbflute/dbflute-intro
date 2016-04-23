@@ -65,6 +65,12 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 method : 'POST',
                 url : 'api/engine/remove/' + params.version
             });
+        },
+        dfporpBeanList: function(clientBody) {
+            return $http({
+                method : 'POST',
+                url : 'api/client/dfprop/' + clientBody.project
+            });
         }
     };
 });

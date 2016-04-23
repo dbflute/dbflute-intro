@@ -120,6 +120,12 @@ angular.module('dbflute-intro')
         $window.open('api/client/task/' + clientBean.project + '/' + task);
     };
 
+    $scope.dfprop = function(clientBean) {
+        ApiFactory.dfporpBeanList(convertParam(clientBean)).then(function (response) {
+            $scope.dfpropBeanList = response.data;
+        })
+    };
+
     $scope.changeDatabase = function(clientBean) {
         var databaseInfoDef = $scope.classificationMap["databaseInfoDefMap"][clientBean.database];
 

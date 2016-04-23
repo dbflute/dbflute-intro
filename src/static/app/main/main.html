@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-sm-3">
       <div>
-        プロジェクトdddd
+        プロジェクト
         <input type="button" class="btn btn-primary" value="追加" ng-click="add()" />
       </div>
       <div class="list-group">
@@ -201,6 +201,14 @@
                       </label>
                     </div>
                   </div>
+                </div>
+              </form>
+            </uib-tab>
+            <uib-tab heading="{{'LABEL_DFPROP' | translate:translationData}}" ng-click="dfprop(clientBean)">
+              <form class="form-horizontal">
+                <div ng-repeat="bean in dfpropBeanList">
+                  <input type="button" class="btn btn-default" ng-click="displaysDfprop=displaysDfprop?false:true;" value="{{bean.fileName}}" />
+                  <pre ng-bind-html="bean.content" ng-show="displaysDfprop"></pre>
                 </div>
               </form>
             </uib-tab>
