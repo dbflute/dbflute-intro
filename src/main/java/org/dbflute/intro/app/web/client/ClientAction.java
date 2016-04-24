@@ -259,18 +259,23 @@ public class ClientAction extends IntroBaseAction {
 
     @Execute
     public JsonResponse<List<ClientDfpropBean>> dfprop(String project) throws IOException {
+        // find dfprop files
         File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
         File[] files = dfpropDir.listFiles();
         if (files == null || files.length == 0) {
             throw new FileNotFoundException("not found dfprop files. dir=" + dfpropDir);
         }
 
+        // create display beans
         ArrayList<ClientDfpropBean> result = new ArrayList<>();
         for (File file : files) {
             if (!file.getName().endsWith(".dfprop")) {
                 continue;
             }
-            result.add(new ClientDfpropBean(file));
+            ClientDfpropBean bean = new ClientDfpropBean();
+            bean.fileName = file.getName();
+            bean.content = dbFluteClientLogic.readDfpropContents(file);
+            result.add(bean);
         }
         return asJson(result);
     }
