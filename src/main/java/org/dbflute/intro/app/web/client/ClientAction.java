@@ -44,6 +44,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author p1us2er0
@@ -257,23 +258,33 @@ public class ClientAction extends IntroBaseAction {
         return createHtmlStreamResponse(calcFile(project, "history"));
     }
 
+    // TODO deco pri.A migration to ClientDfpropAction by jflute (2016/05/09)
+    // TODO deco pri.B don't use throws (IOException) by jflute (2016/05/09)
     @Execute
     public JsonResponse<List<ClientDfpropBean>> dfprop(String project) throws IOException {
         // find dfprop files
         File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
+        // TODO deco pri.B file filtering by jflute (2016/05/09)
+        // e.g. File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
+        // TODO deco pri.B rename files to dfpropFiles by jflute (2016/05/09)
         File[] files = dfpropDir.listFiles();
         if (files == null || files.length == 0) {
+            // TODO deco pri.C BusinessException by jflute (2016/05/09)
             throw new FileNotFoundException("not found dfprop files. dir=" + dfpropDir);
         }
 
         // create display beans
+        // TODO deco pri.C use List interface by jflute (2016/05/09)
         ArrayList<ClientDfpropBean> result = new ArrayList<>();
+        // TODO deco pri.C use stream by jflute (2016/05/09)
         for (File file : files) {
             if (!file.getName().endsWith(".dfprop")) {
                 continue;
             }
             ClientDfpropBean bean = new ClientDfpropBean();
             bean.fileName = file.getName();
+            // TODO deco pri.C don't depend on view, with refactoring logic by jflute (2016/05/09)
+            // TODO deco pri.B avoid mojibake by jflute (2016/05/09)
             bean.content = dbFluteClientLogic.readDfpropContents(file);
             result.add(bean);
         }
