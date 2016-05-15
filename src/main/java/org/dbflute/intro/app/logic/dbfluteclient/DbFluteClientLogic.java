@@ -29,10 +29,7 @@ import org.dbflute.intro.mylasta.util.ZipUtil;
 import org.dbflute.util.DfStringUtil;
 
 import javax.annotation.Resource;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProxySelector;
@@ -559,47 +556,6 @@ public class DbFluteClientLogic {
         });
 
         return databaseParamMap;
-    }
-
-    /**
-     * Read contents of dfprop file
-     * @param file Target file (NotNull)
-     * @return contents (NotNull)
-     * @throws IOException
-     */
-    public String readDfpropContents(File file) throws IOException {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                setupTextColor(sb, line).append("<br />");
-            }
-            br.close();
-            return sb.toString();
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("file not found. file=" + file);
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
-    }
-
-    /**
-     * Setup color of prop words
-     * @param sb contents
-     * @param line target line
-     * @return added contents
-     */
-    private StringBuilder setupTextColor(StringBuilder sb, String line) {
-        if(line.trim().startsWith("#")) {
-            return sb.append("<span class=\"text-muted\">").append(line).append("</span>");
-        }
-
-        String changed = line.replaceAll("\\bmap\\b", "<span class=\"text-primary\">map</span>")
-                .replaceAll("\\blist\\b", "<span class=\"text-primary\">list</span>")
-                .replaceAll("\\btrue\\b", "<span class=\"text-primary\">true</span>")
-                .replaceAll("\\bfalse\\b", "<span class=\"text-primary\">false</span>");
-        return sb.append(changed);
     }
 
     private String escapeControlMark(Object value) {

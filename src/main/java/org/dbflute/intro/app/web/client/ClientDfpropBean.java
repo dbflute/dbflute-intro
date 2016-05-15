@@ -6,11 +6,6 @@ package org.dbflute.intro.app.web.client;
 public class ClientDfpropBean {
 
     // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static final String BR = "<br />";
-
-    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     public String fileName;

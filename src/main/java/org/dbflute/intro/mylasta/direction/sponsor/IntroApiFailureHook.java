@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.intro.mylasta.bean.ErrorBean;
+import org.dbflute.intro.mylasta.exception.FileNotFoundException;
+import org.dbflute.intro.mylasta.exception.FileNotReadException;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfCollectionUtil;
 import org.dbflute.util.DfStringUtil;
@@ -102,6 +104,10 @@ public class IntroApiFailureHook implements ApiFailureHook {
             } else {
                 introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
             }
+        } else if (cause instanceof FileNotFoundException) {
+            introMessages.addErrorsFileNotFound(GLOBAL_PROPERTY_KEY);
+        } else if (cause instanceof FileNotReadException) {
+            introMessages.addErrorsFileNotRead(GLOBAL_PROPERTY_KEY);
         } else {
             introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
         }
