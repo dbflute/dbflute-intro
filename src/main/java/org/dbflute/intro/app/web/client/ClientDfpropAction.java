@@ -25,8 +25,6 @@ public class ClientDfpropAction extends IntroBaseAction {
     //                                                                          ==========
     private static final String UTF8 = "UTF-8";
 
-    private static final String BR = "<br>";
-
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
@@ -41,7 +39,7 @@ public class ClientDfpropAction extends IntroBaseAction {
         // TODO DONE deco pri.B rename files to dfpropFiles by jflute (2016/05/09)
         File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
-            // TODO DONE deco pri.C BusinessException by jflute (2016/05/09)
+            // TODO deco pri.C BusinessException by jflute (2016/05/09)
             throw new FileNotFoundException("Not found dfprop files. file dir=" + dfpropDir.getPath());
         }
 
@@ -54,7 +52,7 @@ public class ClientDfpropAction extends IntroBaseAction {
     private List<ClientDfpropBean> mappingToBean(File[] dfpropFiles) {
         // TODO DONE deco pri.C use List interface by jflute (2016/05/09)
         // TODO deco pri.C use stream by jflute (2016/05/09)
-        // For returning an exception, I don't use stream.
+        // ↑ For returning an exception, I don't use stream.
         List<ClientDfpropBean> dfpropList = new ArrayList<>();
         for (File dfpropFile : dfpropFiles) {
             ClientDfpropBean bean = new ClientDfpropBean();
@@ -65,7 +63,7 @@ public class ClientDfpropAction extends IntroBaseAction {
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dfpropFile), UTF8));
                 bean.content = br.lines()
                     .collect(StringBuilder::new
-                        , (stringBuilder, str) -> stringBuilder.append(str).append(BR)
+                        , (stringBuilder, str) -> stringBuilder.append(str).append(System.lineSeparator())
                         , StringBuilder::append)
                     .toString();
                 dfpropList.add(bean);
