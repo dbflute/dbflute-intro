@@ -288,10 +288,7 @@ public class IntroMessages extends IntroLabels {
     public static final String ERRORS_APP_DATABASE_CONNECTION = "{errors.app.database.connection}";
 
     /** The key of the message: ファイルが見つかりません。 */
-    public static final String ERRORS_FILE_NOT_FOUND = "{errors.app.file.not.found}";
-
-    /** The key of the message: ファイルが読み込めません。 */
-    public static final String ERRORS_FILE_NOT_READ = "{errors.app.file.not.read}";
+    public static final String ERRORS_DFPROP_FILE_NOT_FOUND = "{errors.app.dfprop.file.not.found}";
 
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
@@ -1556,34 +1553,6 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppDatabaseConnection(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_DATABASE_CONNECTION));
-        return this;
-    }
-
-    /**
-     * Add the created action message for the key 'errors.app.database.connection' with parameters.
-     * <pre>
-     * message: ファイルが見つかりません。
-     * </pre>
-     * @param property The property name for the message. (NotNull)
-     * @return this. (NotNull)
-     */
-    public IntroMessages addErrorsFileNotFound(String property) {
-        assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_FILE_NOT_FOUND));
-        return this;
-    }
-
-    /**
-     * Add the created action message for the key 'errors.app.database.connection' with parameters.
-     * <pre>
-     * message: ファイルが読み込めません。
-     * </pre>
-     * @param property The property name for the message. (NotNull)
-     * @return this. (NotNull)
-     */
-    public IntroMessages addErrorsFileNotRead(String property) {
-        assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_FILE_NOT_READ));
         return this;
     }
 }

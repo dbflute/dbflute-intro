@@ -7,14 +7,14 @@ import org.lastaflute.core.exception.LaApplicationException;
  * ファイル取得例外クラス。
  * @author deco
  */
-public class FileNotFoundException extends LaApplicationException {
+public class DfpropFileNotFoundException extends LaApplicationException {
 
     /**
      * 例外クラスを生成します。
      * @param debugMsg デバッグメッセージ
      */
-    public FileNotFoundException(String debugMsg) {
+    public DfpropFileNotFoundException(String debugMsg) {
         super(debugMsg);
-        saveMessage(IntroMessages.ERRORS_FILE_NOT_FOUND, new Object[0]);
+        saveMessage(IntroMessages.ERRORS_DFPROP_FILE_NOT_FOUND);
     }
 }

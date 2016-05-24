@@ -15,18 +15,8 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.intro.mylasta.bean.ErrorBean;
-import org.dbflute.intro.mylasta.exception.FileNotFoundException;
-import org.dbflute.intro.mylasta.exception.FileNotReadException;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfCollectionUtil;
 import org.dbflute.util.DfStringUtil;
@@ -43,6 +33,13 @@ import org.lastaflute.web.exception.RequestJsonParseFailureException;
 import org.lastaflute.web.login.exception.LoginUnauthorizedException;
 import org.lastaflute.web.response.ApiResponse;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author p1us2er0
@@ -104,10 +101,6 @@ public class IntroApiFailureHook implements ApiFailureHook {
             } else {
                 introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
             }
-        } else if (cause instanceof FileNotFoundException) {
-            introMessages.addErrorsFileNotFound(GLOBAL_PROPERTY_KEY);
-        } else if (cause instanceof FileNotReadException) {
-            introMessages.addErrorsFileNotRead(GLOBAL_PROPERTY_KEY);
         } else {
             introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
         }

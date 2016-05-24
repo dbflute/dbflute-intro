@@ -8,6 +8,14 @@ public class ClientDfpropBean {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    public String fileName;
-    public String content;
+    public final String fileName;
+    public final String content;
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    public ClientDfpropBean(String fileName, String content) {
+        this.fileName = fileName;
+        this.content = content;
+    }
 }
