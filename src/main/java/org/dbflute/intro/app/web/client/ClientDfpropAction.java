@@ -39,7 +39,7 @@ public class ClientDfpropAction extends IntroBaseAction {
         File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
         File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
-            throw new DfpropFileNotFoundException("Not found dfprop files. file dir=" + dfpropDir.getPath());
+            throw new DfpropFileNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath());
         }
         return dfpropFiles;
     }
@@ -65,5 +65,31 @@ public class ClientDfpropAction extends IntroBaseAction {
             }
             return new ClientDfpropBean(dfpropFile.getName(), fileText);
         }).collect(Collectors.toList());
+    }
+
+    @Execute(urlPattern = "@word/{}")
+    public JsonResponse<Void> update(String project, ClientDfpropUpdateForm form) {
+        validate(form, messages -> {});
+
+        File dfpropFile = findDfpropFile(project, form);
+        writeDfpropFile(form.content, dfpropFile);
+
+        return JsonResponse.asEmptyBody();
+    }
+
+    private File findDfpropFile(String project, ClientDfpropUpdateForm form) {
+        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute" + project + "/dfprop/" + form.fileName);
+        if (!dfpropFile.isFile()) {
+            throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
+        }
+        return dfpropFile;
+    }
+
+    private void writeDfpropFile(String content, File dfpropFile) {
+        try {
+            FileUtils.write(dfpropFile, content, UTF8);
+        } catch (IOException e) {
+            throw new LaSystemException("Cannot write the file: " + dfpropFile);
+        }
     }
 }
