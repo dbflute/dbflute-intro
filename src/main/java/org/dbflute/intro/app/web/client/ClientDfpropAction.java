@@ -78,7 +78,7 @@ public class ClientDfpropAction extends IntroBaseAction {
     }
 
     private File findDfpropFile(String project, ClientDfpropUpdateForm form) {
-        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute" + project + "/dfprop/" + form.fileName);
+        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop/" + form.fileName);
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
         }
