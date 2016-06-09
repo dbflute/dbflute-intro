@@ -38,6 +38,15 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. 0 */
     String TIME_ADJUST_TIME_MILLIS = "time.adjust.time.millis";
 
+    /** The key of the configuration. e.g. debug */
+    String LOG_LEVEL = "log.level";
+
+    /** The key of the configuration. e.g. debug */
+    String LOG_CONSOLE_LEVEL = "log.console.level";
+
+    /** The key of the configuration. e.g. /tmp/lastaflute/dbfluteintro */
+    String LOG_FILE_BASEDIR = "log.file.basedir";
+
     /**
      * Get the value of property as {@link String}.
      * @param propertyKey The key of the property. (NotNull)
@@ -120,6 +129,30 @@ public interface IntroEnv {
     Long getTimeAdjustTimeMillisAsLong();
 
     /**
+     * Get the value for the key 'log.level'. <br>
+     * The value is, e.g. debug <br>
+     * comment: The log level for logback
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getLogLevel();
+
+    /**
+     * Get the value for the key 'log.console.level'. <br>
+     * The value is, e.g. debug <br>
+     * comment: The log console level for logback
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getLogConsoleLevel();
+
+    /**
+     * Get the value for the key 'log.file.basedir'. <br>
+     * The value is, e.g. /tmp/lastaflute/dbfluteintro <br>
+     * comment: The log file basedir
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getLogFileBasedir();
+
+    /**
      * The simple implementation for configuration.
      * @author FreeGen
      */
@@ -158,6 +191,18 @@ public interface IntroEnv {
 
         public Long getTimeAdjustTimeMillisAsLong() {
             return getAsLong(IntroEnv.TIME_ADJUST_TIME_MILLIS);
+        }
+
+        public String getLogLevel() {
+            return get(IntroEnv.LOG_LEVEL);
+        }
+
+        public String getLogConsoleLevel() {
+            return get(IntroEnv.LOG_CONSOLE_LEVEL);
+        }
+
+        public String getLogFileBasedir() {
+            return get(IntroEnv.LOG_FILE_BASEDIR);
         }
     }
 }

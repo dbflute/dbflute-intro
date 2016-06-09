@@ -22,9 +22,6 @@ import org.dbflute.intro.unit.IntroBaseTestCase;
  */
 public class IntroLastaDocTest extends IntroBaseTestCase {
 
-    /**
-     * ドキュメントをテストします。
-     */
     public void test_document() {
         saveLastaDocMeta();
     }

@@ -26,6 +26,9 @@ public interface IntroConfig extends IntroEnv {
     /** The key of the configuration. e.g. DbfluteIntro */
     String DOMAIN_TITLE = "domain.title";
 
+    /** The key of the configuration. e.g. dbfluteintro */
+    String DOMAIN_NAME = "domain.name";
+
     /** The key of the configuration. e.g. / */
     String COOKIE_DEFAULT_PATH = "cookie.default.path";
 
@@ -78,6 +81,13 @@ public interface IntroConfig extends IntroEnv {
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
     String getDomainTitle();
+
+    /**
+     * Get the value for the key 'domain.name'. <br>
+     * The value is, e.g. dbfluteintro <br>
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getDomainName();
 
     /**
      * Get the value for the key 'cookie.default.path'. <br>
@@ -223,6 +233,10 @@ public interface IntroConfig extends IntroEnv {
 
         public String getDomainTitle() {
             return get(IntroConfig.DOMAIN_TITLE);
+        }
+
+        public String getDomainName() {
+            return get(IntroConfig.DOMAIN_NAME);
         }
 
         public String getCookieDefaultPath() {

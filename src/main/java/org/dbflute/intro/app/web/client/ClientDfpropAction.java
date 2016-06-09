@@ -29,7 +29,6 @@ public class ClientDfpropAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<List<ClientDfpropBean>> index(String project) {
-        // TODO DONE deco to private method by jflute (2016/05/24)
         File[] dfpropFiles = findDfpropFiles(project);
         List<ClientDfpropBean> beans = mappingToBeans(dfpropFiles);
         return asJson(beans);
@@ -46,16 +45,6 @@ public class ClientDfpropAction extends IntroBaseAction {
 
     private List<ClientDfpropBean> mappingToBeans(File[] dfpropFiles) {
         // ↑ For returning an exception, I don't use stream.
-        // TODO DONE deco like this by jflute (2016/05/24)
-        //return Stream.of(dfpropFiles).map(dfpropFile -> {
-        //    String fileText;
-        //    try {
-        //        fileText = FileUtils.readFileToString(dfpropFile, UTF8);
-        //    } catch (IOException e) {
-        //        throw new LaSystemException("Cannot read the file: " + dfpropFile);
-        //    }
-        //    return new ClientDfpropBean(dfpropFile.getName(), fileText);
-        //}).collect(Collectors.toList());
         return Stream.of(dfpropFiles).map(dfpropFile -> {
             String fileText;
             try {
