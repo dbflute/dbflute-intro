@@ -32,9 +32,11 @@ ext {
             lastaflute : '0.8.2',
             dbflute : '1.1.1',
 
+            jettyboot : '0.4.2',
+
             junit : '4.12',
             utflute : '0.6.0E',
-            jettyboot : '0.4.2'
+            javaparser : '2.2.2'
         ]
 }
 
@@ -72,6 +74,7 @@ dependencies {
 
     testCompile "junit:junit:${versions.junit}"
     testCompile "org.dbflute.utflute:utflute-lastaflute:${versions.utflute}"
+    testCompile "com.github.javaparser:javaparser-core:${versions.javaparser}"
 }
 
 mainClassName = 'org.dbflute.intro.DbfluteIntroBoot'
