@@ -1,6 +1,6 @@
 # common
 .DS_Store
-bin/
+/bin
 build/
 target/
 work/
