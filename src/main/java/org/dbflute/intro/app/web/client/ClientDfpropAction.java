@@ -27,6 +27,9 @@ public class ClientDfpropAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    // -----------------------------------------------------
+    //                                                 index
+    //                                                 -----
     @Execute
     public JsonResponse<List<ClientDfpropBean>> index(String project) {
         File[] dfpropFiles = findDfpropFiles(project);
@@ -35,7 +38,7 @@ public class ClientDfpropAction extends IntroBaseAction {
     }
 
     private File[] findDfpropFiles(String project) {
-        File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
+        File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project));
         File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
             throw new DfpropFileNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath());
@@ -44,7 +47,6 @@ public class ClientDfpropAction extends IntroBaseAction {
     }
 
     private List<ClientDfpropBean> mappingToBeans(File[] dfpropFiles) {
-        // ↑ For returning an exception, I don't use stream.
         return Stream.of(dfpropFiles).map(dfpropFile -> {
             String fileText;
             try {
@@ -56,6 +58,9 @@ public class ClientDfpropAction extends IntroBaseAction {
         }).collect(Collectors.toList());
     }
 
+    // -----------------------------------------------------
+    //                                                update
+    //                                                ------
     @Execute(urlPattern = "@word/{}")
     public JsonResponse<Void> update(String project, ClientDfpropUpdateForm form) {
         validate(form, messages -> {});
@@ -67,7 +72,7 @@ public class ClientDfpropAction extends IntroBaseAction {
     }
 
     private File findDfpropFile(String project, ClientDfpropUpdateForm form) {
-        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop/" + form.fileName);
+        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project) + form.fileName);
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
         }
@@ -80,5 +85,12 @@ public class ClientDfpropAction extends IntroBaseAction {
         } catch (IOException e) {
             throw new LaSystemException("Cannot write the file: " + dfpropFile);
         }
+    }
+
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    private String getProjectPath(String project) {
+        return "dbflute_" + project + "/dfprop/";
     }
 }

@@ -1,7 +1,6 @@
 package org.dbflute.intro.app.web.client;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
 import org.dbflute.intro.unit.IntroBaseTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
@@ -14,13 +13,31 @@ import java.util.List;
  */
 public class ClientDfpropActionTest extends IntroBaseTestCase {
 
+    // ===================================================================================
+    //                                                                            Settings
+    //                                                                            ========
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        createTestClient();
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+        deleteTestClient();
+    }
+
+    // ===================================================================================
+    //                                                                                Test
+    //                                                                                ====
     public void test_index_success() throws Exception {
         // ## Arrange ##
         ClientDfpropAction action = new ClientDfpropAction();
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<ClientDfpropBean>> response = action.index("decodb");
+        JsonResponse<List<ClientDfpropBean>> response = action.index(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         TestingJsonData<List<ClientDfpropBean>> jsonData = validateJsonData(response);
@@ -35,17 +52,20 @@ public class ClientDfpropActionTest extends IntroBaseTestCase {
         // ## Arrange ##
         ClientDfpropAction action = new ClientDfpropAction();
         inject(action);
-        String project = "decodb";
+
         ClientDfpropUpdateForm form = new ClientDfpropUpdateForm();
-        form.fileName = "additionalForeignKeyMap.dfprop";
+        File dfpropDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/");
+        File dfpropBefore = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"))[0];
+        form.fileName = dfpropBefore.getName();
         form.content = "content";
 
         // ## Act ##
-        action.update(project, form);
+        action.update(TEST_CLIENT_PROJECT, form);
 
         // ## Assert ##
-        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop/" + form.fileName);
-        String content = FileUtils.readFileToString(dfpropFile, "utf-8");
+        File dfpropAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/" + form.fileName);
+        String content = FileUtils.readFileToString(dfpropAfter, "UTF-8");
+        log(form.fileName, content);
         assertEquals(form.content, content);
     }
 }
