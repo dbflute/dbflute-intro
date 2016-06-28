@@ -1,11 +1,11 @@
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.dfprop;
 
 import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
  */
-public class ClientDfpropBean {
+public class DfpropBean {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -18,7 +18,7 @@ public class ClientDfpropBean {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ClientDfpropBean(String fileName, String content) {
+    public DfpropBean(String fileName, String content) {
         this.fileName = fileName;
         this.content = content;
     }

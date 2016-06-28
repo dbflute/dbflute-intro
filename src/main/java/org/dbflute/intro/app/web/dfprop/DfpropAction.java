@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.dfprop;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * @author deco
  */
-public class ClientDfpropAction extends IntroBaseAction {
+public class DfpropAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                          Definition
@@ -31,9 +31,9 @@ public class ClientDfpropAction extends IntroBaseAction {
     //                                                 index
     //                                                 -----
     @Execute
-    public JsonResponse<List<ClientDfpropBean>> index(String project) {
+    public JsonResponse<List<DfpropBean>> index(String project) {
         File[] dfpropFiles = findDfpropFiles(project);
-        List<ClientDfpropBean> beans = mappingToBeans(dfpropFiles);
+        List<DfpropBean> beans = mappingToBeans(dfpropFiles);
         return asJson(beans);
     }
 
@@ -46,7 +46,7 @@ public class ClientDfpropAction extends IntroBaseAction {
         return dfpropFiles;
     }
 
-    private List<ClientDfpropBean> mappingToBeans(File[] dfpropFiles) {
+    private List<DfpropBean> mappingToBeans(File[] dfpropFiles) {
         return Stream.of(dfpropFiles).map(dfpropFile -> {
             String fileText;
             try {
@@ -54,25 +54,25 @@ public class ClientDfpropAction extends IntroBaseAction {
             } catch (IOException e) {
                 throw new LaSystemException("Cannot read the file: " + dfpropFile);
             }
-            return new ClientDfpropBean(dfpropFile.getName(), fileText);
+            return new DfpropBean(dfpropFile.getName(), fileText);
         }).collect(Collectors.toList());
     }
 
     // -----------------------------------------------------
     //                                                update
     //                                                ------
-    @Execute(urlPattern = "@word/{}")
-    public JsonResponse<Void> update(String project, ClientDfpropUpdateForm form) {
+    @Execute(urlPattern = "{}/@word/{}")
+    public JsonResponse<Void> update(String project, String fileName, DfpropUpdateForm form) {
         validate(form, messages -> {});
 
-        File dfpropFile = findDfpropFile(project, form);
+        File dfpropFile = findDfpropFile(project, fileName);
         writeDfpropFile(form.content, dfpropFile);
 
         return JsonResponse.asEmptyBody();
     }
 
-    private File findDfpropFile(String project, ClientDfpropUpdateForm form) {
-        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project) + form.fileName);
+    private File findDfpropFile(String project, String fileName) {
+        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project) + fileName);
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
         }

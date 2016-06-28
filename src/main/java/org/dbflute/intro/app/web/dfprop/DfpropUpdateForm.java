@@ -1,17 +1,15 @@
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.dfprop;
 
 import org.lastaflute.web.validation.Required;
 
 /**
- * @author akifumi.tominaga
+ * @author deco
  */
-public class ClientDfpropUpdateForm {
+public class DfpropUpdateForm {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Required
-    public String fileName;
     @Required
     public String content;
 }

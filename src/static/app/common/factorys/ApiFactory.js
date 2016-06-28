@@ -69,7 +69,7 @@ angular.module('dbflute-intro').factory('ApiFactory',
         dfporpBeanList: function(clientBody) {
             return $http({
                 method : 'POST',
-                url : 'api/client/dfprop/' + clientBody.project
+                url : 'api/dfprop/' + clientBody.project
             });
         }
     };
