@@ -46,3 +46,7 @@ bower_components/
 .sass-cache/
 .tmp/
 dist/
+
+# Exceptions
+!src/main/java/org/dbflute/intro/app/web/log/
+!src/test/java/org/dbflute/intro/app/web/log/
