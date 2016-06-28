@@ -59,7 +59,7 @@ public abstract class IntroBaseTestCase extends WebContainerTestCase {
         try {
             FileUtils.copyDirectory(srcDir, destDir);
         } catch (IOException e) {
-            throw new LaSystemException("Cannot copy dir:" + srcDir + "to dir:" + destDir);
+            throw new LaSystemException("Cannot copy dir:" + srcDir + "to dir:" + destDir, e);
         }
     }
 
@@ -73,7 +73,7 @@ public abstract class IntroBaseTestCase extends WebContainerTestCase {
         try {
             FileUtils.deleteDirectory(clientDir);
         } catch (IOException e) {
-            throw new LaSystemException("Cannot delete dir:" + clientDir);
+            throw new LaSystemException("Cannot delete dir:" + clientDir, e);
         }
     }
 }
