@@ -291,6 +291,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: dfprop file not found. */
     public static final String ERRORS_APP_DFPROP_FILE_NOT_FOUND = "{errors.app.dfprop.file.not.found}";
 
+    /** The key of the message: playsql file not found. */
+    public static final String ERRORS_APP_PLAYSQL_FILE_NOT_FOUND = "{errors.app.playsql.file.not.found}";
+
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
      * <pre>
@@ -1554,20 +1557,6 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppDatabaseConnection(String property) {
         assertPropertyNotNull(property);
         add(property, new ActionMessage(ERRORS_APP_DATABASE_CONNECTION));
-        return this;
-    }
-
-    /**
-     * Add the created action message for the key 'errors.app.dfprop.file.not.found' with parameters.
-     * <pre>
-     * message: dfprop file not found.
-     * </pre>
-     * @param property The property name for the message. (NotNull)
-     * @return this. (NotNull)
-     */
-    public IntroMessages addErrorsAppDfpropFileNotFound(String property) {
-        assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_DFPROP_FILE_NOT_FOUND));
         return this;
     }
 }
