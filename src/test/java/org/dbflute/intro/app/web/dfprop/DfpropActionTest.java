@@ -37,7 +37,7 @@ public class DfpropActionTest extends IntroBaseTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<DfpropBean>> response = action.index(TEST_CLIENT_PROJECT);
+        JsonResponse<List<DfpropBean>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         TestingJsonData<List<DfpropBean>> jsonData = validateJsonData(response);

@@ -28,10 +28,10 @@ public class DfpropAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     // -----------------------------------------------------
-    //                                                 index
-    //                                                 -----
-    @Execute
-    public JsonResponse<List<DfpropBean>> index(String project) {
+    //                                                  list
+    //                                                  ----
+    @Execute(urlPattern ="{}/@word")
+    public JsonResponse<List<DfpropBean>> list(String project) {
         File[] dfpropFiles = findDfpropFiles(project);
         List<DfpropBean> beans = mappingToBeans(dfpropFiles);
         return asJson(beans);
