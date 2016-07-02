@@ -109,11 +109,11 @@ angular.module('dbflute-intro')
     };
 
     $scope.openSchemaHTML = function(clientBean) {
-        $window.open('api/client/schemahtml/' + clientBean.project);
+        $window.open('api/document/' + clientBean.project+ '/schemahtml/');
     };
 
     $scope.openHistoryHTML = function(clientBean) {
-        $window.open('api/client/historyhtml/' + clientBean.project);
+      $window.open('api/document/' + clientBean.project+ '/historyhtml/');
     };
 
     $scope.task = function(clientBean, task) {

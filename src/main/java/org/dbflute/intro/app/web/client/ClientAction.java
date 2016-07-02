@@ -15,12 +15,11 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.dbfluteclient.ClientParam;
 import org.dbflute.intro.app.logic.dbfluteclient.DatabaseParam;
 import org.dbflute.intro.app.logic.dbfluteclient.DbFluteClientLogic;
+import org.dbflute.intro.app.logic.dbfluteclient.DocumentLogic;
 import org.dbflute.intro.app.logic.dbfluteclient.OptionParam;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
 import org.dbflute.intro.app.logic.simple.DbFluteTaskLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
@@ -30,12 +29,10 @@ import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.response.StreamResponse;
 import org.lastaflute.web.servlet.request.ResponseManager;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
@@ -49,6 +46,12 @@ import java.util.stream.Collectors;
  */
 public class ClientAction extends IntroBaseAction {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    // -----------------------------------------------------
+    //                                          DI Component
+    //                                          ------------
     @Resource
     private DbFluteClientLogic dbFluteClientLogic;
 
@@ -56,8 +59,14 @@ public class ClientAction extends IntroBaseAction {
     private DbFluteTaskLogic dbFluteTaskLogic;
 
     @Resource
+    private DocumentLogic documentLogic;
+
+    @Resource
     private ResponseManager responseManager;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     @Execute
     public JsonResponse<Map<String, Map<?, ?>>> classification() {
         Map<String, Map<?, ?>> classificationMap = dbFluteClientLogic.getClassificationMap();
@@ -125,7 +134,7 @@ public class ClientAction extends IntroBaseAction {
             clientBean.optionBean = optionBean;
         });
 
-        clientBean.schemaSyncCheckMap = new LinkedHashMap<String, DatabaseBean>();
+        clientBean.schemaSyncCheckMap = new LinkedHashMap<>();
         clientParam.getSchemaSyncCheckMap().entrySet().forEach(schemaSyncCheck -> {
             OptionalThing.ofNullable(schemaSyncCheck.getValue(), () -> {}).ifPresent(databaseParam -> {
                 DatabaseBean databaseBean = new DatabaseBean();
@@ -139,8 +148,8 @@ public class ClientAction extends IntroBaseAction {
 
         clientDetailBean.clientBean = clientBean;
         String project = clientParam.getProject();
-        clientDetailBean.schemahtml = calcFile(project, "schema").exists();
-        clientDetailBean.historyhtml = calcFile(project, "history").exists();
+        clientDetailBean.schemahtml = documentLogic.findDocumentFile(project, "schema").exists();
+        clientDetailBean.historyhtml = documentLogic.findDocumentFile(project, "history").exists();
         clientDetailBean.replaceSchema = dbFluteClientLogic.existReplaceSchemaFile(project);
         return clientDetailBean;
     }
@@ -187,7 +196,7 @@ public class ClientAction extends IntroBaseAction {
             clientParam.setOptionParam(optionParam);
         });
 
-        clientParam.setSchemaSyncCheckMap(new LinkedHashMap<String, DatabaseParam>());
+        clientParam.setSchemaSyncCheckMap(new LinkedHashMap<>());
         clientBody.schemaSyncCheckMap.entrySet().forEach(schemaSyncCheck -> {
             OptionalThing.ofNullable(schemaSyncCheck.getValue(), () -> {}).ifPresent(databaseBody -> {
                 DatabaseParam databaseParam = new DatabaseParam();
@@ -243,30 +252,5 @@ public class ClientAction extends IntroBaseAction {
 
         dbFluteTaskLogic.execute(project, task, env, outputStream);
         return JsonResponse.asEmptyBody();
-    }
-
-    @Execute
-    public StreamResponse schemahtml(String project) {
-        return createHtmlStreamResponse(calcFile(project, "schema"));
-    }
-
-    @Execute
-    public StreamResponse historyhtml(String project) {
-        return createHtmlStreamResponse(calcFile(project, "history"));
-    }
-
-    protected File calcFile(String project, String type) {
-        File file = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/output/doc/" + type + "-" + project + ".html");
-        return file;
-    }
-
-    protected StreamResponse createHtmlStreamResponse(File file) {
-        StreamResponse streamResponse = new StreamResponse("");
-        streamResponse.contentType("text/html; charset=UTF-8");
-        streamResponse.stream(writtenStream -> {
-            writtenStream.write(FileUtils.openInputStream(file));
-        });
-
-        return streamResponse;
     }
 }
