@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.log;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.unit.IntroBaseTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.junit.Test;
@@ -82,7 +82,7 @@ public class LogActionTest extends IntroBaseTestCase {
     //                                                                         Test Helper
     //                                                                         ===========
     private void deleteLogFiles() {
-        File logDir =  new File(DbFluteIntroLogic.BASE_DIR_PATH, LOG_FILE_PATH);
+        File logDir =  new File(IntroPhysicalLogic.BASE_DIR_PATH, LOG_FILE_PATH);
         File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));
         if (logFiles != null) {
             for (File file : logFiles) {
@@ -92,7 +92,7 @@ public class LogActionTest extends IntroBaseTestCase {
     }
 
     private void createLogFile(String fileName, String content) throws IOException {
-        File logFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, LOG_FILE_PATH + fileName);
+        File logFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, LOG_FILE_PATH + fileName);
         if (!logFile.getParentFile().exists()) {
             logFile.getParentFile().mkdirs();
         }

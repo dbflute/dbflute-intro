@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.playsql;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.exception.PlaysqlFileNotFoundException;
 import org.lastaflute.core.exception.LaSystemException;
@@ -33,7 +33,7 @@ public class PlaysqlAction extends IntroBaseAction {
     }
 
     private File[] findPlaysqlFiles(String project) {
-        File playsqlDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project));
+        File playsqlDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, getProjectPath(project));
         File[] playsqlFiles = playsqlDir.listFiles((dir, name) -> name.endsWith(".sql"));
         if (playsqlFiles == null || playsqlFiles.length == 0) {
             throw new PlaysqlFileNotFoundException("Not found playsql files. file dir: " + playsqlDir.getPath());
@@ -67,7 +67,7 @@ public class PlaysqlAction extends IntroBaseAction {
     }
 
     private File findPlaysqlFile(String project, String fileName) {
-        File playsqlFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project) + fileName);
+        File playsqlFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, getProjectPath(project) + fileName);
         if (!playsqlFile.isFile()) {
             throw new PlaysqlFileNotFoundException("Not found playsql file: " + playsqlFile.getPath());
         }

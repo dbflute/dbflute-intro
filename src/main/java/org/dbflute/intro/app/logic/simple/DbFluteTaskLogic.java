@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.optional.OptionalThing;
 
 /**
@@ -57,7 +58,7 @@ public class DbFluteTaskLogic {
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            processBuilder.directory(new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project));
+            processBuilder.directory(new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project));
 
             int resultCode = executeCommand(processBuilder, outputStream);
             return resultCode == 0;

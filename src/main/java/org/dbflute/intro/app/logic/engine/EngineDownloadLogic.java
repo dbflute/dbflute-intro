@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.simple;
+package org.dbflute.intro.app.logic.engine;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,14 +23,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.intro.mylasta.util.ZipUtil;
 import org.dbflute.util.DfStringUtil;
@@ -39,33 +37,16 @@ import org.dbflute.util.DfStringUtil;
  * @author p1us2er0
  * @author jflute
  */
-public class DbFluteEngineLogic {
+public class EngineDownloadLogic {
 
-    public static final String MY_DBFLUTE_PATH = DbFluteIntroLogic.BASE_DIR_PATH + "/mydbflute/dbflute-%1$s";
+    public static final String MY_DBFLUTE_PATH = IntroPhysicalLogic.BASE_DIR_PATH + "/mydbflute/dbflute-%1$s";
     private static final String KEY_DBFLUTE_ENGINE_DOWNLOAD_URL = "dbflute.engine.download.url";
     private static final String CLIENT_TEMPLATE_PATH = "/client-template/dbflute_dfclient.zip";
 
     @Resource
     private IntroConfig introConfig;
-
-    private Properties publicProperties;
-
-    public Properties getPublicProperties() {
-
-        if (publicProperties != null) {
-            return publicProperties;
-        }
-
-        publicProperties = new Properties();
-        try {
-            URL url = new URL(introConfig.getDbflutePublicPropertiesUrl());
-            publicProperties.load(url.openStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return publicProperties;
-    }
+    @Resource
+    private PublicPropertiesLogic publicPropertiesLogic;
 
     public void download(String dbfluteVersion) {
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
@@ -93,28 +74,6 @@ public class DbFluteEngineLogic {
     }
 
     protected String calcDownloadUrl(String dbfluteVersion) {
-        return getPublicProperties().getProperty(KEY_DBFLUTE_ENGINE_DOWNLOAD_URL).replace("$$version$$", dbfluteVersion);
-    }
-
-    public void remove(String dbfluteVersion) {
-        final File mydbfluteDir = new File(String.format(MY_DBFLUTE_PATH, dbfluteVersion));
-        if (mydbfluteDir.exists()) {
-            try {
-                FileUtils.deleteDirectory(mydbfluteDir);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public List<String> getExistedVersionList() {
-        try {
-            List<String> list = Files.list(Paths.get(DbFluteIntroLogic.BASE_DIR_PATH, "mydbflute")).filter(file -> {
-                return file.toFile().isDirectory() && file.toFile().getName().startsWith("dbflute-");
-            }).map(file -> file.toFile().getName().substring(8)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-            return list;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return publicPropertiesLogic.extractProperties().getProperty(KEY_DBFLUTE_ENGINE_DOWNLOAD_URL).replace("$$version$$", dbfluteVersion);
     }
 }

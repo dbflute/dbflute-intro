@@ -20,7 +20,10 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.simple.DbFluteEngineLogic;
+import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
+import org.dbflute.intro.app.logic.engine.EngineDownloadLogic;
+import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
+import org.dbflute.intro.app.logic.engine.EngineRemoveLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -31,28 +34,35 @@ import org.lastaflute.web.response.JsonResponse;
 public class EngineAction extends IntroBaseAction {
 
     @Resource
-    protected DbFluteEngineLogic dbFluteEngineLogic;
+    protected PublicPropertiesLogic publicPropertiesLogic;
+    @Resource
+    protected EngineDownloadLogic engineDownloadLogic;
+    @Resource
+    protected EngineInfoLogic engineInfoLogic;
+    @Resource
+    protected EngineRemoveLogic engineRemoveLogic;
 
+    // TODO jflute intro: don't want to public (2016/07/05)
     @Execute
     public JsonResponse<Properties> publicProperties() {
-        return asJson(dbFluteEngineLogic.getPublicProperties());
+        return asJson(publicPropertiesLogic.extractProperties());
     }
 
     @Execute
     public JsonResponse<List<String>> versions() {
-        List<String> dbFluteVersionList = dbFluteEngineLogic.getExistedVersionList();
+        List<String> dbFluteVersionList = engineInfoLogic.getExistingVersionList();
         return asJson(dbFluteVersionList);
     }
 
     @Execute
     public JsonResponse<Void> download(String version) {
-        dbFluteEngineLogic.download(version);
+        engineDownloadLogic.download(version);
         return JsonResponse.asEmptyBody();
     }
 
     @Execute
     public JsonResponse<Void> remove(String version) {
-        dbFluteEngineLogic.remove(version);
+        engineRemoveLogic.remove(version);
         return JsonResponse.asEmptyBody();
     }
 }

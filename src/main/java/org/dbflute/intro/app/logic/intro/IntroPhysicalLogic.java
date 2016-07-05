@@ -13,28 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.intro;
-
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
-import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.lastaflute.web.Execute;
-import org.lastaflute.web.response.JsonResponse;
+package org.dbflute.intro.app.logic.intro;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class IntroAction extends IntroBaseAction {
+public class IntroPhysicalLogic {
 
-    @Resource
-    protected IntroInfoLogic introInfoLogic;
+    /**
+     * <pre>
+     * e.g. "."
+     *  dbflute-intro
+     *   |-dbflute_exampledb // DBFlute client
+     *   |-mydbflute         // DBFlute module
+     *   |-dbflute-intro.jar
+     * </pre>
+     */
+    public static final String BASE_DIR_PATH = ".";
 
-    @Execute
-    public JsonResponse<Map<String, Object>> manifest() {
-        return asJson(introInfoLogic.getManifestMap());
+    public String toIntroResourcePath(String path) {
+        return BASE_DIR_PATH + "/" + path;
     }
 }

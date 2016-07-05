@@ -1,8 +1,8 @@
 package org.dbflute.intro.app.logic.dbfluteclient;
 
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
-
 import java.io.File;
+
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
  * @author deco
@@ -10,6 +10,6 @@ import java.io.File;
 public class DocumentLogic {
 
     public File findDocumentFile(String project, String type) {
-        return new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/output/doc/" + type + "-" + project + ".html");
+        return new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/output/doc/" + type + "-" + project + ".html");
     }
 }

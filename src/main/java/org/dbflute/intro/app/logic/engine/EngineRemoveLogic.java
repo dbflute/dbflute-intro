@@ -13,28 +13,33 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.intro;
+package org.dbflute.intro.app.logic.engine;
 
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
-import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.lastaflute.web.Execute;
-import org.lastaflute.web.response.JsonResponse;
+import org.apache.commons.io.FileUtils;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class IntroAction extends IntroBaseAction {
+public class EngineRemoveLogic { // TODO jflute intro: will rename? (2016/07/05)
 
     @Resource
-    protected IntroInfoLogic introInfoLogic;
+    private EnginePhysicalLogic enginePhysicalLogic;
 
-    @Execute
-    public JsonResponse<Map<String, Object>> manifest() {
-        return asJson(introInfoLogic.getManifestMap());
+    public void remove(String engineVersion) {
+        final String enginePath = enginePhysicalLogic.buildEnginePath(engineVersion);
+        final File engineDir = new File(enginePath);
+        if (engineDir.exists()) {
+            try {
+                FileUtils.deleteDirectory(engineDir);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to delete the engine: " + enginePath, e);
+            }
+        }
     }
 }

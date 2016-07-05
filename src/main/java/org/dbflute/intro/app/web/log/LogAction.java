@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.log;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.core.exception.LaSystemException;
 import org.lastaflute.web.Execute;
@@ -35,7 +35,7 @@ public class LogAction extends IntroBaseAction {
     }
 
     private File[] findLogFiles(String project) {
-        File logDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/log/");
+        File logDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/log/");
         return logDir.listFiles((dir, name) -> name.endsWith(".log"));
     }
 

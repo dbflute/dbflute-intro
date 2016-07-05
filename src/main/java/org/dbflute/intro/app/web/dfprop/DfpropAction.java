@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.dfprop;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.exception.DfpropFileNotFoundException;
 import org.lastaflute.core.exception.LaSystemException;
@@ -38,7 +38,7 @@ public class DfpropAction extends IntroBaseAction {
     }
 
     private File[] findDfpropFiles(String project) {
-        File dfpropDir = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project));
+        File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, getProjectPath(project));
         File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
             throw new DfpropFileNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath());
@@ -72,7 +72,7 @@ public class DfpropAction extends IntroBaseAction {
     }
 
     private File findDfpropFile(String project, String fileName) {
-        File dfpropFile = new File(DbFluteIntroLogic.BASE_DIR_PATH, getProjectPath(project) + fileName);
+        File dfpropFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, getProjectPath(project) + fileName);
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
         }
