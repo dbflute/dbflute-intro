@@ -63,17 +63,15 @@ public class DbFluteClientLogic {
         Map<String, Map<?, ?>> classificationMap = new LinkedHashMap<String, Map<?, ?>>();
 
         Map<String, String> targetLanguageMap = Stream.of(introConfig.getTargetLanguage().split(",")).collect(
-                Collectors.toMap(targetLanguage -> targetLanguage, targetLanguage -> targetLanguage, (u, v) -> v,
-                        LinkedHashMap::new));
+                Collectors.toMap(targetLanguage -> targetLanguage, targetLanguage -> targetLanguage, (u, v) -> v, LinkedHashMap::new));
         classificationMap.put("targetLanguageMap", targetLanguageMap);
 
         Map<String, String> targetContainerMap = Stream.of(introConfig.getTargetContainer().split(",")).collect(
-                Collectors.toMap(targetContainer -> targetContainer, targetContainer -> targetContainer, (u, v) -> v,
-                        LinkedHashMap::new));
+                Collectors.toMap(targetContainer -> targetContainer, targetContainer -> targetContainer, (u, v) -> v, LinkedHashMap::new));
         classificationMap.put("targetContainerMap", targetContainerMap);
 
-        Map<String, DatabaseInfoDefParam> databaseInfoDefMap = Stream.of(DatabaseInfoDef.values()).collect(
-                Collectors.toMap(databaseInfoDef -> databaseInfoDef.getDatabaseName(),
+        Map<String, DatabaseInfoDefParam> databaseInfoDefMap =
+                Stream.of(DatabaseInfoDef.values()).collect(Collectors.toMap(databaseInfoDef -> databaseInfoDef.getDatabaseName(),
                         databaseInfoDef -> new DatabaseInfoDefParam(databaseInfoDef), (u, v) -> v, LinkedHashMap::new));
         classificationMap.put("databaseInfoDefMap", databaseInfoDefMap);
 
@@ -166,8 +164,7 @@ public class DbFluteClientLogic {
             }
             connection = driver.connect(clientParam.getDatabaseParam().getUrl(), info);
 
-        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
-                | SQLException e) {
+        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
             throw new DatabaseConnectionException(e.getMessage(), e);
         } finally {
             ProxySelector.setDefault(proxySelector);
@@ -175,8 +172,7 @@ public class DbFluteClientLogic {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException e) {
-                }
+                } catch (SQLException e) {}
             }
         }
     }
@@ -486,9 +482,12 @@ public class DbFluteClientLogic {
             }
         }
         File extlibDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/extlib");
-        for (File file : extlibDir.listFiles()) {
-            if (file.getName().endsWith(".jar")) {
-                clientParam.setJdbcDriverJarPath(file.getPath());
+        if (extlibDir.exists()) {
+            File[] extlibFiles = extlibDir.listFiles();
+            for (File file : extlibFiles) {
+                if (file.getName().endsWith(".jar")) {
+                    clientParam.setJdbcDriverJarPath(file.getPath());
+                }
             }
         }
 
@@ -518,7 +517,8 @@ public class DbFluteClientLogic {
 
         Map<String, Object> outsideSqlMap = map.get("outsideSqlMap.dfprop");
         if (outsideSqlMap != null) {
-            optionParam.setGenerateProcedureParameterBean(Boolean.parseBoolean((String) outsideSqlMap.get("isGenerateProcedureParameterParam")));
+            optionParam.setGenerateProcedureParameterBean(
+                    Boolean.parseBoolean((String) outsideSqlMap.get("isGenerateProcedureParameterParam")));
         }
 
         Map<String, DatabaseParam> schemaSyncCheckMap = clientParam.getSchemaSyncCheckMap();
