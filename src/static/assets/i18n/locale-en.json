@@ -3,12 +3,11 @@
   "BUTTON_LANG_EN" : "ENGLISH",
 
   "LABEL_TITLE" : "DBFlute Intro",
-  "LABEL_SETTING" : "設定",
+  "LABEL_SETTINGS" : "Settings",
   "LABEL_DOWNLOAD" : "Download",
-  "LABEL_SET" : "設定",
-  "LABEL_HELP" : "ヘルプ",
-  "LABEL_VERSION" : "バージョン",
-  "LABEL_UPGRADE" : "バージョン更新",
+  "LABEL_HELP" : "Help",
+  "LABEL_VERSION" : "Version",
+  "LABEL_UPGRADE" : "Upgrade Version",
 
   "LABEL_SCHEMA_HTML" : "テーブル定義を開く(SchemaHTML)",
   "LABEL_HISTORY_HTML" : "DB変更履歴を開く (HistoryHTML)",
@@ -24,7 +23,7 @@
   "LABEL_CLEAR" : "クリア",
 
   "LABEL_REQUIRED" : "(*)",
-  "LABEL_PROJECT" : "DB name",
+  "LABEL_PROJECT" : "Project (DB name)",
   "LABEL_CLIENT_CREATE" : "create",
   "LABEL_CLIENT_CHANGE" : "change",
   "LABEL_CLIENT_CANCEL" : "cancel",

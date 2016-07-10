@@ -1,11 +1,10 @@
 {
-  "BUTTON_LANG_JA" : "日本語",
-  "BUTTON_LANG_EN" : "英語",
+  "BUTTON_LANG_JA" : "Japanese",
+  "BUTTON_LANG_EN" : "English",
 
   "LABEL_TITLE" : "DBFlute Intro",
-  "LABEL_SETTING" : "設定",
+  "LABEL_SETTINGS" : "設定",
   "LABEL_DOWNLOAD" : "ダウンロード",
-  "LABEL_SET" : "設定",
   "LABEL_HELP" : "ヘルプ",
   "LABEL_VERSION" : "バージョン",
   "LABEL_UPGRADE" : "バージョン更新",
@@ -24,7 +23,7 @@
   "LABEL_CLEAR" : "クリア",
 
   "LABEL_REQUIRED" : "(*)",
-  "LABEL_PROJECT" : "DB名",
+  "LABEL_PROJECT" : "プロジェクト (DB名)",
   "LABEL_CLIENT_CREATE" : "作成",
   "LABEL_CLIENT_CHANGE" : "変更",
   "LABEL_CLIENT_CANCEL" : "キャンセル",
