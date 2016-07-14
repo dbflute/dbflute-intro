@@ -32,6 +32,6 @@ public class EnginePhysicalLogic {
 
     public String buildEnginePath(String engineVersion) {
         final String resolvedPath = String.format(ENGINE_TEMPLATE_PATH, engineVersion);
-        return introPhysicalLogic.toIntroResourcePath(resolvedPath);
+        return introPhysicalLogic.buildResourcePath(resolvedPath);
     }
 }

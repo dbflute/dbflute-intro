@@ -15,12 +15,22 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
 import org.dbflute.intro.app.logic.dbfluteclient.ClientParam;
 import org.dbflute.intro.app.logic.dbfluteclient.DatabaseParam;
 import org.dbflute.intro.app.logic.dbfluteclient.DbFluteClientLogic;
 import org.dbflute.intro.app.logic.dbfluteclient.DocumentLogic;
 import org.dbflute.intro.app.logic.dbfluteclient.OptionParam;
-import org.dbflute.intro.app.logic.simple.DbFluteTaskLogic;
+import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
@@ -30,15 +40,6 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.ResponseManager;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author p1us2er0
@@ -56,7 +57,7 @@ public class ClientAction extends IntroBaseAction {
     private DbFluteClientLogic dbFluteClientLogic;
 
     @Resource
-    private DbFluteTaskLogic dbFluteTaskLogic;
+    private TaskExecutionLogic taskExecutionLogic;
 
     @Resource
     private DocumentLogic documentLogic;
@@ -250,7 +251,7 @@ public class ClientAction extends IntroBaseAction {
             throw new RuntimeException(e);
         }
 
-        dbFluteTaskLogic.execute(project, task, env, outputStream);
+        taskExecutionLogic.execute(project, task, env, outputStream);
         return JsonResponse.asEmptyBody();
     }
 }

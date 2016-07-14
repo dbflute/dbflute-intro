@@ -31,7 +31,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class IntroUpgradeLogic {
 
-    public boolean upgrade() {
+    public void upgrade() {
         File jarPathFile = new File("./dbflute-intro.jar");
 
         Class<?> clazz = this.getClass();
@@ -40,25 +40,18 @@ public class IntroUpgradeLogic {
 
         if (path.lastIndexOf("!") != -1) {
             try {
-                jarPathFile = new File(URLDecoder.decode(path.substring("file:/".length(), path.lastIndexOf("!")),
-                        Charsets.UTF_8.name()));
+                jarPathFile = new File(URLDecoder.decode(path.substring("file:/".length(), path.lastIndexOf("!")), Charsets.UTF_8.name()));
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return false;
+                throw new IllegalStateException(e);
             }
         }
 
         try {
-            FileUtils.copyURLToFile(new URL("http://p1us2er0.github.io/dbflute-intro/download/" + jarPathFile.getName()),
-                    jarPathFile);
+            FileUtils.copyURLToFile(new URL("http://p1us2er0.github.io/dbflute-intro/download/" + jarPathFile.getName()), jarPathFile);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return false;
+            throw new IllegalStateException(e);
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            throw new IllegalStateException(e);
         }
-
-        return true;
     }
 }

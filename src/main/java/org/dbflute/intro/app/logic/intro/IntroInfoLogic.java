@@ -15,9 +15,6 @@
  */
 package org.dbflute.intro.app.logic.intro;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -25,10 +22,7 @@ import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.jar.Manifest;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * @author p1us2er0
@@ -48,31 +42,6 @@ public class IntroInfoLogic {
     public static final String BASE_DIR_PATH = ".";
 
     public static final String INI_FILE_PATH = BASE_DIR_PATH + "/dbflute-intro.ini";
-
-    // TODO jflute intro: unused? (2016/07/05)
-    //public void loadProxy() {
-    //    System.clearProperty("proxySet");
-    //    System.clearProperty("proxyHost");
-    //    System.clearProperty("proxyPort");
-    //
-    //    Properties properties = getProperties();
-    //    String proxyHost = properties.getProperty("proxyHost");
-    //    String proxyPort = properties.getProperty("proxyPort");
-    //    boolean useSystemProxies = Boolean.parseBoolean(properties.getProperty("java.net.useSystemProxies"));
-    //
-    //    if (useSystemProxies) {
-    //        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
-    //    } else {
-    //        if (proxyHost != null && !proxyHost.equals("")) {
-    //            System.setProperty("proxySet", "true");
-    //            System.setProperty("proxyHost", proxyHost);
-    //        }
-    //
-    //        if (proxyPort != null && !proxyPort.equals("")) {
-    //            System.setProperty("proxyPort", proxyPort);
-    //        }
-    //    }
-    //}
 
     public Map<String, Object> getManifestMap() {
         Map<String, Object> manifestMap = new LinkedHashMap<String, Object>();
@@ -100,29 +69,32 @@ public class IntroInfoLogic {
     }
 
     // TODO jflute intro: unused? (2016/07/05)
+    //public void loadProxy() {
+    //    System.clearProperty("proxySet");
+    //    System.clearProperty("proxyHost");
+    //    System.clearProperty("proxyPort");
+    //
+    //    Properties properties = getProperties();
+    //    String proxyHost = properties.getProperty("proxyHost");
+    //    String proxyPort = properties.getProperty("proxyPort");
+    //    boolean useSystemProxies = Boolean.parseBoolean(properties.getProperty("java.net.useSystemProxies"));
+    //
+    //    if (useSystemProxies) {
+    //        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
+    //    } else {
+    //        if (proxyHost != null && !proxyHost.equals("")) {
+    //            System.setProperty("proxySet", "true");
+    //            System.setProperty("proxyHost", proxyHost);
+    //        }
+    //
+    //        if (proxyPort != null && !proxyPort.equals("")) {
+    //            System.setProperty("proxyPort", proxyPort);
+    //        }
+    //    }
+    //}
+
+    // TODO jflute intro: unused? (2016/07/05)
     //public String getVersion() {
     //    return String.valueOf(getManifestMap().get("Implementation-Version"));
     //}
-
-    // ===================================================================================
-    //                                                                        Assist Logic
-    //                                                                        ============
-    private Properties getProperties() {
-        File file = new File(IntroInfoLogic.INI_FILE_PATH);
-        Properties properties = new Properties();
-        if (file.exists()) {
-            FileInputStream fileInputStream = null;
-            try {
-                fileInputStream = new FileInputStream(file);
-                properties.load(fileInputStream);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                IOUtils.closeQuietly(fileInputStream);
-            }
-        }
-        return properties;
-    }
 }

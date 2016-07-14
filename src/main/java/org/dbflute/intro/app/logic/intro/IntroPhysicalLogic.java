@@ -1,4 +1,4 @@
-/*
+/*uili
  * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,15 @@ public class IntroPhysicalLogic {
      */
     public static final String BASE_DIR_PATH = ".";
 
-    public String toIntroResourcePath(String path) {
+    public String buildResourcePath(String path) {
         return BASE_DIR_PATH + "/" + path;
+    }
+
+    public String toDBFluteClientPath(String project) {
+        return buildResourcePath("dbflute_" + project);
+    }
+
+    public String toDBFluteClientResourcePath(String project, String resource) {
+        return toDBFluteClientPath(project) + "/" + resource;
     }
 }

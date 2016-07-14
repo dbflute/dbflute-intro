@@ -13,12 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.simple;
+package org.dbflute.intro.app.logic.task;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -26,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
@@ -35,73 +36,81 @@ import org.dbflute.optional.OptionalThing;
  * @author p1us2er0
  * @author jflute
  */
-public class DbFluteTaskLogic {
+public class TaskExecutionLogic {
 
-    public boolean execute(String project, String task, OptionalThing<String> env, OutputStream outputStream) {
-        List<ProcessBuilder> dbfluteTaskList;
-        if ("doc".equals(task)) {
-            dbfluteTaskList = getDocCommandList();
-        } else if ("loadDataReverse".equals(task)) {
-            dbfluteTaskList = getLoadDataReverseCommandList();
-        } else if ("schemaSyncCheck".equals(task)) {
-            dbfluteTaskList = getSchemaSyncCheckCommandList();
-        } else if ("replaceSchema".equals(task)) {
-            dbfluteTaskList = getReplaceSchemaCommandList();
-        } else {
-            throw new RuntimeException("タスク不正");
-        }
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
 
-        boolean result = dbfluteTaskList.stream().allMatch(processBuilder -> {
-            Map<String, String> environment = processBuilder.environment();
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
+    // TODO jflute intro: make TaskInstruction class (2016/07/14)
+    public boolean execute(String project, String instruction, OptionalThing<String> env, OutputStream outputStream) {
+        final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(instruction);
+        return dbfluteTaskList.stream().allMatch(processBuilder -> {
+            final Map<String, String> environment = processBuilder.environment();
             environment.put("pause_at_end", "n");
             environment.put("answer", "y");
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            processBuilder.directory(new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project));
+            final String clientPath = introPhysicalLogic.toDBFluteClientPath(project);
+            processBuilder.directory(new File(clientPath));
 
             int resultCode = executeCommand(processBuilder, outputStream);
             return resultCode == 0;
         });
+    }
 
-        return result;
+    // ===================================================================================
+    //                                                                           Task List
+    //                                                                           =========
+    private List<ProcessBuilder> prepareTaskList(String instruction) {
+        final List<ProcessBuilder> dbfluteTaskList;
+        if ("doc".equals(instruction)) {
+            dbfluteTaskList = getDocCommandList();
+        } else if ("loadDataReverse".equals(instruction)) {
+            dbfluteTaskList = getLoadDataReverseCommandList();
+        } else if ("schemaSyncCheck".equals(instruction)) {
+            dbfluteTaskList = getSchemaSyncCheckCommandList();
+        } else if ("replaceSchema".equals(instruction)) {
+            dbfluteTaskList = getReplaceSchemaCommandList();
+        } else {
+            throw new IllegalStateException("Unknown task: " + instruction);
+        }
+        return dbfluteTaskList;
     }
 
     public List<ProcessBuilder> getDocCommandList() {
-
         List<List<String>> commandList = new ArrayList<List<String>>();
         commandList.add(Arrays.asList("manage", "jdbc"));
         commandList.add(Arrays.asList("manage", "doc"));
-
-        return getCommandList(commandList);
+        return toProcessBuilderList(commandList);
     }
 
     public List<ProcessBuilder> getLoadDataReverseCommandList() {
-
         List<List<String>> commandList = new ArrayList<List<String>>();
         commandList.add(Arrays.asList("manage", "jdbc"));
         commandList.add(Arrays.asList("manage", "load-data-reverse"));
-
-        return getCommandList(commandList);
+        return toProcessBuilderList(commandList);
     }
 
     public List<ProcessBuilder> getSchemaSyncCheckCommandList() {
-
         List<List<String>> commandList = new ArrayList<List<String>>();
         commandList.add(Arrays.asList("manage", "schema-sync-check"));
-
-        return getCommandList(commandList);
+        return toProcessBuilderList(commandList);
     }
 
     public List<ProcessBuilder> getReplaceSchemaCommandList() {
-
         List<List<String>> commandList = new ArrayList<List<String>>();
         commandList.add(Arrays.asList("manage", "replace-schema"));
-
-        return getCommandList(commandList);
+        return toProcessBuilderList(commandList);
     }
 
-    protected List<ProcessBuilder> getCommandList(List<List<String>> commandList) {
+    protected List<ProcessBuilder> toProcessBuilderList(List<List<String>> commandList) {
         List<ProcessBuilder> processBuilderList = commandList.stream().filter(command -> !command.isEmpty()).map(command -> {
             String onName = System.getProperty("os.name").toLowerCase();
             List<String> list = new ArrayList<String>();
@@ -124,27 +133,27 @@ public class DbFluteTaskLogic {
         return processBuilderList;
     }
 
-    public int executeCommand(ProcessBuilder processBuilder, OutputStream outputStream) {
+    // ===================================================================================
+    //                                                                             Process
+    //                                                                             =======
+    private int executeCommand(ProcessBuilder processBuilder, OutputStream outputStream) {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
-
         int result = 0;
-        try (InputStream inputStream = process.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader)){
-
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             while (true) {
-                String line = bufferedReader.readLine();
+                String line = br.readLine();
                 if (line == null) {
                     break;
                 }
 
                 IOUtils.write(line, outputStream);
+                // TODO jflute intro: LF? (2016/07/14)
                 IOUtils.write(System.getProperty("line.separator"), outputStream);
                 outputStream.flush();
 
@@ -153,13 +162,11 @@ public class DbFluteTaskLogic {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
-
         if (result == 0) {
             result = process.exitValue();
         }
-
         return result;
     }
 }
