@@ -13,13 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.dbfluteclient;
+package org.dbflute.intro.app.logic.client;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class ClientParam {
 
@@ -27,27 +28,16 @@ public class ClientParam {
     //                                                                           Attribute
     //                                                                           =========
     private String project;
-
     private String database;
-
     private String targetLanguage;
-
     private String targetContainer;
-
     private String packageBase;
-
     private String jdbcDriver;
-
     private DatabaseParam databaseParam;
-
     private DatabaseParam systemUserDatabaseParam;
-
     private String jdbcDriverJarPath;
-
     private String dbfluteVersion;
-
     private OptionParam optionParam;
-
     private Map<String, DatabaseParam> schemaSyncCheckMap;
 
     // ===================================================================================

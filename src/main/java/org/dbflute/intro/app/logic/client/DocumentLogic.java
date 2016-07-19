@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.logic.dbfluteclient;
+package org.dbflute.intro.app.logic.client;
 
 import java.io.File;
 

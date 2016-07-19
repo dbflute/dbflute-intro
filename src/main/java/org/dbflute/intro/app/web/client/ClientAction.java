@@ -25,13 +25,16 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import org.dbflute.intro.app.logic.dbfluteclient.ClientParam;
-import org.dbflute.intro.app.logic.dbfluteclient.DatabaseParam;
-import org.dbflute.intro.app.logic.dbfluteclient.DbFluteClientLogic;
-import org.dbflute.intro.app.logic.dbfluteclient.DocumentLogic;
-import org.dbflute.intro.app.logic.dbfluteclient.OptionParam;
+import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientParam;
+import org.dbflute.intro.app.logic.client.DatabaseParam;
+import org.dbflute.intro.app.logic.client.DbFluteClientLogic;
+import org.dbflute.intro.app.logic.client.DocumentLogic;
+import org.dbflute.intro.app.logic.client.OptionParam;
+import org.dbflute.intro.app.logic.client.TestConnectionLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
@@ -54,45 +57,50 @@ public class ClientAction extends IntroBaseAction {
     //                                          DI Component
     //                                          ------------
     @Resource
-    private DbFluteClientLogic dbFluteClientLogic;
-
+    private DbFluteClientLogic dbfluteClientLogic;
+    @Resource
+    private ClientInfoLogic clientInfoLogic;
+    @Resource
+    private TestConnectionLogic testConnectionLogic;
     @Resource
     private TaskExecutionLogic taskExecutionLogic;
-
     @Resource
     private DocumentLogic documentLogic;
-
+    @Resource
+    private IntroClsAssist introClsAssist;
     @Resource
     private ResponseManager responseManager;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    // -----------------------------------------------------
+    //                                                Select
+    //                                                ------
     @Execute
     public JsonResponse<Map<String, Map<?, ?>>> classification() {
-        Map<String, Map<?, ?>> classificationMap = dbFluteClientLogic.getClassificationMap();
+        Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
         return asJson(classificationMap);
     }
 
     @Execute
     public JsonResponse<List<ClientDetailBean>> list() {
-        List<String> projectList = dbFluteClientLogic.getProjectList();
-        List<ClientDetailBean> clientDetailBeanList = projectList.stream().map(project -> {
-            ClientParam clientParam = dbFluteClientLogic.convClientParamFromDfprop(project);
-            return convert(clientParam);
+        List<String> projectList = clientInfoLogic.getProjectList();
+        List<ClientDetailBean> beanList = projectList.stream().map(project -> {
+            ClientParam clientParam = clientInfoLogic.convClientParamFromDfprop(project);
+            return convertToDetailBean(clientParam);
         }).collect(Collectors.toList());
-
-        return asJson(clientDetailBeanList);
+        return asJson(beanList);
     }
 
     @Execute
     public JsonResponse<ClientDetailBean> detail(String project) {
-        ClientParam clientParam = dbFluteClientLogic.convClientParamFromDfprop(project);
-        ClientDetailBean clientDetailBean = convert(clientParam);
+        ClientParam clientParam = clientInfoLogic.convClientParamFromDfprop(project);
+        ClientDetailBean clientDetailBean = convertToDetailBean(clientParam);
         return asJson(clientDetailBean);
     }
 
-    protected ClientDetailBean convert(ClientParam clientParam) {
+    protected ClientDetailBean convertToDetailBean(ClientParam clientParam) {
         ClientDetailBean clientDetailBean = new ClientDetailBean();
         ClientBean clientBean = new ClientBean();
         clientBean.project = clientParam.getProject();
@@ -151,11 +159,36 @@ public class ClientAction extends IntroBaseAction {
         String project = clientParam.getProject();
         clientDetailBean.schemahtml = documentLogic.findDocumentFile(project, "schema").exists();
         clientDetailBean.historyhtml = documentLogic.findDocumentFile(project, "history").exists();
-        clientDetailBean.replaceSchema = dbFluteClientLogic.existReplaceSchemaFile(project);
+        clientDetailBean.replaceSchema = clientInfoLogic.existsReplaceSchemaFile(project);
         return clientDetailBean;
     }
 
-    protected ClientParam convert(ClientBody clientBody) {
+    // -----------------------------------------------------
+    //                                                Update
+    //                                                ------
+    @Execute
+    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
+        validate(clientCreateBody, messages -> {});
+        ClientParam clientParam = convertToParam(clientCreateBody.clientBody);
+        if (clientCreateBody.testConnection) {
+            testConnection(clientParam);
+        }
+        dbfluteClientLogic.createClient(clientParam);
+        return JsonResponse.asEmptyBody();
+    }
+
+    @Execute
+    public JsonResponse<Void> update(ClientCreateBody clientCreateBody) {
+        validate(clientCreateBody, messages -> {});
+        ClientParam clientParam = convertToParam(clientCreateBody.clientBody);
+        if (clientCreateBody.testConnection) {
+            testConnection(clientParam);
+        }
+        dbfluteClientLogic.updateClient(clientParam);
+        return JsonResponse.asEmptyBody();
+    }
+
+    protected ClientParam convertToParam(ClientBody clientBody) {
         ClientParam clientParam = new ClientParam();
         clientParam.setProject(clientBody.project);
         clientParam.setDatabase(clientBody.database);
@@ -212,34 +245,21 @@ public class ClientAction extends IntroBaseAction {
         return clientParam;
     }
 
-    @Execute
-    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
-        validate(clientCreateBody, messages -> {});
-        ClientParam clientParam = convert(clientCreateBody.clientBody);
-        if (clientCreateBody.testConnection) {
-            dbFluteClientLogic.testConnection(clientParam);
-        }
-        dbFluteClientLogic.createClient(clientParam, clientCreateBody.testConnection);
-        return JsonResponse.asEmptyBody();
-    }
-
-    @Execute
-    public JsonResponse<Void> update(ClientCreateBody clientCreateBody) {
-        validate(clientCreateBody, messages -> {});
-        ClientParam clientParam = convert(clientCreateBody.clientBody);
-        if (clientCreateBody.testConnection) {
-            dbFluteClientLogic.testConnection(clientParam);
-        }
-        dbFluteClientLogic.updateClient(clientParam, clientCreateBody.testConnection);
-        return JsonResponse.asEmptyBody();
+    private void testConnection(ClientParam clientParam) {
+        String jdbcDriverJarPath = clientParam.getJdbcDriverJarPath();
+        String dbfluteVersion = clientParam.getDbfluteVersion();
+        String jdbcDriver = clientParam.getJdbcDriver();
+        DatabaseParam databaseParam = clientParam.getDatabaseParam();
+        testConnectionLogic.testConnection(jdbcDriverJarPath, dbfluteVersion, jdbcDriver, databaseParam);
     }
 
     @Execute
     public JsonResponse<Void> delete(String project) {
-        dbFluteClientLogic.deleteClient(project);
+        dbfluteClientLogic.deleteClient(project);
         return JsonResponse.asEmptyBody();
     }
 
+    // TODO jflute intro: independent (2016/07/19)
     @Execute
     public JsonResponse<Void> task(String project, String task, OptionalThing<String> env) {
         HttpServletResponse response = responseManager.getResponse();

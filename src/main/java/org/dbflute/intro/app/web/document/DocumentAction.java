@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.document;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.dbfluteclient.DocumentLogic;
+import org.dbflute.intro.app.logic.client.DocumentLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.StreamResponse;

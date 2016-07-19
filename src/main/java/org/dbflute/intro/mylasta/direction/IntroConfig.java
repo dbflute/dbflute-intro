@@ -53,12 +53,6 @@ public interface IntroConfig extends IntroEnv {
     /** The key of the configuration. e.g. http://dbflute.org/meta/public.properties */
     String DBFLUTE_PUBLIC_PROPERTIES_URL = "dbflute.public.properties.url";
 
-    /** The key of the configuration. e.g. java,csharp,scala */
-    String TARGET_LANGUAGE = "targetLanguage";
-
-    /** The key of the configuration. e.g. lasta_di,seasar,spring,guice,cdi */
-    String TARGET_CONTAINER = "targetContainer";
-
     /**
      * Get the value of property as {@link String}.
      * @param propertyKey The key of the property. (NotNull)
@@ -207,22 +201,6 @@ public interface IntroConfig extends IntroEnv {
     String getDbflutePublicPropertiesUrl();
 
     /**
-     * Get the value for the key 'targetLanguage'. <br>
-     * The value is, e.g. java,csharp,scala <br>
-     * comment: targetLanguage
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getTargetLanguage();
-
-    /**
-     * Get the value for the key 'targetContainer'. <br>
-     * The value is, e.g. lasta_di,seasar,spring,guice,cdi <br>
-     * comment: targetContainer
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getTargetContainer();
-
-    /**
      * The simple implementation for configuration.
      * @author FreeGen
      */
@@ -293,14 +271,6 @@ public interface IntroConfig extends IntroEnv {
 
         public String getDbflutePublicPropertiesUrl() {
             return get(IntroConfig.DBFLUTE_PUBLIC_PROPERTIES_URL);
-        }
-
-        public String getTargetLanguage() {
-            return get(IntroConfig.TARGET_LANGUAGE);
-        }
-
-        public String getTargetContainer() {
-            return get(IntroConfig.TARGET_CONTAINER);
         }
     }
 }

@@ -1,0 +1,34 @@
+# /---------------------------------------------------------------------------
+# webcls: (NotRequired - Default map:{})
+#
+# The definition of classification.
+#
+# Specification:
+# map: {
+#     [classification-name] = list:{
+#         ; map:{ topComment=[comment]; codeType=[String(default) or Number or Boolean] }
+#         ; map:{ refCls=[projectName]@[DB classification name] ; refType=[included or exists or matches] }
+#         ; map:{ code=[code]; name=[name]; alias=[alias]; comment=[comment] }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # basically name/alias is same as code to keep native settings
+    ; TargetLanguage = list:{
+        ; map:{ topComment=TargetLanguage for DBFlute ; codeType=String }
+        ; map:{ code=java; name=java; comment=Java }
+        ; map:{ code=csharp; name=csharp; comment=CSharp }
+        ; map:{ code=scala; name=scala; comment=Scala }
+    }
+    ; TargetContainer = list:{
+        ; map:{ topComment=TargetContainer for DBFlute ; codeType=String }
+        ; map:{ code=lasta_di; name=lasta_di; comment=Lasta Di }
+        ; map:{ code=spring; name=spring; comment=Spring Framework }
+        ; map:{ code=guice; name=guice; comment=Google Guice }
+        ; map:{ code=seasar; name=seasar; comment=Seasar }
+        ; map:{ code=cdi; name=cdi; comment=CDI }
+    }
+}
+# ----------------/
