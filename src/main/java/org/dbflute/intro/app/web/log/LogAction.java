@@ -49,8 +49,8 @@ public class LogAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                 index
     //                                                 -----
-    @Execute
-    public JsonResponse<List<LogBean>> index(String project) {
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<List<LogBean>> list(String project) {
         File[] logFiles = findLogFiles(project);
         if (logFiles == null) {
             return JsonResponse.asEmptyBody();

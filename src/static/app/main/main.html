@@ -204,11 +204,30 @@
                 </div>
               </form>
             </uib-tab>
+             <!--dfprop -->
             <uib-tab heading="{{'LABEL_DFPROP' | translate:translationData}}" ng-click="dfprop(clientBean)">
               <form class="form-horizontal">
                 <div ng-repeat="bean in dfpropBeanList">
                   <input type="button" class="btn btn-default" ng-click="displaysDfprop=displaysDfprop?false:true;" value="{{bean.fileName}}" />
                   <pre ng-bind-html="bean.content" ng-show="displaysDfprop"></pre>
+                </div>
+              </form>
+            </uib-tab>
+            <!-- PlaySQL -->
+            <uib-tab heading="{{'LABEL_PLAYSQL' | translate:translationData}}" ng-click="playsql(clientBean)">
+              <form class="form-horizontal">
+                <div ng-repeat="bean in playsqlBeanList">
+                  <input type="button" class="btn btn-default" ng-click="displaysPlaysql=displaysPlaysql?false:true;" value="{{bean.fileName}}" />
+                  <pre ng-bind-html="bean.content" ng-show="displaysPlaysql"></pre>
+                </div>
+              </form>
+            </uib-tab>
+            <!-- log -->
+            <uib-tab heading="{{'LABEL_LOG' | translate:translationData}}" ng-click="log(clientBean)">
+              <form class="form-horizontal">
+                <div ng-repeat="bean in logBeanList">
+                  <input type="button" class="btn btn-default" ng-click="displaysLog=displaysLog?false:true;" value="{{bean.fileName}}" />
+                  <pre ng-bind-html="bean.content" ng-show="displaysLog"></pre>
                 </div>
               </form>
             </uib-tab>

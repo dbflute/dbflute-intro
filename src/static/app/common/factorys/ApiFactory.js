@@ -71,6 +71,18 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 method : 'POST',
                 url : 'api/dfprop/' + clientBody.project + '/list'
             });
-        }
+        },
+        playsqlBeanList: function(clientBody) {
+            return $http({
+                method : 'POST',
+                url : 'api/playsql/' + clientBody.project + '/list'
+            });
+        },
+        logBeanList: function(clientBody) {
+            return $http({
+                method : 'POST',
+                url : 'api/log/' + clientBody.project + '/list'
+            });
+        },
     };
 });

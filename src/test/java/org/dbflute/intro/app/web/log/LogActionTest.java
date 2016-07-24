@@ -47,7 +47,7 @@ public class LogActionTest extends IntroBaseTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<LogBean>> response = action.index(TEST_CLIENT_PROJECT);
+        JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         assertTrue(response.isReturnAsEmptyBody());
@@ -66,7 +66,7 @@ public class LogActionTest extends IntroBaseTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<LogBean>> response = action.index(TEST_CLIENT_PROJECT);
+        JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         TestingJsonData<List<LogBean>> jsonData = validateJsonData(response);

@@ -125,7 +125,16 @@ angular.module('dbflute-intro')
             $scope.dfpropBeanList = response.data;
         })
     };
-
+    $scope.playsql = function(clientBean) {
+        ApiFactory.playsqlBeanList(convertParam(clientBean)).then(function (response) {
+            $scope.playsqlBeanList = response.data;
+        })
+    };
+    $scope.log = function(clientBean) {
+        ApiFactory.logBeanList(convertParam(clientBean)).then(function (response) {
+            $scope.logBeanList = response.data;
+        })
+    };
     $scope.changeDatabase = function(clientBean) {
         var databaseInfoDef = $scope.classificationMap["databaseInfoDefMap"][clientBean.database];
 
