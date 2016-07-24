@@ -53,19 +53,19 @@ public class DfpropActionTest extends IntroBaseTestCase {
         DfpropAction action = new DfpropAction();
         inject(action);
 
-        DfpropUpdateForm form = new DfpropUpdateForm();
+        DfpropUpdateBody body = new DfpropUpdateBody();
         File dfpropDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/");
         File dfpropBefore = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"))[0];
         String fileName = dfpropBefore.getName();
-        form.content = "content";
+        body.content = "content";
 
         // ## Act ##
-        action.update(TEST_CLIENT_PROJECT, fileName, form);
+        action.update(TEST_CLIENT_PROJECT, fileName, body);
 
         // ## Assert ##
         File dfpropAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/" + fileName);
         String content = FileUtils.readFileToString(dfpropAfter, "UTF-8");
         log(fileName, content);
-        assertEquals(form.content, content);
+        assertEquals(body.content, content);
     }
 }

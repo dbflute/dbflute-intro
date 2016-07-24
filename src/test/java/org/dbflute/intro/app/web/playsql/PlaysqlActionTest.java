@@ -57,19 +57,19 @@ public class PlaysqlActionTest extends IntroBaseTestCase {
         PlaysqlAction action = new PlaysqlAction();
         inject(action);
 
-        PlaysqlUpdateForm form = new PlaysqlUpdateForm();
+        PlaysqlUpdateBody body = new PlaysqlUpdateBody();
         File playsqlDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/playsql/");
         File playsqlBefore = playsqlDir.listFiles((dir, name) -> name.endsWith(".sql"))[0];
         String fileName = playsqlBefore.getName();
-        form.content = "content";
+        body.content = "content";
 
         // ## Act ##
-        action.update(TEST_CLIENT_PROJECT, fileName, form);
+        action.update(TEST_CLIENT_PROJECT, fileName, body);
 
         // ## Assert ##
         File playsqlAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/playsql/" + fileName);
         String content = FileUtils.readFileToString(playsqlAfter, "UTF-8");
         log(fileName, content);
-        assertEquals(form.content, content);
+        assertEquals(body.content, content);
     }
 }

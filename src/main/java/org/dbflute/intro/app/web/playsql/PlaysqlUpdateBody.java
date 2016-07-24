@@ -20,21 +20,11 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author deco
  */
-public class PlaysqlBean {
+public class PlaysqlUpdateBody {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Required
-    public final String fileName;
-
-    public final String content;
-
-    // ===================================================================================
-    //                                                                         Constructor
-    //                                                                         ===========
-    public PlaysqlBean(String fileName, String content) {
-        this.fileName = fileName;
-        this.content = content;
-    }
+    public String content;
 }

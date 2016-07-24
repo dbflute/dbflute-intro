@@ -13,28 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.playsql;
+package org.dbflute.intro.app.web.dfprop;
 
 import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
  */
-public class PlaysqlBean {
+public class DfpropUpdateBody {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Required
-    public final String fileName;
-
-    public final String content;
-
-    // ===================================================================================
-    //                                                                         Constructor
-    //                                                                         ===========
-    public PlaysqlBean(String fileName, String content) {
-        this.fileName = fileName;
-        this.content = content;
-    }
+    public String content;
 }
