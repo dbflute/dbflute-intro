@@ -50,3 +50,4 @@ dist/
 # Exceptions
 !src/main/java/org/dbflute/intro/app/web/log/
 !src/test/java/org/dbflute/intro/app/web/log/
+!/src/main/java/org/dbflute/intro/app/logic/log/
