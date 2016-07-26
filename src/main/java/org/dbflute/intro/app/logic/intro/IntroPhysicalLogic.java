@@ -36,11 +36,23 @@ public class IntroPhysicalLogic {
         return BASE_DIR_PATH + "/" + path;
     }
 
+    /**
+     * <pre>
+     * e.g.
+     *  toDBFluteClientPath("maihamadb"): ./dbflute_maihamadb
+     * </pre>
+     * @param project The project name of DBFlute client. (NotNull)
+     * @return The path to the DBFlute client. (NotNull)
+     */
     public String toDBFluteClientPath(String project) {
         return buildResourcePath("dbflute_" + project);
     }
 
     public String toDBFluteClientResourcePath(String project, String resource) {
         return toDBFluteClientPath(project) + "/" + resource;
+    }
+
+    public String toDocumentOutputDirPath(String project) {
+        return toDBFluteClientResourcePath(project, "/output/doc");
     }
 }

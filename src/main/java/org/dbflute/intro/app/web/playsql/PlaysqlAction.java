@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.web.playsql;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.core.FileHandlingLogic;
 import org.dbflute.intro.app.logic.playsql.PlaysqlPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.exception.PlaysqlFileNotFoundException;
@@ -43,6 +44,8 @@ public class PlaysqlAction extends IntroBaseAction {
     //                                          ------------
     @Resource
     private PlaysqlPhysicalLogic playsqlPhysicalLogic;
+    @Resource
+    private FileHandlingLogic fileHandlingLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -50,6 +53,7 @@ public class PlaysqlAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                  list
     //                                                  ----
+    // TODO deco with directory? by jflute (2016/07/26)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<PlaysqlBean>> list(String project) {
         File[] playsqlFiles = findPlaysqlFiles(project);
@@ -65,22 +69,17 @@ public class PlaysqlAction extends IntroBaseAction {
         }
         return playsqlFiles;
     }
-
+    
     private List<PlaysqlBean> mappingToBeans(File[] playsqlFiles) {
         return Stream.of(playsqlFiles).map(playsqlFile -> {
-            String content;
-            try {
-                content = FileUtils.readFileToString(playsqlFile, "UTF-8");
-            } catch (IOException e) {
-                throw new LaSystemException("Cannot read the file: " + playsqlFile);
-            }
-            return new PlaysqlBean(playsqlFile.getName(), content);
+            return new PlaysqlBean(playsqlFile.getName(), fileHandlingLogic.readFile(playsqlFile));
         }).collect(Collectors.toList());
     }
 
     // -----------------------------------------------------
     //                                                update
     //                                                ------
+    // TODO jflute intro: needs adjustment? (2016/07/26)
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, PlaysqlUpdateBody body) {
         validate(body, messages -> {});

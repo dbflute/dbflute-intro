@@ -38,8 +38,8 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 public class ClientInfoLogic {
 
     // ===================================================================================
-    //                                                                      Classification
-    //                                                                      ==============
+    //                                                                        Project List
+    //                                                                        ============
     public List<String> getProjectList() {
         List<String> list = new ArrayList<String>();
         final File baseDir = new File(IntroPhysicalLogic.BASE_DIR_PATH);
@@ -55,6 +55,9 @@ public class ClientInfoLogic {
         return list;
     }
 
+    // ===================================================================================
+    //                                                                    Environment List
+    //                                                                    ================
     public List<String> getEnvList(String project) {
         List<String> envList = new ArrayList<String>();
         File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
@@ -67,6 +70,9 @@ public class ClientInfoLogic {
         return envList;
     }
 
+    // ===================================================================================
+    //                                                                       ReplaceSchema
+    //                                                                       =============
     public boolean existsReplaceSchemaFile(String project) {
         boolean exists = false;
         final File playsqlDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/playsql");
@@ -84,7 +90,10 @@ public class ClientInfoLogic {
         return exists;
     }
 
-    public ClientParam convClientParamFromDfprop(String project) {
+    // ===================================================================================
+    //                                                                              Dfprop
+    //                                                                              ======
+    public ClientParam convertDfpropToClientParam(String project) {
         Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>();
         File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
 
@@ -188,12 +197,12 @@ public class ClientInfoLogic {
         }
 
         Map<String, DatabaseParam> schemaSyncCheckMap = clientParam.getSchemaSyncCheckMap();
-        schemaSyncCheckMap.putAll(convDatabaseParamMapFromDfprop(project));
+        schemaSyncCheckMap.putAll(convertDfpropToDatabaseParamMap(project));
 
         return clientParam;
     }
 
-    private Map<String, DatabaseParam> convDatabaseParamMapFromDfprop(String project) {
+    private Map<String, DatabaseParam> convertDfpropToDatabaseParamMap(String project) {
         Map<String, DatabaseParam> databaseParamMap = new LinkedHashMap<String, DatabaseParam>();
         File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
         Stream.of(dfpropDir.listFiles()).forEach(file -> {

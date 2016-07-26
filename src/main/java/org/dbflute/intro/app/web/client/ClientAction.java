@@ -27,11 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientParam;
+import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.client.DatabaseParam;
-import org.dbflute.intro.app.logic.client.DbFluteClientLogic;
-import org.dbflute.intro.app.logic.client.DocumentLogic;
 import org.dbflute.intro.app.logic.client.OptionParam;
-import org.dbflute.intro.app.logic.client.TestConnectionLogic;
+import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
+import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
@@ -40,6 +40,7 @@ import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.ResponseManager;
@@ -57,7 +58,7 @@ public class ClientAction extends IntroBaseAction {
     //                                          DI Component
     //                                          ------------
     @Resource
-    private DbFluteClientLogic dbfluteClientLogic;
+    private ClientUpdateLogic clientUpdateLogic;
     @Resource
     private ClientInfoLogic clientInfoLogic;
     @Resource
@@ -65,11 +66,13 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private TaskExecutionLogic taskExecutionLogic;
     @Resource
-    private DocumentLogic documentLogic;
+    private DocumentPhysicalLogic documentLogic;
     @Resource
     private IntroClsAssist introClsAssist;
     @Resource
     private ResponseManager responseManager;
+    @Resource
+    private TimeManager timeManager;
 
     // ===================================================================================
     //                                                                             Execute
@@ -87,7 +90,7 @@ public class ClientAction extends IntroBaseAction {
     public JsonResponse<List<ClientDetailBean>> list() {
         List<String> projectList = clientInfoLogic.getProjectList();
         List<ClientDetailBean> beanList = projectList.stream().map(project -> {
-            ClientParam clientParam = clientInfoLogic.convClientParamFromDfprop(project);
+            ClientParam clientParam = clientInfoLogic.convertDfpropToClientParam(project);
             return convertToDetailBean(clientParam);
         }).collect(Collectors.toList());
         return asJson(beanList);
@@ -95,7 +98,7 @@ public class ClientAction extends IntroBaseAction {
 
     @Execute
     public JsonResponse<ClientDetailBean> detail(String project) {
-        ClientParam clientParam = clientInfoLogic.convClientParamFromDfprop(project);
+        ClientParam clientParam = clientInfoLogic.convertDfpropToClientParam(project);
         ClientDetailBean clientDetailBean = convertToDetailBean(clientParam);
         return asJson(clientDetailBean);
     }
@@ -173,7 +176,7 @@ public class ClientAction extends IntroBaseAction {
         if (clientCreateBody.testConnection) {
             testConnection(clientParam);
         }
-        dbfluteClientLogic.createClient(clientParam);
+        clientUpdateLogic.createClient(clientParam);
         return JsonResponse.asEmptyBody();
     }
 
@@ -184,7 +187,7 @@ public class ClientAction extends IntroBaseAction {
         if (clientCreateBody.testConnection) {
             testConnection(clientParam);
         }
-        dbfluteClientLogic.updateClient(clientParam);
+        clientUpdateLogic.updateClient(clientParam);
         return JsonResponse.asEmptyBody();
     }
 
@@ -255,7 +258,7 @@ public class ClientAction extends IntroBaseAction {
 
     @Execute
     public JsonResponse<Void> delete(String project) {
-        dbfluteClientLogic.deleteClient(project);
+        clientUpdateLogic.deleteClient(project);
         return JsonResponse.asEmptyBody();
     }
 

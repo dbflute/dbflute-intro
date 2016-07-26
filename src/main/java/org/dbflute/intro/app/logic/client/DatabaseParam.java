@@ -15,8 +15,10 @@
  */
 package org.dbflute.intro.app.logic.client;
 
+// TODO jflute intro: Model? (2016/07/26)
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class DatabaseParam {
 

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.client;
+package org.dbflute.intro.app.logic.dfprop;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.dbflute.intro.app.logic.client.DatabaseParam;
 import org.dbflute.intro.app.logic.engine.EngineDownloadLogic;
 import org.dbflute.intro.mylasta.exception.DatabaseConnectionException;
 import org.dbflute.util.DfStringUtil;

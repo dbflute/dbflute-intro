@@ -33,6 +33,7 @@ classes/
 # Middleware
 localdb/
 localap/
+etc/testdb
 
 # DBFlute
 latest-data.zip

@@ -18,6 +18,7 @@ package org.dbflute.intro.app.logic.client;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// TODO jflute intro: Model? (2016/07/26)
 /**
  * @author p1us2er0
  * @author jflute

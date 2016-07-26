@@ -28,7 +28,7 @@ public class PlaysqlBean {
     @Required
     public final String fileName;
 
-    public final String content;
+    public final String content; // may be empty file
 
     // ===================================================================================
     //                                                                         Constructor

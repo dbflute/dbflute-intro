@@ -19,20 +19,21 @@ import org.dbflute.intro.app.def.DatabaseInfoDef;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class DatabaseInfoDefParam {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private String databaseName;
-    private String driverName;
-    private String urlTemplate;
-    private String defultSchema;
-    private boolean needSchema;
-    private boolean needJdbcDriverJar;
-    private boolean upperSchema;
-    private boolean assistInputUser;
+    private final String databaseName;
+    private final String driverName;
+    private final String urlTemplate;
+    private final String defultSchema;
+    private final boolean needSchema;
+    private final boolean needJdbcDriverJar;
+    private final boolean upperSchema;
+    private final boolean assistInputUser;
 
     // ===================================================================================
     //                                                                         Constructor

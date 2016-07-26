@@ -34,7 +34,7 @@ import org.dbflute.intro.mylasta.util.ZipUtil;
  * @author p1us2er0
  * @author jflute
  */
-public class DbFluteClientLogic {
+public class ClientUpdateLogic {
 
     // ===================================================================================
     //                                                                Create/Update Client
