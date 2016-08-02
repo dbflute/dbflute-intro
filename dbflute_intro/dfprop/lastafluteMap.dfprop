@@ -25,7 +25,7 @@
 #
 map:{
     # your service name, camel case, initial uncapitalised
-    ; serviceName = dbflute
+    ; serviceName = intro
 
     # package for your domain name, e.g. com.example
     ; domainPackage = org.dbflute.intro

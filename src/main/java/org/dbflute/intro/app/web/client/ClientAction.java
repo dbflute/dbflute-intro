@@ -15,8 +15,6 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +37,7 @@ import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
+import org.dbflute.intro.mylasta.webcls.WebCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
@@ -264,17 +263,11 @@ public class ClientAction extends IntroBaseAction {
 
     // TODO jflute intro: independent (2016/07/19)
     @Execute
-    public JsonResponse<Void> task(String project, String task, OptionalThing<String> env) {
+    public JsonResponse<Void> task(String project, WebCDef.IntroInstruction instruction, OptionalThing<String> env) {
         HttpServletResponse response = responseManager.getResponse();
         response.setContentType("text/plain; charset=UTF-8");
-        OutputStream outputStream;
-        try {
-            outputStream = response.getOutputStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        taskExecutionLogic.execute(project, task, env, outputStream);
+        // TODO jflute tasks OK? (2016/08/02)
+        taskExecutionLogic.execute(project, instruction.tasks(), env, () -> response.getOutputStream());
         return JsonResponse.asEmptyBody();
     }
 }

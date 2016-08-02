@@ -31,6 +31,7 @@ import javax.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.optional.OptionalThing;
+import org.dbflute.util.Srl;
 
 /**
  * @author p1us2er0
@@ -48,8 +49,8 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public boolean execute(String project, String instruction, OptionalThing<String> env, OutputStream outputStream) {
-        final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(instruction);
+    public boolean execute(String project, String taskExp, OptionalThing<String> env, CommandOutputStreamProvider streamProvider) {
+        final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskExp);
         return dbfluteTaskList.stream().allMatch(processBuilder -> {
             final Map<String, String> environment = processBuilder.environment();
             environment.put("pause_at_end", "n");
@@ -60,53 +61,24 @@ public class TaskExecutionLogic {
             final String clientPath = introPhysicalLogic.toDBFluteClientPath(project);
             processBuilder.directory(new File(clientPath));
 
-            int resultCode = executeCommand(processBuilder, outputStream);
+            int resultCode = executeCommand(processBuilder, streamProvider);
             return resultCode == 0;
         });
+    }
+
+    @FunctionalInterface
+    public static interface CommandOutputStreamProvider {
+        OutputStream provide() throws IOException;
     }
 
     // ===================================================================================
     //                                                                           Task List
     //                                                                           =========
-    private List<ProcessBuilder> prepareTaskList(String instruction) {
-        final List<ProcessBuilder> dbfluteTaskList;
-        if ("doc".equals(instruction)) {
-            dbfluteTaskList = getDocCommandList();
-        } else if ("loadDataReverse".equals(instruction)) {
-            dbfluteTaskList = getLoadDataReverseCommandList();
-        } else if ("schemaSyncCheck".equals(instruction)) {
-            dbfluteTaskList = getSchemaSyncCheckCommandList();
-        } else if ("replaceSchema".equals(instruction)) {
-            dbfluteTaskList = getReplaceSchemaCommandList();
-        } else {
-            throw new IllegalStateException("Unknown task: " + instruction);
-        }
-        return dbfluteTaskList;
-    }
-
-    public List<ProcessBuilder> getDocCommandList() {
-        List<List<String>> commandList = new ArrayList<List<String>>();
-        commandList.add(Arrays.asList("manage", "jdbc"));
-        commandList.add(Arrays.asList("manage", "doc"));
-        return toProcessBuilderList(commandList);
-    }
-
-    public List<ProcessBuilder> getLoadDataReverseCommandList() {
-        List<List<String>> commandList = new ArrayList<List<String>>();
-        commandList.add(Arrays.asList("manage", "jdbc"));
-        commandList.add(Arrays.asList("manage", "load-data-reverse"));
-        return toProcessBuilderList(commandList);
-    }
-
-    public List<ProcessBuilder> getSchemaSyncCheckCommandList() {
-        List<List<String>> commandList = new ArrayList<List<String>>();
-        commandList.add(Arrays.asList("manage", "schema-sync-check"));
-        return toProcessBuilderList(commandList);
-    }
-
-    public List<ProcessBuilder> getReplaceSchemaCommandList() {
-        List<List<String>> commandList = new ArrayList<List<String>>();
-        commandList.add(Arrays.asList("manage", "replace-schema"));
+    private List<ProcessBuilder> prepareTaskList(String taskExp) {
+        List<String> taskList = Srl.splitListTrimmed(taskExp, ",");
+        List<List<String>> commandList = taskList.stream().map(task -> {
+            return Arrays.asList("manage", task);
+        }).collect(Collectors.toList());
         return toProcessBuilderList(commandList);
     }
 
@@ -136,7 +108,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Process
     //                                                                             =======
-    private int executeCommand(ProcessBuilder processBuilder, OutputStream outputStream) {
+    private int executeCommand(ProcessBuilder processBuilder, CommandOutputStreamProvider streamProvider) {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
@@ -145,24 +117,26 @@ public class TaskExecutionLogic {
             throw new IllegalStateException(e);
         }
         int result = 0;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
+                ; OutputStream ous = streamProvider.provide() // for e.g. GUI screen
+        ) {
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
                     break;
                 }
 
-                IOUtils.write(line, outputStream);
-                // TODO jflute intro: LF? (2016/07/14)
-                IOUtils.write(System.getProperty("line.separator"), outputStream);
-                outputStream.flush();
+                IOUtils.write(line, ous);
+                IOUtils.write("\n", ous); // LF fixedly
+                ous.flush();
 
                 if (line.equals("BUILD FAILED")) {
                     result = 1;
                 }
             }
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            String msg = "Failed to execute the command: " + process;
+            throw new IllegalStateException(msg, e);
         }
         if (result == 0) {
             result = process.exitValue();

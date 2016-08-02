@@ -15,30 +15,21 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
-import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
-import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.mylasta.exception.DfpropFileNotFoundException;
-import org.lastaflute.core.exception.LaSystemException;
-import org.lastaflute.web.Execute;
-import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.lastaflute.web.Execute;
+import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author deco
  */
 public class DfpropAction extends IntroBaseAction {
-
-    // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static final String UTF8 = "UTF-8";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -55,32 +46,13 @@ public class DfpropAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                  list
     //                                                  ----
-    @Execute(urlPattern ="{}/@word")
+    @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<DfpropBean>> list(String project) {
-        File[] dfpropFiles = findDfpropFiles(project);
-        List<DfpropBean> beans = mappingToBeans(dfpropFiles);
+        List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(project);
+        List<DfpropBean> beans = dfpropFileList.stream()
+                .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), dfpropPhysicalLogic.readDfpropText(dfpropFile)))
+                .collect(Collectors.toList());
         return asJson(beans);
-    }
-
-    private File[] findDfpropFiles(String project) {
-        File dfpropDir = new File(dfpropPhysicalLogic.buildDfpropDirPath(project));
-        File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
-        if (dfpropFiles == null || dfpropFiles.length == 0) {
-            throw new DfpropFileNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath());
-        }
-        return dfpropFiles;
-    }
-
-    private List<DfpropBean> mappingToBeans(File[] dfpropFiles) {
-        return Stream.of(dfpropFiles).map(dfpropFile -> {
-            String fileText;
-            try {
-                fileText = FileUtils.readFileToString(dfpropFile, UTF8);
-            } catch (IOException e) {
-                throw new LaSystemException("Cannot read the file: " + dfpropFile);
-            }
-            return new DfpropBean(dfpropFile.getName(), fileText);
-        }).collect(Collectors.toList());
     }
 
     // -----------------------------------------------------
@@ -89,26 +61,8 @@ public class DfpropAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
-
-        File dfpropFile = findDfpropFile(project, fileName);
-        writeDfpropFile(body.content, dfpropFile);
-
+        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(project, fileName);
+        dfpropPhysicalLogic.writeDfpropFile(body.content, dfpropFile);
         return JsonResponse.asEmptyBody();
-    }
-
-    private File findDfpropFile(String project, String fileName) {
-        File dfpropFile = new File(dfpropPhysicalLogic.buildDfpropFilePath(project, fileName));
-        if (!dfpropFile.isFile()) {
-            throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
-        }
-        return dfpropFile;
-    }
-
-    private void writeDfpropFile(String content, File dfpropFile) {
-        try {
-            FileUtils.write(dfpropFile, content, UTF8);
-        } catch (IOException e) {
-            throw new LaSystemException("Cannot write the file: " + dfpropFile);
-        }
     }
 }

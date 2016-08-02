@@ -30,5 +30,24 @@ map:{
         ; map:{ code=seasar; name=seasar; comment=Seasar }
         ; map:{ code=cdi; name=cdi; comment=CDI }
     }
+    ; IntroInstruction = list:{
+        ; map:{ topComment=Instruction for DBFlute task ; codeType=String }
+        ; map:{
+            ; code=doc; name=Doc; comment=Doc task
+            ; subItemMap = map:{ tasks = jdbc,doc }
+        }
+        ; map:{
+            ; code=loadDataReverse; name=LoadDataReverse; comment=LoadDataReverse task
+            ; subItemMap = map:{ tasks = jdbc,load-data-reverse }
+        }
+        ; map:{
+            ; code=schemaSyncCheck; name=SchemaSyncCheck; comment=SchemaSyncCheck task
+            ; subItemMap = map:{ tasks = schema-sync-check }
+        }
+        ; map:{
+            ; code=replaceSchema; name=ReplaceSchema; comment=ReplaceSchema task
+            ; subItemMap = map:{ tasks = replace-schema }
+        }
+    }
 }
 # ----------------/

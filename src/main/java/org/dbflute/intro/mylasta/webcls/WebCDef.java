@@ -187,12 +187,118 @@ public interface WebCDef extends Classification {
         @Override public String toString() { return code(); }
     }
 
+    /**
+     * Instruction for DBFlute task
+     */
+    public enum IntroInstruction implements WebCDef {
+        /** Doc: Doc task */
+        Doc("doc", "Doc", EMPTY_SISTERS)
+        ,
+        /** LoadDataReverse: LoadDataReverse task */
+        LoadDataReverse("loadDataReverse", "LoadDataReverse", EMPTY_SISTERS)
+        ,
+        /** SchemaSyncCheck: SchemaSyncCheck task */
+        SchemaSyncCheck("schemaSyncCheck", "SchemaSyncCheck", EMPTY_SISTERS)
+        ,
+        /** ReplaceSchema: ReplaceSchema task */
+        ReplaceSchema("replaceSchema", "ReplaceSchema", EMPTY_SISTERS)
+        ;
+        private static final Map<String, IntroInstruction> _codeValueMap = new HashMap<String, IntroInstruction>();
+        static {
+            for (IntroInstruction value : values()) {
+                _codeValueMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+            }
+        }
+        private static final Map<String, Map<String, Object>> _subItemMapMap = new HashMap<String, Map<String, Object>>();
+        static {
+            {
+                Map<String, Object> subItemMap = new HashMap<String, Object>();
+                subItemMap.put("tasks", "jdbc,doc");
+                _subItemMapMap.put(Doc.code(), Collections.unmodifiableMap(subItemMap));
+            }
+            {
+                Map<String, Object> subItemMap = new HashMap<String, Object>();
+                subItemMap.put("tasks", "jdbc,load-data-reverse");
+                _subItemMapMap.put(LoadDataReverse.code(), Collections.unmodifiableMap(subItemMap));
+            }
+            {
+                Map<String, Object> subItemMap = new HashMap<String, Object>();
+                subItemMap.put("tasks", "schema-sync-check");
+                _subItemMapMap.put(SchemaSyncCheck.code(), Collections.unmodifiableMap(subItemMap));
+            }
+            {
+                Map<String, Object> subItemMap = new HashMap<String, Object>();
+                subItemMap.put("tasks", "replace-schema");
+                _subItemMapMap.put(ReplaceSchema.code(), Collections.unmodifiableMap(subItemMap));
+            }
+        }
+        private String _code; private String _alias; private Set<String> _sisterSet;
+        private IntroInstruction(String code, String alias, String[] sisters)
+        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        public String code() { return _code; } public String alias() { return _alias; }
+        public Set<String> sisterSet() { return _sisterSet; }
+        public Map<String, Object> subItemMap() { return _subItemMapMap.get(code()); }
+        public ClassificationMeta meta() { return WebCDef.DefMeta.IntroInstruction; }
+
+        public String tasks() {
+            return (String)subItemMap().get("tasks");
+        }
+
+        public boolean inGroup(String groupName) {
+            return false;
+        }
+
+        /**
+         * Get the classification by the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
+         * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
+         */
+        public static IntroInstruction codeOf(Object code) {
+            if (code == null) { return null; }
+            if (code instanceof IntroInstruction) { return (IntroInstruction)code; }
+            return _codeValueMap.get(code.toString().toLowerCase());
+        }
+
+        /**
+         * Get the classification by the name (also called 'value' in ENUM world).
+         * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
+         * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         */
+        public static IntroInstruction nameOf(String name) {
+            if (name == null) { return null; }
+            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
+        }
+
+        /**
+         * Get the list of all classification elements. (returns new copied list)
+         * @return The snapshot list of all classification elements. (NotNull)
+         */
+        public static List<IntroInstruction> listAll() {
+            return new ArrayList<IntroInstruction>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         */
+        public static List<IntroInstruction> groupOf(String groupName) {
+            return new ArrayList<IntroInstruction>(4);
+        }
+
+        @Override public String toString() { return code(); }
+    }
+
     public enum DefMeta implements ClassificationMeta {
         /** TargetLanguage for DBFlute */
         TargetLanguage
         ,
         /** TargetContainer for DBFlute */
         TargetContainer
+        ,
+        /** Instruction for DBFlute task */
+        IntroInstruction
         ;
         public String classificationName() {
             return name(); // same as definition name
@@ -201,24 +307,28 @@ public interface WebCDef extends Classification {
         public Classification codeOf(Object code) {
             if ("TargetLanguage".equals(name())) { return WebCDef.TargetLanguage.codeOf(code); }
             if ("TargetContainer".equals(name())) { return WebCDef.TargetContainer.codeOf(code); }
+            if ("IntroInstruction".equals(name())) { return WebCDef.IntroInstruction.codeOf(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public Classification nameOf(String name) {
             if ("TargetLanguage".equals(name())) { return WebCDef.TargetLanguage.valueOf(name); }
             if ("TargetContainer".equals(name())) { return WebCDef.TargetContainer.valueOf(name); }
+            if ("IntroInstruction".equals(name())) { return WebCDef.IntroInstruction.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listAll() {
             if ("TargetLanguage".equals(name())) { return toClassificationList(WebCDef.TargetLanguage.listAll()); }
             if ("TargetContainer".equals(name())) { return toClassificationList(WebCDef.TargetContainer.listAll()); }
+            if ("IntroInstruction".equals(name())) { return toClassificationList(WebCDef.IntroInstruction.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> groupOf(String groupName) {
             if ("TargetLanguage".equals(name())) { return toClassificationList(WebCDef.TargetLanguage.groupOf(groupName)); }
             if ("TargetContainer".equals(name())) { return toClassificationList(WebCDef.TargetContainer.groupOf(groupName)); }
+            if ("IntroInstruction".equals(name())) { return toClassificationList(WebCDef.IntroInstruction.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -230,12 +340,14 @@ public interface WebCDef extends Classification {
         public ClassificationCodeType codeType() {
             if ("TargetLanguage".equals(name())) { return ClassificationCodeType.String; }
             if ("TargetContainer".equals(name())) { return ClassificationCodeType.String; }
+            if ("IntroInstruction".equals(name())) { return ClassificationCodeType.String; }
             return ClassificationCodeType.String; // as default
         }
 
         public ClassificationUndefinedHandlingType undefinedHandlingType() {
             if ("TargetLanguage".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
             if ("TargetContainer".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
+            if ("IntroInstruction".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 
