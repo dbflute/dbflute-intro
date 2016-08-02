@@ -19,28 +19,24 @@ import org.dbflute.jetty.JettyBoot;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class IntroBoot {
 
+    // TODO jflute intro: default port (2016/08/02)
     protected static final int DEFAULT_PORT = 9000;
 
     public static void main(String[] args) {
-        JettyBoot jettyBoot = new JettyBoot(getPort(), "dbflute-intro");
-        jettyBoot.asDevelopment();
+        JettyBoot boot = new JettyBoot(getPort(), "dbflute-intro");
+        // TODO jflute intro: development? (2016/08/02)
+        boot.asDevelopment();
         if (Boolean.getBoolean("browseOnDesktop")) {
-            jettyBoot.browseOnDesktop();
+            boot.browseOnDesktop();
         }
-        jettyBoot.bootAwait();
+        boot.bootAwait();
     }
 
     private static int getPort() {
-        String port = System.getProperty("port");
-        if (port != null) {
-            try {
-                return Integer.parseInt(port);
-            } catch (NumberFormatException ignore) {
-            }
-        }
-        return DEFAULT_PORT;
+        return Integer.parseInt(System.getProperty("port", String.valueOf(DEFAULT_PORT)));
     }
 }
