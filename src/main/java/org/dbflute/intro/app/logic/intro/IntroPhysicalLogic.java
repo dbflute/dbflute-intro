@@ -52,7 +52,11 @@ public class IntroPhysicalLogic {
         return toDBFluteClientPath(project) + "/" + resource;
     }
 
+    public String toDfpropDirPath(String project) {
+        return toDBFluteClientResourcePath(project, "dfprop");
+    }
+
     public String toDocumentOutputDirPath(String project) {
-        return toDBFluteClientResourcePath(project, "/output/doc");
+        return toDBFluteClientResourcePath(project, "output/doc");
     }
 }

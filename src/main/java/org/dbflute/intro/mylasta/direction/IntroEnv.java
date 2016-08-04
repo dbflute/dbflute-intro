@@ -47,6 +47,21 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. /tmp/lastaflute/dbfluteintro */
     String LOG_FILE_BASEDIR = "log.file.basedir";
 
+    /** The key of the configuration. e.g. org.h2.Driver */
+    String JDBC_DRIVER = "jdbc.driver";
+
+    /** The key of the configuration. e.g. jdbc:h2:file:$classes(org.dbflute.intro.dbflute.allcommon.DBCurrent.class)/../../etc/introdb/introdb */
+    String JDBC_URL = "jdbc.url";
+
+    /** The key of the configuration. e.g. introdb */
+    String JDBC_USER = "jdbc.user";
+
+    /** The key of the configuration. e.g. introdb */
+    String JDBC_PASSWORD = "jdbc.password";
+
+    /** The key of the configuration. e.g. 10 */
+    String JDBC_CONNECTION_POOLING_SIZE = "jdbc.connection.pooling.size";
+
     /**
      * Get the value of property as {@link String}.
      * @param propertyKey The key of the property. (NotNull)
@@ -153,6 +168,55 @@ public interface IntroEnv {
     String getLogFileBasedir();
 
     /**
+     * Get the value for the key 'jdbc.driver'. <br>
+     * The value is, e.g. org.h2.Driver <br>
+     * comment: The driver FQCN to connect database for JDBC
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getJdbcDriver();
+
+    /**
+     * Get the value for the key 'jdbc.url'. <br>
+     * The value is, e.g. jdbc:h2:file:$classes(org.dbflute.intro.dbflute.allcommon.DBCurrent.class)/../../etc/introdb/introdb <br>
+     * comment: The URL of database connection for JDBC
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getJdbcUrl();
+
+    /**
+     * Get the value for the key 'jdbc.user'. <br>
+     * The value is, e.g. introdb <br>
+     * comment: The user of database connection for JDBC
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getJdbcUser();
+
+    /**
+     * Get the value for the key 'jdbc.password'. <br>
+     * The value is, e.g. introdb <br>
+     * comment: @Secure The password of database connection for JDBC
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getJdbcPassword();
+
+    /**
+     * Get the value for the key 'jdbc.connection.pooling.size'. <br>
+     * The value is, e.g. 10 <br>
+     * comment: The (max) pooling size of Seasar's connection pool
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getJdbcConnectionPoolingSize();
+
+    /**
+     * Get the value for the key 'jdbc.connection.pooling.size' as {@link Integer}. <br>
+     * The value is, e.g. 10 <br>
+     * comment: The (max) pooling size of Seasar's connection pool
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     * @throws NumberFormatException When the property is not integer.
+     */
+    Integer getJdbcConnectionPoolingSizeAsInteger();
+
+    /**
      * The simple implementation for configuration.
      * @author FreeGen
      */
@@ -203,6 +267,30 @@ public interface IntroEnv {
 
         public String getLogFileBasedir() {
             return get(IntroEnv.LOG_FILE_BASEDIR);
+        }
+
+        public String getJdbcDriver() {
+            return get(IntroEnv.JDBC_DRIVER);
+        }
+
+        public String getJdbcUrl() {
+            return get(IntroEnv.JDBC_URL);
+        }
+
+        public String getJdbcUser() {
+            return get(IntroEnv.JDBC_USER);
+        }
+
+        public String getJdbcPassword() {
+            return get(IntroEnv.JDBC_PASSWORD);
+        }
+
+        public String getJdbcConnectionPoolingSize() {
+            return get(IntroEnv.JDBC_CONNECTION_POOLING_SIZE);
+        }
+
+        public Integer getJdbcConnectionPoolingSizeAsInteger() {
+            return getAsInteger(IntroEnv.JDBC_CONNECTION_POOLING_SIZE);
         }
     }
 }

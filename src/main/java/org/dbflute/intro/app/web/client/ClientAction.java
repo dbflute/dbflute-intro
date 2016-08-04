@@ -37,6 +37,7 @@ import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
+import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
 import org.dbflute.intro.mylasta.webcls.WebCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
@@ -263,11 +264,16 @@ public class ClientAction extends IntroBaseAction {
 
     // TODO jflute intro: independent (2016/07/19)
     @Execute
-    public JsonResponse<Void> task(String project, WebCDef.IntroInstruction instruction, OptionalThing<String> env) {
+    public JsonResponse<Void> task(String project, WebCDef.TaskInstruction instruction, OptionalThing<String> env) {
+        List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
+        HttpServletResponse response = prepareTaskResponse();
+        taskExecutionLogic.execute(project, taskTypeList, env, () -> response.getOutputStream());
+        return JsonResponse.asEmptyBody();
+    }
+
+    private HttpServletResponse prepareTaskResponse() {
         HttpServletResponse response = responseManager.getResponse();
         response.setContentType("text/plain; charset=UTF-8");
-        // TODO jflute tasks OK? (2016/08/02)
-        taskExecutionLogic.execute(project, instruction.tasks(), env, () -> response.getOutputStream());
-        return JsonResponse.asEmptyBody();
+        return response;
     }
 }

@@ -26,6 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.dbflute.infra.dfprop.DfPropFile;
@@ -37,6 +39,9 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
  */
 public class ClientInfoLogic {
 
+    @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
+    
     // ===================================================================================
     //                                                                        Project List
     //                                                                        ============
@@ -58,9 +63,10 @@ public class ClientInfoLogic {
     // ===================================================================================
     //                                                                    Environment List
     //                                                                    ================
+    // TODO jflute intro: unused? (2016/08/02)
     public List<String> getEnvList(String project) {
         List<String> envList = new ArrayList<String>();
-        File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
+        File dfpropDir = new File(introPhysicalLogic.toDfpropDirPath(project));
         for (File file : dfpropDir.listFiles()) {
             if (file.isDirectory() && file.getName().startsWith("schemaSyncCheck_")) {
                 envList.add(file.getName().substring("schemaSyncCheck_".length()));
@@ -75,7 +81,7 @@ public class ClientInfoLogic {
     //                                                                       =============
     public boolean existsReplaceSchemaFile(String project) {
         boolean exists = false;
-        final File playsqlDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/playsql");
+        final File playsqlDir = new File(introPhysicalLogic.toDBFluteClientResourcePath(project, "playsql"));
         for (File file : playsqlDir.listFiles()) {
             if (file.isFile() && file.getName().startsWith("replace-schema") && file.getName().endsWith(".sql")) {
                 try {

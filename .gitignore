@@ -33,6 +33,7 @@ classes/
 # Middleware
 localdb/
 localap/
+etc/introdb
 etc/testdb
 
 # DBFlute

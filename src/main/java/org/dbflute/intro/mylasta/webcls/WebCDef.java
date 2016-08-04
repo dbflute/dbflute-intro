@@ -36,161 +36,9 @@ public interface WebCDef extends Classification {
     Map<String, Object> EMPTY_SUB_ITEM_MAP = (Map<String, Object>)Collections.EMPTY_MAP;
 
     /**
-     * TargetLanguage for DBFlute
-     */
-    public enum TargetLanguage implements WebCDef {
-        /** java: Java */
-        java("java", "java", EMPTY_SISTERS)
-        ,
-        /** csharp: CSharp */
-        csharp("csharp", "csharp", EMPTY_SISTERS)
-        ,
-        /** scala: Scala */
-        scala("scala", "scala", EMPTY_SISTERS)
-        ;
-        private static final Map<String, TargetLanguage> _codeValueMap = new HashMap<String, TargetLanguage>();
-        static {
-            for (TargetLanguage value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
-            }
-        }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private TargetLanguage(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
-        public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
-        public Map<String, Object> subItemMap() { return EMPTY_SUB_ITEM_MAP; }
-        public ClassificationMeta meta() { return WebCDef.DefMeta.TargetLanguage; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
-        /**
-         * Get the classification by the code. (CaseInsensitive)
-         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
-         * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
-         */
-        public static TargetLanguage codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof TargetLanguage) { return (TargetLanguage)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
-        }
-
-        /**
-         * Get the classification by the name (also called 'value' in ENUM world).
-         * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
-         * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
-         */
-        public static TargetLanguage nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
-        /**
-         * Get the list of all classification elements. (returns new copied list)
-         * @return The snapshot list of all classification elements. (NotNull)
-         */
-        public static List<TargetLanguage> listAll() {
-            return new ArrayList<TargetLanguage>(Arrays.asList(values()));
-        }
-
-        /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
-         * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
-         */
-        public static List<TargetLanguage> groupOf(String groupName) {
-            return new ArrayList<TargetLanguage>(4);
-        }
-
-        @Override public String toString() { return code(); }
-    }
-
-    /**
-     * TargetContainer for DBFlute
-     */
-    public enum TargetContainer implements WebCDef {
-        /** lasta_di: Lasta Di */
-        lasta_di("lasta_di", "lasta_di", EMPTY_SISTERS)
-        ,
-        /** spring: Spring Framework */
-        spring("spring", "spring", EMPTY_SISTERS)
-        ,
-        /** guice: Google Guice */
-        guice("guice", "guice", EMPTY_SISTERS)
-        ,
-        /** seasar: Seasar */
-        seasar("seasar", "seasar", EMPTY_SISTERS)
-        ,
-        /** cdi: CDI */
-        cdi("cdi", "cdi", EMPTY_SISTERS)
-        ;
-        private static final Map<String, TargetContainer> _codeValueMap = new HashMap<String, TargetContainer>();
-        static {
-            for (TargetContainer value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
-            }
-        }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private TargetContainer(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
-        public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
-        public Map<String, Object> subItemMap() { return EMPTY_SUB_ITEM_MAP; }
-        public ClassificationMeta meta() { return WebCDef.DefMeta.TargetContainer; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
-        /**
-         * Get the classification by the code. (CaseInsensitive)
-         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
-         * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
-         */
-        public static TargetContainer codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof TargetContainer) { return (TargetContainer)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
-        }
-
-        /**
-         * Get the classification by the name (also called 'value' in ENUM world).
-         * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
-         * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
-         */
-        public static TargetContainer nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
-        /**
-         * Get the list of all classification elements. (returns new copied list)
-         * @return The snapshot list of all classification elements. (NotNull)
-         */
-        public static List<TargetContainer> listAll() {
-            return new ArrayList<TargetContainer>(Arrays.asList(values()));
-        }
-
-        /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
-         * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
-         */
-        public static List<TargetContainer> groupOf(String groupName) {
-            return new ArrayList<TargetContainer>(4);
-        }
-
-        @Override public String toString() { return code(); }
-    }
-
-    /**
      * Instruction for DBFlute task
      */
-    public enum IntroInstruction implements WebCDef {
+    public enum TaskInstruction implements WebCDef {
         /** Doc: Doc task */
         Doc("doc", "Doc", EMPTY_SISTERS)
         ,
@@ -203,9 +51,9 @@ public interface WebCDef extends Classification {
         /** ReplaceSchema: ReplaceSchema task */
         ReplaceSchema("replaceSchema", "ReplaceSchema", EMPTY_SISTERS)
         ;
-        private static final Map<String, IntroInstruction> _codeValueMap = new HashMap<String, IntroInstruction>();
+        private static final Map<String, TaskInstruction> _codeValueMap = new HashMap<String, TaskInstruction>();
         static {
-            for (IntroInstruction value : values()) {
+            for (TaskInstruction value : values()) {
                 _codeValueMap.put(value.code().toLowerCase(), value);
                 for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
             }
@@ -214,35 +62,35 @@ public interface WebCDef extends Classification {
         static {
             {
                 Map<String, Object> subItemMap = new HashMap<String, Object>();
-                subItemMap.put("tasks", "jdbc,doc");
+                subItemMap.put("relatedTasks", "jdbc,doc");
                 _subItemMapMap.put(Doc.code(), Collections.unmodifiableMap(subItemMap));
             }
             {
                 Map<String, Object> subItemMap = new HashMap<String, Object>();
-                subItemMap.put("tasks", "jdbc,load-data-reverse");
+                subItemMap.put("relatedTasks", "jdbc,load_data_reverse");
                 _subItemMapMap.put(LoadDataReverse.code(), Collections.unmodifiableMap(subItemMap));
             }
             {
                 Map<String, Object> subItemMap = new HashMap<String, Object>();
-                subItemMap.put("tasks", "schema-sync-check");
+                subItemMap.put("relatedTasks", "schema_sync_check");
                 _subItemMapMap.put(SchemaSyncCheck.code(), Collections.unmodifiableMap(subItemMap));
             }
             {
                 Map<String, Object> subItemMap = new HashMap<String, Object>();
-                subItemMap.put("tasks", "replace-schema");
+                subItemMap.put("relatedTasks", "replace_schema");
                 _subItemMapMap.put(ReplaceSchema.code(), Collections.unmodifiableMap(subItemMap));
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;
-        private IntroInstruction(String code, String alias, String[] sisters)
+        private TaskInstruction(String code, String alias, String[] sisters)
         { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
         public Map<String, Object> subItemMap() { return _subItemMapMap.get(code()); }
-        public ClassificationMeta meta() { return WebCDef.DefMeta.IntroInstruction; }
+        public ClassificationMeta meta() { return WebCDef.DefMeta.TaskInstruction; }
 
-        public String tasks() {
-            return (String)subItemMap().get("tasks");
+        public String relatedTasks() {
+            return (String)subItemMap().get("relatedTasks");
         }
 
         public boolean inGroup(String groupName) {
@@ -254,9 +102,9 @@ public interface WebCDef extends Classification {
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static IntroInstruction codeOf(Object code) {
+        public static TaskInstruction codeOf(Object code) {
             if (code == null) { return null; }
-            if (code instanceof IntroInstruction) { return (IntroInstruction)code; }
+            if (code instanceof TaskInstruction) { return (TaskInstruction)code; }
             return _codeValueMap.get(code.toString().toLowerCase());
         }
 
@@ -265,7 +113,7 @@ public interface WebCDef extends Classification {
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
          */
-        public static IntroInstruction nameOf(String name) {
+        public static TaskInstruction nameOf(String name) {
             if (name == null) { return null; }
             try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
         }
@@ -274,8 +122,8 @@ public interface WebCDef extends Classification {
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<IntroInstruction> listAll() {
-            return new ArrayList<IntroInstruction>(Arrays.asList(values()));
+        public static List<TaskInstruction> listAll() {
+            return new ArrayList<TaskInstruction>(Arrays.asList(values()));
         }
 
         /**
@@ -283,52 +131,38 @@ public interface WebCDef extends Classification {
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
          */
-        public static List<IntroInstruction> groupOf(String groupName) {
-            return new ArrayList<IntroInstruction>(4);
+        public static List<TaskInstruction> groupOf(String groupName) {
+            return new ArrayList<TaskInstruction>(4);
         }
 
         @Override public String toString() { return code(); }
     }
 
     public enum DefMeta implements ClassificationMeta {
-        /** TargetLanguage for DBFlute */
-        TargetLanguage
-        ,
-        /** TargetContainer for DBFlute */
-        TargetContainer
-        ,
         /** Instruction for DBFlute task */
-        IntroInstruction
+        TaskInstruction
         ;
         public String classificationName() {
             return name(); // same as definition name
         }
 
         public Classification codeOf(Object code) {
-            if ("TargetLanguage".equals(name())) { return WebCDef.TargetLanguage.codeOf(code); }
-            if ("TargetContainer".equals(name())) { return WebCDef.TargetContainer.codeOf(code); }
-            if ("IntroInstruction".equals(name())) { return WebCDef.IntroInstruction.codeOf(code); }
+            if ("TaskInstruction".equals(name())) { return WebCDef.TaskInstruction.codeOf(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public Classification nameOf(String name) {
-            if ("TargetLanguage".equals(name())) { return WebCDef.TargetLanguage.valueOf(name); }
-            if ("TargetContainer".equals(name())) { return WebCDef.TargetContainer.valueOf(name); }
-            if ("IntroInstruction".equals(name())) { return WebCDef.IntroInstruction.valueOf(name); }
+            if ("TaskInstruction".equals(name())) { return WebCDef.TaskInstruction.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listAll() {
-            if ("TargetLanguage".equals(name())) { return toClassificationList(WebCDef.TargetLanguage.listAll()); }
-            if ("TargetContainer".equals(name())) { return toClassificationList(WebCDef.TargetContainer.listAll()); }
-            if ("IntroInstruction".equals(name())) { return toClassificationList(WebCDef.IntroInstruction.listAll()); }
+            if ("TaskInstruction".equals(name())) { return toClassificationList(WebCDef.TaskInstruction.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> groupOf(String groupName) {
-            if ("TargetLanguage".equals(name())) { return toClassificationList(WebCDef.TargetLanguage.groupOf(groupName)); }
-            if ("TargetContainer".equals(name())) { return toClassificationList(WebCDef.TargetContainer.groupOf(groupName)); }
-            if ("IntroInstruction".equals(name())) { return toClassificationList(WebCDef.IntroInstruction.groupOf(groupName)); }
+            if ("TaskInstruction".equals(name())) { return toClassificationList(WebCDef.TaskInstruction.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -338,16 +172,12 @@ public interface WebCDef extends Classification {
         }
 
         public ClassificationCodeType codeType() {
-            if ("TargetLanguage".equals(name())) { return ClassificationCodeType.String; }
-            if ("TargetContainer".equals(name())) { return ClassificationCodeType.String; }
-            if ("IntroInstruction".equals(name())) { return ClassificationCodeType.String; }
+            if ("TaskInstruction".equals(name())) { return ClassificationCodeType.String; }
             return ClassificationCodeType.String; // as default
         }
 
         public ClassificationUndefinedHandlingType undefinedHandlingType() {
-            if ("TargetLanguage".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
-            if ("TargetContainer".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
-            if ("IntroInstruction".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
+            if ("TaskInstruction".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 

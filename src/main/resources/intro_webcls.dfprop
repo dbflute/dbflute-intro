@@ -15,38 +15,24 @@
 # *The line that starts with '#' means comment-out.
 #
 map:{
-    # basically name/alias is same as code to keep native settings
-    ; TargetLanguage = list:{
-        ; map:{ topComment=TargetLanguage for DBFlute ; codeType=String }
-        ; map:{ code=java; name=java; comment=Java }
-        ; map:{ code=csharp; name=csharp; comment=CSharp }
-        ; map:{ code=scala; name=scala; comment=Scala }
-    }
-    ; TargetContainer = list:{
-        ; map:{ topComment=TargetContainer for DBFlute ; codeType=String }
-        ; map:{ code=lasta_di; name=lasta_di; comment=Lasta Di }
-        ; map:{ code=spring; name=spring; comment=Spring Framework }
-        ; map:{ code=guice; name=guice; comment=Google Guice }
-        ; map:{ code=seasar; name=seasar; comment=Seasar }
-        ; map:{ code=cdi; name=cdi; comment=CDI }
-    }
-    ; IntroInstruction = list:{
+    ; TaskInstruction = list:{
         ; map:{ topComment=Instruction for DBFlute task ; codeType=String }
+        # relatedTasks: task names as task type code (separated with comma)
         ; map:{
             ; code=doc; name=Doc; comment=Doc task
-            ; subItemMap = map:{ tasks = jdbc,doc }
+            ; subItemMap = map:{ relatedTasks = jdbc,doc }
         }
         ; map:{
             ; code=loadDataReverse; name=LoadDataReverse; comment=LoadDataReverse task
-            ; subItemMap = map:{ tasks = jdbc,load-data-reverse }
+            ; subItemMap = map:{ relatedTasks = jdbc,load_data_reverse }
         }
         ; map:{
             ; code=schemaSyncCheck; name=SchemaSyncCheck; comment=SchemaSyncCheck task
-            ; subItemMap = map:{ tasks = schema-sync-check }
+            ; subItemMap = map:{ relatedTasks = schema_sync_check }
         }
         ; map:{
             ; code=replaceSchema; name=ReplaceSchema; comment=ReplaceSchema task
-            ; subItemMap = map:{ tasks = replace-schema }
+            ; subItemMap = map:{ relatedTasks = replace_schema }
         }
     }
 }

@@ -106,10 +106,8 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     // ===================================================================================
     //                                                                                 DB
     //                                                                                ====
-
     @Override
     protected void prepareDbDirection(FwDbDirection direction) {
-
     }
 
     // ===================================================================================

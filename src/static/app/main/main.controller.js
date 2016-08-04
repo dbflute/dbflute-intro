@@ -136,15 +136,11 @@ angular.module('dbflute-intro')
         })
     };
     $scope.changeDatabase = function(clientBean) {
-        var databaseInfoDef = $scope.classificationMap["databaseInfoDefMap"][clientBean.database];
+        var databaseInfoDef = $scope.classificationMap["databaseTypeMap"][clientBean.database];
 
         clientBean.jdbcDriver = databaseInfoDef.driverName;
         clientBean.databaseBean.url = databaseInfoDef.urlTemplate;
-        clientBean.databaseBean.schema =  databaseInfoDef.defultSchema;
-        // "needJdbcDriverJar": false,
-        // "needSchema": false,
-        // "upperSchema": false,
-        // "assistInputUser": false,
+        clientBean.databaseBean.schema =  databaseInfoDef.defaultSchema;
     };
 
     $scope.downloadModal = function() {

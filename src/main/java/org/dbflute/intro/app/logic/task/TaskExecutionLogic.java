@@ -30,8 +30,8 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
-import org.dbflute.util.Srl;
 
 /**
  * @author p1us2er0
@@ -49,8 +49,9 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public boolean execute(String project, String taskExp, OptionalThing<String> env, CommandOutputStreamProvider streamProvider) {
-        final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskExp);
+    public boolean execute(String project, List<CDef.TaskType> taskTypeList, OptionalThing<String> env,
+            CommandOutputStreamProvider streamProvider) {
+        final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         return dbfluteTaskList.stream().allMatch(processBuilder -> {
             final Map<String, String> environment = processBuilder.environment();
             environment.put("pause_at_end", "n");
@@ -74,35 +75,35 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                           Task List
     //                                                                           =========
-    private List<ProcessBuilder> prepareTaskList(String taskExp) {
-        List<String> taskList = Srl.splitListTrimmed(taskExp, ",");
-        List<List<String>> commandList = taskList.stream().map(task -> {
-            return Arrays.asList("manage", task);
-        }).collect(Collectors.toList());
+    private List<ProcessBuilder> prepareTaskList(List<CDef.TaskType> taskTypeList) {
+        List<List<String>> commandList =
+                taskTypeList.stream().map(tp -> Arrays.asList("manage", tp.manageArg())).collect(Collectors.toList());
         return toProcessBuilderList(commandList);
     }
 
-    protected List<ProcessBuilder> toProcessBuilderList(List<List<String>> commandList) {
-        List<ProcessBuilder> processBuilderList = commandList.stream().filter(command -> !command.isEmpty()).map(command -> {
-            String onName = System.getProperty("os.name").toLowerCase();
-            List<String> list = new ArrayList<String>();
-            if (onName.startsWith("windows")) {
-                list.add("cmd");
-                list.add("/c");
-                list.add(command.get(0) + ".bat");
+    private List<ProcessBuilder> toProcessBuilderList(List<List<String>> commandList) {
+        return commandList.stream().filter(command -> !command.isEmpty()).map(command -> {
+            List<String> partsList = new ArrayList<String>();
+            if (isWindows()) {
+                partsList.add("cmd");
+                partsList.add("/c");
+                partsList.add(command.get(0) + ".bat");
             } else {
-                list.add("sh");
-                list.add(command.get(0) + ".sh");
+                partsList.add("sh");
+                partsList.add(command.get(0) + ".sh");
             }
 
             if (command.size() > 1) {
-                list.addAll(command.subList(1, command.size()));
+                partsList.addAll(command.subList(1, command.size()));
             }
 
-            return new ProcessBuilder(list);
+            return new ProcessBuilder(partsList);
         }).collect(Collectors.toList());
+    }
 
-        return processBuilderList;
+    private boolean isWindows() {
+        // TODO jflute intro: isWindows() util? (2016/08/02)
+        return System.getProperty("os.name").toLowerCase().startsWith("windows");
     }
 
     // ===================================================================================

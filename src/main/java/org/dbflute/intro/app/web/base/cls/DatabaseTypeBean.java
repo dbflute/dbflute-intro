@@ -13,15 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.client;
+package org.dbflute.intro.app.web.base.cls;
 
-import org.dbflute.intro.app.def.DatabaseInfoDef;
+import org.dbflute.intro.dbflute.exentity.ClsTargetDatabase;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class DatabaseInfoDefParam {
+public class DatabaseTypeBean {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -29,24 +29,24 @@ public class DatabaseInfoDefParam {
     private final String databaseName;
     private final String driverName;
     private final String urlTemplate;
-    private final String defultSchema;
-    private final boolean needSchema;
-    private final boolean needJdbcDriverJar;
-    private final boolean upperSchema;
-    private final boolean assistInputUser;
+    private final String defaultSchema;
+    private final boolean schemaRequired;
+    private final boolean schemaUpperCase;
+    private final boolean userInputAssist;
+    private final boolean embeddedJar;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DatabaseInfoDefParam(DatabaseInfoDef databaseInfoDef) {
+    public DatabaseTypeBean(ClsTargetDatabase databaseInfoDef) {
         this.databaseName = databaseInfoDef.getDatabaseName();
-        this.driverName = databaseInfoDef.getDriverName();
+        this.driverName = databaseInfoDef.getJdbcDriverFqcn();
         this.urlTemplate = databaseInfoDef.getUrlTemplate();
-        this.defultSchema = databaseInfoDef.getDefultSchema();
-        this.needSchema = databaseInfoDef.isNeedSchema();
-        this.needJdbcDriverJar = databaseInfoDef.isNeedJdbcDriverJar();
-        this.upperSchema = databaseInfoDef.isUpperSchema();
-        this.assistInputUser = databaseInfoDef.isAssistInputUser();
+        this.defaultSchema = databaseInfoDef.getDefaultSchema();
+        this.schemaRequired = databaseInfoDef.isSchemaRequiredFlgTrue();
+        this.schemaUpperCase = databaseInfoDef.isSchemaUpperCaseFlgTrue();
+        this.userInputAssist = databaseInfoDef.isUserInputAssistFlgTrue();
+        this.embeddedJar = databaseInfoDef.isEmbeddedJarFlgTrue();
     }
 
     // ===================================================================================
@@ -65,22 +65,22 @@ public class DatabaseInfoDefParam {
     }
 
     public String getDefultSchema() {
-        return defultSchema;
+        return defaultSchema;
     }
 
-    public boolean isNeedJdbcDriverJar() {
-        return needJdbcDriverJar;
+    public boolean isSchemaRequired() {
+        return schemaRequired;
     }
 
-    public boolean isNeedSchema() {
-        return needSchema;
+    public boolean isSchemaUpperCase() {
+        return schemaUpperCase;
     }
 
-    public boolean isUpperSchema() {
-        return upperSchema;
+    public boolean isUserInputAssist() {
+        return userInputAssist;
     }
 
-    public boolean isAssistInputUser() {
-        return assistInputUser;
+    public boolean isEmbeddedJar() {
+        return embeddedJar;
     }
 }

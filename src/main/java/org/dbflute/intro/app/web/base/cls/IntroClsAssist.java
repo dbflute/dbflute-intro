@@ -16,43 +16,75 @@
 package org.dbflute.intro.app.web.base.cls;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.def.DatabaseInfoDef;
-import org.dbflute.intro.app.logic.client.DatabaseInfoDefParam;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
+import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.intro.mylasta.webcls.WebCDef;
+import org.dbflute.util.DfStringUtil;
 
 /**
  * @author jflute
  */
 public class IntroClsAssist {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroConfig introConfig;
+    @Resource
+    private ClsTargetDatabaseBhv databaseBhv;
 
+    // ===================================================================================
+    //                                                                          Basic Info
+    //                                                                          ==========
     public Map<String, Map<?, ?>> getClassificationMap() {
         Map<String, Map<?, ?>> clsMap = new LinkedHashMap<String, Map<?, ?>>();
-
-        Map<String, String> targetLanguageMap = WebCDef.TargetLanguage.listAll()
-                .stream()
-                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.code(), (u, v) -> v, LinkedHashMap::new));
-        clsMap.put("targetLanguageMap", targetLanguageMap);
-
-        Map<String, String> targetContainerMap = WebCDef.TargetContainer.listAll()
-                .stream()
-                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.code(), (u, v) -> v, LinkedHashMap::new));
-        clsMap.put("targetContainerMap", targetContainerMap);
-
-        Map<String, DatabaseInfoDefParam> databaseInfoDefMap =
-                Stream.of(DatabaseInfoDef.values()).collect(Collectors.toMap(databaseInfoDef -> databaseInfoDef.getDatabaseName(),
-                        databaseInfoDef -> new DatabaseInfoDefParam(databaseInfoDef), (u, v) -> v, LinkedHashMap::new));
-        clsMap.put("databaseInfoDefMap", databaseInfoDefMap);
-
+        clsMap.put("databaseInfoDefMap", prepareDatabaseInfoDefMap());
+        clsMap.put("targetLanguageMap", prepareTargetLanguageMap());
+        clsMap.put("targetContainerMap", prepareTargetContainerMap());
         return clsMap;
     }
+
+    private Map<String, DatabaseTypeBean> prepareDatabaseInfoDefMap() {
+        return databaseBhv.selectList(cb -> {
+            cb.query().addOrderBy_DisplayOrder_Asc();
+        }).stream().collect(Collectors.toMap(db -> db.getDatabaseName(), db -> new DatabaseTypeBean(db), (u, v) -> v, LinkedHashMap::new));
+    }
+
+    private Map<String, String> prepareTargetLanguageMap() {
+        return CDef.TargetLanguage.listAll()
+                .stream()
+                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.code(), (u, v) -> v, LinkedHashMap::new));
+    }
+
+    private Map<String, String> prepareTargetContainerMap() {
+        return CDef.TargetContainer.listAll()
+                .stream()
+                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.code(), (u, v) -> v, LinkedHashMap::new));
+    }
+
+    // ===================================================================================
+    //                                                                    Task Instruction
+    //                                                                    ================
+    public List<TaskType> toTaskTypeList(WebCDef.TaskInstruction instruction) {
+        String relatedTasks = instruction.relatedTasks(); // e.g. 'jdbc,doc' when 'doc'
+        List<String> taskExpList = DfStringUtil.splitListTrimmed(relatedTasks, ",");
+        return taskExpList.stream().map(taskExp -> checkingTaskType(taskExp, CDef.TaskType.codeOf(taskExp))).collect(Collectors.toList());
+    }
+
+    private CDef.TaskType checkingTaskType(String taskExp, CDef.TaskType taskType) {
+        if (taskType == null) {
+            throw new IllegalStateException("Not found the task: taskExp=" + taskExp);
+        }
+        return taskType;
+    }
+
 }
