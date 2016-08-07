@@ -48,6 +48,7 @@ import org.lastaflute.web.servlet.request.ResponseManager;
 /**
  * @author p1us2er0
  * @author deco
+ * @author jflute
  */
 public class ClientAction extends IntroBaseAction {
 
@@ -91,7 +92,7 @@ public class ClientAction extends IntroBaseAction {
         List<String> projectList = clientInfoLogic.getProjectList();
         List<ClientDetailBean> beanList = projectList.stream().map(project -> {
             ClientParam clientParam = clientInfoLogic.convertDfpropToClientParam(project);
-            return convertToDetailBean(clientParam);
+            return mappingToDetailBean(clientParam);
         }).collect(Collectors.toList());
         return asJson(beanList);
     }
@@ -99,12 +100,11 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public JsonResponse<ClientDetailBean> detail(String project) {
         ClientParam clientParam = clientInfoLogic.convertDfpropToClientParam(project);
-        ClientDetailBean clientDetailBean = convertToDetailBean(clientParam);
+        ClientDetailBean clientDetailBean = mappingToDetailBean(clientParam);
         return asJson(clientDetailBean);
     }
 
-    protected ClientDetailBean convertToDetailBean(ClientParam clientParam) {
-        ClientDetailBean clientDetailBean = new ClientDetailBean();
+    protected ClientDetailBean mappingToDetailBean(ClientParam clientParam) {
         ClientBean clientBean = new ClientBean();
         clientBean.project = clientParam.getProject();
         clientBean.database = clientParam.getDatabase();
@@ -158,12 +158,13 @@ public class ClientAction extends IntroBaseAction {
             });
         });
 
-        clientDetailBean.clientBean = clientBean;
+        ClientDetailBean detailBean = new ClientDetailBean();
+        detailBean.clientBean = clientBean;
         String project = clientParam.getProject();
-        clientDetailBean.schemahtml = documentLogic.findDocumentFile(project, "schema").exists();
-        clientDetailBean.historyhtml = documentLogic.findDocumentFile(project, "history").exists();
-        clientDetailBean.replaceSchema = clientInfoLogic.existsReplaceSchemaFile(project);
-        return clientDetailBean;
+        detailBean.schemahtml = documentLogic.findDocumentFile(project, "schema").exists();
+        detailBean.historyhtml = documentLogic.findDocumentFile(project, "history").exists();
+        detailBean.replaceSchema = clientInfoLogic.existsReplaceSchemaFile(project);
+        return detailBean;
     }
 
     // -----------------------------------------------------

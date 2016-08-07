@@ -41,7 +41,7 @@ public class ClientInfoLogic {
 
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
-    
+
     // ===================================================================================
     //                                                                        Project List
     //                                                                        ============
@@ -153,13 +153,15 @@ public class ClientInfoLogic {
         if (map.get("replaceSchemaMap.dfprop") != null) {
             @SuppressWarnings("unchecked")
             Map<String, Object> additionalUserMap = (Map<String, Object>) map.get("replaceSchemaMap.dfprop").get("additionalUserMap");
-            @SuppressWarnings("unchecked")
-            Map<String, Object> systemUserDatabaseMap = (Map<String, Object>) additionalUserMap.get("system");
-            if (systemUserDatabaseMap != null) {
-                clientParam.getSystemUserDatabaseParam().setUrl((String) systemUserDatabaseMap.get("url"));
-                clientParam.getSystemUserDatabaseParam().setSchema((String) systemUserDatabaseMap.get("schema"));
-                clientParam.getSystemUserDatabaseParam().setUser((String) systemUserDatabaseMap.get("user"));
-                clientParam.getSystemUserDatabaseParam().setPassword((String) systemUserDatabaseMap.get("password"));
+            if (additionalUserMap != null) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> systemUserDatabaseMap = (Map<String, Object>) additionalUserMap.get("system");
+                if (systemUserDatabaseMap != null) {
+                    clientParam.getSystemUserDatabaseParam().setUrl((String) systemUserDatabaseMap.get("url"));
+                    clientParam.getSystemUserDatabaseParam().setSchema((String) systemUserDatabaseMap.get("schema"));
+                    clientParam.getSystemUserDatabaseParam().setUser((String) systemUserDatabaseMap.get("user"));
+                    clientParam.getSystemUserDatabaseParam().setPassword((String) systemUserDatabaseMap.get("password"));
+                }
             }
         }
         File extlibDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/extlib");

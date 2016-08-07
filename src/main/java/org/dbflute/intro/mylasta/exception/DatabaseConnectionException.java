@@ -19,27 +19,20 @@ import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.lastaflute.core.exception.LaApplicationException;
 
 /**
- * データベース接続例外クラス。
  * @author p1us2er0
+ * @author jflute
  */
 public class DatabaseConnectionException extends LaApplicationException {
 
-    /**
-     * 例外クラスを生成します。
-     * @param debugMsg デバッグメッセージ
-     */
+    private static final long serialVersionUID = 1L;
+
     public DatabaseConnectionException(String debugMsg) {
         super(debugMsg);
-        saveMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION, new Object[0]);
+        saveApplicationMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION);
     }
 
-    /**
-     * 例外クラスを生成します。
-     * @param debugMsg デバッグメッセージ
-     * @param cause 原因
-     */
     public DatabaseConnectionException(String debugMsg, Throwable cause) {
         super(debugMsg, cause);
-        saveMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION, new Object[0]);
+        saveApplicationMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION);
     }
 }

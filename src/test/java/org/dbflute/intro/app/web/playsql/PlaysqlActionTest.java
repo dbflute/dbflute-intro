@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.playsql;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.unit.IntroBaseTestCase;
+import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author deco
  */
-public class PlaysqlActionTest extends IntroBaseTestCase {
+public class PlaysqlActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
     //                                                                            Settings

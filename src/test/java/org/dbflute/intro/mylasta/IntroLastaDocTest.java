@@ -15,12 +15,12 @@
  */
 package org.dbflute.intro.mylasta;
 
-import org.dbflute.intro.unit.IntroBaseTestCase;
+import org.dbflute.intro.unit.UnitIntroTestCase;
 
 /**
  * @author t-awane
  */
-public class IntroLastaDocTest extends IntroBaseTestCase {
+public class IntroLastaDocTest extends UnitIntroTestCase {
 
     public void test_document() {
         saveLastaDocMeta();

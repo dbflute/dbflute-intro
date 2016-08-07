@@ -15,31 +15,44 @@
  */
 package org.dbflute.intro.unit;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.dbflute.utflute.lastaflute.WebContainerTestCase;
 import org.lastaflute.core.exception.LaSystemException;
-
-import java.io.File;
-import java.io.IOException;
+import org.lastaflute.core.json.JsonManager;
+import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author t-awane
  * @author deco
+ * @author jflute
  */
-public abstract class IntroBaseTestCase extends WebContainerTestCase {
+public abstract class UnitIntroTestCase extends WebContainerTestCase {
 
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    private static final String SRC_CLIENT_PATH = "dbflute_intro";
+    private static final String SRC_CLIENT_PATH = "dbflute_introdb";
 
     protected static final String TEST_CLIENT_PATH = "dbflute_testdb";
-
     protected static final String TEST_CLIENT_PROJECT = "testdb";
+
+    @Resource
+    private JsonManager jsonManager;
 
     // ===================================================================================
     //                                                                         Test Helper
     //                                                                         ===========
+    protected void showJson(JsonResponse<?> response) {
+        Object jsonBean = response.getJsonBean();
+        String json = jsonManager.toJson(jsonBean);
+        log(json);
+    }
+
     @Override
     protected File getProjectDir() {
         return getTestCaseBuildDir().getParentFile().getParentFile().getParentFile();

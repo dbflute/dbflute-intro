@@ -5,6 +5,7 @@ import org.lastaflute.core.exception.LaApplicationException;
 
 /**
  * @author deco
+ * @author jflute
  */
 public class DfpropFileNotFoundException extends LaApplicationException {
 
@@ -12,6 +13,6 @@ public class DfpropFileNotFoundException extends LaApplicationException {
 
     public DfpropFileNotFoundException(String debugMsg) {
         super(debugMsg);
-        saveMessage(IntroMessages.ERRORS_APP_DFPROP_FILE_NOT_FOUND);
+        saveApplicationMessage(IntroMessages.ERRORS_APP_DFPROP_FILE_NOT_FOUND);
     }
 }

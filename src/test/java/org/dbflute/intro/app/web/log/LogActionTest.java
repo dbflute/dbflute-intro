@@ -2,7 +2,7 @@ package org.dbflute.intro.app.web.log;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.unit.IntroBaseTestCase;
+import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author deco
  */
-public class LogActionTest extends IntroBaseTestCase {
+public class LogActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
     //                                                                          Definition

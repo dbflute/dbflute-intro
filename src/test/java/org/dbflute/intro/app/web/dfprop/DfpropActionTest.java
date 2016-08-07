@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.web.dfprop;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.unit.IntroBaseTestCase;
+import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author deco
  */
-public class DfpropActionTest extends IntroBaseTestCase {
+public class DfpropActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
     //                                                                            Settings

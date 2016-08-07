@@ -15,6 +15,14 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.intro.mylasta.bean.ErrorBean;
 import org.dbflute.optional.OptionalThing;
@@ -27,22 +35,16 @@ import org.lastaflute.core.message.MessageManager;
 import org.lastaflute.core.util.ContainerUtil;
 import org.lastaflute.web.api.ApiFailureHook;
 import org.lastaflute.web.api.ApiFailureResource;
-import org.lastaflute.web.exception.ForcedRequest403ForbiddenException;
-import org.lastaflute.web.exception.ForcedRequest404NotFoundException;
+import org.lastaflute.web.exception.Forced403ForbiddenException;
+import org.lastaflute.web.exception.Forced404NotFoundException;
 import org.lastaflute.web.exception.RequestJsonParseFailureException;
 import org.lastaflute.web.login.exception.LoginUnauthorizedException;
 import org.lastaflute.web.response.ApiResponse;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class IntroApiFailureHook implements ApiFailureHook {
 
@@ -66,11 +68,11 @@ public class IntroApiFailureHook implements ApiFailureHook {
 
     @Override
     public OptionalThing<ApiResponse> handleClientException(ApiFailureResource resource, RuntimeException cause) {
-        if (cause instanceof ForcedRequest403ForbiddenException) {
+        if (cause instanceof Forced403ForbiddenException) {
             Map<String, List<String>> messages = DfCollectionUtil.newHashMap();
             return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_FORBIDDEN));
         }
-        if (cause instanceof ForcedRequest404NotFoundException) {
+        if (cause instanceof Forced404NotFoundException) {
             Map<String, List<String>> messages = DfCollectionUtil.newHashMap();
             return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_NOT_FOUND));
         }
@@ -106,7 +108,7 @@ public class IntroApiFailureHook implements ApiFailureHook {
         }
 
         Map<String, List<String>> messages =
-                geMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
+                getMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
         return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_BAD_REQUEST));
     }
 
@@ -115,17 +117,17 @@ public class IntroApiFailureHook implements ApiFailureHook {
         IntroMessages introMessages = new IntroMessages();
         introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
         Map<String, List<String>> messages =
-                geMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
+                getMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
         return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
     }
 
-    protected ApiResponse createErrorResponse(Map<String, List<String>> messages, int httpStatus) {
+    private ApiResponse createErrorResponse(Map<String, List<String>> messages, int httpStatus) {
         ErrorBean errorBean = new ErrorBean();
         errorBean.setMessages(messages);
         return new JsonResponse<ErrorBean>(errorBean).httpStatus(httpStatus);
     }
 
-    protected MessageManager geMessageManager() {
+    private MessageManager getMessageManager() {
         return ContainerUtil.getComponent(MessageManager.class);
     }
 }

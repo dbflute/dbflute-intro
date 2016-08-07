@@ -17,71 +17,63 @@ package org.dbflute.intro.app.web.client;
 
 import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+
+import org.lastaflute.web.validation.Required;
+
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class ClientDetailBean {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    @Required
     public ClientBean clientBean;
-    public boolean schemahtml;
-    public boolean historyhtml;
-    public boolean replaceSchema;
+    @Required
+    public Boolean schemahtml;
+    @Required
+    public Boolean historyhtml;
+    @Required
+    public Boolean replaceSchema;
 
-    /**
-     * @author p1us2er0
-     */
     public static class ClientBean {
 
-        // ===================================================================================
-        //                                                                           Attribute
-        //                                                                           =========
+        @Required
         public String project;
-
+        @Required
         public String database;
-
+        @Required
         public String targetLanguage;
-
+        @Required
         public String targetContainer;
-
+        @Required
         public String packageBase;
-
+        @Required
         public String jdbcDriver;
 
         public DatabaseBean databaseBean;
-
         public DatabaseBean systemUserDatabaseBean;
 
-        /**
-         * @author p1us2er0
-         */
         public static class DatabaseBean {
 
-            // ===================================================================================
-            //                                                                           Attribute
-            //                                                                           =========
+            @Required
             public String url;
             public String schema;
+            @Required
             public String user;
             public String password;
         }
 
         public String jdbcDriverJarPath;
-
+        @Required
         public String dbfluteVersion;
-
         public OptionBean optionBean;
 
-        /**
-         * @author p1us2er0
-         */
         public static class OptionBean {
 
-            // ===================================================================================
-            //                                                                           Attribute
-            //                                                                           =========
             public boolean dbCommentOnAliasBasis = true;
             public String aliasDelimiterInDbComment = ":";
             public boolean checkColumnDefOrderDiff = true;
@@ -91,6 +83,7 @@ public class ClientDetailBean {
             public String procedureSynonymHandlingType = "INCLUDE";
         }
 
+        @NotNull
         public Map<String, DatabaseBean> schemaSyncCheckMap;
     }
 }
