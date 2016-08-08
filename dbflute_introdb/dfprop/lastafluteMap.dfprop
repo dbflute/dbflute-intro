@@ -34,7 +34,7 @@ map:{
     ; appMap = map:{
         ; intro = map:{
             ; path = ../../dbflute-intro
-            ; freeGenList = list:{ env ; config ; label ; message ; doc ; webcls }
+            ; freeGenList = list:{ env ; config ; label ; message ; doc ; appcls }
             ; propertiesHtmlList = list:{ env ; config ; label ; message }
         }
     }

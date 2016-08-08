@@ -28,7 +28,7 @@ ext {
 
             dbflute : '1.1.1',
             h2 : '1.4.192',
-            lastaflute : '0.8.3-RC2',
+            lastaflute : '0.8.3-RC7',
 
             slf4j : '1.7.18',
             logback : '1.1.6',

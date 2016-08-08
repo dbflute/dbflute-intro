@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.mylasta.webcls;
+package org.dbflute.intro.mylasta.appcls;
 
 import java.util.*;
 
@@ -23,10 +23,10 @@ import org.dbflute.jdbc.ClassificationMeta;
 import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
 
 /**
- * The definition of web classification.
+ * The definition of application classification.
  * @author FreeGen
  */
-public interface WebCDef extends Classification {
+public interface AppCDef extends Classification {
 
     /** The empty array for no sisters. */
     String[] EMPTY_SISTERS = new String[]{};
@@ -38,7 +38,7 @@ public interface WebCDef extends Classification {
     /**
      * Instruction for DBFlute task
      */
-    public enum TaskInstruction implements WebCDef {
+    public enum TaskInstruction implements AppCDef {
         /** Doc: Doc task */
         Doc("doc", "Doc", EMPTY_SISTERS)
         ,
@@ -87,7 +87,7 @@ public interface WebCDef extends Classification {
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
         public Map<String, Object> subItemMap() { return _subItemMapMap.get(code()); }
-        public ClassificationMeta meta() { return WebCDef.DefMeta.TaskInstruction; }
+        public ClassificationMeta meta() { return AppCDef.DefMeta.TaskInstruction; }
 
         public String relatedTasks() {
             return (String)subItemMap().get("relatedTasks");
@@ -147,22 +147,22 @@ public interface WebCDef extends Classification {
         }
 
         public Classification codeOf(Object code) {
-            if ("TaskInstruction".equals(name())) { return WebCDef.TaskInstruction.codeOf(code); }
+            if ("TaskInstruction".equals(name())) { return AppCDef.TaskInstruction.codeOf(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public Classification nameOf(String name) {
-            if ("TaskInstruction".equals(name())) { return WebCDef.TaskInstruction.valueOf(name); }
+            if ("TaskInstruction".equals(name())) { return AppCDef.TaskInstruction.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listAll() {
-            if ("TaskInstruction".equals(name())) { return toClassificationList(WebCDef.TaskInstruction.listAll()); }
+            if ("TaskInstruction".equals(name())) { return toClassificationList(AppCDef.TaskInstruction.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> groupOf(String groupName) {
-            if ("TaskInstruction".equals(name())) { return toClassificationList(WebCDef.TaskInstruction.groupOf(groupName)); }
+            if ("TaskInstruction".equals(name())) { return toClassificationList(AppCDef.TaskInstruction.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -181,9 +181,9 @@ public interface WebCDef extends Classification {
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 
-        public static WebCDef.DefMeta meta(String classificationName) { // instead of valueOf()
+        public static AppCDef.DefMeta meta(String classificationName) { // instead of valueOf()
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
-            if ("TaskInstruction".equalsIgnoreCase(classificationName)) { return WebCDef.DefMeta.TaskInstruction; }
+            if ("TaskInstruction".equalsIgnoreCase(classificationName)) { return AppCDef.DefMeta.TaskInstruction; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
         }
     }

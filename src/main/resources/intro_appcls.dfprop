@@ -1,7 +1,7 @@
 # /---------------------------------------------------------------------------
-# webcls: (NotRequired - Default map:{})
+# appcls: (NotRequired - Default map:{})
 #
-# The definition of classification.
+# The definition of application classification.
 #
 # Specification:
 # map: {

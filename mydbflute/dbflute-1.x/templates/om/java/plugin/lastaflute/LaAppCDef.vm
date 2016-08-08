@@ -28,7 +28,7 @@ import ${tableMap.allcommonPackage}.*;
 
 #set ($glCDef = "${request.className}")
 /**
- * The definition of web classification.
+ * The definition of application classification.
  * @author FreeGen
  */
 public interface ${glCDef} extends Classification {
@@ -196,7 +196,7 @@ public interface ${glCDef} extends Classification {
 
         /**
          * @param dbCls The DB classification to find. (NullAllowed: if null, returns empty) 
-         * @return The the web classification corresponding to the DB classification. (NotNull, EmptyAllowed: when null specified, not found)
+         * @return The the app classification corresponding to the DB classification. (NotNull, EmptyAllowed: when null specified, not found)
          */
         public static OptionalThing<${classificationName}> fromDBCls(${refClsElement.classificationType} dbCls) {
             String dbCode = dbCls != null ? dbCls.code() : null;
@@ -206,12 +206,12 @@ public interface ${glCDef} extends Classification {
         }
 
         /**
-         * @return The DB classification corresponding to the web classification. (NotNull, EmptyAllowed: when no-related to DB)
+         * @return The DB classification corresponding to the app classification. (NotNull, EmptyAllowed: when no-related to DB)
          */
         public OptionalThing<${refClsElement.classificationType}> toDBCls() {
-            String webCode = code();
-            return OptionalThing.ofNullable(${refClsElement.classificationType}.codeOf(webCode), () -> {
-                throw new IllegalStateException("Cannot convert ${classificationName} to ${refClsElement.classificationName} by the web code: " + webCode);
+            String appCode = code();
+            return OptionalThing.ofNullable(${refClsElement.classificationType}.codeOf(appCode), () -> {
+                throw new IllegalStateException("Cannot convert ${classificationName} to ${refClsElement.classificationName} by the app code: " + appCode);
             });
         }
 #end
