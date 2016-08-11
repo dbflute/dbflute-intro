@@ -23,14 +23,23 @@ import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author jflute
+ * @author deco
  */
 public class FileHandlingLogic {
-    
+
     public String readFile(File textFile) {
         try {
             return FileUtils.readFileToString(textFile, "UTF-8");
         } catch (IOException e) {
             throw new LaSystemException("Cannot read the file: " + textFile);
+        }
+    }
+
+    public void writeFile(String content, File dfpropFile) {
+        try {
+            FileUtils.write(dfpropFile, content, "UTF-8");
+        } catch (IOException e) {
+            throw new LaSystemException("Cannot write the file: " + dfpropFile);
         }
     }
 }

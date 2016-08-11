@@ -15,16 +15,16 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
+import org.dbflute.intro.app.logic.core.FileHandlingLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author deco
@@ -39,6 +39,8 @@ public class DfpropAction extends IntroBaseAction {
     //                                          ------------
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
+    @Resource
+    private FileHandlingLogic fileHandlingLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -50,7 +52,7 @@ public class DfpropAction extends IntroBaseAction {
     public JsonResponse<List<DfpropBean>> list(String project) {
         List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(project);
         List<DfpropBean> beans = dfpropFileList.stream()
-                .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), dfpropPhysicalLogic.readDfpropText(dfpropFile)))
+                .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), fileHandlingLogic.readFile(dfpropFile)))
                 .collect(Collectors.toList());
         return asJson(beans);
     }
@@ -61,8 +63,10 @@ public class DfpropAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
+
         File dfpropFile = dfpropPhysicalLogic.findDfpropFile(project, fileName);
-        dfpropPhysicalLogic.writeDfpropFile(body.content, dfpropFile);
+        fileHandlingLogic.writeFile(body.content, dfpropFile);
+
         return JsonResponse.asEmptyBody();
     }
 }

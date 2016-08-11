@@ -38,7 +38,6 @@ public class DfpropPhysicalLogic {
     //                                                                          Definition
     //                                                                          ==========
     private static final String DFPROP_DIR_PATH = "dfprop";
-    private static final String UTF8 = "UTF-8";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -59,8 +58,8 @@ public class DfpropPhysicalLogic {
     }
 
     // ===================================================================================
-    //                                                                           Find/Read
-    //                                                                           =========
+    //                                                                                Find
+    //                                                                                ====
     public File findDfpropFile(String project, String fileName) {
         final File dfpropFile = new File(buildDfpropFilePath(project, fileName));
         if (!dfpropFile.isFile()) {
@@ -76,26 +75,5 @@ public class DfpropPhysicalLogic {
             throw new DfpropFileNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath());
         }
         return Collections.unmodifiableList(Arrays.asList(dfpropFiles));
-    }
-
-    public String readDfpropText(File dfpropFile) {
-        String fileText;
-        try {
-            fileText = FileUtils.readFileToString(dfpropFile, UTF8);
-        } catch (IOException e) {
-            throw new LaSystemException("Cannot read the file: " + dfpropFile);
-        }
-        return fileText;
-    }
-
-    // ===================================================================================
-    //                                                                               Write
-    //                                                                               =====
-    public void writeDfpropFile(String content, File dfpropFile) {
-        try {
-            FileUtils.write(dfpropFile, content, UTF8);
-        } catch (IOException e) {
-            throw new LaSystemException("Cannot write the file: " + dfpropFile);
-        }
     }
 }

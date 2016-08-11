@@ -18,18 +18,45 @@ package org.dbflute.intro.app.logic.log;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author deco
  */
 public class LogPhysicalLogic {
 
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
     private static final String LOG_DIR_PATH = "log";
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
+    // ===================================================================================
+    //                                                                                Path
+    //                                                                                ====
     public String buildLogPath(String project) {
         return introPhysicalLogic.toDBFluteClientResourcePath(project, LOG_DIR_PATH);
     }
+
+    // ===================================================================================
+    //                                                                                Read
+    //                                                                                ====
+    public List<File> findLogFileAllList(String project) {
+        final File logDir = new File(buildLogPath(project));
+        final File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));
+        if (logFiles == null || logFiles.length == 0) {
+            return Collections.unmodifiableList(new ArrayList<>());
+        }
+        return Collections.unmodifiableList(Arrays.asList(logFiles));
+    }
+
 }
