@@ -47,13 +47,13 @@ public class IntroClsAssist {
     //                                                                          ==========
     public Map<String, Map<?, ?>> getClassificationMap() {
         Map<String, Map<?, ?>> clsMap = new LinkedHashMap<String, Map<?, ?>>();
-        clsMap.put("targetDatabaseMap", prepareDatabaseTypeMap());
+        clsMap.put("targetDatabaseMap", prepareTargetDatabaseMap());
         clsMap.put("targetLanguageMap", prepareTargetLanguageMap());
         clsMap.put("targetContainerMap", prepareTargetContainerMap());
         return clsMap;
     }
 
-    private Map<String, DatabaseTypeBean> prepareDatabaseTypeMap() {
+    private Map<String, DatabaseTypeBean> prepareTargetDatabaseMap() {
         return databaseBhv.selectList(cb -> {
             cb.query().addOrderBy_DisplayOrder_Asc();
         }).stream().collect(Collectors.toMap(db -> db.getDatabaseName(), db -> new DatabaseTypeBean(db), (u, v) -> v, LinkedHashMap::new));
@@ -62,13 +62,13 @@ public class IntroClsAssist {
     private Map<String, String> prepareTargetLanguageMap() {
         return CDef.TargetLanguage.listAll()
                 .stream()
-                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.code(), (u, v) -> v, LinkedHashMap::new));
+                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.alias(), (u, v) -> v, LinkedHashMap::new));
     }
 
     private Map<String, String> prepareTargetContainerMap() {
         return CDef.TargetContainer.listAll()
                 .stream()
-                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.code(), (u, v) -> v, LinkedHashMap::new));
+                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.alias(), (u, v) -> v, LinkedHashMap::new));
     }
 
     // ===================================================================================

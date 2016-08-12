@@ -18,7 +18,6 @@ package org.dbflute.intro.app.model.client;
 import java.util.Map;
 
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
-import org.dbflute.intro.app.model.client.basic.ProjectMeta;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model.client.basic;
+package org.dbflute.intro.app.model.client;
 
 import org.dbflute.optional.OptionalThing;
 
@@ -25,7 +25,7 @@ public class ProjectMeta {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String clientProject;
+    protected final String clientProject; // torque.project
     protected final String jdbcDriverJarPath; // path to extlib
     protected final String dbfluteVersion; // e.g. 1.1.1 (at _project.sh)
 
