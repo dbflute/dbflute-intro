@@ -136,7 +136,7 @@ angular.module('dbflute-intro')
         })
     };
     $scope.changeDatabase = function(clientBean) {
-        var databaseInfoDef = $scope.classificationMap["databaseTypeMap"][clientBean.database];
+        var databaseInfoDef = $scope.classificationMap["databaseTypeMap"][clientBean.databaseType];
 
         clientBean.jdbcDriver = databaseInfoDef.driverName;
         clientBean.databaseBean.url = databaseInfoDef.urlTemplate;

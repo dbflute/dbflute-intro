@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
-import org.dbflute.intro.app.logic.client.ClientParam;
+import org.dbflute.intro.app.logic.client.ClientModel;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.client.DatabaseParam;
 import org.dbflute.intro.app.logic.client.OptionParam;
@@ -38,7 +38,7 @@ import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
-import org.dbflute.intro.mylasta.webcls.WebCDef;
+import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
@@ -91,7 +91,7 @@ public class ClientAction extends IntroBaseAction {
     public JsonResponse<List<ClientDetailBean>> list() {
         List<String> projectList = clientInfoLogic.getProjectList();
         List<ClientDetailBean> beanList = projectList.stream().map(project -> {
-            ClientParam clientParam = clientInfoLogic.convertDfpropToClientParam(project);
+            ClientModel clientParam = clientInfoLogic.convertDfpropToClientParam(project);
             return mappingToDetailBean(clientParam);
         }).collect(Collectors.toList());
         return asJson(beanList);
@@ -99,17 +99,17 @@ public class ClientAction extends IntroBaseAction {
 
     @Execute
     public JsonResponse<ClientDetailBean> detail(String project) {
-        ClientParam clientParam = clientInfoLogic.convertDfpropToClientParam(project);
+        ClientModel clientParam = clientInfoLogic.convertDfpropToClientParam(project);
         ClientDetailBean clientDetailBean = mappingToDetailBean(clientParam);
         return asJson(clientDetailBean);
     }
 
-    protected ClientDetailBean mappingToDetailBean(ClientParam clientParam) {
+    protected ClientDetailBean mappingToDetailBean(ClientModel clientParam) {
         ClientBean clientBean = new ClientBean();
-        clientBean.project = clientParam.getProject();
-        clientBean.database = clientParam.getDatabase();
-        clientBean.targetLanguage = clientParam.getTargetLanguage();
-        clientBean.targetContainer = clientParam.getTargetContainer();
+        clientBean.projectName = clientParam.getProject();
+        clientBean.databaseType = clientParam.getDatabase();
+        clientBean.languageType = clientParam.getTargetLanguage();
+        clientBean.containerType = clientParam.getTargetContainer();
         clientBean.packageBase = clientParam.getPackageBase();
         clientBean.jdbcDriver = clientParam.getJdbcDriver();
 
@@ -173,7 +173,7 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientParam clientParam = convertToParam(clientCreateBody.clientBody);
+        ClientModel clientParam = convertToParam(clientCreateBody.clientBody);
         if (clientCreateBody.testConnection) {
             testConnection(clientParam);
         }
@@ -184,7 +184,7 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> update(ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientParam clientParam = convertToParam(clientCreateBody.clientBody);
+        ClientModel clientParam = convertToParam(clientCreateBody.clientBody);
         if (clientCreateBody.testConnection) {
             testConnection(clientParam);
         }
@@ -192,8 +192,8 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    protected ClientParam convertToParam(ClientBody clientBody) {
-        ClientParam clientParam = new ClientParam();
+    protected ClientModel convertToParam(ClientBody clientBody) {
+        ClientModel clientParam = new ClientModel();
         clientParam.setProject(clientBody.project);
         clientParam.setDatabase(clientBody.database);
         clientParam.setTargetLanguage(clientBody.targetLanguage);
@@ -249,7 +249,7 @@ public class ClientAction extends IntroBaseAction {
         return clientParam;
     }
 
-    private void testConnection(ClientParam clientParam) {
+    private void testConnection(ClientModel clientParam) {
         String jdbcDriverJarPath = clientParam.getJdbcDriverJarPath();
         String dbfluteVersion = clientParam.getDbfluteVersion();
         String jdbcDriver = clientParam.getJdbcDriver();
@@ -265,7 +265,7 @@ public class ClientAction extends IntroBaseAction {
 
     // TODO jflute intro: independent (2016/07/19)
     @Execute
-    public JsonResponse<Void> task(String project, WebCDef.TaskInstruction instruction, OptionalThing<String> env) {
+    public JsonResponse<Void> task(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         HttpServletResponse response = prepareTaskResponse();
         taskExecutionLogic.execute(project, taskTypeList, env, () -> response.getOutputStream());

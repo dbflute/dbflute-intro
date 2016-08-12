@@ -42,13 +42,13 @@ public class ClientDetailBean {
     public static class ClientBean {
 
         @Required
-        public String project;
+        public String projectName;
         @Required
-        public String database;
+        public String databaseType;
         @Required
-        public String targetLanguage;
+        public String languageType;
         @Required
-        public String targetContainer;
+        public String containerType;
         @Required
         public String packageBase;
         @Required

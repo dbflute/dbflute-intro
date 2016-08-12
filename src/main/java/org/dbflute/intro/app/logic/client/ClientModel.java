@@ -18,12 +18,11 @@ package org.dbflute.intro.app.logic.client;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// TODO jflute intro: Model? (2016/07/26)
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class ClientParam {
+public class ClientModel {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -48,8 +47,8 @@ public class ClientParam {
         return project;
     }
 
-    public void setProject(String projectName) {
-        this.project = projectName;
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getDatabase() {

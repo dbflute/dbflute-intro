@@ -1,0 +1,6 @@
+CONTAINER_CODE	CONTAINER_NAME	DISPLAY_ORDER
+lasta_di	Lasta Di	1
+spring	Spring Framework	2
+guice	Google Guice	3
+seasar	Seasar (S2Container)	4
+cdi	CDI	5

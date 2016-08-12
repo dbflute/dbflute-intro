@@ -30,31 +30,31 @@ import org.dbflute.intro.dbflute.exentity.*;
  * <pre>
  * [primary-key]
  *     CONTAINER_CODE
- * 
+ *
  * [column]
  *     CONTAINER_CODE, CONTAINER_NAME, DISPLAY_ORDER
- * 
+ *
  * [sequence]
  *     
- * 
+ *
  * [identity]
  *     
- * 
+ *
  * [version-no]
  *     
- * 
+ *
  * [foreign table]
  *     
- * 
+ *
  * [referrer table]
  *     
- * 
+ *
  * [foreign property]
  *     
- * 
+ *
  * [referrer property]
  *     
- * 
+ *
  * [get/set template]
  * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  * String containerCode = entity.getContainerCode();

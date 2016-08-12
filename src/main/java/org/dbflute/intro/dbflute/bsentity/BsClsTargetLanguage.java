@@ -30,31 +30,31 @@ import org.dbflute.intro.dbflute.exentity.*;
  * <pre>
  * [primary-key]
  *     LANGUAGE_CODE
- * 
+ *
  * [column]
  *     LANGUAGE_CODE, LANGUAGE_NAME, DISPLAY_ORDER
- * 
+ *
  * [sequence]
  *     
- * 
+ *
  * [identity]
  *     
- * 
+ *
  * [version-no]
  *     
- * 
+ *
  * [foreign table]
  *     
- * 
+ *
  * [referrer table]
  *     
- * 
+ *
  * [foreign property]
  *     
- * 
+ *
  * [referrer property]
  *     
- * 
+ *
  * [get/set template]
  * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
  * String languageCode = entity.getLanguageCode();

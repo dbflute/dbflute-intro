@@ -25,8 +25,8 @@ import javax.annotation.Resource;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
+import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
-import org.dbflute.intro.mylasta.webcls.WebCDef;
 import org.dbflute.util.DfStringUtil;
 
 /**
@@ -47,13 +47,13 @@ public class IntroClsAssist {
     //                                                                          ==========
     public Map<String, Map<?, ?>> getClassificationMap() {
         Map<String, Map<?, ?>> clsMap = new LinkedHashMap<String, Map<?, ?>>();
-        clsMap.put("databaseInfoDefMap", prepareDatabaseInfoDefMap());
-        clsMap.put("targetLanguageMap", prepareTargetLanguageMap());
-        clsMap.put("targetContainerMap", prepareTargetContainerMap());
+        clsMap.put("databaseTypeMap", prepareDatabaseTypeMap());
+        clsMap.put("languageTypeMap", prepareTargetLanguageMap());
+        clsMap.put("containerTypeMap", prepareTargetContainerMap());
         return clsMap;
     }
 
-    private Map<String, DatabaseTypeBean> prepareDatabaseInfoDefMap() {
+    private Map<String, DatabaseTypeBean> prepareDatabaseTypeMap() {
         return databaseBhv.selectList(cb -> {
             cb.query().addOrderBy_DisplayOrder_Asc();
         }).stream().collect(Collectors.toMap(db -> db.getDatabaseName(), db -> new DatabaseTypeBean(db), (u, v) -> v, LinkedHashMap::new));
@@ -74,7 +74,7 @@ public class IntroClsAssist {
     // ===================================================================================
     //                                                                    Task Instruction
     //                                                                    ================
-    public List<TaskType> toTaskTypeList(WebCDef.TaskInstruction instruction) {
+    public List<TaskType> toTaskTypeList(AppCDef.TaskInstruction instruction) {
         String relatedTasks = instruction.relatedTasks(); // e.g. 'jdbc,doc' when 'doc'
         List<String> taskExpList = DfStringUtil.splitListTrimmed(relatedTasks, ",");
         return taskExpList.stream().map(taskExp -> checkingTaskType(taskExp, CDef.TaskType.codeOf(taskExp))).collect(Collectors.toList());

@@ -17,6 +17,7 @@ package org.dbflute.intro.mylasta.direction.sponsor;
 
 import java.util.TimeZone;
 
+import org.dbflute.intro.mylasta.direction.sponsor.introdb.IntroDBInitializer;
 import org.dbflute.system.DBFluteSystem;
 import org.dbflute.system.provider.DfFinalTimeZoneProvider;
 import org.dbflute.util.DfTypeUtil;
@@ -25,16 +26,29 @@ import org.lastaflute.core.direction.FwAssistantDirector;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class IntroCurtainBeforeHook implements CurtainBeforeHook {
 
+    // ===================================================================================
+    //                                                                               Hook
+    //                                                                              ======
     public void hook(FwAssistantDirector assistantDirector) {
         processDBFluteSystem();
+        initializeIntroDB();
     }
 
+    // ===================================================================================
+    //                                                                      DBFlute System
+    //                                                                      ==============
     protected void processDBFluteSystem() {
         DBFluteSystem.unlock();
-        DBFluteSystem.setFinalTimeZoneProvider(new DfFinalTimeZoneProvider() {
+        DBFluteSystem.setFinalTimeZoneProvider(createFinalTimeZoneProvider());
+        DBFluteSystem.lock();
+    }
+
+    protected DfFinalTimeZoneProvider createFinalTimeZoneProvider() {
+        return new DfFinalTimeZoneProvider() {
             protected final TimeZone provided = IntroUserTimeZoneProcessProvider.centralTimeZone;
 
             public TimeZone provide() {
@@ -45,7 +59,13 @@ public class IntroCurtainBeforeHook implements CurtainBeforeHook {
             public String toString() {
                 return DfTypeUtil.toClassTitle(this) + ":{" + provided.getID() + "}";
             }
-        });
-        DBFluteSystem.lock();
+        };
+    }
+
+    // ===================================================================================
+    //                                                                             IntroDB
+    //                                                                             =======
+    protected void initializeIntroDB() {
+        new IntroDBInitializer().initializeIntroDB();
     }
 }

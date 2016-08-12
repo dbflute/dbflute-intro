@@ -39,15 +39,15 @@ public class ClientUpdateLogic {
     // ===================================================================================
     //                                                                Create/Update Client
     //                                                                ====================
-    public void createClient(ClientParam clientParam) {
+    public void createClient(ClientModel clientParam) {
         _createClient(clientParam, false);
     }
 
-    public void updateClient(ClientParam clientParam) {
+    public void updateClient(ClientModel clientParam) {
         _createClient(clientParam, true);
     }
 
-    private void _createClient(ClientParam clientParam, boolean update) {
+    private void _createClient(ClientModel clientParam, boolean update) {
         final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getProject());
         final String dbfluteVersionExpression = "dbflute-" + clientParam.getDbfluteVersion();
         final File mydbflutePureFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, "/mydbflute");
@@ -195,7 +195,7 @@ public class ClientUpdateLogic {
         }
     }
 
-    private void createSchemaSyncCheck(ClientParam clientParam) {
+    private void createSchemaSyncCheck(ClientModel clientParam) {
         final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getProject());
         URL schemaSyncCheckURL = ClassLoader.getSystemResource("dfprop/documentMap+schemaSyncCheck.dfprop");
 

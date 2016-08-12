@@ -21,7 +21,7 @@
       <ul class="list-group">
         <li class="list-group-item" ng-repeat="version in versions">
           {{version}}
-          <input type="button" class="btn btn-primary pull-right" value="削除" ng-click="removeEngine(version)" />
+          <input type="button" class="btn btn-primary pull-right" value="Delete" ng-click="removeEngine(version)" />
         </li>
       </ul>
     </div>
@@ -29,34 +29,34 @@
       <div class="row">
         <div class="col-sm-12">
           <uib-tabset>
-            <uib-tab heading="基本">
+            <uib-tab heading="Basic">
               <form class="form-horizontal">
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_PROJECT' | translate:translationData}}</label>
                   <div class="col-sm-8">
-                    <span ng-hide="editFlg && clientBean.create">{{clientBean.project}}</span>
-                    <input type="text" class="form-control" ng-model="clientBean.project" ng-show="editFlg && clientBean.create" />
+                    <span ng-hide="editFlg && clientBean.create">{{clientBean.projectName}}</span>
+                    <input type="text" class="form-control" ng-model="clientBean.projectName" ng-show="editFlg && clientBean.create" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_DATABASE' | translate:translationData}}</label>
                   <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{clientBean.database}}</span>
-                    <select class="form-control" ng-model="clientBean.database" ng-options="database.databaseName as database.databaseName for database in classificationMap.databaseTypeMap" ng-show="editFlg" ng-change="changeDatabase(clientBean)"></select>
+                    <span ng-hide="editFlg">{{clientBean.databaseType}}</span>
+                    <select class="form-control" ng-model="clientBean.databaseType" ng-options="database.databaseName as database.databaseName for database in classificationMap.databaseTypeMap" ng-show="editFlg" ng-change="changeDatabase(clientBean)"></select>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_TARGET_LANGUAGE' | translate:translationData}}</label>
                   <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{clientBean.targetLanguage}}</span>
-                    <select class="form-control" ng-model="clientBean.targetLanguage" ng-options="targetLanguage for targetLanguage in classificationMap.languageTypeMap" ng-show="editFlg"></select>
+                    <span ng-hide="editFlg">{{clientBean.languageType}}</span>
+                    <select class="form-control" ng-model="clientBean.languageType" ng-options="targetLanguage for targetLanguage in classificationMap.languageTypeMap" ng-show="editFlg"></select>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_TARGET_CONTAINER' | translate:translationData}}</label>
                   <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{clientBean.targetContainer}}</span>
-                    <select class="form-control" ng-model="clientBean.targetContainer" ng-options="targetContainer for targetContainer in classificationMap.containerTypeMap" ng-show="editFlg"></select>
+                    <span ng-hide="editFlg">{{clientBean.containerType}}</span>
+                    <select class="form-control" ng-model="clientBean.containerType" ng-options="targetContainer for targetContainer in classificationMap.containerTypeMap" ng-show="editFlg"></select>
                   </div>
                 </div>
                 <div class="form-group">

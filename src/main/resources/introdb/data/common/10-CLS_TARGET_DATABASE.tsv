@@ -1,0 +1,8 @@
+DATABASE_CODE	DATABASE_NAME	JDBC_DRIVER_FQCN	URL_TEMPLATE	DEFAULT_SCHEMA	SCHEMA_REQUIRED_FLG	SCHEMA_UPPER_CASE_FLG	USER_INPUT_ASSIST_FLG	EMBEDDED_JAR_FLG	DISPLAY_ORDER
+mysql	MySQL	com.mysql.jdbc.Driver	jdbc:mysql://localhost:3306/xxx		0	0	0	1	1
+postgresql	PostgreSQL	org.postgresql.Driver	jdbc:postgresql://localhost:5432/xxx	public	1	0	0	1	2
+oracle	Oracle	oracle.jdbc.OracleDriver	jdbc:oracle:thin:@localhost:1521:xxx	xxx	1	1	1	0	3
+db2	DB2	com.ibm.db2.jcc.DB2Driver	jdbc:db2://localhost:50000/xxx	xxx	1	1	1	0	4
+sqlserver	SQLServer	com.microsoft.sqlserver.jdbc.SQLServerDriver	jdbc:sqlserver://localhost:1433;DatabaseName=xxx;	dbo	1	0	0	0	5
+h2	H2 Database	org.h2.Driver	jdbc:h2:file:xxx	PUBLIC	1	0	0	1	6
+derby	Apache Derby	org.apache.derby.jdbc.EmbeddedDriver	jdbc:derby:xxx;create=true	xxx	1	1	1	0	7

@@ -99,7 +99,7 @@ public class ClientInfoLogic {
     // ===================================================================================
     //                                                                              Dfprop
     //                                                                              ======
-    public ClientParam convertDfpropToClientParam(String project) {
+    public ClientModel convertDfpropToClientParam(String project) {
         Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>();
         File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
 
@@ -139,7 +139,7 @@ public class ClientInfoLogic {
             }
         }
 
-        ClientParam clientParam = new ClientParam();
+        ClientModel clientParam = new ClientModel();
         clientParam.setProject(project);
         clientParam.setTargetLanguage((String) basicInfoMap.get("targetLanguage"));
         clientParam.setTargetContainer((String) basicInfoMap.get("targetContainer"));
