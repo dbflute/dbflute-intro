@@ -15,13 +15,13 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.lastaflute.web.ruts.message.ActionMessages;
+import org.lastaflute.core.message.UserMessages;
 
 /**
  * The keys for message.
  * @author FreeGen
  */
-public class IntroLabels extends ActionMessages {
+public class IntroLabels extends UserMessages {
 
     /** The serial version UID for object serialization. (Default) */
     private static final long serialVersionUID = 1L;

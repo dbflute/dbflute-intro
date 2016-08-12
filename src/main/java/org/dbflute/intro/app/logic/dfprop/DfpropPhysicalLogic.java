@@ -16,17 +16,15 @@
 package org.dbflute.intro.app.logic.dfprop;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.mylasta.exception.DfpropDirNotFoundException;
 import org.dbflute.intro.mylasta.exception.DfpropFileNotFoundException;
-import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author deco
@@ -63,7 +61,7 @@ public class DfpropPhysicalLogic {
     public File findDfpropFile(String project, String fileName) {
         final File dfpropFile = new File(buildDfpropFilePath(project, fileName));
         if (!dfpropFile.isFile()) {
-            throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath());
+            throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath(), fileName);
         }
         return dfpropFile;
     }
@@ -72,7 +70,7 @@ public class DfpropPhysicalLogic {
         final File dfpropDir = new File(buildDfpropDirPath(project));
         final File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
-            throw new DfpropFileNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath());
+            throw new DfpropDirNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath(), dfpropDir.getName());
         }
         return Collections.unmodifiableList(Arrays.asList(dfpropFiles));
     }

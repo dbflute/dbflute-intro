@@ -16,7 +16,7 @@
 package org.dbflute.intro.mylasta.action;
 
 import org.dbflute.intro.mylasta.action.IntroLabels;
-import org.lastaflute.web.ruts.message.ActionMessage;
+import org.lastaflute.core.message.UserMessage;
 
 /**
  * The keys for message.
@@ -288,10 +288,16 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: システムエラーが発生しました。 */
     public static final String ERRORS_APP_DATABASE_CONNECTION = "{errors.app.database.connection}";
 
-    /** The key of the message: dfprop file not found. */
+    /** The key of the message: the DBFlute Client is not found: {0} */
+    public static final String ERRORS_APP_CLIENT_NOT_FOUND = "{errors.app.client.not.found}";
+
+    /** The key of the message: the dfprop directory is not found: {0} */
+    public static final String ERRORS_APP_DFPROP_DIR_NOT_FOUND = "{errors.app.dfprop.dir.not.found}";
+
+    /** The key of the message: the dfprop file is not found: {0} */
     public static final String ERRORS_APP_DFPROP_FILE_NOT_FOUND = "{errors.app.dfprop.file.not.found}";
 
-    /** The key of the message: playsql file not found. */
+    /** The key of the message: the playsql file is not found: {0} */
     public static final String ERRORS_APP_PLAYSQL_FILE_NOT_FOUND = "{errors.app.playsql.file.not.found}";
 
     /**
@@ -305,7 +311,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsAssertFalseMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_AssertFalse_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_AssertFalse_MESSAGE));
         return this;
     }
 
@@ -319,7 +325,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsAssertTrueMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_AssertTrue_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_AssertTrue_MESSAGE));
         return this;
     }
 
@@ -334,7 +340,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsDecimalMaxMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_DecimalMax_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_DecimalMax_MESSAGE, value));
         return this;
     }
 
@@ -349,7 +355,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsDecimalMinMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_DecimalMin_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_DecimalMin_MESSAGE, value));
         return this;
     }
 
@@ -365,7 +371,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsDigitsMessage(String property, String integer, String fraction) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Digits_MESSAGE, integer, fraction));
+        add(property, new UserMessage(CONSTRAINTS_Digits_MESSAGE, integer, fraction));
         return this;
     }
 
@@ -379,7 +385,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsFutureMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Future_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_Future_MESSAGE));
         return this;
     }
 
@@ -394,7 +400,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsMaxMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Max_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_Max_MESSAGE, value));
         return this;
     }
 
@@ -409,7 +415,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsMinMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Min_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_Min_MESSAGE, value));
         return this;
     }
 
@@ -423,7 +429,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsNotNullMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_NotNull_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_NotNull_MESSAGE));
         return this;
     }
 
@@ -437,7 +443,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsNullMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Null_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_Null_MESSAGE));
         return this;
     }
 
@@ -451,7 +457,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsPastMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Past_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_Past_MESSAGE));
         return this;
     }
 
@@ -466,7 +472,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsPatternMessage(String property, String regexp) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Pattern_MESSAGE, regexp));
+        add(property, new UserMessage(CONSTRAINTS_Pattern_MESSAGE, regexp));
         return this;
     }
 
@@ -482,7 +488,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsSizeMessage(String property, String min, String max) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Size_MESSAGE, min, max));
+        add(property, new UserMessage(CONSTRAINTS_Size_MESSAGE, min, max));
         return this;
     }
 
@@ -497,7 +503,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsCreditCardNumberMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_CreditCardNumber_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_CreditCardNumber_MESSAGE));
         return this;
     }
 
@@ -512,7 +518,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsEanMessage(String property, String type) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_EAN_MESSAGE, type));
+        add(property, new UserMessage(CONSTRAINTS_EAN_MESSAGE, type));
         return this;
     }
 
@@ -526,7 +532,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsEmailMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Email_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_Email_MESSAGE));
         return this;
     }
 
@@ -542,7 +548,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsLengthMessage(String property, String min, String max) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Length_MESSAGE, min, max));
+        add(property, new UserMessage(CONSTRAINTS_Length_MESSAGE, min, max));
         return this;
     }
 
@@ -557,7 +563,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsLuhnCheckMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_LuhnCheck_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_LuhnCheck_MESSAGE, value));
         return this;
     }
 
@@ -572,7 +578,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsMod10CheckMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Mod10Check_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_Mod10Check_MESSAGE, value));
         return this;
     }
 
@@ -587,7 +593,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsMod11CheckMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Mod11Check_MESSAGE, value));
+        add(property, new UserMessage(CONSTRAINTS_Mod11Check_MESSAGE, value));
         return this;
     }
 
@@ -603,7 +609,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsModCheckMessage(String property, String value, String modType) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_ModCheck_MESSAGE, value, modType));
+        add(property, new UserMessage(CONSTRAINTS_ModCheck_MESSAGE, value, modType));
         return this;
     }
 
@@ -617,7 +623,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsNotBlankMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_NotBlank_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_NotBlank_MESSAGE));
         return this;
     }
 
@@ -631,7 +637,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsNotEmptyMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_NotEmpty_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_NotEmpty_MESSAGE));
         return this;
     }
 
@@ -646,7 +652,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsParametersScriptAssertMessage(String property, String script) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_ParametersScriptAssert_MESSAGE, script));
+        add(property, new UserMessage(CONSTRAINTS_ParametersScriptAssert_MESSAGE, script));
         return this;
     }
 
@@ -662,7 +668,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsRangeMessage(String property, String min, String max) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Range_MESSAGE, min, max));
+        add(property, new UserMessage(CONSTRAINTS_Range_MESSAGE, min, max));
         return this;
     }
 
@@ -676,7 +682,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsSafeHtmlMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_SafeHtml_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_SafeHtml_MESSAGE));
         return this;
     }
 
@@ -691,7 +697,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsScriptAssertMessage(String property, String script) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_ScriptAssert_MESSAGE, script));
+        add(property, new UserMessage(CONSTRAINTS_ScriptAssert_MESSAGE, script));
         return this;
     }
 
@@ -705,7 +711,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsUrlMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_URL_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_URL_MESSAGE));
         return this;
     }
 
@@ -719,7 +725,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsRequiredMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_Required_MESSAGE));
+        add(property, new UserMessage(CONSTRAINTS_Required_MESSAGE));
         return this;
     }
 
@@ -734,7 +740,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addConstraintsTypeAnyMessage(String property, String propertyType) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(CONSTRAINTS_TypeAny_MESSAGE, propertyType));
+        add(property, new UserMessage(CONSTRAINTS_TypeAny_MESSAGE, propertyType));
         return this;
     }
 
@@ -750,7 +756,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorMinPeopleNumMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_MinPeopleNum_MESSAGE, value));
+        add(property, new UserMessage(APP_VALIDATOR_MinPeopleNum_MESSAGE, value));
         return this;
     }
 
@@ -765,7 +771,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorMaxPeopleNumMessage(String property, String value) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_MaxPeopleNum_MESSAGE, value));
+        add(property, new UserMessage(APP_VALIDATOR_MaxPeopleNum_MESSAGE, value));
         return this;
     }
 
@@ -780,7 +786,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorMinSizeMessage(String property, String min) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_MinSize_MESSAGE, min));
+        add(property, new UserMessage(APP_VALIDATOR_MinSize_MESSAGE, min));
         return this;
     }
 
@@ -795,7 +801,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorMaxSizeMessage(String property, String max) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_MaxSize_MESSAGE, max));
+        add(property, new UserMessage(APP_VALIDATOR_MaxSize_MESSAGE, max));
         return this;
     }
 
@@ -810,7 +816,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorMinSizeCollectionMessage(String property, String min) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_MinSizeCollection_MESSAGE, min));
+        add(property, new UserMessage(APP_VALIDATOR_MinSizeCollection_MESSAGE, min));
         return this;
     }
 
@@ -825,7 +831,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorMaxSizeCollectionMessage(String property, String max) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_MaxSizeCollection_MESSAGE, max));
+        add(property, new UserMessage(APP_VALIDATOR_MaxSizeCollection_MESSAGE, max));
         return this;
     }
 
@@ -840,7 +846,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorEqualsSizeMessage(String property, String equals) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_EqualsSize_MESSAGE, equals));
+        add(property, new UserMessage(APP_VALIDATOR_EqualsSize_MESSAGE, equals));
         return this;
     }
 
@@ -854,7 +860,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorKatakanaMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_Katakana_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_Katakana_MESSAGE));
         return this;
     }
 
@@ -868,7 +874,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorTelMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_Tel_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_Tel_MESSAGE));
         return this;
     }
 
@@ -882,7 +888,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorZipCodeMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ZipCode_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ZipCode_MESSAGE));
         return this;
     }
 
@@ -896,7 +902,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorAlphaNumMixMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_AlphaNumMix_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_AlphaNumMix_MESSAGE));
         return this;
     }
 
@@ -910,7 +916,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorBankAccountNameMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_BankAccountName_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_BankAccountName_MESSAGE));
         return this;
     }
 
@@ -924,7 +930,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorPasswordMismatchMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_Password_Mismatch_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_Password_Mismatch_MESSAGE));
         return this;
     }
 
@@ -938,7 +944,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorShopAnyRequiredMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ShopAnyRequired_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ShopAnyRequired_MESSAGE));
         return this;
     }
 
@@ -952,7 +958,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorShopNotHideMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ShopNotHide_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ShopNotHide_MESSAGE));
         return this;
     }
 
@@ -966,7 +972,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorWeekCdDuplicateMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_WeekCd_DUPLICATE_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_WeekCd_DUPLICATE_MESSAGE));
         return this;
     }
 
@@ -980,7 +986,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReservePeopleNumMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReservePeopleNum_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReservePeopleNum_MESSAGE));
         return this;
     }
 
@@ -994,7 +1000,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveStatusCdReserveFixMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveStatusCdReserveFix_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveStatusCdReserveFix_MESSAGE));
         return this;
     }
 
@@ -1008,7 +1014,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveShopCandidateDuplicateMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveShopCandidate_DUPLICATE_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveShopCandidate_DUPLICATE_MESSAGE));
         return this;
     }
 
@@ -1022,7 +1028,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveShopCandidateRequiredMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveShopCandidate_REQUIRED_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveShopCandidate_REQUIRED_MESSAGE));
         return this;
     }
 
@@ -1036,7 +1042,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorPriorityDuplicateMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_Priority_DUPLICATE_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_Priority_DUPLICATE_MESSAGE));
         return this;
     }
 
@@ -1050,7 +1056,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorSeatOnlyAndCourseMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_SeatOnlyAndCourse_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_SeatOnlyAndCourse_MESSAGE));
         return this;
     }
 
@@ -1065,7 +1071,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorSeatOnlyReserveMessage(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_SeatOnlyReserve_MESSAGE, arg0));
+        add(property, new UserMessage(APP_VALIDATOR_SeatOnlyReserve_MESSAGE, arg0));
         return this;
     }
 
@@ -1079,7 +1085,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorNoticeMessageMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_NoticeMessage_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_NoticeMessage_MESSAGE));
         return this;
     }
 
@@ -1093,7 +1099,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveLogTypeCdMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveLogTypeCd_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveLogTypeCd_MESSAGE));
         return this;
     }
 
@@ -1107,7 +1113,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveShopDataInvalidMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveShopData_INVALID_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveShopData_INVALID_MESSAGE));
         return this;
     }
 
@@ -1121,7 +1127,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveCourseDataInvalidMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveCourseData_INVALID_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveCourseData_INVALID_MESSAGE));
         return this;
     }
 
@@ -1135,7 +1141,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveCourseEffectiveTimeOutsideMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveCourseEffectiveTime_OUTSIDE_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveCourseEffectiveTime_OUTSIDE_MESSAGE));
         return this;
     }
 
@@ -1149,7 +1155,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorReserveShopCandidateEntryFailedMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ReserveShopCandidate_ENTRY_FAILED_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ReserveShopCandidate_ENTRY_FAILED_MESSAGE));
         return this;
     }
 
@@ -1163,7 +1169,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorCourseCsvDataSizeMismatchMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_CourseCsvDataSize_MISMATCH_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_CourseCsvDataSize_MISMATCH_MESSAGE));
         return this;
     }
 
@@ -1177,7 +1183,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorImageDataNotFoundMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_ImageData_NOT_FOUND_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_ImageData_NOT_FOUND_MESSAGE));
         return this;
     }
 
@@ -1191,7 +1197,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorXTypeBooleanMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_XTypeBoolean_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_XTypeBoolean_MESSAGE));
         return this;
     }
 
@@ -1205,7 +1211,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorLocalTimeFormatMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_LocalTimeFormat_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_LocalTimeFormat_MESSAGE));
         return this;
     }
 
@@ -1219,7 +1225,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppValidatorLocalDateTimeFormatMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_VALIDATOR_LocalDateTimeFormat_MESSAGE));
+        add(property, new UserMessage(APP_VALIDATOR_LocalDateTimeFormat_MESSAGE));
         return this;
     }
 
@@ -1234,7 +1240,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppConverterValidMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_CONVERTER_Valid_MESSAGE));
+        add(property, new UserMessage(APP_CONVERTER_Valid_MESSAGE));
         return this;
     }
 
@@ -1248,7 +1254,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppConverterNumberMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_CONVERTER_Number_MESSAGE));
+        add(property, new UserMessage(APP_CONVERTER_Number_MESSAGE));
         return this;
     }
 
@@ -1262,7 +1268,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppConverterDateMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_CONVERTER_Date_MESSAGE));
+        add(property, new UserMessage(APP_CONVERTER_Date_MESSAGE));
         return this;
     }
 
@@ -1276,7 +1282,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppConverterTimeMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_CONVERTER_Time_MESSAGE));
+        add(property, new UserMessage(APP_CONVERTER_Time_MESSAGE));
         return this;
     }
 
@@ -1290,7 +1296,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addAppConverterDateTimeMessage(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(APP_CONVERTER_DateTime_MESSAGE));
+        add(property, new UserMessage(APP_CONVERTER_DateTime_MESSAGE));
         return this;
     }
 
@@ -1306,7 +1312,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsNumber(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_NUMBER, arg0));
+        add(property, new UserMessage(ERRORS_NUMBER, arg0));
         return this;
     }
 
@@ -1321,7 +1327,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsSameValue(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_SAME_VALUE, arg0));
+        add(property, new UserMessage(ERRORS_SAME_VALUE, arg0));
         return this;
     }
 
@@ -1336,7 +1342,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsGreaterThan(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_GREATER_THAN, arg0));
+        add(property, new UserMessage(ERRORS_GREATER_THAN, arg0));
         return this;
     }
 
@@ -1351,7 +1357,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsLessThan(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_LESS_THAN, arg0));
+        add(property, new UserMessage(ERRORS_LESS_THAN, arg0));
         return this;
     }
 
@@ -1366,7 +1372,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsGreaterEquals(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_GREATER_EQUALS, arg0));
+        add(property, new UserMessage(ERRORS_GREATER_EQUALS, arg0));
         return this;
     }
 
@@ -1381,7 +1387,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsLessEquals(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_LESS_EQUALS, arg0));
+        add(property, new UserMessage(ERRORS_LESS_EQUALS, arg0));
         return this;
     }
 
@@ -1396,7 +1402,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsRequiredAtLeastOne(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_REQUIRED_AT_LEAST_ONE, arg0));
+        add(property, new UserMessage(ERRORS_REQUIRED_AT_LEAST_ONE, arg0));
         return this;
     }
 
@@ -1412,7 +1418,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsRequiredOr(String property, String arg0, String arg1) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_REQUIRED_OR, arg0, arg1));
+        add(property, new UserMessage(ERRORS_REQUIRED_OR, arg0, arg1));
         return this;
     }
 
@@ -1428,7 +1434,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsUploadSize(String property, String arg0, String arg1) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_UPLOAD_SIZE, arg0, arg1));
+        add(property, new UserMessage(ERRORS_UPLOAD_SIZE, arg0, arg1));
         return this;
     }
 
@@ -1443,7 +1449,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsEmptyLogin(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_EMPTY_LOGIN));
+        add(property, new UserMessage(ERRORS_EMPTY_LOGIN));
         return this;
     }
 
@@ -1457,7 +1463,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAlreadyExists(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_ALREADY_EXISTS));
+        add(property, new UserMessage(ERRORS_ALREADY_EXISTS));
         return this;
     }
 
@@ -1472,7 +1478,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsLoginFailure(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_LOGIN_FAILURE));
+        add(property, new UserMessage(ERRORS_LOGIN_FAILURE));
         return this;
     }
 
@@ -1486,7 +1492,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAppIllegalTransition(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_ILLEGAL_TRANSITION));
+        add(property, new UserMessage(ERRORS_APP_ILLEGAL_TRANSITION));
         return this;
     }
 
@@ -1500,7 +1506,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAppDbAlreadyDeleted(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_DB_ALREADY_DELETED));
+        add(property, new UserMessage(ERRORS_APP_DB_ALREADY_DELETED));
         return this;
     }
 
@@ -1514,7 +1520,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAppDbAlreadyUpdated(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_DB_ALREADY_UPDATED));
+        add(property, new UserMessage(ERRORS_APP_DB_ALREADY_UPDATED));
         return this;
     }
 
@@ -1528,7 +1534,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAppDbAlreadyExists(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_DB_ALREADY_EXISTS));
+        add(property, new UserMessage(ERRORS_APP_DB_ALREADY_EXISTS));
         return this;
     }
 
@@ -1542,7 +1548,7 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAppSystemError(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_SYSTEM_ERROR));
+        add(property, new UserMessage(ERRORS_APP_SYSTEM_ERROR));
         return this;
     }
 
@@ -1556,35 +1562,67 @@ public class IntroMessages extends IntroLabels {
      */
     public IntroMessages addErrorsAppDatabaseConnection(String property) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_DATABASE_CONNECTION));
+        add(property, new UserMessage(ERRORS_APP_DATABASE_CONNECTION));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.client.not.found' with parameters.
+     * <pre>
+     * message: the DBFlute Client is not found: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppClientNotFound(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_CLIENT_NOT_FOUND, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.dfprop.dir.not.found' with parameters.
+     * <pre>
+     * message: the dfprop directory is not found: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppDfpropDirNotFound(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_DFPROP_DIR_NOT_FOUND, arg0));
         return this;
     }
 
     /**
      * Add the created action message for the key 'errors.app.dfprop.file.not.found' with parameters.
      * <pre>
-     * message: dfprop file not found.
+     * message: the dfprop file is not found: {0}
      * </pre>
      * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public IntroMessages addErrorsAppDfpropFileNotFound(String property) {
+    public IntroMessages addErrorsAppDfpropFileNotFound(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_DFPROP_FILE_NOT_FOUND));
+        add(property, new UserMessage(ERRORS_APP_DFPROP_FILE_NOT_FOUND, arg0));
         return this;
     }
 
     /**
      * Add the created action message for the key 'errors.app.playsql.file.not.found' with parameters.
      * <pre>
-     * message: playsql file not found.
+     * message: the playsql file is not found: {0}
      * </pre>
      * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public IntroMessages addErrorsAppPlaysqlFileNotFound(String property) {
+    public IntroMessages addErrorsAppPlaysqlFileNotFound(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new ActionMessage(ERRORS_APP_PLAYSQL_FILE_NOT_FOUND));
+        add(property, new UserMessage(ERRORS_APP_PLAYSQL_FILE_NOT_FOUND, arg0));
         return this;
     }
 }

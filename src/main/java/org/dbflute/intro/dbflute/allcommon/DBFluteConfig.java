@@ -98,7 +98,7 @@ public class DBFluteConfig {
     protected DataSourceHandler _dataSourceHandler;
     protected PhysicalConnectionDigger _physicalConnectionDigger;
     protected SQLExceptionDigger _sqlExceptionDigger;
-    protected String _outsideSqlPackage = null;
+    protected String _outsideSqlPackage = "org.dbflute.intro.dbflute";
     protected MappingDateTimeZoneProvider _mappingDateTimeZoneProvider;
 
     // extension

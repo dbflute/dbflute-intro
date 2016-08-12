@@ -50,7 +50,7 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. org.h2.Driver */
     String JDBC_DRIVER = "jdbc.driver";
 
-    /** The key of the configuration. e.g. jdbc:h2:file:$classes(org.dbflute.intro.dbflute.allcommon.DBCurrent.class)/../../etc/introdb/introdb */
+    /** The key of the configuration. e.g. jdbc:h2:mem:introdb */
     String JDBC_URL = "jdbc.url";
 
     /** The key of the configuration. e.g. introdb */
@@ -177,7 +177,7 @@ public interface IntroEnv {
 
     /**
      * Get the value for the key 'jdbc.url'. <br>
-     * The value is, e.g. jdbc:h2:file:$classes(org.dbflute.intro.dbflute.allcommon.DBCurrent.class)/../../etc/introdb/introdb <br>
+     * The value is, e.g. jdbc:h2:mem:introdb <br>
      * comment: The URL of database connection for JDBC
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */

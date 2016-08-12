@@ -13,20 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.client;
+package org.dbflute.intro.app.model;
 
-// TODO jflute intro: Model? (2016/07/26)
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class DatabaseParam {
+public class DatabaseModel {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     private String url;
-    private String schema;
+    private String schema; // contains additional schema as common-separated
     private String user;
     private String password;
 

@@ -52,13 +52,13 @@ public class ClientDetailBean {
         @Required
         public String packageBase;
         @Required
-        public String jdbcDriver;
+        public String jdbcDriverFqcn;
+        public String jdbcDriverJarPath;
 
         public DatabaseBean databaseBean;
         public DatabaseBean systemUserDatabaseBean;
 
         public static class DatabaseBean {
-
             @Required
             public String url;
             public String schema;
@@ -67,7 +67,6 @@ public class ClientDetailBean {
             public String password;
         }
 
-        public String jdbcDriverJarPath;
         @Required
         public String dbfluteVersion;
         public OptionBean optionBean;

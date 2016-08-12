@@ -13,9 +13,8 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.client;
+package org.dbflute.intro.app.model;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -27,28 +26,30 @@ public class ClientModel {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private String project;
+    private String clientProject;
     private String database;
     private String targetLanguage;
     private String targetContainer;
     private String packageBase;
-    private String jdbcDriver;
-    private DatabaseParam databaseParam;
-    private DatabaseParam systemUserDatabaseParam;
-    private String jdbcDriverJarPath;
-    private String dbfluteVersion;
-    private OptionParam optionParam;
-    private Map<String, DatabaseParam> schemaSyncCheckMap;
+
+    private String jdbcDriverFqcn; // common with various database info
+    private String jdbcDriverJarPath; // from extlib
+    private String dbfluteVersion; // from _project.sh
+
+    private DatabaseModel databaseModel; // contains additional schema
+    private DatabaseModel systemUserDatabaseModel; // fromm replaceSchemaMap.dfprop
+    private OptionModel optionModel; // e.g. documentMap.dfprop, outsideSqlMap.dfprop
+    private Map<String, DatabaseModel> schemaSyncCheckMap; // from documentMap.dfprop
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getProject() {
-        return project;
+    public String getClientProject() {
+        return clientProject;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setClientProject(String clientProject) {
+        this.clientProject = clientProject;
     }
 
     public String getDatabase() {
@@ -83,36 +84,12 @@ public class ClientModel {
         this.packageBase = packageBase;
     }
 
-    public String getJdbcDriver() {
-        return jdbcDriver;
+    public String getJdbcDriverFqcn() {
+        return jdbcDriverFqcn;
     }
 
-    public void setJdbcDriver(String jdbcDriver) {
-        this.jdbcDriver = jdbcDriver;
-    }
-
-    public DatabaseParam getDatabaseParam() {
-        if (databaseParam == null) {
-            databaseParam = new DatabaseParam();
-        }
-
-        return databaseParam;
-    }
-
-    public void setDatabaseParam(DatabaseParam databaseParam) {
-        this.databaseParam = databaseParam;
-    }
-
-    public DatabaseParam getSystemUserDatabaseParam() {
-        if (systemUserDatabaseParam == null) {
-            systemUserDatabaseParam = new DatabaseParam();
-        }
-
-        return systemUserDatabaseParam;
-    }
-
-    public void setSystemUserDatabaseParam(DatabaseParam systemUserDatabaseParam) {
-        this.systemUserDatabaseParam = systemUserDatabaseParam;
+    public void setJdbcDriverFqcn(String jdbcDriverFqcn) {
+        this.jdbcDriverFqcn = jdbcDriverFqcn;
     }
 
     public String getJdbcDriverJarPath() {
@@ -131,27 +108,35 @@ public class ClientModel {
         this.dbfluteVersion = versionInfoDBFlute;
     }
 
-    public OptionParam getOptionParam() {
-        if (optionParam == null) {
-            optionParam = new OptionParam();
-        }
-
-        return optionParam;
+    public DatabaseModel getDatabaseModel() {
+        return databaseModel;
     }
 
-    public void setOptionParam(OptionParam optionParam) {
-        this.optionParam = optionParam;
+    public void setDatabaseModel(DatabaseModel databaseModel) {
+        this.databaseModel = databaseModel;
     }
 
-    public Map<String, DatabaseParam> getSchemaSyncCheckMap() {
-        if (schemaSyncCheckMap == null) {
-            schemaSyncCheckMap = new LinkedHashMap<String, DatabaseParam>();
-        }
+    public DatabaseModel getSystemUserDatabaseModel() {
+        return systemUserDatabaseModel;
+    }
 
+    public void setSystemUserDatabaseModel(DatabaseModel systemUserDatabaseModel) {
+        this.systemUserDatabaseModel = systemUserDatabaseModel;
+    }
+
+    public OptionModel getOptionModel() {
+        return optionModel;
+    }
+
+    public void setOptionModel(OptionModel optionModel) {
+        this.optionModel = optionModel;
+    }
+
+    public Map<String, DatabaseModel> getSchemaSyncCheckMap() {
         return schemaSyncCheckMap;
     }
 
-    public void setSchemaSyncCheckMap(Map<String, DatabaseParam> schemaSyncCheckMap) {
+    public void setSchemaSyncCheckMap(Map<String, DatabaseModel> schemaSyncCheckMap) {
         this.schemaSyncCheckMap = schemaSyncCheckMap;
     }
 }

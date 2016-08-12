@@ -31,7 +31,12 @@ import javax.annotation.Resource;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.dbflute.infra.dfprop.DfPropFile;
+import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.ClientModel;
+import org.dbflute.intro.app.model.DatabaseModel;
+import org.dbflute.intro.app.model.OptionModel;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author p1us2er0
@@ -39,25 +44,34 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
  */
 public class ClientInfoLogic {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private DfpropInfoLogic dfpropInfoLogic;
 
     // ===================================================================================
-    //                                                                        Project List
+    //                                                                        Project Info
     //                                                                        ============
+    public boolean existsClientProject(String project) {
+        return new File(introPhysicalLogic.toDBFluteClientPath(project)).exists();
+    }
+
     public List<String> getProjectList() {
-        List<String> list = new ArrayList<String>();
+        final List<String> projectList = new ArrayList<String>();
         final File baseDir = new File(IntroPhysicalLogic.BASE_DIR_PATH);
         if (baseDir.exists()) {
             for (File file : baseDir.listFiles()) {
                 if (file.isDirectory() && file.getName().startsWith("dbflute_")) {
                     if (!file.getName().contains("dbflute_intro")) {
-                        list.add(file.getName().substring(8));
+                        projectList.add(file.getName().substring(8));
                     }
                 }
             }
         }
-        return list;
+        return projectList;
     }
 
     // ===================================================================================
@@ -65,21 +79,20 @@ public class ClientInfoLogic {
     //                                                                    ================
     // TODO jflute intro: unused? (2016/08/02)
     public List<String> getEnvList(String project) {
-        List<String> envList = new ArrayList<String>();
-        File dfpropDir = new File(introPhysicalLogic.toDfpropDirPath(project));
+        final List<String> envList = new ArrayList<String>();
+        final File dfpropDir = new File(introPhysicalLogic.toDfpropDirPath(project));
         for (File file : dfpropDir.listFiles()) {
             if (file.isDirectory() && file.getName().startsWith("schemaSyncCheck_")) {
                 envList.add(file.getName().substring("schemaSyncCheck_".length()));
             }
         }
-
         return envList;
     }
 
     // ===================================================================================
     //                                                                       ReplaceSchema
     //                                                                       =============
-    public boolean existsReplaceSchemaFile(String project) {
+    public boolean existsReplaceSchema(String project) {
         boolean exists = false;
         final File playsqlDir = new File(introPhysicalLogic.toDBFluteClientResourcePath(project, "playsql"));
         for (File file : playsqlDir.listFiles()) {
@@ -97,40 +110,44 @@ public class ClientInfoLogic {
     }
 
     // ===================================================================================
-    //                                                                              Dfprop
-    //                                                                              ======
-    public ClientModel convertDfpropToClientParam(String project) {
-        Map<String, Map<String, Object>> map = new LinkedHashMap<String, Map<String, Object>>();
-        File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
-
-        Stream.of(dfpropDir.listFiles()).forEach(file -> {
-            if (!file.getName().endsWith("Map.dfprop")) {
-                return;
-            }
-
-            String fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
-            DfPropFile dfPropFile = new DfPropFile();
-            map.put(fileNameKey, dfPropFile.readMap(file.getAbsolutePath(), null));
-
-            File plusFile = new File(file.getName().replace("Map.dfprop", "Map+.dfprop"));
-            if (plusFile.exists()) {
-                map.get(fileNameKey).putAll(dfPropFile.readMap(plusFile.getAbsolutePath(), null));
-            }
-        });
-
-        Map<String, Object> databaseInfoMap = map.get("databaseInfoMap.dfprop");
-        Map<String, Object> basicInfoMap = map.get("basicInfoMap.dfprop");
-        if (databaseInfoMap == null || basicInfoMap == null) {
-            throw new RuntimeException("dbflute client is invalid.");
+    //                                                                        Client Model
+    //                                                                        ============
+    public OptionalThing<ClientModel> findClient(String project) {
+        if (!existsClientProject(project)) {
+            return OptionalThing.empty();
         }
-        String schema = (String) databaseInfoMap.get("schema");
+        final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.prepareDfpropMap(project);
+        final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
+        if (basicInfoMap == null) {
+            throw new RuntimeException("Not found the basicInfoMap.dfprop: " + dfpropMap.keySet());
+        }
+        final Map<String, Object> databaseInfoMap = dfpropMap.get("databaseInfoMap.dfprop");
+        if (databaseInfoMap == null) {
+            throw new RuntimeException("Not found the databaseInfoMap.dfprop: " + dfpropMap.keySet());
+        }
+        final ClientModel clientModel = new ClientModel();
+        clientModel.setClientProject(project);
+        clientModel.setDatabase((String) basicInfoMap.get("database"));
+        clientModel.setTargetLanguage((String) basicInfoMap.get("targetLanguage"));
+        clientModel.setTargetContainer((String) basicInfoMap.get("targetContainer"));
+        clientModel.setPackageBase((String) basicInfoMap.get("packageBase"));
+        clientModel.setJdbcDriverFqcn((String) databaseInfoMap.get("driver"));
+        clientModel.setJdbcDriverJarPath(prepareJdbcDriverJarPath(project));
+        clientModel.setDbfluteVersion(prepareDBFluteVersion(project));
+        clientModel.setDatabaseModel(prepareDatabaseModel(databaseInfoMap));
+        clientModel.setSystemUserDatabaseModel(prepareSystemUserDatabaseModel(dfpropMap));
+        clientModel.setOptionModel(prepareOptionMap(dfpropMap));
+        clientModel.setSchemaSyncCheckMap(prepareSchemaSyncCheckMap(project));
+        return OptionalThing.of(clientModel);
+    }
 
+    private String prepareSchema(Map<String, Object> databaseInfoMap) {
+        String schema = (String) databaseInfoMap.get("schema");
         @SuppressWarnings("unchecked")
         Map<String, Object> variousMap = ((Map<String, Object>) databaseInfoMap.get("variousMap"));
         if (variousMap != null) {
             @SuppressWarnings("unchecked")
             Map<String, Object> additionalSchemaMap = ((Map<String, Object>) variousMap.get("additionalSchemaMap"));
-
             if (additionalSchemaMap != null) {
                 Set<String> keySet = additionalSchemaMap.keySet();
                 for (String additionalSchema : keySet) {
@@ -138,81 +155,88 @@ public class ClientInfoLogic {
                 }
             }
         }
+        return schema;
+    }
 
-        ClientModel clientParam = new ClientModel();
-        clientParam.setProject(project);
-        clientParam.setTargetLanguage((String) basicInfoMap.get("targetLanguage"));
-        clientParam.setTargetContainer((String) basicInfoMap.get("targetContainer"));
-        clientParam.setPackageBase((String) basicInfoMap.get("packageBase"));
-        clientParam.setDatabase((String) basicInfoMap.get("database"));
-        clientParam.setJdbcDriver((String) databaseInfoMap.get("driver"));
-        clientParam.getDatabaseParam().setUrl((String) databaseInfoMap.get("url"));
-        clientParam.getDatabaseParam().setSchema(schema);
-        clientParam.getDatabaseParam().setUser((String) databaseInfoMap.get("user"));
-        clientParam.getDatabaseParam().setPassword((String) databaseInfoMap.get("password"));
-        if (map.get("replaceSchemaMap.dfprop") != null) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> additionalUserMap = (Map<String, Object>) map.get("replaceSchemaMap.dfprop").get("additionalUserMap");
-            if (additionalUserMap != null) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> systemUserDatabaseMap = (Map<String, Object>) additionalUserMap.get("system");
-                if (systemUserDatabaseMap != null) {
-                    clientParam.getSystemUserDatabaseParam().setUrl((String) systemUserDatabaseMap.get("url"));
-                    clientParam.getSystemUserDatabaseParam().setSchema((String) systemUserDatabaseMap.get("schema"));
-                    clientParam.getSystemUserDatabaseParam().setUser((String) systemUserDatabaseMap.get("user"));
-                    clientParam.getSystemUserDatabaseParam().setPassword((String) systemUserDatabaseMap.get("password"));
-                }
-            }
-        }
-        File extlibDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/extlib");
+    private String prepareJdbcDriverJarPath(String project) {
+        final File extlibDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/extlib");
         if (extlibDir.exists()) {
             File[] extlibFiles = extlibDir.listFiles();
             for (File file : extlibFiles) {
                 if (file.getName().endsWith(".jar")) {
-                    clientParam.setJdbcDriverJarPath(file.getPath());
+                    return file.getPath();
                 }
             }
         }
+        return null;
+    }
 
-        File projectFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/_project.bat");
-        String data = null;
+    private String prepareDBFluteVersion(String project) {
+        final File projectFile = new File(introPhysicalLogic.toDBFluteClientResourcePath(project, "_project.sh"));
+        final String data;
         try {
             data = FileUtils.readFileToString(projectFile);
         } catch (IOException e) {
-            new RuntimeException(e);
+            throw new IllegalStateException("Failed to read the project file: " + projectFile, e);
         }
-
-        Pattern pattern = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
-        Matcher matcher = pattern.matcher(data);
+        final Pattern pattern = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
+        final Matcher matcher = pattern.matcher(data);
         if (matcher.find()) {
-            clientParam.setDbfluteVersion(matcher.group(2));
+            return matcher.group(2);
         }
-
-        Map<String, Object> documentMap = map.get("documentMap.dfprop");
-        OptionParam optionParam = clientParam.getOptionParam();
-        if (documentMap != null) {
-            optionParam.setDbCommentOnAliasBasis(Boolean.parseBoolean((String) documentMap.get("isDbCommentOnAliasBasis")));
-            optionParam.setAliasDelimiterInDbComment((String) documentMap.get("aliasDelimiterInDbComment"));
-            optionParam.setCheckColumnDefOrderDiff(Boolean.parseBoolean((String) documentMap.get("isCheckColumnDefOrderDiff")));
-            optionParam.setCheckDbCommentDiff(Boolean.parseBoolean((String) documentMap.get("isCheckDbCommentDiff")));
-            optionParam.setCheckProcedureDiff(Boolean.parseBoolean((String) documentMap.get("isCheckProcedureDiff")));
-        }
-
-        Map<String, Object> outsideSqlMap = map.get("outsideSqlMap.dfprop");
-        if (outsideSqlMap != null) {
-            optionParam.setGenerateProcedureParameterBean(
-                    Boolean.parseBoolean((String) outsideSqlMap.get("isGenerateProcedureParameterParam")));
-        }
-
-        Map<String, DatabaseParam> schemaSyncCheckMap = clientParam.getSchemaSyncCheckMap();
-        schemaSyncCheckMap.putAll(convertDfpropToDatabaseParamMap(project));
-
-        return clientParam;
+        return null;
     }
 
-    private Map<String, DatabaseParam> convertDfpropToDatabaseParamMap(String project) {
-        Map<String, DatabaseParam> databaseParamMap = new LinkedHashMap<String, DatabaseParam>();
-        File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
+    private DatabaseModel prepareDatabaseModel(Map<String, Object> databaseInfoMap) {
+        final DatabaseModel databaseModel = new DatabaseModel();
+        databaseModel.setUrl((String) databaseInfoMap.get("url"));
+        databaseModel.setSchema(prepareSchema(databaseInfoMap));
+        databaseModel.setUser((String) databaseInfoMap.get("user"));
+        databaseModel.setPassword((String) databaseInfoMap.get("password"));
+        return databaseModel;
+    }
+
+    private DatabaseModel prepareSystemUserDatabaseModel(final Map<String, Map<String, Object>> dfpropMap) {
+        final DatabaseModel systemUserDatabaseModel = new DatabaseModel();
+        final Map<String, Object> replaceSchemaMap = dfpropMap.get("replaceSchemaMap.dfprop");
+        if (replaceSchemaMap != null) {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> additionalUserMap = (Map<String, Object>) replaceSchemaMap.get("additionalUserMap");
+            if (additionalUserMap != null) {
+                @SuppressWarnings("unchecked")
+                final Map<String, Object> systemUserDatabaseMap = (Map<String, Object>) additionalUserMap.get("system");
+                if (systemUserDatabaseMap != null) {
+                    systemUserDatabaseModel.setUrl((String) systemUserDatabaseMap.get("url"));
+                    systemUserDatabaseModel.setSchema((String) systemUserDatabaseMap.get("schema"));
+                    systemUserDatabaseModel.setUser((String) systemUserDatabaseMap.get("user"));
+                    systemUserDatabaseModel.setPassword((String) systemUserDatabaseMap.get("password"));
+                }
+            }
+        }
+        return systemUserDatabaseModel;
+    }
+
+    private OptionModel prepareOptionMap(final Map<String, Map<String, Object>> dfpropMap) {
+        final Map<String, Object> documentMap = dfpropMap.get("documentMap.dfprop");
+        OptionModel optionModel = new OptionModel();
+        if (documentMap != null) {
+            optionModel.setDbCommentOnAliasBasis(Boolean.parseBoolean((String) documentMap.get("isDbCommentOnAliasBasis")));
+            optionModel.setAliasDelimiterInDbComment((String) documentMap.get("aliasDelimiterInDbComment"));
+            optionModel.setCheckColumnDefOrderDiff(Boolean.parseBoolean((String) documentMap.get("isCheckColumnDefOrderDiff")));
+            optionModel.setCheckDbCommentDiff(Boolean.parseBoolean((String) documentMap.get("isCheckDbCommentDiff")));
+            optionModel.setCheckProcedureDiff(Boolean.parseBoolean((String) documentMap.get("isCheckProcedureDiff")));
+        }
+        final Map<String, Object> outsideSqlMap = dfpropMap.get("outsideSqlMap.dfprop");
+        if (outsideSqlMap != null) {
+            optionModel.setGenerateProcedureParameterBean(
+                    Boolean.parseBoolean((String) outsideSqlMap.get("isGenerateProcedureParameterParam")));
+        }
+        return optionModel;
+    }
+
+    private Map<String, DatabaseModel> prepareSchemaSyncCheckMap(String project) {
+        final Map<String, DatabaseModel> databaseParamMap = new LinkedHashMap<String, DatabaseModel>();
+        final File dfpropDir = new File(introPhysicalLogic.toDfpropDirPath(project));
         Stream.of(dfpropDir.listFiles()).forEach(file -> {
             if (!file.isDirectory() || !file.getName().startsWith("schemaSyncCheck_")) {
                 return;
@@ -224,19 +248,18 @@ public class ClientInfoLogic {
                 return;
             }
 
-            DfPropFile dfPropFile = new DfPropFile();
-            Map<String, Object> readMap = dfPropFile.readMap(documentMapFile.getAbsolutePath(), null);
+            final DfPropFile dfpropFile = new DfPropFile();
+            final Map<String, Object> readMap = dfpropFile.readMap(documentMapFile.getAbsolutePath(), null);
             @SuppressWarnings("all")
-            Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+            final Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
 
-            DatabaseParam databaseParam = new DatabaseParam();
-            databaseParam.setUrl((String) schemaSyncCheckMap.get("url"));
-            databaseParam.setSchema((String) schemaSyncCheckMap.get("schema"));
-            databaseParam.setUser((String) schemaSyncCheckMap.get("user"));
-            databaseParam.setPassword((String) schemaSyncCheckMap.get("password"));
-            databaseParamMap.put(file.getName().replace("schemaSyncCheck_", ""), databaseParam);
+            DatabaseModel databaseModel = new DatabaseModel();
+            databaseModel.setUrl((String) schemaSyncCheckMap.get("url"));
+            databaseModel.setSchema((String) schemaSyncCheckMap.get("schema"));
+            databaseModel.setUser((String) schemaSyncCheckMap.get("user"));
+            databaseModel.setPassword((String) schemaSyncCheckMap.get("password"));
+            databaseParamMap.put(file.getName().replace("schemaSyncCheck_", ""), databaseModel);
         });
-
         return databaseParamMap;
     }
 }

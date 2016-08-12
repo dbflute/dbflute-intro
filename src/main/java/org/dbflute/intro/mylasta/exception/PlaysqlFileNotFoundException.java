@@ -1,18 +1,21 @@
 package org.dbflute.intro.mylasta.exception;
 
 import org.dbflute.intro.mylasta.action.IntroMessages;
-import org.lastaflute.core.exception.LaApplicationException;
+import org.lastaflute.core.message.exception.MessagingApplicationException;
 
 /**
  * @author deco
  * @author jflute
  */
-public class PlaysqlFileNotFoundException extends LaApplicationException {
+public class PlaysqlFileNotFoundException extends MessagingApplicationException {
 
     private static final long serialVersionUID = 1L;
 
-    public PlaysqlFileNotFoundException(String debugMsg) {
-        super(debugMsg);
-        saveApplicationMessage(IntroMessages.ERRORS_APP_PLAYSQL_FILE_NOT_FOUND);
+    public PlaysqlFileNotFoundException(String debugMsg, String fileName) {
+        super(debugMsg, prepareMessages(fileName));
+    }
+
+    private static IntroMessages prepareMessages(String fileName) {
+        return new IntroMessages().addErrorsAppPlaysqlFileNotFound(IntroMessages.GLOBAL_PROPERTY_KEY, fileName);
     }
 }

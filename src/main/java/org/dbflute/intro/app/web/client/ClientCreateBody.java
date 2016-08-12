@@ -24,6 +24,7 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class ClientCreateBody {
 
@@ -55,9 +56,6 @@ public class ClientCreateBody {
         public String packageBase;
 
         @Required
-        public String jdbcDriver;
-
-        @Required
         @Valid
         public DatabaseBody databaseBody;
 
@@ -65,16 +63,14 @@ public class ClientCreateBody {
         @Valid
         public DatabaseBody systemUserDatabaseBody;
 
-        /**
-         * @author p1us2er0
-         */
         public static class DatabaseBody {
 
-            // ===================================================================================
-            //                                                                           Attribute
-            //                                                                           =========
+            @Required
+            public String jdbcDriver;
+            @Required
             public String url;
             public String schema;
+            @Required
             public String user;
             public String password;
         }
@@ -88,14 +84,8 @@ public class ClientCreateBody {
         @Valid
         public OptionBody optionBody;
 
-        /**
-         * @author p1us2er0
-         */
         public static class OptionBody {
 
-            // ===================================================================================
-            //                                                                           Attribute
-            //                                                                           =========
             public boolean dbCommentOnAliasBasis = true;
             public String aliasDelimiterInDbComment = ":";
             public boolean checkColumnDefOrderDiff = true;

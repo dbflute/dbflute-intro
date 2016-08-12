@@ -13,28 +13,38 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.client;
+package org.dbflute.intro.app.model;
 
-// TODO jflute intro: Model? (2016/07/26)
 /**
  * @author p1us2er0
+ * @author jflute
  */
-public class OptionParam {
+public class OptionModel {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private boolean dbCommentOnAliasBasis = true;
-    private String aliasDelimiterInDbComment = ":";
-    private boolean checkColumnDefOrderDiff = true;
-    private boolean checkDbCommentDiff = true;
-    private boolean checkProcedureDiff = true;
-    private boolean generateProcedureParameterBean = true;
-    private String procedureSynonymHandlingType = "INCLUDE";
+    // -----------------------------------------------------
+    //                                           documentMap
+    //                                           -----------
+    private boolean dbCommentOnAliasBasis;
+    private String aliasDelimiterInDbComment;
+    private boolean checkColumnDefOrderDiff;
+    private boolean checkDbCommentDiff;
+    private boolean checkProcedureDiff;
+
+    // -----------------------------------------------------
+    //                                         outsideSqlMap
+    //                                         -------------
+    private boolean generateProcedureParameterBean;
+    private String procedureSynonymHandlingType;
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
+    // -----------------------------------------------------
+    //                                           documentMap
+    //                                           -----------
     public boolean isDbCommentOnAliasBasis() {
         return dbCommentOnAliasBasis;
     }
@@ -75,6 +85,9 @@ public class OptionParam {
         this.checkProcedureDiff = isCheckProcedureDiff;
     }
 
+    // -----------------------------------------------------
+    //                                         outsideSqlMap
+    //                                         -------------
     public boolean isGenerateProcedureParameterBean() {
         return generateProcedureParameterBean;
     }

@@ -69,8 +69,8 @@
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER' | translate:translationData}}</label>
                   <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{clientBean.jdbcDriver}}</span>
-                    <input type="text" class="form-control" ng-model="clientBean.jdbcDriver" ng-show="editFlg" />
+                    <span ng-hide="editFlg">{{clientBean.databaseBean.jdbcDriver}}</span>
+                    <input type="text" class="form-control" ng-model="clientBean.jdbcDriverFqcn" ng-show="editFlg" />
                   </div>
                 </div>
                 <div class="form-group">

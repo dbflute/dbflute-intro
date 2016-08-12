@@ -29,8 +29,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.dbflute.intro.app.logic.client.DatabaseParam;
 import org.dbflute.intro.app.logic.engine.EngineDownloadLogic;
+import org.dbflute.intro.app.model.DatabaseModel;
 import org.dbflute.intro.mylasta.exception.DatabaseConnectionException;
 import org.dbflute.util.DfStringUtil;
 
@@ -43,7 +43,7 @@ public class TestConnectionLogic {
     // ===================================================================================
     //                                                                     Test Connection
     //                                                                     ===============
-    public void testConnection(String jdbcDriverJarPath, String dbfluteVersion, String jdbcDriver, DatabaseParam databaseParam) {
+    public void testConnection(String jdbcDriverJarPath, String dbfluteVersion, String jdbcDriver, DatabaseModel databaseParam) {
         ProxySelector proxySelector = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
         Connection connection = null;

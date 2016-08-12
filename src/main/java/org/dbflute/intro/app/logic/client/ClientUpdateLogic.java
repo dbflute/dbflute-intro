@@ -28,6 +28,9 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.dbflute.helper.mapstring.MapListString;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.ClientModel;
+import org.dbflute.intro.app.model.DatabaseModel;
+import org.dbflute.intro.app.model.OptionModel;
 import org.dbflute.intro.mylasta.util.ZipUtil;
 
 /**
@@ -47,9 +50,10 @@ public class ClientUpdateLogic {
         _createClient(clientParam, true);
     }
 
-    private void _createClient(ClientModel clientParam, boolean update) {
-        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getProject());
-        final String dbfluteVersionExpression = "dbflute-" + clientParam.getDbfluteVersion();
+    // TODO jflute intro: use +.dfprop ? (2016/08/12)
+    private void _createClient(ClientModel clientModel, boolean update) {
+        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientModel.getClientProject());
+        final String dbfluteVersionExpression = "dbflute-" + clientModel.getDbfluteVersion();
         final File mydbflutePureFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, "/mydbflute");
         if (!dbfluteClientDir.exists()) {
             if (update) {
@@ -90,34 +94,34 @@ public class ClientUpdateLogic {
             Map<File, Map<String, Object>> fileMap = new LinkedHashMap<File, Map<String, Object>>();
 
             Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientParam.getProject());
+            replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientModel.getClientProject());
             fileMap.put(new File(dbfluteClientDir, "/_project.bat"), replaceMap);
             fileMap.put(new File(dbfluteClientDir, "/_project.sh"), replaceMap);
 
             replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("torque.project = dfclient", "torque.project = " + clientParam.getProject());
+            replaceMap.put("torque.project = dfclient", "torque.project = " + clientModel.getClientProject());
             fileMap.put(new File(dbfluteClientDir, "/build.properties"), replaceMap);
 
             replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("@database@", clientParam.getDatabase());
-            replaceMap.put("@targetLanguage@", clientParam.getTargetLanguage());
-            replaceMap.put("@targetContainer@", clientParam.getTargetContainer());
-            replaceMap.put("@packageBase@", clientParam.getPackageBase());
+            replaceMap.put("@database@", clientModel.getDatabase());
+            replaceMap.put("@targetLanguage@", clientModel.getTargetLanguage());
+            replaceMap.put("@targetContainer@", clientModel.getTargetContainer());
+            replaceMap.put("@packageBase@", clientModel.getPackageBase());
             fileMap.put(new File(dbfluteClientDir, "/dfprop/basicInfoMap+.dfprop"), replaceMap);
 
             replaceMap = new LinkedHashMap<String, Object>();
             replaceMap.put("{Please write your setting! at './dfprop/databaseInfoMap.dfprop'}", "");
             fileMap.put(new File(dbfluteClientDir, "/dfprop/databaseInfoMap.dfprop"), replaceMap);
 
-            String schema = clientParam.getDatabaseParam().getSchema();
+            String schema = clientModel.getDatabaseModel().getSchema();
             schema = schema == null ? "" : schema;
             String[] schemaList = schema.split(",");
             replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("@driver@", escapeControlMark(clientParam.getJdbcDriver()));
-            replaceMap.put("@url@", escapeControlMark(clientParam.getDatabaseParam().getUrl()));
+            replaceMap.put("@driver@", escapeControlMark(clientModel.getJdbcDriverFqcn()));
+            replaceMap.put("@url@", escapeControlMark(clientModel.getDatabaseModel().getUrl()));
             replaceMap.put("@schema@", escapeControlMark(schemaList[0].trim()));
-            replaceMap.put("@user@", escapeControlMark(clientParam.getDatabaseParam().getUser()));
-            replaceMap.put("@password@", escapeControlMark(clientParam.getDatabaseParam().getPassword()));
+            replaceMap.put("@user@", escapeControlMark(clientModel.getDatabaseModel().getUser()));
+            replaceMap.put("@password@", escapeControlMark(clientModel.getDatabaseModel().getPassword()));
             StringBuilder builder = new StringBuilder();
             for (int i = 1; i < schemaList.length; i++) {
                 builder.append("            ; " + escapeControlMark(schemaList[i].trim())
@@ -127,7 +131,7 @@ public class ClientUpdateLogic {
             replaceMap.put("@additionalSchema@", builder.toString().replaceAll("\n$", ""));
             fileMap.put(new File(dbfluteClientDir, "/dfprop/databaseInfoMap+.dfprop"), replaceMap);
 
-            OptionParam optionParam = clientParam.getOptionParam();
+            OptionModel optionParam = clientModel.getOptionModel();
 
             replaceMap = new LinkedHashMap<String, Object>();
             replaceMap.put("@isDbCommentOnAliasBasis@", optionParam.isDbCommentOnAliasBasis());
@@ -143,11 +147,11 @@ public class ClientUpdateLogic {
             fileMap.put(new File(dbfluteClientDir, "/dfprop/outsideSqlMap+.dfprop"), replaceMap);
 
             replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("@driver@", escapeControlMark(clientParam.getJdbcDriver()));
-            replaceMap.put("@url@", escapeControlMark(clientParam.getSystemUserDatabaseParam().getUrl()));
-            replaceMap.put("@schema@", escapeControlMark(clientParam.getSystemUserDatabaseParam().getSchema()));
-            replaceMap.put("@user@", escapeControlMark(clientParam.getSystemUserDatabaseParam().getUser()));
-            replaceMap.put("@password@", escapeControlMark(clientParam.getSystemUserDatabaseParam().getPassword()));
+            replaceMap.put("@driver@", escapeControlMark(clientModel.getJdbcDriverFqcn()));
+            replaceMap.put("@url@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUrl()));
+            replaceMap.put("@schema@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getSchema()));
+            replaceMap.put("@user@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUser()));
+            replaceMap.put("@password@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getPassword()));
             fileMap.put(new File(dbfluteClientDir, "/dfprop/replaceSchemaMap+.dfprop"), replaceMap);
 
             replaceFile(fileMap, false);
@@ -155,15 +159,15 @@ public class ClientUpdateLogic {
             fileMap = new LinkedHashMap<File, Map<String, Object>>();
 
             replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientParam.getDbfluteVersion());
+            replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getDbfluteVersion());
             fileMap.put(new File(dbfluteClientDir, "/_project.bat"), replaceMap);
             fileMap.put(new File(dbfluteClientDir, "/_project.sh"), replaceMap);
 
             replaceFile(fileMap, true);
 
-            if (clientParam.getJdbcDriverJarPath() != null && !clientParam.getJdbcDriverJarPath().equals("")) {
+            if (clientModel.getJdbcDriverJarPath() != null && !clientModel.getJdbcDriverJarPath().equals("")) {
                 File extLibDir = new File(dbfluteClientDir, "extlib");
-                File jarFile = new File(clientParam.getJdbcDriverJarPath());
+                File jarFile = new File(clientModel.getJdbcDriverJarPath());
                 File jarFileOld = new File(extLibDir, jarFile.getName());
 
                 boolean flg = true;
@@ -179,14 +183,14 @@ public class ClientUpdateLogic {
                             file.delete();
                         }
 
-                        FileUtils.copyFileToDirectory(new File(clientParam.getJdbcDriverJarPath()), extLibDir);
+                        FileUtils.copyFileToDirectory(new File(clientModel.getJdbcDriverJarPath()), extLibDir);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
             }
 
-            createSchemaSyncCheck(clientParam);
+            createSchemaSyncCheck(clientModel);
         } catch (Exception e) {
             try {
                 FileUtils.deleteDirectory(dbfluteClientDir);
@@ -196,10 +200,10 @@ public class ClientUpdateLogic {
     }
 
     private void createSchemaSyncCheck(ClientModel clientParam) {
-        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getProject());
+        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getClientProject());
         URL schemaSyncCheckURL = ClassLoader.getSystemResource("dfprop/documentMap+schemaSyncCheck.dfprop");
 
-        for (Entry<String, DatabaseParam> entry : clientParam.getSchemaSyncCheckMap().entrySet()) {
+        for (Entry<String, DatabaseModel> entry : clientParam.getSchemaSyncCheckMap().entrySet()) {
             final File dfpropEnvDir = new File(dbfluteClientDir, "dfprop/schemaSyncCheck_" + entry.getKey());
             dfpropEnvDir.mkdir();
 

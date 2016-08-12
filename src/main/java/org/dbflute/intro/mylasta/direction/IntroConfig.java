@@ -23,10 +23,10 @@ import org.lastaflute.core.direction.exception.ConfigPropertyNotFoundException;
  */
 public interface IntroConfig extends IntroEnv {
 
-    /** The key of the configuration. e.g. DbfluteIntro */
+    /** The key of the configuration. e.g. Intro */
     String DOMAIN_TITLE = "domain.title";
 
-    /** The key of the configuration. e.g. dbfluteintro */
+    /** The key of the configuration. e.g. intro */
     String DOMAIN_NAME = "domain.name";
 
     /** The key of the configuration. e.g. / */
@@ -71,14 +71,16 @@ public interface IntroConfig extends IntroEnv {
 
     /**
      * Get the value for the key 'domain.title'. <br>
-     * The value is, e.g. DbfluteIntro <br>
+     * The value is, e.g. Intro <br>
+     * comment: The name of domain (means this application) as identity
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
     String getDomainTitle();
 
     /**
      * Get the value for the key 'domain.name'. <br>
-     * The value is, e.g. dbfluteintro <br>
+     * The value is, e.g. intro <br>
+     * comment: The title of domain (means this application) for logging
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
     String getDomainName();
