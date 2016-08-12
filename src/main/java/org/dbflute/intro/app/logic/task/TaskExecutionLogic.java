@@ -59,7 +59,7 @@ public class TaskExecutionLogic {
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            final String clientPath = introPhysicalLogic.toDBFluteClientPath(project);
+            final String clientPath = introPhysicalLogic.buildClientPath(project);
             processBuilder.directory(new File(clientPath));
 
             int resultCode = executeCommand(processBuilder, streamProvider);

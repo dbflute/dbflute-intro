@@ -30,7 +30,7 @@
 
   "LABEL_PROJECT_TAB" : "DB",
 
-  "LABEL_DATABASE" : "DBMS",
+  "LABEL_TARGET_DATABASE" : "DBMS",
   "LABEL_TARGET_LANGUAGE" : "Language",
   "LABEL_TARGET_CONTAINER": "Container",
   "LABEL_PACKAGE_BASE" : "Pakage Base",

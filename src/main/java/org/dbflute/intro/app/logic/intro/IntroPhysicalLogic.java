@@ -21,42 +21,64 @@ package org.dbflute.intro.app.logic.intro;
  */
 public class IntroPhysicalLogic {
 
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String ENGINE_TEMPLATE_PATH = "mydbflute/dbflute-%1$s";
+
     /**
      * <pre>
      * e.g. "."
      *  dbflute-intro
-     *   |-dbflute_exampledb // DBFlute client
-     *   |-mydbflute         // DBFlute module
+     *   |-dbflute_maihamadb // client
+     *   |-mydbflute         // engine
      *   |-dbflute-intro.jar
      * </pre>
      */
     public static final String BASE_DIR_PATH = ".";
 
-    public String buildResourcePath(String path) {
-        return BASE_DIR_PATH + "/" + path;
-    }
-
+    // ===================================================================================
+    //                                                                              Client
+    //                                                                              ======
     /**
      * <pre>
      * e.g.
      *  toDBFluteClientPath("maihamadb"): ./dbflute_maihamadb
      * </pre>
-     * @param project The project name of DBFlute client. (NotNull)
+     * @param clientProject The project name of DBFlute client. (NotNull)
      * @return The path to the DBFlute client. (NotNull)
      */
-    public String toDBFluteClientPath(String project) {
-        return buildResourcePath("dbflute_" + project);
+    public String buildClientPath(String clientProject) {
+        return buildBasicPath("dbflute_" + clientProject);
     }
 
-    public String toDBFluteClientResourcePath(String project, String resource) {
-        return toDBFluteClientPath(project) + "/" + resource;
+    public String buildClientResourcePath(String clientProject, String resource) {
+        return buildClientPath(clientProject) + "/" + resource;
     }
 
-    public String toDfpropDirPath(String project) {
-        return toDBFluteClientResourcePath(project, "dfprop");
+    public String buildDfpropDirPath(String clientProject) {
+        return buildClientResourcePath(clientProject, "dfprop");
     }
 
-    public String toDocumentOutputDirPath(String project) {
-        return toDBFluteClientResourcePath(project, "output/doc");
+    public String buildDocumentOutputDirPath(String clientProject) {
+        return buildClientResourcePath(clientProject, "output/doc");
+    }
+
+    // ===================================================================================
+    //                                                                              Engine
+    //                                                                              ======
+    public String buildEnginePath(String dbfluteVersion) {
+        return buildBasicPath(String.format(ENGINE_TEMPLATE_PATH, dbfluteVersion));
+    }
+
+    public String buildEngineResourcePath(String dbfluteVersion, String resource) {
+        return buildEnginePath(dbfluteVersion) + "/" + resource;
+    }
+
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    protected String buildBasicPath(String path) {
+        return BASE_DIR_PATH + "/" + path;
     }
 }

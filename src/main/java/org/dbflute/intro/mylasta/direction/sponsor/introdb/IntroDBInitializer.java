@@ -32,6 +32,7 @@ import org.dbflute.bhv.BehaviorWritable;
 import org.dbflute.dbmeta.DBMeta;
 import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.helper.token.file.FileToken;
+import org.dbflute.intro.dbflute.allcommon.DBMetaInstanceHandler;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetContainerBhv;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetLanguageBhv;
@@ -73,6 +74,9 @@ public class IntroDBInitializer {
         try {
             conn = dataSource.getConnection();
             st = conn.createStatement();
+            for (DBMeta dbmeta : DBMetaInstanceHandler.getUnmodifiableDBMetaMap().values()) {
+                st.execute("drop table " + dbmeta.getTableSqlName() + " if exists");
+            }
             st.execute(sqls);
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to execute the DDL: " + schemaSqlPath, e);

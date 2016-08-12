@@ -47,9 +47,9 @@ public class IntroClsAssist {
     //                                                                          ==========
     public Map<String, Map<?, ?>> getClassificationMap() {
         Map<String, Map<?, ?>> clsMap = new LinkedHashMap<String, Map<?, ?>>();
-        clsMap.put("databaseTypeMap", prepareDatabaseTypeMap());
-        clsMap.put("languageTypeMap", prepareTargetLanguageMap());
-        clsMap.put("containerTypeMap", prepareTargetContainerMap());
+        clsMap.put("targetDatabaseMap", prepareDatabaseTypeMap());
+        clsMap.put("targetLanguageMap", prepareTargetLanguageMap());
+        clsMap.put("targetContainerMap", prepareTargetContainerMap());
         return clsMap;
     }
 

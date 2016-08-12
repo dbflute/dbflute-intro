@@ -13,38 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model;
+package org.dbflute.intro.app.model.client.document;
+
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class OptionModel {
+public class DocumentMap {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // -----------------------------------------------------
-    //                                           documentMap
-    //                                           -----------
-    private boolean dbCommentOnAliasBasis;
-    private String aliasDelimiterInDbComment;
-    private boolean checkColumnDefOrderDiff;
-    private boolean checkDbCommentDiff;
-    private boolean checkProcedureDiff;
-
-    // -----------------------------------------------------
-    //                                         outsideSqlMap
-    //                                         -------------
-    private boolean generateProcedureParameterBean;
-    private String procedureSynonymHandlingType;
+    protected boolean dbCommentOnAliasBasis;
+    protected String aliasDelimiterInDbComment;
+    protected boolean checkColumnDefOrderDiff;
+    protected boolean checkDbCommentDiff;
+    protected boolean checkProcedureDiff;
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    // -----------------------------------------------------
-    //                                           documentMap
-    //                                           -----------
     public boolean isDbCommentOnAliasBasis() {
         return dbCommentOnAliasBasis;
     }
@@ -53,8 +43,10 @@ public class OptionModel {
         this.dbCommentOnAliasBasis = isDbCommentOnAliasBasis;
     }
 
-    public String getAliasDelimiterInDbComment() {
-        return aliasDelimiterInDbComment;
+    public OptionalThing<String> getAliasDelimiterInDbComment() {
+        return OptionalThing.ofNullable(aliasDelimiterInDbComment, () -> {
+            throw new IllegalStateException("Not found the aliasDelimiterInDbComment.");
+        });
     }
 
     public void setAliasDelimiterInDbComment(String aliasDelimiterInDbComment) {
@@ -83,24 +75,5 @@ public class OptionModel {
 
     public void setCheckProcedureDiff(boolean isCheckProcedureDiff) {
         this.checkProcedureDiff = isCheckProcedureDiff;
-    }
-
-    // -----------------------------------------------------
-    //                                         outsideSqlMap
-    //                                         -------------
-    public boolean isGenerateProcedureParameterBean() {
-        return generateProcedureParameterBean;
-    }
-
-    public void setGenerateProcedureParameterBean(boolean isGenerateProcedureParameterBean) {
-        this.generateProcedureParameterBean = isGenerateProcedureParameterBean;
-    }
-
-    public String getProcedureSynonymHandlingType() {
-        return procedureSynonymHandlingType;
-    }
-
-    public void setProcedureSynonymHandlingType(String procedureSynonymHandlingType) {
-        this.procedureSynonymHandlingType = procedureSynonymHandlingType;
     }
 }

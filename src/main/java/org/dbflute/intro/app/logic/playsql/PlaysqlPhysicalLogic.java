@@ -45,7 +45,7 @@ public class PlaysqlPhysicalLogic {
     //                                                                                Path
     //                                                                                ====
     public String buildPlaysqlDirPath(String project) {
-        return introPhysicalLogic.toDBFluteClientResourcePath(project, PLAYSQL_DIR_PATH);
+        return introPhysicalLogic.buildClientResourcePath(project, PLAYSQL_DIR_PATH);
     }
 
     public String buildPlaysqlFilePath(String project, String fileName) {

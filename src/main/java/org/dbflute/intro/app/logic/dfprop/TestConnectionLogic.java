@@ -27,10 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.dbflute.intro.app.logic.engine.EngineDownloadLogic;
-import org.dbflute.intro.app.model.DatabaseModel;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.mylasta.exception.DatabaseConnectionException;
 import org.dbflute.util.DfStringUtil;
 
@@ -40,20 +43,22 @@ import org.dbflute.util.DfStringUtil;
  */
 public class TestConnectionLogic {
 
+    @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
+
     // ===================================================================================
     //                                                                     Test Connection
     //                                                                     ===============
-    public void testConnection(String jdbcDriverJarPath, String dbfluteVersion, String jdbcDriver, DatabaseModel databaseParam) {
+    public void testConnection(String jdbcDriverJarPath, String dbfluteVersion, DatabaseInfoMap databaseInfoMap) {
         ProxySelector proxySelector = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
         Connection connection = null;
-
         try {
-            List<URL> urls = new ArrayList<URL>();
+            final List<URL> urls = new ArrayList<URL>();
             if (DfStringUtil.is_Null_or_Empty(jdbcDriverJarPath)) {
-                File mydbfluteDir = new File(String.format(EngineDownloadLogic.MY_DBFLUTE_PATH, dbfluteVersion), "lib");
-                if (mydbfluteDir.isDirectory()) {
-                    for (File file : FileUtils.listFiles(mydbfluteDir, FileFilterUtils.suffixFileFilter(".jar"), null)) {
+                final File libDir = new File(introPhysicalLogic.buildEngineResourcePath(dbfluteVersion, "lib"));
+                if (libDir.isDirectory()) {
+                    for (File file : FileUtils.listFiles(libDir, FileFilterUtils.suffixFileFilter(".jar"), null)) {
                         urls.add(file.toURI().toURL());
                     }
                 }
@@ -63,21 +68,23 @@ public class TestConnectionLogic {
             }
 
             URLClassLoader loader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]));
+            String jdbcDriver = databaseInfoMap.getDriver();
 
             @SuppressWarnings("unchecked")
             Class<Driver> driverClass = (Class<Driver>) loader.loadClass(jdbcDriver);
             Driver driver = driverClass.newInstance();
 
             Properties info = new Properties();
-            String user = databaseParam.getUser();
+            DbConnectionBox dbConnectionBox = databaseInfoMap.getDbConnectionBox();
+            String user = dbConnectionBox.getUser();
             if (DfStringUtil.is_NotNull_and_NotEmpty(user)) {
                 info.put("user", user);
             }
-            String password = databaseParam.getPassword();
+            String password = dbConnectionBox.getPassword();
             if (DfStringUtil.is_NotNull_and_NotEmpty(password)) {
                 info.put("password", password);
             }
-            connection = driver.connect(databaseParam.getUrl(), info);
+            connection = driver.connect(dbConnectionBox.getUrl(), info);
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
             throw new DatabaseConnectionException(e.getMessage(), e);
         } finally {

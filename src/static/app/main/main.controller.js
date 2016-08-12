@@ -3,7 +3,7 @@
 angular.module('dbflute-intro')
         .controller('MainCtrl', function ($scope, $window, $uibModal, ApiFactory) {
 
-    // レスポンスの型を変換 Bean -> Body
+    //  Bean -> Body
     var convertParam = function(param) {
         var tempParam = angular.copy(param);
         for (var key in tempParam) {
@@ -64,7 +64,7 @@ angular.module('dbflute-intro')
 
     $scope.add = function() {
         $scope.editFlg = true;
-        $scope.clientBean = {create: true, databaseBean: {}, systemUserDatabaseBean: {}, schemaSyncCheckMap: {}, optionBean: {}};
+        $scope.clientBean = {create: true, databaseBean: {}, systemUserBean: {}, schemaSyncCheckMap: {}, optionBean: {}};
     };
 
     $scope.edit = function() {
@@ -137,7 +137,7 @@ angular.module('dbflute-intro')
     };
     $scope.changeDatabase = function(clientBean) {
     	clientBean.jdbcDriverFqcn = clientBean.driverName;
-        var database = $scope.classificationMap["databaseTypeMap"][clientBean.databaseType];
+        var database = $scope.classificationMap["targetDatabaseMap"][clientBean.databaseType];
         clientBean.databaseBean.url = database.urlTemplate;
         clientBean.databaseBean.schema =  database.defaultSchema;
     };

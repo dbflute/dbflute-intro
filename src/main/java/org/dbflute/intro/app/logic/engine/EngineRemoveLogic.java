@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
  * @author p1us2er0
@@ -29,10 +30,10 @@ import org.apache.commons.io.FileUtils;
 public class EngineRemoveLogic { // TODO jflute intro: will rename? (2016/07/05)
 
     @Resource
-    private EnginePhysicalLogic enginePhysicalLogic;
+    private IntroPhysicalLogic introPhysicalLogic;
 
     public void remove(String engineVersion) {
-        final String enginePath = enginePhysicalLogic.buildEnginePath(engineVersion);
+        final String enginePath = introPhysicalLogic.buildEnginePath(engineVersion);
         final File engineDir = new File(enginePath);
         if (engineDir.exists()) {
             try {

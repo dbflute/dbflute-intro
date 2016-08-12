@@ -47,7 +47,7 @@ public class DfpropPhysicalLogic {
     //                                                                               Path
     //                                                                              ======
     public String buildDfpropDirPath(String project) {
-        return introPhysicalLogic.toDBFluteClientResourcePath(project, DFPROP_DIR_PATH);
+        return introPhysicalLogic.buildClientResourcePath(project, DFPROP_DIR_PATH);
     }
 
     public String buildDfpropFilePath(String project, String fileName) {

@@ -28,9 +28,9 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
  */
 public class DfpropInfoLogic {
 
-    public Map<String, Map<String, Object>> prepareDfpropMap(String project) {
+    public Map<String, Map<String, Object>> findDfpropMap(String clientProject) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project + "/dfprop");
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientProject + "/dfprop");
 
         Stream.of(dfpropDir.listFiles()).forEach(file -> {
             if (!file.getName().endsWith("Map.dfprop")) {
@@ -51,6 +51,14 @@ public class DfpropInfoLogic {
                 dfpropMap.get(fileNameKey).putAll(dfpropFile.readMap(plusFile.getAbsolutePath(), null));
             }
         });
+        final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
+        if (basicInfoMap == null) {
+            throw new RuntimeException("Not found the basicInfoMap.dfprop: " + dfpropMap.keySet());
+        }
+        final Map<String, Object> databaseInfoMap = dfpropMap.get("databaseInfoMap.dfprop");
+        if (databaseInfoMap == null) {
+            throw new RuntimeException("Not found the databaseInfoMap.dfprop: " + dfpropMap.keySet());
+        }
         return dfpropMap;
     }
 }

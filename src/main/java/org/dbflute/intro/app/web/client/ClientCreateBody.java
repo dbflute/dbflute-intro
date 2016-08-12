@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -28,47 +29,38 @@ import org.lastaflute.web.validation.Required;
  */
 public class ClientCreateBody {
 
+    // TODO jflute nested body named body? (2016/08/12)
     @Required
     @Valid
     public ClientBody clientBody;
 
-    /**
-     * @author p1us2er0
-     */
+    // TODO jflute recyle with bean? (2016/08/12)
     public static class ClientBody {
 
-        // ===================================================================================
-        //                                                                           Attribute
-        //                                                                           =========
         @Required
-        public String project;
-
+        public String clientProject;
         @Required
-        public String database;
-
+        public CDef.TargetDatabase targetDatabase;
         @Required
-        public String targetLanguage;
-
+        public CDef.TargetLanguage targetLanguage;
         @Required
-        public String targetContainer;
-
+        public CDef.TargetContainer targetContainer;
         @Required
         public String packageBase;
+        @Required
+        public String jdbcDriverFqcn;
 
         @Required
         @Valid
         public DatabaseBody databaseBody;
 
-        @Required
         @Valid
-        public DatabaseBody systemUserDatabaseBody;
+        public DatabaseBody systemUserBody;
 
         public static class DatabaseBody {
 
             @Required
-            public String jdbcDriver;
-            @Required
-            public String url;
+            public String url; // contains additional schema by comma
             public String schema;
             @Required
             public String user;
@@ -86,13 +78,18 @@ public class ClientCreateBody {
 
         public static class OptionBody {
 
-            public boolean dbCommentOnAliasBasis = true;
-            public String aliasDelimiterInDbComment = ":";
-            public boolean checkColumnDefOrderDiff = true;
-            public boolean checkDbCommentDiff = true;
-            public boolean checkProcedureDiff = true;
-            public boolean generateProcedureParameterBean = true;
-            public String procedureSynonymHandlingType = "INCLUDE";
+            @Required
+            public Boolean dbCommentOnAliasBasis;
+            public String aliasDelimiterInDbComment;
+            @Required
+            public Boolean checkColumnDefOrderDiff;
+            @Required
+            public Boolean checkDbCommentDiff;
+            @Required
+            public Boolean checkProcedureDiff;
+            @Required
+            public Boolean generateProcedureParameterBean;
+            public String procedureSynonymHandlingType;
         }
 
         @NotNull
@@ -100,5 +97,5 @@ public class ClientCreateBody {
     }
 
     @Required
-    public Boolean testConnection = true;
+    public Boolean testConnection;
 }

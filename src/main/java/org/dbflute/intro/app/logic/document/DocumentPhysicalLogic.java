@@ -14,8 +14,16 @@ public class DocumentPhysicalLogic {
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
-    public File findDocumentFile(String project, String type) {
-        final String outputDirPath = introPhysicalLogic.toDocumentOutputDirPath(project);
-        return new File(outputDirPath + "/" + type + "-" + project + ".html");
+    public boolean existsSchemaHtml(String clientProject) {
+        return findDocumentFile(clientProject, "schema").exists();
+    }
+
+    public boolean existsHistoryHtml(String clientProject) {
+        return findDocumentFile(clientProject, "history").exists();
+    }
+
+    public File findDocumentFile(String clientProject, String type) {
+        final String outputDirPath = introPhysicalLogic.buildDocumentOutputDirPath(clientProject);
+        return new File(outputDirPath + "/" + type + "-" + clientProject + ".html");
     }
 }

@@ -13,54 +13,35 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model;
+package org.dbflute.intro.app.model.client.database;
 
 /**
- * @author p1us2er0
  * @author jflute
  */
-public class DatabaseModel {
+public class DatabaseInfoMap {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private String url;
-    private String schema; // contains additional schema as common-separated
-    private String user;
-    private String password;
+    protected final String driver;
+    protected final DbConnectionBox dbConnectionInfo;
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    public DatabaseInfoMap(String driver, DbConnectionBox dbConnectionInfo) {
+        this.driver = driver;
+        this.dbConnectionInfo = dbConnectionInfo;
+    }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getUrl() {
-        return url;
+    public String getDriver() {
+        return driver;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
-    public void setSchema(String schema) {
-        this.schema = schema;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public DbConnectionBox getDbConnectionBox() {
+        return dbConnectionInfo;
     }
 }

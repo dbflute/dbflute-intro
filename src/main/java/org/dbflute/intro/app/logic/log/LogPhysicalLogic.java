@@ -44,7 +44,7 @@ public class LogPhysicalLogic {
     //                                                                                Path
     //                                                                                ====
     public String buildLogPath(String project) {
-        return introPhysicalLogic.toDBFluteClientResourcePath(project, LOG_DIR_PATH);
+        return introPhysicalLogic.buildClientResourcePath(project, LOG_DIR_PATH);
     }
 
     // ===================================================================================
