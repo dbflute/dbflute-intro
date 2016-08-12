@@ -38,7 +38,8 @@ etc/testdb
 
 # DBFlute
 latest-data.zip
-/dbflute_*
+/dbflute_testdb
+/dbflute_maihamadb
 /dbflute-intro.jar
 /dbflute-intro.war
 

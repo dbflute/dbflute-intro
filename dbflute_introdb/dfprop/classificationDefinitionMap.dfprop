@@ -1,0 +1,99 @@
+# /---------------------------------------------------------------------------
+# classificationDefinitionMap: (NotRequired - Default map:{})
+#
+# The definition of classification.
+#
+# Specification:
+# map: {
+#     [classification-name] = list:{
+#         ; map:{
+#             ; topComment=[comment]; codeType=[String(default) or Number or Boolean]
+#             ; undefinedHandlingType=[EXCEPTION or LOGGING(default) or ALLOWED]
+#             ; isUseDocumentOnly=[true or false(default)]
+#             ; isSuppressAutoDeploy=[true or false(default)]
+#             ; groupingMap = map:{
+#                 ; [group-name] = map:{
+#                     ; groupComment=[comment]
+#                     ; elementList=list:{[the list of classification element's name]}
+#                 }
+#             }
+#         }
+#         # classification elements for implicit classification
+#         ; map:{
+#             ; code=[code]; name=[name]; alias=[alias]; comment=[comment]
+#             ; sisterCode=[code or code-list]; subItemMap=map:{[free-map]}
+#         }
+#         # settings for table classification
+#         ; map:{
+#             ; table=[table-name]
+#             ; code=[column-name for code]; name=[column-name for name]
+#             ; alias=[column-name for alias]; comment=[column-name for comment]}
+#             ; where=[condition for select]; orderBy=[column-name for ordering]
+#             ; exceptCodeList=[the list of except code]
+#         }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # ====================================================================================
+    #                                                                               Common
+    #                                                                               ======
+    ; Flg = list:{
+        ; map:{
+            ; topComment=general boolean classification for every flg-column; codeType=Number
+        }
+        ; map:{code=1; name=True ; alias=Checked  ; comment=means yes; sisterCode=true }
+        ; map:{code=0; name=False; alias=Unchecked; comment=means no ; sisterCode=false}
+    }
+
+    # ====================================================================================
+    #                                                                         basicInfoMap
+    #                                                                         ============
+    ; TargetDatabase = list:{
+        ; map:{
+            ; topComment=databases DBFlute cau use; codeType=String
+        }
+        ; map:{
+            ; table=CLS_TARGET_DATABASE
+            ; code=DATABASE_CODE; name=DATABASE_NAME; orderBy=DISPLAY_ORDER
+        }
+    }
+    ; TargetLanguage = list:{
+        ; map:{
+            ; topComment=databases DBFlute cau use; codeType=String
+        }
+        ; map:{
+            ; table=CLS_TARGET_LANGUAGE
+            ; code=LANGUAGE_CODE; name=LANGUAGE_NAME; orderBy=DISPLAY_ORDER
+        }
+    }
+    ; TargetContainer = list:{
+        ; map:{
+            ; topComment=containers DBFlute cau use; codeType=String
+        }
+        ; map:{
+            ; table=CLS_TARGET_CONTAINER
+            ; code=CONTAINER_CODE; name=CONTAINER_NAME; orderBy=DISPLAY_ORDER
+        }
+    }
+
+    # ====================================================================================
+    #                                                                         DBFlute Task
+    #                                                                         ============
+    ; TaskType = list:{
+        ; map:{
+            ; topComment=DBFlute tasks e.g. jdbc, doc; codeType=String
+        }
+        ; map:{code=jdbc; name=JDBC; subItemMap = map:{manageArg=jdbc}}
+        ; map:{code=doc; name=Doc; subItemMap = map:{manageArg=doc}}
+        ; map:{code=generate; name=Generate; subItemMap = map:{manageArg=generate}}
+        ; map:{code=outside_sql_test; name=OutsideSqlTest; subItemMap = map:{manageArg=outside-sql-test}}
+        ; map:{code=sql2entity; name=Sql2Entity; subItemMap = map:{manageArg=sql2entity}}
+        ; map:{code=replace_schema; name=ReplaceSchema; subItemMap = map:{manageArg=replace-schema}}
+        ; map:{code=load_data_reverse; name=LoadDataReverse; subItemMap = map:{manageArg=loadDataReverse}}
+        ; map:{code=schema_sync_check; name=SchemaSyncCheck; subItemMap = map:{manageArg=schema-sync-check}}
+    }
+}
+# ----------------/
