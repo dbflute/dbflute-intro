@@ -75,7 +75,7 @@ dependencies {
     testCompile "com.github.javaparser:javaparser-core:${versions.javaparser}"
 }
 
-mainClassName = 'org.dbflute.intro.DbfluteIntroBoot'
+mainClassName = 'org.dbflute.intro.IntroBoot'
 
 war {
     from {
