@@ -44,13 +44,13 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. debug */
     String LOG_CONSOLE_LEVEL = "log.console.level";
 
-    /** The key of the configuration. e.g. /tmp/lastaflute/dbfluteintro */
+    /** The key of the configuration. e.g. /tmp/lastaflute/intro */
     String LOG_FILE_BASEDIR = "log.file.basedir";
 
     /** The key of the configuration. e.g. org.h2.Driver */
     String JDBC_DRIVER = "jdbc.driver";
 
-    /** The key of the configuration. e.g. jdbc:h2:mem:introdb */
+    /** The key of the configuration. e.g. jdbc:h2:mem:introdb;DB_CLOSE_DELAY=-1 */
     String JDBC_URL = "jdbc.url";
 
     /** The key of the configuration. e.g. introdb */
@@ -161,7 +161,7 @@ public interface IntroEnv {
 
     /**
      * Get the value for the key 'log.file.basedir'. <br>
-     * The value is, e.g. /tmp/lastaflute/dbfluteintro <br>
+     * The value is, e.g. /tmp/lastaflute/intro <br>
      * comment: The log file basedir
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
@@ -177,7 +177,7 @@ public interface IntroEnv {
 
     /**
      * Get the value for the key 'jdbc.url'. <br>
-     * The value is, e.g. jdbc:h2:mem:introdb <br>
+     * The value is, e.g. jdbc:h2:mem:introdb;DB_CLOSE_DELAY=-1 <br>
      * comment: The URL of database connection for JDBC
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */

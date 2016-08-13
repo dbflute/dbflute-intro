@@ -54,40 +54,38 @@ public class ClientCreateBody {
         @Valid
         public DatabaseBody databaseBody;
 
-        @Valid
         public DatabaseBody systemUserBody;
 
         public static class DatabaseBody {
 
-            @Required
             public String url; // contains additional schema by comma
             public String schema;
-            @Required
             public String user;
             public String password;
         }
+        
+        @Required
+        public String dbfluteVersion;
 
         public String jdbcDriverJarPath;
 
         @Required
-        public String dbfluteVersion;
-
-        @Required
-        @Valid
+        // TODO jflute intro: option body validation after client implementation (2016/08/13)
+        //@Valid
         public OptionBody optionBody;
 
         public static class OptionBody {
 
-            @Required
+            //@Required
             public Boolean dbCommentOnAliasBasis;
             public String aliasDelimiterInDbComment;
-            @Required
+            //@Required
             public Boolean checkColumnDefOrderDiff;
-            @Required
+            //@Required
             public Boolean checkDbCommentDiff;
-            @Required
+            //@Required
             public Boolean checkProcedureDiff;
-            @Required
+            //@Required
             public Boolean generateProcedureParameterBean;
             public String procedureSynonymHandlingType;
         }

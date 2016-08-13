@@ -30,6 +30,7 @@ import org.lastaflute.web.validation.Required;
 public class ClientDetailBean {
 
     @Required
+    @Valid
     public ClientBean clientBean;
 
     public static class ClientBean {
@@ -64,10 +65,10 @@ public class ClientDetailBean {
             public String password;
         }
 
-        public String jdbcDriverJarPath;
-
         @Required
         public String dbfluteVersion;
+
+        public String jdbcDriverJarPath;
 
         @Valid
         public OptionBean optionBean;

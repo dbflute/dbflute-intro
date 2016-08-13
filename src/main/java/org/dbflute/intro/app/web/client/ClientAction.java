@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,15 +33,16 @@ import org.dbflute.intro.app.model.client.ProjectMeta;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
 import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
+import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
-import org.dbflute.intro.mylasta.exception.ClientNotFoundException;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
@@ -84,7 +86,7 @@ public class ClientAction extends IntroBaseAction {
     //                                                Select
     //                                                ------
     @Execute
-    public JsonResponse<Map<String, Map<?, ?>>> classification() {
+    public JsonResponse<Map<String, Map<?, ?>>> classifications() {
         Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
         return asJson(classificationMap);
     }
@@ -124,6 +126,7 @@ public class ClientAction extends IntroBaseAction {
             });
         }).orElse(null);
         clientBean.optionBean = prepareOption(clientModel);
+        clientBean.schemaSyncCheckMap = new LinkedHashMap<>();
         // #pending by jflute
         //    Map<String, DatabaseInfoMap> schemaSyncCheckMap = clientModel.getSchemaSyncCheckMap();
         //    if (schemaSyncCheckMap != null) {
@@ -157,8 +160,8 @@ public class ClientAction extends IntroBaseAction {
         clientBean.targetContainer = basicInfoMap.getTargetContainer();
         clientBean.packageBase = basicInfoMap.getPackageBase();
         clientBean.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
+        clientBean.dbfluteVersion = projectMeta.getDbfluteVersion();
         clientBean.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
-        clientBean.dbfluteVersion = projectMeta.getDbfluteVersion().orElse(null);
     }
 
     private void prepareDatabase(ClientBean clientBean, ClientModel clientModel) {
@@ -227,7 +230,7 @@ public class ClientAction extends IntroBaseAction {
     }
 
     private ProjectMeta prepareProjectMeta(ClientBody clientBody) {
-        return new ProjectMeta(clientBody.clientProject, clientBody.jdbcDriverJarPath, clientBody.dbfluteVersion);
+        return new ProjectMeta(clientBody.clientProject, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientBody clientBody) {
@@ -238,23 +241,23 @@ public class ClientAction extends IntroBaseAction {
         return OptionalThing.ofNullable(clientBody.databaseBody, () -> {}).map(databaseBody -> {
             DbConnectionBox dbConnectionInfo =
                     new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
-            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, dbConnectionInfo);
+            AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
+            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, dbConnectionInfo, additionalSchemaMap);
         }).orElseThrow(() -> {
             return new IllegalStateException("Not found the database body: " + clientBody);
         });
     }
 
     private void testConnectionIfPossible(ClientModel clientModel) {
-        clientModel.getProjectMeta().getJdbcDriverJarPath().ifPresent(jarPath -> {
-            clientModel.getProjectMeta().getDbfluteVersion().ifPresent(dbfluteVersion -> {
-                testConnectionLogic.testConnection(jarPath, dbfluteVersion, clientModel.getDatabaseInfoMap());
-            });
-        });
+        String dbfluteVersion = clientModel.getProjectMeta().getDbfluteVersion();
+        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectMeta().getJdbcDriverJarPath();
+        DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
+        testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
     }
 
     @Execute
-    public JsonResponse<Void> delete(String project) {
-        clientUpdateLogic.deleteClient(project);
+    public JsonResponse<Void> delete(String clientProject) {
+        clientUpdateLogic.deleteClient(clientProject);
         return JsonResponse.asEmptyBody();
     }
 

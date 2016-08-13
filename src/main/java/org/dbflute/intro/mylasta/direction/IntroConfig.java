@@ -38,20 +38,8 @@ public interface IntroConfig extends IntroEnv {
     /** The key of the configuration. e.g. 315360000 */
     String COOKIE_ETERNAL_EXPIRE = "cookie.eternal.expire";
 
-    /** The key of the configuration. e.g. 4 */
-    String PAGING_PAGE_SIZE = "paging.page.size";
-
-    /** The key of the configuration. e.g. 3 */
-    String PAGING_PAGE_RANGE_SIZE = "paging.page.range.size";
-
-    /** The key of the configuration. e.g. true */
-    String PAGING_PAGE_RANGE_FILL_LIMIT = "paging.page.range.fill.limit";
-
-    /** The key of the configuration. e.g. 1930 */
-    String MINIMUM_YEAR = "minimum.year";
-
-    /** The key of the configuration. e.g. http://dbflute.org/meta/public.properties */
-    String DBFLUTE_PUBLIC_PROPERTIES_URL = "dbflute.public.properties.url";
+    /** The key of the configuration. e.g. HRB */
+    String COOKIE_REMEMBER_ME_HARBOR_KEY = "cookie.remember.me.harbor.key";
 
     /**
      * Get the value of property as {@link String}.
@@ -128,79 +116,12 @@ public interface IntroConfig extends IntroEnv {
     Integer getCookieEternalExpireAsInteger();
 
     /**
-     * Get the value for the key 'paging.page.size'. <br>
-     * The value is, e.g. 4 <br>
-     * comment: The size of one page for paging
+     * Get the value for the key 'cookie.remember.me.harbor.key'. <br>
+     * The value is, e.g. HRB <br>
+     * comment: The cookie key of remember-me for Harbor #change_it_first
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
-    String getPagingPageSize();
-
-    /**
-     * Get the value for the key 'paging.page.size' as {@link Integer}. <br>
-     * The value is, e.g. 4 <br>
-     * comment: The size of one page for paging
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     * @throws NumberFormatException When the property is not integer.
-     */
-    Integer getPagingPageSizeAsInteger();
-
-    /**
-     * Get the value for the key 'paging.page.range.size'. <br>
-     * The value is, e.g. 3 <br>
-     * comment: The size of page range for paging
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getPagingPageRangeSize();
-
-    /**
-     * Get the value for the key 'paging.page.range.size' as {@link Integer}. <br>
-     * The value is, e.g. 3 <br>
-     * comment: The size of page range for paging
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     * @throws NumberFormatException When the property is not integer.
-     */
-    Integer getPagingPageRangeSizeAsInteger();
-
-    /**
-     * Get the value for the key 'paging.page.range.fill.limit'. <br>
-     * The value is, e.g. true <br>
-     * comment: The option 'fillLimit' of page range for paging
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getPagingPageRangeFillLimit();
-
-    /**
-     * Is the property for the key 'paging.page.range.fill.limit' true? <br>
-     * The value is, e.g. true <br>
-     * comment: The option 'fillLimit' of page range for paging
-     * @return The determination, true or false. (if not found, exception but basically no way)
-     */
-    boolean isPagingPageRangeFillLimit();
-
-    /**
-     * Get the value for the key 'minimum.year'. <br>
-     * The value is, e.g. 1930 <br>
-     * comment: The minimum year of this project
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getMinimumYear();
-
-    /**
-     * Get the value for the key 'minimum.year' as {@link Integer}. <br>
-     * The value is, e.g. 1930 <br>
-     * comment: The minimum year of this project
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     * @throws NumberFormatException When the property is not integer.
-     */
-    Integer getMinimumYearAsInteger();
-
-    /**
-     * Get the value for the key 'dbflute.public.properties.url'. <br>
-     * The value is, e.g. http://dbflute.org/meta/public.properties <br>
-     * comment: Dbflute public properties url
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getDbflutePublicPropertiesUrl();
+    String getCookieRememberMeHarborKey();
 
     /**
      * The simple implementation for configuration.
@@ -239,40 +160,8 @@ public interface IntroConfig extends IntroEnv {
             return getAsInteger(IntroConfig.COOKIE_ETERNAL_EXPIRE);
         }
 
-        public String getPagingPageSize() {
-            return get(IntroConfig.PAGING_PAGE_SIZE);
-        }
-
-        public Integer getPagingPageSizeAsInteger() {
-            return getAsInteger(IntroConfig.PAGING_PAGE_SIZE);
-        }
-
-        public String getPagingPageRangeSize() {
-            return get(IntroConfig.PAGING_PAGE_RANGE_SIZE);
-        }
-
-        public Integer getPagingPageRangeSizeAsInteger() {
-            return getAsInteger(IntroConfig.PAGING_PAGE_RANGE_SIZE);
-        }
-
-        public String getPagingPageRangeFillLimit() {
-            return get(IntroConfig.PAGING_PAGE_RANGE_FILL_LIMIT);
-        }
-
-        public boolean isPagingPageRangeFillLimit() {
-            return is(IntroConfig.PAGING_PAGE_RANGE_FILL_LIMIT);
-        }
-
-        public String getMinimumYear() {
-            return get(IntroConfig.MINIMUM_YEAR);
-        }
-
-        public Integer getMinimumYearAsInteger() {
-            return getAsInteger(IntroConfig.MINIMUM_YEAR);
-        }
-
-        public String getDbflutePublicPropertiesUrl() {
-            return get(IntroConfig.DBFLUTE_PUBLIC_PROPERTIES_URL);
+        public String getCookieRememberMeHarborKey() {
+            return get(IntroConfig.COOKIE_REMEMBER_ME_HARBOR_KEY);
         }
     }
 }

@@ -23,8 +23,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.mylasta.exception.DfpropDirNotFoundException;
-import org.dbflute.intro.mylasta.exception.DfpropFileNotFoundException;
+import org.dbflute.intro.bizfw.tellfailure.DfpropDirNotFoundException;
+import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 
 /**
  * @author deco
@@ -47,7 +47,7 @@ public class DfpropPhysicalLogic {
     //                                                                               Path
     //                                                                              ======
     public String buildDfpropDirPath(String project) {
-        return introPhysicalLogic.buildClientResourcePath(project, DFPROP_DIR_PATH);
+        return introPhysicalLogic.buildClientPath(project, DFPROP_DIR_PATH);
     }
 
     public String buildDfpropFilePath(String project, String fileName) {

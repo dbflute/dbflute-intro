@@ -10,10 +10,10 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/intro/manifest'
             });
         },
-        publicProperties: function() {
+        engineLatest: function() {
             return $http({
                 method : 'POST',
-                url : 'api/engine/publicProperties'
+                url : 'api/engine/latest'
             });
         },
         engineVersions: function() {
@@ -22,10 +22,10 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/engine/versions'
             });
         },
-        classification: function() {
+        classifications: function() {
             return $http({
                 method : 'POST',
-                url : 'api/client/classification'
+                url : 'api/client/classifications'
             });
         },
         clientBeanList: function() {

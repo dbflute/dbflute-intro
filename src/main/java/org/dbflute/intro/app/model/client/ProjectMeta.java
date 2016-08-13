@@ -25,17 +25,17 @@ public class ProjectMeta {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String clientProject; // torque.project
+    protected final String clientProject; // not null, torque.project
+    protected final String dbfluteVersion; // not null, e.g. 1.1.1 (at _project.sh)
     protected final String jdbcDriverJarPath; // path to extlib
-    protected final String dbfluteVersion; // e.g. 1.1.1 (at _project.sh)
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ProjectMeta(String clientProject, String jdbcDriverJarPath, String dbfluteVersion) {
+    public ProjectMeta(String clientProject, String dbfluteVersion, String jdbcDriverJarPath) {
         this.clientProject = clientProject;
-        this.jdbcDriverJarPath = jdbcDriverJarPath;
         this.dbfluteVersion = dbfluteVersion;
+        this.jdbcDriverJarPath = jdbcDriverJarPath;
     }
 
     // ===================================================================================
@@ -45,15 +45,13 @@ public class ProjectMeta {
         return clientProject;
     }
 
+    public String getDbfluteVersion() {
+        return dbfluteVersion;
+    }
+    
     public OptionalThing<String> getJdbcDriverJarPath() {
         return OptionalThing.ofNullable(jdbcDriverJarPath, () -> {
             throw new IllegalStateException("Not found the jdbcDriverJarPath.");
-        });
-    }
-
-    public OptionalThing<String> getDbfluteVersion() {
-        return OptionalThing.ofNullable(dbfluteVersion, () -> {
-            throw new IllegalStateException("Not found the dbfluteVersion.");
         });
     }
 }

@@ -13,26 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.mylasta.exception;
+package org.dbflute.intro.bizfw.tellfailure;
+
+import java.util.function.Consumer;
 
 import org.dbflute.intro.mylasta.action.IntroMessages;
-import org.lastaflute.core.exception.LaApplicationException;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class DatabaseConnectionException extends LaApplicationException {
+public class DatabaseConnectionException extends IntroApplicationException {
 
     private static final long serialVersionUID = 1L;
 
-    public DatabaseConnectionException(String debugMsg) {
-        super(debugMsg);
-        saveApplicationMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION);
+    public DatabaseConnectionException(String debugMsg, String failureHint) {
+        super(debugMsg, prepareMessages(failureHint));
     }
 
-    public DatabaseConnectionException(String debugMsg, Throwable cause) {
-        super(debugMsg, cause);
-        saveApplicationMessage(IntroMessages.ERRORS_APP_DATABASE_CONNECTION);
+    public DatabaseConnectionException(String debugMsg, String failureHint, Throwable cause) {
+        super(debugMsg, prepareMessages(failureHint), cause);
+    }
+
+    private static Consumer<IntroMessages> prepareMessages(String failureHint) {
+        return messages -> messages.addErrorsAppDatabaseConnection(GLOBAL, failureHint);
     }
 }

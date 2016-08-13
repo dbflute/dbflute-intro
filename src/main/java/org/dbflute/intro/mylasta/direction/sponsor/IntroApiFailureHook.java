@@ -15,32 +15,23 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.dbflute.intro.mylasta.action.IntroMessages;
-import org.dbflute.intro.mylasta.bean.ErrorBean;
 import org.dbflute.optional.OptionalThing;
-import org.dbflute.util.DfCollectionUtil;
-import org.dbflute.util.DfStringUtil;
-import org.lastaflute.core.json.exception.JsonPropertyDateTimeParseFailureException;
-import org.lastaflute.core.json.exception.JsonPropertyNumberParseFailureException;
-import org.lastaflute.core.json.exception.JsonPropertyParseFailureException;
 import org.lastaflute.core.message.MessageManager;
-import org.lastaflute.core.util.ContainerUtil;
 import org.lastaflute.web.api.ApiFailureHook;
 import org.lastaflute.web.api.ApiFailureResource;
-import org.lastaflute.web.exception.Forced403ForbiddenException;
-import org.lastaflute.web.exception.Forced404NotFoundException;
-import org.lastaflute.web.exception.RequestJsonParseFailureException;
+import org.lastaflute.web.api.BusinessFailureMapping;
+import org.lastaflute.web.login.exception.LoginFailureException;
+import org.lastaflute.web.login.exception.LoginRequiredException;
 import org.lastaflute.web.login.exception.LoginUnauthorizedException;
 import org.lastaflute.web.response.ApiResponse;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.servlet.request.RequestManager;
 
 /**
  * @author p1us2er0
@@ -48,86 +39,111 @@ import org.lastaflute.web.response.JsonResponse;
  */
 public class IntroApiFailureHook implements ApiFailureHook {
 
-    private static final String GLOBAL_PROPERTY_KEY = IntroMessages.GLOBAL_PROPERTY_KEY;
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // [Front-side Implementation Image]
+    //
+    // if (HTTP Status: 200) { // success
+    //     XxxJsonBean bean = parseJsonAsSuccess(response);
+    //     ...(do process per action)
+    // } else if (HTTP Status: 400) { // e.g. validation error, application exception, client exception
+    //     FailureBean bean = parseJsonAsFailure(response);
+    //     ...(show bean.messageList or do process per bean.failureType)
+    // } else if (HTTP Status: 404) { // e.g. real not found, invalid parameter
+    //     showNotFoundError();
+    // } else { // basically 500, server exception
+    //     showSystemError();
+    // }
+    // _/_/_/_/_/_/_/_/_/_/
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    protected static final int BUSINESS_FAILURE_STATUS = HttpServletResponse.SC_BAD_REQUEST;
+    protected static final BusinessFailureMapping<ApiFailureType> failureTypeMapping; // for application exception
+
+    static { // you can add mapping of failure type with exception
+        failureTypeMapping = new BusinessFailureMapping<ApiFailureType>(failureMap -> {
+            failureMap.put(LoginFailureException.class, ApiFailureType.LOGIN_FAILURE);
+            failureMap.put(LoginRequiredException.class, ApiFailureType.LOGIN_REQUIRED);
+        });
+    }
 
     @Override
     public ApiResponse handleValidationError(ApiFailureResource resource) {
-        return createErrorResponse(resource.getPropertyMessageMap(), HttpServletResponse.SC_BAD_REQUEST);
+        final ApiFailureBean bean = createFailureBean(ApiFailureType.VALIDATION_ERROR, resource);
+        return asJson(bean).httpStatus(BUSINESS_FAILURE_STATUS);
     }
 
     @Override
     public ApiResponse handleApplicationException(ApiFailureResource resource, RuntimeException cause) {
-        Map<String, List<String>> messages = DfCollectionUtil.newHashMap();
-        messages.putAll(resource.getPropertyMessageMap());
+        final ApiFailureType failureType = failureTypeMapping.findAssignable(cause).orElseGet(() -> {
+            return ApiFailureType.APPLICATION_EXCEPTION;
+        });
+        final ApiFailureBean bean = createFailureBean(failureType, resource);
+        return asJson(bean).httpStatus(prepareApplicationExceptionHttpStatus(cause));
+    }
+
+    private int prepareApplicationExceptionHttpStatus(RuntimeException cause) {
         if (cause instanceof LoginUnauthorizedException) {
-            return createErrorResponse(messages, HttpServletResponse.SC_UNAUTHORIZED);
+            return HttpServletResponse.SC_UNAUTHORIZED;
         } else {
-            return createErrorResponse(messages, HttpServletResponse.SC_BAD_REQUEST);
+            return BUSINESS_FAILURE_STATUS;
         }
     }
 
     @Override
     public OptionalThing<ApiResponse> handleClientException(ApiFailureResource resource, RuntimeException cause) {
-        if (cause instanceof Forced403ForbiddenException) {
-            Map<String, List<String>> messages = DfCollectionUtil.newHashMap();
-            return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_FORBIDDEN));
-        }
-        if (cause instanceof Forced404NotFoundException) {
-            Map<String, List<String>> messages = DfCollectionUtil.newHashMap();
-            return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_NOT_FOUND));
-        }
-
-        IntroMessages introMessages = new IntroMessages();
-        if (cause instanceof RequestJsonParseFailureException) {
-            RequestJsonParseFailureException requestJsonParseFailureException = (RequestJsonParseFailureException) cause;
-            Throwable parseFailureCause = requestJsonParseFailureException.getCause();
-            if (parseFailureCause instanceof JsonPropertyParseFailureException) {
-                JsonPropertyParseFailureException jsonPropertyParseFailureException = (JsonPropertyParseFailureException) parseFailureCause;
-                String propertyPath = jsonPropertyParseFailureException.getPropertyPath();
-                if (parseFailureCause instanceof JsonPropertyNumberParseFailureException) {
-                    introMessages.addAppConverterNumberMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
-                } else if (parseFailureCause instanceof JsonPropertyDateTimeParseFailureException) {
-                    Class<?> propertyType = jsonPropertyParseFailureException.getPropertyType();
-                    if (LocalDate.class.isAssignableFrom(propertyType)) {
-                        introMessages.addAppConverterDateMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
-                    } else if (LocalTime.class.isAssignableFrom(propertyType)) {
-                        introMessages.addAppConverterTimeMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
-                    } else if (LocalDateTime.class.isAssignableFrom(propertyType)) {
-                        introMessages.addAppConverterDateTimeMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
-                    } else {
-                        introMessages.addAppConverterValidMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
-                    }
-                } else {
-                    introMessages.addAppConverterValidMessage(DfStringUtil.substringFirstRear(propertyPath, "$."));
-                }
-            } else {
-                introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
-            }
-        } else {
-            introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
-        }
-
-        Map<String, List<String>> messages =
-                getMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
-        return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_BAD_REQUEST));
+        // HTTP status will be automatically sent as client error for the cause
+        return OptionalThing.of(asJson(createFailureBean(ApiFailureType.CLIENT_EXCEPTION, resource)));
     }
 
     @Override
     public OptionalThing<ApiResponse> handleServerException(ApiFailureResource resource, Throwable cause) {
-        IntroMessages introMessages = new IntroMessages();
-        introMessages.addErrorsAppSystemError(GLOBAL_PROPERTY_KEY);
-        Map<String, List<String>> messages =
-                getMessageManager().toPropertyMessageMap(resource.getRequestManager().getUserLocale(), introMessages);
-        return OptionalThing.of(createErrorResponse(messages, HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+        // HTTP status will be automatically sent as server error
+        final Map<String, List<String>> messageMap = prepareServerExceptionMessageMap(resource, cause);
+        return OptionalThing.of(asJson(createFailureBean(ApiFailureType.SERVER_EXCEPTION, messageMap)));
     }
 
-    private ApiResponse createErrorResponse(Map<String, List<String>> messages, int httpStatus) {
-        ErrorBean errorBean = new ErrorBean();
-        errorBean.setMessages(messages);
-        return new JsonResponse<ErrorBean>(errorBean).httpStatus(httpStatus);
+    private Map<String, List<String>> prepareServerExceptionMessageMap(ApiFailureResource resource, Throwable cause) {
+        // TODO jflute intro: where is server log file in production? (2016/08/13)
+        // the resource does not have messages when server exception so make custom messages here
+        final IntroMessages messages = new IntroMessages();
+        messages.addErrorsAppIntroError(IntroMessages.GLOBAL_PROPERTY_KEY, cause.getClass().getName());
+        final RequestManager requestManager = resource.getRequestManager();
+        final MessageManager messageManager = requestManager.getMessageManager();
+        return messageManager.toPropertyMessageMap(requestManager.getUserLocale(), messages);
     }
 
-    private MessageManager getMessageManager() {
-        return ContainerUtil.getComponent(MessageManager.class);
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    protected JsonResponse<ApiFailureBean> asJson(ApiFailureBean bean) {
+        return new JsonResponse<ApiFailureBean>(bean);
+    }
+
+    protected ApiFailureBean createFailureBean(ApiFailureType failureType, ApiFailureResource resource) {
+        return new ApiFailureBean(failureType, resource.getPropertyMessageMap());
+    }
+
+    protected ApiFailureBean createFailureBean(ApiFailureType failureType, Map<String, List<String>> messageMap) {
+        return new ApiFailureBean(failureType, messageMap);
+    }
+
+    public static class ApiFailureBean {
+
+        public final ApiFailureType failureType;
+        public final Map<String, List<String>> messages;
+
+        public ApiFailureBean(ApiFailureType failureType, Map<String, List<String>> messages) {
+            this.failureType = failureType;
+            this.messages = messages;
+        }
+    }
+
+    public static enum ApiFailureType {
+        VALIDATION_ERROR // special type
+        , LOGIN_FAILURE, LOGIN_REQUIRED // specific type of application exception
+        , APPLICATION_EXCEPTION // default type of application exception
+        , CLIENT_EXCEPTION, SERVER_EXCEPTION
     }
 }

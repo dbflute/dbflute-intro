@@ -15,6 +15,8 @@
  */
 package org.dbflute.intro.app.model.client.database;
 
+import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
+
 /**
  * @author jflute
  */
@@ -25,13 +27,23 @@ public class DatabaseInfoMap {
     //                                                                           =========
     protected final String driver;
     protected final DbConnectionBox dbConnectionInfo;
+    protected final AdditionalSchemaMap additionalSchemaMap; // not null, empty allowed
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DatabaseInfoMap(String driver, DbConnectionBox dbConnectionInfo) {
+    public DatabaseInfoMap(String driver, DbConnectionBox dbConnectionInfo, AdditionalSchemaMap additionalSchemaMap) {
         this.driver = driver;
         this.dbConnectionInfo = dbConnectionInfo;
+        this.additionalSchemaMap = additionalSchemaMap;
+    }
+
+    // ===================================================================================
+    //                                                                      Basic Override
+    //                                                                      ==============
+    @Override
+    public String toString() {
+        return "database:{" + driver + ", " + dbConnectionInfo + ", " + additionalSchemaMap.getSchemaBoxMap().keySet() + "}";
     }
 
     // ===================================================================================

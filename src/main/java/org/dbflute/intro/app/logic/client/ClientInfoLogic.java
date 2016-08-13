@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +36,8 @@ import org.dbflute.intro.app.model.client.ProjectMeta;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
+import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap.AdditionalSchemaBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.outsidesql.OutsideSqlMap;
 import org.dbflute.intro.app.model.client.reps.AdditionalUserMap;
@@ -57,6 +59,8 @@ public class ClientInfoLogic {
     //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private DfpropInfoLogic dfpropInfoLogic;
 
@@ -86,9 +90,9 @@ public class ClientInfoLogic {
     //                                                                    Environment List
     //                                                                    ================
     // TODO jflute intro: unused? (2016/08/02)
-    public List<String> getEnvList(String project) {
+    public List<String> getEnvList(String clientProject) {
         final List<String> envList = new ArrayList<String>();
-        final File dfpropDir = new File(introPhysicalLogic.buildDfpropDirPath(project));
+        final File dfpropDir = new File(introPhysicalLogic.buildClientPath(clientProject, "dfprop"));
         for (File file : dfpropDir.listFiles()) {
             if (file.isDirectory() && file.getName().startsWith("schemaSyncCheck_")) {
                 envList.add(file.getName().substring("schemaSyncCheck_".length()));
@@ -100,9 +104,9 @@ public class ClientInfoLogic {
     // ===================================================================================
     //                                                                       ReplaceSchema
     //                                                                       =============
-    public boolean existsReplaceSchema(String project) {
+    public boolean existsReplaceSchema(String clientProject) {
         boolean exists = false;
-        final File playsqlDir = new File(introPhysicalLogic.buildClientResourcePath(project, "playsql"));
+        final File playsqlDir = clientPhysicalLogic.findPlaysqlDir(clientProject);
         for (File file : playsqlDir.listFiles()) {
             if (file.isFile() && file.getName().startsWith("replace-schema") && file.getName().endsWith(".sql")) {
                 try {
@@ -143,11 +147,28 @@ public class ClientInfoLogic {
     //                                          Project Core
     //                                          ------------
     private ProjectMeta prepareProjectMeta(String clientProject) {
-        return new ProjectMeta(clientProject, prepareJdbcDriverJarPath(clientProject), prepareDBFluteVersion(clientProject));
+        return new ProjectMeta(clientProject, prepareDBFluteVersion(clientProject), prepareJdbcDriverJarPath(clientProject));
+    }
+
+    private String prepareDBFluteVersion(String clientProject) {
+        final File projectFile = new File(introPhysicalLogic.buildClientPath(clientProject, "_project.sh"));
+        final String data;
+        try {
+            data = FileUtils.readFileToString(projectFile);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read the project file: " + projectFile, e);
+        }
+        final Pattern pattern = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
+        final Matcher matcher = pattern.matcher(data);
+        if (matcher.find()) {
+            return matcher.group(2);
+        } else {
+            throw new IllegalStateException("Not found the DBFlute version in _project.sh: " + projectFile);
+        }
     }
 
     private String prepareJdbcDriverJarPath(String clientProject) {
-        final File extlibDir = new File(introPhysicalLogic.buildClientResourcePath(clientProject, "extlib"));
+        final File extlibDir = clientPhysicalLogic.findExtlibDir(clientProject);
         if (extlibDir.exists()) {
             File[] extlibFiles = extlibDir.listFiles();
             for (File file : extlibFiles) {
@@ -157,19 +178,6 @@ public class ClientInfoLogic {
             }
         }
         return null;
-    }
-
-    private String prepareDBFluteVersion(String clientProject) {
-        final File projectFile = new File(introPhysicalLogic.buildClientResourcePath(clientProject, "_project.sh"));
-        final String data;
-        try {
-            data = FileUtils.readFileToString(projectFile);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read the project file: " + projectFile, e);
-        }
-        final Pattern pattern = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
-        final Matcher matcher = pattern.matcher(data);
-        return matcher.find() ? matcher.group(2) : null;
     }
 
     // -----------------------------------------------------
@@ -191,27 +199,28 @@ public class ClientInfoLogic {
         final Map<String, Object> dataMap = dfpropMap.get("databaseInfoMap.dfprop");
         final String jdbcDriverFqcn = required(dataMap, "driver");
         final String url = required(dataMap, "url");
-        final String schema = prepareSchema(dataMap);
+        final String schema = (String) dataMap.get("schema");
         final String user = required(dataMap, "user");
         final String password = (String) dataMap.get("password");
-        return new DatabaseInfoMap(jdbcDriverFqcn, new DbConnectionBox(url, schema, user, password));
+        final AdditionalSchemaMap additionalSchemaMap = prepareAdditionalSchemaMap(dataMap);
+        return new DatabaseInfoMap(jdbcDriverFqcn, new DbConnectionBox(url, schema, user, password), additionalSchemaMap);
     }
 
-    private String prepareSchema(Map<String, Object> databaseInfoMap) {
-        String schema = (String) databaseInfoMap.get("schema");
+    private AdditionalSchemaMap prepareAdditionalSchemaMap(Map<String, Object> dataMap) {
+        final Map<String, AdditionalSchemaBox> schemaBoxMap = new LinkedHashMap<>();
         @SuppressWarnings("unchecked")
-        Map<String, Object> variousMap = ((Map<String, Object>) databaseInfoMap.get("variousMap"));
+        Map<String, Object> variousMap = ((Map<String, Object>) dataMap.get("variousMap"));
         if (variousMap != null) {
             @SuppressWarnings("unchecked")
             Map<String, Object> additionalSchemaMap = ((Map<String, Object>) variousMap.get("additionalSchemaMap"));
             if (additionalSchemaMap != null) {
-                Set<String> keySet = additionalSchemaMap.keySet();
-                for (String additionalSchema : keySet) {
-                    schema += "," + additionalSchema;
+                for (String additionalSchema : additionalSchemaMap.keySet()) {
+                    // #pending see the class code
+                    schemaBoxMap.put(additionalSchema, new AdditionalSchemaBox(additionalSchema));
                 }
             }
         }
-        return schema;
+        return new AdditionalSchemaMap(schemaBoxMap);
     }
 
     // -----------------------------------------------------

@@ -16,31 +16,28 @@
 package org.dbflute.intro.app.logic.engine;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
- * @author p1us2er0
  * @author jflute
  */
-public class EngineRemoveLogic { // TODO jflute intro: will rename? (2016/07/05)
+public class EnginePhysicalLogic {
 
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
-    public void remove(String engineVersion) {
-        final String enginePath = introPhysicalLogic.buildEnginePath(engineVersion);
-        final File engineDir = new File(enginePath);
-        if (engineDir.exists()) {
-            try {
-                FileUtils.deleteDirectory(engineDir);
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to delete the engine: " + enginePath, e);
-            }
-        }
+    public File findLibDir(String dbfluteVersion) {
+        return new File(introPhysicalLogic.buildEnginePath(dbfluteVersion, "lib"));
+    }
+
+    public File findDfClientZip(String dbfluteVersion) {
+        return new File(buildDfClientZipPath(dbfluteVersion));
+    }
+
+    public String buildDfClientZipPath(String dbfluteVersion) {
+        return introPhysicalLogic.buildEnginePath(dbfluteVersion, "etc", "client-template", "dbflute_dfclient.zip");
     }
 }

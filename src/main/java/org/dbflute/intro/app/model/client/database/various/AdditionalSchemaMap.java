@@ -13,29 +13,39 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model.client.database;
+package org.dbflute.intro.app.model.client.database.various;
+
+import java.util.Map;
 
 /**
  * @author jflute
  */
-public class DbConnectionBox {
+public class AdditionalSchemaMap {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String url;
-    protected final String schema;
-    protected final String user;
-    protected final String password;
+    protected final Map<String, AdditionalSchemaBox> schemaBoxMap;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DbConnectionBox(String url, String schema, String user, String password) {
-        this.url = url;
-        this.schema = schema;
-        this.user = user;
-        this.password = password;
+    public AdditionalSchemaMap(Map<String, AdditionalSchemaBox> schemaBoxMap) {
+        this.schemaBoxMap = schemaBoxMap;
+    }
+
+    // #waiting_for function of additional schema implementation by jflute (2016/08/13)
+    public static class AdditionalSchemaBox {
+
+        protected final String schema;
+
+        public AdditionalSchemaBox(String schema) {
+            this.schema = schema;
+        }
+
+        public String getSchema() {
+            return schema;
+        }
     }
 
     // ===================================================================================
@@ -43,25 +53,13 @@ public class DbConnectionBox {
     //                                                                      ==============
     @Override
     public String toString() {
-        return "box:{" + url + ", " + schema + ", " + user + "}";
+        return "additional:{" + schemaBoxMap + "}";
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getUrl() {
-        return url;
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getPassword() {
-        return password;
+    public Map<String, AdditionalSchemaBox> getSchemaBoxMap() {
+        return schemaBoxMap;
     }
 }

@@ -31,6 +31,7 @@ public class DocumentMap {
     protected boolean checkColumnDefOrderDiff;
     protected boolean checkDbCommentDiff;
     protected boolean checkProcedureDiff;
+    protected SchemaSyncCheckMap schemaSyncCheckMap;
 
     // ===================================================================================
     //                                                                            Accessor
@@ -75,5 +76,15 @@ public class DocumentMap {
 
     public void setCheckProcedureDiff(boolean isCheckProcedureDiff) {
         this.checkProcedureDiff = isCheckProcedureDiff;
+    }
+
+    public OptionalThing<SchemaSyncCheckMap> getSchemaSyncCheckMap() {
+        return OptionalThing.ofNullable(schemaSyncCheckMap, () -> {
+            throw new IllegalStateException("Not found the schemaSyncCheckMap.");
+        });
+    }
+
+    public void setSchemaSyncCheckMap(SchemaSyncCheckMap schemaSyncCheckMap) {
+        this.schemaSyncCheckMap = schemaSyncCheckMap;
     }
 }

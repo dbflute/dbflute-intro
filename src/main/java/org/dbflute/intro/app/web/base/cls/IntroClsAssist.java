@@ -53,10 +53,10 @@ public class IntroClsAssist {
         return clsMap;
     }
 
-    private Map<String, DatabaseTypeBean> prepareTargetDatabaseMap() {
+    private Map<String, DatabaseDefBean> prepareTargetDatabaseMap() {
         return databaseBhv.selectList(cb -> {
             cb.query().addOrderBy_DisplayOrder_Asc();
-        }).stream().collect(Collectors.toMap(db -> db.getDatabaseName(), db -> new DatabaseTypeBean(db), (u, v) -> v, LinkedHashMap::new));
+        }).stream().collect(Collectors.toMap(db -> db.getDatabaseName(), db -> new DatabaseDefBean(db), (u, v) -> v, LinkedHashMap::new));
     }
 
     private Map<String, String> prepareTargetLanguageMap() {

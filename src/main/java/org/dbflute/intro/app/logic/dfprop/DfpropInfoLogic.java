@@ -44,11 +44,11 @@ public class DfpropInfoLogic {
                 fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
             }
             final DfPropFile dfpropFile = new DfPropFile();
-            dfpropMap.put(fileNameKey, dfpropFile.readMap(file.getAbsolutePath(), null));
+            dfpropMap.put(fileNameKey, readMap(file, dfpropFile));
 
             final File plusFile = new File(file.getName().replace("Map.dfprop", "Map+.dfprop"));
             if (plusFile.exists()) {
-                dfpropMap.get(fileNameKey).putAll(dfpropFile.readMap(plusFile.getAbsolutePath(), null));
+                dfpropMap.get(fileNameKey).putAll(readMap(plusFile, dfpropFile));
             }
         });
         final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
@@ -60,5 +60,14 @@ public class DfpropInfoLogic {
             throw new RuntimeException("Not found the databaseInfoMap.dfprop: " + dfpropMap.keySet());
         }
         return dfpropMap;
+    }
+
+    private Map<String, Object> readMap(File targetFile, DfPropFile dfpropFile) {
+        final String absolutePath = targetFile.getAbsolutePath();
+        try {
+            return dfpropFile.readMap(absolutePath, null);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
+        }
     }
 }

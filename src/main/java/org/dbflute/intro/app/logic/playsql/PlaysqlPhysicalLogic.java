@@ -23,7 +23,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.mylasta.exception.PlaysqlFileNotFoundException;
+import org.dbflute.intro.bizfw.tellfailure.PlaysqlFileNotFoundException;
 
 /**
  * @author deco
@@ -45,7 +45,7 @@ public class PlaysqlPhysicalLogic {
     //                                                                                Path
     //                                                                                ====
     public String buildPlaysqlDirPath(String project) {
-        return introPhysicalLogic.buildClientResourcePath(project, PLAYSQL_DIR_PATH);
+        return introPhysicalLogic.buildClientPath(project, PLAYSQL_DIR_PATH);
     }
 
     public String buildPlaysqlFilePath(String project, String fileName) {

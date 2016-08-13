@@ -31,11 +31,15 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.dbflute.intro.mylasta.exception.DatabaseConnectionException;
+import org.dbflute.intro.bizfw.tellfailure.DatabaseConnectionException;
+import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -43,58 +47,74 @@ import org.dbflute.util.DfStringUtil;
  */
 public class TestConnectionLogic {
 
+    private static final Logger logger = LoggerFactory.getLogger(TestConnectionLogic.class);
+
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private EnginePhysicalLogic enginePhysicalLogic;
 
     // ===================================================================================
     //                                                                     Test Connection
     //                                                                     ===============
-    public void testConnection(String jdbcDriverJarPath, String dbfluteVersion, DatabaseInfoMap databaseInfoMap) {
-        ProxySelector proxySelector = ProxySelector.getDefault();
+    public void testConnection(String dbfluteVersion, OptionalThing<String> jdbcDriverJarPath, DatabaseInfoMap databaseInfoMap) {
+        final ProxySelector proxySelector = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
         Connection connection = null;
         try {
-            final List<URL> urls = new ArrayList<URL>();
-            if (DfStringUtil.is_Null_or_Empty(jdbcDriverJarPath)) {
-                final File libDir = new File(introPhysicalLogic.buildEngineResourcePath(dbfluteVersion, "lib"));
-                if (libDir.isDirectory()) {
-                    for (File file : FileUtils.listFiles(libDir, FileFilterUtils.suffixFileFilter(".jar"), null)) {
-                        urls.add(file.toURI().toURL());
-                    }
-                }
-            } else {
-                URL fileUrl = new File(jdbcDriverJarPath).toURI().toURL();
-                urls.add(fileUrl);
-            }
-
-            URLClassLoader loader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]));
-            String jdbcDriver = databaseInfoMap.getDriver();
-
-            @SuppressWarnings("unchecked")
-            Class<Driver> driverClass = (Class<Driver>) loader.loadClass(jdbcDriver);
-            Driver driver = driverClass.newInstance();
-
-            Properties info = new Properties();
-            DbConnectionBox dbConnectionBox = databaseInfoMap.getDbConnectionBox();
-            String user = dbConnectionBox.getUser();
+            final Driver driver = prepareJdbcDriver(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
+            final Properties info = new Properties();
+            final DbConnectionBox dbConnectionBox = databaseInfoMap.getDbConnectionBox();
+            final String user = dbConnectionBox.getUser();
             if (DfStringUtil.is_NotNull_and_NotEmpty(user)) {
                 info.put("user", user);
             }
-            String password = dbConnectionBox.getPassword();
+            final String password = dbConnectionBox.getPassword();
             if (DfStringUtil.is_NotNull_and_NotEmpty(password)) {
                 info.put("password", password);
             }
+            logger.debug("...Connecting the database: " + databaseInfoMap);
             connection = driver.connect(dbConnectionBox.getUrl(), info);
-        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
-            throw new DatabaseConnectionException(e.getMessage(), e);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | MalformedURLException | SQLException e) {
+            final String failureHint = e.getClass().getName() + " :: " + e.getMessage();
+            throw new DatabaseConnectionException("Failed to test the connection: " + databaseInfoMap, failureHint, e);
         } finally {
             ProxySelector.setDefault(proxySelector);
-
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException ignored) {}
             }
         }
+    }
+
+    private Driver prepareJdbcDriver(String dbfluteVersion, OptionalThing<String> jdbcDriverJarPath, DatabaseInfoMap databaseInfoMap)
+            throws ClassNotFoundException, InstantiationException, IllegalAccessException, MalformedURLException {
+        final List<URL> urls = new ArrayList<URL>();
+        if (jdbcDriverJarPath.isPresent()) {
+            final String jarPath = jdbcDriverJarPath.get();
+            final URL fileUrl = new File(jarPath).toURI().toURL();
+            urls.add(fileUrl);
+        } else {
+            final File libDir = enginePhysicalLogic.findLibDir(dbfluteVersion);
+            if (libDir.isDirectory()) {
+                for (File existingJarFile : FileUtils.listFiles(libDir, FileFilterUtils.suffixFileFilter(".jar"), null)) {
+                    try {
+                        urls.add(existingJarFile.toURI().toURL());
+                    } catch (MalformedURLException e) { // no way
+                        throw new IllegalStateException("Failed to create the URL for the jar file: " + existingJarFile.getPath());
+                    }
+                }
+            }
+        }
+        final URLClassLoader loader = URLClassLoader.newInstance(urls.toArray(new URL[urls.size()]));
+        final String jdbcDriver = databaseInfoMap.getDriver();
+
+        @SuppressWarnings("unchecked")
+        final Class<Driver> driverClass = (Class<Driver>) loader.loadClass(jdbcDriver);
+        return driverClass.newInstance();
     }
 }

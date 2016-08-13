@@ -50,8 +50,8 @@ angular.module('dbflute-intro')
         });
     };
 
-    $scope.classification = function() {
-        ApiFactory.classification().then(function(response) {
+    $scope.classifications = function() {
+        ApiFactory.classifications().then(function(response) {
             $scope.classificationMap = response.data;
         });
     };
@@ -62,7 +62,7 @@ angular.module('dbflute-intro')
         });
      };
 
-    $scope.add = function() {
+    $scope.createClient = function() {
         $scope.editFlg = true;
         $scope.clientBean = {create: true, databaseBean: {}, systemUserBean: {}, schemaSyncCheckMap: {}, optionBean: {}};
     };
@@ -137,7 +137,8 @@ angular.module('dbflute-intro')
     };
     $scope.changeDatabase = function(clientBean) {
     	clientBean.jdbcDriverFqcn = clientBean.driverName;
-        var database = $scope.classificationMap["targetDatabaseMap"][clientBean.databaseType];
+        var database = $scope.classificationMap["targetDatabaseMap"][clientBean.targetDatabase];
+        clientBean.jdbcDriverFqcn = database.driverName;
         clientBean.databaseBean.url = database.urlTemplate;
         clientBean.databaseBean.schema =  database.defaultSchema;
     };
@@ -147,10 +148,10 @@ angular.module('dbflute-intro')
             templateUrl: 'app/main/download.html',
             controller: 'DownloadInstanceController',
             resolve: {
-              publicProperties: function() {
-                  return ApiFactory.publicProperties();
-              }
-          }
+                engineLatest: function() {
+                    return ApiFactory.engineLatest();
+                }
+            }
         });
 
         downloadInstance.result.then(function(versions) {
@@ -187,55 +188,31 @@ angular.module('dbflute-intro')
 
     $scope.manifest();
     $scope.engineVersions();
-    $scope.classification();
+    $scope.classifications();
     $scope.findClientBeanList();
 });
 
 angular.module('dbflute-intro').controller('DownloadInstanceController',
-        function($scope, $uibModalInstance, publicProperties, ApiFactory) {
+        function($scope, $uibModalInstance, engineLatest, ApiFactory) {
     'use strict';
 
+    var engineLatestData = engineLatest.data;
+    var latestReleaseVersion = engineLatestData.latestReleaseVersion;
+    var latestSnapshotVersion = engineLatestData.latestSnapshotVersion;
+
     $scope.downloading = false;
-
-    $scope.publicProperties = {};
-    $scope.publicProperties.compatible10x = [];
-    $scope.publicProperties.compatible11x = [];
     $scope.currentBranch = 'compatible11x';
-    $scope.dbfluteEngine = {version: ''};
-
-    var publicPropertiesData = publicProperties.data;
-    var compatible10xRelease = publicPropertiesData['compatible10x.dbflute.latest.release.version'];
-    var compatible10xSnapshot = publicPropertiesData['compatible10x.dbflute.latest.snapshot.version'];
-    var compatible11xRelease = publicPropertiesData['dbflute.latest.release.version'];
-    var compatible11xSnapshot = publicPropertiesData['dbflute.latest.snapshot.version'];
-
-    $scope.publicProperties.compatible10x[0] = compatible10xRelease;
-    $scope.publicProperties.compatible11x[0] = compatible11xRelease;
-
-    if (compatible10xRelease !== compatible10xSnapshot) {
-        $scope.publicProperties.compatible10x[1] = compatible10xSnapshot;
-    }
-
-    if (compatible11xRelease !== compatible11xSnapshot) {
-        $scope.publicProperties.compatible11x[1] = compatible11xSnapshot;
-        $scope.dbfluteEngine.version = compatible11xSnapshot;
-    }
-
-    $scope.dbfluteEngine = {
-        version: $scope.publicProperties.compatible11x[0]
-    };
-
-    $scope.selectVersion = function(version) {
-        $scope.dbfluteEngine.version = version;
-    };
+    $scope.latestVersion = latestReleaseVersion;
+    $scope.specifiedVersion = latestReleaseVersion;
+    $scope.dbfluteEngine = {version: latestReleaseVersion};
 
     $scope.version = null;
 
     $scope.downloadEngine = function() {
         $scope.downloading = true;
 
-        if ($scope.version !== null) {
-            $scope.dbfluteEngine.version = $scope.version;
+        if ($scope.specifiedVersion !== null) {
+            $scope.dbfluteEngine.version = $scope.specifiedVersion;
         }
         ApiFactory.downloadEngine($scope.dbfluteEngine).then(function(response) {
             $scope.downloading = false;

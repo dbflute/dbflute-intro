@@ -1,24 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE logback>
-<!-- _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_ -->
-<!-- intro logging settings for All Environments -->
-<!-- _/_/_/_/_/_/_/_/_/_/_ -->
+<!-- _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ -->
+<!-- Intro logging settings for All Environments -->
+<!-- _/_/_/_/_/_/_/_/_/_/ -->
 <configuration>
-  <include resource="logparts/logback_property.xml" />
   <property resource="intro_env.properties" />
   <property resource="intro_env_${lasta.env}.properties" />
-  <property resource="intro_config.properties" />
+  <property name="domain.name" value="intro"/>
+  <property name="log.level" value="${log.level:-debug}"/>
+  <property name="log.pattern" value="%d [%t] %-5p \\(%C{0}@%M\\(\\):%L\\) - %m%n"/>
+  <property name="log.file.basedir" value="${log.file.basedir:-/tmp/lastaflute/undefinedbasedir}"/>
+  <property name="backup.date.suffix" value="_%d{yyyyMMdd}"/>
+  <property name="backup.max.history" value="180"/>
 
-  <!-- define your properties here
-  e.g. <property name="sea.land" value="${iks.bonvo:-amba}"/> -->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>${log.pattern}</pattern></encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><level>${log.console.level}</level></filter>
+  </appender>
+  <appender name="appfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.file.basedir}/app_${domain.name}.log</File>
+    <Append>true</Append>
+    <encoder><pattern>${log.pattern}</pattern></encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.file.basedir}/backup/app_${domain.name}${backup.date.suffix}.log</fileNamePattern>
+      <maxHistory>${backup.max.history}</maxHistory>
+    </rollingPolicy>
+  </appender>
+  <appender name="errorfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.file.basedir}/error_${domain.name}.log</File>
+    <Append>true</Append>
+    <encoder><pattern>${log.pattern}</pattern></encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><level>ERROR</level></filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.file.basedir}/backup/error_${domain.name}${backup.date.suffix}.log</fileNamePattern>
+      <maxHistory>${backup.max.history}</maxHistory>
+    </rollingPolicy>
+  </appender>
+  <appender name="mailfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.file.basedir}/mail_${domain.name}.log</File>
+    <Append>true</Append>
+    <encoder><pattern>${log.pattern}</pattern></encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${log.file.basedir}/backup/mail_${domain.name}${backup.date.suffix}.log</fileNamePattern>
+      <maxHistory>${backup.max.history}</maxHistory>
+    </rollingPolicy>
+  </appender>
 
-  <include resource="logparts/logback_appender.xml" />
-
-  <!-- define your additional appenders here
-  e.g. <appender name="sea" class="land.IksAppender">... -->
-
-  <include resource="logparts/logback_logger.xml" />
-
-  <!-- define your additional loggers here
-  e.g. <logger name="sea.land.iks.bonvo" additivity="false" level="${log.level}">... -->
+  <logger name="org.dbflute" additivity="false" level="${log.level}">
+    <appender-ref ref="console"/><appender-ref ref="appfile"/><appender-ref ref="errorfile"/>
+  </logger>
+  <logger name="org.lastaflute" additivity="false" level="${log.level}">
+    <appender-ref ref="console"/><appender-ref ref="appfile"/><appender-ref ref="errorfile"/>
+  </logger>
+  <logger name="mailflute.sending" additivity="false" level="${log.level}">
+    <appender-ref ref="mailfile"/>
+  </logger>
+  <root level="error">
+    <appender-ref ref="console"/><appender-ref ref="errorfile"/>
+  </root>
 </configuration>

@@ -21,24 +21,24 @@ import org.dbflute.intro.dbflute.exentity.ClsTargetDatabase;
  * @author p1us2er0
  * @author jflute
  */
-public class DatabaseTypeBean {
+public class DatabaseDefBean {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private final String databaseName;
-    private final String driverName;
-    private final String urlTemplate;
-    private final String defaultSchema;
-    private final boolean schemaRequired;
-    private final boolean schemaUpperCase;
-    private final boolean userInputAssist;
-    private final boolean embeddedJar;
+    public final String databaseName;
+    public final String driverName;
+    public final String urlTemplate;
+    public final String defaultSchema;
+    public final boolean schemaRequired;
+    public final boolean schemaUpperCase;
+    public final boolean userInputAssist;
+    public final boolean embeddedJar;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DatabaseTypeBean(ClsTargetDatabase databaseInfoDef) {
+    public DatabaseDefBean(ClsTargetDatabase databaseInfoDef) {
         this.databaseName = databaseInfoDef.getDatabaseName();
         this.driverName = databaseInfoDef.getJdbcDriverFqcn();
         this.urlTemplate = databaseInfoDef.getUrlTemplate();
@@ -47,40 +47,5 @@ public class DatabaseTypeBean {
         this.schemaUpperCase = databaseInfoDef.isSchemaUpperCaseFlgTrue();
         this.userInputAssist = databaseInfoDef.isUserInputAssistFlgTrue();
         this.embeddedJar = databaseInfoDef.isEmbeddedJarFlgTrue();
-    }
-
-    // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public String getDriverName() {
-        return driverName;
-    }
-
-    public String getUrlTemplate() {
-        return urlTemplate;
-    }
-
-    public String getDefultSchema() {
-        return defaultSchema;
-    }
-
-    public boolean isSchemaRequired() {
-        return schemaRequired;
-    }
-
-    public boolean isSchemaUpperCase() {
-        return schemaUpperCase;
-    }
-
-    public boolean isUserInputAssist() {
-        return userInputAssist;
-    }
-
-    public boolean isEmbeddedJar() {
-        return embeddedJar;
     }
 }

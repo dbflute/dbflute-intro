@@ -11,7 +11,7 @@ cd dbflute-intro
 
 # during development
 cd dbflute-intro
-## Api (run main class(org.dbflute.intro.DbfluteIntroBoot) in the IED. or execute commond.)
+## Api (run main class(org.dbflute.intro.IntroBoot) in the IDE. or execute commond)
 ./gradlew run
 ## Front End
 ./gradlew gulp_serve

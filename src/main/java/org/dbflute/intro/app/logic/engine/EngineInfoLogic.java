@@ -22,6 +22,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
@@ -30,11 +32,12 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
  */
 public class EngineInfoLogic {
 
-    public static final String MY_DBFLUTE_PATH = IntroPhysicalLogic.BASE_DIR_PATH + "/mydbflute/dbflute-%1$s";
+    @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
 
     public List<String> getExistingVersionList() {
         try {
-            List<String> list = Files.list(Paths.get(IntroPhysicalLogic.BASE_DIR_PATH, "mydbflute")).filter(file -> {
+            List<String> list = Files.list(Paths.get(introPhysicalLogic.buildMydbflutePath())).filter(file -> {
                 return file.toFile().isDirectory() && file.toFile().getName().startsWith("dbflute-");
             }).map(file -> file.toFile().getName().substring(8)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
             return list;

@@ -1,48 +1,46 @@
 package org.dbflute.intro.app.web.document;
 
+import java.io.File;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.StreamResponse;
 
-import javax.annotation.Resource;
-import java.io.File;
-
 /**
  * @author deco
+ * @author jflute
  */
 public class DocumentAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // -----------------------------------------------------
-    //                                          DI Component
-    //                                          ------------
     @Resource
-    private DocumentPhysicalLogic documentLogic;
+    private DocumentPhysicalLogic documentPhysicalLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse schemahtml(String project) {
-        return createHtmlStreamResponse(documentLogic.findDocumentFile(project, "schema"));
+    public StreamResponse schemahtml(String clientProject) {
+        return asHtmlStream(documentPhysicalLogic.findSchemaHtml(clientProject));
     }
 
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse historyhtml(String project) {
-        return createHtmlStreamResponse(documentLogic.findDocumentFile(project, "history"));
+    public StreamResponse historyhtml(String clientProject) {
+        return asHtmlStream(documentPhysicalLogic.findHistoryHtml(clientProject));
     }
 
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
-    private StreamResponse createHtmlStreamResponse(File file) {
-        StreamResponse streamResponse = new StreamResponse("");
-        streamResponse.contentType("text/html; charset=UTF-8");
-        streamResponse.stream(writtenStream -> writtenStream.write(FileUtils.openInputStream(file)));
-        return streamResponse;
+    private StreamResponse asHtmlStream(File file) {
+        return asStream(file.getName()).contentType("text/html; charset=UTF-8").stream(out -> {
+            out.write(FileUtils.openInputStream(file));
+        });
     }
 }

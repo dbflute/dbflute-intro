@@ -15,13 +15,14 @@
  */
 package org.dbflute.intro.app.logic.core;
 
-import java.io.IOException;
-import java.net.URL;
+import java.lang.reflect.Field;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
+import org.dbflute.util.DfReflectionUtil;
 
 /**
  * @author p1us2er0
@@ -29,16 +30,12 @@ import org.dbflute.intro.mylasta.direction.IntroConfig;
  */
 public class PublicPropertiesLogic {
 
-    // TODO jflute intro: need to cache?
-    private static Properties publicProperties;
+    private static DfPublicProperties publicProperties; // cached
 
     @Resource
     private IntroConfig introConfig;
 
-    public Properties extractProperties() {
-        // TODO jflute intro: want to use DfPublicProperties (2016/07/05)
-        //DfPublicProperties prop = new DfPublicProperties();
-        //prop.load();
+    public DfPublicProperties findProperties() {
         if (publicProperties != null) {
             return publicProperties;
         }
@@ -46,19 +43,16 @@ public class PublicPropertiesLogic {
             if (publicProperties != null) {
                 return publicProperties;
             }
-            loadProperties();
+            publicProperties = new DfPublicProperties();
+            publicProperties.load();
             return publicProperties;
         }
     }
 
-    private void loadProperties() {
-        publicProperties = new Properties();
-        String propertiesUrl = introConfig.getDbflutePublicPropertiesUrl();
-        try {
-            URL url = new URL(propertiesUrl);
-            publicProperties.load(url.openStream());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load the properties: URL=" + propertiesUrl, e);
-        }
+    public Properties asPlainProperties() {
+        // TODO jflute intro: quit reflection (2016/08/12)
+        DfPublicProperties prop = findProperties();
+        Field field = DfReflectionUtil.getWholeField(DfPublicProperties.class, "_publicProp");
+        return (Properties) DfReflectionUtil.getValueForcedly(field, prop);
     }
 }

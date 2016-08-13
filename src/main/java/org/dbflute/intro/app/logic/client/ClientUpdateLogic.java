@@ -17,18 +17,21 @@ package org.dbflute.intro.app.logic.client;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.dbflute.helper.mapstring.MapListString;
+import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.mylasta.util.ZipUtil;
+import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
+import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 
 /**
  * @author p1us2er0
@@ -36,170 +39,163 @@ import org.dbflute.intro.mylasta.util.ZipUtil;
  */
 public class ClientUpdateLogic {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private ClientPhysicalLogic clientPhysicalLogic;
+    @Resource
+    private EnginePhysicalLogic enginePhysicalLogic;
 
     // ===================================================================================
     //                                                                Create/Update Client
     //                                                                ====================
     public void createClient(ClientModel clientParam) {
-        _createClient(clientParam, false);
+        doCreateClient(clientParam, false);
     }
 
     public void updateClient(ClientModel clientParam) {
-        _createClient(clientParam, true);
+        doCreateClient(clientParam, true);
     }
 
-    // TODO jflute intro: use +.dfprop ? (2016/08/12)
-    private void _createClient(ClientModel clientModel, boolean update) {
+    private void doCreateClient(ClientModel clientModel, boolean update) {
         final String clientProject = clientModel.getProjectMeta().getClientProject();
-        final File dbfluteClientDir = new File(introPhysicalLogic.buildClientPath(clientProject));
-        if (!dbfluteClientDir.exists()) {
+        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
+        readyClient(clientModel, update, clientProject, clientDir);
+        try {
+            replaceClientFilePlainly(clientModel, clientProject);
+            replaceClientFileRegex(clientModel, clientProject);
+            copyJarFileToExtlib(clientModel, clientProject);
+
+            // #pending: SchemaSyncCheck, Document Options, SystemUser, AdditionalSchema by jflute
+        } catch (RuntimeException e) {
+            recoveryFailureClient(clientDir);
+            throw e;
+        }
+    }
+
+    // -----------------------------------------------------
+    //                                          Ready Client
+    //                                          ------------
+    private void readyClient(ClientModel clientModel, boolean update, String clientProject, File clientDir) {
+        if (!clientDir.exists()) { // new-create
             if (update) {
-                throw new RuntimeException("already deleted.");
+                throw new IllegalStateException("The DBFlute client has already been deleted: clientProject=" + clientProject);
             }
-            final String dbfluteVersion = clientModel.getProjectMeta().getDbfluteVersion().get();
-            final String enginePath = introPhysicalLogic.buildEnginePath(dbfluteVersion);
-            final String templateZipFileName = enginePath + "/etc/client-template/dbflute_dfclient.zip";
-            ZipUtil.decrypt(templateZipFileName, IntroPhysicalLogic.BASE_DIR_PATH);
-            new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_dfclient").renameTo(dbfluteClientDir);
-        } else {
+            clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectMeta().getDbfluteVersion(), clientDir);
+        } else { // already exists so update
             if (!update) {
                 throw new IllegalStateException("The DBFlute client already exists (but new-create): clientProject=" + clientProject);
             }
         }
+    }
 
-        try {
-            List<String> dfpropFileList = new ArrayList<String>();
-            dfpropFileList.add("basicInfoMap.dfprop");
-            dfpropFileList.add("databaseInfoMap.dfprop");
-            dfpropFileList.add("documentMap.dfprop");
-            dfpropFileList.add("littleAdjustmentMap.dfprop");
-            dfpropFileList.add("outsideSqlMap.dfprop");
-            dfpropFileList.add("replaceSchemaMap.dfprop");
-
-            try {
-                for (String dfpropFile : dfpropFileList) {
-                    File file = new File(dbfluteClientDir, "dfprop/" + dfpropFile);
-                    if (!file.exists()) {
-                        file = new File(dbfluteClientDir, "dfprop/" + dfpropFile.replace("Map.dfprop", "DefinitionMap.dfprop"));
-                    }
-                    URL url = ClassLoader.getSystemResource("dfprop/" + dfpropFile.replace(".dfprop", "+.dfprop"));
-                    FileUtils.copyURLToFile(url, new File(dbfluteClientDir, "dfprop/" + file.getName().replace(".dfprop", "+.dfprop")));
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            Map<File, Map<String, Object>> fileMap = new LinkedHashMap<File, Map<String, Object>>();
-
-            Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
+    // -----------------------------------------------------
+    //                                   Replace Client File
+    //                                   -------------------
+    private void replaceClientFilePlainly(ClientModel clientModel, String clientProject) {
+        final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
+        {
+            final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientProject);
-            fileMap.put(new File(dbfluteClientDir, "/_project.bat"), replaceMap);
-            fileMap.put(new File(dbfluteClientDir, "/_project.sh"), replaceMap);
-
-            replaceMap = new LinkedHashMap<String, Object>();
+            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientProject), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientProject), replaceMap);
+        }
+        {
+            final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             replaceMap.put("torque.project = dfclient", "torque.project = " + clientProject);
-            fileMap.put(new File(dbfluteClientDir, "/build.properties"), replaceMap);
-            
-            // TODO jflute intro: re-making (2016/08/12)
-            //
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("@database@", clientModel.getBasicInfoMap().getDatabase().code());
-            //            replaceMap.put("@targetLanguage@", clientModel.getBasicInfoMap().getTargetLanguage().code());
-            //            replaceMap.put("@targetContainer@", clientModel.getBasicInfoMap().getTargetContainer().code());
-            //            replaceMap.put("@packageBase@", clientModel.getBasicInfoMap().getGenerationPackageBase());
-            //            fileMap.put(new File(dbfluteClientDir, "/dfprop/basicInfoMap+.dfprop"), replaceMap);
-            //
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("{Please write your setting! at './dfprop/databaseInfoMap.dfprop'}", "");
-            //            fileMap.put(new File(dbfluteClientDir, "/dfprop/databaseInfoMap.dfprop"), replaceMap);
-            //
-            //            String schema = clientModel.getDatabaseInfoMap().getSchema();
-            //            schema = schema == null ? "" : schema;
-            //            String[] schemaList = schema.split(",");
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("@driver@", escapeControlMark(clientModel.getDriver()));
-            //            replaceMap.put("@url@", escapeControlMark(clientModel.getDatabaseInfoMap().getUrl()));
-            //            replaceMap.put("@schema@", escapeControlMark(schemaList[0].trim()));
-            //            replaceMap.put("@user@", escapeControlMark(clientModel.getDatabaseInfoMap().getUser()));
-            //            replaceMap.put("@password@", escapeControlMark(clientModel.getDatabaseInfoMap().getPassword()));
-            //            StringBuilder builder = new StringBuilder();
-            //            for (int i = 1; i < schemaList.length; i++) {
-            //                builder.append("            ; " + escapeControlMark(schemaList[i].trim())
-            //                        + " = map:{objectTypeTargetList=list:{TABLE; VIEW; SYNONYM}}\n");
-            //            }
-            //
-            //            replaceMap.put("@additionalSchema@", builder.toString().replaceAll("\n$", ""));
-            //            fileMap.put(new File(dbfluteClientDir, "/dfprop/databaseInfoMap+.dfprop"), replaceMap);
-            //
-            //            OptionModel optionParam = clientModel.getOptionModel();
-            //
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("@isDbCommentOnAliasBasis@", optionParam.isDbCommentOnAliasBasis());
-            //            replaceMap.put("@aliasDelimiterInDbComment@", optionParam.getAliasDelimiterInDbComment());
-            //            replaceMap.put("@isCheckColumnDefOrderDiff@", optionParam.isCheckColumnDefOrderDiff());
-            //            replaceMap.put("@isCheckDbCommentDiff@", optionParam.isCheckDbCommentDiff());
-            //            replaceMap.put("@isCheckProcedureDiff@", optionParam.isCheckProcedureDiff());
-            //            fileMap.put(new File(dbfluteClientDir, "/dfprop/documentMap+.dfprop"), replaceMap);
-            //
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("@isGenerateProcedureParameterParam@", optionParam.isGenerateProcedureParameterBean());
-            //            replaceMap.put("@procedureSynonymHandlingType@", optionParam.getProcedureSynonymHandlingType());
-            //            fileMap.put(new File(dbfluteClientDir, "/dfprop/outsideSqlMap+.dfprop"), replaceMap);
-            //
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("@driver@", escapeControlMark(clientModel.getDriver()));
-            //            replaceMap.put("@url@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUrl()));
-            //            replaceMap.put("@schema@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getSchema()));
-            //            replaceMap.put("@user@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUser()));
-            //            replaceMap.put("@password@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getPassword()));
-            //            fileMap.put(new File(dbfluteClientDir, "/dfprop/replaceSchemaMap+.dfprop"), replaceMap);
-            //
-            //            replaceFile(fileMap, false);
-            //
-            //            fileMap = new LinkedHashMap<File, Map<String, Object>>();
-            //
-            //            replaceMap = new LinkedHashMap<String, Object>();
-            //            replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getDbfluteVersion());
-            //            fileMap.put(new File(dbfluteClientDir, "/_project.bat"), replaceMap);
-            //            fileMap.put(new File(dbfluteClientDir, "/_project.sh"), replaceMap);
-            //
-            //            replaceFile(fileMap, true);
-            //
-            //            if (clientModel.getJdbcDriverJarPath() != null && !clientModel.getJdbcDriverJarPath().equals("")) {
-            //                File extLibDir = new File(dbfluteClientDir, "extlib");
-            //                File jarFile = new File(clientModel.getJdbcDriverJarPath());
-            //                File jarFileOld = new File(extLibDir, jarFile.getName());
-            //
-            //                boolean flg = true;
-            //                if (jarFileOld.exists()) {
-            //                    if (jarFile.getCanonicalPath().equals(jarFileOld.getCanonicalPath())) {
-            //                        flg = false;
-            //                    }
-            //                }
-            //
-            //                if (flg) {
-            //                    try {
-            //                        for (File file : FileUtils.listFiles(extLibDir, new String[] { ".jar" }, false)) {
-            //                            file.delete();
-            //                        }
-            //
-            //                        FileUtils.copyFileToDirectory(new File(clientModel.getJdbcDriverJarPath()), extLibDir);
-            //                    } catch (IOException e) {
-            //                        throw new RuntimeException(e);
-            //                    }
-            //                }
-            //            }
-            //
-            //            createSchemaSyncCheck(clientModel);
-        } catch (Exception e) {
+            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(clientProject), replaceMap);
+        }
+        {
+            final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
+            final BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+            replaceMap.put("@database@", basicInfoMap.getDatabase().code());
+            replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
+            replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
+            replaceMap.put("@packageBase@", basicInfoMap.getPackageBase());
+            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(clientProject), replaceMap);
+        }
+        {
+            final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
+            final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
+            final DbConnectionBox connectionBox = databaseInfoMap.getDbConnectionBox();
+            replaceMap.put("@driver@", escapeControlMark(databaseInfoMap.getDriver()));
+            replaceMap.put("@url@", escapeControlMark(connectionBox.getUrl()));
+            replaceMap.put("@schema@", escapeControlMark(connectionBox.getSchema()));
+            replaceMap.put("@user@", escapeControlMark(connectionBox.getUser()));
+            replaceMap.put("@password@", escapeControlMark(connectionBox.getPassword()));
+            fileReplaceMap.put(clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject), replaceMap);
+        }
+        doReplaceClientFile(fileReplaceMap, false);
+    }
+
+    private void replaceClientFileRegex(ClientModel clientModel, final String clientProject) {
+        final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
+        final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
+        replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getProjectMeta().getDbfluteVersion());
+        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientProject), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientProject), replaceMap);
+        doReplaceClientFile(fileReplaceMap, true);
+    }
+
+    private void doReplaceClientFile(Map<File, Map<String, Object>> fileMap, boolean regularExpression) {
+        for (Entry<File, Map<String, Object>> entry : fileMap.entrySet()) {
+            final File clientFile = entry.getKey();
             try {
-                FileUtils.deleteDirectory(dbfluteClientDir);
-            } catch (IOException ignored) {}
-            throw new RuntimeException(e);
+                if (!clientFile.exists()) { // possible when e.g. update, #hope lazy make from client templates
+                    throw new IllegalStateException("Not found the client file: " + clientFile);
+                }
+                String replacedText = FileUtils.readFileToString(clientFile, Charsets.UTF_8);
+                for (Entry<String, Object> replaceEntry : entry.getValue().entrySet()) {
+                    final String key = replaceEntry.getKey();
+                    final String value = String.valueOf(replaceEntry.getValue() == null ? "" : replaceEntry.getValue());
+                    replacedText = regularExpression ? replacedText.replaceAll(key, value) : replacedText.replace(key, value);
+                }
+                FileUtils.write(clientFile, replacedText, Charsets.UTF_8);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to replace the client file: " + clientFile, e);
+            }
         }
     }
+
+    // -----------------------------------------------------
+    //                                              Jar File
+    //                                              --------
+    private void copyJarFileToExtlib(ClientModel clientModel, String clientProject) {
+        clientModel.getProjectMeta().getJdbcDriverJarPath().ifPresent(jarPath -> {
+            final File extlibDir = clientPhysicalLogic.findExtlibDir(clientProject);
+            final File previousJar = new File(extlibDir, new File(jarPath).getName());
+            try {
+                final boolean alreadyExists =
+                        previousJar.exists() && new File(jarPath).getCanonicalPath().equals(previousJar.getCanonicalPath());
+                if (!alreadyExists) {
+                    for (File existingJarFile : FileUtils.listFiles(extlibDir, new String[] { ".jar" }, false)) {
+                        existingJarFile.delete(); // all jar files (cannot identity old version file)
+                    }
+                    FileUtils.copyFileToDirectory(new File(jarPath), extlibDir);
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to copy the jar file to extlib: " + jarPath, e);
+            }
+        });
+    }
+
+    // -----------------------------------------------------
+    //                                          Assist Logic
+    //                                          ------------
+    private String escapeControlMark(Object value) {
+        return new MapListString().escapeControlMark(value);
+    }
+
+    private void recoveryFailureClient(File dbfluteClientDir) {
+        try {
+            FileUtils.deleteDirectory(dbfluteClientDir);
+        } catch (IOException ignored) {}
+    }
+
+    // #pending SchemaSyncCheck by jflute
     //    private void createSchemaSyncCheck(ClientModel clientParam) {
     //        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getClientProject());
     //        URL schemaSyncCheckURL = ClassLoader.getSystemResource("dfprop/documentMap+schemaSyncCheck.dfprop");
@@ -228,48 +224,42 @@ public class ClientUpdateLogic {
     //            replaceFile(fileMap, false);
     //        }
     //    }
+
+    // #pending option and system user by jflute
+    //            OptionModel optionParam = clientModel.getOptionModel();
     //
-    //    private void replaceFile(Map<File, Map<String, Object>> fileMap, boolean regularExpression) {
-    //        try {
-    //            for (Entry<File, Map<String, Object>> entry : fileMap.entrySet()) {
-    //                File file = entry.getKey();
-    //                if (!file.exists()) {
-    //                    file = new File(file.getParentFile(), file.getName().replace("Map+.dfprop", "DefinitionMap+.dfprop"));
-    //                }
-    //                String text = FileUtils.readFileToString(file, Charsets.UTF_8);
-    //                for (Entry<String, Object> replaceEntry : entry.getValue().entrySet()) {
-    //                    Object value = replaceEntry.getValue();
-    //                    value = value == null ? "" : value;
-    //                    if (regularExpression) {
-    //                        text = text.replaceAll(replaceEntry.getKey(), String.valueOf(value));
-    //                    } else {
-    //                        text = text.replace(replaceEntry.getKey(), String.valueOf(value));
-    //                    }
-    //                }
-    //                FileUtils.write(file, text, Charsets.UTF_8);
-    //            }
-    //        } catch (IOException e) {
-    //            throw new RuntimeException(e);
-    //        }
-    //    }
+    //            replaceMap = new LinkedHashMap<String, Object>();
+    //            replaceMap.put("@isDbCommentOnAliasBasis@", optionParam.isDbCommentOnAliasBasis());
+    //            replaceMap.put("@aliasDelimiterInDbComment@", optionParam.getAliasDelimiterInDbComment());
+    //            replaceMap.put("@isCheckColumnDefOrderDiff@", optionParam.isCheckColumnDefOrderDiff());
+    //            replaceMap.put("@isCheckDbCommentDiff@", optionParam.isCheckDbCommentDiff());
+    //            replaceMap.put("@isCheckProcedureDiff@", optionParam.isCheckProcedureDiff());
+    //            fileMap.put(new File(dbfluteClientDir, "/dfprop/documentMap+.dfprop"), replaceMap);
     //
-    //    private String escapeControlMark(Object value) {
-    //        return new MapListString().escapeControlMark(value);
-    //    }
+    //            replaceMap = new LinkedHashMap<String, Object>();
+    //            replaceMap.put("@isGenerateProcedureParameterParam@", optionParam.isGenerateProcedureParameterBean());
+    //            replaceMap.put("@procedureSynonymHandlingType@", optionParam.getProcedureSynonymHandlingType());
+    //            fileMap.put(new File(dbfluteClientDir, "/dfprop/outsideSqlMap+.dfprop"), replaceMap);
+    //
+    //            replaceMap = new LinkedHashMap<String, Object>();
+    //            replaceMap.put("@driver@", escapeControlMark(clientModel.getDriver()));
+    //            replaceMap.put("@url@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUrl()));
+    //            replaceMap.put("@schema@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getSchema()));
+    //            replaceMap.put("@user@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUser()));
+    //            replaceMap.put("@password@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getPassword()));
+    //            fileMap.put(new File(dbfluteClientDir, "/dfprop/replaceSchemaMap+.dfprop"), replaceMap);
+    //
+    //            createSchemaSyncCheck(clientModel);
 
     // ===================================================================================
     //                                                                       Delete Client
     //                                                                       =============
-    public boolean deleteClient(String project) {
-        if (project == null) {
-            return false;
-        }
-        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + project);
+    public void deleteClient(String clientProject) {
+        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
         try {
-            FileUtils.deleteDirectory(dbfluteClientDir);
+            FileUtils.deleteDirectory(clientDir);
         } catch (IOException e) {
-            return false;
+            throw new IllegalStateException("Failed to delete the DBFlute client: " + clientDir);
         }
-        return true;
     }
 }

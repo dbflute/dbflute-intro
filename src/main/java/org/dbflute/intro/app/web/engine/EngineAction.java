@@ -16,14 +16,13 @@
 package org.dbflute.intro.app.web.engine;
 
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
-import org.dbflute.intro.app.logic.engine.EngineDownloadLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
-import org.dbflute.intro.app.logic.engine.EngineRemoveLogic;
+import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -33,19 +32,28 @@ import org.lastaflute.web.response.JsonResponse;
  */
 public class EngineAction extends IntroBaseAction {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     protected PublicPropertiesLogic publicPropertiesLogic;
     @Resource
-    protected EngineDownloadLogic engineDownloadLogic;
+    protected EngineInstallLogic engineInstallLogic;
     @Resource
     protected EngineInfoLogic engineInfoLogic;
-    @Resource
-    protected EngineRemoveLogic engineRemoveLogic;
 
-    // TODO jflute intro: don't want to public (2016/07/05)
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     @Execute
-    public JsonResponse<Properties> publicProperties() {
-        return asJson(publicPropertiesLogic.extractProperties());
+    public JsonResponse<EngineLatestBean> latest() {
+        DfPublicProperties prop = publicPropertiesLogic.findProperties();
+        EngineLatestBean bean = mappingToLatestVersion(prop);
+        return asJson(bean);
+    }
+
+    private EngineLatestBean mappingToLatestVersion(DfPublicProperties prop) {
+        return new EngineLatestBean(prop.getDBFluteLatestReleaseVersion(), prop.getDBFluteLatestSnapshotVersion());
     }
 
     @Execute
@@ -55,14 +63,14 @@ public class EngineAction extends IntroBaseAction {
     }
 
     @Execute
-    public JsonResponse<Void> download(String version) {
-        engineDownloadLogic.download(version);
+    public JsonResponse<Void> download(String dbfluteVersion) {
+        engineInstallLogic.downloadUnzipping(dbfluteVersion);
         return JsonResponse.asEmptyBody();
     }
 
     @Execute
     public JsonResponse<Void> remove(String version) {
-        engineRemoveLogic.remove(version);
+        engineInstallLogic.remove(version);
         return JsonResponse.asEmptyBody();
     }
 }

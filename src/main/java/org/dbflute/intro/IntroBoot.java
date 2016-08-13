@@ -27,7 +27,7 @@ public class IntroBoot {
     protected static final int DEFAULT_PORT = 9000;
 
     public static void main(String[] args) {
-        JettyBoot boot = new JettyBoot(getPort(), "dbflute-intro");
+        JettyBoot boot = new JettyBoot(getPort(), "/");
         // TODO jflute intro: development? (2016/08/02)
         boot.asDevelopment();
         if (Boolean.getBoolean("browseOnDesktop")) {
