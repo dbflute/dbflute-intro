@@ -30,14 +30,19 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.util.ProcessUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
 public class TaskExecutionLogic {
+
+    private static final Logger logger = LoggerFactory.getLogger(TaskExecutionLogic.class);
 
     // ===================================================================================
     //                                                                           Attribute
@@ -49,8 +54,9 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public boolean execute(String project, List<CDef.TaskType> taskTypeList, OptionalThing<String> env,
+    public boolean execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env,
             CommandOutputStreamProvider streamProvider) {
+        logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         return dbfluteTaskList.stream().allMatch(processBuilder -> {
             final Map<String, String> environment = processBuilder.environment();
@@ -59,7 +65,7 @@ public class TaskExecutionLogic {
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            final String clientPath = introPhysicalLogic.buildClientPath(project);
+            final String clientPath = introPhysicalLogic.buildClientPath(clientProject);
             processBuilder.directory(new File(clientPath));
 
             int resultCode = executeCommand(processBuilder, streamProvider);
@@ -102,8 +108,7 @@ public class TaskExecutionLogic {
     }
 
     private boolean isWindows() {
-        // TODO jflute intro: isWindows() util? (2016/08/02)
-        return System.getProperty("os.name").toLowerCase().startsWith("windows");
+        return ProcessUtil.isWindows();
     }
 
     // ===================================================================================
@@ -136,12 +141,21 @@ public class TaskExecutionLogic {
                 }
             }
         } catch (IOException e) {
-            String msg = "Failed to execute the command: " + process;
-            throw new IllegalStateException(msg, e);
+            if (isNazoErrorByJetty(e)) {
+                logger.debug("Nazo Error! {}", processBuilder, e);
+                return result;
+            } else {
+                String msg = "Failed to execute the command: " + process;
+                throw new IllegalStateException(msg, e);
+            }
         }
         if (result == 0) {
             result = process.exitValue();
         }
         return result;
+    }
+
+    private boolean isNazoErrorByJetty(IOException e) {
+        return e.getClass().getSimpleName().equals("EofException") && e.getMessage() != null && e.getMessage().contains("Closed");
     }
 }

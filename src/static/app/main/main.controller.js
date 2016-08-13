@@ -78,7 +78,7 @@ angular.module('dbflute-intro')
         } else {
             for (var index in $scope.clientBeanList) {
                 var clientBean = $scope.clientBeanList[index].clientBean;
-                if ($scope.clientBean.project == clientBean.project) {
+                if ($scope.clientBean.clientProject == clientBean.clientProject) {
                     $scope.clientBean = clientBean;
                     break;
                 }
@@ -109,15 +109,15 @@ angular.module('dbflute-intro')
     };
 
     $scope.openSchemaHTML = function(clientBean) {
-        $window.open('api/document/' + clientBean.project+ '/schemahtml/');
+        $window.open('api/document/' + clientBean.clientProject+ '/schemahtml/');
     };
 
     $scope.openHistoryHTML = function(clientBean) {
-      $window.open('api/document/' + clientBean.project+ '/historyhtml/');
+      $window.open('api/document/' + clientBean.clientProject+ '/historyhtml/');
     };
 
     $scope.task = function(clientBean, task) {
-        $window.open('api/client/task/' + clientBean.project + '/' + task);
+        $window.open('api/client/task/' + clientBean.clientProject + '/' + task);
     };
 
     $scope.dfprop = function(clientBean) {
