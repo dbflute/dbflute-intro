@@ -16,7 +16,7 @@
 package org.dbflute.intro.app.logic.client;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -27,8 +27,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
@@ -57,6 +56,8 @@ public class ClientInfoLogic {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
     @Resource
@@ -110,10 +111,10 @@ public class ClientInfoLogic {
         for (File file : playsqlDir.listFiles()) {
             if (file.isFile() && file.getName().startsWith("replace-schema") && file.getName().endsWith(".sql")) {
                 try {
-                    if (FileUtils.readFileToString(file, Charsets.UTF_8).trim().length() > 0) {
+                    if (flutyFileLogic.readFile(file).trim().length() > 0) {
                         exists = true;
                     }
-                } catch (IOException e) {
+                } catch (UncheckedIOException e) {
                     continue;
                 }
             }
@@ -152,12 +153,7 @@ public class ClientInfoLogic {
 
     private String prepareDBFluteVersion(String clientProject) {
         final File projectFile = new File(introPhysicalLogic.buildClientPath(clientProject, "_project.sh"));
-        final String data;
-        try {
-            data = FileUtils.readFileToString(projectFile);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read the project file: " + projectFile, e);
-        }
+        final String data = flutyFileLogic.readFile(projectFile);
         final Pattern pattern = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
         final Matcher matcher = pattern.matcher(data);
         if (matcher.find()) {

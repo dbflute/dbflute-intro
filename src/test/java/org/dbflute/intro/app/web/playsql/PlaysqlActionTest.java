@@ -1,18 +1,24 @@
 package org.dbflute.intro.app.web.playsql;
 
-import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
 
-import java.io.File;
-import java.util.List;
-
 /**
  * @author deco
+ * @author jflute
  */
 public class PlaysqlActionTest extends UnitIntroTestCase {
+
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                            Settings
@@ -68,7 +74,7 @@ public class PlaysqlActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         File playsqlAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/playsql/" + fileName);
-        String content = FileUtils.readFileToString(playsqlAfter, "UTF-8");
+        String content = flutyFileLogic.readFile(playsqlAfter);
         log(fileName, content);
         assertEquals(body.content, content);
     }

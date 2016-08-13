@@ -17,29 +17,31 @@ package org.dbflute.intro.app.logic.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import org.apache.commons.io.FileUtils;
-import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author jflute
  * @author deco
  */
-public class FileHandlingLogic {
+public class FlutyFileLogic {
+
+    private static final String BASIC_ENCODING = "UTF-8"; // all DBFlute resources are UTF-8
 
     public String readFile(File textFile) {
         try {
-            return FileUtils.readFileToString(textFile, "UTF-8");
+            return FileUtils.readFileToString(textFile, BASIC_ENCODING);
         } catch (IOException e) {
-            throw new LaSystemException("Cannot read the file: " + textFile);
+            throw new UncheckedIOException("Cannot read the text file: " + textFile, e);
         }
     }
 
-    public void writeFile(String content, File dfpropFile) {
+    public void writeFile(File textFile, String content) {
         try {
-            FileUtils.write(dfpropFile, content, "UTF-8");
+            FileUtils.write(textFile, content, BASIC_ENCODING);
         } catch (IOException e) {
-            throw new LaSystemException("Cannot write the file: " + dfpropFile);
+            throw new UncheckedIOException("Cannot write the text file: " + textFile, e);
         }
     }
 }

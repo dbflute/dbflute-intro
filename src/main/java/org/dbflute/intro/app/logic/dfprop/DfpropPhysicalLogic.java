@@ -33,11 +33,6 @@ import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 public class DfpropPhysicalLogic {
 
     // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static final String DFPROP_DIR_PATH = "dfprop";
-
-    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
@@ -46,28 +41,27 @@ public class DfpropPhysicalLogic {
     // ===================================================================================
     //                                                                               Path
     //                                                                              ======
-    public String buildDfpropDirPath(String project) {
-        return introPhysicalLogic.buildClientPath(project, DFPROP_DIR_PATH);
+    public String buildDfpropDirPath(String clientProject) {
+        return introPhysicalLogic.buildClientPath(clientProject, "dfprop");
     }
 
-    public String buildDfpropFilePath(String project, String fileName) {
-        String dfpropDirPath = buildDfpropDirPath(project);
-        return dfpropDirPath + "/" + fileName;
+    public String buildDfpropFilePath(String clientProject, String fileName) {
+        return buildDfpropDirPath(clientProject) + "/" + fileName;
     }
 
     // ===================================================================================
     //                                                                                Find
     //                                                                                ====
-    public File findDfpropFile(String project, String fileName) {
-        final File dfpropFile = new File(buildDfpropFilePath(project, fileName));
+    public File findDfpropFile(String clientProject, String fileName) {
+        final File dfpropFile = new File(buildDfpropFilePath(clientProject, fileName));
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath(), fileName);
         }
         return dfpropFile;
     }
 
-    public List<File> findDfpropFileAllList(String project) {
-        final File dfpropDir = new File(buildDfpropDirPath(project));
+    public List<File> findDfpropFileAllList(String clientProject) {
+        final File dfpropDir = new File(buildDfpropDirPath(clientProject));
         final File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
             throw new DfpropDirNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath(), dfpropDir.getName());

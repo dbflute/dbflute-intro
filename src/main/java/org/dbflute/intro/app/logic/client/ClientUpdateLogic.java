@@ -23,9 +23,9 @@ import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.dbflute.helper.mapstring.MapListString;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
@@ -42,6 +42,8 @@ public class ClientUpdateLogic {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
     @Resource
@@ -143,20 +145,16 @@ public class ClientUpdateLogic {
     private void doReplaceClientFile(Map<File, Map<String, Object>> fileMap, boolean regularExpression) {
         for (Entry<File, Map<String, Object>> entry : fileMap.entrySet()) {
             final File clientFile = entry.getKey();
-            try {
-                if (!clientFile.exists()) { // possible when e.g. update, #hope lazy make from client templates
-                    throw new IllegalStateException("Not found the client file: " + clientFile);
-                }
-                String replacedText = FileUtils.readFileToString(clientFile, Charsets.UTF_8);
-                for (Entry<String, Object> replaceEntry : entry.getValue().entrySet()) {
-                    final String key = replaceEntry.getKey();
-                    final String value = String.valueOf(replaceEntry.getValue() == null ? "" : replaceEntry.getValue());
-                    replacedText = regularExpression ? replacedText.replaceAll(key, value) : replacedText.replace(key, value);
-                }
-                FileUtils.write(clientFile, replacedText, Charsets.UTF_8);
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to replace the client file: " + clientFile, e);
+            if (!clientFile.exists()) { // possible when e.g. update, #hope lazy make from client templates
+                throw new IllegalStateException("Not found the client file: " + clientFile);
             }
+            String replacedText = flutyFileLogic.readFile(clientFile);
+            for (Entry<String, Object> replaceEntry : entry.getValue().entrySet()) {
+                final String key = replaceEntry.getKey();
+                final String value = String.valueOf(replaceEntry.getValue() == null ? "" : replaceEntry.getValue());
+                replacedText = regularExpression ? replacedText.replaceAll(key, value) : replacedText.replace(key, value);
+            }
+            flutyFileLogic.writeFile(clientFile, replacedText);
         }
     }
 

@@ -15,19 +15,21 @@
  */
 package org.dbflute.intro.app.web.log;
 
-import org.dbflute.intro.app.logic.core.FileHandlingLogic;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @author deco
+ * @author jflute
  */
 public class LogAction extends IntroBaseAction {
 
@@ -40,7 +42,7 @@ public class LogAction extends IntroBaseAction {
     @Resource
     private LogPhysicalLogic logPhysicalLogic;
     @Resource
-    private FileHandlingLogic fileHandlingLogic;
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -52,8 +54,8 @@ public class LogAction extends IntroBaseAction {
     public JsonResponse<List<LogBean>> list(String project) {
         List<File> logFileList = logPhysicalLogic.findLogFileAllList(project);
         List<LogBean> beans = logFileList.stream()
-            .map(logFile -> new LogBean(logFile.getName(), fileHandlingLogic.readFile(logFile)))
-            .collect(Collectors.toList());
+                .map(logFile -> new LogBean(logFile.getName(), flutyFileLogic.readFile(logFile)))
+                .collect(Collectors.toList());
         return asJson(beans);
     }
 }

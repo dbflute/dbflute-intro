@@ -15,32 +15,31 @@
  */
 package org.dbflute.intro.app.web.playsql;
 
-import org.dbflute.intro.app.logic.core.FileHandlingLogic;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.playsql.PlaysqlPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @author deco
+ * @author jflute
  */
 public class PlaysqlAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // -----------------------------------------------------
-    //                                          DI Component
-    //                                          ------------
     @Resource
     private PlaysqlPhysicalLogic playsqlPhysicalLogic;
     @Resource
-    private FileHandlingLogic fileHandlingLogic;
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -53,8 +52,8 @@ public class PlaysqlAction extends IntroBaseAction {
     public JsonResponse<List<PlaysqlBean>> list(String project) {
         List<File> playsqlFileList = playsqlPhysicalLogic.findPlaysqlFileAllList(project);
         List<PlaysqlBean> beans = playsqlFileList.stream()
-            .map(playsqlFile -> new PlaysqlBean(playsqlFile.getName(), fileHandlingLogic.readFile(playsqlFile)))
-            .collect(Collectors.toList());
+                .map(playsqlFile -> new PlaysqlBean(playsqlFile.getName(), flutyFileLogic.readFile(playsqlFile)))
+                .collect(Collectors.toList());
         return asJson(beans);
     }
 
@@ -67,7 +66,7 @@ public class PlaysqlAction extends IntroBaseAction {
         validate(body, messages -> {});
 
         File playsqlFile = playsqlPhysicalLogic.findPlaysqlFile(project, fileName);
-        fileHandlingLogic.writeFile(body.content, playsqlFile);
+        flutyFileLogic.writeFile(playsqlFile, body.content);
 
         return JsonResponse.asEmptyBody();
     }

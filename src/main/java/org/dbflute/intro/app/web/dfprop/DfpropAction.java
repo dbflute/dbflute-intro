@@ -15,16 +15,17 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
-import org.dbflute.intro.app.logic.core.FileHandlingLogic;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author deco
@@ -34,13 +35,10 @@ public class DfpropAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // -----------------------------------------------------
-    //                                          DI Component
-    //                                          ------------
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
-    private FileHandlingLogic fileHandlingLogic;
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -52,7 +50,7 @@ public class DfpropAction extends IntroBaseAction {
     public JsonResponse<List<DfpropBean>> list(String project) {
         List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(project);
         List<DfpropBean> beans = dfpropFileList.stream()
-                .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), fileHandlingLogic.readFile(dfpropFile)))
+                .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), flutyFileLogic.readFile(dfpropFile)))
                 .collect(Collectors.toList());
         return asJson(beans);
     }
@@ -65,7 +63,7 @@ public class DfpropAction extends IntroBaseAction {
         validate(body, messages -> {});
 
         File dfpropFile = dfpropPhysicalLogic.findDfpropFile(project, fileName);
-        fileHandlingLogic.writeFile(body.content, dfpropFile);
+        flutyFileLogic.writeFile(dfpropFile, body.content);
 
         return JsonResponse.asEmptyBody();
     }

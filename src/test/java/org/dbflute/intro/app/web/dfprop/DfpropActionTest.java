@@ -1,17 +1,22 @@
 package org.dbflute.intro.app.web.dfprop;
 
-import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * @author deco
  */
 public class DfpropActionTest extends UnitIntroTestCase {
+
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                            Settings
@@ -64,7 +69,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         File dfpropAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/" + fileName);
-        String content = FileUtils.readFileToString(dfpropAfter, "UTF-8");
+        String content = flutyFileLogic.readFile(dfpropAfter);
         log(fileName, content);
         assertEquals(body.content, content);
     }
