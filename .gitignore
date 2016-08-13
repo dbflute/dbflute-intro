@@ -42,6 +42,7 @@ latest-data.zip
 /dbflute_maihamadb
 /dbflute-intro.jar
 /dbflute-intro.war
+trial_config.ignored
 
 # node
 node_modules/
