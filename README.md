@@ -1,47 +1,35 @@
-#DBFlute Intro
+DBFlute Intro
+=======================
+The GUI Application for DBFlute Management
 
-## developer
+# For Intro users
+## How to use Intro
+1. download jar file
+2. `$ java -jar dbflute-intro.war`
 
-```
-# git clone
+TODO jflute how to distribution?
 
-# refresh app
-cd dbflute-intro
-./gradlew refresh
+# For committers or contributers
+## How to compile (for committer)
 
-# during development
-cd dbflute-intro
-## Api (run main class(org.dbflute.intro.IntroBoot) in the IDE. or execute commond)
-./gradlew run
-## Front End
-./gradlew gulp_serve
+1. git clone https://github.com/dbflute/dbflute-intro.git
+2. import on IDE: import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
+3. install bower, npm
+ 1. `$ bower install`
+ 2. `$ npm install`
 
-# build + run
-cd dbflute-intro
-./gradlew build
-java -jar build/libs/dbflute-intro.war
-```
+TODO jflute only bower, npm OK?
 
-## URL list
+## How to boot at local (for committer)
+1. `$ ./gradlew run` => boot API Server (same as IntroBoot.main())
+2. `$ ./gradlew gulp_serve` => boot FrontEnd Application (AngularJS)
 
-```
-# dbflute intro
-api/intro/manifest
+## How to refresh application
+1. $ `./gradlew refresh`
 
-# dbflute engine
-api/engine/publicProperties
-api/engine/versions
-api/engine/download/{version}
+TODO jflute what is this?
 
-# dbflute client
-api/client/list
-api/client/detail/{project}
-api/client/add
-api/client/remove/{project}
-api/client/update
-api/client/task/{project}/{task}
-api/client/schemahtml
-api/client/historyhtml
-```
+## How to Build
+1. `$ ./gradlew build`
+2. `$ java -jar build/libs/dbflute-intro.war`
 
-end.
