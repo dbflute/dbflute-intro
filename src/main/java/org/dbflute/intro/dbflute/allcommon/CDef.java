@@ -21,6 +21,7 @@ import org.dbflute.jdbc.Classification;
 import org.dbflute.jdbc.ClassificationCodeType;
 import org.dbflute.jdbc.ClassificationMeta;
 import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * The definition of classification.
@@ -30,10 +31,6 @@ public interface CDef extends Classification {
 
     /** The empty array for no sisters. */
     String[] EMPTY_SISTERS = new String[]{};
-
-    /** The empty map for no sub-items. */
-    @SuppressWarnings("unchecked")
-    Map<String, Object> EMPTY_SUB_ITEM_MAP = (Map<String, Object>)Collections.EMPTY_MAP;
 
     /**
      * general boolean classification for every flg-column
@@ -45,11 +42,13 @@ public interface CDef extends Classification {
         /** Unchecked: means no */
         False("0", "Unchecked", new String[] {"false"})
         ;
-        private static final Map<String, Flg> _codeValueMap = new HashMap<String, Flg>();
+        private static final Map<String, Flg> _codeClsMap = new HashMap<String, Flg>();
+        private static final Map<String, Flg> _nameClsMap = new HashMap<String, Flg>();
         static {
             for (Flg value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+                _nameClsMap.put(value.name().toLowerCase(), value);
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;
@@ -57,7 +56,7 @@ public interface CDef extends Classification {
         { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
-        public Map<String, Object> subItemMap() { return EMPTY_SUB_ITEM_MAP; }
+        public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.Flg; }
 
         public boolean inGroup(String groupName) {
@@ -65,6 +64,33 @@ public interface CDef extends Classification {
         }
 
         /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<Flg> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof Flg) { return OptionalThing.of((Flg)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<Flg> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
@@ -72,10 +98,11 @@ public interface CDef extends Classification {
         public static Flg codeOf(Object code) {
             if (code == null) { return null; }
             if (code instanceof Flg) { return (Flg)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
+            return _codeClsMap.get(code.toString().toLowerCase());
         }
 
         /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
          * Get the classification by the name (also called 'value' in ENUM world).
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
@@ -91,6 +118,28 @@ public interface CDef extends Classification {
          */
         public static List<Flg> listAll() {
             return new ArrayList<Flg>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<Flg> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: Flg." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<Flg> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<Flg> clsList = new ArrayList<Flg>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
         }
 
         /**
@@ -130,11 +179,13 @@ public interface CDef extends Classification {
         /** Apache Derby */
         ApacheDerby("derby", "Apache Derby", EMPTY_SISTERS)
         ;
-        private static final Map<String, TargetDatabase> _codeValueMap = new HashMap<String, TargetDatabase>();
+        private static final Map<String, TargetDatabase> _codeClsMap = new HashMap<String, TargetDatabase>();
+        private static final Map<String, TargetDatabase> _nameClsMap = new HashMap<String, TargetDatabase>();
         static {
             for (TargetDatabase value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+                _nameClsMap.put(value.name().toLowerCase(), value);
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;
@@ -142,7 +193,7 @@ public interface CDef extends Classification {
         { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
-        public Map<String, Object> subItemMap() { return EMPTY_SUB_ITEM_MAP; }
+        public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.TargetDatabase; }
 
         public boolean inGroup(String groupName) {
@@ -150,6 +201,33 @@ public interface CDef extends Classification {
         }
 
         /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TargetDatabase> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof TargetDatabase) { return OptionalThing.of((TargetDatabase)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TargetDatabase> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
@@ -157,10 +235,11 @@ public interface CDef extends Classification {
         public static TargetDatabase codeOf(Object code) {
             if (code == null) { return null; }
             if (code instanceof TargetDatabase) { return (TargetDatabase)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
+            return _codeClsMap.get(code.toString().toLowerCase());
         }
 
         /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
          * Get the classification by the name (also called 'value' in ENUM world).
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
@@ -176,6 +255,28 @@ public interface CDef extends Classification {
          */
         public static List<TargetDatabase> listAll() {
             return new ArrayList<TargetDatabase>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<TargetDatabase> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: TargetDatabase." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<TargetDatabase> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<TargetDatabase> clsList = new ArrayList<TargetDatabase>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
         }
 
         /**
@@ -203,11 +304,13 @@ public interface CDef extends Classification {
         /** Scala */
         Scala("scala", "Scala", EMPTY_SISTERS)
         ;
-        private static final Map<String, TargetLanguage> _codeValueMap = new HashMap<String, TargetLanguage>();
+        private static final Map<String, TargetLanguage> _codeClsMap = new HashMap<String, TargetLanguage>();
+        private static final Map<String, TargetLanguage> _nameClsMap = new HashMap<String, TargetLanguage>();
         static {
             for (TargetLanguage value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+                _nameClsMap.put(value.name().toLowerCase(), value);
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;
@@ -215,7 +318,7 @@ public interface CDef extends Classification {
         { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
-        public Map<String, Object> subItemMap() { return EMPTY_SUB_ITEM_MAP; }
+        public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.TargetLanguage; }
 
         public boolean inGroup(String groupName) {
@@ -223,6 +326,33 @@ public interface CDef extends Classification {
         }
 
         /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TargetLanguage> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof TargetLanguage) { return OptionalThing.of((TargetLanguage)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TargetLanguage> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
@@ -230,10 +360,11 @@ public interface CDef extends Classification {
         public static TargetLanguage codeOf(Object code) {
             if (code == null) { return null; }
             if (code instanceof TargetLanguage) { return (TargetLanguage)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
+            return _codeClsMap.get(code.toString().toLowerCase());
         }
 
         /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
          * Get the classification by the name (also called 'value' in ENUM world).
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
@@ -249,6 +380,28 @@ public interface CDef extends Classification {
          */
         public static List<TargetLanguage> listAll() {
             return new ArrayList<TargetLanguage>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<TargetLanguage> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: TargetLanguage." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<TargetLanguage> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<TargetLanguage> clsList = new ArrayList<TargetLanguage>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
         }
 
         /**
@@ -282,11 +435,13 @@ public interface CDef extends Classification {
         /** CDI */
         Cdi("cdi", "CDI", EMPTY_SISTERS)
         ;
-        private static final Map<String, TargetContainer> _codeValueMap = new HashMap<String, TargetContainer>();
+        private static final Map<String, TargetContainer> _codeClsMap = new HashMap<String, TargetContainer>();
+        private static final Map<String, TargetContainer> _nameClsMap = new HashMap<String, TargetContainer>();
         static {
             for (TargetContainer value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+                _nameClsMap.put(value.name().toLowerCase(), value);
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;
@@ -294,7 +449,7 @@ public interface CDef extends Classification {
         { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
-        public Map<String, Object> subItemMap() { return EMPTY_SUB_ITEM_MAP; }
+        public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.TargetContainer; }
 
         public boolean inGroup(String groupName) {
@@ -302,6 +457,33 @@ public interface CDef extends Classification {
         }
 
         /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TargetContainer> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof TargetContainer) { return OptionalThing.of((TargetContainer)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TargetContainer> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
@@ -309,10 +491,11 @@ public interface CDef extends Classification {
         public static TargetContainer codeOf(Object code) {
             if (code == null) { return null; }
             if (code instanceof TargetContainer) { return (TargetContainer)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
+            return _codeClsMap.get(code.toString().toLowerCase());
         }
 
         /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
          * Get the classification by the name (also called 'value' in ENUM world).
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
@@ -328,6 +511,28 @@ public interface CDef extends Classification {
          */
         public static List<TargetContainer> listAll() {
             return new ArrayList<TargetContainer>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<TargetContainer> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: TargetContainer." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<TargetContainer> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<TargetContainer> clsList = new ArrayList<TargetContainer>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
         }
 
         /**
@@ -370,11 +575,13 @@ public interface CDef extends Classification {
         /** SchemaSyncCheck */
         SchemaSyncCheck("schema_sync_check", "SchemaSyncCheck", EMPTY_SISTERS)
         ;
-        private static final Map<String, TaskType> _codeValueMap = new HashMap<String, TaskType>();
+        private static final Map<String, TaskType> _codeClsMap = new HashMap<String, TaskType>();
+        private static final Map<String, TaskType> _nameClsMap = new HashMap<String, TaskType>();
         static {
             for (TaskType value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+                _nameClsMap.put(value.name().toLowerCase(), value);
             }
         }
         private static final Map<String, Map<String, Object>> _subItemMapMap = new HashMap<String, Map<String, Object>>();
@@ -437,6 +644,33 @@ public interface CDef extends Classification {
         }
 
         /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TaskType> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof TaskType) { return OptionalThing.of((TaskType)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TaskType> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
@@ -444,10 +678,11 @@ public interface CDef extends Classification {
         public static TaskType codeOf(Object code) {
             if (code == null) { return null; }
             if (code instanceof TaskType) { return (TaskType)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
+            return _codeClsMap.get(code.toString().toLowerCase());
         }
 
         /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
          * Get the classification by the name (also called 'value' in ENUM world).
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
@@ -463,6 +698,28 @@ public interface CDef extends Classification {
          */
         public static List<TaskType> listAll() {
             return new ArrayList<TaskType>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<TaskType> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: TaskType." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<TaskType> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<TaskType> clsList = new ArrayList<TaskType>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
         }
 
         /**
@@ -497,39 +754,75 @@ public interface CDef extends Classification {
             return name(); // same as definition name
         }
 
-        public Classification codeOf(Object code) {
-            if ("Flg".equals(name())) { return CDef.Flg.codeOf(code); }
-            if ("TargetDatabase".equals(name())) { return CDef.TargetDatabase.codeOf(code); }
-            if ("TargetLanguage".equals(name())) { return CDef.TargetLanguage.codeOf(code); }
-            if ("TargetContainer".equals(name())) { return CDef.TargetContainer.codeOf(code); }
-            if ("TaskType".equals(name())) { return CDef.TaskType.codeOf(code); }
+        public OptionalThing<? extends Classification> of(Object code) {
+            if (Flg.name().equals(name())) { return CDef.Flg.of(code); }
+            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.of(code); }
+            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.of(code); }
+            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.of(code); }
+            if (TaskType.name().equals(name())) { return CDef.TaskType.of(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public Classification nameOf(String name) {
-            if ("Flg".equals(name())) { return CDef.Flg.valueOf(name); }
-            if ("TargetDatabase".equals(name())) { return CDef.TargetDatabase.valueOf(name); }
-            if ("TargetLanguage".equals(name())) { return CDef.TargetLanguage.valueOf(name); }
-            if ("TargetContainer".equals(name())) { return CDef.TargetContainer.valueOf(name); }
-            if ("TaskType".equals(name())) { return CDef.TaskType.valueOf(name); }
+        public OptionalThing<? extends Classification> byName(String name) {
+            if (Flg.name().equals(name())) { return CDef.Flg.byName(name); }
+            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.byName(name); }
+            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.byName(name); }
+            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.byName(name); }
+            if (TaskType.name().equals(name())) { return CDef.TaskType.byName(name); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public Classification codeOf(Object code) { // null if not found, old style so use classificationOf(code)
+            if (Flg.name().equals(name())) { return CDef.Flg.codeOf(code); }
+            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.codeOf(code); }
+            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.codeOf(code); }
+            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.codeOf(code); }
+            if (TaskType.name().equals(name())) { return CDef.TaskType.codeOf(code); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public Classification nameOf(String name) { // null if not found, old style so use classificationByName(name)
+            if (Flg.name().equals(name())) { return CDef.Flg.valueOf(name); }
+            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.valueOf(name); }
+            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.valueOf(name); }
+            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.valueOf(name); }
+            if (TaskType.name().equals(name())) { return CDef.TaskType.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listAll() {
-            if ("Flg".equals(name())) { return toClassificationList(CDef.Flg.listAll()); }
-            if ("TargetDatabase".equals(name())) { return toClassificationList(CDef.TargetDatabase.listAll()); }
-            if ("TargetLanguage".equals(name())) { return toClassificationList(CDef.TargetLanguage.listAll()); }
-            if ("TargetContainer".equals(name())) { return toClassificationList(CDef.TargetContainer.listAll()); }
-            if ("TaskType".equals(name())) { return toClassificationList(CDef.TaskType.listAll()); }
+            if (Flg.name().equals(name())) { return toClassificationList(CDef.Flg.listAll()); }
+            if (TargetDatabase.name().equals(name())) { return toClassificationList(CDef.TargetDatabase.listAll()); }
+            if (TargetLanguage.name().equals(name())) { return toClassificationList(CDef.TargetLanguage.listAll()); }
+            if (TargetContainer.name().equals(name())) { return toClassificationList(CDef.TargetContainer.listAll()); }
+            if (TaskType.name().equals(name())) { return toClassificationList(CDef.TaskType.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public List<Classification> groupOf(String groupName) {
-            if ("Flg".equals(name())) { return toClassificationList(CDef.Flg.groupOf(groupName)); }
-            if ("TargetDatabase".equals(name())) { return toClassificationList(CDef.TargetDatabase.groupOf(groupName)); }
-            if ("TargetLanguage".equals(name())) { return toClassificationList(CDef.TargetLanguage.groupOf(groupName)); }
-            if ("TargetContainer".equals(name())) { return toClassificationList(CDef.TargetContainer.groupOf(groupName)); }
-            if ("TaskType".equals(name())) { return toClassificationList(CDef.TaskType.groupOf(groupName)); }
+        public List<Classification> listByGroup(String groupName) { // exception if not found
+            if (Flg.name().equals(name())) { return toClassificationList(CDef.Flg.listByGroup(groupName)); }
+            if (TargetDatabase.name().equals(name())) { return toClassificationList(CDef.TargetDatabase.listByGroup(groupName)); }
+            if (TargetLanguage.name().equals(name())) { return toClassificationList(CDef.TargetLanguage.listByGroup(groupName)); }
+            if (TargetContainer.name().equals(name())) { return toClassificationList(CDef.TargetContainer.listByGroup(groupName)); }
+            if (TaskType.name().equals(name())) { return toClassificationList(CDef.TaskType.listByGroup(groupName)); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public List<? extends Classification> listOf(Collection<String> codeList) {
+            if (Flg.name().equals(name())) { return CDef.Flg.listOf(codeList); }
+            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.listOf(codeList); }
+            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.listOf(codeList); }
+            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.listOf(codeList); }
+            if (TaskType.name().equals(name())) { return CDef.TaskType.listOf(codeList); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public List<Classification> groupOf(String groupName) { // old style
+            if (Flg.name().equals(name())) { return toClassificationList(CDef.Flg.groupOf(groupName)); }
+            if (TargetDatabase.name().equals(name())) { return toClassificationList(CDef.TargetDatabase.groupOf(groupName)); }
+            if (TargetLanguage.name().equals(name())) { return toClassificationList(CDef.TargetLanguage.groupOf(groupName)); }
+            if (TargetContainer.name().equals(name())) { return toClassificationList(CDef.TargetContainer.groupOf(groupName)); }
+            if (TaskType.name().equals(name())) { return toClassificationList(CDef.TaskType.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -539,31 +832,50 @@ public interface CDef extends Classification {
         }
 
         public ClassificationCodeType codeType() {
-            if ("Flg".equals(name())) { return ClassificationCodeType.Number; }
-            if ("TargetDatabase".equals(name())) { return ClassificationCodeType.String; }
-            if ("TargetLanguage".equals(name())) { return ClassificationCodeType.String; }
-            if ("TargetContainer".equals(name())) { return ClassificationCodeType.String; }
-            if ("TaskType".equals(name())) { return ClassificationCodeType.String; }
+            if (Flg.name().equals(name())) { return ClassificationCodeType.Number; }
+            if (TargetDatabase.name().equals(name())) { return ClassificationCodeType.String; }
+            if (TargetLanguage.name().equals(name())) { return ClassificationCodeType.String; }
+            if (TargetContainer.name().equals(name())) { return ClassificationCodeType.String; }
+            if (TaskType.name().equals(name())) { return ClassificationCodeType.String; }
             return ClassificationCodeType.String; // as default
         }
 
         public ClassificationUndefinedHandlingType undefinedHandlingType() {
-            if ("Flg".equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if ("TargetDatabase".equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if ("TargetLanguage".equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if ("TargetContainer".equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if ("TaskType".equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
+            if (Flg.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
+            if (TargetDatabase.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
+            if (TargetLanguage.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
+            if (TargetContainer.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
+            if (TaskType.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 
-        public static CDef.DefMeta meta(String classificationName) { // instead of valueOf()
+        public static OptionalThing<CDef.DefMeta> find(String classificationName) { // instead of valueOf()
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
-            if ("Flg".equalsIgnoreCase(classificationName)) { return CDef.DefMeta.Flg; }
-            if ("TargetDatabase".equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetDatabase; }
-            if ("TargetLanguage".equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetLanguage; }
-            if ("TargetContainer".equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetContainer; }
-            if ("TaskType".equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TaskType; }
+            if (Flg.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.Flg); }
+            if (TargetDatabase.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetDatabase); }
+            if (TargetLanguage.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetLanguage); }
+            if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetContainer); }
+            if (TaskType.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TaskType); }
+            return OptionalThing.ofNullable(null, () -> {
+                throw new ClassificationNotFoundException("Unknown classification: " + classificationName);
+            });
+        }
+
+        public static CDef.DefMeta meta(String classificationName) { // old style so use byName(name)
+            if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
+            if (Flg.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.Flg; }
+            if (TargetDatabase.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetDatabase; }
+            if (TargetLanguage.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetLanguage; }
+            if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetContainer; }
+            if (TaskType.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TaskType; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
+        }
+    }
+
+    public static class ClassificationNotFoundException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        public ClassificationNotFoundException(String msg) {
+            super(msg);
         }
     }
 }

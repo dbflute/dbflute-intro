@@ -18,47 +18,45 @@ package org.dbflute.intro.mylasta;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.police.ActionComponentPolice;
 import org.dbflute.utflute.lastaflute.police.HotDeployDestroyerPolice;
+import org.dbflute.utflute.lastaflute.police.InjectedResourceDefinitionPolice;
+import org.dbflute.utflute.lastaflute.police.LastaPresentsSomethingPolice;
 import org.dbflute.utflute.lastaflute.police.NonActionExtendsActionPolice;
 import org.dbflute.utflute.lastaflute.police.NonWebHasWebReferencePolice;
 import org.dbflute.utflute.lastaflute.police.WebPackageNinjaReferencePolice;
 
 /**
  * @author t-awane
+ * @author jflute
  */
 public class IntroActionDefTest extends UnitIntroTestCase {
 
-    /**
-     * コンポーネントをテストします。
-     */
     public void test_component() {
         policeStoryOfJavaClassChase(new ActionComponentPolice(tp -> getComponent(tp)));
     }
 
-    /**
-     * コンポーネントをテストします。
-     */
     public void test_hotDeployDestroyer() {
         policeStoryOfJavaClassChase(new HotDeployDestroyerPolice(tp -> getComponent(tp)));
     }
 
-    /**
-     * コンポーネントをテストします。
-     */
     public void test_nonActionExtendsAction() {
         policeStoryOfJavaClassChase(new NonActionExtendsActionPolice());
     }
 
-    /**
-     * コンポーネントをテストします。
-     */
     public void test_nonWebHasWebReference() {
         policeStoryOfJavaClassChase(new NonWebHasWebReferencePolice());
     }
 
-    /**
-     * コンポーネントをテストします。
-     */
     public void test_webPackageNinjaReferencePolice() {
         policeStoryOfJavaClassChase(new WebPackageNinjaReferencePolice());
+    }
+
+    public void test_injectedResourceDefinitionPolice() throws Exception {
+        policeStoryOfJavaClassChase(new InjectedResourceDefinitionPolice().shouldBePrivateField(field -> {
+            return true; // means all fields
+        }));
+    }
+
+    public void test_lastaPresentsSomethingPolice() throws Exception {
+        policeStoryOfJavaClassChase(new LastaPresentsSomethingPolice());
     }
 }
