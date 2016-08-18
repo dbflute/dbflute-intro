@@ -21,6 +21,7 @@ import org.dbflute.jdbc.Classification;
 import org.dbflute.jdbc.ClassificationCodeType;
 import org.dbflute.jdbc.ClassificationMeta;
 import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * The definition of application classification.
@@ -30,10 +31,6 @@ public interface AppCDef extends Classification {
 
     /** The empty array for no sisters. */
     String[] EMPTY_SISTERS = new String[]{};
-
-    /** The empty map for no sub-items. */
-    @SuppressWarnings("unchecked")
-    Map<String, Object> EMPTY_SUB_ITEM_MAP = (Map<String, Object>)Collections.EMPTY_MAP;
 
     /**
      * Instruction for DBFlute task
@@ -51,11 +48,12 @@ public interface AppCDef extends Classification {
         /** ReplaceSchema: ReplaceSchema task */
         ReplaceSchema("replaceSchema", "ReplaceSchema", EMPTY_SISTERS)
         ;
-        private static final Map<String, TaskInstruction> _codeValueMap = new HashMap<String, TaskInstruction>();
+        private static final Map<String, TaskInstruction> _codeClsMap = new HashMap<String, TaskInstruction>();
+        private static final Map<String, TaskInstruction> _nameClsMap = new HashMap<String, TaskInstruction>();
         static {
             for (TaskInstruction value : values()) {
-                _codeValueMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeValueMap.put(sister.toLowerCase(), value); }
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
             }
         }
         private static final Map<String, Map<String, Object>> _subItemMapMap = new HashMap<String, Map<String, Object>>();
@@ -98,17 +96,46 @@ public interface AppCDef extends Classification {
         }
 
         /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TaskInstruction> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof TaskInstruction) { return OptionalThing.of((TaskInstruction)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<TaskInstruction> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
+         * @deprecated use of()
          */
         public static TaskInstruction codeOf(Object code) {
             if (code == null) { return null; }
             if (code instanceof TaskInstruction) { return (TaskInstruction)code; }
-            return _codeValueMap.get(code.toString().toLowerCase());
+            return _codeClsMap.get(code.toString().toLowerCase());
         }
 
         /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
          * Get the classification by the name (also called 'value' in ENUM world).
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
@@ -124,6 +151,28 @@ public interface AppCDef extends Classification {
          */
         public static List<TaskInstruction> listAll() {
             return new ArrayList<TaskInstruction>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<TaskInstruction> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: TaskInstruction." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<TaskInstruction> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<TaskInstruction> clsList = new ArrayList<TaskInstruction>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
         }
 
         /**
@@ -146,23 +195,43 @@ public interface AppCDef extends Classification {
             return name(); // same as definition name
         }
 
-        public Classification codeOf(Object code) {
-            if ("TaskInstruction".equals(name())) { return AppCDef.TaskInstruction.codeOf(code); }
+        public OptionalThing<? extends Classification> of(Object code) {
+            if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.of(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public Classification nameOf(String name) {
-            if ("TaskInstruction".equals(name())) { return AppCDef.TaskInstruction.valueOf(name); }
+        public OptionalThing<? extends Classification> byName(String name) {
+            if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.byName(name); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public Classification codeOf(Object code) { // null if not found, old style so use classificationOf(code)
+            if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.codeOf(code); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public Classification nameOf(String name) { // null if not found, old style so use classificationByName(name)
+            if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listAll() {
-            if ("TaskInstruction".equals(name())) { return toClassificationList(AppCDef.TaskInstruction.listAll()); }
+            if (TaskInstruction.name().equals(name())) { return toClassificationList(AppCDef.TaskInstruction.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public List<Classification> groupOf(String groupName) {
-            if ("TaskInstruction".equals(name())) { return toClassificationList(AppCDef.TaskInstruction.groupOf(groupName)); }
+        public List<Classification> listByGroup(String groupName) { // exception if not found
+            if (TaskInstruction.name().equals(name())) { return toClassificationList(AppCDef.TaskInstruction.listByGroup(groupName)); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public List<? extends Classification> listOf(Collection<String> codeList) {
+            if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.listOf(codeList); }
+            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+        }
+
+        public List<Classification> groupOf(String groupName) { // old style
+            if (TaskInstruction.name().equals(name())) { return toClassificationList(AppCDef.TaskInstruction.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -172,19 +241,34 @@ public interface AppCDef extends Classification {
         }
 
         public ClassificationCodeType codeType() {
-            if ("TaskInstruction".equals(name())) { return ClassificationCodeType.String; }
+            if (TaskInstruction.name().equals(name())) { return ClassificationCodeType.String; }
             return ClassificationCodeType.String; // as default
         }
 
         public ClassificationUndefinedHandlingType undefinedHandlingType() {
-            if ("TaskInstruction".equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
+            if (TaskInstruction.name().equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 
-        public static AppCDef.DefMeta meta(String classificationName) { // instead of valueOf()
+        public static OptionalThing<AppCDef.DefMeta> find(String classificationName) { // instead of valueOf()
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
-            if ("TaskInstruction".equalsIgnoreCase(classificationName)) { return AppCDef.DefMeta.TaskInstruction; }
+            if (TaskInstruction.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(AppCDef.DefMeta.TaskInstruction); }
+            return OptionalThing.ofNullable(null, () -> {
+                throw new ClassificationNotFoundException("Unknown classification: " + classificationName);
+            });
+        }
+
+        public static AppCDef.DefMeta meta(String classificationName) { // old style so use byName(name)
+            if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
+            if (TaskInstruction.name().equalsIgnoreCase(classificationName)) { return AppCDef.DefMeta.TaskInstruction; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
+        }
+    }
+
+    public static class ClassificationNotFoundException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        public ClassificationNotFoundException(String msg) {
+            super(msg);
         }
     }
 }

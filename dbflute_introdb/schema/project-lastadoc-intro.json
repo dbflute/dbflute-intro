@@ -1919,7 +1919,7 @@
       "typeName": "org.dbflute.intro.app.web.log.LogAction",
       "simpleTypeName": "LogAction",
       "description": "@author deco",
-      "typeComment": "/**\n * @author deco\n */",
+      "typeComment": "/**\n * @author deco\n * @author jflute\n */",
       "methodName": "list",
       "methodComment": null,
       "annotationList": [
@@ -1967,7 +1967,7 @@
       "typeName": "org.dbflute.intro.app.web.playsql.PlaysqlAction",
       "simpleTypeName": "PlaysqlAction",
       "description": "@author deco",
-      "typeComment": "/**\n * @author deco\n */",
+      "typeComment": "/**\n * @author deco\n * @author jflute\n */",
       "methodName": "list",
       "methodComment": null,
       "annotationList": [
@@ -2013,7 +2013,7 @@
       "typeName": "org.dbflute.intro.app.web.playsql.PlaysqlAction",
       "simpleTypeName": "PlaysqlAction",
       "description": "@author deco",
-      "typeComment": "/**\n * @author deco\n */",
+      "typeComment": "/**\n * @author deco\n * @author jflute\n */",
       "methodName": "update",
       "methodComment": null,
       "annotationList": [
