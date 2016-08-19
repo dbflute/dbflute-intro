@@ -34,10 +34,8 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
-import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
-import org.dbflute.intro.app.web.client.ClientDetailResult.ClientPart;
-import org.dbflute.intro.app.web.client.ClientDetailResult.ClientPart.DatabaseSettingsPart;
-import org.dbflute.intro.app.web.client.ClientDetailResult.ClientPart.OptionPart;
+import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
+import org.dbflute.intro.app.web.client.ClientDetailResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
@@ -98,13 +96,13 @@ public class ClientAction extends IntroBaseAction {
     }
 
     protected ClientDetailResult mappingToDetailBean(ClientModel clientModel) {
-        ClientPart clientBean = new ClientPart();
-        prepareBasic(clientBean, clientModel);
-        prepareDatabase(clientBean, clientModel);
-        clientBean.systemUserSettings = clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
+        ClientDetailResult detailBean = new ClientDetailResult();
+        prepareBasic(detailBean, clientModel);
+        prepareDatabase(detailBean, clientModel);
+        detailBean.systemUserSettings = clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
             return replaceSchemaMap.getAdditionalUserMap().flatMap(additionalUserMap -> {
                 return additionalUserMap.getSystemUserMap().map(systemUserMap -> {
-                    DatabaseSettingsPart databaseBean = new DatabaseSettingsPart();
+                    ClientDetailResult.DatabaseSettingsPart databaseBean = new ClientDetailResult.DatabaseSettingsPart();
                     databaseBean.url = systemUserMap.getDbConnectionBox().getUrl();
                     databaseBean.schema = systemUserMap.getDbConnectionBox().getSchema();
                     databaseBean.user = systemUserMap.getDbConnectionBox().getUser();
@@ -113,8 +111,8 @@ public class ClientAction extends IntroBaseAction {
                 });
             });
         }).orElse(null);
-        clientBean.optionBean = prepareOption(clientModel);
-        clientBean.schemaSyncCheckMap = new LinkedHashMap<>();
+        detailBean.optionBean = prepareOption(clientModel);
+        detailBean.schemaSyncCheckMap = new LinkedHashMap<>();
         // #pending by jflute
         //    Map<String, DatabaseInfoMap> schemaSyncCheckMap = clientModel.getSchemaSyncCheckMap();
         //    if (schemaSyncCheckMap != null) {
@@ -130,36 +128,34 @@ public class ClientAction extends IntroBaseAction {
         //        });
         //    }
 
-        ClientDetailResult detailBean = new ClientDetailResult();
-        detailBean.clientBean = clientBean;
         String clientProject = clientModel.getProjectMeta().getClientProject();
-        detailBean.schemahtml = documentLogic.existsSchemaHtml(clientProject);
-        detailBean.historyhtml = documentLogic.existsHistoryHtml(clientProject);
-        detailBean.replaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
+        detailBean.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
+        detailBean.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        detailBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
         return detailBean;
     }
 
-    private void prepareBasic(ClientPart clientBean, ClientModel clientModel) {
+    private void prepareBasic(ClientDetailResult client, ClientModel clientModel) {
         ProjectMeta projectMeta = clientModel.getProjectMeta();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        clientBean.projectName = projectMeta.getClientProject();
-        clientBean.targetDatabase = basicInfoMap.getDatabase();
-        clientBean.targetLanguage = basicInfoMap.getTargetLanguage();
-        clientBean.targetContainer = basicInfoMap.getTargetContainer();
-        clientBean.packageBase = basicInfoMap.getPackageBase();
-        clientBean.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
-        clientBean.dbfluteVersion = projectMeta.getDbfluteVersion();
-        clientBean.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
+        client.projectName = projectMeta.getClientProject();
+        client.databaseCode = basicInfoMap.getDatabase();
+        client.languageCode = basicInfoMap.getTargetLanguage();
+        client.containerCode = basicInfoMap.getTargetContainer();
+        client.packageBase = basicInfoMap.getPackageBase();
+        client.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
+        client.dbfluteVersion = projectMeta.getDbfluteVersion();
+        client.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
     }
 
-    private void prepareDatabase(ClientPart clientBean, ClientModel clientModel) {
+    private void prepareDatabase(ClientDetailResult client, ClientModel clientModel) {
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-        DatabaseSettingsPart databaseBean = new DatabaseSettingsPart();
+        ClientDetailResult.DatabaseSettingsPart databaseBean = new ClientDetailResult.DatabaseSettingsPart();
         databaseBean.url = databaseInfoMap.getDbConnectionBox().getUrl();
         databaseBean.schema = databaseInfoMap.getDbConnectionBox().getSchema();
         databaseBean.user = databaseInfoMap.getDbConnectionBox().getUser();
         databaseBean.password = databaseInfoMap.getDbConnectionBox().getPassword();
-        clientBean.mainSchemaSettings = databaseBean;
+        client.mainSchemaSettings = databaseBean;
     }
 
     private OptionPart prepareOption(ClientModel clientModel) {
@@ -184,7 +180,7 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.clientBody);
+        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -195,7 +191,7 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> update(ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.clientBody);
+        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -203,13 +199,13 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    protected ClientModel mappingToClientModel(ClientBody clientBody) {
+    protected ClientModel mappingToClientModel(ClientPart clientBody) {
         ClientModel clientModel = newClientModel(clientBody);
         // TODO jflute intro: re-making (2016/08/12)
         return clientModel;
     }
 
-    private ClientModel newClientModel(ClientBody clientBody) {
+    private ClientModel newClientModel(ClientPart clientBody) {
         ProjectMeta projectMeta = prepareProjectMeta(clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
@@ -217,16 +213,16 @@ public class ClientAction extends IntroBaseAction {
         return clientModel;
     }
 
-    private ProjectMeta prepareProjectMeta(ClientBody clientBody) {
-        return new ProjectMeta(clientBody.clientProject, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
+    private ProjectMeta prepareProjectMeta(ClientPart clientBody) {
+        return new ProjectMeta(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
     }
 
-    private BasicInfoMap prepareBasicInfoMap(ClientBody clientBody) {
-        return new BasicInfoMap(clientBody.targetDatabase, clientBody.targetLanguage, clientBody.targetContainer, clientBody.packageBase);
+    private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
+        return new BasicInfoMap(clientBody.databaseCode, clientBody.languageCode, clientBody.containerCode, clientBody.packageBase);
     }
 
-    private DatabaseInfoMap prepareDatabaseInfoMap(ClientBody clientBody) {
-        return OptionalThing.ofNullable(clientBody.databaseBody, () -> {}).map(databaseBody -> {
+    private DatabaseInfoMap prepareDatabaseInfoMap(ClientPart clientBody) {
+        return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
             DbConnectionBox connectionBox =
                     new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
             AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code

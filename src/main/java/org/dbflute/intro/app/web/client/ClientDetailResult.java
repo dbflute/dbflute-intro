@@ -29,75 +29,74 @@ import org.lastaflute.web.validation.Required;
  */
 public class ClientDetailResult {
 
+    // ===================================================================================
+    //                                                                         Client Info
+    //                                                                         ===========
+    @Required
+    public String projectName;
+    @Required
+    public CDef.TargetDatabase databaseCode;
+    @Required
+    public CDef.TargetLanguage languageCode;
+    @Required
+    public CDef.TargetContainer containerCode;
+    @Required
+    public String packageBase;
+    @Required
+    public String jdbcDriverFqcn;
+
     @Required
     @Valid
-    public ClientPart clientBean;
+    public DatabaseSettingsPart mainSchemaSettings;
 
-    public static class ClientPart {
+    @Valid
+    public DatabaseSettingsPart systemUserSettings;
 
-        @Required
-        public String projectName;
-        @Required
-        public CDef.TargetDatabase targetDatabase;
-        @Required
-        public CDef.TargetLanguage targetLanguage;
-        @Required
-        public CDef.TargetContainer targetContainer;
-        @Required
-        public String packageBase;
-        @Required
-        public String jdbcDriverFqcn;
+    public static class DatabaseSettingsPart {
 
         @Required
-        @Valid
-        public DatabaseSettingsPart mainSchemaSettings;
-
-        @Valid
-        public DatabaseSettingsPart systemUserSettings;
-
-        public static class DatabaseSettingsPart {
-
-            @Required
-            public String url;
-            public String schema; // contains additional schema by comma
-            @Required
-            public String user;
-            public String password;
-        }
-
+        public String url;
+        public String schema; // contains additional schema by comma
         @Required
-        public String dbfluteVersion;
-
-        public String jdbcDriverJarPath;
-
-        // #hope documentOption, outsideSqlOption by jflute
-        @Valid
-        public OptionPart optionBean;
-
-        public static class OptionPart {
-
-            @Required
-            public Boolean dbCommentOnAliasBasis;
-            public String aliasDelimiterInDbComment;
-            @Required
-            public Boolean checkColumnDefOrderDiff;
-            @Required
-            public Boolean checkDbCommentDiff;
-            @Required
-            public Boolean checkProcedureDiff;
-            @Required
-            public Boolean generateProcedureParameterBean;
-            public String procedureSynonymHandlingType;
-        }
-
-        @NotNull
-        public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
+        public String user;
+        public String password;
     }
 
     @Required
-    public Boolean schemahtml;
+    public String dbfluteVersion;
+
+    public String jdbcDriverJarPath;
+
+    // #hope documentOption, outsideSqlOption by jflute
+    @Valid
+    public OptionPart optionBean;
+
+    public static class OptionPart {
+
+        @Required
+        public Boolean dbCommentOnAliasBasis;
+        public String aliasDelimiterInDbComment;
+        @Required
+        public Boolean checkColumnDefOrderDiff;
+        @Required
+        public Boolean checkDbCommentDiff;
+        @Required
+        public Boolean checkProcedureDiff;
+        @Required
+        public Boolean generateProcedureParameterBean;
+        public String procedureSynonymHandlingType;
+    }
+
+    @NotNull
+    public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
+
+    // ===================================================================================
+    //                                                                        Client State
+    //                                                                        ============
     @Required
-    public Boolean historyhtml;
+    public Boolean hasSchemahtml;
     @Required
-    public Boolean replaceSchema;
+    public Boolean hasHistoryhtml;
+    @Required
+    public Boolean hasReplaceSchema;
 }

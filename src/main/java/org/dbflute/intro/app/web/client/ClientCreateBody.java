@@ -29,22 +29,20 @@ import org.lastaflute.web.validation.Required;
  */
 public class ClientCreateBody {
 
-    // TODO jflute nested body named body? (2016/08/12)
     @Required
     @Valid
-    public ClientBody clientBody;
+    public ClientPart client;
 
-    // TODO jflute recyle with bean? (2016/08/12)
-    public static class ClientBody {
+    public static class ClientPart {
 
         @Required
-        public String clientProject;
+        public String projectName;
         @Required
-        public CDef.TargetDatabase targetDatabase;
+        public CDef.TargetDatabase databaseCode;
         @Required
-        public CDef.TargetLanguage targetLanguage;
+        public CDef.TargetLanguage languageCode;
         @Required
-        public CDef.TargetContainer targetContainer;
+        public CDef.TargetContainer containerCode;
         @Required
         public String packageBase;
         @Required
@@ -52,25 +50,29 @@ public class ClientCreateBody {
 
         @Required
         @Valid
-        public DatabaseBody databaseBody;
+        public DatabaseSettingsPart mainSchemaSettings;
 
-        public DatabaseBody systemUserBody;
+        // #pending by jflute
+        //@Valid
+        public DatabaseSettingsPart systemUserSettings;
 
-        public static class DatabaseBody {
+        public static class DatabaseSettingsPart {
 
-            public String url; // contains additional schema by comma
-            public String schema;
+            @Required
+            public String url;
+            public String schema; // contains additional schema by comma
+            @Required
             public String user;
             public String password;
         }
-        
+
         @Required
         public String dbfluteVersion;
 
         public String jdbcDriverJarPath;
 
-        @Required
         // TODO jflute intro: option body validation after client implementation (2016/08/13)
+        //@Required
         //@Valid
         public OptionBody optionBody;
 
@@ -91,9 +93,12 @@ public class ClientCreateBody {
         }
 
         @NotNull
-        public Map<String, DatabaseBody> schemaSyncCheckMap;
+        public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
     }
 
+    // ===================================================================================
+    //                                                                       Create Option
+    //                                                                       =============
     @Required
     public Boolean testConnection;
 }

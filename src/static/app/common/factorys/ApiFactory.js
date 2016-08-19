@@ -28,17 +28,17 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/client/classifications'
             });
         },
-        clientBeanList: function() {
+        clientList: function() {
             return $http({
                 method : 'POST',
                 url : 'api/client/list'
             });
         },
-        createClient: function(clientBody, testConnection) {
+        createClient: function(client, testConnection) {
             return $http({
                 method : 'POST',
                 url : 'api/client/create',
-                data : {clientBody: clientBody, testConnection: testConnection}
+                data : {client: client, testConnection: testConnection}
             });
         },
         updateClient: function(clientBody, testConnection) {
