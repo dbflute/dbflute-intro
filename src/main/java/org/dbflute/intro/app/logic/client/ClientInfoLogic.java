@@ -127,7 +127,9 @@ public class ClientInfoLogic {
     //                                                                        ============
     public OptionalThing<ClientModel> findClient(String clientProject) {
         if (!existsClientProject(clientProject)) {
-            return OptionalThing.empty();
+            return OptionalThing.ofNullable(null, () -> {
+                throw new IllegalStateException("Not found the client project: " + clientProject);
+            });
         }
         final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.findDfpropMap(clientProject);
         final ClientModel clientModel = newClientModel(clientProject, dfpropMap);

@@ -64,7 +64,7 @@ angular.module('dbflute-intro')
 
     $scope.createClient = function() {
         $scope.editFlg = true;
-        $scope.clientBean = {create: true, databaseBean: {}, systemUserBean: {}, schemaSyncCheckMap: {}, optionBean: {}};
+        $scope.clientBean = {create: true, mainSchemaSettings: {}, systemUserSettings: {}, schemaSyncCheckMap: {}, optionBean: {}};
     };
 
     $scope.edit = function() {
@@ -78,7 +78,7 @@ angular.module('dbflute-intro')
         } else {
             for (var index in $scope.clientBeanList) {
                 var clientBean = $scope.clientBeanList[index].clientBean;
-                if ($scope.clientBean.clientProject == clientBean.clientProject) {
+                if ($scope.clientBean.projectName == clientBean.projectName) {
                     $scope.clientBean = clientBean;
                     break;
                 }
@@ -109,15 +109,15 @@ angular.module('dbflute-intro')
     };
 
     $scope.openSchemaHTML = function(clientBean) {
-        $window.open('api/document/' + clientBean.clientProject+ '/schemahtml/');
+        $window.open('api/document/' + clientBean.projectName+ '/schemahtml/');
     };
 
     $scope.openHistoryHTML = function(clientBean) {
-      $window.open('api/document/' + clientBean.clientProject+ '/historyhtml/');
+      $window.open('api/document/' + clientBean.projectName+ '/historyhtml/');
     };
 
     $scope.task = function(clientBean, task) {
-        $window.open('api/client/task/' + clientBean.clientProject + '/' + task);
+        $window.open('api/task/execute/' + clientBean.projectName + '/' + task);
     };
 
     $scope.dfprop = function(clientBean) {
@@ -139,8 +139,8 @@ angular.module('dbflute-intro')
     	clientBean.jdbcDriverFqcn = clientBean.driverName;
         var database = $scope.classificationMap["targetDatabaseMap"][clientBean.targetDatabase];
         clientBean.jdbcDriverFqcn = database.driverName;
-        clientBean.databaseBean.url = database.urlTemplate;
-        clientBean.databaseBean.schema =  database.defaultSchema;
+        clientBean.mainSchemaSettings.url = database.urlTemplate;
+        clientBean.mainSchemaSettings.schema =  database.defaultSchema;
     };
 
     $scope.downloadModal = function() {

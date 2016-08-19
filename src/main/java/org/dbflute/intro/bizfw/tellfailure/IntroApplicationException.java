@@ -8,7 +8,7 @@ import org.lastaflute.core.message.exception.MessagingApplicationException;
 /**
  * @author jflute
  */
-public class IntroApplicationException extends MessagingApplicationException {
+public abstract class IntroApplicationException extends MessagingApplicationException {
 
     private static final long serialVersionUID = 1L;
     protected static final String GLOBAL = IntroMessages.GLOBAL_PROPERTY_KEY;

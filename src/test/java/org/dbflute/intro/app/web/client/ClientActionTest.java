@@ -35,12 +35,12 @@ public class ClientActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<ClientDetailBean>> response = action.list();
+        JsonResponse<List<ClientDetailResult>> response = action.list();
 
         // ## Assert ##
         showJson(response);
-        TestingJsonData<List<ClientDetailBean>> jsonData = validateJsonData(response);
-        List<ClientDetailBean> detailBeanList = jsonData.getJsonBean();
+        TestingJsonData<List<ClientDetailResult>> jsonData = validateJsonData(response);
+        List<ClientDetailResult> detailBeanList = jsonData.getJsonBean();
         assertHasAnyElement(detailBeanList);
     }
 }

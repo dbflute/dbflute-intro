@@ -27,16 +27,16 @@ import org.lastaflute.web.validation.Required;
  * @author p1us2er0
  * @author jflute
  */
-public class ClientDetailBean {
+public class ClientDetailResult {
 
     @Required
     @Valid
-    public ClientBean clientBean;
+    public ClientPart clientBean;
 
-    public static class ClientBean {
+    public static class ClientPart {
 
         @Required
-        public String clientProject;
+        public String projectName;
         @Required
         public CDef.TargetDatabase targetDatabase;
         @Required
@@ -50,12 +50,12 @@ public class ClientDetailBean {
 
         @Required
         @Valid
-        public DatabaseBean databaseBean;
+        public DatabaseSettingsPart mainSchemaSettings;
 
         @Valid
-        public DatabaseBean systemUserBean;
+        public DatabaseSettingsPart systemUserSettings;
 
-        public static class DatabaseBean {
+        public static class DatabaseSettingsPart {
 
             @Required
             public String url;
@@ -70,10 +70,11 @@ public class ClientDetailBean {
 
         public String jdbcDriverJarPath;
 
+        // #hope documentOption, outsideSqlOption by jflute
         @Valid
-        public OptionBean optionBean;
+        public OptionPart optionBean;
 
-        public static class OptionBean {
+        public static class OptionPart {
 
             @Required
             public Boolean dbCommentOnAliasBasis;
@@ -90,7 +91,7 @@ public class ClientDetailBean {
         }
 
         @NotNull
-        public Map<String, DatabaseBean> schemaSyncCheckMap;
+        public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
     }
 
     @Required

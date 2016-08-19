@@ -21,13 +21,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
-import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ProjectMeta;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
@@ -37,17 +35,14 @@ import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
-import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
-import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
-import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
+import org.dbflute.intro.app.web.client.ClientDetailResult.ClientPart;
+import org.dbflute.intro.app.web.client.ClientDetailResult.ClientPart.DatabaseSettingsPart;
+import org.dbflute.intro.app.web.client.ClientDetailResult.ClientPart.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
-import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
-import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.servlet.request.ResponseManager;
 
 /**
  * @author p1us2er0
@@ -59,9 +54,6 @@ public class ClientAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // -----------------------------------------------------
-    //                                          DI Component
-    //                                          ------------
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
@@ -69,13 +61,9 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private TestConnectionLogic testConnectionLogic;
     @Resource
-    private TaskExecutionLogic taskExecutionLogic;
-    @Resource
     private DocumentPhysicalLogic documentLogic;
     @Resource
     private IntroClsAssist introClsAssist;
-    @Resource
-    private ResponseManager responseManager;
     @Resource
     private TimeManager timeManager;
 
@@ -92,31 +80,31 @@ public class ClientAction extends IntroBaseAction {
     }
 
     @Execute
-    public JsonResponse<List<ClientDetailBean>> list() {
+    public JsonResponse<List<ClientDetailResult>> list() {
         List<String> projectList = clientInfoLogic.getProjectList();
-        List<ClientDetailBean> beans = projectList.stream().map(project -> {
+        List<ClientDetailResult> beans = projectList.stream().map(project -> {
             return mappingToDetailBean(clientInfoLogic.findClient(project).get());
         }).collect(Collectors.toList());
         return asJson(beans);
     }
 
     @Execute
-    public JsonResponse<ClientDetailBean> detail(String clientProject) {
+    public JsonResponse<ClientDetailResult> detail(String clientProject) {
         ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
         });
-        ClientDetailBean detailBean = mappingToDetailBean(clientModel);
+        ClientDetailResult detailBean = mappingToDetailBean(clientModel);
         return asJson(detailBean);
     }
 
-    protected ClientDetailBean mappingToDetailBean(ClientModel clientModel) {
-        ClientBean clientBean = new ClientBean();
+    protected ClientDetailResult mappingToDetailBean(ClientModel clientModel) {
+        ClientPart clientBean = new ClientPart();
         prepareBasic(clientBean, clientModel);
         prepareDatabase(clientBean, clientModel);
-        clientBean.systemUserBean = clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
+        clientBean.systemUserSettings = clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
             return replaceSchemaMap.getAdditionalUserMap().flatMap(additionalUserMap -> {
                 return additionalUserMap.getSystemUserMap().map(systemUserMap -> {
-                    DatabaseBean databaseBean = new DatabaseBean();
+                    DatabaseSettingsPart databaseBean = new DatabaseSettingsPart();
                     databaseBean.url = systemUserMap.getDbConnectionBox().getUrl();
                     databaseBean.schema = systemUserMap.getDbConnectionBox().getSchema();
                     databaseBean.user = systemUserMap.getDbConnectionBox().getUser();
@@ -142,7 +130,7 @@ public class ClientAction extends IntroBaseAction {
         //        });
         //    }
 
-        ClientDetailBean detailBean = new ClientDetailBean();
+        ClientDetailResult detailBean = new ClientDetailResult();
         detailBean.clientBean = clientBean;
         String clientProject = clientModel.getProjectMeta().getClientProject();
         detailBean.schemahtml = documentLogic.existsSchemaHtml(clientProject);
@@ -151,10 +139,10 @@ public class ClientAction extends IntroBaseAction {
         return detailBean;
     }
 
-    private void prepareBasic(ClientBean clientBean, ClientModel clientModel) {
+    private void prepareBasic(ClientPart clientBean, ClientModel clientModel) {
         ProjectMeta projectMeta = clientModel.getProjectMeta();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        clientBean.clientProject = projectMeta.getClientProject();
+        clientBean.projectName = projectMeta.getClientProject();
         clientBean.targetDatabase = basicInfoMap.getDatabase();
         clientBean.targetLanguage = basicInfoMap.getTargetLanguage();
         clientBean.targetContainer = basicInfoMap.getTargetContainer();
@@ -164,18 +152,18 @@ public class ClientAction extends IntroBaseAction {
         clientBean.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
     }
 
-    private void prepareDatabase(ClientBean clientBean, ClientModel clientModel) {
+    private void prepareDatabase(ClientPart clientBean, ClientModel clientModel) {
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-        DatabaseBean databaseBean = new DatabaseBean();
+        DatabaseSettingsPart databaseBean = new DatabaseSettingsPart();
         databaseBean.url = databaseInfoMap.getDbConnectionBox().getUrl();
         databaseBean.schema = databaseInfoMap.getDbConnectionBox().getSchema();
         databaseBean.user = databaseInfoMap.getDbConnectionBox().getUser();
         databaseBean.password = databaseInfoMap.getDbConnectionBox().getPassword();
-        clientBean.databaseBean = databaseBean;
+        clientBean.mainSchemaSettings = databaseBean;
     }
 
-    private OptionBean prepareOption(ClientModel clientModel) {
-        OptionBean optionBean = new OptionBean();
+    private OptionPart prepareOption(ClientModel clientModel) {
+        OptionPart optionBean = new OptionPart();
         clientModel.getDocumentMap().ifPresent(documentMap -> {
             optionBean.dbCommentOnAliasBasis = documentMap.isDbCommentOnAliasBasis();
             optionBean.aliasDelimiterInDbComment = documentMap.getAliasDelimiterInDbComment().orElse(null);
@@ -239,10 +227,10 @@ public class ClientAction extends IntroBaseAction {
 
     private DatabaseInfoMap prepareDatabaseInfoMap(ClientBody clientBody) {
         return OptionalThing.ofNullable(clientBody.databaseBody, () -> {}).map(databaseBody -> {
-            DbConnectionBox dbConnectionInfo =
+            DbConnectionBox connectionBox =
                     new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
             AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
-            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, dbConnectionInfo, additionalSchemaMap);
+            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, connectionBox, additionalSchemaMap);
         }).orElseThrow(() -> {
             return new IllegalStateException("Not found the database body: " + clientBody);
         });
@@ -259,20 +247,5 @@ public class ClientAction extends IntroBaseAction {
     public JsonResponse<Void> delete(String clientProject) {
         clientUpdateLogic.deleteClient(clientProject);
         return JsonResponse.asEmptyBody();
-    }
-
-    // TODO jflute intro: independent (2016/07/19)
-    @Execute
-    public JsonResponse<Void> task(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
-        List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
-        HttpServletResponse response = prepareTaskResponse();
-        taskExecutionLogic.execute(project, taskTypeList, env, () -> response.getOutputStream());
-        return JsonResponse.asEmptyBody();
-    }
-
-    private HttpServletResponse prepareTaskResponse() {
-        HttpServletResponse response = responseManager.getResponse();
-        response.setContentType("text/plain; charset=UTF-8");
-        return response;
     }
 }
