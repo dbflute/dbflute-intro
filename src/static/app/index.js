@@ -1,9 +1,16 @@
 'use strict';
+
+/**
+ * onError
+ */
 window.onerror = function (message, url, lineNumber) {
-    alert("画面の処理中にエラーが発生しました。");
+    alert("Sorry...script error");
     return false;
 };
 
+/**
+ * Module for ???
+ */
 angular.module('dbflute-intro', [
         'ngAnimate',
         'ngCookies',
@@ -14,13 +21,19 @@ angular.module('dbflute-intro', [
         'ngStorage',
         'pascalprecht.translate']);
 
+/**
+ * Module for exceptionHandler
+ */
 angular.module('dbflute-intro').factory("$exceptionHandler", function ($log) {
     return function (exception, cause) {
         $log.error(exception);
-        alert("画面の処理中にエラーが発生しました。");
+        alert("Sorry...script error");
     };
 });
 
+/**
+ * Module for URL mapping
+ */
 angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('home', {
@@ -30,12 +43,19 @@ angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvi
         }).state('client', {
             url: '/client',
             templateUrl: 'app/client/client.html',
-          controller: 'ClientCtrl'
+            controller: 'ClientCtrl'
+        }).state('welcome', {
+            url: '/welcome',
+            templateUrl: 'app/welcome/welcome.html',
+            controller: 'WelcomeCtrl'
         });
 
     $urlRouterProvider.otherwise('/');
 });
 
+/**
+ * Module for i18n
+ */
 angular.module('dbflute-intro').config(function($translateProvider) {
     $translateProvider.useStaticFilesLoader({
         prefix: 'assets/i18n/locale-',
@@ -50,6 +70,9 @@ angular.module('dbflute-intro').config(function($translateProvider) {
 //    $translateProvider.useLocalStorage();
 });
 
+/**
+ * Module for httpProvider
+ */
 angular.module('dbflute-intro').config(function($httpProvider) {
     $httpProvider.interceptors.push(
             ['$q', '$rootScope', '$injector',
@@ -64,7 +87,7 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                 var reload = false;
 
                 if(response.status === 0) {
-                    $rootScope.messages = ['エラーが発生しました。サーバが停止しています。しばらくたってからアクセスしてください。'];
+                    $rootScope.messages = ['Cannot access the server, retry later'];
                     reload = true;
                 }
 
@@ -82,9 +105,7 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                             for (var i in response.data.messages[key]) {
                                 var message = response.data.messages[key][i];
 
-                                // リストを含む場合の処理
                                 if (key.match(/List/)) {
-                                    // indexを含むリストの場合
                                     if (key.match(/[0-9]/)) {
                                         var newKey = '';
                                         var splitList = key.split(/[0-9]/);
@@ -97,7 +118,6 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                                     }
                                 }
 
-                                // TODO
                                 if (key.lastIndexOf('.')) {
                                     key = key.substring(key.lastIndexOf('.') + 1);
                                 }
