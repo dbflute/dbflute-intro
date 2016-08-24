@@ -35,84 +35,85 @@
             <uib-tab heading="Basic">
               <form class="form-horizontal">
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_PROJECT' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_PROJECT' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg && client.create">{{client.projectName}}</span>
-                    <input type="text" class="form-control" ng-model="client.projectName" ng-show="editFlg && client.create" />
+                    <input type="text" class="form-control" ng-model="client.projectName" ng-show="editFlg && client.create" placeholder="docksidestage" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_DATABASE' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_DATABASE' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.databaseCode}}</span>
+                    <!-- TODO deco set default value -->
                     <select class="form-control" ng-model="client.databaseCode" ng-options="code as def.databaseName for (code, def) in classificationMap.targetDatabaseMap" ng-show="editFlg" ng-change="changeDatabase(client)"></select>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_LANGUAGE' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_LANGUAGE' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.languageCode}}</span>
                     <select class="form-control" ng-model="client.languageCode" ng-options="code as name for (code, name) in classificationMap.targetLanguageMap" ng-show="editFlg"></select>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_CONTAINER' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_CONTAINER' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.containerCode}}</span>
                     <select class="form-control" ng-model="client.containerCode" ng-options="code as name for (code, name) in classificationMap.targetContainerMap" ng-show="editFlg"></select>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_PACKAGE_BASE' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_PACKAGE_BASE' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.packageBase}}</span>
-                    <input type="text" class="form-control" ng-model="client.packageBase" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.packageBase" ng-show="editFlg" placeholder="org.docksidestage.dbflute" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.jdbcDriverFqcn}}</span>
-                    <input type="text" class="form-control" ng-model="client.jdbcDriverFqcn" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.jdbcDriverFqcn" ng-show="editFlg" placeholder="mysql-connector-java-5.1.12-bin.jar" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_URL' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_URL' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.mainSchemaSettings.url}}</span>
-                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" ng-show="editFlg" placeholder="jdbc:mysql://localhost:3306/exampledb" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_SCHEMA' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.mainSchemaSettings.schema}}</span>
-                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema" ng-show="editFlg" placeholder="DOCKSIDESTAGE" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_USER' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_USER' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.mainSchemaSettings.user}}</span>
-                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" ng-show="editFlg" placeholder="root" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_PASSWORD' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.mainSchemaSettings.password}}</span>
-                    <input type="password" class="form-control" ng-model="client.mainSchemaSettings.password" ng-show="editFlg" />
+                    <input type="password" class="form-control" ng-model="client.mainSchemaSettings.password" ng-show="editFlg" placeholder="password" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER_JAR_PATH' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.jdbcDriverJarPath}}</span>
-                    <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" placeholder="~/mysql-connector-java-5.1.12-bin.jar" />
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_DBFLUTE_VERSION' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">{{'LABEL_DBFLUTE_VERSION' | translate:translationData}} *</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.dbfluteVersion}}</span>
                     <select class="form-control" ng-model="client.dbfluteVersion" ng-options="version for version in versions" ng-show="editFlg"></select>
