@@ -91,7 +91,9 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                     reload = true;
                 }
 
+                // TODO jflute intro: index.js extract to method
                 if (response.status === 400) {
+                	// TODO jflute intro: index.js validation erro handling
                     if (response.data.messages) {
                         var messageList = new Array();
                         var convertCamelToSnake = function(key) {
@@ -129,24 +131,17 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                             }
                         }
                         $rootScope.messages = messageList;
-
                     } else {
                         $rootScope.messages = angular.isArray(response.data) ? response.data : [response.data];
                     }
-                }
-
-                if (response.status === 401) {
-                    $rootScope.messages = ['セッションが切れました。再度認証してください。'];
+                } else if (response.status === 401) {
+                    $rootScope.messages = ['401 Not Authorized'];
                     reload = true;
-                }
-
-                if (response.status === 403) {
-                    $rootScope.messages = ['権限がありません。'];
-                }
-
-                if (response.status === 500) {
+                } else if (response.status === 403) {
+                    $rootScope.messages = ['403 Forbidden'];
+                } else if (response.status >= 500) {
                     $rootScope.messages = angular.isArray(response.data) ? response.data : [response.data];
-                    $rootScope.messages.unshift('エラーが発生しました。');
+                    $rootScope.messages.unshift('500 Server Error');
                 }
 
                 if (!dialog && $rootScope.messages) {
