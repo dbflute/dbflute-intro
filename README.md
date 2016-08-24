@@ -33,3 +33,32 @@ TODO jflute what is this?
 1. `$ ./gradlew build`
 2. `$ java -jar build/libs/dbflute-intro.war`
 
+## Server-side Framework
+
+using LastaFlute:
+https://github.com/lastaflute/lastaflute
+
+## Front-side Framework
+
+using Angular:
+```
+dbflute-intro
+ |-src
+ |  |-main
+ |  |-static
+ |     |-app
+ |     |  |-common
+ |     |  |  |-ApiFactory.js
+ |     |  |-main
+ |     |  |  |-main.controller.js
+ |     |  |  |-main.html
+ |     |  |-welcome
+ |     |  |  |-welcome.controller.js
+ |     |  |  |-welcome.html
+ |     |  |-bootstrap.css
+ |     |  |-index.css     // core styles
+ |     |  +-index.js      // core angular modules
+ |     |
+ |     |-404.html
+ |     +-index.html       // base HTML of all components
+```
