@@ -28,7 +28,7 @@ tasks.eclipseJdt << {
     ext.originalOutputFile.withWriter(encoding) { writer ->
         lines.each { line ->
             writer << line
-            writer << "\r\n"
+            writer << "\n"
         }
     }
     assert outputFile.delete()
