@@ -1,6 +1,10 @@
+
+// =======================================================================================
+//                                                                           Core Settings
+//                                                                           =============
 buildscript {
     repositories {
-        jcenter()
+        jcenter() // http://jcenter.bintray.com/
     }
 }
 
@@ -14,6 +18,10 @@ apply plugin: 'application'
 apply plugin: 'war'
 apply plugin: 'project-report'
 
+
+// =======================================================================================
+//                                                                              Basic Info
+//                                                                              ==========
 group = 'org.dbflute'
 version = '0.0.3-SNAPSHOT'
 
@@ -22,34 +30,50 @@ ext {
 
     versions =
         [
+            // Basic Resource
             jdk : '1.8',
             gradle : '2.12',
             node : '5.9.1',
 
+            // Main Framework
             dbflute : '1.1.1',
             h2 : '1.4.192',
             lastaflute : '0.8.3',
 
+            // Partner Library
             slf4j : '1.7.18',
             logback : '1.1.6',
             jettyboot : '0.4.3',
 
+            // GoodNeighbor Library
+            commonslang : '3.4',
+            commonsio : '2.4',
+
+            // Testing
             junit : '4.8.2',
             utflute : '0.6.1A',
             javaparser : '2.2.2'
         ]
 }
 
-task refreshResource {
 
+// =======================================================================================
+//                                                                                 Plug-in
+//                                                                                 =======
+// TODO jflute intro: what is refreshResource? (Eclipse Synchronizer?)
+task refreshResource {
 }
 
 task refreshResourceAfter {
-
 }
 
+// include plugin's gradle settings (using application settings, e.g. versions)
 fileTree(dir: 'gradle/gradlePlugin', includes: ['*.gradle']).each { apply from: it }
 
+
+// =======================================================================================
+//                                                                                 Library
+//                                                                                 =======
 repositories {
     mavenLocal()
     mavenCentral()
@@ -59,25 +83,36 @@ repositories {
 }
 
 dependencies {
+    // Main Framework
     compile "org.dbflute:dbflute-runtime:${versions.dbflute}"
     runtime "com.h2database:h2:${versions.h2}"
     compile "org.lastaflute:lastaflute:${versions.lastaflute}"
 
-    compile 'javax.transaction:javax.transaction-api:1.2'
+    // Partner Library
+    compile "javax.transaction:javax.transaction-api:1.2"
     compile "org.slf4j:slf4j-api:${versions.slf4j}"
     runtime "ch.qos.logback:logback-classic:${versions.logback}"
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-    providedCompile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
-    compile 'commons-io:commons-io:2.4'
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+    compile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
 
+    // GoodNeighbor Library
+    compile "org.apache.commons:commons-lang3:${versions.commonslang}"
+    compile "commons-io:commons-io:${versions.commonsio}"
+
+    // Testing
     testCompile "junit:junit:${versions.junit}"
     testCompile "org.dbflute.utflute:utflute-lastaflute:${versions.utflute}"
     testCompile "com.github.javaparser:javaparser-core:${versions.javaparser}"
 }
 
+
+// =======================================================================================
+//                                                                               Packaging
+//                                                                               =========
 mainClassName = 'org.dbflute.intro.IntroBoot'
 
 war {
+    // TODO jflute intro: needs to remove servlet, jetty?
     from {
         configurations.providedCompile.collect {
             it.isDirectory() ? it : project.zipTree(it)
@@ -100,7 +135,7 @@ war {
     try {
         scmBranch = 'git branch --contains'.execute().text.trim() - '* '
         scmRevision = 'git rev-parse HEAD'.execute().text.trim()
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
 
     manifest {
@@ -114,6 +149,10 @@ war {
     }
 }
 
+
+// =======================================================================================
+//                                                                                 License
+//                                                                                 =======
 license {
     strictCheck true
     include "**/*.java"
@@ -122,6 +161,10 @@ license {
     }
 }
 
+
+// =======================================================================================
+//                                                                                 Refresh
+//                                                                                 =======
 task refresh(dependsOn: ['refreshResource', 'refreshResourceAfter', 'eclipse'])
 tasks['refreshResourceAfter'].dependsOn(['refreshResource'])
 if (tasks.findByName('eclipseClasspath')) {

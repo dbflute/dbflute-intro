@@ -41,7 +41,7 @@ eclipse {
 
         file {
             withProperties { properties ->
-                def formatter = new XmlSlurper().parse('./gradle/eclipse/formatter.xml')
+                def formatter = new XmlSlurper().parse('./gradle/eclipse/code-formatter-profile.xml')
 
                 formatter.profile.setting.each {
                     properties.put(it.@id as String, it.@value as String)
