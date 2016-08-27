@@ -14,15 +14,15 @@ TODO jflute how to distribution?
 
 1. git clone https://github.com/dbflute/dbflute-intro.git
 2. import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
-3. install node, gulp, bower if non-existent in your computer
+3. (install node, gulp, bower if non-existent in your computer)
  1. `$ brew install node`
  2. `$ npm install -g gulp`
  3. `$ npm install -g bower`
-4. install components of bower, npm for dbflute-intro
+4. install components of bower, npm for application (at dbflute-intro directory)
  1. `$ bower install`
  2. `$ npm install`
 
-## How to boot at local (for committer)
+## How to boot (for committer)
 1. `$ ./gradlew run` => boot API Server (same as IntroBoot.main())
 2. `$ ./gradlew gulp_serve` => boot FrontEnd Application (AngularJS)
 
@@ -31,7 +31,7 @@ TODO jflute how to distribution?
 
 TODO jflute what is this?
 
-## How to Build
+## How to build
 1. `$ ./gradlew build`
 2. `$ java -jar build/libs/dbflute-intro.war`
 
