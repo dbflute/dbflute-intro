@@ -7,7 +7,7 @@
     "angular-cookies": "1.5.3",
     "angular-touch": "1.5.3",
     "angular-sanitize": "1.5.3",
-    "angular-ui-router": "1.0.0alpha0",
+    "angular-ui-router": "1.0.0-alpha.1",
     "angular-bootstrap": "0.14.3",
     "angular-translate": "2.11.0",
     "angular-translate-storage-cookie": "2.11.0",
