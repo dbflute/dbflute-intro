@@ -13,12 +13,14 @@ TODO jflute how to distribution?
 ## How to compile (for committer)
 
 1. git clone https://github.com/dbflute/dbflute-intro.git
-2. import on IDE: import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
-3. install bower, npm
+2. import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
+3. install node, gulp, bower if non-existent in your computer
+ 1. `$ brew install node`
+ 2. `$ npm install -g gulp`
+ 3. `$ npm install -g bower`
+4. install components of bower, npm for dbflute-intro
  1. `$ bower install`
  2. `$ npm install`
-
-TODO jflute only bower, npm OK?
 
 ## How to boot at local (for committer)
 1. `$ ./gradlew run` => boot API Server (same as IntroBoot.main())
