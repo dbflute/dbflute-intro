@@ -36,14 +36,13 @@ public class AccessContextLogic {
     //                                                                  Resource Interface
     //                                                                  ==================
     @FunctionalInterface
-    public static interface AppTypeSupplier {
+    public interface AppTypeSupplier {
         String supply();
     }
 
     // ===================================================================================
     //                                                                      Create Context
     //                                                                      ==============
-
     public AccessContext create(AccessContextResource resource, AppTypeSupplier appTypeSupplier) {
         final AccessContext context = new AccessContext();
         context.setAccessLocalDateTimeProvider(() -> timeManager.currentDateTime());
@@ -53,13 +52,14 @@ public class AccessContextLogic {
 
     private String buildAccessUserTrace(AccessContextResource resource, AppTypeSupplier appTypeSupplier) {
         // #change_it you can customize the user trace for common column
+        // example default style: "M:7,HBR,ProductListAction" or "_:-1,HBR,ProductListAction"
         final StringBuilder sb = new StringBuilder();
         sb.append("_:").append(-1); // no authentication in DBFlute Intro
         //sb.append(userTypeSupplier.supply().orElse("_")).append(":");
         //sb.append(userBeanSupplier.supply().map(bean -> bean.getUserId()).orElse(-1));
         sb.append(",").append(appTypeSupplier.supply()).append(",").append(resource.getModuleName());
         final String trace = sb.toString();
-        final int columnSize = 200;
+        final int columnSize = 200; // is same as e.g. REGISTER_USER
         return trace.length() > columnSize ? trace.substring(0, columnSize) : trace;
     }
 }
