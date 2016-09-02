@@ -36,19 +36,10 @@ angular.module('dbflute-intro').factory("$exceptionHandler", function ($log) {
  */
 angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
-        .state('home', {
-            url: '/',
-            templateUrl: 'app/main/main.html',
-            controller: 'MainCtrl'
-        }).state('client', {
-            url: '/client',
-            templateUrl: 'app/client/client.html',
-            controller: 'ClientCtrl'
-        }).state('welcome', {
-            url: '/welcome',
-            templateUrl: 'app/welcome/welcome.html',
-            controller: 'WelcomeCtrl'
-        });
+        .state('home', { url: '/', templateUrl: 'app/main/main.html', controller: 'MainCtrl'})
+        .state('client', { url: '/client', templateUrl: 'app/client/client.html', controller: 'ClientCtrl'})
+        .state('welcome', { url: '/welcome', templateUrl: 'app/welcome/welcome.html', controller: 'WelcomeCtrl'})
+        ;
 
     $urlRouterProvider.otherwise('/');
 });
@@ -96,13 +87,6 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                 	// TODO jflute intro: index.js validation erro handling
                     if (response.data.messages) {
                         var messageList = new Array();
-                        var convertCamelToSnake = function(key) {
-                            return key.replace(/([A-Z])/g,
-                                function(s) {
-                                    return '_' + s.charAt(0).toLowerCase();
-                                }
-                            );
-                        };
                         for (var key in response.data.messages) {
                             for (var i in response.data.messages[key]) {
                                 var message = response.data.messages[key][i];
@@ -123,8 +107,7 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                                 if (key.lastIndexOf('.')) {
                                     key = key.substring(key.lastIndexOf('.') + 1);
                                 }
-                                var propertyName = convertCamelToSnake(key).toUpperCase();
-                                propertyName = "LABEL_" + propertyName;
+                                var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
                                 var $translate = $injector.get('$translate')
                                 var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
                                 messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');

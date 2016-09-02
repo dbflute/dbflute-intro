@@ -32,6 +32,7 @@ import org.lastaflute.web.login.exception.LoginUnauthorizedException;
 import org.lastaflute.web.response.ApiResponse;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.RequestManager;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author p1us2er0
@@ -131,7 +132,9 @@ public class IntroApiFailureHook implements ApiFailureHook {
 
     public static class ApiFailureBean {
 
+        @Required
         public final ApiFailureType failureType;
+        @Required
         public final Map<String, List<String>> messages;
 
         public ApiFailureBean(ApiFailureType failureType, Map<String, List<String>> messages) {
