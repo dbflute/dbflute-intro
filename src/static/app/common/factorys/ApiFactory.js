@@ -84,5 +84,11 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/log/' + clientBody.project + '/list'
             });
         },
+        schemaHtml: function(client) {
+            return $http({
+                method: 'POST',
+                url: 'api/document/' + client.projectName + '/schemahtml/'
+            });
+        },
     };
 });

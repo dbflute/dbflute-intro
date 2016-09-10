@@ -1,14 +1,15 @@
 package org.dbflute.intro.app.web.document;
 
-import java.io.File;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
+import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.response.StreamResponse;
+
+import javax.annotation.Resource;
+import java.io.File;
 
 /**
  * @author deco
@@ -21,13 +22,20 @@ public class DocumentAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private DocumentPhysicalLogic documentPhysicalLogic;
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse schemahtml(String clientProject) {
-        return asHtmlStream(documentPhysicalLogic.findSchemaHtml(clientProject));
+    public JsonResponse<SchemaHtmlResult> schemahtml(String clientProject) {
+        File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientProject);
+        if (!schemaHtml.exists()) {
+            return JsonResponse.asEmptyBody();
+        }
+        SchemaHtmlResult result = new SchemaHtmlResult(flutyFileLogic.readFile(schemaHtml));
+        return asJson(result);
     }
 
     @Execute(urlPattern = "{}/@word")
