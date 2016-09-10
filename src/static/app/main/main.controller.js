@@ -154,7 +154,7 @@ angular.module('dbflute-intro')
     //                                                                            ========
     $scope.openSchemaHTML = function(client) {
       $uibModal.open({
-        templateUrl: 'app/main/schema.html',
+        templateUrl: 'app/main/document.html',
         controller: 'SchemaHtmlController',
         resolve: {
           schemaHtml: function () {
@@ -165,7 +165,15 @@ angular.module('dbflute-intro')
     };
 
     $scope.openHistoryHTML = function(client) {
-      $window.open('api/document/' + client.projectName+ '/historyhtml/');
+      $uibModal.open({
+        templateUrl: 'app/main/document.html',
+        controller: 'HistoryHtmlController',
+        resolve: {
+          historyHtml: function () {
+            return ApiFactory.historyHtml(client);
+          }
+        }
+      });
     };
 
     // ===================================================================================
@@ -267,9 +275,18 @@ angular.module('dbflute-intro').controller('DownloadInstanceController',
  * Schema HTML
  */
 angular.module('dbflute-intro').controller('SchemaHtmlController',
-  function($scope, $sce, $uibModalInstance, schemaHtml, ApiFactory) {
+  function($scope, $sce, $uibModalInstance, schemaHtml) {
     'use strict';
 
-    $scope.schemaHtml = $sce.trustAsHtml(schemaHtml.data.content);
+    $scope.documentHtml = $sce.trustAsHtml(schemaHtml.data.content);
 });
 
+/**
+ * History HTML
+ */
+angular.module('dbflute-intro').controller('HistoryHtmlController',
+  function($scope, $sce, $uibModalInstance, historyHtml) {
+    'use strict';
+
+    $scope.documentHtml = $sce.trustAsHtml(historyHtml.data.content);
+});

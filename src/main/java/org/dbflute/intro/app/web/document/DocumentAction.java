@@ -39,16 +39,12 @@ public class DocumentAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse historyhtml(String clientProject) {
-        return asHtmlStream(documentPhysicalLogic.findHistoryHtml(clientProject));
-    }
-
-    // ===================================================================================
-    //                                                                        Assist Logic
-    //                                                                        ============
-    private StreamResponse asHtmlStream(File file) {
-        return asStream(file.getName()).contentType("text/html; charset=UTF-8").stream(out -> {
-            out.write(FileUtils.openInputStream(file));
-        });
+    public JsonResponse<HistoryHtmlResult> historyhtml(String clientProject) {
+        File historyHtml = documentPhysicalLogic.findHistoryHtml(clientProject);
+        if (!historyHtml.exists()) {
+            return JsonResponse.asEmptyBody();
+        }
+        HistoryHtmlResult result = new HistoryHtmlResult(flutyFileLogic.readFile(historyHtml));
+        return asJson(result);
     }
 }

@@ -5,12 +5,12 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author deco
  */
-public class SchemaHtmlResult {
+public class HistoryHtmlResult {
 
     @Required
     final public String content;
 
-    public SchemaHtmlResult(String content) {
+    public HistoryHtmlResult(String content) {
         this.content = content;
     }
 }
