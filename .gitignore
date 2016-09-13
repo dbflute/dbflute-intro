@@ -19,6 +19,7 @@ log/
 
 # IntelliJ
 .idea/
+*.iml
 
 # Java
 classes/

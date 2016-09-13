@@ -4,7 +4,6 @@
     <div class="col-sm-3">
       <div>
         <h2>DBFlute Entry Client</h2>
-        <input type="button" class="btn btn-primary" value="Create" ng-click="showClientInput()" />
       </div>
       <div class="col-md-12">
         <p>existing clients:</p>
@@ -28,261 +27,109 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-6" ng-show="client">
+    <div class="col-sm-6">
       <div class="row">
         <div class="col-sm-12">
-          <uib-tabset>
-            <uib-tab heading="Basic">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_PROJECT' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg && client.create">{{client.projectName}}</span>
-                    <input type="text" class="form-control" ng-model="client.projectName" ng-show="editFlg && client.create" />
-                  </div>
+          <section class="Basic">
+            <h1 class="heading">Basic</h1>
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_PROJECT' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg && client.create">{{client.projectName}}</span>
+                  <input type="text" class="form-control" ng-model="client.projectName" ng-show="editFlg && client.create" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_TARGET_DATABASE' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.databaseCode}}</span>
-                    <select class="form-control" ng-model="client.databaseCode" ng-options="code as def.databaseName for (code, def) in classificationMap.targetDatabaseMap" ng-show="editFlg" ng-change="changeDatabase(client)"></select>
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_TARGET_DATABASE' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.databaseCode}}</span>
+                  <select class="form-control" ng-model="client.databaseCode" ng-options="code as def.databaseName for (code, def) in classificationMap.targetDatabaseMap" ng-change="changeDatabase(client)" ng-open="oRMapperOptionsFlg"></select>
                 </div>
-                <div class="form-group">
+              </div>
+              <!--TODO: details要素を使用可能なら書き換える by hakiba-->
+              <div id="or-mapper-options">
+                <button ng-click="openORMapperOptions()">O/R Mapper Options</button>
+                <div class="form-group" ng-show="oRMapperOptionsFlg">
                   <label class="col-sm-4 control-label">{{'LABEL_TARGET_LANGUAGE' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.languageCode}}</span>
-                    <select class="form-control" ng-model="client.languageCode" ng-options="code as name for (code, name) in classificationMap.targetLanguageMap" ng-show="editFlg"></select>
+                    <select class="form-control" ng-model="client.languageCode" ng-options="code as name for (code, name) in classificationMap.targetLanguageMap" ng-show="oRMapperOptionsFlg"></select>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" ng-show="oRMapperOptionsFlg">
                   <label class="col-sm-4 control-label">{{'LABEL_TARGET_CONTAINER' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.containerCode}}</span>
-                    <select class="form-control" ng-model="client.containerCode" ng-options="code as name for (code, name) in classificationMap.targetContainerMap" ng-show="editFlg"></select>
+                    <select class="form-control" ng-model="client.containerCode" ng-options="code as name for (code, name) in classificationMap.targetContainerMap" ng-show="oRMapperOptionsFlg"></select>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" ng-show="oRMapperOptionsFlg">
                   <label class="col-sm-4 control-label">{{'LABEL_PACKAGE_BASE' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.packageBase}}</span>
-                    <input type="text" class="form-control" ng-model="client.packageBase" ng-show="editFlg" />
+                    <input type="text" class="form-control" ng-model="client.packageBase" ng-show="oRMapperOptionsFlg"/>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.jdbcDriverFqcn}}</span>
-                    <input type="text" class="form-control" ng-model="client.jdbcDriverFqcn" ng-show="editFlg" />
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.jdbcDriverFqcn}}</span>
+                  <input type="text" class="form-control" ng-model="client.jdbcDriverFqcn" ng-show="editFlg" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_URL' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.mainSchemaSettings.url}}</span>
-                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" ng-show="editFlg" />
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_URL' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.mainSchemaSettings.url}}</span>
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" ng-show="editFlg" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_SCHEMA' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.mainSchemaSettings.schema}}</span>
-                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema" ng-show="editFlg" />
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_SCHEMA' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.mainSchemaSettings.schema}}</span>
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema" ng-show="editFlg" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_USER' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.mainSchemaSettings.user}}</span>
-                    <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" ng-show="editFlg" />
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_USER' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.mainSchemaSettings.user}}</span>
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" ng-show="editFlg" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_PASSWORD' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.mainSchemaSettings.password}}</span>
-                    <input type="password" class="form-control" ng-model="client.mainSchemaSettings.password" ng-show="editFlg" />
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_PASSWORD' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.mainSchemaSettings.password}}</span>
+                  <input type="password" class="form-control" ng-model="client.mainSchemaSettings.password" ng-show="editFlg" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER_JAR_PATH' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.jdbcDriverJarPath}}</span>
-                    <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER_JAR_PATH' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.jdbcDriverJarPath}}</span>
+                  <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
                 </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_DBFLUTE_VERSION' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.dbfluteVersion}}</span>
-                    <select class="form-control" ng-model="client.dbfluteVersion" ng-options="version for version in versions" ng-show="editFlg"></select>
-                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">{{'LABEL_DBFLUTE_VERSION' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.dbfluteVersion}}</span>
+                  <select class="form-control" ng-model="client.dbfluteVersion" ng-options="version for version in versions" ng-show="editFlg"></select>
                 </div>
-              </form>
-            </uib-tab>
-            <uib-tab heading="{{'LABEL_SYSTEM_USER_DATABASE' | translate:translationData}}">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_URL' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.systemUserSettings.url}}</span>
-                    <input type="text" class="form-control" ng-model="client.systemUserSettings.url" ng-show="editFlg" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_SCHEMA' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.systemUserSettings.schema}}</span>
-                    <input type="text" class="form-control" ng-model="client.systemUserSettings.schema" ng-show="editFlg" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_USER' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.systemUserSettings.user}}</span>
-                    <input type="text" class="form-control" ng-model="client.systemUserSettings.user" ng-show="editFlg" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_PASSWORD' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.systemUserSettings.password}}</span>
-                    <input type="password" class="form-control" ng-model="client.systemUserSettings.password" ng-show="editFlg" />
-                  </div>
-                </div>
-              </form>
-            </uib-tab>
-            <uib-tab heading="{{'LABEL_OPTION' | translate:translationData}}">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">{{'LABEL_DB_COMMENT_ON_ALIAS_BASIS' | translate:translationData}}</label>
-                  <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.optionBean.aliasDelimiterInDbComment}}</span>
-                    <input type="text" class="form-control" ng-model="client.optionBean.aliasDelimiterInDbComment" ng-show="editFlg" />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label"></label>
-                  <div class="col-sm-8">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" class="form-control" ng-model="client.optionBean.checkColumnDefOrderDiff" ng-eabled="editFlg" />
-                        {{'LABEL_CHECK_COLUMN_DEF_ORDER_DIFF' | translate:translationData}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label"></label>
-                  <div class="col-sm-8">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" class="form-control" ng-model="client.optionBean.checkDbCommentDiff" ng-eabled="editFlg" />
-                        {{'LABEL_CHECK_DB_COMMENT_DIFF' | translate:translationData}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label"></label>
-                  <div class="col-sm-8">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" class="form-control" ng-model="client.optionBean.checkProcedureDiff" ng-eabled="editFlg" />
-                        {{'LABEL_CHECK_PROCEDURE_DIFF' | translate:translationData}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label"></label>
-                  <div class="col-sm-8">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox" class="form-control" ng-model="client.optionBean.generateProcedureParameterBean" ng-eabled="editFlg" />
-                        {{'LABEL_GENERATE_PROCEDURE_PARAMETER_BEAN' | translate:translationData}}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </uib-tab>
-             <!--dfprop -->
-            <uib-tab heading="{{'LABEL_DFPROP' | translate:translationData}}" ng-click="dfprop(client)">
-              <form class="form-horizontal">
-                <div ng-repeat="bean in dfpropBeanList">
-                  <input type="button" class="btn btn-default" ng-click="displaysDfprop=displaysDfprop?false:true;" value="{{bean.fileName}}" />
-                  <pre ng-bind-html="bean.content" ng-show="displaysDfprop"></pre>
-                </div>
-              </form>
-            </uib-tab>
-            <!-- PlaySQL -->
-            <uib-tab heading="{{'LABEL_PLAYSQL' | translate:translationData}}" ng-click="playsql(client)">
-              <form class="form-horizontal">
-                <div ng-repeat="bean in playsqlBeanList">
-                  <input type="button" class="btn btn-default" ng-click="displaysPlaysql=displaysPlaysql?false:true;" value="{{bean.fileName}}" />
-                  <pre ng-bind-html="bean.content" ng-show="displaysPlaysql"></pre>
-                </div>
-              </form>
-            </uib-tab>
-            <!-- log -->
-            <uib-tab heading="{{'LABEL_LOG' | translate:translationData}}" ng-click="log(client)">
-              <form class="form-horizontal">
-                <div ng-repeat="bean in logBeanList">
-                  <input type="button" class="btn btn-default" ng-click="displaysLog=displaysLog?false:true;" value="{{bean.fileName}}" />
-                  <pre ng-bind-html="bean.content" ng-show="displaysLog"></pre>
-                </div>
-              </form>
-            </uib-tab>
-            <uib-tab heading="{{'LABEL_SCHEMA_SYNC_CHECK' | translate:translationData}}">
-              <input type="button" class="btn btn-primary" value="追加" ng-click="addSchemaSyncCheckMap()" ng-show="editFlg" />
-              <uib-tabset>
-                <uib-tab heading="{{key}}" ng-repeat="(key, mainSchemaSettings) in client.schemaSyncCheckMap">
-                  <form class="form-horizontal">
-                    <div class="form-group">
-                      <label class="col-sm-4 control-label">{{'LABEL_URL' | translate:translationData}}</label>
-                      <div class="col-sm-8">
-                        <span ng-hide="editFlg">{{mainSchemaSettings.url}}</span>
-                        <input type="text" class="form-control" ng-model="mainSchemaSettings.url" ng-show="editFlg" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-4 control-label">{{'LABEL_SCHEMA' | translate:translationData}}</label>
-                      <div class="col-sm-8">
-                        <span ng-hide="editFlg">{{mainSchemaSettings.schema}}</span>
-                        <input type="text" class="form-control" ng-model="mainSchemaSettings.schema" ng-show="editFlg" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-4 control-label">{{'LABEL_USER' | translate:translationData}}</label>
-                      <div class="col-sm-8">
-                        <span ng-hide="editFlg">{{mainSchemaSettings.user}}</span>
-                        <input type="text" class="form-control" ng-model="mainSchemaSettings.user" ng-show="editFlg" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-4 control-label">{{'LABEL_PASSWORD' | translate:translationData}}</label>
-                      <div class="col-sm-8">
-                        <span ng-hide="editFlg">{{mainSchemaSettings.password}}</span>
-                        <input type="password" class="form-control" ng-model="mainSchemaSettings.password" ng-show="editFlg" />
-                      </div>
-                    </div>
-                    <input type="button" class="btn btn-primary" value="Delete" ng-click="removeSchemaSyncCheckMap(key)" ng-show="editFlg" />
-                  </form>
-                </uib-tab>
-              </uib-tabset>
-            </uib-tab>
-          </uib-tabset>
+              </div>
+            </form>
+          </section>
         </div>
       </div>
     </div>
-    <div class="col-sm-3" ng-show="client">
+    <div class="col-sm-3" >
       <div class="row">
         <div class="col-sm-12">
-          <input type="button" class="btn btn-primary" value="Edit" ng-click="edit()" ng-hide="editFlg" />
-          <input type="button" class="btn btn-primary" value="Delete" ng-click="remove(client)" ng-hide="editFlg" />
           <input type="button" class="btn btn-primary" value="Create" ng-click="create(client, option.testConnection)" ng-show="editFlg && client.create" />
-          <input type="button" class="btn btn-primary" value="Update" ng-click="update(client, option.testConnection)" ng-show="editFlg && !client.create" />
           <input type="button" class="btn btn-primary" value="Cancel" ng-click="cancelEdit()" ng-show="editFlg" />
         </div>
         <div class="col-sm-12" ng-show="editFlg">
@@ -291,26 +138,6 @@
               <input type="checkbox" class="btn btn-primary" ng-model="option.testConnection" />Connect as test
             </label>
           </div>
-        </div>
-        <div class="col-sm-12" ng-show="!editFlg">
-          <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="Generate Documents" />
-          <p><a href="" ng-click="openSchemaHTML(client)">Open table document</a>(SchemaHTML)</p>
-          <p><a href="" ng-click="openHistoryHTML(client)">Open table history</a>(HistoryHTML)</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12" ng-show="!editFlg">
-          <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="LoadDataReverse" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12" ng-show="!editFlg">
-          <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="SchemaSyncCheck" />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12" ng-show="!editFlg">
-          <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="ReplaceSchema" />
         </div>
       </div>
     </div>
