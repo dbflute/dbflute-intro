@@ -54,21 +54,21 @@
                   <label class="col-sm-4 control-label">{{'LABEL_TARGET_LANGUAGE' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.languageCode}}</span>
-                    <select class="form-control" ng-model="client.languageCode" ng-options="code as name for (code, name) in classificationMap.targetLanguageMap" ng-show="oRMapperOptionsFlg"></select>
+                    <select class="form-control" ng-model="client.languageCode" ng-options="code as name for (code, name) in classificationMap.targetLanguageMap" ng-show="oRMapperOptionsFlg" ng-init="client.languageCode='java'"></select>
                   </div>
                 </div>
                 <div class="form-group" ng-show="oRMapperOptionsFlg">
                   <label class="col-sm-4 control-label">{{'LABEL_TARGET_CONTAINER' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.containerCode}}</span>
-                    <select class="form-control" ng-model="client.containerCode" ng-options="code as name for (code, name) in classificationMap.targetContainerMap" ng-show="oRMapperOptionsFlg"></select>
+                    <select class="form-control" ng-model="client.containerCode" ng-options="code as name for (code, name) in classificationMap.targetContainerMap" ng-show="oRMapperOptionsFlg" ng-init="client.containerCode='lasta_di'"></select>
                   </div>
                 </div>
                 <div class="form-group" ng-show="oRMapperOptionsFlg">
                   <label class="col-sm-4 control-label">{{'LABEL_PACKAGE_BASE' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.packageBase}}</span>
-                    <input type="text" class="form-control" ng-model="client.packageBase" ng-show="oRMapperOptionsFlg"/>
+                    <input type="text" class="form-control" ng-model="client.packageBase" ng-show="oRMapperOptionsFlg" ng-init="client.packageBase='org.docksidestage.dbflute'"/>
                   </div>
                 </div>
               </div>
