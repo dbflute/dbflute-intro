@@ -17,7 +17,6 @@ package org.dbflute.intro.app.web.client;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -33,7 +32,6 @@ import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.app.web.client.ClientDetailResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
@@ -61,8 +59,6 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private DocumentPhysicalLogic documentLogic;
     @Resource
-    private IntroClsAssist introClsAssist;
-    @Resource
     private TimeManager timeManager;
 
     // ===================================================================================
@@ -71,12 +67,6 @@ public class ClientAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                Select
     //                                                ------
-    @Execute
-    public JsonResponse<Map<String, Map<?, ?>>> classifications() {
-        Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
-        return asJson(classificationMap);
-    }
-
     @Execute
     public JsonResponse<List<ClientDetailResult>> list() {
         List<String> projectList = clientInfoLogic.getProjectList();

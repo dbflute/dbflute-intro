@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -31,10 +32,18 @@ import org.lastaflute.web.response.JsonResponse;
 public class IntroAction extends IntroBaseAction {
 
     @Resource
-    protected IntroInfoLogic introInfoLogic;
+    private IntroInfoLogic introInfoLogic;
+    @Resource
+    private IntroClsAssist introClsAssist;
 
     @Execute
     public JsonResponse<Map<String, Object>> manifest() {
         return asJson(introInfoLogic.getManifestMap());
+    }
+
+    @Execute
+    public JsonResponse<Map<String, Map<?, ?>>> classifications() {
+        Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
+        return asJson(classificationMap);
     }
 }

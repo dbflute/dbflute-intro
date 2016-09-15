@@ -4,30 +4,25 @@ angular.module('dbflute-intro').factory('ApiFactory',
     'use strict';
 
     return {
-        manifest: function() {
+        // ===============================================================================
+        //                                                                           Intro
+        //                                                                           =====
+    	manifest: function() {
             return $http({
                 method : 'POST',
                 url : 'api/intro/manifest'
             });
         },
-        engineLatest: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/latest'
-            });
-        },
-        engineVersions: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/versions'
-            });
-        },
         classifications: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/client/classifications'
-            });
+        	return $http({
+        		method : 'POST',
+        		url : 'api/intro/classifications'
+        	});
         },
+
+        // ===============================================================================
+        //                                                                          Client
+        //                                                                          ======
         clientList: function() {
             return $http({
                 method : 'POST',
@@ -52,18 +47,6 @@ angular.module('dbflute-intro').factory('ApiFactory',
             return $http({
                 method : 'POST',
                 url : 'api/client/delete/' + clientBody.project
-            });
-        },
-        downloadEngine: function(params) {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/download/' + params.version
-            });
-        },
-        removeEngine: function(params) {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/remove/' + params.version
             });
         },
         dfporpBeanList: function(clientBody) {
@@ -94,6 +77,34 @@ angular.module('dbflute-intro').factory('ApiFactory',
             return $http({
                 method: 'POST',
                 url: 'api/document/' + client.projectName + '/historyhtml/'
+            });
+        },
+
+        // ===============================================================================
+        //                                                                          Engine
+        //                                                                          ======
+        engineLatest: function() {
+            return $http({
+                method : 'POST',
+                url : 'api/engine/latest'
+            });
+        },
+        engineVersions: function() {
+            return $http({
+                method : 'POST',
+                url : 'api/engine/versions'
+            });
+        },
+        downloadEngine: function(params) {
+            return $http({
+                method : 'POST',
+                url : 'api/engine/download/' + params.version
+            });
+        },
+        removeEngine: function(params) {
+            return $http({
+                method : 'POST',
+                url : 'api/engine/remove/' + params.version
             });
         },
     };
