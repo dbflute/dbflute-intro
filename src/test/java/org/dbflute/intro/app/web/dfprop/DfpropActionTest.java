@@ -19,21 +19,6 @@ public class DfpropActionTest extends UnitIntroTestCase {
     private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
-    //                                                                            Settings
-    //                                                                            ========
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        createTestClient();
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        deleteTestClient();
-    }
-
-    // ===================================================================================
     //                                                                                Test
     //                                                                                ====
     public void test_index_success() throws Exception {

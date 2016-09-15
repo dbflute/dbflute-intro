@@ -12,21 +12,6 @@ import org.lastaflute.web.response.JsonResponse;
 public class ClientActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
-    //                                                                            Settgins
-    //                                                                            ========
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        createTestClient();
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        deleteTestClient();
-    }
-
-    // ===================================================================================
     //                                                                               Test
     //                                                                              ======
     public void test_list_success() throws Exception {

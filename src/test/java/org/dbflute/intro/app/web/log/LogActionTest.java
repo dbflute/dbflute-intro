@@ -22,21 +22,6 @@ public class LogActionTest extends UnitIntroTestCase {
     private static final String LOG_FILE_PATH = "dbflute_" + TEST_CLIENT_PROJECT + "/log/";
 
     // ===================================================================================
-    //                                                                            Settings
-    //                                                                            ========
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        createTestClient();
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
-        deleteTestClient();
-    }
-
-    // ===================================================================================
     //                                                                                Test
     //                                                                                ====
     public void test_index_success_no_files() throws Exception {
