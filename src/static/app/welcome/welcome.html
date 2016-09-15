@@ -1,32 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container">
   <div class="row">
-    <div class="col-sm-3">
-      <div>
-        <h2>DBFlute Entry Client</h2>
-      </div>
-      <div class="col-md-12">
-        <p>existing clients:</p>
-        <div class="list-group">
-          <a href="#" class="list-group-item" ng-repeat="client in clientList" ng-click="setCurrentProject(client)">{{client.projectName}}</a>
-        </div>
-      </div>
-      <div>
-        <h2>DBFlute Engine</h2>
-        <button type="button" class="btn btn-primary" ng-click="downloadModal()">
-          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>{{'LABEL_DOWNLOAD' | translate:translationData}}
-        </button>
-        <div class="col-md-12">
-          <p>existing versions:</p>
-          <ul class="list-group">
-            <li class="list-group-item" ng-repeat="version in versions">
-              {{version}}
-              <input type="button" class="btn btn-primary pull-right" value="Delete" ng-click="removeEngine(version)" />
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
     <div class="col-sm-6">
       <div class="row">
         <div class="col-sm-12">
@@ -47,7 +21,7 @@
                   <select class="form-control" ng-model="client.databaseCode" ng-options="code as def.databaseName for (code, def) in classificationMap.targetDatabaseMap" ng-change="changeDatabase(client)" ng-open="oRMapperOptionsFlg"></select>
                 </div>
               </div>
-              <!--TODO: details要素を使用可能なら書き換える by hakiba-->
+              <!--TODO: details隕∫ｴ�繧剃ｽｿ逕ｨ蜿ｯ閭ｽ縺ｪ繧画嶌縺肴鋤縺医ｋ by hakiba-->
               <div id="or-mapper-options">
                 <button ng-click="openORMapperOptions()">O/R Mapper Options</button>
                 <div class="form-group" ng-show="oRMapperOptionsFlg">
@@ -114,13 +88,6 @@
                   <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_DBFLUTE_VERSION' | translate:translationData}}</label>
-                <div class="col-sm-8">
-                  <span ng-hide="editFlg">{{client.dbfluteVersion}}</span>
-                  <select class="form-control" ng-model="client.dbfluteVersion" ng-options="version for version in versions" ng-show="editFlg"></select>
-                </div>
-              </div>
             </form>
           </section>
         </div>
@@ -130,7 +97,6 @@
       <div class="row">
         <div class="col-sm-12">
           <input type="button" class="btn btn-primary" value="Create" ng-click="create(client, option.testConnection)" ng-show="editFlg && client.create" />
-          <input type="button" class="btn btn-primary" value="Cancel" ng-click="cancelEdit()" ng-show="editFlg" />
         </div>
         <div class="col-sm-12" ng-show="editFlg">
           <div class="checkbox">
@@ -140,16 +106,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 col-md-4">
-      System Info
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 col-md-4" ng-repeat="(key, value) in manifest">
-      {{key}} = {{value}}
     </div>
   </div>
 </div>
