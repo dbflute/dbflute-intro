@@ -134,17 +134,17 @@ angular.module('dbflute-intro')
     //                                                                       Optional Menu
     //                                                                       =============
     $scope.dfprop = function(client) {
-        ApiFactory.dfporpBeanList(convertParam(client)).then(function (response) {
+        ApiFactory.dfporpBeanList(client).then(function (response) {
             $scope.dfpropBeanList = response.data;
         })
     };
     $scope.playsql = function(client) {
-        ApiFactory.playsqlBeanList(convertParam(client)).then(function (response) {
+        ApiFactory.playsqlBeanList(client).then(function (response) {
             $scope.playsqlBeanList = response.data;
         })
     };
     $scope.log = function(client) {
-        ApiFactory.logBeanList(convertParam(client)).then(function (response) {
+        ApiFactory.logBeanList(client).then(function (response) {
             $scope.logBeanList = response.data;
         })
     };

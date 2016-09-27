@@ -52,19 +52,19 @@ angular.module('dbflute-intro').factory('ApiFactory',
         dfporpBeanList: function(clientBody) {
             return $http({
                 method : 'POST',
-                url : 'api/dfprop/' + clientBody.project + '/list'
+                url : 'api/dfprop/' + clientBody.projectName + '/list'
             });
         },
         playsqlBeanList: function(clientBody) {
             return $http({
                 method : 'POST',
-                url : 'api/playsql/' + clientBody.project + '/list'
+                url : 'api/playsql/' + clientBody.projectName + '/list'
             });
         },
         logBeanList: function(clientBody) {
             return $http({
                 method : 'POST',
-                url : 'api/log/' + clientBody.project + '/list'
+                url : 'api/log/' + clientBody.projectName + '/list'
             });
         },
         schemaHtml: function(client) {
