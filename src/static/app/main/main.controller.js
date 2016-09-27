@@ -278,6 +278,7 @@ angular.module('dbflute-intro').controller('SchemaHtmlController',
   function($scope, $sce, $uibModalInstance, schemaHtml) {
     'use strict';
 
+    $scope.title = "Schema HTML";
     $scope.documentHtml = $sce.trustAsHtml(schemaHtml.data.content);
 });
 
@@ -288,5 +289,6 @@ angular.module('dbflute-intro').controller('HistoryHtmlController',
   function($scope, $sce, $uibModalInstance, historyHtml) {
     'use strict';
 
+    $scope.title = "History HTML";
     $scope.documentHtml = $sce.trustAsHtml(historyHtml.data.content);
 });
