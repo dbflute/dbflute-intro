@@ -4,7 +4,7 @@
  * Main Controller
  */
 angular.module('dbflute-intro')
-        .controller('MainCtrl', function ($scope, $window, $uibModal, ApiFactory) {
+        .controller('MainCtrl', function ($scope, $window, $uibModal, $state, ApiFactory) {
 
     //  Bean -> Body
     var convertParam = function(param) {
@@ -72,7 +72,11 @@ angular.module('dbflute-intro')
 
     $scope.findClientList = function() {
         ApiFactory.clientList().then(function(response) {
-            $scope.clientList = response.data;
+            if (response.data.length > 0) {
+               $scope.clientList = response.data;
+            } else {
+                $state.go('welcome'); // if no client show welcome page
+            }
         });
      };
 
