@@ -1,12 +1,10 @@
 package org.dbflute.intro.app.web.document;
 
-import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.response.StreamResponse;
 
 import javax.annotation.Resource;
 import java.io.File;
