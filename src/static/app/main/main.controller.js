@@ -70,10 +70,10 @@ angular.module('dbflute-intro')
         $scope.client = angular.copy(client);
     };
 
-    $scope.findClientList = function() {
+    $scope.prepareClientList = function() {
         ApiFactory.clientList().then(function(response) {
             if (response.data.length > 0) {
-               $scope.clientList = response.data;
+                $scope.clientList = response.data;
             } else {
                 $state.go('welcome'); // if no client show welcome page
             }
@@ -107,14 +107,14 @@ angular.module('dbflute-intro')
     $scope.create = function(client, testConnection) {
         ApiFactory.createClient(convertParam(client), testConnection).then(function(response) {
             $scope.editFlg = false;
-            $scope.findClientList();
+            $scope.prepareClientList();
         });
     };
 
     $scope.update = function(client, testConnection) {
         ApiFactory.updateClient(convertParam(client), testConnection).then(function(response) {
             $scope.editFlg = false;
-            $scope.findClientList();
+            $scope.prepareClientList();
         });
     };
 
@@ -122,7 +122,7 @@ angular.module('dbflute-intro')
         ApiFactory.removeClient(convertParam(client)).then(function(response) {
             $scope.editFlg = false;
             $scope.client = null;
-            $scope.findClientList();
+            $scope.prepareClientList();
         });
     };
 
@@ -237,7 +237,7 @@ angular.module('dbflute-intro')
     $scope.manifest();
     $scope.engineVersions();
     $scope.classifications();
-    $scope.findClientList();
+    $scope.prepareClientList();
 });
 
 /**
