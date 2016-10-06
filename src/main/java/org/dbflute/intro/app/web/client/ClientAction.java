@@ -33,6 +33,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
+import org.dbflute.intro.app.web.client.ClientDetailResult.DatabaseSettingsPart;
 import org.dbflute.intro.app.web.client.ClientDetailResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.optional.OptionalThing;
@@ -89,7 +90,7 @@ public class ClientAction extends IntroBaseAction {
         ClientDetailResult detailBean = new ClientDetailResult();
         prepareBasic(detailBean, clientModel);
         prepareDatabase(detailBean, clientModel);
-        detailBean.systemUserSettings = clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
+        detailBean.systemUserSettings = (DatabaseSettingsPart) clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
             return replaceSchemaMap.getAdditionalUserMap().flatMap(additionalUserMap -> {
                 return additionalUserMap.getSystemUserMap().map(systemUserMap -> {
                     ClientDetailResult.DatabaseSettingsPart databaseBean = new ClientDetailResult.DatabaseSettingsPart();
