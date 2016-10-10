@@ -32,6 +32,8 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -42,6 +44,7 @@ public class EngineInstallLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    private static final Logger logger = LoggerFactory.getLogger(EngineInstallLogic.class);
 
     // ===================================================================================
     //                                                                           Attribute
@@ -58,15 +61,17 @@ public class EngineInstallLogic {
     // ===================================================================================
     //                                                                            Download
     //                                                                            ========
-    public void downloadUnzipping(String dbfluteVersion) {
+    public void downloadUnzipping(String dbfluteVersion) { // overriding if already exists
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
-            return;
+            throw new IllegalArgumentException("dbfluteVersion is null or empty: " + dbfluteVersion);
         }
+        logger.debug("...Downloading DBflute Engine: {}", dbfluteVersion);
         final String downloadUrl = calcDownloadUrl(dbfluteVersion);
         final File engineDir = introPhysicalLogic.findEngineDir(dbfluteVersion);
         engineDir.getParentFile().mkdirs(); // make 'mydbflute' directory
         final Path zipFile = doDownloadToZip(downloadUrl, engineDir);
         engineDir.mkdirs(); // make 'engine' directory e.g. mydbflute/dbflute-1.1.1
+        logger.debug("...Unzipping DBflute Engine: {}", zipFile.getFileName());
         ZipUtil.decrypt(zipFile.toFile().getPath(), engineDir.getAbsolutePath());
         FileUtils.deleteQuietly(zipFile.toFile());
     }
