@@ -35,7 +35,9 @@ angular.module('dbflute-intro')
     $scope.classificationMap = {}; // e.g. targetDatabase
     $scope.client = {
         create: true,
-        mainSchemaSettings: {}
+        mainSchemaSettings: {},
+        schemaSyncCheckMap: {},
+        dbfluteVersion: ""
     }; // model of current client
     $scope.editFlg = true; // TODO hakiba can be deleted by jflute
     $scope.oRMapperOptionsFlg = false;
@@ -49,6 +51,11 @@ angular.module('dbflute-intro')
             $scope.classificationMap = response.data;
         });
     };
+    $scope.registerEngineLatest = function() {
+        ApiFactory.engineLatest().then(function (response) {
+            $scope.client.dbfluteVersion = response.data.latestReleaseVersion;
+        })
+    };
 
     // ===================================================================================
     //                                                                        Event Method
@@ -56,7 +63,6 @@ angular.module('dbflute-intro')
     $scope.openORMapperOptions = function() {
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
-    
     $scope.changeDatabase = function (client) {
     	client.jdbcDriverFqcn = client.driverName;
     	var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
@@ -64,16 +70,13 @@ angular.module('dbflute-intro')
     	client.mainSchemaSettings.url = database.urlTemplate;
     	client.mainSchemaSettings.schema = database.defaultSchema;
     };
-
     $scope.create = function (client, testConnection) {
-        ApiFactory.createClient(convertParam(client), testConnection).then(function (response) {
-            $scope.editFlg = false;
-            $scope.findClientList();
-        });
+      ApiFactory.createWelcomeClient(client, testConnection).then(function (response) {});
     };
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     $scope.findClassifications();
+    $scope.registerEngineLatest();
 });

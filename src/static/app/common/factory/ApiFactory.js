@@ -21,6 +21,18 @@ angular.module('dbflute-intro').factory('ApiFactory',
         },
 
         // ===============================================================================
+        //                                                                         Welcome
+        //                                                                         =======
+
+        createWelcomeClient: function(client, testConnection) {
+          return $http({
+            method : 'POST',
+            url : 'api/welcome/create',
+            data : {client: client, testConnection: testConnection}
+          });
+        },
+
+        // ===============================================================================
         //                                                                          Client
         //                                                                          ======
         clientList: function() {
@@ -106,6 +118,6 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 method : 'POST',
                 url : 'api/engine/remove/' + params.version
             });
-        },
+        }
     };
 });

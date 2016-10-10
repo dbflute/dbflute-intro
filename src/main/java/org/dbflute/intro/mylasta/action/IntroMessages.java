@@ -156,6 +156,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: the playsql file is not found: {0} */
     public static final String ERRORS_APP_PLAYSQL_FILE_NOT_FOUND = "{errors.app.playsql.file.notFound}";
 
+    /** The key of the message: client already exists: {0} */
+    public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
+
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
      * <pre>
@@ -788,6 +791,22 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppPlaysqlFileNotFound(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_PLAYSQL_FILE_NOT_FOUND, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.welcome.client.alreadyExists' with parameters.
+     * <pre>
+     * message: client already exists: {0}
+     * comment: ---------------------
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsWelcomeClientAlreadyExists(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_WELCOME_CLIENT_ALREADY_EXISTS, arg0));
         return this;
     }
 }
