@@ -5,41 +5,40 @@
       <div class="row">
         <div class="col-sm-12">
           <section class="Basic">
-            <h1 class="heading">Basic</h1>
+            <h1 class="heading">Welcomt to DBflute</h1>
             <form class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_projectName' | translate:translationData}}</label>
+                <label class="col-sm-4 control-label">* {{'LABEL_projectName' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg && client.create">{{client.projectName}}</span>
                   <input type="text" class="form-control" ng-model="client.projectName" ng-show="editFlg && client.create" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_databaseCode' | translate:translationData}}</label>
+                <label class="col-sm-4 control-label">* {{'LABEL_databaseCode' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.databaseCode}}</span>
                   <select class="form-control" ng-model="client.databaseCode" ng-options="code as def.databaseName for (code, def) in classificationMap.targetDatabaseMap" ng-change="changeDatabase(client)" ng-open="oRMapperOptionsFlg"></select>
                 </div>
               </div>
-              <!--TODO: details隕∫ｴ�繧剃ｽｿ逕ｨ蜿ｯ閭ｽ縺ｪ繧画嶌縺肴鋤縺医ｋ by hakiba-->
               <div id="or-mapper-options">
                 <button ng-click="openORMapperOptions()">O/R Mapper Options</button>
                 <div class="form-group" ng-show="oRMapperOptionsFlg">
-                  <label class="col-sm-4 control-label">{{'LABEL_languageCode' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">* {{'LABEL_languageCode' | translate:translationData}}</label>
                   <div class="col-sm-8">
-                    <span ng-hide="editFlg">{{client.languageCode}}</span>
+                    <span ng-hide="editFlg">* {{client.languageCode}}</span>
                     <select class="form-control" ng-model="client.languageCode" ng-options="code as name for (code, name) in classificationMap.targetLanguageMap" ng-show="oRMapperOptionsFlg" ng-init="client.languageCode='java'"></select>
                   </div>
                 </div>
                 <div class="form-group" ng-show="oRMapperOptionsFlg">
-                  <label class="col-sm-4 control-label">{{'LABEL_containerCode' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">* {{'LABEL_containerCode' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.containerCode}}</span>
                     <select class="form-control" ng-model="client.containerCode" ng-options="code as name for (code, name) in classificationMap.targetContainerMap" ng-show="oRMapperOptionsFlg" ng-init="client.containerCode='lasta_di'"></select>
                   </div>
                 </div>
                 <div class="form-group" ng-show="oRMapperOptionsFlg">
-                  <label class="col-sm-4 control-label">{{'LABEL_packageBase' | translate:translationData}}</label>
+                  <label class="col-sm-4 control-label">* {{'LABEL_packageBase' | translate:translationData}}</label>
                   <div class="col-sm-8">
                     <span ng-hide="editFlg">{{client.packageBase}}</span>
                     <input type="text" class="form-control" ng-model="client.packageBase" ng-show="oRMapperOptionsFlg" ng-init="client.packageBase='org.docksidestage.dbflute'"/>
@@ -47,14 +46,21 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_jdbcDriverFqcn' | translate:translationData}}</label>
+                <label class="col-sm-4 control-label">* {{'LABEL_jdbcDriverFqcn' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.jdbcDriverFqcn}}</span>
                   <input type="text" class="form-control" ng-model="client.jdbcDriverFqcn" ng-show="editFlg" />
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_url' | translate:translationData}}</label>
+                <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER_JAR_PATH' | translate:translationData}}</label>
+                <div class="col-sm-8">
+                  <span ng-hide="editFlg">{{client.jdbcDriverJarPath}}</span>
+                  <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">* {{'LABEL_url' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.mainSchemaSettings.url}}</span>
                   <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" ng-show="editFlg" />
@@ -68,7 +74,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_user' | translate:translationData}}</label>
+                <label class="col-sm-4 control-label">* {{'LABEL_user' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.mainSchemaSettings.user}}</span>
                   <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" ng-show="editFlg" />
@@ -79,13 +85,6 @@
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.mainSchemaSettings.password}}</span>
                   <input type="password" class="form-control" ng-model="client.mainSchemaSettings.password" ng-show="editFlg" />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-4 control-label">{{'LABEL_JDBC_DRIVER_JAR_PATH' | translate:translationData}}</label>
-                <div class="col-sm-8">
-                  <span ng-hide="editFlg">{{client.jdbcDriverJarPath}}</span>
-                  <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
                 </div>
               </div>
             </form>
