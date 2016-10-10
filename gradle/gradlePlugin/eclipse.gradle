@@ -6,6 +6,9 @@ eclipse {
         downloadSources=true
         file.whenMerged { cp ->
             cp.entries.findAll {
+                it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.path.startsWith('src/main/')
+            }*.output = sourceSets.main.output.classesDir.path - (projectDir.path + File.separator)
+            cp.entries.findAll {
                 it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.path.startsWith('src/test/')
             }*.output = sourceSets.test.output.classesDir.path - (projectDir.path + File.separator)
             cp.entries.findAll {
