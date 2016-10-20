@@ -36,11 +36,11 @@ public class EngineAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    protected PublicPropertiesLogic publicPropertiesLogic;
+    private PublicPropertiesLogic publicPropertiesLogic;
     @Resource
-    protected EngineInstallLogic engineInstallLogic;
+    private EngineInstallLogic engineInstallLogic;
     @Resource
-    protected EngineInfoLogic engineInfoLogic;
+    private EngineInfoLogic engineInfoLogic;
 
     // ===================================================================================
     //                                                                             Execute

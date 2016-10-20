@@ -53,7 +53,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    protected IntroConfig introConfig;
+    private IntroConfig config;
 
     // ===================================================================================
     //                                                                              Assist
@@ -73,14 +73,14 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     @Override
     protected void prepareCoreDirection(FwCoreDirection direction) {
         // this configuration is on intro_env.properties because this is true only when development
-        direction.directDevelopmentHere(introConfig.isDevelopmentHere());
+        direction.directDevelopmentHere(config.isDevelopmentHere());
 
         // titles of the application for logging are from configurations
-        direction.directLoggingTitle(introConfig.getDomainTitle(), introConfig.getEnvironmentTitle());
+        direction.directLoggingTitle(config.getDomainTitle(), config.getEnvironmentTitle());
 
         // this configuration is on sea_env.properties because it has no influence to production
         // even if you set true manually and forget to set false back
-        direction.directFrameworkDebug(introConfig.isFrameworkDebug()); // basically false
+        direction.directFrameworkDebug(config.isFrameworkDebug()); // basically false
 
         // you can add your own process when your application is booting
         direction.directCurtainBefore(createCurtainBefore());
@@ -100,7 +100,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     }
 
     protected IntroTimeResourceProvider createTimeResourceProvider() {
-        return new IntroTimeResourceProvider(introConfig);
+        return new IntroTimeResourceProvider(config);
     }
 
     // ===================================================================================
@@ -132,7 +132,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
 
     protected IntroCookieResourceProvider createCookieResourceProvider() { // #change_it
         final InvertibleCryptographer cr = InvertibleCryptographer.createAesCipher("intro");
-        return new IntroCookieResourceProvider(introConfig, cr);
+        return new IntroCookieResourceProvider(config, cr);
     }
 
     protected IntroActionAdjustmentProvider createActionAdjustmentProvider() {

@@ -35,9 +35,9 @@ public class WelcomeAction extends IntroBaseAction {
     @Resource
     private TestConnectionLogic testConnectionLogic;
     @Resource
-    protected EngineInstallLogic engineInstallLogic;
+    private EngineInstallLogic engineInstallLogic;
     @Resource
-    protected PublicPropertiesLogic publicPropertiesLogic;
+    private PublicPropertiesLogic publicPropertiesLogic;
 
     // ===================================================================================
     //                                                                             Execute
