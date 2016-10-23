@@ -12,7 +12,6 @@ import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.client.ClientCreateBody;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -43,46 +42,44 @@ public class WelcomeAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
-        validate(clientCreateBody, messages -> {
-            String projectName = clientCreateBody.client.projectName;
+    public JsonResponse<Void> create(WelcomeCreateBody welcomeCreateBody) {
+        validate(welcomeCreateBody, messages -> {
+            String projectName = welcomeCreateBody.client.projectName;
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
         });
         String latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
         engineInstallLogic.downloadUnzipping(latestVersion);
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
-        if (clientCreateBody.testConnection) {
+        ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
+        if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
         clientUpdateLogic.createClient(clientModel);
         return JsonResponse.asEmptyBody();
     }
 
-    protected ClientModel mappingToClientModel(ClientCreateBody.ClientPart clientBody) {
-        ClientModel clientModel = newClientModel(clientBody);
+    protected ClientModel mappingToClientModel(WelcomeCreateBody.ClientPart clientBody) {
         // TODO jflute intro: re-making (2016/08/12)
-        return clientModel;
+        return newClientModel(clientBody);
     }
 
-    private ClientModel newClientModel(ClientCreateBody.ClientPart clientBody) {
+    private ClientModel newClientModel(WelcomeCreateBody.ClientPart clientBody) {
         ProjectMeta projectMeta = prepareProjectMeta(clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
-        ClientModel clientModel = new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
-        return clientModel;
+        return new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
     }
 
-    private ProjectMeta prepareProjectMeta(ClientCreateBody.ClientPart clientBody) {
+    private ProjectMeta prepareProjectMeta(WelcomeCreateBody.ClientPart clientBody) {
         return new ProjectMeta(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
     }
 
-    private BasicInfoMap prepareBasicInfoMap(ClientCreateBody.ClientPart clientBody) {
+    private BasicInfoMap prepareBasicInfoMap(WelcomeCreateBody.ClientPart clientBody) {
         return new BasicInfoMap(clientBody.databaseCode, clientBody.languageCode, clientBody.containerCode, clientBody.packageBase);
     }
 
-    private DatabaseInfoMap prepareDatabaseInfoMap(ClientCreateBody.ClientPart clientBody) {
+    private DatabaseInfoMap prepareDatabaseInfoMap(WelcomeCreateBody.ClientPart clientBody) {
         return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
             DbConnectionBox connectionBox =
                 new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
