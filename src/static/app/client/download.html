@@ -1,0 +1,32 @@
+<div class="modal-header">
+  DBFlute Engine Download
+</div>
+<div class="modal-body">
+  <!-- no branch for now
+  <div class="row">
+    <div class="col-md-3">Version Type</div>
+    <div class="col-md-9">
+      <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default" ng-click="currentBranch = 'compatible11x'" ng-class="{active: currentBranch === 'compatible11x'}">1.1.x (Java8)</button>
+        <button type="button" class="btn btn-default" ng-click="currentBranch = 'compatible10x'" ng-class="{active: currentBranch === 'compatible10x'}">1.0.x (Java6)</button>
+      </div>
+    </div>
+  </div>
+   -->
+
+  <div class="row">
+    <div class="col-md-9">
+      <p>The latest version is {{latestVersion}} now.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-9">
+      <input type="input" ng-model="specifiedVersion" placeholder="e.g. {{latestVersion}}"/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-right"><img ng-show="downloading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" alt="" /><input type="button" class="btn btn-primary" ng-click="downloadEngine()" value="Download" /></div>
+  </div>
+</div>
