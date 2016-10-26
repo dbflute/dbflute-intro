@@ -15,15 +15,15 @@
  */
 package org.dbflute.intro.app.web.document;
 
-import java.io.File;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
-import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.response.StreamResponse;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.InputStream;
 
 /**
  * @author deco
@@ -36,29 +36,38 @@ public class DocumentAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private DocumentPhysicalLogic documentPhysicalLogic;
-    @Resource
-    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<SchemaHtmlResult> schemahtml(String clientProject) {
+    public StreamResponse schemahtml(String clientProject) {
         File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientProject);
         if (!schemaHtml.exists()) {
-            return JsonResponse.asEmptyBody();
+            return null;
         }
-        SchemaHtmlResult result = new SchemaHtmlResult(flutyFileLogic.readFile(schemaHtml));
-        return asJson(result);
+        return createHtmlStreamResponse(schemaHtml);
     }
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<HistoryHtmlResult> historyhtml(String clientProject) {
+    public StreamResponse historyhtml(String clientProject) {
         File historyHtml = documentPhysicalLogic.findHistoryHtml(clientProject);
         if (!historyHtml.exists()) {
-            return JsonResponse.asEmptyBody();
+            return null;
         }
-        HistoryHtmlResult result = new HistoryHtmlResult(flutyFileLogic.readFile(historyHtml));
-        return asJson(result);
+        return createHtmlStreamResponse(historyHtml);
+    }
+
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    private StreamResponse createHtmlStreamResponse(File file) {
+        StreamResponse stream = asStream("schema-...html");
+        stream.headerContentDispositionInline();
+        return stream.contentType("text/html; encoding=\"UTF-8\"").stream(out -> {
+            try (InputStream ins = FileUtils.openInputStream(file)) {
+                out.write(ins);
+            }
+        });
     }
 }

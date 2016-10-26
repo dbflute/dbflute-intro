@@ -157,27 +157,11 @@ angular.module('dbflute-intro')
     //                                                                            Document
     //                                                                            ========
     $scope.openSchemaHTML = function(client) {
-      $uibModal.open({
-        templateUrl: 'app/main/document.html',
-        controller: 'SchemaHtmlController',
-        resolve: {
-          schemaHtml: function () {
-            return ApiFactory.schemaHtml(client);
-          }
-        }
-      });
+      $window.open('http://localhost:9000/document/decodb/schemahtml/')
     };
 
     $scope.openHistoryHTML = function(client) {
-      $uibModal.open({
-        templateUrl: 'app/main/document.html',
-        controller: 'HistoryHtmlController',
-        resolve: {
-          historyHtml: function () {
-            return ApiFactory.historyHtml(client);
-          }
-        }
-      });
+      $window.open('http://localhost:9000/document/decodb/historyhtml/')
     };
 
     // ===================================================================================
@@ -273,26 +257,4 @@ angular.module('dbflute-intro').controller('DownloadInstanceController',
             });
         });
     };
-});
-
-/**
- * Schema HTML
- */
-angular.module('dbflute-intro').controller('SchemaHtmlController',
-  function($scope, $sce, $uibModalInstance, schemaHtml) {
-    'use strict';
-
-    $scope.title = "Schema HTML";
-    $scope.documentHtml = $sce.trustAsHtml(schemaHtml.data.content);
-});
-
-/**
- * History HTML
- */
-angular.module('dbflute-intro').controller('HistoryHtmlController',
-  function($scope, $sce, $uibModalInstance, historyHtml) {
-    'use strict';
-
-    $scope.title = "History HTML";
-    $scope.documentHtml = $sce.trustAsHtml(historyHtml.data.content);
 });
