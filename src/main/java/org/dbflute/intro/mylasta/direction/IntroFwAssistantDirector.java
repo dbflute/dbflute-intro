@@ -15,8 +15,6 @@
  */
 package org.dbflute.intro.mylasta.direction;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.dbflute.intro.mylasta.direction.sponsor.IntroActionAdjustmentProvider;
@@ -46,8 +44,6 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     //                                                                          ==========
     public static final String INTRO_CONFIG_FILE = "intro_config.properties";
     public static final String INTRO_ENV_FILE = "intro_env.properties";
-    public static final String INTRO_LABEL_NAME = "intro_label";
-    public static final String INTRO_MESSAGE_NAME = "intro_message";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -60,11 +56,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     //                                                                              ======
     @Override
     protected void prepareAssistDirection(FwAssistDirection direction) {
-        direction.directConfig(nameList -> setupAppConfig(nameList), INTRO_CONFIG_FILE, INTRO_ENV_FILE);
-    }
-
-    protected void setupAppConfig(List<String> nameList) {
-
+        direction.directConfig(nameList -> nameList.add("intro_config.properties"), "intro_env.properties");
     }
 
     // ===================================================================================
@@ -93,8 +85,8 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
         return new IntroCurtainBeforeHook();
     }
 
-    protected IntroSecurityResourceProvider createSecurityResourceProvider() { // #change_it
-        final InvertibleCryptographer inver = InvertibleCryptographer.createAesCipher("intro");
+    protected IntroSecurityResourceProvider createSecurityResourceProvider() { // #changed basically unused
+        final InvertibleCryptographer inver = InvertibleCryptographer.createBlowfishCipher("intro");
         final OneWayCryptographer oneWay = OneWayCryptographer.createSha256Cryptographer();
         return new IntroSecurityResourceProvider(inver, oneWay);
     }
@@ -118,7 +110,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
         direction.directRequest(createUserLocaleProcessProvider(), createUserTimeZoneProcessProvider());
         direction.directCookie(createCookieResourceProvider());
         direction.directAdjustment(createActionAdjustmentProvider());
-        direction.directMessage(nameList -> setupAppMessage(nameList), INTRO_LABEL_NAME, INTRO_MESSAGE_NAME);
+        direction.directMessage(nameList -> nameList.add("intro_message"), "intro_label");
         direction.directApiCall(createApiFailureHook());
     }
 
@@ -130,8 +122,8 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
         return new IntroUserTimeZoneProcessProvider();
     }
 
-    protected IntroCookieResourceProvider createCookieResourceProvider() { // #change_it
-        final InvertibleCryptographer cr = InvertibleCryptographer.createAesCipher("intro");
+    protected IntroCookieResourceProvider createCookieResourceProvider() { // #changed basically unused
+        final InvertibleCryptographer cr = InvertibleCryptographer.createBlowfishCipher("intro");
         return new IntroCookieResourceProvider(config, cr);
     }
 
@@ -142,8 +134,4 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     protected ApiFailureHook createApiFailureHook() {
         return new IntroApiFailureHook();
     }
-
-    protected void setupAppMessage(List<String> nameList) {
-
-    };
 }

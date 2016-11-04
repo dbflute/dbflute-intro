@@ -49,6 +49,9 @@ dbflute-intro
  |  |-main
  |  |-static
  |     |-app
+ |     |  |-client
+ |     |  |  |-client.controller.js
+ |     |  |  |-client.html
  |     |  |-common
  |     |  |  |-ApiFactory.js
  |     |  |-main
