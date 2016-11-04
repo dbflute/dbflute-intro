@@ -37,7 +37,7 @@ angular.module('dbflute-intro').factory("$exceptionHandler", function ($log) {
 angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('home', { url: '/', templateUrl: 'app/main/main.html', controller: 'MainCtrl'})
-        .state('client', { url: '/client', templateUrl: 'app/client/client.html', controller: 'ClientCtrl', params: {'client' : null}})
+        .state('client', { url: '/client/:projectName', templateUrl: 'app/client/client.html', controller: 'ClientCtrl'})
         .state('welcome', { url: '/welcome', templateUrl: 'app/welcome/welcome.html', controller: 'WelcomeCtrl'})
         ;
 

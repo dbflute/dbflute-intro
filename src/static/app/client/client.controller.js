@@ -8,36 +8,14 @@ angular.module('dbflute-intro')
 
     //  Bean -> Body
     var convertParam = function(param) {
-// #later deleted
-//        var tempParam = angular.copy(param);
-//        for (var key in tempParam) {
-//            if (key.indexOf('Bean') >= 0) {
-//                var old = key;
-//                var data = tempParam[key];
-//                key = key.replace('Bean', 'Body');
-//                tempParam[key] = data;
-//                delete tempParam[old];
-//            }
-//
-//            if (tempParam[key] instanceof Array) {
-//                if (tempParam[key][0] instanceof Array || tempParam[key][0] instanceof Object) {
-//                    for (var i in tempParam[key]) {
-//                        convertParam(tempParam[key][i]);
-//                    }
-//                }
-//            } else if (tempParam[key] instanceof Object) {
-//                convertParam(tempParam[key]);
-//            }
-//        }
-//
-//        return tempParam;
-    	return param;
+        return param;
     };
 
+    $scope.projectName = $stateParams.projectName;
     $scope.manifest = {}; // intro manifest
     $scope.versions = []; // engine versions
     $scope.classificationMap = {}; // e.g. targetDatabase
-    $scope.client = $stateParams.client; // model of current client
+    $scope.client = null; // model of current client
     $scope.clientList = []; // existing clients
     $scope.editFlg = false;
     $scope.option = {testConnection: true};
@@ -66,8 +44,10 @@ angular.module('dbflute-intro')
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    $scope.setCurrentProject = function(client) {
-        $scope.client = angular.copy(client);
+    $scope.setCurrentProject = function(projectName) {
+        ApiFactory.clientDetail(projectName).then(function(response) {
+           $scope.client = response.data;
+      });
     };
 
     $scope.prepareClientList = function() {
@@ -222,6 +202,7 @@ angular.module('dbflute-intro')
     $scope.engineVersions();
     $scope.classifications();
     $scope.prepareClientList();
+    $scope.setCurrentProject($scope.projectName)
 });
 
 /**

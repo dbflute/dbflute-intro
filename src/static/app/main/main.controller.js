@@ -74,7 +74,7 @@ angular.module('dbflute-intro')
     //                                                                     Client Handling
     //                                                                     ===============
     $scope.setCurrentProject = function(client) {
-        $state.go('client', { client: client });
+        $state.go('client', { projectName: client.projectName });
     };
 
     $scope.prepareClientList = function() {

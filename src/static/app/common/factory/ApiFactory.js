@@ -47,6 +47,12 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/client/list'
             });
         },
+        clientDetail: function(projectName) {
+            return $http({
+                method : 'POST',
+                url : 'api/client/detail/' + projectName
+            });
+        },
         createClient: function(client, testConnection) {
             return $http({
                 method : 'POST',

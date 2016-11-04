@@ -1,34 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container">
   <div class="row">
-    <div class="col-sm-3">
-      <div>
-        <h2>DBFlute Client</h2>
-        <input type="button" class="btn btn-primary" value="Create" ng-click="showClientInput()" />
-      </div>
-      <div class="col-md-12">
-        <p>existing clients:</p>
-        <div class="list-group">
-          <a href="" class="list-group-item" ng-repeat="client in clientList" ng-click="setCurrentProject(client)">{{client.projectName}}</a>
-        </div>
-      </div>
-      <div>
-        <h2>DBFlute Engine</h2>
-        <button type="button" class="btn btn-primary" ng-click="downloadModal()">
-          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>{{'LABEL_DOWNLOAD' | translate:translationData}}
-        </button>
-        <div class="col-md-12">
-          <p>existing versions:</p>
-          <ul class="list-group">
-            <li class="list-group-item" ng-repeat="version in versions">
-              {{version}}
-              <input type="button" class="btn btn-primary pull-right" value="Delete" ng-click="removeEngine(version)" />
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6" ng-show="client">
+    <div class="col-sm-9" ng-show="client">
       <div class="row">
         <div class="col-sm-12">
           <uib-tabset>
