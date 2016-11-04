@@ -15,12 +15,6 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -33,13 +27,17 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
-import org.dbflute.intro.app.web.client.ClientDetailResult.DatabaseSettingsPart;
-import org.dbflute.intro.app.web.client.ClientDetailResult.OptionPart;
+import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author p1us2er0
@@ -69,31 +67,22 @@ public class ClientAction extends IntroBaseAction {
     //                                                Select
     //                                                ------
     @Execute
-    public JsonResponse<List<ClientDetailResult>> list() {
+    public JsonResponse<List<ClientRowResult>> list() {
         List<String> projectList = clientInfoLogic.getProjectList();
-        List<ClientDetailResult> beans = projectList.stream().map(project -> {
-            return mappingToDetailBean(clientInfoLogic.findClient(project).get());
+        List<ClientRowResult> beans = projectList.stream().map(project -> {
+            return mappingToRowBean(clientInfoLogic.findClient(project).get());
         }).collect(Collectors.toList());
         return asJson(beans);
     }
 
-    @Execute
-    public JsonResponse<ClientDetailResult> detail(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
-        });
-        ClientDetailResult detailBean = mappingToDetailBean(clientModel);
-        return asJson(detailBean);
-    }
-
-    protected ClientDetailResult mappingToDetailBean(ClientModel clientModel) {
-        ClientDetailResult detailBean = new ClientDetailResult();
-        prepareBasic(detailBean, clientModel);
-        prepareDatabase(detailBean, clientModel);
-        detailBean.systemUserSettings = (DatabaseSettingsPart) clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
+    private ClientRowResult mappingToRowBean(ClientModel clientModel) {
+        ClientRowResult rowBean = new ClientRowResult();
+        prepareBasic(rowBean, clientModel);
+        prepareDatabase(rowBean, clientModel);
+        rowBean.systemUserSettings = (ClientRowResult.DatabaseSettingsPart) clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
             return replaceSchemaMap.getAdditionalUserMap().flatMap(additionalUserMap -> {
                 return additionalUserMap.getSystemUserMap().map(systemUserMap -> {
-                    ClientDetailResult.DatabaseSettingsPart databaseBean = new ClientDetailResult.DatabaseSettingsPart();
+                    ClientRowResult.DatabaseSettingsPart databaseBean = new ClientRowResult.DatabaseSettingsPart();
                     databaseBean.url = systemUserMap.getDbConnectionBox().getUrl();
                     databaseBean.schema = systemUserMap.getDbConnectionBox().getSchema();
                     databaseBean.user = systemUserMap.getDbConnectionBox().getUser();
@@ -102,8 +91,8 @@ public class ClientAction extends IntroBaseAction {
                 });
             });
         }).orElse(null);
-        detailBean.optionBean = prepareOption(clientModel);
-        detailBean.schemaSyncCheckMap = new LinkedHashMap<>();
+        rowBean.optionBean = prepareOption(clientModel);
+        rowBean.schemaSyncCheckMap = new LinkedHashMap<>();
         // #pending by jflute
         //    Map<String, DatabaseInfoMap> schemaSyncCheckMap = clientModel.getSchemaSyncCheckMap();
         //    if (schemaSyncCheckMap != null) {
@@ -120,13 +109,13 @@ public class ClientAction extends IntroBaseAction {
         //    }
 
         String clientProject = clientModel.getProjectMeta().getClientProject();
-        detailBean.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
-        detailBean.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
-        detailBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
-        return detailBean;
+        rowBean.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
+        rowBean.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
+        return rowBean;
     }
 
-    private void prepareBasic(ClientDetailResult client, ClientModel clientModel) {
+    private void prepareBasic(ClientRowResult client, ClientModel clientModel) {
         ProjectMeta projectMeta = clientModel.getProjectMeta();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
         client.projectName = projectMeta.getClientProject();
@@ -139,9 +128,9 @@ public class ClientAction extends IntroBaseAction {
         client.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
     }
 
-    private void prepareDatabase(ClientDetailResult client, ClientModel clientModel) {
+    private void prepareDatabase(ClientRowResult client, ClientModel clientModel) {
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-        ClientDetailResult.DatabaseSettingsPart databaseBean = new ClientDetailResult.DatabaseSettingsPart();
+        ClientRowResult.DatabaseSettingsPart databaseBean = new ClientRowResult.DatabaseSettingsPart();
         databaseBean.url = databaseInfoMap.getDbConnectionBox().getUrl();
         databaseBean.schema = databaseInfoMap.getDbConnectionBox().getSchema();
         databaseBean.user = databaseInfoMap.getDbConnectionBox().getUser();
@@ -163,6 +152,33 @@ public class ClientAction extends IntroBaseAction {
             optionBean.procedureSynonymHandlingType = outsideSqlMap.getProcedureSynonymHandlingType();
         });
         return optionBean;
+    }
+
+    @Execute
+    public JsonResponse<ClientOperationResult> operation(String clientProject) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+        });
+        ClientOperationResult detailBean = mappingToOperationResult(clientModel);
+        return asJson(detailBean);
+    }
+
+    private ClientOperationResult mappingToOperationResult(ClientModel clientModel) {
+        ClientOperationResult operation = new ClientOperationResult();
+        prepareBasic(operation, clientModel);
+        String clientProject = clientModel.getProjectMeta().getClientProject();
+        operation.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
+        operation.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        return operation;
+    }
+
+    private void prepareBasic(ClientOperationResult client, ClientModel clientModel) {
+        ProjectMeta projectMeta = clientModel.getProjectMeta();
+        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+        client.projectName = projectMeta.getClientProject();
+        client.databaseCode = basicInfoMap.getDatabase();
+        client.languageCode = basicInfoMap.getTargetLanguage();
+        client.containerCode = basicInfoMap.getTargetContainer();
     }
 
     // -----------------------------------------------------
@@ -190,7 +206,7 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    protected ClientModel mappingToClientModel(ClientPart clientBody) {
+    private ClientModel mappingToClientModel(ClientPart clientBody) {
         ClientModel clientModel = newClientModel(clientBody);
         // TODO jflute intro: re-making (2016/08/12)
         return clientModel;

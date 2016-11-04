@@ -15,11 +15,11 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.List;
-
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
+
+import java.util.List;
 
 /**
  * @author jflute
@@ -35,12 +35,12 @@ public class ClientActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<ClientDetailResult>> response = action.list();
+        JsonResponse<List<ClientRowResult>> response = action.list();
 
         // ## Assert ##
         showJson(response);
-        TestingJsonData<List<ClientDetailResult>> jsonData = validateJsonData(response);
-        List<ClientDetailResult> detailBeanList = jsonData.getJsonBean();
+        TestingJsonData<List<ClientRowResult>> jsonData = validateJsonData(response);
+        List<ClientRowResult> detailBeanList = jsonData.getJsonBean();
         assertHasAnyElement(detailBeanList);
     }
 }

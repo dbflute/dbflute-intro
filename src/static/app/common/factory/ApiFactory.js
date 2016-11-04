@@ -7,7 +7,7 @@ angular.module('dbflute-intro').factory('ApiFactory',
         // ===============================================================================
         //                                                                           Intro
         //                                                                           =====
-    	manifest: function() {
+        manifest: function() {
             return $http({
                 method : 'POST',
                 url : 'api/intro/manifest'
@@ -47,10 +47,10 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/client/list'
             });
         },
-        clientDetail: function(projectName) {
+        clientOperation: function(projectName) {
             return $http({
                 method : 'POST',
-                url : 'api/client/detail/' + projectName
+                url : 'api/client/operation/' + projectName
             });
         },
         createClient: function(client, testConnection) {
@@ -89,18 +89,6 @@ angular.module('dbflute-intro').factory('ApiFactory',
             return $http({
                 method : 'POST',
                 url : 'api/log/' + clientBody.projectName + '/list'
-            });
-        },
-        schemaHtml: function(client) {
-            return $http({
-                method: 'POST',
-                url: 'api/document/' + client.projectName + '/schemahtml/'
-            });
-        },
-        historyHtml: function(client) {
-            return $http({
-                method: 'POST',
-                url: 'api/document/' + client.projectName + '/historyhtml/'
             });
         },
 

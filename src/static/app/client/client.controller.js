@@ -5,7 +5,7 @@
  */
 angular.module('dbflute-intro')
         .controller('ClientCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
-
+    // TODO deco remove unused functions
     //  Bean -> Body
     var convertParam = function(param) {
         return param;
@@ -45,7 +45,7 @@ angular.module('dbflute-intro')
     //                                                                     Client Handling
     //                                                                     ===============
     $scope.setCurrentProject = function(projectName) {
-        ApiFactory.clientDetail(projectName).then(function(response) {
+        ApiFactory.clientOperation(projectName).then(function(response) {
            $scope.client = response.data;
       });
     };

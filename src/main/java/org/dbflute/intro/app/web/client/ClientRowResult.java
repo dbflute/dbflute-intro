@@ -15,19 +15,18 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.Map;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.Required;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.lastaflute.web.validation.Required;
+import java.util.Map;
 
 /**
  * @author p1us2er0
  * @author jflute
  */
-public class ClientDetailResult {
+public class ClientRowResult {
 
     // ===================================================================================
     //                                                                         Client Info
