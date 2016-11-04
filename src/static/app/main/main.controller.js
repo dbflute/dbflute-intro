@@ -147,29 +147,28 @@ angular.module('dbflute-intro')
     $scope.dfprop = function(client) {
         ApiFactory.dfporpBeanList(client).then(function (response) {
             $scope.dfpropBeanList = response.data;
-        })
+        });
     };
     $scope.playsql = function(client) {
         ApiFactory.playsqlBeanList(client).then(function (response) {
             $scope.playsqlBeanList = response.data;
-        })
+        });
     };
     $scope.log = function(client) {
         ApiFactory.logBeanList(client).then(function (response) {
             $scope.logBeanList = response.data;
-        })
+        });
     };
 
     // ===================================================================================
     //                                                                            Document
     //                                                                            ========
     $scope.openSchemaHTML = function(client) {
-      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/schemahtml/')
+      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/schemahtml/');
     };
 
     $scope.openHistoryHTML = function(client) {
-      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/historyhtml/')
-      // $window.open('http://localhost:9000/document/decodb/historyhtml/')
+      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/historyhtml/');
     };
 
     // ===================================================================================
@@ -221,7 +220,7 @@ angular.module('dbflute-intro')
         ApiFactory.removeEngine(params).then(function(response) {
             $scope.engineVersions();
         });
-    }
+    };
 
     // ===================================================================================
     //                                                                          Initialize
