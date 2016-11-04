@@ -15,27 +15,38 @@
  */
 package org.dbflute.intro.app.web.intro;
 
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import org.dbflute.intro.IntroBoot;
 import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author p1us2er0
  * @author jflute
+ * @author deco
  */
 public class IntroAction extends IntroBaseAction {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroInfoLogic introInfoLogic;
     @Resource
     private IntroClsAssist introClsAssist;
+    @Resource
+    private IntroConfig introConfig;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     @Execute
     public JsonResponse<Map<String, Object>> manifest() {
         return asJson(introInfoLogic.getManifestMap());
@@ -45,5 +56,12 @@ public class IntroAction extends IntroBaseAction {
     public JsonResponse<Map<String, Map<?, ?>>> classifications() {
         Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
         return asJson(classificationMap);
+    }
+
+    @Execute
+    public JsonResponse<Map<String, Object>> configuration() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("serverUrl", "http://" + introConfig.getServerDomain() + ":" + IntroBoot.getPort() + "/");
+        return asJson(map);
     }
 }

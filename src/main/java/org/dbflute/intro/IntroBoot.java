@@ -36,7 +36,7 @@ public class IntroBoot {
         boot.bootAwait();
     }
 
-    private static int getPort() {
+    public static int getPort() {
         return Integer.parseInt(System.getProperty("port", String.valueOf(DEFAULT_PORT)));
     }
 }

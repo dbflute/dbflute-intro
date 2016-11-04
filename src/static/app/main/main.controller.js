@@ -36,6 +36,7 @@ angular.module('dbflute-intro')
 
     $scope.manifest = {}; // intro manifest
     $scope.versions = []; // engine versions
+    $scope.configuration = {}; // intro configuration
     $scope.classificationMap = {}; // e.g. targetDatabase
     $scope.client = null; // model of current client
     $scope.clientList = []; // existing clients
@@ -54,6 +55,12 @@ angular.module('dbflute-intro')
     $scope.engineVersions = function(version) {
         ApiFactory.engineVersions().then(function(response) {
             $scope.versions = response.data;
+        });
+    };
+
+    $scope.configuration = function() {
+        ApiFactory.configuration().then(function(response) {
+            $scope.configuration = response.data;
         });
     };
 
@@ -157,11 +164,12 @@ angular.module('dbflute-intro')
     //                                                                            Document
     //                                                                            ========
     $scope.openSchemaHTML = function(client) {
-      $window.open('http://localhost:9000/document/decodb/schemahtml/')
+      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/schemahtml/')
     };
 
     $scope.openHistoryHTML = function(client) {
-      $window.open('http://localhost:9000/document/decodb/historyhtml/')
+      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/historyhtml/')
+      // $window.open('http://localhost:9000/document/decodb/historyhtml/')
     };
 
     // ===================================================================================
@@ -183,11 +191,11 @@ angular.module('dbflute-intro')
             return;
         }
         $scope.client.schemaSyncCheckMap[name] = {};
-    }
+    };
 
     $scope.removeSchemaSyncCheckMap = function(name) {
         delete $scope.client.schemaSyncCheckMap[name];
-    }
+    };
 
     // ===================================================================================
     //                                                                              Engine
@@ -220,6 +228,7 @@ angular.module('dbflute-intro')
     //                                                                          ==========
     $scope.manifest();
     $scope.engineVersions();
+    $scope.configuration();
     $scope.classifications();
     $scope.prepareClientList();
 });
