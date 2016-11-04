@@ -58,6 +58,7 @@ angular.module('dbflute-intro').config(function($translateProvider) {
     $translateProvider.preferredLanguage('ja');
     $translateProvider.fallbackLanguage('en');
     $translateProvider.useMissingTranslationHandlerLog();
+    // TODO jflute intro: index.js what is this? (useLocalStorage())
 //    $translateProvider.useLocalStorage();
 });
 
@@ -70,27 +71,22 @@ angular.module('dbflute-intro').config(function($httpProvider) {
             function($q, $rootScope, $injector) {
 
         var dialog = null;
-
         return {
             responseError: function(response) {
-
                 $rootScope.messages = null;
                 var reload = false;
-
                 if(response.status === 0) {
                     $rootScope.messages = ['Cannot access the server, retry later'];
                     reload = true;
                 }
-
                 // TODO jflute intro: index.js extract to method
                 if (response.status === 400) {
-                	// TODO jflute intro: index.js validation erro handling
+                	// TODO jflute intro: index.js validation error handling
                     if (response.data.messages) {
                         var messageList = new Array();
                         for (var key in response.data.messages) {
                             for (var i in response.data.messages[key]) {
                                 var message = response.data.messages[key][i];
-
                                 if (key.match(/List/)) {
                                     if (key.match(/[0-9]/)) {
                                         var newKey = '';
@@ -103,7 +99,6 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                                         key += '[]';
                                     }
                                 }
-
                                 if (key.lastIndexOf('.')) {
                                     key = key.substring(key.lastIndexOf('.') + 1);
                                 }
@@ -126,8 +121,8 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                     $rootScope.messages = angular.isArray(response.data) ? response.data : [response.data];
                     $rootScope.messages.unshift('500 Server Error');
                 }
-
                 if (!dialog && $rootScope.messages) {
+                	// TODO jflute intro: what is resultView.html?
                     dialog = $injector.get('$uibModal').open({templateUrl: 'resultView.html', scope: $rootScope});
                     dialog.result.then(function () {
                             dialog = null;
@@ -141,7 +136,6 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                             }
                         });
                 }
-
                 return $q.reject(response);
             }
         }
