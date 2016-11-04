@@ -19,6 +19,12 @@ angular.module('dbflute-intro').factory('ApiFactory',
         		url : 'api/intro/classifications'
         	});
         },
+        configuration: function () {
+            return $http({
+                method: 'POST',
+                url: 'api/intro/configuration'
+            });
+        },
 
         // ===============================================================================
         //                                                                         Welcome
