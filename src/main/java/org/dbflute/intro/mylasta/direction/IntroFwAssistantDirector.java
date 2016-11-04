@@ -36,6 +36,7 @@ import org.lastaflute.web.direction.FwWebDirection;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
 
