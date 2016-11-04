@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.optional.OptionalThing;
+import org.dbflute.util.Srl;
 import org.lastaflute.core.message.MessageManager;
 import org.lastaflute.web.api.ApiFailureHook;
 import org.lastaflute.web.api.ApiFailureResource;
@@ -69,12 +71,18 @@ public class IntroApiFailureHook implements ApiFailureHook {
         });
     }
 
+    // ===================================================================================
+    //                                                                    Validation Error
+    //                                                                    ================
     @Override
     public ApiResponse handleValidationError(ApiFailureResource resource) {
         final ApiFailureBean bean = createFailureBean(ApiFailureType.VALIDATION_ERROR, resource);
         return asJson(bean).httpStatus(BUSINESS_FAILURE_STATUS);
     }
 
+    // ===================================================================================
+    //                                                               Application Exception
+    //                                                               =====================
     @Override
     public ApiResponse handleApplicationException(ApiFailureResource resource, RuntimeException cause) {
         final ApiFailureType failureType = failureTypeMapping.findAssignable(cause).orElseGet(() -> {
@@ -92,12 +100,18 @@ public class IntroApiFailureHook implements ApiFailureHook {
         }
     }
 
+    // ===================================================================================
+    //                                                                    Client Exception
+    //                                                                    ================
     @Override
     public OptionalThing<ApiResponse> handleClientException(ApiFailureResource resource, RuntimeException cause) {
         // HTTP status will be automatically sent as client error for the cause
         return OptionalThing.of(asJson(createFailureBean(ApiFailureType.CLIENT_EXCEPTION, resource)));
     }
 
+    // ===================================================================================
+    //                                                                    Server Exception
+    //                                                                    ================
     @Override
     public OptionalThing<ApiResponse> handleServerException(ApiFailureResource resource, Throwable cause) {
         // HTTP status will be automatically sent as server error
@@ -106,13 +120,37 @@ public class IntroApiFailureHook implements ApiFailureHook {
     }
 
     private Map<String, List<String>> prepareServerExceptionMessageMap(ApiFailureResource resource, Throwable cause) {
-        // TODO jflute intro: where is server log file in production? (2016/08/13)
-        // the resource does not have messages when server exception so make custom messages here
         final IntroMessages messages = new IntroMessages();
-        messages.addErrorsAppIntroError(IntroMessages.GLOBAL_PROPERTY_KEY, cause.getClass().getName());
+        final String errorMessage = buildDisplayErrorMessage(cause);
+        messages.addErrorsAppIntroError(IntroMessages.GLOBAL_PROPERTY_KEY, errorMessage);
         final RequestManager requestManager = resource.getRequestManager();
         final MessageManager messageManager = requestManager.getMessageManager();
         return messageManager.toPropertyMessageMap(requestManager.getUserLocale(), messages);
+    }
+
+    private String buildDisplayErrorMessage(Throwable cause) {
+        final String causeName = cause.getClass().getName();
+        final String causeMessage = cause.getMessage();
+        final String stackTraceExp = buildOneLinerStackTraceExp(cause);
+        return causeName + ": " + causeMessage + " - " + stackTraceExp; // one liner for JSON view
+    }
+
+    private String buildOneLinerStackTraceExp(Throwable cause) {
+        final StringBuilder sb = new StringBuilder();
+        int index = 0;
+        for (StackTraceElement element : cause.getStackTrace()) {
+            if (index >= 5) { // recent elements only
+                break;
+            }
+            final String simpleName = Srl.substringLastRear(element.getClassName(), ".");
+            final String methodName = element.getMethodName();
+            final String fileName = element.getFileName();
+            final int lineNumber = element.getLineNumber();
+            sb.append(" at ").append(simpleName).append(".").append(methodName);
+            sb.append("(").append(fileName).append(":").append(lineNumber).append(")");
+            ++index;
+        }
+        return sb.toString();
     }
 
     // ===================================================================================
@@ -134,7 +172,7 @@ public class IntroApiFailureHook implements ApiFailureHook {
 
         @Required
         public final ApiFailureType failureType;
-        @Required
+        @NotNull
         public final Map<String, List<String>> messages;
 
         public ApiFailureBean(ApiFailureType failureType, Map<String, List<String>> messages) {

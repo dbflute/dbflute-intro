@@ -28,8 +28,6 @@
   "LABEL_CLIENT_CHANGE" : "change",
   "LABEL_CLIENT_CANCEL" : "cancel",
 
-  "LABEL_PROJECT_TAB" : "DB",
-
   "LABEL_databaseCode" : "DBMS",
   "LABEL_languageCode" : "Language",
   "LABEL_containerCode": "Container",

@@ -15,54 +15,19 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.dbflute.util.DfStringUtil;
-import org.dbflute.util.DfTypeUtil;
 import org.lastaflute.web.path.ActionAdjustmentProvider;
-import org.lastaflute.web.ruts.config.ActionExecute;
-import org.lastaflute.web.ruts.config.ActionMapping;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
-    private static final int INDEXED_PROPERTY_SIZE_LIMIT = 200; // hard coding for now
-
-    public int provideIndexedPropertySizeLimit() {
-        return INDEXED_PROPERTY_SIZE_LIMIT;
-    }
-
-    public String decodeUrlParameterPropertyValue(Object bean, String name, String value) {
-        return null;
-    }
-
-    public String filterHtmlPath(String path, ActionMapping actionMappingWrapper) {
-        return null;
-    }
-
-    public List<String> prepareHtmlRetryWordList(String requestPath, List<String> wordList) {
-        return null;
-    }
-
-    public boolean isForcedRoutingTarget(HttpServletRequest request, String requestPath) {
-        return true;
-    }
-
-    // #migration: S2ExecuteConfig to ActionExecuteConfig
-    public boolean isForcedSuppressRedirectWithSlash(HttpServletRequest request, String requestPath, ActionExecute executeConfig) {
-        return true;
-    }
-
-    public String customizeActionMappingRequestPath(String requestPath) {
-        return DfStringUtil.substringFirstRear(requestPath, "/api");
-    }
-
     @Override
-    public String toString() {
-        return DfTypeUtil.toClassTitle(this) + ":{indexedLimit=" + INDEXED_PROPERTY_SIZE_LIMIT + "}";
+    public String customizeActionMappingRequestPath(String requestPath) {
+        // Action class name does not need 'Api' prefix
+        // ('api' is to be separated from angular request)
+        return DfStringUtil.substringFirstRear(requestPath, "/api");
     }
 }

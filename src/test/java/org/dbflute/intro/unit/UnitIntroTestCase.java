@@ -56,24 +56,16 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         super.tearDown();
     }
 
-    protected boolean isSuppressTestClient() {
+    protected boolean isSuppressTestClient() { // you can override
         return false;
     }
 
     // ===================================================================================
-    //                                                                        Assist Logic
-    //                                                                        ============
-    @Override
-    protected File getProjectDir() {
-        return getTestCaseBuildDir().getParentFile().getParentFile().getParentFile();
-    }
-
-    // -----------------------------------------------------
-    //                                     Setup test client
-    //                                     -----------------
+    //                                                                         Test Client
+    //                                                                         ===========
     /**
-     * Create dbflute client.
-     * Use in setUp of test class.
+     * Create dbflute client. <br>
+     * Use in setUp of test class. <br>
      * Don't forget to delete files in tearDown!!
      */
     protected void createTestClient() {
@@ -87,8 +79,8 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     /**
-     * Delete dbflute client.
-     * Use in tearDown of test class.
+     * Delete dbflute client. <br>
+     * Use in tearDown of test class. <br>
      * Don't forget to create files in setUp!!
      */
     protected void deleteTestClient() {
