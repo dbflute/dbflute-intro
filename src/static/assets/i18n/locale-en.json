@@ -57,6 +57,8 @@
   "LABEL_PROXY_PORT" : "ポート",
   "LABEL_PROXY_SETTING" : "プロキシ設定",
 
+  "LABEL_ENGINE_VERSION" : "Engine Version",
+
   "MSG_REQUIRED" : "{{name}}を入力してください。",
   "MSG_INVALID" : "{{name}}「{{value}}」が不正です。",
   "MSG_EXIST_PROJECT" : "DB名「{{project}}」がすでに存在します。",

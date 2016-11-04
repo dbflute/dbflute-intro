@@ -87,6 +87,7 @@ angular.module('dbflute-intro')
         });
      };
 
+    // TODO deco move to welcome again by jflute
     $scope.showClientInput = function() {
         $scope.editFlg = true;
         $scope.client = {create: true, mainSchemaSettings: {}, systemUserSettings: {}, schemaSyncCheckMap: {}, optionBean: {}};
