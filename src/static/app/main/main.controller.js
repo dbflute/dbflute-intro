@@ -4,7 +4,7 @@
  * Main Controller
  */
 angular.module('dbflute-intro')
-        .controller('MainCtrl', function ($scope, $window, $uibModal, $state, ApiFactory) {
+        .controller('MainCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
     //  Bean -> Body
     var convertParam = function(param) {
@@ -74,7 +74,7 @@ angular.module('dbflute-intro')
     //                                                                     Client Handling
     //                                                                     ===============
     $scope.setCurrentProject = function(client) {
-        $scope.client = angular.copy(client);
+        $state.go('client', { client: client });
     };
 
     $scope.prepareClientList = function() {

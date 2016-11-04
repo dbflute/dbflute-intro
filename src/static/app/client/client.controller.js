@@ -4,7 +4,7 @@
  * Main Controller
  */
 angular.module('dbflute-intro')
-        .controller('ClientCtrl', function ($scope, $window, $uibModal, $state, ApiFactory) {
+        .controller('ClientCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
     //  Bean -> Body
     var convertParam = function(param) {
@@ -37,7 +37,7 @@ angular.module('dbflute-intro')
     $scope.manifest = {}; // intro manifest
     $scope.versions = []; // engine versions
     $scope.classificationMap = {}; // e.g. targetDatabase
-    $scope.client = null; // model of current client
+    $scope.client = $stateParams.client; // model of current client
     $scope.clientList = []; // existing clients
     $scope.editFlg = false;
     $scope.option = {testConnection: true};
