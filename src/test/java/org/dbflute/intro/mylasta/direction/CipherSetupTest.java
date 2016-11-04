@@ -7,7 +7,7 @@ import org.lastaflute.core.security.PrimaryCipher;
 import org.lastaflute.web.servlet.cookie.CookieCipher;
 
 /**
- * @author jflute
+ * @author jflute at rinshi-no-mori
  */
 public class CipherSetupTest extends UnitIntroTestCase {
 
