@@ -6,6 +6,7 @@
 angular.module('dbflute-intro')
         .controller('MainCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
+    // TODO deco remove unused functions
     //  Bean -> Body
     var convertParam = function(param) {
 // #later deleted
@@ -87,10 +88,8 @@ angular.module('dbflute-intro')
         });
      };
 
-    // TODO deco move to welcome again by jflute
-    $scope.showClientInput = function() {
-        $scope.editFlg = true;
-        $scope.client = {create: true, mainSchemaSettings: {}, systemUserSettings: {}, schemaSyncCheckMap: {}, optionBean: {}};
+    $scope.goToClientCreate = function() {
+        $state.go('create');
     };
 
     $scope.edit = function() {

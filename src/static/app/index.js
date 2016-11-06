@@ -38,6 +38,7 @@ angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvi
     $stateProvider
         .state('home', { url: '/', templateUrl: 'app/main/main.html', controller: 'MainCtrl'})
         .state('client', { url: '/client/:projectName', templateUrl: 'app/client/client.html', controller: 'ClientCtrl'})
+        .state('create', { url: '/create', templateUrl: 'app/client/create.html', controller: 'ClientCreateCtrl'})
         .state('welcome', { url: '/welcome', templateUrl: 'app/welcome/welcome.html', controller: 'WelcomeCtrl'})
         ;
 
