@@ -26,7 +26,7 @@ public class IntroBoot {
     // TODO jflute intro: default port (2016/08/02)
     protected static final int DEFAULT_PORT = 9000;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         JettyBoot boot = new JettyBoot(getPort(), "/");
         // TODO jflute intro: development? (2016/08/02)
         boot.asDevelopment();
