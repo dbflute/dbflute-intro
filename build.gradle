@@ -13,7 +13,6 @@ plugins {
     id 'com.github.hierynomus.license' version '0.13.1'
 }
 
-apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'war'
 apply plugin: 'project-report'
@@ -112,16 +111,15 @@ dependencies {
 mainClassName = 'org.dbflute.intro.IntroBoot'
 
 war {
-    // TODO jflute intro: needs to remove servlet, jetty?
-    from {
-        configurations.providedCompile.collect {
-            it.isDirectory() ? it : project.zipTree(it)
-        }
-        configurations.providedRuntime.collect {
-            it.isDirectory() ? it : project.zipTree(it)
+    def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all']
+    configurations.compile.collect { file ->
+        if (embeddedArtifactList.any {file.getName().startsWith(it)}) {
+            from {
+                file.isDirectory() ? file : zipTree(file)
+            }
         }
     }
-
+    rootSpec.exclude(embeddedArtifactList.collect {"**/${it}-*.jar"})
     from fileTree(dir: sourceSets.main.output.classesDir, includes: ["${mainClassName.replace('.', '/')}.class"])
     from fileTree(dir: file('dist'), include: '**/**')
 
