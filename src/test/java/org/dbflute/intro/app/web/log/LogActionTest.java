@@ -50,7 +50,11 @@ public class LogActionTest extends UnitIntroTestCase {
         JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        assertTrue(response.isReturnAsEmptyBody());
+        TestingJsonData<List<LogBean>> jsonData = validateJsonData(response);
+        List<LogBean> logList = jsonData.getJsonBean(); // might be empty
+        logList.forEach(log -> { // show only
+            log(log);
+        });
     }
 
     @Test
@@ -82,7 +86,7 @@ public class LogActionTest extends UnitIntroTestCase {
     //                                                                         Test Helper
     //                                                                         ===========
     private void deleteLogFiles() {
-        File logDir =  new File(IntroPhysicalLogic.BASE_DIR_PATH, LOG_FILE_PATH);
+        File logDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, LOG_FILE_PATH);
         File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));
         if (logFiles != null) {
             for (File file : logFiles) {
