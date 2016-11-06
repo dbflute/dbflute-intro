@@ -62,12 +62,12 @@ public class IntroApiFailureHook implements ApiFailureHook {
     //                                                                          Definition
     //                                                                          ==========
     protected static final int BUSINESS_FAILURE_STATUS = HttpServletResponse.SC_BAD_REQUEST;
-    protected static final BusinessFailureMapping<ApiFailureType> failureTypeMapping; // for application exception
+    protected static final BusinessFailureMapping<UnifiedFailureType> failureTypeMapping; // for application exception
 
     static { // you can add mapping of failure type with exception
-        failureTypeMapping = new BusinessFailureMapping<ApiFailureType>(failureMap -> {
-            failureMap.put(LoginFailureException.class, ApiFailureType.LOGIN_FAILURE);
-            failureMap.put(LoginRequiredException.class, ApiFailureType.LOGIN_REQUIRED);
+        failureTypeMapping = new BusinessFailureMapping<UnifiedFailureType>(failureMap -> {
+            failureMap.put(LoginFailureException.class, UnifiedFailureType.LOGIN_FAILURE);
+            failureMap.put(LoginRequiredException.class, UnifiedFailureType.LOGIN_REQUIRED);
         });
     }
 
@@ -76,7 +76,7 @@ public class IntroApiFailureHook implements ApiFailureHook {
     //                                                                    ================
     @Override
     public ApiResponse handleValidationError(ApiFailureResource resource) {
-        final ApiFailureBean bean = createFailureBean(ApiFailureType.VALIDATION_ERROR, resource);
+        final UnifiedFailureBean bean = createFailureBean(UnifiedFailureType.VALIDATION_ERROR, resource);
         return asJson(bean).httpStatus(BUSINESS_FAILURE_STATUS);
     }
 
@@ -85,10 +85,10 @@ public class IntroApiFailureHook implements ApiFailureHook {
     //                                                               =====================
     @Override
     public ApiResponse handleApplicationException(ApiFailureResource resource, RuntimeException cause) {
-        final ApiFailureType failureType = failureTypeMapping.findAssignable(cause).orElseGet(() -> {
-            return ApiFailureType.APPLICATION_EXCEPTION;
+        final UnifiedFailureType failureType = failureTypeMapping.findAssignable(cause).orElseGet(() -> {
+            return UnifiedFailureType.APPLICATION_EXCEPTION;
         });
-        final ApiFailureBean bean = createFailureBean(failureType, resource);
+        final UnifiedFailureBean bean = createFailureBean(failureType, resource);
         return asJson(bean).httpStatus(prepareApplicationExceptionHttpStatus(cause));
     }
 
@@ -106,7 +106,7 @@ public class IntroApiFailureHook implements ApiFailureHook {
     @Override
     public OptionalThing<ApiResponse> handleClientException(ApiFailureResource resource, RuntimeException cause) {
         // HTTP status will be automatically sent as client error for the cause
-        return OptionalThing.of(asJson(createFailureBean(ApiFailureType.CLIENT_EXCEPTION, resource)));
+        return OptionalThing.of(asJson(createFailureBean(UnifiedFailureType.CLIENT_EXCEPTION, resource)));
     }
 
     // ===================================================================================
@@ -116,7 +116,7 @@ public class IntroApiFailureHook implements ApiFailureHook {
     public OptionalThing<ApiResponse> handleServerException(ApiFailureResource resource, Throwable cause) {
         // HTTP status will be automatically sent as server error
         final Map<String, List<String>> messageMap = prepareServerExceptionMessageMap(resource, cause);
-        return OptionalThing.of(asJson(createFailureBean(ApiFailureType.SERVER_EXCEPTION, messageMap)));
+        return OptionalThing.of(asJson(createFailureBean(UnifiedFailureType.SERVER_EXCEPTION, messageMap)));
     }
 
     private Map<String, List<String>> prepareServerExceptionMessageMap(ApiFailureResource resource, Throwable cause) {
@@ -156,32 +156,32 @@ public class IntroApiFailureHook implements ApiFailureHook {
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
-    protected JsonResponse<ApiFailureBean> asJson(ApiFailureBean bean) {
-        return new JsonResponse<ApiFailureBean>(bean);
+    protected JsonResponse<UnifiedFailureBean> asJson(UnifiedFailureBean bean) {
+        return new JsonResponse<UnifiedFailureBean>(bean);
     }
 
-    protected ApiFailureBean createFailureBean(ApiFailureType failureType, ApiFailureResource resource) {
-        return new ApiFailureBean(failureType, resource.getPropertyMessageMap());
+    protected UnifiedFailureBean createFailureBean(UnifiedFailureType failureType, ApiFailureResource resource) {
+        return new UnifiedFailureBean(failureType, resource.getPropertyMessageMap());
     }
 
-    protected ApiFailureBean createFailureBean(ApiFailureType failureType, Map<String, List<String>> messageMap) {
-        return new ApiFailureBean(failureType, messageMap);
+    protected UnifiedFailureBean createFailureBean(UnifiedFailureType failureType, Map<String, List<String>> messageMap) {
+        return new UnifiedFailureBean(failureType, messageMap);
     }
 
-    public static class ApiFailureBean {
+    public static class UnifiedFailureBean {
 
         @Required
-        public final ApiFailureType failureType;
+        public final UnifiedFailureType failureType;
         @NotNull
         public final Map<String, List<String>> messages;
 
-        public ApiFailureBean(ApiFailureType failureType, Map<String, List<String>> messages) {
+        public UnifiedFailureBean(UnifiedFailureType failureType, Map<String, List<String>> messages) {
             this.failureType = failureType;
             this.messages = messages;
         }
     }
 
-    public static enum ApiFailureType {
+    public static enum UnifiedFailureType {
         VALIDATION_ERROR // special type
         , LOGIN_FAILURE, LOGIN_REQUIRED // specific type of application exception
         , APPLICATION_EXCEPTION // default type of application exception
