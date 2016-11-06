@@ -74,10 +74,6 @@ angular.module('dbflute-intro')
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    $scope.setCurrentProject = function(client) {
-        $state.go('client', { projectName: client.projectName });
-    };
-
     $scope.prepareClientList = function() {
         ApiFactory.clientList().then(function(response) {
             if (response.data.length > 0) {
@@ -87,6 +83,10 @@ angular.module('dbflute-intro')
             }
         });
      };
+
+    $scope.goToClient = function(client) {
+        $state.go('client', { projectName: client.projectName });
+    };
 
     $scope.goToClientCreate = function() {
         $state.go('create');
