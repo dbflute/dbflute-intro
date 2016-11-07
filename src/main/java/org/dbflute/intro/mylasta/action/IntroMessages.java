@@ -135,7 +135,7 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: double submit might be requested */
     public static final String ERRORS_APP_DOUBLE_SUBMIT_REQUEST = "{errors.app.double.submit.request}";
 
-    /** The key of the message: Intro Error: {0} */
+    /** The key of the message: Intro Error =&gt; {0} */
     public static final String ERRORS_APP_INTRO_ERROR = "{errors.app.intro.error}";
 
     /** The key of the message: Cannot connect to the database: {0} */
@@ -691,7 +691,7 @@ public class IntroMessages extends IntroLabels {
     /**
      * Add the created action message for the key 'errors.app.intro.error' with parameters.
      * <pre>
-     * message: Intro Error: {0}
+     * message: Intro Error =&gt; {0}
      * comment: ---------------------
      * </pre>
      * @param property The property name for the message. (NotNull)

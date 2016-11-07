@@ -15,17 +15,18 @@
  */
 package org.dbflute.intro.app.web.intro;
 
-import org.dbflute.intro.IntroBoot;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
+import org.dbflute.intro.bizfw.server.BootingInternetDomain;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author p1us2er0
@@ -42,7 +43,7 @@ public class IntroAction extends IntroBaseAction {
     @Resource
     private IntroClsAssist introClsAssist;
     @Resource
-    private IntroConfig introConfig;
+    private IntroConfig config;
 
     // ===================================================================================
     //                                                                             Execute
@@ -61,7 +62,8 @@ public class IntroAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Map<String, Object>> configuration() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("serverUrl", "http://" + introConfig.getServerDomain() + ":" + IntroBoot.getPort() + "/");
+        String serverUrl = new BootingInternetDomain(config).toCompleteDomain();
+        map.put("serverUrl", serverUrl);
         return asJson(map);
     }
 }

@@ -62,6 +62,9 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. 10 */
     String JDBC_CONNECTION_POOLING_SIZE = "jdbc.connection.pooling.size";
 
+    /** The key of the configuration. e.g. localhost:{0} */
+    String SERVER_DOMAIN = "server.domain";
+
     /**
      * Get the value of property as {@link String}.
      * @param propertyKey The key of the property. (NotNull)
@@ -217,6 +220,14 @@ public interface IntroEnv {
     Integer getJdbcConnectionPoolingSizeAsInteger();
 
     /**
+     * Get the value for the key 'server.domain'. <br>
+     * The value is, e.g. localhost:{0} <br>
+     * comment: domain to access this application from internet, e.g. for registration mail
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getServerDomain();
+
+    /**
      * The simple implementation for configuration.
      * @author FreeGen
      */
@@ -291,6 +302,10 @@ public interface IntroEnv {
 
         public Integer getJdbcConnectionPoolingSizeAsInteger() {
             return getAsInteger(IntroEnv.JDBC_CONNECTION_POOLING_SIZE);
+        }
+
+        public String getServerDomain() {
+            return get(IntroEnv.SERVER_DOMAIN);
         }
     }
 }

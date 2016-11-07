@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.mylasta.direction;
 
+import org.dbflute.intro.mylasta.direction.IntroEnv;
 import org.lastaflute.core.direction.exception.ConfigPropertyNotFoundException;
 
 /**
@@ -37,11 +38,8 @@ public interface IntroConfig extends IntroEnv {
     /** The key of the configuration. e.g. 315360000 */
     String COOKIE_ETERNAL_EXPIRE = "cookie.eternal.expire";
 
-    /** The key of the configuration. e.g. HRB */
+    /** The key of the configuration. e.g. ITR */
     String COOKIE_REMEMBER_ME_HARBOR_KEY = "cookie.remember.me.harbor.key";
-
-    /** The key of the configuration. e.g. localhost */
-    String SERVER_DOMAIN = "server.domain";
 
     /**
      * Get the value of property as {@link String}.
@@ -119,19 +117,11 @@ public interface IntroConfig extends IntroEnv {
 
     /**
      * Get the value for the key 'cookie.remember.me.harbor.key'. <br>
-     * The value is, e.g. HRB <br>
-     * comment: The cookie key of remember-me for Harbor #change_it_first
+     * The value is, e.g. ITR <br>
+     * comment: The cookie key of remember-me for Intro #changed
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
     String getCookieRememberMeHarborKey();
-
-    /**
-     * Get the value for the key 'server.domain'. <br>
-     * The value is, e.g. localhost <br>
-     * comment: domain to access this application from internet, e.g. for registration mail
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getServerDomain();
 
     /**
      * The simple implementation for configuration.
@@ -172,10 +162,6 @@ public interface IntroConfig extends IntroEnv {
 
         public String getCookieRememberMeHarborKey() {
             return get(IntroConfig.COOKIE_REMEMBER_ME_HARBOR_KEY);
-        }
-
-        public String getServerDomain() {
-            return get(IntroConfig.SERVER_DOMAIN);
         }
     }
 }
