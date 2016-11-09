@@ -17,7 +17,9 @@ package org.dbflute.intro.app.logic.engine;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,13 +38,21 @@ public class EngineInfoLogic {
     private IntroPhysicalLogic introPhysicalLogic;
 
     public List<String> getExistingVersionList() {
+        String mydbflutePath = introPhysicalLogic.buildMydbflutePath();
         try {
-            List<String> list = Files.list(Paths.get(introPhysicalLogic.buildMydbflutePath())).filter(file -> {
-                return file.toFile().isDirectory() && file.toFile().getName().startsWith("dbflute-");
-            }).map(file -> file.toFile().getName().substring(8)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-            return list;
+            Path mydbfluteDir = Paths.get(mydbflutePath);
+            if (!mydbfluteDir.toFile().exists()) {
+                return Collections.emptyList();
+            }
+            String enginePrefix = "dbflute-";
+            List<String> versionList = Files.list(mydbfluteDir)
+                    .filter(file -> file.toFile().isDirectory() && file.toFile().getName().startsWith(enginePrefix))
+                    .map(file -> file.toFile().getName().substring(enginePrefix.length()))
+                    .sorted(Comparator.reverseOrder())
+                    .collect(Collectors.toList());
+            return versionList;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Failed to get engine versions: " + mydbflutePath, e);
         }
     }
 }
