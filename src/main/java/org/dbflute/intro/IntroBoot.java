@@ -28,9 +28,9 @@ public class IntroBoot {
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         JettyBoot boot = new JettyBoot(getPort(), "/");
-        // TODO jflute intro: development? (2016/08/02)
-        boot.asDevelopment();
-        if (Boolean.getBoolean("browseOnDesktop")) {
+        if (isNoneEnv()) { // development
+            boot.asDevelopment();
+        } else { // production
             boot.browseOnDesktop();
         }
         boot.bootAwait();
@@ -38,5 +38,9 @@ public class IntroBoot {
 
     public static int getPort() {
         return Integer.parseInt(System.getProperty("port", String.valueOf(DEFAULT_PORT)));
+    }
+
+    private static boolean isNoneEnv() {
+        return System.getProperty("lasta.env") == null;
     }
 }
