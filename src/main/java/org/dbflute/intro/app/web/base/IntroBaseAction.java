@@ -15,8 +15,6 @@
  */
 package org.dbflute.intro.app.web.base;
 
-import java.lang.reflect.Method;
-
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.context.AccessContextLogic;
@@ -52,7 +50,7 @@ public abstract class IntroBaseAction extends TypicalAction // has several inter
     @Resource
     private CsrfManager csrfManager;
     @Resource
-    private IntroConfig introConfig;
+    private IntroConfig config;
     @Resource
     private AccessContextLogic accessContextLogic;
 
@@ -78,12 +76,13 @@ public abstract class IntroBaseAction extends TypicalAction // has several inter
     // #app_customize you can customize the action hook
     @Override
     public ActionResponse hookBefore(ActionRuntime runtime) { // application may override
-        if (!introConfig.isDevelopmentHere()) {
-            Method executeMethod = runtime.getExecuteMethod();
-            if (runtime.isApiExecute() && !executeMethod.isAnnotationPresent(CsrfTokenVerifySkip.class)) {
-                csrfManager.verifyToken();
-            }
-        }
+        // same reason as prepareWebDirection()'s comment out
+        //if (!introConfig.isDevelopmentHere()) {
+        //    Method executeMethod = runtime.getExecuteMethod();
+        //    if (runtime.isApiExecute() && !executeMethod.isAnnotationPresent(CsrfTokenVerifySkip.class)) {
+        //        csrfManager.verifyToken();
+        //    }
+        //}
         return super.hookBefore(runtime);
     }
 

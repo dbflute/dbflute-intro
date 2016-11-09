@@ -17,7 +17,6 @@ package org.dbflute.intro.mylasta.direction;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.bizfw.server.BootingInternetDomain;
 import org.dbflute.intro.mylasta.direction.sponsor.IntroActionAdjustmentProvider;
 import org.dbflute.intro.mylasta.direction.sponsor.IntroApiFailureHook;
 import org.dbflute.intro.mylasta.direction.sponsor.IntroCookieResourceProvider;
@@ -34,7 +33,6 @@ import org.lastaflute.core.security.OneWayCryptographer;
 import org.lastaflute.db.direction.FwDbDirection;
 import org.lastaflute.web.api.ApiFailureHook;
 import org.lastaflute.web.direction.FwWebDirection;
-import org.lastaflute.web.servlet.filter.cors.CorsHook;
 
 /**
  * @author p1us2er0
@@ -115,7 +113,8 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
         direction.directAdjustment(createActionAdjustmentProvider());
         direction.directMessage(nameList -> nameList.add("intro_message"), "intro_label");
         direction.directApiCall(createApiFailureHook());
-        direction.directCors(createCorsHook());
+        // see IntroBaseAction's hookBefore() for the detail
+        //direction.directCors(createCorsHook());
     }
 
     protected IntroUserLocaleProcessProvider createUserLocaleProcessProvider() {
@@ -139,7 +138,8 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
         return new IntroApiFailureHook();
     }
 
-    protected CorsHook createCorsHook() {
-        return new CorsHook(new BootingInternetDomain(config).toCompleteDomain());
-    }
+    // see IntroBaseAction's hookBefore() for the detail
+    //protected CorsHook createCorsHook() {
+    //    return new CorsHook(new BootingInternetDomain(config).toCompleteDomain());
+    //}
 }
