@@ -26,6 +26,7 @@ public class IntroBoot {
     // TODO jflute intro: default port (2016/08/02)
     protected static final int DEFAULT_PORT = 9000;
 
+    // TODO jflute intro: automatically set lasta.env in production (2016/11/10)
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         JettyBoot boot = new JettyBoot(getPort(), "/");
         if (isNoneEnv()) { // development

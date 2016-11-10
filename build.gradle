@@ -42,7 +42,7 @@ ext {
             // Partner Library
             slf4j : '1.7.21',
             logback : '1.1.7',
-            jettyboot : '0.4.3',
+            jettyboot : '0.4.4',
 
             // GoodNeighbor Library
             commonslang : '3.4',
@@ -50,7 +50,7 @@ ext {
 
             // Testing
             junit : '4.8.2',
-            utflute : '0.6.1B',
+            utflute : '0.6.1C',
             javaparser : '2.5.1'
         ]
 }
