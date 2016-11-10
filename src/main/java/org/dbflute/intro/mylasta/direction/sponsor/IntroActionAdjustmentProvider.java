@@ -15,6 +15,8 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.web.path.ActionAdjustmentProvider;
 
@@ -24,10 +26,17 @@ import org.lastaflute.web.path.ActionAdjustmentProvider;
  */
 public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
+    protected static final String API_URL_PREFIX = "/api"; // to be separated from angular request
+
+    @Override
+    public boolean isForcedRoutingExcept(HttpServletRequest request, String requestPath) {
+        // of course, request to angular resources does not need routing
+        return requestPath.startsWith(API_URL_PREFIX);
+    }
+
     @Override
     public String customizeActionMappingRequestPath(String requestPath) {
-        // Action class name does not need 'Api' prefix
-        // ('api' is to be separated from angular request)
-        return DfStringUtil.substringFirstRear(requestPath, "/api");
+        // action class name does not need 'Api' prefix
+        return DfStringUtil.substringFirstRear(requestPath, API_URL_PREFIX);
     }
 }
