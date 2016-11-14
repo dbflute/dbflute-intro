@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-sm-12">
           <section class="Basic">
-            <h1 class="heading">Welcomt to DBflute</h1>
+            <h1 class="heading">Welcome to DBFlute</h1>
             <form class="form-horizontal">
               <div class="form-group">
                 <label class="col-sm-4 control-label">* {{'LABEL_projectName' | translate:translationData}}</label>
@@ -108,3 +108,13 @@
     </div>
   </div>
 </div>
+<!-- progress modal -->
+<script type="text/ng-template" id="progress.html">
+  <div class="modal-header">
+    Downloading...
+  </div>
+  <div class="modal-body">
+    <progressbar class="progress-striped active" animate="false" value="100">
+    </progressbar>
+  </div>
+</script>

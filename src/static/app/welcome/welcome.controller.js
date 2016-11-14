@@ -4,7 +4,7 @@
 * Welcome Controller
 */
 angular.module('dbflute-intro')
-        .controller('WelcomeCtrl', function ($scope, $window, $uibModal, ApiFactory) {
+        .controller('WelcomeCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
     // TODO hakiba implement as you like it by jflute (2016/08/22)
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -71,7 +71,14 @@ angular.module('dbflute-intro')
     	client.mainSchemaSettings.schema = database.defaultSchema;
     };
     $scope.create = function (client, testConnection) {
-      ApiFactory.createWelcomeClient(client, testConnection).then(function (response) {});
+      var modalInstance = $uibModal.open({
+        templateUrl:"progress.html",
+        backdrop:"static",keyboard:false
+      });
+      ApiFactory.createWelcomeClient(client, testConnection).then(function (response) {
+        modalInstance.close();
+        $state.go('client', { projectName: client.projectName });
+      });
     };
 
     // ===================================================================================
