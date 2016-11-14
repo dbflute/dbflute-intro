@@ -11,7 +11,7 @@
                 <label class="col-sm-4 control-label">* {{'LABEL_projectName' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg && client.create">{{client.projectName}}</span>
-                  <input type="text" class="form-control" ng-model="client.projectName" ng-show="editFlg && client.create" />
+                  <input type="text" class="form-control" ng-model="client.projectName" placeholder="maihamadb" ng-show="editFlg && client.create" />
                 </div>
               </div>
               <div class="form-group">
@@ -56,28 +56,28 @@
                 <label class="col-sm-4 control-label">{{'LABEL_jdbcDriverJarPath' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.jdbcDriverJarPath}}</span>
-                  <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" ng-show="editFlg" />
+                  <input type="text" class="form-control" ng-model="client.jdbcDriverJarPath" placeholder="~/ojdbc7.jar" ng-show="editFlg" />
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-4 control-label">* {{'LABEL_url' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.mainSchemaSettings.url}}</span>
-                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" ng-show="editFlg" />
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url" placeholder="jdbc:mysql://localhost:3306/maihamadb" ng-show="editFlg" />
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-4 control-label">{{'LABEL_schema' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.mainSchemaSettings.schema}}</span>
-                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema" ng-show="editFlg" />
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema" placeholder="MAIHAMADB" ng-show="editFlg" />
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-4 control-label">* {{'LABEL_user' | translate:translationData}}</label>
                 <div class="col-sm-8">
                   <span ng-hide="editFlg">{{client.mainSchemaSettings.user}}</span>
-                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" ng-show="editFlg" />
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user" placeholder="maihamadb" ng-show="editFlg" />
                 </div>
               </div>
               <div class="form-group">
