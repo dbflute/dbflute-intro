@@ -15,14 +15,9 @@
  */
 package org.dbflute.intro.app.logic.intro;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.jar.Manifest;
+
+import org.dbflute.intro.IntroBoot;
 
 /**
  * @author p1us2er0
@@ -44,28 +39,7 @@ public class IntroInfoLogic {
     public static final String INI_FILE_PATH = BASE_DIR_PATH + "/dbflute-intro.ini";
 
     public Map<String, Object> getManifestMap() {
-        Map<String, Object> manifestMap = new LinkedHashMap<String, Object>();
-        InputStream inputStream = null;
-        try {
-            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            Enumeration<URL> resources = contextClassLoader.getResources("META-INF/MANIFEST.MF");
-            while (resources.hasMoreElements()) {
-                inputStream = resources.nextElement().openStream();
-                Manifest manifest = new Manifest(inputStream);
-                if (!"dbflute-intro".equals(manifest.getMainAttributes().getValue("Implementation-Title"))) {
-                    continue;
-                }
-
-                for (Entry<Object, Object> entry : manifest.getMainAttributes().entrySet()) {
-                    manifestMap.put(String.valueOf(entry.getKey()), entry.getValue());
-                }
-
-                break;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return manifestMap;
+        return IntroBoot.getManifestMap();
     }
 
     // TODO jflute intro: unused? (2016/07/05)
