@@ -33,7 +33,8 @@ import org.dbflute.jetty.JettyBoot;
 public class IntroBoot {
 
     private static final String LASTA_ENV_KEY = "lasta.env";
-    private static final int DEFAULT_PORT = 8926;
+    private static final int DEVELOPMENT_PORT = 8925;
+    private static final int PRODUCTION_PORT = 8926;
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
@@ -53,7 +54,8 @@ public class IntroBoot {
     }
 
     public static int getPort() {
-        return Integer.parseInt(System.getProperty("port", String.valueOf(DEFAULT_PORT)));
+        final int defaultPort = isDevelopment() ? DEVELOPMENT_PORT : PRODUCTION_PORT;
+        return Integer.parseInt(System.getProperty("port", String.valueOf(defaultPort)));
     }
 
     private static boolean isDevelopment() {
