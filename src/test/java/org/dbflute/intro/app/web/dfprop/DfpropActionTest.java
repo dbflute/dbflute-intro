@@ -46,8 +46,9 @@ public class DfpropActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         TestingJsonData<List<DfpropBean>> jsonData = validateJsonData(response);
-        assertHasAnyElement(jsonData.getJsonBean());
-        jsonData.getJsonBean().forEach(dfpropBean -> {
+        List<DfpropBean> dfpropList = jsonData.getJsonResult();
+        assertHasAnyElement(dfpropList);
+        dfpropList.forEach(dfpropBean -> {
             log(dfpropBean.fileName);
             assertTrue(dfpropBean.fileName.endsWith(".dfprop"));
         });

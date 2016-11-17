@@ -49,7 +49,7 @@ public class PlaysqlActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         TestingJsonData<List<PlaysqlBean>> jsonData = validateJsonData(response);
-        List<PlaysqlBean> beans = jsonData.getJsonBean();
+        List<PlaysqlBean> beans = jsonData.getJsonResult();
         assertHasAnyElement(beans);
         beans.forEach(bean -> {
             log(bean.fileName);
