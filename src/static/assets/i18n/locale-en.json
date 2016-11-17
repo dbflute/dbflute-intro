@@ -4,11 +4,11 @@
 
   "LABEL_INTRO_HOME_TITLE" : "DBFlute Intro",
 
-  "LABEL_projectName" : "Client Project (DB name)",
+  "LABEL_projectName" : "Project Name (DB name)",
   "LABEL_databaseCode" : "DBMS",
   "LABEL_languageCode" : "Language",
   "LABEL_containerCode": "DI Container",
-  "LABEL_packageBase" : "Generation Package Base",
+  "LABEL_packageBase" : "Generation Package",
   "LABEL_jdbcDriverJarPath" : "JDBC Driver Path",
   "LABEL_dbfluteVersion" : "DBFlute Version",
   "LABEL_jdbcDriverFqcn" : "JDBC DRIVER",

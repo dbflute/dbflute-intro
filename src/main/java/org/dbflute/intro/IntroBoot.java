@@ -15,6 +15,15 @@
  */
 package org.dbflute.intro;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.jar.Manifest;
+
 import org.dbflute.jetty.JettyBoot;
 
 /**
@@ -23,13 +32,14 @@ import org.dbflute.jetty.JettyBoot;
  */
 public class IntroBoot {
 
-    // TODO jflute intro: default port (2016/08/02)
-    protected static final int DEFAULT_PORT = 9000;
+    private static final String LASTA_ENV_KEY = "lasta.env";
+    private static final int DEVELOPMENT_PORT = 8925;
+    private static final int PRODUCTION_PORT = 8926;
 
-    // TODO jflute intro: automatically set lasta.env in production (2016/11/10)
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
+        automaticallySetupProduction();
         JettyBoot boot = new JettyBoot(getPort(), "/");
-        if (isNoneEnv()) { // development
+        if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
             boot.browseOnDesktop();
@@ -37,11 +47,49 @@ public class IntroBoot {
         boot.bootAwait();
     }
 
-    public static int getPort() {
-        return Integer.parseInt(System.getProperty("port", String.valueOf(DEFAULT_PORT)));
+    private static void automaticallySetupProduction() {
+        if (hasManifest() && isDevelopment()) { // booting by war without lasta.env
+            System.setProperty(LASTA_ENV_KEY, "production"); // automatically set to simple booting
+        }
     }
 
-    private static boolean isNoneEnv() {
-        return System.getProperty("lasta.env") == null;
+    public static int getPort() {
+        final int defaultPort = isDevelopment() ? DEVELOPMENT_PORT : PRODUCTION_PORT;
+        return Integer.parseInt(System.getProperty("port", String.valueOf(defaultPort)));
+    }
+
+    private static boolean isDevelopment() {
+        return System.getProperty(LASTA_ENV_KEY) == null;
+    }
+
+    // ===================================================================================
+    //                                                                            Manifest
+    //                                                                            ========
+    private static boolean hasManifest() {
+        return !getManifestMap().isEmpty();
+    }
+
+    public static Map<String, Object> getManifestMap() { // copied from IntroInfoLogic
+        String manifestPath = "META-INF/MANIFEST.MF";
+        Map<String, Object> manifestMap = new LinkedHashMap<String, Object>();
+        InputStream inputStream = null;
+        try {
+            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            Enumeration<URL> resources = contextClassLoader.getResources(manifestPath);
+            while (resources.hasMoreElements()) {
+                inputStream = resources.nextElement().openStream();
+                Manifest manifest = new Manifest(inputStream);
+                if (!"dbflute-intro".equals(manifest.getMainAttributes().getValue("Implementation-Title"))) {
+                    continue;
+                }
+                for (Entry<Object, Object> entry : manifest.getMainAttributes().entrySet()) {
+                    manifestMap.put(String.valueOf(entry.getKey()), entry.getValue());
+                }
+                break;
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to get manifest file: " + manifestPath, e);
+        }
+        return manifestMap;
     }
 }

@@ -75,8 +75,10 @@ public class WelcomeAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    protected ClientModel mappingToClientModel(WelcomeCreateBody.ClientPart clientBody) {
-        // TODO jflute intro: re-making (2016/08/12)
+    // ===================================================================================
+    //                                                                             Mapping
+    //                                                                             =======
+    private ClientModel mappingToClientModel(WelcomeCreateBody.ClientPart clientBody) {
         return newClientModel(clientBody);
     }
 

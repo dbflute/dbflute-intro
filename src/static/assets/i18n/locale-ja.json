@@ -4,11 +4,11 @@
 
   "LABEL_INTRO_HOME_TITLE" : "DBFlute Intro",
 
-  "LABEL_projectName" : "クライアントプロジェクト (DB名)",
+  "LABEL_projectName" : "プロジェクト名 (DB名)",
   "LABEL_databaseCode" : "DBMS",
   "LABEL_languageCode" : "言語",
   "LABEL_containerCode": "DIコンテナ",
-  "LABEL_packageBase" : "基底の自動生成パッケージ",
+  "LABEL_packageBase" : "自動生成パッケージ",
   "LABEL_jdbcDriverJarPath" : "JDBCドライバのパス",
   "LABEL_dbfluteVersion" : "DBFluteバージョン",
   "LABEL_jdbcDriverFqcn" : "JDBCドライバ",

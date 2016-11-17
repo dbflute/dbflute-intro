@@ -40,7 +40,7 @@ public class ClientActionTest extends UnitIntroTestCase {
         // ## Assert ##
         showJson(response);
         TestingJsonData<List<ClientRowResult>> jsonData = validateJsonData(response);
-        List<ClientRowResult> detailBeanList = jsonData.getJsonBean();
+        List<ClientRowResult> detailBeanList = jsonData.getJsonResult();
         assertHasAnyElement(detailBeanList);
     }
 }
