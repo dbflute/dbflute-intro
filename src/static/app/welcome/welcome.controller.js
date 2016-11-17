@@ -39,7 +39,6 @@ angular.module('dbflute-intro')
         schemaSyncCheckMap: {},
         dbfluteVersion: ""
     }; // model of current client
-    $scope.editFlg = true; // TODO hakiba can be deleted by jflute
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
 
