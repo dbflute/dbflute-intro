@@ -1,7 +1,14 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container">
-  <h2>DBFlute Client {{client.projectName}} for {{client.databaseCode}}, {{client.languageCode}}, {{client.containerCode}}</h2>
+  <h2>DBFlute Client {{client.projectName}}</h2>
+  <div class="col-sm-6">
+    <p class="text-right">
+      for {{client.databaseCode}}, {{client.languageCode}}, {{client.containerCode}}
+    </p>
+  </div>
   <div class="col-sm-12" ng-show="!editFlg">
+    <div class="col-sm-9">
+    </div>
     <h3>Documents</h3>
     <div class="col-sm-3">
       <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="Generate Documents (jdbc, doc)" />

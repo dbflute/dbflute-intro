@@ -5,6 +5,16 @@ body {
   background: #ffbbbb;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: #222;
+  font-family: Times, "Times New Roman", "Hiragino Mincho Pro", "ƒqƒ‰ƒMƒm–¾’© Pro W3", "MS P Mincho", "‚l‚r ‚o–¾’©", serif;
+}
+h2 {
+  padding: 1px 10px 0 40px;
+  line-height: 62px;
+  background: transparent url(../image/parts/head-score.png) no-repeat;
+}
+
 button {
   outline: none !important;
 }
