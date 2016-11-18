@@ -31,7 +31,8 @@ public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
     @Override
     public boolean isForcedRoutingExcept(HttpServletRequest request, String requestPath) {
         // of course, request to angular resources does not need routing
-        return !requestPath.startsWith(API_URL_PREFIX);
+        // (requestPath might contain /dbflute-intro/ so use contains())
+        return !requestPath.contains(API_URL_PREFIX);
     }
 
     @Override
