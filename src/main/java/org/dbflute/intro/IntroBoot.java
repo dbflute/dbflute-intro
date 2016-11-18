@@ -33,12 +33,12 @@ import org.dbflute.jetty.JettyBoot;
 public class IntroBoot {
 
     private static final String LASTA_ENV_KEY = "lasta.env";
-    private static final int DEVELOPMENT_PORT = 8925;
+    private static final int DEVELOPMENT_PORT = 8925; // related to proxy.js
     private static final int PRODUCTION_PORT = 8926;
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        JettyBoot boot = new JettyBoot(getPort(), "/");
+        JettyBoot boot = new JettyBoot(getPort(), "/"); // no context path
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
