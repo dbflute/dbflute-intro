@@ -50,7 +50,7 @@ ext {
 
             // Testing
             junit : '4.8.2',
-            utflute : '0.6.1D',
+            utflute : '0.6.2',
             javaparser : '2.5.1'
         ]
 }
