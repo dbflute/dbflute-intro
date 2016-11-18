@@ -1,9 +1,14 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container">
-<h2>DBFlute {{client.projectName}} Client from {{client.databaseCode}}, {{client.languageCode}}, {{client.containerCode}}</h2>
+  <h2>DBFlute Client {{client.projectName}} for {{client.databaseCode}}, {{client.languageCode}}, {{client.containerCode}}</h2>
   <div class="col-sm-12" ng-show="!editFlg">
-    <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="Generate Documents" />
-    <p ng-show="client.hasSchemahtml"><a href="" ng-click="openSchemaHTML(client)">Open table document</a>(SchemaHTML)</p>
-    <p ng-show="client.hasHistoryhtml"><a href="" ng-click="openHistoryHTML(client)">Open table history</a>(HistoryHTML)</p>
+    <h3>Documents</h3>
+    <div class="col-sm-3">
+      <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="Generate Documents (jdbc, doc)" />
+    </div>
+    <div class="col-sm-9">
+      <p ng-show="client.hasSchemahtml"><strong><a href="" ng-click="openSchemaHTML(client)">Open the table layout, SchemaHTML</a></strong></p>
+      <p ng-show="client.hasHistoryhtml"><strong><a href="" ng-click="openHistoryHTML(client)">Open the table history, HistoryHTML</a></strong></p>
+    </div>
   </div>
 </div>
