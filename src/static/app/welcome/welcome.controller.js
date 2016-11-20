@@ -39,10 +39,11 @@ angular.module('dbflute-intro')
         schemaSyncCheckMap: {},
         dbfluteVersion: ""
     }; // model of current client
-    $scope.oRMapperOptionsFlg = false;
+    // TODO make function with create.controller.js by hakiba
     $scope.needsJdbcDriverJarPath = true;
-    $scope.option = {testConnection: true};
     $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
+    $scope.oRMapperOptionsFlg = false;
+    $scope.option = {testConnection: true};
 
     // ===================================================================================
     //                                                                      Initial Method
@@ -66,7 +67,6 @@ angular.module('dbflute-intro')
     };
     $scope.changeDatabase = function (client) {
       $scope.needsJdbcDriverJarPath = !$scope.databaseCodeNotNeedsJdbcDriverJarPath.includes(client.databaseCode);
-      console.log("needsJdbcDriverJarPath:" + $scope.needsJdbcDriverJarPath);
     	var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
