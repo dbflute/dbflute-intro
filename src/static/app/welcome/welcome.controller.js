@@ -77,9 +77,11 @@ angular.module('dbflute-intro')
         templateUrl:"progress.html",
         backdrop:"static",keyboard:false
       });
-      ApiFactory.createWelcomeClient(client, testConnection).then(function (response) {
+      ApiFactory.createWelcomeClient(client, testConnection).then(function (success) {
         modalInstance.close();
-        $state.go('client', { projectName: client.projectName });
+        $state.go('client', {projectName: client.projectName})
+      }, function(error) {
+        modalInstance.close();
       });
     };
 
