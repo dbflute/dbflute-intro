@@ -35,6 +35,11 @@ angular.module('dbflute-intro')
             $scope.versions = response.data;
         });
     };
+    $scope.setLatestEngineVerison = function (client) {
+        ApiFactory.engineLatest().then(function (response) {
+          client.dbfluteVersion = response.data.latestReleaseVersion;
+        })
+    };
 
     // ===================================================================================
     //                                                                        Event Method
@@ -61,4 +66,5 @@ angular.module('dbflute-intro')
     //                                                                          ==========
     $scope.findClassifications();
     $scope.engineVersions();
+    $scope.setLatestEngineVerison($scope.client);
 });
