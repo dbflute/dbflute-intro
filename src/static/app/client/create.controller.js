@@ -16,7 +16,7 @@ angular.module('dbflute-intro')
         schemaSyncCheckMap: {},
         dbfluteVersion: ''
     }; // model of current client
-    $scope.needsJdbcDriverJarPath = true;
+    $scope.needsJdbcDriverJarPath = false;
     $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};

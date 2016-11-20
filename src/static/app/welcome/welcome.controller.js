@@ -40,7 +40,7 @@ angular.module('dbflute-intro')
         dbfluteVersion: ""
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
-    $scope.needsJdbcDriverJarPath = true;
+    $scope.needsJdbcDriverJarPath = false;
     $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
@@ -79,7 +79,7 @@ angular.module('dbflute-intro')
       });
       ApiFactory.createWelcomeClient(client, testConnection).then(function (success) {
         modalInstance.close();
-        $state.go('client', {projectName: client.projectName})
+        $state.go('home');
       }, function(error) {
         modalInstance.close();
       });
