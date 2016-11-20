@@ -32,13 +32,16 @@ public class BootingInternetDomain {
     }
 
     public String toCompleteDomain() { // with trailing slash
-        final String portSuffix = buildPortSuffix();
-        return "http://" + serverDomain + portSuffix + "/";
+        return buildCompleteDomain("");
     }
 
     public String toCompleteApiDomain() { // with trailing slash
+        return buildCompleteDomain("api/");
+    }
+
+    private String buildCompleteDomain(String rearElement) {
         final String portSuffix = buildPortSuffix();
-        return "http://" + serverDomain + portSuffix + "/api";
+        return "http://" + serverDomain + portSuffix + "/" + rearElement;
     }
 
     private String buildPortSuffix() {
