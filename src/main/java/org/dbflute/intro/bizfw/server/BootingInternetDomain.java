@@ -36,6 +36,11 @@ public class BootingInternetDomain {
         return "http://" + serverDomain + portSuffix + "/";
     }
 
+    public String toCompleteApiDomain() { // with trailing slash
+        final String portSuffix = buildPortSuffix();
+        return "http://" + serverDomain + portSuffix + "/api";
+    }
+
     private String buildPortSuffix() {
         return "localhost".equals(serverDomain) ? ":" + port : "";
     }

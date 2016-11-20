@@ -62,8 +62,11 @@ public class IntroAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Map<String, Object>> configuration() {
         Map<String, Object> map = new LinkedHashMap<>();
-        String serverUrl = new BootingInternetDomain(config).toCompleteDomain();
+        BootingInternetDomain domain = new BootingInternetDomain(config);
+        String serverUrl = domain.toCompleteDomain();
+        String apiServerUrl = domain.toCompleteApiDomain();
         map.put("serverUrl", serverUrl);
+        map.put("apiServerUrl", apiServerUrl);
         return asJson(map);
     }
 }

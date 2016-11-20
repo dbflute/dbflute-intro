@@ -44,11 +44,11 @@ angular.module('dbflute-intro')
     //                                                                            Document
     //                                                                            ========
     $scope.openSchemaHTML = function(client) {
-        $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/schemahtml/');
+        $window.open($scope.configuration['apiServerUrl'] + '/document/' + client.projectName + '/schemahtml/');
     };
 
     $scope.openHistoryHTML = function(client) {
-        $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/historyhtml/');
+        $window.open($scope.configuration['apiServerUrl'] + '/document/' + client.projectName + '/historyhtml/');
     };
 
     // ===================================================================================
