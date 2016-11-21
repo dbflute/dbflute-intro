@@ -34,7 +34,7 @@ public class IntroBoot {
 
     private static final String LASTA_ENV_KEY = "lasta.env";
     private static final int DEVELOPMENT_PORT = 8925; // related to proxy.js
-    private static final int PRODUCTION_PORT = 8926;
+    private static final int PRODUCTION_PORT = 8926; // contains DBFlute birthdate
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
