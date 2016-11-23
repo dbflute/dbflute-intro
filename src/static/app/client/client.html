@@ -11,7 +11,7 @@
     </div>
     <h3>Documents</h3>
     <div class="col-sm-3">
-      <input type="button" class="btn btn-primary" ng-click="task(client, 'doc')" value="Generate Documents (jdbc, doc)" />
+      <input type="button" class="btn btn-primary" ng-click="task('doc')" value="Generate Documents (jdbc, doc)" />
     </div>
     <div class="col-sm-9">
       <p ng-show="client.hasSchemahtml"><strong><a href="" ng-click="openSchemaHTML(client)">Open the table layout, SchemaHTML</a></strong></p>
@@ -19,3 +19,13 @@
     </div>
   </div>
 </div>
+<!-- progress modal -->
+<script type="text/ng-template" id="progress.html">
+  <div class="modal-header">
+    Generating...
+  </div>
+  <div class="modal-body">
+    <progressbar class="progress-striped active" animate="false" value="100">
+    </progressbar>
+  </div>
+</script>

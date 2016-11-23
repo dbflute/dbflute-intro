@@ -62,7 +62,7 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. 10 */
     String JDBC_CONNECTION_POOLING_SIZE = "jdbc.connection.pooling.size";
 
-    /** The key of the configuration. e.g. localhost:{0} */
+    /** The key of the configuration. e.g. localhost */
     String SERVER_DOMAIN = "server.domain";
 
     /**
@@ -221,8 +221,8 @@ public interface IntroEnv {
 
     /**
      * Get the value for the key 'server.domain'. <br>
-     * The value is, e.g. localhost:{0} <br>
-     * comment: domain to access this application from internet, e.g. for registration mail
+     * The value is, e.g. localhost <br>
+     * comment: domain to access this application from internet without port number
      * @return The value of found property. (NotNull: if not found, exception but basically no way)
      */
     String getServerDomain();

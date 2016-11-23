@@ -15,11 +15,6 @@
  */
 package org.dbflute.intro.app.web.task;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
@@ -28,7 +23,9 @@ import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.servlet.request.ResponseManager;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author p1us2er0
@@ -44,8 +41,6 @@ public class TaskAction extends IntroBaseAction {
     private TaskExecutionLogic taskExecutionLogic;
     @Resource
     private IntroClsAssist introClsAssist;
-    @Resource
-    private ResponseManager responseManager;
 
     // ===================================================================================
     //                                                                             Execute
@@ -53,14 +48,7 @@ public class TaskAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
-        HttpServletResponse response = prepareTaskResponse();
-        taskExecutionLogic.execute(project, taskTypeList, env, () -> response.getOutputStream());
+        taskExecutionLogic.execute(project, taskTypeList, env);
         return JsonResponse.asEmptyBody();
-    }
-
-    private HttpServletResponse prepareTaskResponse() {
-        HttpServletResponse response = responseManager.getResponse();
-        response.setContentType("text/plain; charset=UTF-8");
-        return response;
     }
 }

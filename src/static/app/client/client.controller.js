@@ -4,7 +4,7 @@
  * Main Controller
  */
 angular.module('dbflute-intro')
-        .controller('ClientCtrl', function ($scope, $window, $state, $stateParams, ApiFactory) {
+        .controller('ClientCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
     // TODO deco remove unused functions
     //  Bean -> Body
     var convertParam = function(param) {
@@ -54,8 +54,18 @@ angular.module('dbflute-intro')
     // ===================================================================================
     //                                                                               Task
     //                                                                              ======
-    $scope.task = function(client, task) {
-        $window.open('api/task/execute/' + client.projectName + '/' + task);
+    $scope.task = function(task) {
+        var modalInstance = $uibModal.open({
+            templateUrl:"progress.html",
+            backdrop:"static",keyboard:false
+        });
+
+        ApiFactory.task($scope.projectName, task).then(function (success) {
+            modalInstance.close();
+            $scope.prepareCurrentProject($scope.projectName);
+        }, function (error) {
+            modalInstance.close();
+        });
     };
 
     // ===================================================================================

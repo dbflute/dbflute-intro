@@ -15,26 +15,24 @@
  */
 package org.dbflute.intro.app.logic.task;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.tellfailure.TaskExecuteFailureException;
 import org.dbflute.intro.bizfw.util.ProcessUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author p1us2er0
@@ -54,8 +52,7 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public boolean execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env,
-            CommandOutputStreamProvider streamProvider) {
+    public boolean execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env){
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         return dbfluteTaskList.stream().allMatch(processBuilder -> {
@@ -68,14 +65,9 @@ public class TaskExecutionLogic {
             final String clientPath = introPhysicalLogic.buildClientPath(clientProject);
             processBuilder.directory(new File(clientPath));
 
-            int resultCode = executeCommand(processBuilder, streamProvider);
+            int resultCode = executeCommand(processBuilder);
             return resultCode == 0;
         });
-    }
-
-    @FunctionalInterface
-    public static interface CommandOutputStreamProvider {
-        OutputStream provide() throws IOException;
     }
 
     // ===================================================================================
@@ -114,7 +106,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Process
     //                                                                             =======
-    private int executeCommand(ProcessBuilder processBuilder, CommandOutputStreamProvider streamProvider) {
+    private int executeCommand(ProcessBuilder processBuilder) {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
@@ -123,8 +115,8 @@ public class TaskExecutionLogic {
             throw new IllegalStateException(e);
         }
         int result = 0;
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
-                ; OutputStream ous = streamProvider.provide() // for e.g. GUI screen
         ) {
             while (true) {
                 String line = br.readLine();
@@ -132,9 +124,7 @@ public class TaskExecutionLogic {
                     break;
                 }
 
-                IOUtils.write(line, ous);
-                IOUtils.write("\n", ous); // LF fixedly
-                ous.flush();
+                builder.append(line).append("\n"); // for error message
 
                 if (line.equals("BUILD FAILED")) {
                     result = 1;
@@ -151,6 +141,9 @@ public class TaskExecutionLogic {
         }
         if (result == 0) {
             result = process.exitValue();
+        }
+        if (result != 0) {
+            throw new TaskExecuteFailureException("Failed to execute task", builder.toString());
         }
         return result;
     }

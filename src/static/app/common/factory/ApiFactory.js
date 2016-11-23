@@ -118,6 +118,16 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 method : 'POST',
                 url : 'api/engine/remove/' + params.version
             });
+        },
+
+        // ===============================================================================
+        //                                                                            Task
+        //                                                                            ====
+        task: function(projectName, task) {
+            return $http({
+                method: 'POST',
+                url: 'api/task/execute/' + projectName + '/' + task
+            });
         }
     };
 });

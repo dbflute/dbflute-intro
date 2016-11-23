@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**
@@ -155,6 +154,9 @@ public class IntroMessages extends IntroLabels {
 
     /** The key of the message: the playsql file is not found: {0} */
     public static final String ERRORS_APP_PLAYSQL_FILE_NOT_FOUND = "{errors.app.playsql.file.notFound}";
+
+    /** The key of the message: the task execute failure: {0} */
+    public static final String ERRORS_APP_TASK_EXECUTE_FAILURE = "{errors.app.task.execute.failure}";
 
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
@@ -791,6 +793,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppPlaysqlFileNotFound(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_PLAYSQL_FILE_NOT_FOUND, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.task.execute.failure' with parameters.
+     * <pre>
+     * message: the task execute failure: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppTaskExecuteFailure(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_TASK_EXECUTE_FAILURE, arg0));
         return this;
     }
 
