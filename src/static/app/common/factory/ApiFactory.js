@@ -56,14 +56,14 @@ angular.module('dbflute-intro').factory('ApiFactory',
         createClient: function(client, testConnection) {
             return $http({
                 method : 'POST',
-                url : 'api/client/create',
+                url : 'api/client/create/' + client.projectName,
                 data : {client: client, testConnection: testConnection}
             });
         },
         updateClient: function(clientBody, testConnection) {
             return $http({
                 method : 'POST',
-                url : 'api/client/update',
+                url : 'api/client/edit/' + clientBody.projectName,
                 data : {clientBody: clientBody, testConnection: testConnection}
             });
         },

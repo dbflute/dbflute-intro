@@ -85,7 +85,7 @@ angular.module('dbflute-intro')
      };
 
     $scope.goToClient = function(client) {
-        $state.go('client', { projectName: client.projectName });
+        $state.go('operate', { projectName: client.projectName });
     };
 
     $scope.goToClientCreate = function() {

@@ -185,9 +185,9 @@ public class ClientAction extends IntroBaseAction {
     //                                                Update
     //                                                ------
     @Execute
-    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -196,9 +196,9 @@ public class ClientAction extends IntroBaseAction {
     }
 
     @Execute
-    public JsonResponse<Void> update(ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -206,22 +206,22 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(ClientPart clientBody) {
-        ClientModel clientModel = newClientModel(clientBody);
+    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
+        ClientModel clientModel = newClientModel(projectName, clientBody);
         // TODO jflute intro: re-making (2016/08/12)
         return clientModel;
     }
 
-    private ClientModel newClientModel(ClientPart clientBody) {
-        ProjectMeta projectMeta = prepareProjectMeta(clientBody);
+    private ClientModel newClientModel(String projectName, ClientPart clientBody) {
+        ProjectMeta projectMeta = prepareProjectMeta(projectName, clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
         ClientModel clientModel = new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
         return clientModel;
     }
 
-    private ProjectMeta prepareProjectMeta(ClientPart clientBody) {
-        return new ProjectMeta(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
+    private ProjectMeta prepareProjectMeta(String projectName, ClientPart clientBody) {
+        return new ProjectMeta(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {

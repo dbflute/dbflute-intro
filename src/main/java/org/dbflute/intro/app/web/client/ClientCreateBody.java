@@ -15,13 +15,12 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.Map;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.Required;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.lastaflute.web.validation.Required;
+import java.util.Map;
 
 /**
  * @author p1us2er0
@@ -35,8 +34,6 @@ public class ClientCreateBody {
 
     public static class ClientPart {
 
-        @Required
-        public String projectName;
         @Required
         public CDef.TargetDatabase databaseCode;
         @Required
