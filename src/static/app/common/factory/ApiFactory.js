@@ -110,13 +110,13 @@ angular.module('dbflute-intro').factory('ApiFactory',
         downloadEngine: function(params) {
             return $http({
                 method : 'POST',
-                url : 'api/engine/download/' + params.version
+                url : 'api/engine/download/' + params.version + '/'
             });
         },
         removeEngine: function(params) {
             return $http({
                 method : 'POST',
-                url : 'api/engine/remove/' + params.version
+                url : 'api/engine/remove/' + params.version + '/'
             });
         },
 
