@@ -4,10 +4,10 @@ The GUI Application for DBFlute Management
 
 # For Intro users
 ## How to use Intro
-1. download jar file
+1. download war file
 2. `$ java -jar dbflute-intro.war`
 
-TODO jflute how to distribution?
+http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html
 
 # For committers or contributers
 ## How to compile (for committer)
