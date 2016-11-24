@@ -15,22 +15,25 @@
  */
 package org.dbflute.intro.bizfw.tellfailure;
 
-import org.dbflute.intro.mylasta.action.IntroMessages;
-
 import java.util.function.Consumer;
+
+import org.dbflute.intro.bizfw.tellfailure.base.IntroApplicationException;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 
 /**
  * @author deco
+ * @author jflute
  */
 public class TaskExecuteFailureException extends IntroApplicationException {
 
     private static final long serialVersionUID = 1L;
 
-    public TaskExecuteFailureException(String debugMsg, String executeResult) {
-        super(debugMsg, prepareMessages(executeResult));
+    public TaskExecuteFailureException(String debugMsg, String failureHint, Throwable e) {
+        super(debugMsg, prepareMessages(failureHint), e);
     }
 
     private static Consumer<IntroMessages> prepareMessages(String failureHint) {
-        return messages -> messages.addErrorsAppTaskExecuteFailure(GLOBAL, failureHint);
+        String prefix = failureHint != null && failureHint.contains("\n") ? "\n" : "";
+        return messages -> messages.addErrorsAppTaskExecuteFailure(GLOBAL, prefix + failureHint);
     }
 }

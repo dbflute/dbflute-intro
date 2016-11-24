@@ -15,15 +15,6 @@
  */
 package org.dbflute.intro.app.logic.task;
 
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.tellfailure.TaskExecuteFailureException;
-import org.dbflute.intro.bizfw.util.ProcessUtil;
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.dbflute.optional.OptionalThing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +25,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.util.ProcessUtil;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.dbflute.optional.OptionalThing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author p1us2er0
  * @author jflute
+ * @author deco
  */
 public class TaskExecutionLogic {
 
@@ -52,10 +53,10 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public boolean execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env){
+    public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
-        return dbfluteTaskList.stream().allMatch(processBuilder -> {
+        for (ProcessBuilder processBuilder : dbfluteTaskList) {
             final Map<String, String> environment = processBuilder.environment();
             environment.put("pause_at_end", "n");
             environment.put("answer", "y");
@@ -64,10 +65,8 @@ public class TaskExecutionLogic {
             });
             final String clientPath = introPhysicalLogic.buildClientPath(clientProject);
             processBuilder.directory(new File(clientPath));
-
-            int resultCode = executeCommand(processBuilder);
-            return resultCode == 0;
-        });
+            executeCommand(processBuilder);
+        }
     }
 
     // ===================================================================================
@@ -106,7 +105,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Process
     //                                                                             =======
-    private int executeCommand(ProcessBuilder processBuilder) {
+    private void executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
@@ -114,8 +113,8 @@ public class TaskExecutionLogic {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-        int result = 0;
-        StringBuilder builder = new StringBuilder();
+        int resultCode = 0;
+        StringBuilder logSb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
         ) {
             while (true) {
@@ -124,31 +123,70 @@ public class TaskExecutionLogic {
                     break;
                 }
 
-                builder.append(line).append("\n"); // for error message
+                logSb.append(line).append("\n"); // for error message, fixedly LF
 
-                if (line.equals("BUILD FAILED")) {
-                    result = 1;
+                if (isErrorLine(line)) {
+                    resultCode = 1;
                 }
             }
         } catch (IOException e) {
-            if (isNazoErrorByJetty(e)) {
+            if (isNazoErrorByJetty(e)) { // #for_now may be unneeded by quitting output stream by jflute
                 logger.debug("Nazo Error! {}", processBuilder, e);
-                return result;
+                return;
             } else {
                 String msg = "Failed to execute the command: " + process;
                 throw new IllegalStateException(msg, e);
             }
         }
-        if (result == 0) {
-            result = process.exitValue();
+        if (resultCode == 0) {
+            resultCode = waitForProcessEnding(process);
         }
-        if (result != 0) {
-            throw new TaskExecuteFailureException("Failed to execute task", builder.toString());
-        }
-        return result;
+        handleErrorResultCode(resultCode, logSb);
+    }
+
+    private boolean isErrorLine(String line) { // depending on Apache Ant
+        return line.equals("BUILD FAILED");
     }
 
     private boolean isNazoErrorByJetty(IOException e) {
         return e.getClass().getSimpleName().equals("EofException") && e.getMessage() != null && e.getMessage().contains("Closed");
+    }
+
+    private int waitForProcessEnding(Process process) {
+        try {
+            return process.waitFor();
+        } catch (InterruptedException continued) {
+            logger.warn("Failed to wait for the process: " + process, continued);
+            return 0; // unknown as success for now
+        }
+    }
+
+    private void handleErrorResultCode(int resultCode, StringBuilder logSb) throws TaskErrorResultException {
+        if (resultCode != 0) {
+            // #hope want to set task type as exception info by jflute
+            String msg = "Failed to execute the task: resultCode=" + resultCode;
+            throw new TaskErrorResultException(msg, resultCode, logSb.toString());
+        }
+    }
+
+    public static class TaskErrorResultException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+        private final String processLog;
+        private final int resultCode;
+
+        public TaskErrorResultException(String msg, int resultCode, String processLog) {
+            super(msg);
+            this.resultCode = resultCode;
+            this.processLog = processLog;
+        }
+
+        public int getResultCode() {
+            return resultCode;
+        }
+
+        public String getProcessLog() {
+            return processLog;
+        }
     }
 }
