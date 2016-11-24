@@ -11,7 +11,7 @@
   <property name="log.pattern" value="%d [%t] %-5p \\(%C{0}@%M\\(\\):%L\\) - %m%n"/>
   <property name="log.file.basedir" value="${log.file.basedir:-/tmp/lastaflute/undefinedbasedir}"/>
   <property name="backup.date.suffix" value="_%d{yyyyMMdd}"/>
-  <property name="backup.max.history" value="180"/>
+  <property name="backup.max.history" value="10"/>
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder><pattern>${log.pattern}</pattern></encoder>
