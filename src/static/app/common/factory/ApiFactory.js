@@ -107,6 +107,7 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/engine/versions'
             });
         },
+        // needs trailing slash if URL parameter contains dot
         downloadEngine: function(params) {
             return $http({
                 method : 'POST',
