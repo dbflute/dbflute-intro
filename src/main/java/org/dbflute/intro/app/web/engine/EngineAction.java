@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,61 @@
 package org.dbflute.intro.app.web.engine;
 
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.simple.DbFluteEngineLogic;
-import org.dbflute.intro.app.web.base.DbfluteIntroBaseAction;
+import org.dbflute.infra.dfprop.DfPublicProperties;
+import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
+import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
+import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
+import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author p1us2er0
  */
-public class EngineAction extends DbfluteIntroBaseAction {
+public class EngineAction extends IntroBaseAction {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
-    protected DbFluteEngineLogic dbFluteEngineLogic;
+    private PublicPropertiesLogic publicPropertiesLogic;
+    @Resource
+    private EngineInstallLogic engineInstallLogic;
+    @Resource
+    private EngineInfoLogic engineInfoLogic;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     @Execute
-    public JsonResponse<Properties> publicProperties() {
-        return asJson(dbFluteEngineLogic.getPublicProperties());
+    public JsonResponse<EngineLatestBean> latest() {
+        DfPublicProperties prop = publicPropertiesLogic.findProperties();
+        EngineLatestBean bean = mappingToLatestVersion(prop);
+        return asJson(bean);
+    }
+
+    private EngineLatestBean mappingToLatestVersion(DfPublicProperties prop) {
+        return new EngineLatestBean(prop.getDBFluteLatestReleaseVersion(), prop.getDBFluteLatestSnapshotVersion());
     }
 
     @Execute
     public JsonResponse<List<String>> versions() {
-        List<String> dbFluteVersionList = dbFluteEngineLogic.getExistedVersionList();
+        List<String> dbFluteVersionList = engineInfoLogic.getExistingVersionList();
         return asJson(dbFluteVersionList);
     }
 
     @Execute
-    public JsonResponse<Void> download(String version) {
-        dbFluteEngineLogic.download(version);
+    public JsonResponse<Void> download(String dbfluteVersion) {
+        engineInstallLogic.downloadUnzipping(dbfluteVersion);
         return JsonResponse.asEmptyBody();
     }
 
     @Execute
     public JsonResponse<Void> remove(String version) {
-        dbFluteEngineLogic.remove(version);
+        engineInstallLogic.remove(version);
         return JsonResponse.asEmptyBody();
     }
 }

@@ -6,6 +6,9 @@ eclipse {
         downloadSources=true
         file.whenMerged { cp ->
             cp.entries.findAll {
+                it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.path.startsWith('src/main/')
+            }*.output = sourceSets.main.output.classesDir.path - (projectDir.path + File.separator)
+            cp.entries.findAll {
                 it instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && it.path.startsWith('src/test/')
             }*.output = sourceSets.test.output.classesDir.path - (projectDir.path + File.separator)
             cp.entries.findAll {
@@ -28,7 +31,7 @@ tasks.eclipseJdt << {
     ext.originalOutputFile.withWriter(encoding) { writer ->
         lines.each { line ->
             writer << line
-            writer << "\r\n"
+            writer << "\n"
         }
     }
     assert outputFile.delete()
@@ -41,7 +44,7 @@ eclipse {
 
         file {
             withProperties { properties ->
-                def formatter = new XmlSlurper().parse('./gradle/eclipse/formatter.xml')
+                def formatter = new XmlSlurper().parse('./gradle/eclipse/code-formatter-profile.xml')
 
                 formatter.profile.setting.each {
                     properties.put(it.@id as String, it.@value as String)

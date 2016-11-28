@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,258 +15,240 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.dbfluteclient.ClientParam;
-import org.dbflute.intro.app.logic.dbfluteclient.DatabaseParam;
-import org.dbflute.intro.app.logic.dbfluteclient.DbFluteClientLogic;
-import org.dbflute.intro.app.logic.dbfluteclient.OptionParam;
-import org.dbflute.intro.app.logic.simple.DbFluteIntroLogic;
-import org.dbflute.intro.app.logic.simple.DbFluteTaskLogic;
-import org.dbflute.intro.app.web.base.DbfluteIntroBaseAction;
-import org.dbflute.intro.app.web.client.ClientCreateBody.ClientBody;
-import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean;
-import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.DatabaseBean;
-import org.dbflute.intro.app.web.client.ClientDetailBean.ClientBean.OptionBean;
+import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
+import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
+import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
+import org.dbflute.intro.app.model.client.ClientModel;
+import org.dbflute.intro.app.model.client.ProjectMeta;
+import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
+import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
+import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
+import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
+import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.response.StreamResponse;
-import org.lastaflute.web.servlet.request.ResponseManager;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author p1us2er0
+ * @author deco
+ * @author jflute
  */
-public class ClientAction extends DbfluteIntroBaseAction {
+public class ClientAction extends IntroBaseAction {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
-    private DbFluteClientLogic dbFluteClientLogic;
-
+    private ClientUpdateLogic clientUpdateLogic;
     @Resource
-    private DbFluteTaskLogic dbFluteTaskLogic;
-
+    private ClientInfoLogic clientInfoLogic;
     @Resource
-    private ResponseManager responseManager;
+    private TestConnectionLogic testConnectionLogic;
+    @Resource
+    private DocumentPhysicalLogic documentLogic;
+    @Resource
+    private TimeManager timeManager;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
+    // -----------------------------------------------------
+    //                                                Select
+    //                                                ------
     @Execute
-    public JsonResponse<Map<String, Map<?, ?>>> classification() {
-        Map<String, Map<?, ?>> classificationMap = dbFluteClientLogic.getClassificationMap();
-        return asJson(classificationMap);
-    }
-
-    @Execute
-    public JsonResponse<List<ClientDetailBean>> list() {
-        List<String> projectList = dbFluteClientLogic.getProjectList();
-        List<ClientDetailBean> clientDetailBeanList = projectList.stream().map(project -> {
-            ClientParam clientParam = dbFluteClientLogic.convClientParamFromDfprop(project);
-            return convert(clientParam);
+    public JsonResponse<List<ClientRowResult>> list() {
+        List<String> projectList = clientInfoLogic.getProjectList();
+        List<ClientRowResult> beans = projectList.stream().map(project -> {
+            return mappingToRowBean(clientInfoLogic.findClient(project).get());
         }).collect(Collectors.toList());
-
-        return asJson(clientDetailBeanList);
+        return asJson(beans);
     }
 
-    @Execute
-    public JsonResponse<ClientDetailBean> detail(String project) {
-        ClientParam clientParam = dbFluteClientLogic.convClientParamFromDfprop(project);
-        ClientDetailBean clientDetailBean = convert(clientParam);
-        return asJson(clientDetailBean);
-    }
-
-    protected ClientDetailBean convert(ClientParam clientParam) {
-        ClientDetailBean clientDetailBean = new ClientDetailBean();
-        ClientBean clientBean = new ClientBean();
-        clientBean.project = clientParam.getProject();
-        clientBean.database = clientParam.getDatabase();
-        clientBean.targetLanguage = clientParam.getTargetLanguage();
-        clientBean.targetContainer = clientParam.getTargetContainer();
-        clientBean.packageBase = clientParam.getPackageBase();
-        clientBean.jdbcDriver = clientParam.getJdbcDriver();
-
-        OptionalThing.ofNullable(clientParam.getDatabaseParam(), () -> {}).ifPresent(databaseParam -> {
-            DatabaseBean databaseBean = new DatabaseBean();
-            databaseBean.url = databaseParam.getUrl();
-            databaseBean.schema = databaseParam.getSchema();
-            databaseBean.user = databaseParam.getUser();
-            databaseBean.password = databaseParam.getPassword();
-            clientBean.databaseBean = databaseBean;
-        });
-
-        OptionalThing.ofNullable(clientParam.getSystemUserDatabaseParam(), () -> {}).ifPresent(databaseParam -> {
-            DatabaseBean databaseBean = new DatabaseBean();
-            databaseBean.url = databaseParam.getUrl();
-            databaseBean.schema = databaseParam.getSchema();
-            databaseBean.user = databaseParam.getUser();
-            databaseBean.password = databaseParam.getPassword();
-            clientBean.systemUserDatabaseBean = databaseBean;
-        });
-
-        clientBean.jdbcDriverJarPath = clientParam.getJdbcDriverJarPath();
-        clientBean.dbfluteVersion = clientParam.getDbfluteVersion();
-
-        OptionalThing.ofNullable(clientParam.getOptionParam(), () -> {}).ifPresent(optionParam -> {
-            OptionBean optionBean = new OptionBean();
-            optionBean.dbCommentOnAliasBasis = optionParam.isDbCommentOnAliasBasis();
-            optionBean.aliasDelimiterInDbComment = optionParam.getAliasDelimiterInDbComment();
-            optionBean.checkColumnDefOrderDiff = optionParam.isCheckColumnDefOrderDiff();
-            optionBean.checkDbCommentDiff = optionParam.isCheckDbCommentDiff();
-            optionBean.checkProcedureDiff = optionParam.isCheckProcedureDiff();
-            optionBean.generateProcedureParameterBean = optionParam.isGenerateProcedureParameterBean();
-            optionBean.procedureSynonymHandlingType = optionParam.getProcedureSynonymHandlingType();
-            clientBean.optionBean = optionBean;
-        });
-
-        clientBean.schemaSyncCheckMap = new LinkedHashMap<String, DatabaseBean>();
-        clientParam.getSchemaSyncCheckMap().entrySet().forEach(schemaSyncCheck -> {
-            OptionalThing.ofNullable(schemaSyncCheck.getValue(), () -> {}).ifPresent(databaseParam -> {
-                DatabaseBean databaseBean = new DatabaseBean();
-                databaseBean.url = databaseParam.getUrl();
-                databaseBean.schema = databaseParam.getSchema();
-                databaseBean.user = databaseParam.getUser();
-                databaseBean.password = databaseParam.getPassword();
-                clientBean.schemaSyncCheckMap.put(schemaSyncCheck.getKey(), databaseBean);
+    private ClientRowResult mappingToRowBean(ClientModel clientModel) {
+        ClientRowResult rowBean = new ClientRowResult();
+        prepareBasic(rowBean, clientModel);
+        prepareDatabase(rowBean, clientModel);
+        rowBean.systemUserSettings = (ClientRowResult.DatabaseSettingsPart) clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
+            return replaceSchemaMap.getAdditionalUserMap().flatMap(additionalUserMap -> {
+                return additionalUserMap.getSystemUserMap().map(systemUserMap -> {
+                    ClientRowResult.DatabaseSettingsPart databaseBean = new ClientRowResult.DatabaseSettingsPart();
+                    databaseBean.url = systemUserMap.getDbConnectionBox().getUrl();
+                    databaseBean.schema = systemUserMap.getDbConnectionBox().getSchema();
+                    databaseBean.user = systemUserMap.getDbConnectionBox().getUser();
+                    databaseBean.password = systemUserMap.getDbConnectionBox().getPassword();
+                    return databaseBean;
+                });
             });
-        });
+        }).orElse(null);
+        rowBean.optionBean = prepareOption(clientModel);
+        rowBean.schemaSyncCheckMap = new LinkedHashMap<>();
+        // #pending by jflute
+        //    Map<String, DatabaseInfoMap> schemaSyncCheckMap = clientModel.getSchemaSyncCheckMap();
+        //    if (schemaSyncCheckMap != null) {
+        //        clientBean.schemaSyncCheckMap = new LinkedHashMap<>();
+        //        schemaSyncCheckMap.entrySet().forEach(schemaSyncCheck -> {
+        //            DatabaseInfoMap schemaSyncCheckModel = schemaSyncCheck.getValue();
+        //            DatabaseBean schemaSyncCheckBean = new DatabaseBean();
+        //            schemaSyncCheckBean.url = schemaSyncCheckModel.getUrl();
+        //            schemaSyncCheckBean.schema = schemaSyncCheckModel.getSchema();
+        //            schemaSyncCheckBean.user = schemaSyncCheckModel.getUser();
+        //            schemaSyncCheckBean.password = schemaSyncCheckModel.getPassword();
+        //            clientBean.schemaSyncCheckMap.put(schemaSyncCheck.getKey(), schemaSyncCheckBean);
+        //        });
+        //    }
 
-        clientDetailBean.clientBean = clientBean;
-        String project = clientParam.getProject();
-        clientDetailBean.schemahtml = calcFile(project, "schema").exists();
-        clientDetailBean.historyhtml = calcFile(project, "history").exists();
-        clientDetailBean.replaceSchema = dbFluteClientLogic.existReplaceSchemaFile(project);
-        return clientDetailBean;
+        String clientProject = clientModel.getProjectMeta().getClientProject();
+        rowBean.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
+        rowBean.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
+        return rowBean;
     }
 
-    protected ClientParam convert(ClientBody clientBody) {
-        ClientParam clientParam = new ClientParam();
-        clientParam.setProject(clientBody.project);
-        clientParam.setDatabase(clientBody.database);
-        clientParam.setTargetLanguage(clientBody.targetLanguage);
-        clientParam.setTargetContainer(clientBody.targetContainer);
-        clientParam.setPackageBase(clientBody.packageBase);
-        clientParam.setJdbcDriver(clientBody.jdbcDriver);
+    private void prepareBasic(ClientRowResult client, ClientModel clientModel) {
+        ProjectMeta projectMeta = clientModel.getProjectMeta();
+        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+        client.projectName = projectMeta.getClientProject();
+        client.databaseCode = basicInfoMap.getDatabase();
+        client.languageCode = basicInfoMap.getTargetLanguage();
+        client.containerCode = basicInfoMap.getTargetContainer();
+        client.packageBase = basicInfoMap.getPackageBase();
+        client.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
+        client.dbfluteVersion = projectMeta.getDbfluteVersion();
+        client.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
+    }
 
-        OptionalThing.ofNullable(clientBody.databaseBody, () -> {}).ifPresent(databaseBody -> {
-            DatabaseParam databaseParam = new DatabaseParam();
-            databaseParam.setUrl(databaseBody.url);
-            databaseParam.setSchema(databaseBody.schema);
-            databaseParam.setUser(databaseBody.user);
-            databaseParam.setPassword(databaseBody.password);
-            clientParam.setDatabaseParam(databaseParam);
+    private void prepareDatabase(ClientRowResult client, ClientModel clientModel) {
+        DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
+        ClientRowResult.DatabaseSettingsPart databaseBean = new ClientRowResult.DatabaseSettingsPart();
+        databaseBean.url = databaseInfoMap.getDbConnectionBox().getUrl();
+        databaseBean.schema = databaseInfoMap.getDbConnectionBox().getSchema();
+        databaseBean.user = databaseInfoMap.getDbConnectionBox().getUser();
+        databaseBean.password = databaseInfoMap.getDbConnectionBox().getPassword();
+        client.mainSchemaSettings = databaseBean;
+    }
+
+    private OptionPart prepareOption(ClientModel clientModel) {
+        OptionPart optionBean = new OptionPart();
+        clientModel.getDocumentMap().ifPresent(documentMap -> {
+            optionBean.dbCommentOnAliasBasis = documentMap.isDbCommentOnAliasBasis();
+            optionBean.aliasDelimiterInDbComment = documentMap.getAliasDelimiterInDbComment().orElse(null);
+            optionBean.checkColumnDefOrderDiff = documentMap.isCheckColumnDefOrderDiff();
+            optionBean.checkDbCommentDiff = documentMap.isCheckDbCommentDiff();
+            optionBean.checkProcedureDiff = documentMap.isCheckProcedureDiff();
         });
-
-        OptionalThing.ofNullable(clientBody.systemUserDatabaseBody, () -> {}).ifPresent(databaseBody -> {
-            DatabaseParam databaseParam = new DatabaseParam();
-            databaseParam.setUrl(databaseBody.url);
-            databaseParam.setSchema(databaseBody.schema);
-            databaseParam.setUser(databaseBody.user);
-            databaseParam.setPassword(databaseBody.password);
-            clientParam.setSystemUserDatabaseParam(databaseParam);
+        clientModel.getOutsideSqlMap().ifPresent(outsideSqlMap -> {
+            optionBean.generateProcedureParameterBean = outsideSqlMap.isGenerateProcedureParameterBean();
+            optionBean.procedureSynonymHandlingType = outsideSqlMap.getProcedureSynonymHandlingType();
         });
-
-        clientParam.setJdbcDriverJarPath(clientBody.jdbcDriverJarPath);
-        clientParam.setDbfluteVersion(clientBody.dbfluteVersion);
-
-        OptionalThing.ofNullable(clientBody.optionBody, () -> {}).ifPresent(optionBody -> {
-            OptionParam optionParam = new OptionParam();
-            optionParam.setDbCommentOnAliasBasis(optionBody.dbCommentOnAliasBasis);
-            optionParam.setAliasDelimiterInDbComment(optionBody.aliasDelimiterInDbComment);
-            optionParam.setCheckColumnDefOrderDiff(optionBody.checkColumnDefOrderDiff);
-            optionParam.setCheckDbCommentDiff(optionBody.checkDbCommentDiff);
-            optionParam.setCheckProcedureDiff(optionBody.checkProcedureDiff);
-            optionParam.setGenerateProcedureParameterBean(optionBody.generateProcedureParameterBean);
-            optionParam.setProcedureSynonymHandlingType(optionBody.procedureSynonymHandlingType);
-            clientParam.setOptionParam(optionParam);
-        });
-
-        clientParam.setSchemaSyncCheckMap(new LinkedHashMap<String, DatabaseParam>());
-        clientBody.schemaSyncCheckMap.entrySet().forEach(schemaSyncCheck -> {
-            OptionalThing.ofNullable(schemaSyncCheck.getValue(), () -> {}).ifPresent(databaseBody -> {
-                DatabaseParam databaseParam = new DatabaseParam();
-                databaseParam.setUrl(databaseBody.url);
-                databaseParam.setSchema(databaseBody.schema);
-                databaseParam.setUser(databaseBody.user);
-                databaseParam.setPassword(databaseBody.password);
-                clientParam.getSchemaSyncCheckMap().put(schemaSyncCheck.getKey(), databaseParam);
-            });
-        });
-
-        return clientParam;
+        return optionBean;
     }
 
     @Execute
-    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
+    public JsonResponse<ClientOperationResult> operation(String clientProject) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+        });
+        ClientOperationResult detailBean = mappingToOperationResult(clientModel);
+        return asJson(detailBean);
+    }
+
+    private ClientOperationResult mappingToOperationResult(ClientModel clientModel) {
+        ClientOperationResult operation = new ClientOperationResult();
+        prepareBasic(operation, clientModel);
+        String clientProject = clientModel.getProjectMeta().getClientProject();
+        operation.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
+        operation.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        return operation;
+    }
+
+    private void prepareBasic(ClientOperationResult client, ClientModel clientModel) {
+        ProjectMeta projectMeta = clientModel.getProjectMeta();
+        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+        client.projectName = projectMeta.getClientProject();
+        client.databaseCode = basicInfoMap.getDatabase();
+        client.languageCode = basicInfoMap.getTargetLanguage();
+        client.containerCode = basicInfoMap.getTargetContainer();
+    }
+
+    // -----------------------------------------------------
+    //                                                Update
+    //                                                ------
+    @Execute
+    public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientParam clientParam = convert(clientCreateBody.clientBody);
+        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
-            dbFluteClientLogic.testConnection(clientParam);
+            testConnectionIfPossible(clientModel);
         }
-        dbFluteClientLogic.createClient(clientParam, clientCreateBody.testConnection);
+        clientUpdateLogic.createClient(clientModel);
         return JsonResponse.asEmptyBody();
     }
 
     @Execute
-    public JsonResponse<Void> update(ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientParam clientParam = convert(clientCreateBody.clientBody);
+        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
-            dbFluteClientLogic.testConnection(clientParam);
+            testConnectionIfPossible(clientModel);
         }
-        dbFluteClientLogic.updateClient(clientParam, clientCreateBody.testConnection);
+        clientUpdateLogic.updateClient(clientModel);
         return JsonResponse.asEmptyBody();
     }
 
-    @Execute
-    public JsonResponse<Void> delete(String project) {
-        dbFluteClientLogic.deleteClient(project);
-        return JsonResponse.asEmptyBody();
+    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
+        ClientModel clientModel = newClientModel(projectName, clientBody);
+        // TODO jflute intro: re-making (2016/08/12)
+        return clientModel;
     }
 
-    @Execute
-    public JsonResponse<Void> task(String project, String task, OptionalThing<String> env) {
-        HttpServletResponse response = responseManager.getResponse();
-        response.setContentType("text/plain; charset=UTF-8");
-        OutputStream outputStream;
-        try {
-            outputStream = response.getOutputStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        dbFluteTaskLogic.execute(project, task, env, outputStream);
-        return JsonResponse.asEmptyBody();
+    private ClientModel newClientModel(String projectName, ClientPart clientBody) {
+        ProjectMeta projectMeta = prepareProjectMeta(projectName, clientBody);
+        BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
+        DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
+        ClientModel clientModel = new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
+        return clientModel;
     }
 
-    @Execute
-    public StreamResponse schemahtml(String project) {
-        return createHtmlStreamResponse(calcFile(project, "schema"));
+    private ProjectMeta prepareProjectMeta(String projectName, ClientPart clientBody) {
+        return new ProjectMeta(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
     }
 
-    @Execute
-    public StreamResponse historyhtml(String project) {
-        return createHtmlStreamResponse(calcFile(project, "history"));
+    private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
+        return new BasicInfoMap(clientBody.databaseCode, clientBody.languageCode, clientBody.containerCode, clientBody.packageBase);
     }
 
-    protected File calcFile(String project, String type) {
-        File file = new File(DbFluteIntroLogic.BASE_DIR_PATH, "dbflute_" + project + "/output/doc/" + type + "-" + project + ".html");
-        return file;
-    }
-
-    protected StreamResponse createHtmlStreamResponse(File file) {
-        StreamResponse streamResponse = new StreamResponse("");
-        streamResponse.contentType("text/html; charset=UTF-8");
-        streamResponse.stream(writtenStream -> {
-            writtenStream.write(FileUtils.openInputStream(file));
+    private DatabaseInfoMap prepareDatabaseInfoMap(ClientPart clientBody) {
+        return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
+            DbConnectionBox connectionBox =
+                    new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
+            AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
+            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, connectionBox, additionalSchemaMap);
+        }).orElseThrow(() -> {
+            return new IllegalStateException("Not found the database body: " + clientBody);
         });
+    }
 
-        return streamResponse;
+    private void testConnectionIfPossible(ClientModel clientModel) {
+        String dbfluteVersion = clientModel.getProjectMeta().getDbfluteVersion();
+        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectMeta().getJdbcDriverJarPath();
+        DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
+        testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
+    }
+
+    @Execute
+    public JsonResponse<Void> delete(String clientProject) {
+        clientUpdateLogic.deleteClient(clientProject);
+        return JsonResponse.asEmptyBody();
     }
 }

@@ -1,0 +1,39 @@
+# /---------------------------------------------------------------------------
+# appcls: (NotRequired - Default map:{})
+#
+# The definition of application classification.
+#
+# Specification:
+# map: {
+#     [classification-name] = list:{
+#         ; map:{ topComment=[comment]; codeType=[String(default) or Number or Boolean] }
+#         ; map:{ refCls=[projectName]@[DB classification name] ; refType=[included or exists or matches] }
+#         ; map:{ code=[code]; name=[name]; alias=[alias]; comment=[comment] }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    ; TaskInstruction = list:{
+        ; map:{ topComment=Instruction for DBFlute task ; codeType=String }
+        # relatedTasks: task names as task type code (separated with comma)
+        ; map:{
+            ; code=doc; name=Doc; comment=Doc task
+            ; subItemMap = map:{ relatedTasks = jdbc,doc }
+        }
+        ; map:{
+            ; code=loadDataReverse; name=LoadDataReverse; comment=LoadDataReverse task
+            ; subItemMap = map:{ relatedTasks = jdbc,load_data_reverse }
+        }
+        ; map:{
+            ; code=schemaSyncCheck; name=SchemaSyncCheck; comment=SchemaSyncCheck task
+            ; subItemMap = map:{ relatedTasks = schema_sync_check }
+        }
+        ; map:{
+            ; code=replaceSchema; name=ReplaceSchema; comment=ReplaceSchema task
+            ; subItemMap = map:{ relatedTasks = replace_schema }
+        }
+    }
+}
+# ----------------/

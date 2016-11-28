@@ -30,7 +30,7 @@ task manifest(dependsOn: gulp_build) << {
     try {
         scmBranch = 'git branch --contains'.execute().text.trim() - '* '
         scmRevision = 'git rev-parse HEAD'.execute().text.trim()
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
 
     def json = new groovy.json.JsonBuilder()

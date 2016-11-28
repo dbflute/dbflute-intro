@@ -1,6 +1,6 @@
 # common
 .DS_Store
-bin/
+/bin
 build/
 target/
 work/
@@ -17,6 +17,10 @@ log/
 .classpath
 .settings/
 
+# IntelliJ
+.idea/
+*.iml
+
 # Java
 classes/
 *.class
@@ -30,12 +34,19 @@ classes/
 # Middleware
 localdb/
 localap/
+etc/introdb
+etc/testdb
 
 # DBFlute
 latest-data.zip
-/dbflute_*
+/dbflute_jflutedb
+/dbflute_decodb
+/dbflute_hakibadb
+/dbflute_testdb
+/dbflute_maihamadb
 /dbflute-intro.jar
 /dbflute-intro.war
+trial_config.ignored
 
 # node
 node_modules/
@@ -43,3 +54,8 @@ bower_components/
 .sass-cache/
 .tmp/
 dist/
+
+# Exceptions
+!src/main/java/org/dbflute/intro/app/web/log/
+!src/test/java/org/dbflute/intro/app/web/log/
+!/src/main/java/org/dbflute/intro/app/logic/log/

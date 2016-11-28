@@ -1,43 +1,52 @@
 'use strict';
 
+/**
+ * Main Controller
+ */
 angular.module('dbflute-intro')
-        .controller('MainCtrl', function ($scope, $window, $uibModal, ApiFactory) {
+        .controller('MainCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
-    // レスポンスの型を変換 Bean -> Body
+    // TODO deco remove unused functions
+    //  Bean -> Body
     var convertParam = function(param) {
-        var tempParam = angular.copy(param);
-        for (var key in tempParam) {
-            if (key.indexOf('Bean') >= 0) {
-                var old = key;
-                var data = tempParam[key];
-                key = key.replace('Bean', 'Body');
-                tempParam[key] = data;
-                delete tempParam[old];
-            }
-
-            if (tempParam[key] instanceof Array) {
-                if (tempParam[key][0] instanceof Array || tempParam[key][0] instanceof Object) {
-                    for (var i in tempParam[key]) {
-                        convertParam(tempParam[key][i]);
-                    }
-                }
-            } else if (tempParam[key] instanceof Object) {
-                convertParam(tempParam[key]);
-            }
-        }
-
-        return tempParam;
+// #later deleted
+//        var tempParam = angular.copy(param);
+//        for (var key in tempParam) {
+//            if (key.indexOf('Bean') >= 0) {
+//                var old = key;
+//                var data = tempParam[key];
+//                key = key.replace('Bean', 'Body');
+//                tempParam[key] = data;
+//                delete tempParam[old];
+//            }
+//
+//            if (tempParam[key] instanceof Array) {
+//                if (tempParam[key][0] instanceof Array || tempParam[key][0] instanceof Object) {
+//                    for (var i in tempParam[key]) {
+//                        convertParam(tempParam[key][i]);
+//                    }
+//                }
+//            } else if (tempParam[key] instanceof Object) {
+//                convertParam(tempParam[key]);
+//            }
+//        }
+//
+//        return tempParam;
+    	return param;
     };
 
-    $scope.manifest = {};
-    $scope.publicProperties = [];
-    $scope.versions = [];
-    $scope.classificationMap = {};
-    $scope.clientBeanList = [];
-    $scope.clientBean = null;
+    $scope.manifest = {}; // intro manifest
+    $scope.versions = []; // engine versions
+    $scope.configuration = {}; // intro configuration
+    $scope.classificationMap = {}; // e.g. targetDatabase
+    $scope.client = null; // model of current client
+    $scope.clientList = []; // existing clients
     $scope.editFlg = false;
     $scope.option = {testConnection: true};
 
+    // ===================================================================================
+    //                                                                          Basic Data
+    //                                                                          ==========
     $scope.manifest = function() {
         ApiFactory.manifest().then(function(response) {
             $scope.manifest = response.data;
@@ -50,21 +59,37 @@ angular.module('dbflute-intro')
         });
     };
 
-    $scope.classification = function() {
-        ApiFactory.classification().then(function(response) {
+    $scope.configuration = function() {
+        ApiFactory.configuration().then(function(response) {
+            $scope.configuration = response.data;
+        });
+    };
+
+    $scope.classifications = function() {
+        ApiFactory.classifications().then(function(response) {
             $scope.classificationMap = response.data;
         });
     };
 
-    $scope.findClientBeanList = function() {
-        ApiFactory.clientBeanList().then(function(response) {
-            $scope.clientBeanList = response.data;
+    // ===================================================================================
+    //                                                                     Client Handling
+    //                                                                     ===============
+    $scope.prepareClientList = function() {
+        ApiFactory.clientList().then(function(response) {
+            if (response.data.length > 0) {
+                $scope.clientList = response.data;
+            } else {
+                $state.go('welcome'); // if no client show welcome page
+            }
         });
      };
 
-    $scope.add = function() {
-        $scope.editFlg = true;
-        $scope.clientBean = {create: true, databaseBean: {}, systemUserDatabaseBean: {}, schemaSyncCheckMap: {}, optionBean: {}};
+    $scope.goToClient = function(client) {
+        $state.go('operate', { projectName: client.projectName });
+    };
+
+    $scope.goToClientCreate = function() {
+        $state.go('create');
     };
 
     $scope.edit = function() {
@@ -73,74 +98,116 @@ angular.module('dbflute-intro')
 
     $scope.cancelEdit = function() {
         $scope.editFlg = false;
-        if ($scope.clientBean.create) {
-            $scope.clientBean = null;
+        if ($scope.client.create) {
+            $scope.client = null;
         } else {
-            for (var index in $scope.clientBeanList) {
-                var clientBean = $scope.clientBeanList[index].clientBean;
-                if ($scope.clientBean.project == clientBean.project) {
-                    $scope.clientBean = clientBean;
+            for (var index in $scope.clientList) {
+                var client = $scope.clientList[index];
+                if ($scope.client.projectName == client.projectName) {
+                    $scope.client = client;
                     break;
                 }
             }
         }
     };
 
-    $scope.create = function(clientBean, testConnection) {
-        ApiFactory.createClient(convertParam(clientBean), testConnection).then(function(response) {
+    $scope.create = function(client, testConnection) {
+        ApiFactory.createClient(convertParam(client), testConnection).then(function(response) {
             $scope.editFlg = false;
-            $scope.findClientBeanList();
+            $scope.prepareClientList();
         });
     };
 
-    $scope.update = function(clientBean, testConnection) {
-        ApiFactory.updateClient(convertParam(clientBean), testConnection).then(function(response) {
+    $scope.update = function(client, testConnection) {
+        ApiFactory.updateClient(convertParam(client), testConnection).then(function(response) {
             $scope.editFlg = false;
-            $scope.findClientBeanList();
+            $scope.prepareClientList();
         });
     };
 
-    $scope.remove = function(clientBean) {
-        ApiFactory.removeClient(convertParam(clientBean)).then(function(response) {
+    $scope.remove = function(client) {
+        ApiFactory.removeClient(convertParam(client)).then(function(response) {
             $scope.editFlg = false;
-            $scope.clientBean = null;
-            $scope.findClientBeanList();
+            $scope.client = null;
+            $scope.prepareClientList();
         });
     };
 
-    $scope.openSchemaHTML = function(clientBean) {
-        $window.open('api/client/schemahtml/' + clientBean.project);
+    $scope.changeDatabase = function(client) {
+    	client.jdbcDriverFqcn = client.driverName;
+        var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
+        client.jdbcDriverFqcn = database.driverName;
+        client.mainSchemaSettings.url = database.urlTemplate;
+        client.mainSchemaSettings.schema =  database.defaultSchema;
     };
 
-    $scope.openHistoryHTML = function(clientBean) {
-        $window.open('api/client/historyhtml/' + clientBean.project);
+    // ===================================================================================
+    //                                                                       Optional Menu
+    //                                                                       =============
+    $scope.dfprop = function(client) {
+        ApiFactory.dfporpBeanList(client).then(function (response) {
+            $scope.dfpropBeanList = response.data;
+        });
+    };
+    $scope.playsql = function(client) {
+        ApiFactory.playsqlBeanList(client).then(function (response) {
+            $scope.playsqlBeanList = response.data;
+        });
+    };
+    $scope.log = function(client) {
+        ApiFactory.logBeanList(client).then(function (response) {
+            $scope.logBeanList = response.data;
+        });
     };
 
-    $scope.task = function(clientBean, task) {
-        $window.open('api/client/task/' + clientBean.project + '/' + task);
+    // ===================================================================================
+    //                                                                            Document
+    //                                                                            ========
+    $scope.openSchemaHTML = function(client) {
+      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/schemahtml/');
     };
 
-    $scope.changeDatabase = function(clientBean) {
-        var databaseInfoDef = $scope.classificationMap["databaseInfoDefMap"][clientBean.database];
-
-        clientBean.jdbcDriver = databaseInfoDef.driverName;
-        clientBean.databaseBean.url = databaseInfoDef.urlTemplate;
-        clientBean.databaseBean.schema =  databaseInfoDef.defultSchema;
-        // "needJdbcDriverJar": false,
-        // "needSchema": false,
-        // "upperSchema": false,
-        // "assistInputUser": false,
+    $scope.openHistoryHTML = function(client) {
+      $window.open($scope.configuration['serverUrl'] + '/document/' + client.projectName + '/historyhtml/');
     };
 
+    // ===================================================================================
+    //                                                                               Task
+    //                                                                              ======
+    $scope.task = function(client, task) {
+        $window.open('api/task/execute/' + client.projectName + '/' + task);
+    };
+
+    // ===================================================================================
+    //                                                                     SchemaSyncCheck
+    //                                                                     ===============
+    $scope.addSchemaSyncCheckMap = function() {
+        var name = prompt("Please enter name");
+        if (!name) {
+            return;
+        }
+        if (!name) {
+            return;
+        }
+        $scope.client.schemaSyncCheckMap[name] = {};
+    };
+
+    $scope.removeSchemaSyncCheckMap = function(name) {
+        delete $scope.client.schemaSyncCheckMap[name];
+    };
+
+    // ===================================================================================
+    //                                                                              Engine
+    //                                                                              ======
     $scope.downloadModal = function() {
         var downloadInstance = $uibModal.open({
             templateUrl: 'app/main/download.html',
             controller: 'DownloadInstanceController',
             resolve: {
-              publicProperties: function() {
-                  return ApiFactory.publicProperties();
-              }
-          }
+                engineLatest: function() {
+                    return ApiFactory.engineLatest();
+                }
+            }
         });
 
         downloadInstance.result.then(function(versions) {
@@ -148,84 +215,47 @@ angular.module('dbflute-intro')
         });
     };
 
-    $scope.addSchemaSyncCheckMap = function() {
-        var name = prompt("Please enter name");
-        if (!name) {
-            // 入力を促す
-            return;
-        }
-        if (!name) {
-            return;
-        }
-        $scope.clientBean.schemaSyncCheckMap[name] = {};
-    }
-
-    $scope.removeSchemaSyncCheckMap = function(name) {
-        delete $scope.clientBean.schemaSyncCheckMap[name];
-    }
-
     $scope.removeEngine = function(version) {
         var params = {version: version};
         ApiFactory.removeEngine(params).then(function(response) {
             $scope.engineVersions();
         });
-    }
-
-    $scope.setCurrentProject = function(clientBean) {
-        $scope.clientBean = angular.copy(clientBean.clientBean);
     };
 
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
     $scope.manifest();
     $scope.engineVersions();
-    $scope.classification();
-    $scope.findClientBeanList();
+    $scope.configuration();
+    $scope.classifications();
+    $scope.prepareClientList();
 });
 
+/**
+ * Download DBFlute Engine
+ */
 angular.module('dbflute-intro').controller('DownloadInstanceController',
-        function($scope, $uibModalInstance, publicProperties, ApiFactory) {
+        function($scope, $uibModalInstance, engineLatest, ApiFactory) {
     'use strict';
 
+    var engineLatestData = engineLatest.data;
+    var latestReleaseVersion = engineLatestData.latestReleaseVersion;
+    var latestSnapshotVersion = engineLatestData.latestSnapshotVersion;
+
     $scope.downloading = false;
-
-    $scope.publicProperties = {};
-    $scope.publicProperties.compatible10x = [];
-    $scope.publicProperties.compatible11x = [];
     $scope.currentBranch = 'compatible11x';
-    $scope.dbfluteEngine = {version: ''};
-
-    var publicPropertiesData = publicProperties.data;
-    var compatible10xRelease = publicPropertiesData['compatible10x.dbflute.latest.release.version'];
-    var compatible10xSnapshot = publicPropertiesData['compatible10x.dbflute.latest.snapshot.version'];
-    var compatible11xRelease = publicPropertiesData['dbflute.latest.release.version'];
-    var compatible11xSnapshot = publicPropertiesData['dbflute.latest.snapshot.version'];
-
-    $scope.publicProperties.compatible10x[0] = compatible10xRelease;
-    $scope.publicProperties.compatible11x[0] = compatible11xRelease;
-
-    if (compatible10xRelease !== compatible10xSnapshot) {
-        $scope.publicProperties.compatible10x[1] = compatible10xSnapshot;
-    }
-
-    if (compatible11xRelease !== compatible11xSnapshot) {
-        $scope.publicProperties.compatible11x[1] = compatible11xSnapshot;
-        $scope.dbfluteEngine.version = compatible11xSnapshot;
-    }
-
-    $scope.dbfluteEngine = {
-        version: $scope.publicProperties.compatible11x[0]
-    };
-
-    $scope.selectVersion = function(version) {
-        $scope.dbfluteEngine.version = version;
-    };
+    $scope.latestVersion = latestReleaseVersion;
+    $scope.specifiedVersion = latestReleaseVersion;
+    $scope.dbfluteEngine = {version: latestReleaseVersion};
 
     $scope.version = null;
 
     $scope.downloadEngine = function() {
         $scope.downloading = true;
 
-        if ($scope.version !== null) {
-            $scope.dbfluteEngine.version = $scope.version;
+        if ($scope.specifiedVersion !== null) {
+            $scope.dbfluteEngine.version = $scope.specifiedVersion;
         }
         ApiFactory.downloadEngine($scope.dbfluteEngine).then(function(response) {
             $scope.downloading = false;

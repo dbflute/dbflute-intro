@@ -21,7 +21,7 @@ var chalk = require('chalk');
 /*
  * Location of your backend server
  */
-var proxyTarget = 'http://localhost:9000';
+var proxyTarget = 'http://localhost:8925';
 
 var proxy = httpProxy.createProxyServer({
   target: proxyTarget
@@ -49,7 +49,6 @@ function proxyMiddleware(req, res, next) {
    * may be more reliable but can't be generic.
    */
   if (/^\/api\//.test(req.url)) {
-    req.url = '/dbflute-intro' + req.url;
     proxy.web(req, res);
   } else {
     next();

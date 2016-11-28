@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,100 +15,87 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.Map;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.Required;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.lastaflute.web.validation.Required;
+import java.util.Map;
 
 /**
  * @author p1us2er0
+ * @author jflute
  */
 public class ClientCreateBody {
 
     @Required
     @Valid
-    public ClientBody clientBody;
+    public ClientPart client;
 
-    /**
-     * @author p1us2er0
-     */
-    public static class ClientBody {
-
-        // ===================================================================================
-        //                                                                           Attribute
-        //                                                                           =========
-        @Required
-        public String project;
+    public static class ClientPart {
 
         @Required
-        public String database;
-
+        public CDef.TargetDatabase databaseCode;
         @Required
-        public String targetLanguage;
-
+        public CDef.TargetLanguage languageCode;
         @Required
-        public String targetContainer;
-
+        public CDef.TargetContainer containerCode;
         @Required
         public String packageBase;
-
         @Required
-        public String jdbcDriver;
-
-        @Required
-        @Valid
-        public DatabaseBody databaseBody;
+        public String jdbcDriverFqcn;
 
         @Required
         @Valid
-        public DatabaseBody systemUserDatabaseBody;
+        public DatabaseSettingsPart mainSchemaSettings;
 
-        /**
-         * @author p1us2er0
-         */
-        public static class DatabaseBody {
+        // #pending by jflute
+        //@Valid
+        public DatabaseSettingsPart systemUserSettings;
 
-            // ===================================================================================
-            //                                                                           Attribute
-            //                                                                           =========
+        public static class DatabaseSettingsPart {
+
+            @Required
             public String url;
-            public String schema;
+            public String schema; // contains additional schema by comma
+            @Required
             public String user;
             public String password;
         }
 
-        public String jdbcDriverJarPath;
-
         @Required
         public String dbfluteVersion;
 
-        @Required
-        @Valid
+        public String jdbcDriverJarPath;
+
+        // TODO jflute intro: option body validation after client implementation (2016/08/13)
+        //@Required
+        //@Valid
         public OptionBody optionBody;
 
-        /**
-         * @author p1us2er0
-         */
         public static class OptionBody {
 
-            // ===================================================================================
-            //                                                                           Attribute
-            //                                                                           =========
-            public boolean dbCommentOnAliasBasis = true;
-            public String aliasDelimiterInDbComment = ":";
-            public boolean checkColumnDefOrderDiff = true;
-            public boolean checkDbCommentDiff = true;
-            public boolean checkProcedureDiff = true;
-            public boolean generateProcedureParameterBean = true;
-            public String procedureSynonymHandlingType = "INCLUDE";
+            //@Required
+            public Boolean dbCommentOnAliasBasis;
+            public String aliasDelimiterInDbComment;
+            //@Required
+            public Boolean checkColumnDefOrderDiff;
+            //@Required
+            public Boolean checkDbCommentDiff;
+            //@Required
+            public Boolean checkProcedureDiff;
+            //@Required
+            public Boolean generateProcedureParameterBean;
+            public String procedureSynonymHandlingType;
         }
 
         @NotNull
-        public Map<String, DatabaseBody> schemaSyncCheckMap;
+        public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
     }
 
+    // ===================================================================================
+    //                                                                       Create Option
+    //                                                                       =============
     @Required
-    public Boolean testConnection = true;
+    public Boolean testConnection;
 }
