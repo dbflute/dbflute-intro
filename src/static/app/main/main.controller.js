@@ -92,6 +92,10 @@ angular.module('dbflute-intro')
         $state.go('create');
     };
 
+    $scope.goToClientSettings = function(client) {
+        $state.go('settings', { client: client, projectName: client.projectName });
+    };
+
     $scope.edit = function() {
         $scope.editFlg = true;
     };

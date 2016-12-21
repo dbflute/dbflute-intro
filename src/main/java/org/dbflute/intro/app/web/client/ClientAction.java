@@ -205,6 +205,30 @@ public class ClientAction extends IntroBaseAction {
         clientUpdateLogic.updateClient(clientModel);
         return JsonResponse.asEmptyBody();
     }
+    @Execute
+    public JsonResponse<ClientSettingResult> settings(String clientProject) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+        });
+        ClientSettingResult result = mappingToSettingsResult(clientModel);
+        return asJson(result);
+    }
+
+    private ClientSettingResult mappingToSettingsResult(ClientModel clientModel) {
+        ClientSettingResult result = new ClientSettingResult();
+        ProjectMeta projectMeta = clientModel.getProjectMeta();
+        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+        result.projectName = projectMeta.getClientProject();
+        result.databaseCode = basicInfoMap.getDatabase();
+        result.languageCode = basicInfoMap.getTargetLanguage();
+        result.containerCode = basicInfoMap.getTargetContainer();
+        DbConnectionBox dbConnectionBox = clientModel.getDatabaseInfoMap().getDbConnectionBox();
+        result.mainSchemaSettings.url = dbConnectionBox.getUrl();
+        result.mainSchemaSettings.schema = dbConnectionBox.getSchema();
+        result.mainSchemaSettings.user = dbConnectionBox.getUser();
+        result.mainSchemaSettings.password = dbConnectionBox.getPassword();
+        return result;
+    }
 
     private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
         ClientModel clientModel = newClientModel(projectName, clientBody);
