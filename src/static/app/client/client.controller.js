@@ -67,6 +67,19 @@ angular.module('dbflute-intro')
             modalInstance.close();
         });
     };
+    // ===================================================================================
+    //                                                                     SchemaSyncCheck
+    //                                                                     ===============
+    $scope.schemaSyncCheck = function() {
+        var modalInstance = $uibModal.open({
+            templateUrl: "app/client/schema-sync-check.html",
+            controller: "SchemaSyncCheckSettingController",
+            resolve: {
+                // TODO add request sync setting by deco
+            }
+        });
+    };
+
 
     // ===================================================================================
     //                                                                          Initialize
@@ -74,4 +87,17 @@ angular.module('dbflute-intro')
     $scope.engineVersions();
     $scope.prepareCurrentProject($scope.projectName);
     $scope.configuration();
+});
+
+/**
+ * Schema Sync Check Controller
+ */
+angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
+        function($scope, $uibModalInstance, ApiFactory) {
+    'use strict';
+
+    $scope.checkSchema = function() {
+        // TODO add check schema by deco
+        console.log("update schema");
+    };
 });
