@@ -43,6 +43,11 @@ public class ClientPhysicalLogic {
     private EnginePhysicalLogic enginePhysicalLogic;
 
     // ===================================================================================
+    //                                                                               Basic
+    //                                                                               =====
+    // *methods for client top directory are implemented on IntroPhysicalLogic 
+    
+    // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
     private String buildDfpropDirPath(String clientProject) {

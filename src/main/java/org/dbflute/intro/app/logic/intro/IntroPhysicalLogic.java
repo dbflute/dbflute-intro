@@ -44,8 +44,8 @@ public class IntroPhysicalLogic {
     public static final String BASE_DIR_PATH = ".";
 
     // ===================================================================================
-    //                                                                              Client
-    //                                                                              ======
+    //                                                                               Intro
+    //                                                                               =====
     /**
      * <pre>
      * e.g.
@@ -61,6 +61,9 @@ public class IntroPhysicalLogic {
         return new File(BASE_DIR_PATH);
     }
 
+    // ===================================================================================
+    //                                                                              Client
+    //                                                                              ======
     /**
      * <pre>
      * e.g.

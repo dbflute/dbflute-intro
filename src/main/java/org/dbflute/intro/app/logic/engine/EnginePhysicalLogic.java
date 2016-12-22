@@ -26,13 +26,27 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
  */
 public class EnginePhysicalLogic {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
+    // ===================================================================================
+    //                                                                               Basic
+    //                                                                               =====
+    // *methods for client top directory are implemented on IntroPhysicalLogic 
+
+    // ===================================================================================
+    //                                                                       lib Directory
+    //                                                                       =============
     public File findLibDir(String dbfluteVersion) {
         return new File(introPhysicalLogic.buildEnginePath(dbfluteVersion, "lib"));
     }
 
+    // ===================================================================================
+    //                                                                          Client Zip
+    //                                                                          ==========
     public File findDfClientZip(String dbfluteVersion) {
         return new File(buildDfClientZipPath(dbfluteVersion));
     }
