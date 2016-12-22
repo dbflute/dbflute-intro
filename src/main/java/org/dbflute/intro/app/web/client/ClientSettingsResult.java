@@ -1,14 +1,15 @@
 package org.dbflute.intro.app.web.client;
 
+import javax.validation.Valid;
+
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
 
-import javax.validation.Valid;
-
 /**
  * @author hakiba
+ * @author jflute
  */
-public class ClientSettingResult {
+public class ClientSettingsResult {
 
     // ===================================================================================
     //                                                                         Client Info
@@ -39,7 +40,6 @@ public class ClientSettingResult {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ClientSettingResult() {
-        this.mainSchemaSettings = new DatabaseSettingsPart();
+    public ClientSettingsResult() {
     }
 }
