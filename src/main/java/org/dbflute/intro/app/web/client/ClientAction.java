@@ -34,7 +34,6 @@ import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
-import org.dbflute.intro.app.web.client.ClientSettingsResult.DatabaseSettingsPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
@@ -187,35 +186,6 @@ public class ClientAction extends IntroBaseAction {
         client.containerCode = basicInfoMap.getTargetContainer();
     }
 
-    // -----------------------------------------------------
-    //                                              Settings
-    //                                              --------
-    @Execute
-    public JsonResponse<ClientSettingsResult> settings(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
-        });
-        ClientSettingsResult result = mappingToSettingsResult(clientModel);
-        return asJson(result);
-    }
-
-    private ClientSettingsResult mappingToSettingsResult(ClientModel clientModel) {
-        ClientSettingsResult result = new ClientSettingsResult();
-        ProjectMeta projectMeta = clientModel.getProjectMeta();
-        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        result.projectName = projectMeta.getClientProject();
-        result.databaseCode = basicInfoMap.getDatabase();
-        result.languageCode = basicInfoMap.getTargetLanguage();
-        result.containerCode = basicInfoMap.getTargetContainer();
-        DbConnectionBox dbConnectionBox = clientModel.getDatabaseInfoMap().getDbConnectionBox();
-        result.mainSchemaSettings = new DatabaseSettingsPart();
-        result.mainSchemaSettings.url = dbConnectionBox.getUrl();
-        result.mainSchemaSettings.schema = dbConnectionBox.getSchema();
-        result.mainSchemaSettings.user = dbConnectionBox.getUser();
-        result.mainSchemaSettings.password = dbConnectionBox.getPassword();
-        return result;
-    }
-    
     // -----------------------------------------------------
     //                                                Update
     //                                                ------

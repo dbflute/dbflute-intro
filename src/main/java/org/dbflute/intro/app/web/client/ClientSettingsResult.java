@@ -22,6 +22,10 @@ public class ClientSettingsResult {
     public CDef.TargetLanguage languageCode;
     @Required
     public CDef.TargetContainer containerCode;
+    @Required
+    public String packageBase;
+    @Required
+    public String jdbcDriverFqcn;
 
     @Required
     @Valid
@@ -36,6 +40,11 @@ public class ClientSettingsResult {
         public String user;
         public String password;
     }
+
+    @Required
+    public String dbfluteVersion;
+
+    public String jdbcDriverJarPath;
 
     // ===================================================================================
     //                                                                         Constructor

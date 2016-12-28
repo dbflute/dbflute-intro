@@ -53,12 +53,6 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/client/operation/' + projectName
             });
         },
-        clientSettings: function (projectName) {
-          return $http({
-            method : 'POST',
-            url : 'api/client/settings/' + projectName
-          })
-        },
         createClient: function(client, testConnection) {
             return $http({
                 method : 'POST',
@@ -78,6 +72,19 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 method : 'POST',
                 url : 'api/client/delete/' + clientBody.project
             });
+        },
+        clientSettings: function (projectName) {
+          return $http({
+            method : 'POST',
+            url : 'api/client/settings/' + projectName
+          })
+        },
+        updateClientSettings: function(clientBody) {
+          return $http({
+            method : 'POST',
+            url : 'api/client/settings/edit/' + clientBody.projectName,
+            data : {client: clientBody}
+          });
         },
         dfporpBeanList: function(clientBody) {
             return $http({

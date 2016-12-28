@@ -24,6 +24,8 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.helper.mapstring.MapListString;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
@@ -32,10 +34,12 @@ import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.eclipse.jetty.util.StringUtil;
 
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class ClientUpdateLogic {
 
@@ -58,10 +62,6 @@ public class ClientUpdateLogic {
         doCreateClient(clientParam, false);
     }
 
-    public void updateClient(ClientModel clientParam) {
-        doCreateClient(clientParam, true);
-    }
-
     private void doCreateClient(ClientModel clientModel, boolean update) {
         final String clientProject = clientModel.getProjectMeta().getClientProject();
         final File clientDir = introPhysicalLogic.findClientDir(clientProject);
@@ -76,6 +76,19 @@ public class ClientUpdateLogic {
             recoveryFailureClient(clientDir);
             throw e;
         }
+    }
+
+    public void updateClient(ClientModel clientParam) {
+        doUpdateClient(clientParam);
+    }
+
+    private void doUpdateClient(ClientModel clientModel) {
+        final String clientProject = clientModel.getProjectMeta().getClientProject();
+        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
+        // TODO: 2016/12/27 make readyClient for update by hakiba
+        readyClient(clientModel, true, clientProject, clientDir);
+
+        replaceDfpropDatabaseInfoMap(clientModel, clientProject);
     }
 
     // -----------------------------------------------------
@@ -156,6 +169,32 @@ public class ClientUpdateLogic {
             }
             flutyFileLogic.writeFile(clientFile, replacedText);
         }
+    }
+
+    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
+        doReplaceDfpropDatabaseInfoMap(clientModel, clientProject);
+    }
+
+    private void doReplaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
+        final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
+        final DbConnectionBox dbConnectionBox = clientModel.getDatabaseInfoMap().getDbConnectionBox();
+
+        new FileTextIO().encodeAsUTF8().rewriteFilteringLine(databaseInfoMapPath, line -> {
+            if (line.trim().startsWith("; url      =")) {
+                return "    ; url      = " + StringUtils.defaultString(dbConnectionBox.getUrl());
+            }
+            if (line.trim().startsWith("; schema   =")) {
+                return "    ; schema   = " + StringUtils.defaultString(dbConnectionBox.getSchema());
+            }
+            if (line.trim().startsWith("; user     =")) {
+                return "    ; user     = " + StringUtils.defaultString(dbConnectionBox.getUser());
+            }
+            if (line.trim().startsWith("; password =")) {
+                return "    ; password = " + StringUtils.defaultString(dbConnectionBox.getPassword());
+            }
+            return line;
+        });
     }
 
     // -----------------------------------------------------

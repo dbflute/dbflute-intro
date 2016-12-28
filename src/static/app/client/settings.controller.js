@@ -21,6 +21,11 @@ angular.module('dbflute-intro')
         $scope.client = response.data;
       });
     };
+    $scope.edit = function(client) {
+      ApiFactory.updateClientSettings(client).then(function(response) {
+        // TODO add success flash message by hakiba
+      });
+    };
 
     // ===================================================================================
     //                                                                       Optional Menu
