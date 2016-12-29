@@ -15,17 +15,18 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author deco
@@ -37,6 +38,8 @@ public class DfpropAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
+    @Resource
+    private DfpropInfoLogic dfpropInfoLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
 
@@ -66,5 +69,36 @@ public class DfpropAction extends IntroBaseAction {
         flutyFileLogic.writeFile(dfpropFile, body.content);
 
         return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
+    //                                       SchemaSyncCheck
+    //                                       ---------------
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<DfpropSchemaSyncCheckBean> syncschema(String project) {
+        final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.findDfpropMap(project);
+        final DfpropSchemaSyncCheckBean bean = mappingToSchemaSyncCheckBean(dfpropMap);
+        return asJson(bean);
+    }
+
+    private DfpropSchemaSyncCheckBean mappingToSchemaSyncCheckBean(Map<String, Map<String, Object>> dfpropMap) {
+        final Map<String, Object> documentMap = dfpropMap.get("documentMap.dfprop");
+        if (documentMap == null) {
+            return new DfpropSchemaSyncCheckBean();
+        }
+
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) documentMap.get("schemaSyncCheckMap");
+        if (schemaSyncCheckMap == null) {
+            return new DfpropSchemaSyncCheckBean();
+        }
+
+        DfpropSchemaSyncCheckBean bean = new DfpropSchemaSyncCheckBean();
+        bean.url = (String) schemaSyncCheckMap.get("url");
+        bean.schama = (String) schemaSyncCheckMap.get("schema");
+        bean.user = (String) schemaSyncCheckMap.get("user");
+        bean.password = (String) schemaSyncCheckMap.get("password");
+        bean.isSuppressCraftDiff = (Boolean) schemaSyncCheckMap.get("isSuppressCraftDiff");
+        return bean;
     }
 }

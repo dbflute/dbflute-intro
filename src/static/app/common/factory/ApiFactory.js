@@ -92,6 +92,12 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/dfprop/' + clientBody.projectName + '/list'
             });
         },
+        syncSchema: function(projectName) {
+            return $http({
+                method: 'POST',
+                url : 'api/dfprop/' + projectName + '/syncschema'
+            });
+        },
         playsqlBeanList: function(clientBody) {
             return $http({
                 method : 'POST',

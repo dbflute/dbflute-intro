@@ -75,7 +75,9 @@ angular.module('dbflute-intro')
             templateUrl: "app/client/schema-sync-check.html",
             controller: "SchemaSyncCheckSettingController",
             resolve: {
-                // TODO add request sync setting by deco
+                syncSchemaSetting: function() {
+                    return ApiFactory.syncSchema($scope.projectName);
+                }
             }
         });
     };
@@ -93,8 +95,10 @@ angular.module('dbflute-intro')
  * Schema Sync Check Controller
  */
 angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
-        function($scope, $uibModalInstance, ApiFactory) {
+        function($scope, $uibModalInstance, syncSchemaSetting, ApiFactory) {
     'use strict';
+
+    $scope.syncSchemaSettingData = syncSchemaSetting.data;
 
     $scope.checkSchema = function() {
         // TODO add check schema by deco
