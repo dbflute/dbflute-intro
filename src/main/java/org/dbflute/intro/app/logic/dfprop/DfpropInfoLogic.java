@@ -102,7 +102,7 @@ public class DfpropInfoLogic {
                 }
                 if (!isExampleComment && (inSyncSchemeSetting && line.contains("# - - - - - - - - - -/"))) {
                     inSyncSchemeSetting = false;
-                    line = setting;
+                    line = setting + "\n" + line;
                 }
                 if (!isExampleComment && inSyncSchemeSetting) {
                     continue;

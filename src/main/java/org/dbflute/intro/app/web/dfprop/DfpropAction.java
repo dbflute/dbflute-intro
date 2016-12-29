@@ -114,12 +114,12 @@ public class DfpropAction extends IntroBaseAction {
     }
 
     public String mappingToSchemaSyncCheckMapStr(DfpropEditSyncSchemaBody body) {
-        return "     ; schemaSyncCheckMap = map:{" + "\n" +
-            "         ; url = " + body.url + "\n" +
-            "         ; schema = " + body.schema + "\n" +
-            "         ; user = " + body.user + "\n" +
-            "         ; password = " + body.password + "\n" +
-            "         ; isSuppressCraftDiff = " + body.isSuppressCraftDiff + "\n" +
-            "     }";
+        return "    ; schemaSyncCheckMap = map:{" + "\n" +
+            "        ; url = " + body.url + "\n" +
+            "        ; schema = " + body.schema + "\n" +
+            "        ; user = " + body.user + "\n" +
+            "        ; password = " + body.password + "\n" +
+            "        ; isSuppressCraftDiff = " + body.isSuppressCraftDiff + "\n" +
+            "    }";
     }
 }
