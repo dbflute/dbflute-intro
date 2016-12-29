@@ -34,7 +34,6 @@ import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.eclipse.jetty.util.StringUtil;
 
 /**
  * @author p1us2er0
@@ -178,20 +177,21 @@ public class ClientUpdateLogic {
     private void doReplaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
         final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
-        final DbConnectionBox dbConnectionBox = clientModel.getDatabaseInfoMap().getDbConnectionBox();
+        final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
 
         new FileTextIO().encodeAsUTF8().rewriteFilteringLine(databaseInfoMapPath, line -> {
-            if (line.trim().startsWith("; url      =")) {
-                return "    ; url      = " + StringUtils.defaultString(dbConnectionBox.getUrl());
+            String trimmedLine = line.trim();
+            if (trimmedLine.startsWith("; url") && line.contains("=")) {
+                return "    ; url      = " + StringUtils.defaultString(box.getUrl());
             }
-            if (line.trim().startsWith("; schema   =")) {
-                return "    ; schema   = " + StringUtils.defaultString(dbConnectionBox.getSchema());
+            if (trimmedLine.startsWith("; schema") && line.contains("=")) {
+                return "    ; schema   = " + StringUtils.defaultString(box.getSchema());
             }
-            if (line.trim().startsWith("; user     =")) {
-                return "    ; user     = " + StringUtils.defaultString(dbConnectionBox.getUser());
+            if (trimmedLine.startsWith("; user") && line.contains("=")) {
+                return "    ; user     = " + StringUtils.defaultString(box.getUser());
             }
-            if (line.trim().startsWith("; password =")) {
-                return "    ; password = " + StringUtils.defaultString(dbConnectionBox.getPassword());
+            if (trimmedLine.startsWith("; password") && line.contains("=")) {
+                return "    ; password = " + StringUtils.defaultString(box.getPassword());
             }
             return line;
         });

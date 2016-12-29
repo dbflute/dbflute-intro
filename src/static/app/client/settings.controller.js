@@ -4,7 +4,7 @@
  * Client Settings Controller
  */
 angular.module('dbflute-intro')
-  .controller('ClientSettingsCtrl', function ($scope, $window, $state, $stateParams, ApiFactory) {
+  .controller('ClientSettingsCtrl', function ($scope, $window, $state, $stateParams, Flash, ApiFactory) {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -22,8 +22,12 @@ angular.module('dbflute-intro')
       });
     };
     $scope.edit = function(client) {
-      ApiFactory.updateClientSettings(client).then(function(response) {
-        // TODO add success flash message by hakiba
+      ApiFactory.updateClientSettings(client).then(function() {
+        // success
+        $scope.successAlert();
+      }, function() {
+        // failure
+        $scope.failureAlert();
       });
     };
 
@@ -44,6 +48,18 @@ angular.module('dbflute-intro')
       ApiFactory.logBeanList(client).then(function (response) {
         $scope.logBeanList = response.data;
       });
+    };
+
+    // ===================================================================================
+    //                                                                             Message
+    //                                                                             =======
+    $scope.successAlert = function() {
+      var message = '<strong>Success!</strong> DB Info was updated properly.';
+      var id = Flash.create('success', message, 3000, {class: 'custom-class', id: 'custom-id'}, true);
+    };
+    $scope.failureAlert = function() {
+      var message = "<strong>Failure!</strong> DB Info was can't updated properly.";
+      var id = Flash.create('danger', message, 3000, {class: 'custom-class', id: 'custom-id'}, true);
     };
 
     // ===================================================================================
