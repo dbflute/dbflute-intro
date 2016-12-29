@@ -77,11 +77,6 @@ angular.module('dbflute-intro')
         });
     };
 
-    $scope.checkSync = function() {
-        // TODO add check function
-        console.log("check");
-    };
-
     $scope.editSyncSchema = function() {
         var modalParam = {
             projectName: $scope.projectName,
