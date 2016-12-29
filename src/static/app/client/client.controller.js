@@ -15,6 +15,7 @@ angular.module('dbflute-intro')
     $scope.versions = []; // engine versions
     $scope.configuration = {}; // intro configuration
     $scope.client = null; // model of current client
+    $scope.syncSchemaSetting = {};
 
     // ===================================================================================
     //                                                                          Basic Data
@@ -70,14 +71,23 @@ angular.module('dbflute-intro')
     // ===================================================================================
     //                                                                     SchemaSyncCheck
     //                                                                     ===============
-    $scope.schemaSyncCheck = function() {
+    $scope.syncSchemaSetting = function(projectName) {
+        ApiFactory.syncSchema(projectName).then(function (response) {
+            $scope.syncSchemaSetting = response.data;
+        });
+    };
+
+    $scope.checkSync = function() {
+        // TODO add check function
+        console.log("check");
+    };
+
+    $scope.editSyncSchema = function() {
         var modalInstance = $uibModal.open({
             templateUrl: "app/client/schema-sync-check.html",
             controller: "SchemaSyncCheckSettingController",
             resolve: {
-                syncSchemaSetting: function() {
-                    return ApiFactory.syncSchema($scope.projectName);
-                }
+                syncSchemaSetting: $scope.syncSchemaSetting
             }
         });
     };
@@ -89,6 +99,7 @@ angular.module('dbflute-intro')
     $scope.engineVersions();
     $scope.prepareCurrentProject($scope.projectName);
     $scope.configuration();
+    $scope.syncSchemaSetting($scope.projectName);
 });
 
 /**
@@ -98,7 +109,7 @@ angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
         function($scope, $uibModalInstance, syncSchemaSetting, ApiFactory) {
     'use strict';
 
-    $scope.syncSchemaSettingData = syncSchemaSetting.data;
+    $scope.syncSchemaSettingData = syncSchemaSetting;
 
     $scope.checkSchema = function() {
         // TODO add check schema by deco
