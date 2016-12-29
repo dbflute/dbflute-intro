@@ -15,18 +15,28 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.infra.dfprop.DfPropFile;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.lastaflute.core.exception.LaSystemException;
+
+import javax.annotation.Resource;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import org.dbflute.infra.dfprop.DfPropFile;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
  * @author jflute
  */
 public class DfpropInfoLogic {
+
+    @Resource
+    private DfpropPhysicalLogic dfpropPhysicalLogic;
 
     public Map<String, Map<String, Object>> findDfpropMap(String clientProject) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
@@ -68,6 +78,40 @@ public class DfpropInfoLogic {
             return dfpropFile.readMap(absolutePath, null);
         } catch (RuntimeException e) {
             throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
+        }
+    }
+
+    public void replaceSchemaSyncCheckMap(String project, String setting) {
+        File documentMap = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
+
+        try (BufferedReader br = Files.newBufferedReader(documentMap.toPath())) {
+            boolean isExampleComment = true;
+            boolean inSyncSchemeSetting = false;
+            StringBuilder stringBuilder = new StringBuilder();
+
+            while (true) {
+                String line = br.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (StringUtils.equals(line, "map:{")) {
+                    isExampleComment = false;
+                }
+                if (!isExampleComment && line.contains("; schemaSyncCheckMap = map:{")) {
+                    inSyncSchemeSetting = true;
+                }
+                if (!isExampleComment && (inSyncSchemeSetting && line.contains("# - - - - - - - - - -/"))) {
+                    inSyncSchemeSetting = false;
+                    line = setting;
+                }
+                if (!isExampleComment && inSyncSchemeSetting) {
+                    continue;
+                }
+                stringBuilder.append(line).append("\n");
+            }
+            FileUtils.write(documentMap, stringBuilder.toString());
+        } catch (IOException e) {
+            throw new LaSystemException("Cannot replace schema sync check map", e);
         }
     }
 }

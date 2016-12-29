@@ -72,8 +72,8 @@ public class DfpropAction extends IntroBaseAction {
     }
 
     // -----------------------------------------------------
-    //                                       SchemaSyncCheck
-    //                                       ---------------
+    //                                         GetSyncSchema
+    //                                         -------------
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DfpropSchemaSyncCheckBean> syncschema(String project) {
         final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.findDfpropMap(project);
@@ -100,5 +100,26 @@ public class DfpropAction extends IntroBaseAction {
         bean.password = (String) schemaSyncCheckMap.get("password");
         bean.isSuppressCraftDiff = (Boolean) schemaSyncCheckMap.get("isSuppressCraftDiff");
         return bean;
+    }
+
+    // -----------------------------------------------------
+    //                                        EditSyncSchema
+    //                                        --------------
+    @Execute(urlPattern = "{}/@word/@word")
+    public JsonResponse<Void> syncschemaEdit(String project, DfpropEditSyncSchemaBody body) {
+        validate(body, messages -> {});
+        final String schemaSyncCheckMap = mappingToSchemaSyncCheckMapStr(body);
+        dfpropInfoLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
+        return JsonResponse.asEmptyBody();
+    }
+
+    public String mappingToSchemaSyncCheckMapStr(DfpropEditSyncSchemaBody body) {
+        return "     ; schemaSyncCheckMap = map:{" + "\n" +
+            "         ; url = " + body.url + "\n" +
+            "         ; schema = " + body.schema + "\n" +
+            "         ; user = " + body.user + "\n" +
+            "         ; password = " + body.password + "\n" +
+            "         ; isSuppressCraftDiff = " + body.isSuppressCraftDiff + "\n" +
+            "     }";
     }
 }
