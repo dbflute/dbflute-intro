@@ -83,11 +83,17 @@ angular.module('dbflute-intro')
     };
 
     $scope.editSyncSchema = function() {
-        var modalInstance = $uibModal.open({
+        var modalParam = {
+            projectName: $scope.projectName,
+            syncSchemaSetting: $scope.syncSchemaSetting
+        };
+        $uibModal.open({
             templateUrl: "app/client/schema-sync-check.html",
             controller: "SchemaSyncCheckSettingController",
             resolve: {
-                syncSchemaSetting: $scope.syncSchemaSetting
+                modalParam : function () {
+                    return modalParam;
+                }
             }
         });
     };
@@ -106,13 +112,15 @@ angular.module('dbflute-intro')
  * Schema Sync Check Controller
  */
 angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
-        function($scope, $uibModalInstance, syncSchemaSetting, ApiFactory) {
+        function($scope, $uibModalInstance, modalParam, ApiFactory) {
     'use strict';
 
-    $scope.syncSchemaSettingData = syncSchemaSetting;
+    $scope.projectName = modalParam.projectName;
+    $scope.syncSchemaSettingData = modalParam.syncSchemaSetting;
 
-    $scope.checkSchema = function() {
-        // TODO add check schema by deco
-        console.log("update schema");
+    $scope.editSyncSchema = function() {
+        ApiFactory.editSyncSchema(modalParam.projectName, $scope.syncSchemaSettingData).then(function(response) {
+            $uibModalInstance.close();
+        });
     };
 });

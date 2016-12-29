@@ -98,6 +98,19 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/dfprop/' + projectName + '/syncschema'
             });
         },
+        editSyncSchema: function(projectName, syncSchemaSettingData) {
+            return $http({
+                method: 'POST',
+                url: 'api/dfprop/' + projectName + '/syncschema/edit',
+                data: {
+                    url: syncSchemaSettingData.url,
+                    schema: syncSchemaSettingData.schema,
+                    user: syncSchemaSettingData.user,
+                    password: syncSchemaSettingData.password,
+                    isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff
+                }
+            });
+        },
         playsqlBeanList: function(clientBody) {
             return $http({
                 method : 'POST',
