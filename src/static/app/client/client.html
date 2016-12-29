@@ -24,7 +24,7 @@
     <h3>Schema Sync Check</h3>
     <div class="col-sm-6">
       <div class="col-sm-3">
-        <input type="button" class="btn btn-primary" ng-click="task('schemaSyncCheck')" value="Check schema" />
+        <input type="button" class="btn btn-primary" ng-click="schemaSyncCheck()" value="Check schema" />
         <input type="button" class="btn btn-primary" ng-click="editSyncSchema()" value="Edit schema" />
       </div>
       <p class="text-right">
@@ -34,9 +34,18 @@
   </div>
 </div>
 <!-- progress modal -->
-<script type="text/ng-template" id="progress.html">
+<script type="text/ng-template" id="generating.html">
   <div class="modal-header">
     Generating...
+  </div>
+  <div class="modal-body">
+    <progressbar class="progress-striped active" animate="false" value="100">
+    </progressbar>
+  </div>
+</script>
+<script type="text/ng-template" id="checking.html">
+  <div class="modal-header">
+    Checking...
   </div>
   <div class="modal-body">
     <progressbar class="progress-striped active" animate="false" value="100">

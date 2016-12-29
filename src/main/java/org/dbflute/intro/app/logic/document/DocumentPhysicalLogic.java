@@ -15,11 +15,10 @@
  */
 package org.dbflute.intro.app.logic.document;
 
-import java.io.File;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import java.io.File;
 
 /**
  * @author deco
@@ -52,6 +51,10 @@ public class DocumentPhysicalLogic {
 
     public File findHistoryHtml(String clientProject) {
         return toDocumentFile(clientProject, "history");
+    }
+
+    public File findSyncCheckResultHtml(String clientProject) {
+        return new File(introPhysicalLogic.buildClientPath(clientProject, "output", "doc", "sync-check-result.html"));
     }
 
     // ===================================================================================

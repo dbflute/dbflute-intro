@@ -58,6 +58,15 @@ public class DocumentAction extends IntroBaseAction {
         return createHtmlStreamResponse(historyHtml);
     }
 
+    @Execute(urlPattern = "{}/@word")
+    public StreamResponse synccheckresulthtml(String clientProject) {
+        File syncCheckResultHtml = documentPhysicalLogic.findSyncCheckResultHtml(clientProject);
+        if (!syncCheckResultHtml.exists()) {
+            return null;
+        }
+        return createHtmlStreamResponse(syncCheckResultHtml);
+    }
+
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
