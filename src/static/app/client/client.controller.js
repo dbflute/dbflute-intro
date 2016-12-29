@@ -5,11 +5,6 @@
  */
 angular.module('dbflute-intro')
         .controller('ClientCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
-    // TODO deco remove unused functions
-    //  Bean -> Body
-    var convertParam = function(param) {
-        return param;
-    };
 
     $scope.projectName = $stateParams.projectName;
     $scope.versions = []; // engine versions
