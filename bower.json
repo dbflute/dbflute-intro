@@ -14,6 +14,7 @@
     "angular-translate-storage-local": "2.12.1",
     "angular-translate-loader-static-files": "2.12.1",
     "angular-translate-handler-log": "2.12.1",
+    "angular-flash-alert": "2.4.0",
     "ngstorage": "0.3.11"
   },
   "devDependencies": {

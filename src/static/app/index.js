@@ -19,7 +19,8 @@ angular.module('dbflute-intro', [
         'ui.router',
         'ui.bootstrap',
         'ngStorage',
-        'pascalprecht.translate']);
+        'pascalprecht.translate',
+        'ngFlash']);
 
 /**
  * Module for exceptionHandler
