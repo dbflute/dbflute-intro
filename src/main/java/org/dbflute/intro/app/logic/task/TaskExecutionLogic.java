@@ -15,6 +15,14 @@
  */
 package org.dbflute.intro.app.logic.task;
 
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.util.ProcessUtil;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.dbflute.optional.OptionalThing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -24,15 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.util.ProcessUtil;
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.dbflute.optional.OptionalThing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -53,7 +52,7 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
+    public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException, SchemaNotSynchronizedException {
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         for (ProcessBuilder processBuilder : dbfluteTaskList) {
@@ -105,7 +104,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Process
     //                                                                             =======
-    private void executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException {
+    private void executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException, SchemaNotSynchronizedException {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
@@ -144,7 +143,10 @@ public class TaskExecutionLogic {
         handleErrorResultCode(resultCode, logSb);
     }
 
-    private boolean isErrorLine(String line) { // depending on Apache Ant
+    private boolean isErrorLine(String line) throws SchemaNotSynchronizedException { // depending on Apache Ant
+        if (line.contains("org.dbflute.exception.DfSchemaSyncCheckGhastlyTragedyException")) {
+            throw new SchemaNotSynchronizedException("The schema was not synchronized with another schema");
+        }
         return line.equals("BUILD FAILED");
     }
 
@@ -187,6 +189,14 @@ public class TaskExecutionLogic {
 
         public String getProcessLog() {
             return processLog;
+        }
+    }
+
+    public static class SchemaNotSynchronizedException extends Exception {
+        private static final long serialVersionUID = 1L;
+
+        public SchemaNotSynchronizedException(String msg) {
+            super(msg);
         }
     }
 }

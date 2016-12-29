@@ -15,11 +15,8 @@
  */
 package org.dbflute.intro.app.web.task;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
+import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaNotSynchronizedException;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.TaskErrorResultException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
@@ -29,6 +26,9 @@ import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author p1us2er0
@@ -49,7 +49,7 @@ public class TaskAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<Void> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
+    public JsonResponse<TaskExecuteResult> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         try {
             taskExecutionLogic.execute(project, taskTypeList, env);
@@ -59,7 +59,9 @@ public class TaskAction extends IntroBaseAction {
             String debugMsg =
                     "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
+        } catch (SchemaNotSynchronizedException e) {
+            return asJson(new TaskExecuteResult(false));
         }
-        return JsonResponse.asEmptyBody();
+        return asJson(new TaskExecuteResult(true));
     }
 }
