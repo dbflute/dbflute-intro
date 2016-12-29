@@ -19,25 +19,37 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 
 /**
  * @author jflute
+ * @author deco
  */
 public class SchemaSyncCheckMap {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final DbConnectionBox dbConnectionModel;
+    public DbConnectionBox dbConnectionModel;
+    public boolean isSuppressCraftDiff;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public SchemaSyncCheckMap(DbConnectionBox dbConnectionModel) {
+    public SchemaSyncCheckMap() {
+    }
+
+    public SchemaSyncCheckMap(DbConnectionBox dbConnectionModel, boolean isSuppressCraftDiff) {
         this.dbConnectionModel = dbConnectionModel;
+        this.isSuppressCraftDiff = isSuppressCraftDiff;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public DbConnectionBox getDbConnectionModel() {
-        return dbConnectionModel;
+    public String convertToDfpropStr() {
+        return "    ; schemaSyncCheckMap = map:{" + "\n" +
+            "        ; url = " + dbConnectionModel.getUrl() + "\n" +
+            "        ; schema = " + dbConnectionModel.getSchema() + "\n" +
+            "        ; user = " + dbConnectionModel.getUser() + "\n" +
+            "        ; password = " + dbConnectionModel.getPassword() + "\n" +
+            "        ; isSuppressCraftDiff = " + isSuppressCraftDiff + "\n" +
+            "    }";
     }
 }

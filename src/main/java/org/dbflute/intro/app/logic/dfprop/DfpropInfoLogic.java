@@ -19,6 +19,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.infra.dfprop.DfPropFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.lastaflute.core.exception.LaSystemException;
 
 import javax.annotation.Resource;
@@ -26,12 +28,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 /**
  * @author jflute
+ * @author deco
  */
 public class DfpropInfoLogic {
 
@@ -81,7 +85,25 @@ public class DfpropInfoLogic {
         }
     }
 
-    public void replaceSchemaSyncCheckMap(String project, String setting) {
+    public SchemaSyncCheckMap findSchemaSyncCheckMap(String projectName) {
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+        return Arrays.stream(dfpropDir.listFiles())
+            .filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop"))
+            .map(file -> {
+                final DfPropFile dfpropFile = new DfPropFile();
+                Map<String, Object> readMap = readMap(file, dfpropFile);
+                Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+                DbConnectionBox dbConnectionBox = new DbConnectionBox(
+                    (String) schemaSyncCheckMap.get("url"),
+                    (String) schemaSyncCheckMap.get("schema"),
+                    (String) schemaSyncCheckMap.get("user"),
+                    (String) schemaSyncCheckMap.get("password")
+                );
+                return new SchemaSyncCheckMap(dbConnectionBox, Boolean.valueOf(schemaSyncCheckMap.get("isSuppressCraftDiff").toString()));
+            }).findAny().orElse(new SchemaSyncCheckMap());
+    }
+
+    public void replaceSchemaSyncCheckMap(String project, SchemaSyncCheckMap schemaSyncCheckMap) {
         File documentMap = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
 
         try (BufferedReader br = Files.newBufferedReader(documentMap.toPath())) {
@@ -102,7 +124,7 @@ public class DfpropInfoLogic {
                 }
                 if (!isExampleComment && (inSyncSchemeSetting && line.contains("# - - - - - - - - - -/"))) {
                     inSyncSchemeSetting = false;
-                    line = setting + "\n" + line;
+                    line = schemaSyncCheckMap.convertToDfpropStr() + "\n" + line;
                 }
                 if (!isExampleComment && inSyncSchemeSetting) {
                     continue;
