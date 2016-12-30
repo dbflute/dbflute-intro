@@ -28,7 +28,6 @@ public class DfpropEditSyncSchemaBody {
     public String schema;
     @NotEmpty
     public String user;
-    @NotEmpty
     public String password;
     public boolean isSuppressCraftDiff;
 }

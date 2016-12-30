@@ -69,11 +69,18 @@ angular.module('dbflute-intro')
             templateUrl:"checking.html",
             backdrop:"static",keyboard:false
         });
-        ApiFactory.task($scope.projectName, 'schemaSyncCheck').then(function (success) {
+
+        ApiFactory.task($scope.projectName, 'schemaSyncCheck').then(function (response) {
             modalInstance.close();
+            if (response.data.result) {
+                $uibModal.open({
+                    templateUrl:"success.html"
+                });
+            } else {
+                $window.open($scope.configuration['apiServerUrl'] + 'document/' + $scope.projectName + '/synccheckresulthtml/');
+            }
         }, function (error) {
             modalInstance.close();
-            $window.open($scope.configuration['apiServerUrl'] + 'document/' + $scope.projectName + '/synccheckresulthtml/');
         });
     };
     // ===================================================================================

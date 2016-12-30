@@ -49,19 +49,18 @@ public class TaskAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<TaskExecuteResult> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
+    public JsonResponse<TaskExecutionResult> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         try {
             taskExecutionLogic.execute(project, taskTypeList, env);
+        } catch (SchemaNotSynchronizedException e) {
+            return asJson(new TaskExecutionResult(false));
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
             String processLog = e.getProcessLog();
-            String debugMsg =
-                    "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
+            String debugMsg = "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
-        } catch (SchemaNotSynchronizedException e) {
-            return asJson(new TaskExecuteResult(false));
         }
-        return asJson(new TaskExecuteResult(true));
+        return asJson(new TaskExecutionResult(true));
     }
 }

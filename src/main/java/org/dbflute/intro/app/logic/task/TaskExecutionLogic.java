@@ -52,7 +52,7 @@ public class TaskExecutionLogic {
     //                                                                             Execute
     //                                                                             =======
     // TODO jflute intro: make TaskInstruction class (2016/07/14)
-    public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException, SchemaNotSynchronizedException {
+    public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         for (ProcessBuilder processBuilder : dbfluteTaskList) {
@@ -104,7 +104,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Process
     //                                                                             =======
-    private void executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException, SchemaNotSynchronizedException {
+    private void executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
@@ -192,11 +192,11 @@ public class TaskExecutionLogic {
         }
     }
 
-    public static class SchemaNotSynchronizedException extends Exception {
+    public static class SchemaNotSynchronizedException extends TaskErrorResultException {
         private static final long serialVersionUID = 1L;
 
         public SchemaNotSynchronizedException(String msg) {
-            super(msg);
+            super(msg, 1, null);
         }
     }
 }
