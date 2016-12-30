@@ -6,7 +6,7 @@ import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 /**
  * @author deco
  */
-public class DfpropSchemaSyncCheckBean {
+public class DfpropSchemaSyncCheckResult {
 
     public String url;
     public String schema;
@@ -14,7 +14,7 @@ public class DfpropSchemaSyncCheckBean {
     public String password;
     public Boolean isSuppressCraftDiff;
 
-    public DfpropSchemaSyncCheckBean(SchemaSyncCheckMap schemaSyncCheckMap) {
+    public DfpropSchemaSyncCheckResult(SchemaSyncCheckMap schemaSyncCheckMap) {
         DbConnectionBox dbConnectionModel = schemaSyncCheckMap.dbConnectionModel;
         url = dbConnectionModel.getUrl();
         schema = dbConnectionModel.getSchema();

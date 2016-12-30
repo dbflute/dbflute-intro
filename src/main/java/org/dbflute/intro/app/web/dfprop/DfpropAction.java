@@ -76,9 +76,9 @@ public class DfpropAction extends IntroBaseAction {
     //                                         GetSyncSchema
     //                                         -------------
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DfpropSchemaSyncCheckBean> syncschema(String project) {
+    public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String project) {
         final SchemaSyncCheckMap schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
-        final DfpropSchemaSyncCheckBean bean = new DfpropSchemaSyncCheckBean(schemaSyncCheckMap);
+        final DfpropSchemaSyncCheckResult bean = new DfpropSchemaSyncCheckResult(schemaSyncCheckMap);
         return asJson(bean);
     }
 
