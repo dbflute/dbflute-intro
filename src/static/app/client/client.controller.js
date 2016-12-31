@@ -64,6 +64,9 @@ angular.module('dbflute-intro')
         });
     };
 
+    // ===================================================================================
+    //                                                                     SchemaSyncCheck
+    //                                                                     ===============
     $scope.schemaSyncCheck = function() {
         var modalInstance = $uibModal.open({
             templateUrl:"checking.html",
@@ -83,9 +86,7 @@ angular.module('dbflute-intro')
             modalInstance.close();
         });
     };
-    // ===================================================================================
-    //                                                                     SchemaSyncCheck
-    //                                                                     ===============
+
     $scope.syncSchemaSetting = function(projectName) {
         ApiFactory.syncSchema(projectName).then(function (response) {
             $scope.syncSchemaSetting = response.data;
@@ -108,6 +109,9 @@ angular.module('dbflute-intro')
         });
     };
 
+    $scope.canCheckSchemaSetting = function() {
+        return $scope.syncSchemaSetting.url != null && $scope.syncSchemaSetting.schema != null && $scope.syncSchemaSetting.user != null;
+    };
 
     // ===================================================================================
     //                                                                          Initialize

@@ -19,17 +19,17 @@
     </div>
   </div>
   <div class="col-sm-12">
-    <div class="col-sm-9">
-    </div>
     <h3>Schema Sync Check</h3>
-    <div class="col-sm-6">
+    <div ng-show="canCheckSchemaSetting()" class="clearfix">
       <div class="col-sm-3">
-        <input type="button" class="btn btn-primary" ng-click="schemaSyncCheck()" value="Check schema" />
-        <input type="button" class="btn btn-primary" ng-click="editSyncSchema()" value="Edit schema" />
+        <input type="button" class="btn btn-primary" ng-click="schemaSyncCheck()" value="Check schema"/>
       </div>
-      <p class="text-right">
+      <p class="col-sm-9">
         for {{syncSchemaSetting.url}}, {{syncSchemaSetting.schema}}, {{syncSchemaSetting.user}}
       </p>
+    </div>
+    <div class="col-sm-3">
+      <input type="button" class="btn btn-primary" ng-click="editSyncSchema()" value="Edit schema"/>
     </div>
   </div>
 </div>
