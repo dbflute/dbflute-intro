@@ -113,6 +113,7 @@ public class TaskExecutionLogic {
             throw new IllegalStateException(e);
         }
         int resultCode = 0;
+        boolean schemaNotSynchronized = false;
         StringBuilder logSb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
         ) {
@@ -127,6 +128,10 @@ public class TaskExecutionLogic {
                 if (isErrorLine(line)) {
                     resultCode = 1;
                 }
+
+                if (isSchemaNotSynchronized(line)) {
+                    schemaNotSynchronized = true;
+                }
             }
         } catch (IOException e) {
             if (isNazoErrorByJetty(e)) { // #for_now may be unneeded by quitting output stream by jflute
@@ -140,14 +145,16 @@ public class TaskExecutionLogic {
         if (resultCode == 0) {
             resultCode = waitForProcessEnding(process);
         }
+        throwIfSchemaNotSynchronized(schemaNotSynchronized, resultCode, logSb);
         handleErrorResultCode(resultCode, logSb);
     }
 
-    private boolean isErrorLine(String line) throws SchemaNotSynchronizedException { // depending on Apache Ant
-        if (line.contains("org.dbflute.exception.DfSchemaSyncCheckGhastlyTragedyException")) {
-            throw new SchemaNotSynchronizedException("The schema was not synchronized with another schema");
-        }
+    private boolean isErrorLine(String line) { // depending on Apache Ant
         return line.equals("BUILD FAILED");
+    }
+
+    private boolean isSchemaNotSynchronized(String line) {
+        return line.contains("org.dbflute.exception.DfSchemaSyncCheckGhastlyTragedyException");
     }
 
     private boolean isNazoErrorByJetty(IOException e) {
@@ -160,6 +167,13 @@ public class TaskExecutionLogic {
         } catch (InterruptedException continued) {
             logger.warn("Failed to wait for the process: " + process, continued);
             return 0; // unknown as success for now
+        }
+    }
+
+    private void throwIfSchemaNotSynchronized(boolean schemaNotSynchronized, int resultCode, StringBuilder logSb) throws SchemaNotSynchronizedException {
+        if (schemaNotSynchronized) {
+            String msg = "Schema not synchronized";
+            throw new SchemaNotSynchronizedException(msg, resultCode, logSb.toString());
         }
     }
 
@@ -195,8 +209,8 @@ public class TaskExecutionLogic {
     public static class SchemaNotSynchronizedException extends TaskErrorResultException {
         private static final long serialVersionUID = 1L;
 
-        public SchemaNotSynchronizedException(String msg) {
-            super(msg, 1, null);
+        public SchemaNotSynchronizedException(String msg, int resultCode, String processLog) {
+            super(msg, resultCode, processLog);
         }
     }
 }
