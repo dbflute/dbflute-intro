@@ -94,7 +94,9 @@ public class DfpropInfoLogic {
             .map(file -> {
                 final DfPropFile dfpropFile = new DfPropFile();
                 Map<String, Object> readMap = readMap(file, dfpropFile);
-                return (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+                return schemaSyncCheckMap;
             }).filter(Objects::nonNull)
             .map(schemaSyncCheckMap -> {
                 DbConnectionBox dbConnectionBox = new DbConnectionBox(
