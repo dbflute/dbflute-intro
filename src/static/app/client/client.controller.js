@@ -75,7 +75,7 @@ angular.module('dbflute-intro')
 
         ApiFactory.task($scope.projectName, 'schemaSyncCheck').then(function (response) {
             modalInstance.close();
-            if (response.data.result) {
+            if (response.data.success) {
                 $uibModal.open({
                     templateUrl:"success.html"
                 });
