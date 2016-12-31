@@ -14,6 +14,9 @@ public class DfpropSchemaSyncCheckResult {
     public String password;
     public Boolean isSuppressCraftDiff;
 
+    public DfpropSchemaSyncCheckResult() {
+    }
+
     public DfpropSchemaSyncCheckResult(SchemaSyncCheckMap schemaSyncCheckMap) {
         DbConnectionBox dbConnectionModel = schemaSyncCheckMap.dbConnectionModel;
         url = dbConnectionModel.getUrl();

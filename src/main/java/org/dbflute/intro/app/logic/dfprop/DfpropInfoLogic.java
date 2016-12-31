@@ -31,6 +31,8 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -85,14 +87,16 @@ public class DfpropInfoLogic {
         }
     }
 
-    public SchemaSyncCheckMap findSchemaSyncCheckMap(String projectName) {
+    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
         final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
         return Arrays.stream(dfpropDir.listFiles())
             .filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop"))
             .map(file -> {
                 final DfPropFile dfpropFile = new DfPropFile();
                 Map<String, Object> readMap = readMap(file, dfpropFile);
-                Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+                return (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+            }).filter(Objects::nonNull)
+            .map(schemaSyncCheckMap -> {
                 DbConnectionBox dbConnectionBox = new DbConnectionBox(
                     (String) schemaSyncCheckMap.get("url"),
                     (String) schemaSyncCheckMap.get("schema"),
@@ -100,7 +104,7 @@ public class DfpropInfoLogic {
                     (String) schemaSyncCheckMap.get("password")
                 );
                 return new SchemaSyncCheckMap(dbConnectionBox, Boolean.valueOf(schemaSyncCheckMap.get("isSuppressCraftDiff").toString()));
-            }).findAny().orElse(new SchemaSyncCheckMap());
+            }).findAny();
     }
 
     public void replaceSchemaSyncCheckMap(String project, SchemaSyncCheckMap schemaSyncCheckMap) {

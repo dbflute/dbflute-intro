@@ -27,6 +27,7 @@ import org.lastaflute.web.response.JsonResponse;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -77,8 +78,8 @@ public class DfpropAction extends IntroBaseAction {
     //                                         -------------
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String project) {
-        final SchemaSyncCheckMap schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
-        final DfpropSchemaSyncCheckResult bean = new DfpropSchemaSyncCheckResult(schemaSyncCheckMap);
+        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
+        final DfpropSchemaSyncCheckResult bean = schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElse(new DfpropSchemaSyncCheckResult());
         return asJson(bean);
     }
 
