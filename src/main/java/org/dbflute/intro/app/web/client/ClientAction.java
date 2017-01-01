@@ -212,9 +212,7 @@ public class ClientAction extends IntroBaseAction {
     }
 
     private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
-        ClientModel clientModel = newClientModel(projectName, clientBody);
-        // TODO jflute intro: re-making (2016/08/12)
-        return clientModel;
+        return newClientModel(projectName, clientBody);
     }
 
     private ClientModel newClientModel(String projectName, ClientPart clientBody) {

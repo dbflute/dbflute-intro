@@ -22,12 +22,13 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class DfpropEditSyncSchemaBody {
 
+    // TODO deco use Required annotation by jflute (2017/01/01)
     @NotEmpty
     public String url;
-    @NotEmpty
     public String schema;
     @NotEmpty
     public String user;
     public String password;
+    // TODO deco use Boolean and Required annotation by jflute (2017/01/01)
     public boolean isSuppressCraftDiff;
 }

@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @author hakiba
+ * @author jflute
  */
 public class ClientSettingsAction extends IntroBaseAction {
 
@@ -89,9 +90,7 @@ public class ClientSettingsAction extends IntroBaseAction {
     }
 
     private ClientModel mappingToClientModel(String projectName, ClientUpdateBody.ClientPart clientBody) {
-        ClientModel clientModel = newClientModel(projectName, clientBody);
-        // TODO jflute intro: re-making (2016/08/12)
-        return clientModel;
+        return newClientModel(projectName, clientBody);
     }
 
     private ClientModel newClientModel(String projectName, ClientUpdateBody.ClientPart clientBody) {
