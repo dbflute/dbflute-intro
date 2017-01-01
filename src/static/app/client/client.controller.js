@@ -110,7 +110,7 @@ angular.module('dbflute-intro')
     };
 
     $scope.canCheckSchemaSetting = function() {
-        return $scope.syncSchemaSetting.url != null && $scope.syncSchemaSetting.schema != null && $scope.syncSchemaSetting.user != null;
+        return $scope.syncSchemaSetting.url != null && $scope.syncSchemaSetting.user != null;
     };
 
     // ===================================================================================
