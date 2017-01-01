@@ -41,15 +41,19 @@ public class SchemaSyncCheckMap {
     }
 
     // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
+    //                                                                           to Dfprop
+    //                                                                           =========
     public String convertToDfpropStr() {
-        return "    ; schemaSyncCheckMap = map:{" + "\n" +
-            "        ; url = " + dbConnectionModel.getUrl() + "\n" +
-            "        ; schema = " + dbConnectionModel.getSchema() + "\n" +
-            "        ; user = " + dbConnectionModel.getUser() + "\n" +
-            "        ; password = " + dbConnectionModel.getPassword() + "\n" +
-            "        ; isSuppressCraftDiff = " + isSuppressCraftDiff + "\n" +
-            "    }";
+        final String url = dbConnectionModel.getUrl();
+        final String schema = dbConnectionModel.getSchema();
+        final String user = dbConnectionModel.getUser();
+        final String password = dbConnectionModel.getPassword();
+        return "    ; schemaSyncCheckMap = map:{" + "\n" + //
+                "        ; url = " + url + "\n" + //
+                "        ; schema = " + (schema != null ? schema : "") + "\n" + //
+                "        ; user = " + user + "\n" + //
+                "        ; password = " + (password != null ? password : "") + "\n" + //
+                "        ; isSuppressCraftDiff = " + isSuppressCraftDiff + "\n" + //
+                "    }";
     }
 }
