@@ -57,6 +57,6 @@ public class IntroActionDefTest extends UnitIntroTestCase {
     }
 
     public void test_lastaPresentsSomethingPolice() throws Exception {
-        policeStoryOfJavaClassChase(new LastaPresentsSomethingPolice());
+        policeStoryOfJavaClassChase(new LastaPresentsSomethingPolice().formImmutable());
     }
 }

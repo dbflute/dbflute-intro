@@ -35,9 +35,9 @@ ext {
             node : '6.7.0',
 
             // Main Framework
-            dbflute : '1.1.1',
-            h2 : '1.4.192',
-            lastaflute : '0.8.6',
+            dbflute : '1.1.2',
+            h2 : '1.4.193',
+            lastaflute : '0.8.8',
 
             // Partner Library
             slf4j : '1.7.21',
@@ -50,7 +50,7 @@ ext {
 
             // Testing
             junit : '4.8.2',
-            utflute : '0.6.3',
+            utflute : '0.6.6',
             javaparser : '2.5.1'
         ]
 }
