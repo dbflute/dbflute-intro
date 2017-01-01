@@ -22,7 +22,7 @@ apply plugin: 'project-report'
 //                                                                              Basic Info
 //                                                                              ==========
 group = 'org.dbflute'
-version = '0.1.0'
+version = '0.1.1'
 
 ext {
     encoding = 'UTF-8'
