@@ -18,6 +18,7 @@ package org.dbflute.intro.app.web.client;
 import javax.validation.Valid;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -27,8 +28,8 @@ import org.lastaflute.web.validation.Required;
 public class ClientSettingsResult {
 
     // ===================================================================================
-    //                                                                         Client Info
-    //                                                                         ===========
+    //                                                                           Attribute
+    //                                                                           =========
     @Required
     public String projectName;
     @Required
@@ -50,7 +51,7 @@ public class ClientSettingsResult {
 
         @Required
         public String url;
-        public String schema; // contains additional schema by comma
+        public String schema;
         @Required
         public String user;
         public String password;
@@ -62,8 +63,10 @@ public class ClientSettingsResult {
     public String jdbcDriverJarPath;
 
     // ===================================================================================
-    //                                                                         Constructor
-    //                                                                         ===========
-    public ClientSettingsResult() {
+    //                                                                      Basic Override
+    //                                                                      ==============
+    @Override
+    public String toString() {
+        return Lato.string(this);
     }
 }

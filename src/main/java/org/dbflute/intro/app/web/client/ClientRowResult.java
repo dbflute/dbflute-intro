@@ -55,7 +55,7 @@ public class ClientRowResult {
 
         @Required
         public String url;
-        public String schema; // contains additional schema by comma
+        public String schema;
         @Required
         public String user;
         public String password;

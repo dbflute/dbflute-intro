@@ -43,6 +43,7 @@ public class DocumentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public StreamResponse schemahtml(String clientProject) {
         File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientProject);
+        // TODO deco cannot return null, throw application exception by jflute (2017/01/12)
         if (!schemaHtml.exists()) {
             return null;
         }
@@ -71,6 +72,7 @@ public class DocumentAction extends IntroBaseAction {
     //                                                                        Assist Logic
     //                                                                        ============
     private StreamResponse createHtmlStreamResponse(File file) {
+        // TODO deco dummy name or comment about it by jflute (2017/01/12)
         StreamResponse stream = asStream("schema-...html");
         stream.headerContentDispositionInline();
         return stream.contentType("text/html; encoding=\"UTF-8\"").stream(out -> {

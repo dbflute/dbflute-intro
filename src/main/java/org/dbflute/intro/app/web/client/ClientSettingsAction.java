@@ -15,6 +15,10 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import java.util.LinkedHashMap;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -32,19 +36,17 @@ import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-
 /**
  * @author hakiba
  * @author jflute
  */
 public class ClientSettingsAction extends IntroBaseAction {
 
-
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    @Resource
+    private TimeManager timeManager;
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
@@ -53,8 +55,6 @@ public class ClientSettingsAction extends IntroBaseAction {
     private TestConnectionLogic testConnectionLogic;
     @Resource
     private DocumentPhysicalLogic documentLogic;
-    @Resource
-    private TimeManager timeManager;
 
     // ===================================================================================
     //                                                                             Execute
@@ -64,6 +64,7 @@ public class ClientSettingsAction extends IntroBaseAction {
     //                                              --------
     @Execute
     public JsonResponse<ClientSettingsResult> index(String clientProject) {
+        // TODO hakiba recyle orElseThrow() by jflute (2017/01/12)
         ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
         });
@@ -125,9 +126,10 @@ public class ClientSettingsAction extends IntroBaseAction {
     }
 
     private DatabaseInfoMap prepareDatabaseInfoMap(ClientUpdateBody.ClientPart clientBody) {
+        // TODO jflute next review (2017/01/12)
         return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
             DbConnectionBox connectionBox =
-                new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
+                    new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
             AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
             return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, connectionBox, additionalSchemaMap);
         }).orElseThrow(() -> {

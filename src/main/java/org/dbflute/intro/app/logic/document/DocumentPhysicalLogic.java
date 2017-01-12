@@ -15,22 +15,21 @@
  */
 package org.dbflute.intro.app.logic.document;
 
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import java.io.File;
 
 import javax.annotation.Resource;
-import java.io.File;
+
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
  * @author deco
+ * @author jflute
  */
 public class DocumentPhysicalLogic {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // -----------------------------------------------------
-    //                                          DI Component
-    //                                          ------------
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
@@ -38,34 +37,38 @@ public class DocumentPhysicalLogic {
     //                                                                         Find/Exists
     //                                                                         ===========
     public boolean existsSchemaHtml(String clientProject) {
-        return toDocumentFile(clientProject, "schema").exists();
+        return findSchemaHtml(clientProject).exists();
     }
 
     public boolean existsHistoryHtml(String clientProject) {
-        return toDocumentFile(clientProject, "history").exists();
+        return findHistoryHtml(clientProject).exists();
     }
 
     public File findSchemaHtml(String clientProject) {
-        return toDocumentFile(clientProject, "schema");
+        return toProjectNamedDocumentFile(clientProject, "schema");
     }
 
     public File findHistoryHtml(String clientProject) {
-        return toDocumentFile(clientProject, "history");
+        return toProjectNamedDocumentFile(clientProject, "history");
     }
 
     public File findSyncCheckResultHtml(String clientProject) {
-        return new File(introPhysicalLogic.buildClientPath(clientProject, "output", "doc", "sync-check-result.html"));
+        return toFixedNamedDocumentFile(clientProject, "sync-check-result.html");
     }
 
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
-    private File toDocumentFile(String clientProject, String type) {
-        final String htmlFileName = buildHtmlFileName(clientProject, type);
-        return new File(introPhysicalLogic.buildClientPath(clientProject, "output", "doc", htmlFileName));
+    private File toProjectNamedDocumentFile(String clientProject, String type) { // e.g. SchemaHtml
+        final String pureName = type + "-" + clientProject + ".html";
+        return toFixedNamedDocumentFile(clientProject, pureName);
     }
 
-    private String buildHtmlFileName(String clientProject, String type) {
-        return type + "-" + clientProject + ".html";
+    private File toFixedNamedDocumentFile(String clientProject, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildDocumentPath(clientProject, pureName));
+    }
+
+    private String buildDocumentPath(String clientProject, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientProject, "output", "doc", pureName);
     }
 }
