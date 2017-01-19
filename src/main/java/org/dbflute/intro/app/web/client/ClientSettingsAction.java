@@ -36,6 +36,7 @@ import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
+// TODO hakiba make settings package by jflute (2017/01/19)
 /**
  * @author hakiba
  * @author jflute
@@ -127,6 +128,12 @@ public class ClientSettingsAction extends IntroBaseAction {
 
     private DatabaseInfoMap prepareDatabaseInfoMap(ClientUpdateBody.ClientPart clientBody) {
         // TODO jflute next review (2017/01/12)
+        // TODO jflute mainSchemaSettings cannot be null (2017/01/12)
+        // e.g.
+        //DatabaseSettingsPart dbSettings = clientBody.mainSchemaSettings;
+        //DbConnectionBox connectionBox = new DbConnectionBox(dbSettings.url, dbSettings.schema, dbSettings.user, dbSettings.password);
+        //return DatabaseInfoMap.createWithoutAdditinal(clientBody.jdbcDriverFqcn, connectionBox);
+
         return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
             DbConnectionBox connectionBox =
                     new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);

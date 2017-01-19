@@ -15,10 +15,10 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import javax.validation.Valid;
+
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
-
-import javax.validation.Valid;
 
 /**
  * @author hakiba
@@ -56,10 +56,10 @@ public class ClientUpdateBody {
             public String password;
         }
 
+        // #for_now hakiba not use these items, may use at future (2017/01/19)
         @Required
         public String dbfluteVersion;
 
         public String jdbcDriverJarPath;
-
     }
 }
