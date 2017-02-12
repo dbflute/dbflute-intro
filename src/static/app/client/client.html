@@ -21,8 +21,8 @@
   <div class="col-sm-12">
     <h3>Schema Sync Check</h3>
     <div class="clearfix">
-      <p class="col-sm-6 text-right">
-        for <span ng-show="syncSchemaSetting.url">{{syncSchemaSetting.url}}, </span><span ng-show="syncSchemaSetting.schema">{{syncSchemaSetting.schema}}, </span>{{syncSchemaSetting.user}}
+      <p class="col-sm-6 text-right" ng-show="canCheckSchemaSetting()">
+        for {{syncSchemaSetting.url}}, <span ng-show="syncSchemaSetting.schema">{{syncSchemaSetting.schema}}, </span>{{syncSchemaSetting.user}}
       </p>
     </div>
     <div ng-show="canCheckSchemaSetting()" class="clearfix">
