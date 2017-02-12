@@ -15,19 +15,18 @@
  */
 package org.dbflute.intro.app.web.base.cls;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author jflute
@@ -56,7 +55,7 @@ public class IntroClsAssist {
     private Map<String, DatabaseDefBean> prepareTargetDatabaseMap() {
         return databaseBhv.selectList(cb -> {
             cb.query().addOrderBy_DisplayOrder_Asc();
-        }).stream().collect(Collectors.toMap(db -> db.getDatabaseName(), db -> new DatabaseDefBean(db), (u, v) -> v, LinkedHashMap::new));
+        }).stream().collect(Collectors.toMap(db -> db.getDatabaseCode(), db -> new DatabaseDefBean(db), (u, v) -> v, LinkedHashMap::new));
     }
 
     private Map<String, String> prepareTargetLanguageMap() {

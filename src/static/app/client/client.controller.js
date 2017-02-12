@@ -11,6 +11,7 @@ angular.module('dbflute-intro')
     $scope.configuration = {}; // intro configuration
     $scope.client = null; // model of current client
     $scope.syncSchemaSetting = {};
+    $scope.classificationMap = {}; // e.g. targetDatabase
 
     // ===================================================================================
     //                                                                          Basic Data
@@ -24,6 +25,12 @@ angular.module('dbflute-intro')
     $scope.configuration = function() {
         ApiFactory.configuration().then(function(response) {
             $scope.configuration = response.data;
+        });
+    };
+
+    $scope.findClassifications = function () {
+        ApiFactory.classifications().then(function (response) {
+            $scope.classificationMap = response.data;
         });
     };
 
@@ -98,9 +105,11 @@ angular.module('dbflute-intro')
     };
 
     $scope.editSyncSchema = function() {
+        var database = $scope.classificationMap['targetDatabaseMap'][$scope.client.databaseCode];
         var modalParam = {
             projectName: $scope.projectName,
-            syncSchemaSetting: $scope.syncSchemaSetting
+            syncSchemaSetting: $scope.syncSchemaSetting,
+            defaultSyncUrl: database.urlTemplate
         };
         $uibModal.open({
             templateUrl: "app/client/schema-sync-check.html",
@@ -124,6 +133,7 @@ angular.module('dbflute-intro')
     $scope.prepareCurrentProject($scope.projectName);
     $scope.configuration();
     $scope.syncSchemaSetting($scope.projectName);
+    $scope.findClassifications();
 });
 
 /**
@@ -135,10 +145,23 @@ angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
 
     $scope.projectName = modalParam.projectName;
     $scope.syncSchemaSettingData = modalParam.syncSchemaSetting;
+    $scope.defaultSyncUrl = modalParam.defaultSyncUrl;
 
+    // ===================================================================================
+    //                                                                     SchemaSyncCheck
+    //                                                                     ===============
     $scope.editSyncSchema = function() {
         ApiFactory.editSyncSchema(modalParam.projectName, $scope.syncSchemaSettingData).then(function(response) {
             $uibModalInstance.close();
         });
     };
+
+    $scope.prepareSyncSchemaUrl = function() {
+        $scope.syncSchemaSettingData.url = $scope.syncSchemaSettingData.url || $scope.defaultSyncUrl;
+    };
+
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
+    $scope.prepareSyncSchemaUrl();
 });
