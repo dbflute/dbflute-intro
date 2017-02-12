@@ -20,12 +20,17 @@
   </div>
   <div class="col-sm-12">
     <h3>Schema Sync Check</h3>
+    <div class="clearfix">
+      <p class="col-sm-6 text-right">
+        for <span ng-show="syncSchemaSetting.url">{{syncSchemaSetting.url}}, </span><span ng-show="syncSchemaSetting.schema">{{syncSchemaSetting.schema}}, </span>{{syncSchemaSetting.user}}
+      </p>
+    </div>
     <div ng-show="canCheckSchemaSetting()" class="clearfix">
       <div class="col-sm-3">
         <input type="button" class="btn btn-primary" ng-click="schemaSyncCheck()" value="Check schema"/>
       </div>
-      <p class="col-sm-9">
-        for {{syncSchemaSetting.url}}, {{syncSchemaSetting.schema}}, {{syncSchemaSetting.user}}
+      <p ng-show="client.hasSynccheckresulthtml" class="col-sm-9">
+        <strong><a href="" ng-click="openSyncCheckResultHTML(client)">Open the table layout, SyncCheckResultHTML</a></strong>
       </p>
     </div>
     <div class="col-sm-3">

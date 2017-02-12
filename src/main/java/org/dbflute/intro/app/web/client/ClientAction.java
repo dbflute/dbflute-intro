@@ -15,12 +15,6 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -39,6 +33,11 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author p1us2er0
@@ -174,6 +173,7 @@ public class ClientAction extends IntroBaseAction {
         String clientProject = clientModel.getProjectMeta().getClientProject();
         operation.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
         operation.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        operation.hasSynccheckresulthtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         return operation;
     }
 

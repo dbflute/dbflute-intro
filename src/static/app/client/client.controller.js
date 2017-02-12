@@ -47,6 +47,10 @@ angular.module('dbflute-intro')
         $window.open($scope.configuration['apiServerUrl'] + 'document/' + client.projectName + '/historyhtml/');
     };
 
+    $scope.openSyncCheckResultHTML = function(client) {
+        $window.open($scope.configuration['apiServerUrl'] + 'document/' + client.projectName + '/synccheckresulthtml/');
+    };
+
     // ===================================================================================
     //                                                                               Task
     //                                                                              ======
@@ -80,7 +84,7 @@ angular.module('dbflute-intro')
                     templateUrl:"success.html"
                 });
             } else {
-                $window.open($scope.configuration['apiServerUrl'] + 'document/' + $scope.projectName + '/synccheckresulthtml/');
+                $scope.prepareCurrentProject($scope.projectName);
             }
         }, function (error) {
             modalInstance.close();

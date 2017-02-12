@@ -15,11 +15,10 @@
  */
 package org.dbflute.intro.app.logic.document;
 
-import java.io.File;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import java.io.File;
 
 /**
  * @author deco
@@ -42,6 +41,10 @@ public class DocumentPhysicalLogic {
 
     public boolean existsHistoryHtml(String clientProject) {
         return findHistoryHtml(clientProject).exists();
+    }
+
+    public boolean existsSyncCheckResultHtml(String clientProject) {
+        return findSyncCheckResultHtml(clientProject).exists();
     }
 
     public File findSchemaHtml(String clientProject) {

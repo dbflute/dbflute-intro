@@ -42,4 +42,6 @@ public class ClientOperationResult {
     public Boolean hasSchemahtml;
     @Required
     public Boolean hasHistoryhtml;
+    @Required
+    public Boolean hasSynccheckresulthtml;
 }
