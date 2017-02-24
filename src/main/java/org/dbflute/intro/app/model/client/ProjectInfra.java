@@ -19,23 +19,30 @@ import org.dbflute.optional.OptionalThing;
 
 /**
  * @author jflute
+ * @author hakiba
  */
-public class ProjectMeta {
+public class ProjectInfra {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     protected final String clientProject; // not null, torque.project
     protected final String dbfluteVersion; // not null, e.g. 1.1.1 (at _project.sh)
-    protected final String jdbcDriverJarPath; // path to extlib
+    protected final ExtlibFile jdbcDriverExtlibFile; // extlib file
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ProjectMeta(String clientProject, String dbfluteVersion, String jdbcDriverJarPath) {
+    public ProjectInfra(String clientProject, String dbfluteVersion, String jdbcDriverFileName, String jdbcDriverFileDataBase64) {
         this.clientProject = clientProject;
         this.dbfluteVersion = dbfluteVersion;
-        this.jdbcDriverJarPath = jdbcDriverJarPath;
+        this.jdbcDriverExtlibFile = new ExtlibFile(jdbcDriverFileName, jdbcDriverFileDataBase64);
+    }
+
+    public ProjectInfra(String clientProject, String dbfluteVersion, ExtlibFile jdbcDriverFile) {
+        this.clientProject = clientProject;
+        this.dbfluteVersion = dbfluteVersion;
+        this.jdbcDriverExtlibFile = jdbcDriverFile;
     }
 
     // ===================================================================================
@@ -48,10 +55,10 @@ public class ProjectMeta {
     public String getDbfluteVersion() {
         return dbfluteVersion;
     }
-    
-    public OptionalThing<String> getJdbcDriverJarPath() {
-        return OptionalThing.ofNullable(jdbcDriverJarPath, () -> {
-            throw new IllegalStateException("Not found the jdbcDriverJarPath.");
+
+    public OptionalThing<ExtlibFile> getJdbcDriverExtlibFile() {
+        return OptionalThing.ofNullable(jdbcDriverExtlibFile, () -> {
+            throw new IllegalStateException("Not found the jdbcDriverExtlibFile.");
         });
     }
 }
