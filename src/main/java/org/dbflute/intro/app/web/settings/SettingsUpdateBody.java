@@ -13,17 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.settings;
 
-import javax.validation.Valid;
-
+import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
+
+import javax.validation.Valid;
 
 /**
  * @author hakiba
  */
-public class ClientUpdateBody {
+public class SettingsUpdateBody {
 
     @Required
     @Valid
@@ -60,6 +61,6 @@ public class ClientUpdateBody {
         @Required
         public String dbfluteVersion;
 
-        public String jdbcDriverJarPath;
+        public ExtlibFile jdbcDriverJarFile;
     }
 }

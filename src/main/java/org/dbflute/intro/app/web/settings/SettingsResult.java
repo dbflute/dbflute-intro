@@ -13,19 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
-
-import javax.validation.Valid;
+package org.dbflute.intro.app.web.settings;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
 
+import javax.validation.Valid;
+
 /**
  * @author hakiba
  * @author jflute
  */
-public class ClientSettingsResult {
+public class SettingsResult {
 
     // ===================================================================================
     //                                                                           Attribute

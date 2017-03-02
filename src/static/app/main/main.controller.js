@@ -92,7 +92,7 @@ angular.module('dbflute-intro')
         $state.go('create');
     };
 
-    $scope.goToClientSettings = function(client) {
+    $scope.goToSettings = function(client) {
         $state.go('settings', { client: client, projectName: client.projectName });
     };
 

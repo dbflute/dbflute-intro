@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * Client Settings Controller
+ * Settings Controller
  */
 angular.module('dbflute-intro')
-  .controller('ClientSettingsCtrl', function ($scope, $window, $state, $stateParams, Flash, ApiFactory) {
+  .controller('SettingsCtrl', function ($scope, $window, $state, $stateParams, Flash, ApiFactory) {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -17,12 +17,12 @@ angular.module('dbflute-intro')
     //                                                                     ===============
 
     $scope.prepareCurrentProject = function(projectName) {
-      ApiFactory.clientSettings(projectName).then(function(response) {
+      ApiFactory.settings(projectName).then(function(response) {
         $scope.client = response.data;
       });
     };
     $scope.edit = function(client) {
-      ApiFactory.updateClientSettings(client).then(function() {
+      ApiFactory.updateSettings(client).then(function() {
         // success
         $scope.successAlert();
       }, function() {

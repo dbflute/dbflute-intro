@@ -73,16 +73,16 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/client/delete/' + clientBody.project
             });
         },
-        clientSettings: function (projectName) {
+        settings: function (projectName) {
           return $http({
             method : 'POST',
-            url : 'api/client/settings/' + projectName
+            url : 'api/settings/' + projectName
           })
         },
-        updateClientSettings: function(clientBody) {
+        updateSettings: function(clientBody) {
           return $http({
             method : 'POST',
-            url : 'api/client/settings/edit/' + clientBody.projectName,
+            url : 'api/settings/edit/' + clientBody.projectName,
             data : {client: clientBody}
           });
         },

@@ -13,35 +13,35 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
-
-import java.util.LinkedHashMap;
-
-import javax.annotation.Resource;
+package org.dbflute.intro.app.web.settings;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
+import org.dbflute.intro.app.logic.settings.SettingsUpdateLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.app.model.client.ProjectMeta;
+import org.dbflute.intro.app.model.client.ExtlibFile;
+import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
-import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-// TODO hakiba make settings package by jflute (2017/01/19)
+import javax.annotation.Resource;
+
+import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.*;
+import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.*;
+
 /**
  * @author hakiba
  * @author jflute
  */
-public class ClientSettingsAction extends IntroBaseAction {
+public class SettingsAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -50,6 +50,8 @@ public class ClientSettingsAction extends IntroBaseAction {
     private TimeManager timeManager;
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
+    @Resource
+    private SettingsUpdateLogic settingsUpdateLogic;
     @Resource
     private ClientInfoLogic clientInfoLogic;
     @Resource
@@ -64,29 +66,29 @@ public class ClientSettingsAction extends IntroBaseAction {
     //                                              Settings
     //                                              --------
     @Execute
-    public JsonResponse<ClientSettingsResult> index(String clientProject) {
+    public JsonResponse<SettingsResult> index(String clientProject) {
         // TODO hakiba recyle orElseThrow() by jflute (2017/01/12)
         ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
         });
-        ClientSettingsResult result = mappingToSettingsResult(clientModel);
+        SettingsResult result = mappingToSettingsResult(clientModel);
         return asJson(result);
     }
 
-    private ClientSettingsResult mappingToSettingsResult(ClientModel clientModel) {
-        ClientSettingsResult result = new ClientSettingsResult();
-        ProjectMeta projectMeta = clientModel.getProjectMeta();
+    private SettingsResult mappingToSettingsResult(ClientModel clientModel) {
+        SettingsResult result = new SettingsResult();
+        ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        result.projectName = projectMeta.getClientProject();
+        result.projectName = projectInfra.getClientProject();
         result.databaseCode = basicInfoMap.getDatabase();
         result.languageCode = basicInfoMap.getTargetLanguage();
         result.containerCode = basicInfoMap.getTargetContainer();
         result.packageBase = basicInfoMap.getPackageBase();
         result.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
-        result.dbfluteVersion = projectMeta.getDbfluteVersion();
-        result.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
+        result.dbfluteVersion = projectInfra.getDbfluteVersion();
+        result.jdbcDriverJarPath = projectInfra.getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath).orElse(null);
         DbConnectionBox dbConnectionBox = clientModel.getDatabaseInfoMap().getDbConnectionBox();
-        result.mainSchemaSettings = new ClientSettingsResult.DatabaseSettingsPart();
+        result.mainSchemaSettings = new SettingsResult.DatabaseSettingsPart();
         result.mainSchemaSettings.url = dbConnectionBox.getUrl();
         result.mainSchemaSettings.schema = dbConnectionBox.getSchema();
         result.mainSchemaSettings.user = dbConnectionBox.getUser();
@@ -99,48 +101,36 @@ public class ClientSettingsAction extends IntroBaseAction {
     //                                                  Edit
     //                                                  ----
     @Execute
-    public JsonResponse<Void> edit(String projectName, ClientUpdateBody clientBody) {
-        validate(clientBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(projectName, clientBody.client);
-        clientUpdateLogic.updateClient(clientModel);
+    public JsonResponse<Void> edit(String projectName, SettingsUpdateBody settingsBody) {
+        validate(settingsBody, messages -> {});
+        ClientModel clientModel = mappingToClientModel(projectName, settingsBody.client);
+        settingsUpdateLogic.updateDatabaseInfoMap(clientModel);
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(String projectName, ClientUpdateBody.ClientPart clientBody) {
+    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
         return newClientModel(projectName, clientBody);
     }
 
-    private ClientModel newClientModel(String projectName, ClientUpdateBody.ClientPart clientBody) {
-        ProjectMeta projectMeta = prepareProjectMeta(projectName, clientBody);
+    private ClientModel newClientModel(String projectName, ClientPart clientBody) {
+        ProjectInfra projectInfra = prepareProjectInfra(projectName, clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
-        ClientModel clientModel = new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
+        ClientModel clientModel = new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
         return clientModel;
     }
 
-    private ProjectMeta prepareProjectMeta(String projectName, ClientUpdateBody.ClientPart clientBody) {
-        return new ProjectMeta(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
+    private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
+        return new ProjectInfra(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarFile);
     }
 
-    private BasicInfoMap prepareBasicInfoMap(ClientUpdateBody.ClientPart clientBody) {
+    private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
         return new BasicInfoMap(clientBody.databaseCode, clientBody.languageCode, clientBody.containerCode, clientBody.packageBase);
     }
 
-    private DatabaseInfoMap prepareDatabaseInfoMap(ClientUpdateBody.ClientPart clientBody) {
-        // TODO jflute next review (2017/01/12)
-        // TODO jflute mainSchemaSettings cannot be null (2017/01/12)
-        // e.g.
-        //DatabaseSettingsPart dbSettings = clientBody.mainSchemaSettings;
-        //DbConnectionBox connectionBox = new DbConnectionBox(dbSettings.url, dbSettings.schema, dbSettings.user, dbSettings.password);
-        //return DatabaseInfoMap.createWithoutAdditinal(clientBody.jdbcDriverFqcn, connectionBox);
-
-        return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
-            DbConnectionBox connectionBox =
-                    new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
-            AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
-            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, connectionBox, additionalSchemaMap);
-        }).orElseThrow(() -> {
-            return new IllegalStateException("Not found the database body: " + clientBody);
-        });
+    private DatabaseInfoMap prepareDatabaseInfoMap(ClientPart clientBody) {
+        DatabaseSettingsPart dbSettings = clientBody.mainSchemaSettings;
+        DbConnectionBox connectionBox = new DbConnectionBox(dbSettings.url, dbSettings.schema, dbSettings.user, dbSettings.password);
+        return DatabaseInfoMap.createWithoutAdditional(clientBody.jdbcDriverFqcn, connectionBox);
     }
 }
