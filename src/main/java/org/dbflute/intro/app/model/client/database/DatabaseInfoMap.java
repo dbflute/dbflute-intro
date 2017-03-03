@@ -47,7 +47,7 @@ public class DatabaseInfoMap {
         this.additionalSchemaMap = additionalSchemaMap;
     }
 
-    public static DatabaseInfoMap createWithoutAdditinal(String driver, DbConnectionBox dbConnectionInfo) {
+    public static DatabaseInfoMap createWithoutAdditional(String driver, DbConnectionBox dbConnectionInfo) {
         return new DatabaseInfoMap(driver, dbConnectionInfo);
     }
 

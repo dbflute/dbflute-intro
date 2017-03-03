@@ -37,7 +37,8 @@ angular.module('dbflute-intro')
         create: true,
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
-        dbfluteVersion: ""
+        dbfluteVersion: "",
+        jdbcDriver: {fileName: "", data: null}
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
     $scope.needsJdbcDriverJarPath = false;
@@ -83,6 +84,20 @@ angular.module('dbflute-intro')
       }, function(error) {
         modalInstance.close();
       });
+    };
+    $scope.changeFile = function(files, target) {
+      var file = files[0];
+      var reader = new FileReader();
+      reader.onload = (function() {
+        return function() {
+          var result = window.btoa(reader.result);
+          $scope.client.jdbcDriver.fileName = file.name;
+          $scope.client.jdbcDriver.data = result;
+        };
+      }(file));
+      if (file) {
+        reader.readAsBinaryString(file);
+      }
     };
 
     // ===================================================================================

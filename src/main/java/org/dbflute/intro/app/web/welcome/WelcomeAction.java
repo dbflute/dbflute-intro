@@ -15,17 +15,14 @@
  */
 package org.dbflute.intro.app.web.welcome;
 
-import java.util.LinkedHashMap;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.app.model.client.ProjectMeta;
+import org.dbflute.intro.app.model.client.ExtlibFile;
+import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
@@ -34,6 +31,9 @@ import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
 
 /**
  * @author hakiba
@@ -66,7 +66,7 @@ public class WelcomeAction extends IntroBaseAction {
             }
         });
         String latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
-        engineInstallLogic.downloadUnzipping(latestVersion);
+//        engineInstallLogic.downloadUnzipping(latestVersion);
         ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
@@ -83,14 +83,14 @@ public class WelcomeAction extends IntroBaseAction {
     }
 
     private ClientModel newClientModel(WelcomeCreateBody.ClientPart clientBody) {
-        ProjectMeta projectMeta = prepareProjectMeta(clientBody);
+        ProjectInfra projectInfra = prepareProjectMeta(clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
-        return new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
+        return new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
     }
 
-    private ProjectMeta prepareProjectMeta(WelcomeCreateBody.ClientPart clientBody) {
-        return new ProjectMeta(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
+    private ProjectInfra prepareProjectMeta(WelcomeCreateBody.ClientPart clientBody) {
+        return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
     }
 
     private BasicInfoMap prepareBasicInfoMap(WelcomeCreateBody.ClientPart clientBody) {
@@ -109,8 +109,8 @@ public class WelcomeAction extends IntroBaseAction {
     }
 
     private void testConnectionIfPossible(ClientModel clientModel) {
-        String dbfluteVersion = clientModel.getProjectMeta().getDbfluteVersion();
-        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectMeta().getJdbcDriverJarPath();
+        String dbfluteVersion = clientModel.getProjectInfra().getDbfluteVersion();
+        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectInfra().getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath);
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
         testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
     }

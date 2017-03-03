@@ -15,8 +15,6 @@
  */
 package org.dbflute.intro.app.model.client;
 
-import java.util.Map;
-
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
@@ -25,9 +23,12 @@ import org.dbflute.intro.app.model.client.outsidesql.OutsideSqlMap;
 import org.dbflute.intro.app.model.client.reps.ReplaceSchemaMap;
 import org.dbflute.optional.OptionalThing;
 
+import java.util.Map;
+
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class ClientModel {
 
@@ -37,7 +38,7 @@ public class ClientModel {
     // -----------------------------------------------------
     //                                              Required
     //                                              --------
-    protected final ProjectMeta projectMeta;
+    protected final ProjectInfra projectInfra;
     protected final BasicInfoMap basicInfoMap;
     protected final DatabaseInfoMap databaseInfoMap; // contains additional schema
 
@@ -52,8 +53,8 @@ public class ClientModel {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ClientModel(ProjectMeta projectMeta, BasicInfoMap basicInfoMap, DatabaseInfoMap databaseInfoMap) {
-        this.projectMeta = projectMeta;
+    public ClientModel(ProjectInfra projectInfra, BasicInfoMap basicInfoMap, DatabaseInfoMap databaseInfoMap) {
+        this.projectInfra = projectInfra;
         this.basicInfoMap = basicInfoMap;
         this.databaseInfoMap = databaseInfoMap;
     }
@@ -63,14 +64,14 @@ public class ClientModel {
     //                                                                      ==============
     @Override
     public String toString() {
-        return "client:{" + projectMeta + ", " + basicInfoMap + ", " + databaseInfoMap + "}";
+        return "client:{" + projectInfra + ", " + basicInfoMap + ", " + databaseInfoMap + "}";
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public ProjectMeta getProjectMeta() {
-        return projectMeta;
+    public ProjectInfra getProjectInfra() {
+        return projectInfra;
     }
 
     public BasicInfoMap getBasicInfoMap() {

@@ -15,10 +15,10 @@
  */
 package org.dbflute.intro.app.web.welcome;
 
-import javax.validation.Valid;
-
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
+
+import javax.validation.Valid;
 
 /**
  * @author hakiba
@@ -62,7 +62,13 @@ public class WelcomeCreateBody {
         @Required
         public String dbfluteVersion;
 
-        public String jdbcDriverJarPath;
+        public JdbcDriverPart jdbcDriver;
+
+        public static class JdbcDriverPart {
+
+            public String fileName;
+            public String data;
+         }
     }
 
     // ===================================================================================
