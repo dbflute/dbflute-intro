@@ -25,6 +25,7 @@ import java.util.Map;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class ClientCreateBody {
 
@@ -66,7 +67,13 @@ public class ClientCreateBody {
         @Required
         public String dbfluteVersion;
 
-        public String jdbcDriverJarPath;
+        public JdbcDriverPart jdbcDriver;
+
+        public static class JdbcDriverPart {
+
+            public String fileName;
+            public String data;
+        }
 
         // TODO jflute intro: option body validation after client implementation (2016/08/13)
         //@Required

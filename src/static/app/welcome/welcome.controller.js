@@ -41,8 +41,8 @@ angular.module('dbflute-intro')
         jdbcDriver: {fileName: "", data: null}
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
-    $scope.needsJdbcDriverJarPath = false;
-    $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
+    $scope.needsJdbcDriver = false;
+    $scope.databaseCodeNotNeedsJdbcDriver = ["MySQL", "PostgreSQL", "H2 Database"];
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
 
@@ -67,7 +67,7 @@ angular.module('dbflute-intro')
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
     $scope.changeDatabase = function (client) {
-      $scope.needsJdbcDriverJarPath = !$scope.databaseCodeNotNeedsJdbcDriverJarPath.includes(client.databaseCode);
+      $scope.needsJdbcDriver = !$scope.databaseCodeNotNeedsJdbcDriver.includes(client.databaseCode);
     	var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
@@ -85,11 +85,12 @@ angular.module('dbflute-intro')
         modalInstance.close();
       });
     };
-    $scope.changeFile = function(files, target) {
+    $scope.changeFile = function(files) {
       var file = files[0];
       var reader = new FileReader();
       reader.onload = (function() {
         return function() {
+          // encode base64
           var result = window.btoa(reader.result);
           $scope.client.jdbcDriver.fileName = file.name;
           $scope.client.jdbcDriver.data = result;

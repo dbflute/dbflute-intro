@@ -14,10 +14,11 @@ angular.module('dbflute-intro')
         create: true,
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
-        dbfluteVersion: ''
+        dbfluteVersion: '',
+        jdbcDriver: {fileName: "", data: null}
     }; // model of current client
-    $scope.needsJdbcDriverJarPath = false;
-    $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
+    $scope.needsJdbcDriver = false;
+    $scope.databaseCodeNotNeedsJdbcDriver = ["MySQL", "PostgreSQL", "H2 Database"];
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
     $scope.versions = [];
@@ -48,7 +49,7 @@ angular.module('dbflute-intro')
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
     $scope.changeDatabase = function (client) {
-        $scope.needsJdbcDriverJarPath = !$scope.databaseCodeNotNeedsJdbcDriverJarPath.includes(client.databaseCode);
+        $scope.needsJdbcDriver = !$scope.databaseCodeNotNeedsJdbcDriver.includes(client.databaseCode);
         client.jdbcDriverFqcn = client.driverName;
         var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
         client.jdbcDriverFqcn = database.driverName;
@@ -59,6 +60,21 @@ angular.module('dbflute-intro')
         ApiFactory.createClient(client, testConnection).then(function (response) {
             $state.go('home');
         });
+    };
+    $scope.changeFile = function(files) {
+      var file = files[0];
+      var reader = new FileReader();
+      reader.onload = (function() {
+        return function() {
+          // encode base64
+          var result = window.btoa(reader.result);
+          $scope.client.jdbcDriver.fileName = file.name;
+          $scope.client.jdbcDriver.data = result;
+        };
+      }(file));
+      if (file) {
+        reader.readAsBinaryString(file);
+      }
     };
 
     // ===================================================================================
