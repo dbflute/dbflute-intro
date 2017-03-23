@@ -89,6 +89,7 @@ public class DfpropInfoLogic {
 
     public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
         final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+        // TODO deco dfpropDir.listFiles() may return null so check it (or use nio) by jflute (2017/02/23)
         return Arrays.stream(dfpropDir.listFiles())
             .filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop"))
             .map(file -> {
@@ -99,6 +100,7 @@ public class DfpropInfoLogic {
                 return schemaSyncCheckMap;
             }).filter(Objects::nonNull)
             .map(schemaSyncCheckMap -> {
+                // TODO deco for NotRequired by jflute (2017/02/23)
                 DbConnectionBox dbConnectionBox = new DbConnectionBox(
                     (String) schemaSyncCheckMap.get("url"),
                     (String) schemaSyncCheckMap.get("schema"),
@@ -109,14 +111,18 @@ public class DfpropInfoLogic {
             }).findAny();
     }
 
+    // TODO deco move to DfpropUpdateLogic by jflute (2017/02/23)
     public void replaceSchemaSyncCheckMap(String project, SchemaSyncCheckMap schemaSyncCheckMap) {
         File documentMap = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
 
         try (BufferedReader br = Files.newBufferedReader(documentMap.toPath())) {
+            // TODO deco way of false to true by jflute (2017/02/23)
             boolean isExampleComment = true;
             boolean inSyncSchemeSetting = false;
+            // TODO deco rename to sb by jflute (2017/02/23)
             StringBuilder stringBuilder = new StringBuilder();
 
+            // TODO deco please refactor by jflute (2017/02/23)
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
@@ -137,6 +143,7 @@ public class DfpropInfoLogic {
                 }
                 stringBuilder.append(line).append("\n");
             }
+            // TODO deco use FlutyFileLogic by jflute (2017/02/23)
             FileUtils.write(documentMap, stringBuilder.toString());
         } catch (IOException e) {
             throw new LaSystemException("Cannot replace schema sync check map", e);
