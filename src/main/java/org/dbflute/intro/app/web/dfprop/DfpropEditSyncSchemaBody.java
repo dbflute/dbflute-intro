@@ -15,20 +15,19 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
  */
 public class DfpropEditSyncSchemaBody {
 
-    // TODO deco use Required annotation by jflute (2017/01/01)
-    @NotEmpty
+    @Required
     public String url;
     public String schema;
-    @NotEmpty
+    @Required
     public String user;
     public String password;
-    // TODO deco use Boolean and Required annotation by jflute (2017/01/01)
-    public boolean isSuppressCraftDiff;
+    @Required
+    public Boolean isSuppressCraftDiff;
 }

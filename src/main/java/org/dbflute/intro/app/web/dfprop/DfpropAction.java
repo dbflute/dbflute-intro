@@ -18,7 +18,10 @@ package org.dbflute.intro.app.web.dfprop;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
@@ -42,6 +45,8 @@ public class DfpropAction extends IntroBaseAction {
     private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
     private DfpropInfoLogic dfpropInfoLogic;
+    @Resource
+    private DfpropUpdateLogic dfpropUpdateLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
 
@@ -91,7 +96,32 @@ public class DfpropAction extends IntroBaseAction {
         validate(body, messages -> {});
         final DbConnectionBox dbConnectionBox = new DbConnectionBox(body.url, body.schema, body.user, body.password);
         final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
-        dfpropInfoLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
+        dfpropUpdateLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
+        return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
+    //                                           GetDocument
+    //                                           -----------
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<DfpropDocumentResult> document(String project) {
+        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(project);
+        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(project);
+        return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
+    }
+
+    // -----------------------------------------------------
+    //                                          EditDocument
+    //                                          ------------
+    @Execute(urlPattern = "{}/@word/@word")
+    public JsonResponse<Void> documentEdit(String project, DfpropDocumentEditBody body) {
+        validate(body, messages -> {});
+        final LittleAdjustmentMap littleAdjustmentMap = new LittleAdjustmentMap(body.upperCaseBasic);
+        dfpropUpdateLogic.replaceLittleAdjustmentMap(project, littleAdjustmentMap);
+        final DocumentMap documentMap = new DocumentMap();
+        documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
+        documentMap.setDbCommentOnAliasBasis(body.dbCommentOnAliasBasis);
+        dfpropUpdateLogic.replaceDocumentMap(project, documentMap);
         return JsonResponse.asEmptyBody();
     }
 }

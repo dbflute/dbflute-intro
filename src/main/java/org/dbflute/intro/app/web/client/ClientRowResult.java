@@ -93,9 +93,9 @@ public class ClientRowResult {
     //                                                                        Client State
     //                                                                        ============
     @Required
-    public Boolean hasSchemahtml;
+    public Boolean hasSchemaHtml;
     @Required
-    public Boolean hasHistoryhtml;
+    public Boolean hasHistoryHtml;
     @Required
     public Boolean hasReplaceSchema;
 }

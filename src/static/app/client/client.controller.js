@@ -11,6 +11,7 @@ angular.module('dbflute-intro')
     $scope.configuration = {}; // intro configuration
     $scope.client = null; // model of current client
     $scope.syncSchemaSetting = {};
+    $scope.documentSetting = {};
     $scope.classificationMap = {}; // e.g. targetDatabase
 
     // ===================================================================================
@@ -56,6 +57,22 @@ angular.module('dbflute-intro')
 
     $scope.openSyncCheckResultHTML = function(client) {
         $window.open($scope.configuration['apiServerUrl'] + 'document/' + client.projectName + '/synccheckresulthtml/');
+    };
+
+    $scope.editDocumentSetting = function() {
+      var modalParam = {
+          projectName: $scope.projectName,
+          documentSetting: $scope.documentSetting
+      };
+      $uibModal.open({
+          templateUrl: "app/client/document-setting.html",
+          controller: "DocumentSettingController",
+          resolve: {
+              modalParam : function () {
+                  return modalParam;
+              }
+          }
+      });
     };
 
     // ===================================================================================
@@ -104,6 +121,12 @@ angular.module('dbflute-intro')
         });
     };
 
+    $scope.documentSetting = function(projectName) {
+        ApiFactory.document(projectName).then(function(response) {
+            $scope.documentSetting = response.data;
+        });
+    };
+
     $scope.editSyncSchema = function() {
         var database = $scope.classificationMap['targetDatabaseMap'][$scope.client.databaseCode];
         var modalParam = {
@@ -133,6 +156,7 @@ angular.module('dbflute-intro')
     $scope.prepareCurrentProject($scope.projectName);
     $scope.configuration();
     $scope.syncSchemaSetting($scope.projectName);
+    $scope.documentSetting($scope.projectName);
     $scope.findClassifications();
 });
 
@@ -164,4 +188,24 @@ angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
     //                                                                          Initialize
     //                                                                          ==========
     $scope.prepareSyncSchemaUrl();
+});
+
+/**
+ * Document Controller
+ */
+angular.module('dbflute-intro').controller('DocumentSettingController',
+        function($scope, $uibModalInstance, modalParam, ApiFactory) {
+    'use strict';
+
+    $scope.projectName = modalParam.projectName;
+    $scope.documentSetting = modalParam.documentSetting;
+
+    // ===================================================================================
+    //                                                                            Document
+    //                                                                            ========
+    $scope.editDocumentSetting = function () {
+        ApiFactory.editDocument(modalParam.projectName, $scope.documentSetting).then(function(response) {
+             $uibModalInstance.close();
+        });
+    };
 });
