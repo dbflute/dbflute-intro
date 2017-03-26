@@ -19,8 +19,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.infra.dfprop.DfPropFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -34,6 +37,18 @@ import java.util.stream.Stream;
  */
 public class DfpropInfoLogic {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    @Resource
+    private DfpropPhysicalLogic dfpropPhysicalLogic;
+
+    // ===================================================================================
+    //                                                                                Find
+    //                                                                                ====
+    // -----------------------------------------------------
+    //                                                Dfprop
+    //                                                ------
     public Map<String, Map<String, Object>> findDfpropMap(String clientProject) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
         final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientProject + "/dfprop");
@@ -71,15 +86,9 @@ public class DfpropInfoLogic {
         return dfpropMap;
     }
 
-    private Map<String, Object> readMap(File targetFile, DfPropFile dfpropFile) {
-        final String absolutePath = targetFile.getAbsolutePath();
-        try {
-            return dfpropFile.readMap(absolutePath, null);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
-        }
-    }
-
+    // -----------------------------------------------------
+    //                                       SchemaSyncCheck
+    //                                       ---------------
     public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
         final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
@@ -107,7 +116,54 @@ public class DfpropInfoLogic {
             });
     }
 
+    // -----------------------------------------------------
+    //                                      LittleAdjustment
+    //                                      ----------------
+    public LittleAdjustmentMap findLittleAdjustmentMap(String projectName) {
+        final File littleAdjustmentMap = dfpropPhysicalLogic.findDfpropFile(projectName, "littleAdjustmentMap.dfprop");
+        final Map<String, Object> readMap = readMap(littleAdjustmentMap, new DfPropFile());
+        final boolean isTableDispNameUpperCase = convertSettingToBoolean(readMap.get("isTableDispNameUpperCase"));
+        final boolean isTableSqlNameUpperCase = convertSettingToBoolean(readMap.get("isTableSqlNameUpperCase"));
+        final boolean isColumnSqlNameUpperCase = convertSettingToBoolean(readMap.get("isColumnSqlNameUpperCase"));
+        return new LittleAdjustmentMap(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase);
+    }
+
+    // -----------------------------------------------------
+    //                                              Document
+    //                                              --------
+    public DocumentMap findDocumentMap(String projectName) {
+        final File documentDefinitionMap = dfpropPhysicalLogic.findDfpropFile(projectName, "documentMap.dfprop");
+        final Map<String, Object> readMap = readMap(documentDefinitionMap, new DfPropFile());
+        return prepareDocumentMapInner(readMap);
+    }
+
+    private DocumentMap prepareDocumentMapInner(Map<String, Object> readMap) {
+        final DocumentMap documentMap = new DocumentMap();
+        documentMap.setDbCommentOnAliasBasis(convertSettingToBoolean(readMap.get("isDbCommentOnAliasBasis")));
+        documentMap.setAliasDelimiterInDbComment(convertSettingToString(readMap.get("aliasDelimiterInDbComment")));
+        documentMap.setCheckColumnDefOrderDiff(convertSettingToBoolean(readMap.get("isCheckColumnDefOrderDiff")));
+        documentMap.setCheckDbCommentDiff(convertSettingToBoolean(readMap.get("isCheckDbCommentDiff")));
+        documentMap.setCheckProcedureDiff(convertSettingToBoolean(readMap.get("isCheckProcedureDiff")));
+        return documentMap;
+    }
+
+    // ===================================================================================
+    //                                                                        Small Helper
+    //                                                                        ============
+    private Map<String, Object> readMap(File targetFile, DfPropFile dfpropFile) {
+        final String absolutePath = targetFile.getAbsolutePath();
+        try {
+            return dfpropFile.readMap(absolutePath, null);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
+        }
+    }
+
     private String convertSettingToString(Object obj) {
         return obj == null ? null : obj.toString();
+    }
+
+    private boolean convertSettingToBoolean(Object obj) {
+        return obj != null && Boolean.parseBoolean(convertSettingToString(obj));
     }
 }

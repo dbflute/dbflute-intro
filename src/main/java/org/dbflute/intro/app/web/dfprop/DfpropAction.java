@@ -20,6 +20,8 @@ import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
@@ -96,5 +98,15 @@ public class DfpropAction extends IntroBaseAction {
         final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
         dfpropUpdateLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
         return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
+    //                                           GetDocument
+    //                                           -----------
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<DfpropDocumentResult> document(String project) {
+        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(project);
+        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(project);
+        return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
     }
 }
