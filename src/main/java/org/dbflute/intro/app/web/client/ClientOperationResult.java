@@ -38,11 +38,10 @@ public class ClientOperationResult {
     // ===================================================================================
     //                                                                        Client State
     //                                                                        ============
-    // TODO deco pri.C convert to camel by jflute (2017/02/23)
     @Required
-    public Boolean hasSchemahtml;
+    public Boolean hasSchemaHtml;
     @Required
-    public Boolean hasHistoryhtml;
+    public Boolean hasHistoryHtml;
     @Required
-    public Boolean hasSynccheckresulthtml;
+    public Boolean hasSyncCheckResultHtml;
 }

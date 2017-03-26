@@ -6,35 +6,6 @@
 angular.module('dbflute-intro')
         .controller('MainCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
-    // TODO deco remove unused functions
-    //  Bean -> Body
-    var convertParam = function(param) {
-// #later deleted
-//        var tempParam = angular.copy(param);
-//        for (var key in tempParam) {
-//            if (key.indexOf('Bean') >= 0) {
-//                var old = key;
-//                var data = tempParam[key];
-//                key = key.replace('Bean', 'Body');
-//                tempParam[key] = data;
-//                delete tempParam[old];
-//            }
-//
-//            if (tempParam[key] instanceof Array) {
-//                if (tempParam[key][0] instanceof Array || tempParam[key][0] instanceof Object) {
-//                    for (var i in tempParam[key]) {
-//                        convertParam(tempParam[key][i]);
-//                    }
-//                }
-//            } else if (tempParam[key] instanceof Object) {
-//                convertParam(tempParam[key]);
-//            }
-//        }
-//
-//        return tempParam;
-    	return param;
-    };
-
     $scope.manifest = {}; // intro manifest
     $scope.versions = []; // engine versions
     $scope.configuration = {}; // intro configuration
@@ -116,21 +87,21 @@ angular.module('dbflute-intro')
     };
 
     $scope.create = function(client, testConnection) {
-        ApiFactory.createClient(convertParam(client), testConnection).then(function(response) {
+        ApiFactory.createClient(client, testConnection).then(function(response) {
             $scope.editFlg = false;
             $scope.prepareClientList();
         });
     };
 
     $scope.update = function(client, testConnection) {
-        ApiFactory.updateClient(convertParam(client), testConnection).then(function(response) {
+        ApiFactory.updateClient(client, testConnection).then(function(response) {
             $scope.editFlg = false;
             $scope.prepareClientList();
         });
     };
 
     $scope.remove = function(client) {
-        ApiFactory.removeClient(convertParam(client)).then(function(response) {
+        ApiFactory.removeClient(client).then(function(response) {
             $scope.editFlg = false;
             $scope.client = null;
             $scope.prepareClientList();

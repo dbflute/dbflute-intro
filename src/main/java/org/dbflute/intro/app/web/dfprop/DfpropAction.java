@@ -18,6 +18,7 @@ package org.dbflute.intro.app.web.dfprop;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
@@ -42,6 +43,8 @@ public class DfpropAction extends IntroBaseAction {
     private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
     private DfpropInfoLogic dfpropInfoLogic;
+    @Resource
+    private DfpropUpdateLogic dfpropUpdateLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
 
@@ -91,7 +94,7 @@ public class DfpropAction extends IntroBaseAction {
         validate(body, messages -> {});
         final DbConnectionBox dbConnectionBox = new DbConnectionBox(body.url, body.schema, body.user, body.password);
         final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
-        dfpropInfoLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
+        dfpropUpdateLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
         return JsonResponse.asEmptyBody();
     }
 }

@@ -43,9 +43,8 @@ public class DocumentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public StreamResponse schemahtml(String clientProject) {
         File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientProject);
-        // TODO deco cannot return null, throw application exception by jflute (2017/01/12)
         if (!schemaHtml.exists()) {
-            return null;
+            return StreamResponse.asEmptyBody();
         }
         return createHtmlStreamResponse(schemaHtml);
     }
@@ -54,7 +53,7 @@ public class DocumentAction extends IntroBaseAction {
     public StreamResponse historyhtml(String clientProject) {
         File historyHtml = documentPhysicalLogic.findHistoryHtml(clientProject);
         if (!historyHtml.exists()) {
-            return null;
+            return StreamResponse.asEmptyBody();
         }
         return createHtmlStreamResponse(historyHtml);
     }

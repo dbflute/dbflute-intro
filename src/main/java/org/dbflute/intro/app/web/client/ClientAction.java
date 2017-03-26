@@ -111,8 +111,8 @@ public class ClientAction extends IntroBaseAction {
         //    }
 
         String clientProject = clientModel.getProjectInfra().getClientProject();
-        rowBean.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
-        rowBean.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
+        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
         rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
         return rowBean;
     }
@@ -172,9 +172,9 @@ public class ClientAction extends IntroBaseAction {
         ClientOperationResult operation = new ClientOperationResult();
         prepareBasic(operation, clientModel);
         String clientProject = clientModel.getProjectInfra().getClientProject();
-        operation.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
-        operation.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
-        operation.hasSynccheckresulthtml = documentLogic.existsSyncCheckResultHtml(clientProject);
+        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
+        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
+        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         return operation;
     }
 
