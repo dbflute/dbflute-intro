@@ -10,7 +10,7 @@
   "LABEL_containerCode": "DIコンテナ",
   "LABEL_packageBase" : "自動生成パッケージ",
   "LABEL_jdbcDriverFqcn" : "JDBCドライバ",
-  "LABEL_jdbcDriverJarPath" : "JDBCドライバのパス",
+  "LABEL_jdbcDriverFile": "JDBCドライバファイル",
   "LABEL_url" : "URL",
   "LABEL_schema" : "スキーマ",
   "LABEL_user" : "ユーザ",
