@@ -42,7 +42,6 @@ angular.module('dbflute-intro')
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
     $scope.needsJdbcDriver = false;
-    $scope.databaseCodeNotNeedsJdbcDriver = ["MySQL", "PostgreSQL", "H2 Database"];
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
 
@@ -67,8 +66,8 @@ angular.module('dbflute-intro')
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
     $scope.changeDatabase = function (client) {
-      $scope.needsJdbcDriver = !$scope.databaseCodeNotNeedsJdbcDriver.includes(client.databaseCode);
     	var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
+      $scope.needsJdbcDriver = !database.embeddedJar;
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
     	client.mainSchemaSettings.schema = database.defaultSchema;

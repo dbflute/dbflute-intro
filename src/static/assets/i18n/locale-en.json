@@ -10,7 +10,7 @@
   "LABEL_containerCode": "DI Container",
   "LABEL_packageBase" : "Generation Package",
   "LABEL_jdbcDriverFqcn" : "JDBC Driver",
-  "LABEL_jdbcDriverJarPath" : "JDBC Driver Path",
+  "LABEL_jdbcDriverFile": "JDBC Driver Jar",
   "LABEL_url" : "URL",
   "LABEL_schema" : "Schema",
   "LABEL_user" : "User",
