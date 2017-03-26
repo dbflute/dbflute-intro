@@ -18,6 +18,7 @@ package org.dbflute.intro.app.web.welcome;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
+import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
@@ -28,12 +29,14 @@ import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 /**
  * @author hakiba
@@ -53,6 +56,8 @@ public class WelcomeAction extends IntroBaseAction {
     private EngineInstallLogic engineInstallLogic;
     @Resource
     private PublicPropertiesLogic publicPropertiesLogic;
+    @Resource
+    private DatabaseInfoLogic databaseInfoLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -64,9 +69,13 @@ public class WelcomeAction extends IntroBaseAction {
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
+            TargetDatabase target = welcomeCreateBody.client.databaseCode;
+            if (!databaseInfoLogic.isEmbeddedJar(target)){
+                messages.addErrorsDatabaseNeedsJar("database", target.alias());
+            }
         });
         String latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
-//        engineInstallLogic.downloadUnzipping(latestVersion);
+        engineInstallLogic.downloadUnzipping(latestVersion);
         ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
@@ -90,6 +99,9 @@ public class WelcomeAction extends IntroBaseAction {
     }
 
     private ProjectInfra prepareProjectMeta(WelcomeCreateBody.ClientPart clientBody) {
+        if (clientBody.jdbcDriver.fileName.isEmpty() || Objects.isNull(clientBody.jdbcDriver.data)) {
+            return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion);
+        }
         return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
     }
 

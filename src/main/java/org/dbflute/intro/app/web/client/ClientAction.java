@@ -17,6 +17,7 @@ package org.dbflute.intro.app.web.client;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
+import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
@@ -38,7 +39,10 @@ import org.lastaflute.web.response.JsonResponse;
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 
 /**
  * @author p1us2er0
@@ -59,6 +63,8 @@ public class ClientAction extends IntroBaseAction {
     private TestConnectionLogic testConnectionLogic;
     @Resource
     private DocumentPhysicalLogic documentLogic;
+    @Resource
+    private DatabaseInfoLogic databaseInfoLogic;
     @Resource
     private TimeManager timeManager;
 
@@ -192,7 +198,15 @@ public class ClientAction extends IntroBaseAction {
     //                                                ------
     @Execute
     public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
-        validate(clientCreateBody, messages -> {});
+        validate(clientCreateBody, messages -> {
+            if (clientInfoLogic.getProjectList().contains(projectName)) {
+                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
+            }
+            TargetDatabase target = clientCreateBody.client.databaseCode;
+            if (!databaseInfoLogic.isEmbeddedJar(target)) {
+                messages.addErrorsDatabaseNeedsJar("database", target.alias());
+            }
+        });
         ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
@@ -225,6 +239,9 @@ public class ClientAction extends IntroBaseAction {
     }
 
     private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
+        if (clientBody.jdbcDriver.fileName.isEmpty() || Objects.isNull(clientBody.jdbcDriver.data)) {
+            return new ProjectInfra(projectName, clientBody.dbfluteVersion);
+        }
         return new ProjectInfra(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
     }
 

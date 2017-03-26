@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**
@@ -161,6 +160,9 @@ public class IntroMessages extends IntroLabels {
 
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
+
+    /** The key of the message: needs jar file: {0} */
+    public static final String ERRORS_DATABASE_NEEDS_JAR = "{errors.database.needsJar}";
 
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
@@ -825,6 +827,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsWelcomeClientAlreadyExists(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_WELCOME_CLIENT_ALREADY_EXISTS, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.database.needsJar' with parameters.
+     * <pre>
+     * message: needs jar file: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsDatabaseNeedsJar(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_DATABASE_NEEDS_JAR, arg0));
         return this;
     }
 }

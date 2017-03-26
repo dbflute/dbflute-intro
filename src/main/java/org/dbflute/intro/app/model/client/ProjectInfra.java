@@ -33,6 +33,12 @@ public class ProjectInfra {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
+    public ProjectInfra(String clientProject, String dbfluteVersion) {
+        this.clientProject = clientProject;
+        this.dbfluteVersion = dbfluteVersion;
+        this.jdbcDriverExtlibFile = null;
+    }
+
     public ProjectInfra(String clientProject, String dbfluteVersion, String jdbcDriverFileName, String jdbcDriverFileDataBase64) {
         this.clientProject = clientProject;
         this.dbfluteVersion = dbfluteVersion;
