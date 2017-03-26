@@ -204,6 +204,8 @@ angular.module('dbflute-intro').controller('DocumentSettingController',
     //                                                                            Document
     //                                                                            ========
     $scope.editDocumentSetting = function () {
-        //TODO deco add edit function
+        ApiFactory.editDocument(modalParam.projectName, $scope.documentSetting).then(function(response) {
+             $uibModalInstance.close();
+        });
     };
 });

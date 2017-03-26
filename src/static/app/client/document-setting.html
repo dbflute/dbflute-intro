@@ -4,19 +4,26 @@
 <div class="modal-body">
   <form class="form-horizontal">
     <div class="form-group">
-      <label class="col-sm-4 control-label">AliasDelimiterInDbComment</label>
-      <div class="col-sm-8">
+      <label class="col-sm-6 control-label">AliasDelimiterInDbComment</label>
+      <div class="col-sm-6">
         <input type="text" class="form-control" ng-model="documentSetting.aliasDelimiterInDbComment" placeholder="e.g. [:, ,]"/>
       </div>
     </div>
     <div class="form-group">
-      <div class="col-sm-8">
-        <label><input type="checkbox" class="btn btn-primary" ng-model="documentSetting.upperCaseBasic"/>upper case basis</label>
-      </div>
+      <label for="upperCaseBasic" class="col-sm-6 control-label">
+        upper case basis
+      </label>
+      <input id="upperCaseBasic" type="checkbox" class="col-sm-3 btn btn-primary" ng-model="documentSetting.upperCaseBasic"/>
     </div>
     <div class="form-group">
-      <div class="col-sm-8">
-        <label><input type="checkbox" class="btn btn-primary" ng-model="documentSetting.dbCommentOnAliasBasis"/>is db comment on alias basis</label>
+      <label for="dbCommentOnAliasBasis" class="col-sm-6 control-label">
+        is db comment on alias basis
+      </label>
+      <input id="dbCommentOnAliasBasis" type="checkbox" class="col-sm-3 btn btn-primary" ng-model="documentSetting.dbCommentOnAliasBasis"/>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-6 control-label">
+        <input type="button" class="btn btn-primary" value="OK" ng-click="editDocumentSetting()"/>
       </div>
     </div>
   </form>

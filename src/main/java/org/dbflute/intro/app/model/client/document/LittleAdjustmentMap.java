@@ -8,20 +8,20 @@ public class LittleAdjustmentMap {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    public final boolean isTableDispNameUpperCase;
-    public final boolean isTableSqlNameUpperCase;
-    public final boolean isColumnSqlNameUpperCase;
+    public final Boolean isTableDispNameUpperCase;
+    public final Boolean isTableSqlNameUpperCase;
+    public final Boolean isColumnSqlNameUpperCase;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public LittleAdjustmentMap(boolean isUpperCaseBasic) {
+    public LittleAdjustmentMap(Boolean isUpperCaseBasic) {
         this.isTableDispNameUpperCase = isUpperCaseBasic;
         this.isTableSqlNameUpperCase = isUpperCaseBasic;
         this.isColumnSqlNameUpperCase = isUpperCaseBasic;
     }
 
-    public LittleAdjustmentMap(boolean isTableDispNameUpperCase, boolean isTableSqlNameUpperCase, boolean isColumnSqlNameUpperCase) {
+    public LittleAdjustmentMap(Boolean isTableDispNameUpperCase, Boolean isTableSqlNameUpperCase, Boolean isColumnSqlNameUpperCase) {
         this.isTableDispNameUpperCase = isTableDispNameUpperCase;
         this.isTableSqlNameUpperCase = isTableSqlNameUpperCase;
         this.isColumnSqlNameUpperCase = isColumnSqlNameUpperCase;

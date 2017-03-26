@@ -109,4 +109,19 @@ public class DfpropAction extends IntroBaseAction {
         final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(project);
         return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
     }
+
+    // -----------------------------------------------------
+    //                                          EditDocument
+    //                                          ------------
+    @Execute(urlPattern = "{}/@word/@word")
+    public JsonResponse<Void> documentEdit(String project, DfpropDocumentEditBody body) {
+        validate(body, messages -> {});
+        final LittleAdjustmentMap littleAdjustmentMap = new LittleAdjustmentMap(body.upperCaseBasic);
+        dfpropUpdateLogic.replaceLittleAdjustmentMap(project, littleAdjustmentMap);
+        final DocumentMap documentMap = new DocumentMap();
+        documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
+        documentMap.setDbCommentOnAliasBasis(body.dbCommentOnAliasBasis);
+        dfpropUpdateLogic.replaceDocumentMap(project, documentMap);
+        return JsonResponse.asEmptyBody();
+    }
 }
