@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.function.Function;
 
 /**
  * @author deco
@@ -24,11 +25,11 @@ public class DfpropUpdateLogic {
     private FlutyFileLogic flutyFileLogic;
 
     public void replaceSchemaSyncCheckMap(String project, SchemaSyncCheckMap schemaSyncCheckMap) {
-        File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
+        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
         try (BufferedReader br = Files.newBufferedReader(documentMapFile.toPath())) {
             boolean inSetting = false;
             boolean inSyncSchemeSetting = false;
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
 
             while (true) {
                 String line = br.readLine();
@@ -60,66 +61,61 @@ public class DfpropUpdateLogic {
     }
 
     public void replaceDocumentMap(String project, DocumentMap documentMap) {
-        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
-        try (BufferedReader br = Files.newBufferedReader(documentMapFile.toPath())) {
-            boolean inSetting = false;
-            StringBuilder sb = new StringBuilder();
-            while (true) {
-                String line = br.readLine();
-                if (line == null) {
-                    break;
-                }
-                if (StringUtils.equals(line, "map:{")) {
-                    inSetting = true;
-                }
-                if (inSetting) {
-                    if (line.contains("; aliasDelimiterInDbComment") && line.contains("=")) {
-                        line = "    ; aliasDelimiterInDbComment = " + documentMap.getAliasDelimiterInDbComment().orElse("");
-                    }
-                    if (line.contains("; isDbCommentOnAliasBasis") && line.contains("=")) {
-                        line = "    ; isDbCommentOnAliasBasis = " + String.valueOf(documentMap.isDbCommentOnAliasBasis());
-                    }
-                }
-                sb.append(line).append("\n");
+        final Function<String, String> lineReplacer = line -> {
+            if (line.contains("; aliasDelimiterInDbComment") && line.contains("=")) {
+                return "    ; aliasDelimiterInDbComment = " + documentMap.getAliasDelimiterInDbComment().orElse("");
             }
-            flutyFileLogic.writeFile(documentMapFile, sb.toString());
-        } catch (IOException e) {
-            throw new LaSystemException("Cannot replace document map", e);
-        }
+            if (line.contains("; isDbCommentOnAliasBasis") && line.contains("=")) {
+                return "    ; isDbCommentOnAliasBasis = " + String.valueOf(documentMap.isDbCommentOnAliasBasis());
+            }
+            return line;
+        };
+        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
+        final String fileContent = replaceDfpropFileContent(documentMapFile, lineReplacer);
+        flutyFileLogic.writeFile(documentMapFile, fileContent);
     }
 
     public void replaceLittleAdjustmentMap(String project, LittleAdjustmentMap littleAdjustmentMap) {
+        final Function<String, String> lineReplacer = line -> {
+            final Boolean isTableDispNameUpperCase = littleAdjustmentMap.isTableDispNameUpperCase;
+            if (isTableDispNameUpperCase != null && line.contains("; isTableDispNameUpperCase") && line.contains("=")) {
+                return "    ; isTableDispNameUpperCase = " + String.valueOf(isTableDispNameUpperCase);
+            }
+            final Boolean isTableSqlNameUpperCase = littleAdjustmentMap.isTableSqlNameUpperCase;
+            if (isTableSqlNameUpperCase != null && line.contains("; isTableSqlNameUpperCase") && line.contains("=")) {
+                return "    ; isTableSqlNameUpperCase = " + String.valueOf(isTableSqlNameUpperCase);
+            }
+            final Boolean isColumnSqlNameUpperCase = littleAdjustmentMap.isColumnSqlNameUpperCase;
+            if (isColumnSqlNameUpperCase != null && line.contains("; isColumnSqlNameUpperCase") && line.contains("=")) {
+                return "    ; isColumnSqlNameUpperCase = " + String.valueOf(isColumnSqlNameUpperCase);
+            }
+            return line;
+        };
         final File littleAdjustmentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "littleAdjustmentMap.dfprop");
-        try (BufferedReader br = Files.newBufferedReader(littleAdjustmentMapFile.toPath())) {
-            boolean inSetting = false;
-            StringBuilder sb = new StringBuilder();
+        final String fileContent = replaceDfpropFileContent(littleAdjustmentMapFile, lineReplacer);
+        flutyFileLogic.writeFile(littleAdjustmentMapFile, fileContent);
+    }
+
+    private String replaceDfpropFileContent(File file, Function<String, String> lineReplacer) {
+        try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
+            boolean endComment = false;
+            final StringBuilder sb = new StringBuilder();
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
                     break;
                 }
                 if (StringUtils.equals(line, "map:{")) {
-                    inSetting = true;
+                    endComment = true;
                 }
-                if (inSetting) {
-                    final Boolean isTableDispNameUpperCase = littleAdjustmentMap.isTableDispNameUpperCase;
-                    if (isTableDispNameUpperCase != null && line.contains("; isTableDispNameUpperCase") && line.contains("=")) {
-                        line = "    ; isTableDispNameUpperCase = " + String.valueOf(isTableDispNameUpperCase);
-                    }
-                    final Boolean isTableSqlNameUpperCase = littleAdjustmentMap.isTableSqlNameUpperCase;
-                    if (isTableSqlNameUpperCase != null && line.contains("; isTableSqlNameUpperCase") && line.contains("=")) {
-                        line = "    ; isTableSqlNameUpperCase = " + String.valueOf(isTableSqlNameUpperCase);
-                    }
-                    final Boolean isColumnSqlNameUpperCase = littleAdjustmentMap.isColumnSqlNameUpperCase;
-                    if (isColumnSqlNameUpperCase != null && line.contains("; isColumnSqlNameUpperCase") && line.contains("=")) {
-                        line = "    ; isColumnSqlNameUpperCase = " + String.valueOf(isColumnSqlNameUpperCase);
-                    }
+                if (endComment) {
+                    line = lineReplacer.apply(line);
                 }
                 sb.append(line).append("\n");
             }
-            flutyFileLogic.writeFile(littleAdjustmentMapFile, sb.toString());
+            return sb.toString();
         } catch (IOException e) {
-            throw new LaSystemException("Cannot replace little adjustment map", e);
+            throw new LaSystemException("Cannot replace dfprop", e);
         }
     }
 }
