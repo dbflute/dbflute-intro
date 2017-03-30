@@ -59,7 +59,7 @@ angular.module('dbflute-intro')
         $window.open($scope.configuration['apiServerUrl'] + 'document/' + client.projectName + '/synccheckresulthtml/');
     };
 
-    $scope.editDocumentSetting = function() {
+    $scope.editDocumentSettings = function() {
       var modalParam = {
           projectName: $scope.projectName,
           documentSetting: $scope.documentSetting
@@ -174,7 +174,7 @@ angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
     // ===================================================================================
     //                                                                     SchemaSyncCheck
     //                                                                     ===============
-    $scope.editSyncSchema = function() {
+    $scope.doEditSyncSchema = function() {
         ApiFactory.editSyncSchema(modalParam.projectName, $scope.syncSchemaSettingData).then(function(response) {
             $uibModalInstance.close();
         });
@@ -203,7 +203,7 @@ angular.module('dbflute-intro').controller('DocumentSettingController',
     // ===================================================================================
     //                                                                            Document
     //                                                                            ========
-    $scope.editDocumentSetting = function () {
+    $scope.doEditDocumentSettings = function () {
         ApiFactory.editDocument(modalParam.projectName, $scope.documentSetting).then(function(response) {
              $uibModalInstance.close();
         });
