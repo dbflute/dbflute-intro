@@ -15,6 +15,7 @@ public class LittleAdjustmentMap {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
+    // TODO deco factory method by jflute (2017/03/30)
     public LittleAdjustmentMap(Boolean isUpperCaseBasic) {
         this.isTableDispNameUpperCase = isUpperCaseBasic;
         this.isTableSqlNameUpperCase = isUpperCaseBasic;
