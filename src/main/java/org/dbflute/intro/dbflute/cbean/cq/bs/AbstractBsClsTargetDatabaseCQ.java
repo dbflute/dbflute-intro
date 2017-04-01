@@ -244,7 +244,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase}
      * @param databaseCodeList The collection of databaseCode as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setDatabaseCode_NotInScope(Collection<String> databaseCodeList) {
+    protected void setDatabaseCode_NotInScope(Collection<String> databaseCodeList) {
         doSetDatabaseCode_NotInScope(databaseCodeList);
     }
 
@@ -768,7 +768,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * SCHEMA_REQUIRED_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @param schemaRequiredFlgList The collection of schemaRequiredFlg as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setSchemaRequiredFlg_NotInScope(Collection<Integer> schemaRequiredFlgList) {
+    protected void setSchemaRequiredFlg_NotInScope(Collection<Integer> schemaRequiredFlgList) {
         doSetSchemaRequiredFlg_NotInScope(schemaRequiredFlgList);
     }
 
@@ -905,7 +905,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * SCHEMA_UPPER_CASE_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @param schemaUpperCaseFlgList The collection of schemaUpperCaseFlg as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setSchemaUpperCaseFlg_NotInScope(Collection<Integer> schemaUpperCaseFlgList) {
+    protected void setSchemaUpperCaseFlg_NotInScope(Collection<Integer> schemaUpperCaseFlgList) {
         doSetSchemaUpperCaseFlg_NotInScope(schemaUpperCaseFlgList);
     }
 
@@ -1042,7 +1042,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * USER_INPUT_ASSIST_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @param userInputAssistFlgList The collection of userInputAssistFlg as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setUserInputAssistFlg_NotInScope(Collection<Integer> userInputAssistFlgList) {
+    protected void setUserInputAssistFlg_NotInScope(Collection<Integer> userInputAssistFlgList) {
         doSetUserInputAssistFlg_NotInScope(userInputAssistFlgList);
     }
 
@@ -1179,7 +1179,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * EMBEDDED_JAR_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @param embeddedJarFlgList The collection of embeddedJarFlg as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setEmbeddedJarFlg_NotInScope(Collection<Integer> embeddedJarFlgList) {
+    protected void setEmbeddedJarFlg_NotInScope(Collection<Integer> embeddedJarFlgList) {
         doSetEmbeddedJarFlg_NotInScope(embeddedJarFlgList);
     }
 

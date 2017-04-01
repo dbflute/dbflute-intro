@@ -58,8 +58,7 @@ public class ClsTargetLanguageDbm extends AbstractDBMeta {
     { xsetupEpg(); }
     protected void xsetupEpg() {
         setupEpg(_epgMap, et -> ((ClsTargetLanguage)et).getLanguageCode(), (et, vl) -> {
-            ColumnInfo col = columnLanguageCode();
-            CDef.TargetLanguage cls = (CDef.TargetLanguage)gcls(et, col, vl);
+            CDef.TargetLanguage cls = (CDef.TargetLanguage)gcls(et, columnLanguageCode(), vl);
             if (cls != null) {
                 ((ClsTargetLanguage)et).setLanguageCodeAsTargetLanguage(cls);
             } else {

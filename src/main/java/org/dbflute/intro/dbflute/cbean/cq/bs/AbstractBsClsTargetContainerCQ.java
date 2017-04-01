@@ -212,7 +212,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
      * @param containerCodeList The collection of containerCode as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setContainerCode_NotInScope(Collection<String> containerCodeList) {
+    protected void setContainerCode_NotInScope(Collection<String> containerCodeList) {
         doSetContainerCode_NotInScope(containerCodeList);
     }
 

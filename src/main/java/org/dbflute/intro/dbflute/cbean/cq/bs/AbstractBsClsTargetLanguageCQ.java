@@ -180,7 +180,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
      * @param languageCodeList The collection of languageCode as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setLanguageCode_NotInScope(Collection<String> languageCodeList) {
+    protected void setLanguageCode_NotInScope(Collection<String> languageCodeList) {
         doSetLanguageCode_NotInScope(languageCodeList);
     }
 

@@ -58,8 +58,7 @@ public class ClsTargetDatabaseDbm extends AbstractDBMeta {
     { xsetupEpg(); }
     protected void xsetupEpg() {
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getDatabaseCode(), (et, vl) -> {
-            ColumnInfo col = columnDatabaseCode();
-            CDef.TargetDatabase cls = (CDef.TargetDatabase)gcls(et, col, vl);
+            CDef.TargetDatabase cls = (CDef.TargetDatabase)gcls(et, columnDatabaseCode(), vl);
             if (cls != null) {
                 ((ClsTargetDatabase)et).setDatabaseCodeAsTargetDatabase(cls);
             } else {
@@ -71,8 +70,7 @@ public class ClsTargetDatabaseDbm extends AbstractDBMeta {
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getUrlTemplate(), (et, vl) -> ((ClsTargetDatabase)et).setUrlTemplate((String)vl), "urlTemplate");
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getDefaultSchema(), (et, vl) -> ((ClsTargetDatabase)et).setDefaultSchema((String)vl), "defaultSchema");
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getSchemaRequiredFlg(), (et, vl) -> {
-            ColumnInfo col = columnSchemaRequiredFlg();
-            CDef.Flg cls = (CDef.Flg)gcls(et, col, vl);
+            CDef.Flg cls = (CDef.Flg)gcls(et, columnSchemaRequiredFlg(), vl);
             if (cls != null) {
                 ((ClsTargetDatabase)et).setSchemaRequiredFlgAsFlg(cls);
             } else {
@@ -80,8 +78,7 @@ public class ClsTargetDatabaseDbm extends AbstractDBMeta {
             }
         }, "schemaRequiredFlg");
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getSchemaUpperCaseFlg(), (et, vl) -> {
-            ColumnInfo col = columnSchemaUpperCaseFlg();
-            CDef.Flg cls = (CDef.Flg)gcls(et, col, vl);
+            CDef.Flg cls = (CDef.Flg)gcls(et, columnSchemaUpperCaseFlg(), vl);
             if (cls != null) {
                 ((ClsTargetDatabase)et).setSchemaUpperCaseFlgAsFlg(cls);
             } else {
@@ -89,8 +86,7 @@ public class ClsTargetDatabaseDbm extends AbstractDBMeta {
             }
         }, "schemaUpperCaseFlg");
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getUserInputAssistFlg(), (et, vl) -> {
-            ColumnInfo col = columnUserInputAssistFlg();
-            CDef.Flg cls = (CDef.Flg)gcls(et, col, vl);
+            CDef.Flg cls = (CDef.Flg)gcls(et, columnUserInputAssistFlg(), vl);
             if (cls != null) {
                 ((ClsTargetDatabase)et).setUserInputAssistFlgAsFlg(cls);
             } else {
@@ -98,8 +94,7 @@ public class ClsTargetDatabaseDbm extends AbstractDBMeta {
             }
         }, "userInputAssistFlg");
         setupEpg(_epgMap, et -> ((ClsTargetDatabase)et).getEmbeddedJarFlg(), (et, vl) -> {
-            ColumnInfo col = columnEmbeddedJarFlg();
-            CDef.Flg cls = (CDef.Flg)gcls(et, col, vl);
+            CDef.Flg cls = (CDef.Flg)gcls(et, columnEmbeddedJarFlg(), vl);
             if (cls != null) {
                 ((ClsTargetDatabase)et).setEmbeddedJarFlgAsFlg(cls);
             } else {

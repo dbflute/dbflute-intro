@@ -58,8 +58,7 @@ public class ClsTargetContainerDbm extends AbstractDBMeta {
     { xsetupEpg(); }
     protected void xsetupEpg() {
         setupEpg(_epgMap, et -> ((ClsTargetContainer)et).getContainerCode(), (et, vl) -> {
-            ColumnInfo col = columnContainerCode();
-            CDef.TargetContainer cls = (CDef.TargetContainer)gcls(et, col, vl);
+            CDef.TargetContainer cls = (CDef.TargetContainer)gcls(et, columnContainerCode(), vl);
             if (cls != null) {
                 ((ClsTargetContainer)et).setContainerCodeAsTargetContainer(cls);
             } else {

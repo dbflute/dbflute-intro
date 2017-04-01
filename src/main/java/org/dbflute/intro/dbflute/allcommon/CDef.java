@@ -860,7 +860,7 @@ public interface CDef extends Classification {
             });
         }
 
-        public static CDef.DefMeta meta(String classificationName) { // old style so use byName(name)
+        public static CDef.DefMeta meta(String classificationName) { // old style so use find(name)
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
             if (Flg.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.Flg; }
             if (TargetDatabase.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetDatabase; }
@@ -868,6 +868,11 @@ public interface CDef extends Classification {
             if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetContainer; }
             if (TaskType.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TaskType; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
+        }
+
+        @SuppressWarnings("unused")
+        private String[] xinternalEmptyString() {
+            return emptyStrings(); // to suppress 'unused' warning of import statement
         }
     }
 }

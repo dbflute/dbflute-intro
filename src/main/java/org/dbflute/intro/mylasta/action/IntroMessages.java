@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.mylasta.action;
 
+import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**

@@ -17,11 +17,13 @@ package org.dbflute.intro.mylasta.appcls;
 
 import java.util.*;
 
+import org.dbflute.exception.ClassificationNotFoundException;
 import org.dbflute.jdbc.Classification;
 import org.dbflute.jdbc.ClassificationCodeType;
 import org.dbflute.jdbc.ClassificationMeta;
 import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
 import org.dbflute.optional.OptionalThing;
+import static org.dbflute.util.DfTypeUtil.emptyStrings;
 
 /**
  * The definition of application classification.
@@ -29,24 +31,21 @@ import org.dbflute.optional.OptionalThing;
  */
 public interface AppCDef extends Classification {
 
-    /** The empty array for no sisters. */
-    String[] EMPTY_SISTERS = new String[]{};
-
     /**
      * Instruction for DBFlute task
      */
     public enum TaskInstruction implements AppCDef {
         /** Doc: Doc task */
-        Doc("doc", "Doc", EMPTY_SISTERS)
+        Doc("doc", "Doc", emptyStrings())
         ,
         /** LoadDataReverse: LoadDataReverse task */
-        LoadDataReverse("loadDataReverse", "LoadDataReverse", EMPTY_SISTERS)
+        LoadDataReverse("loadDataReverse", "LoadDataReverse", emptyStrings())
         ,
         /** SchemaSyncCheck: SchemaSyncCheck task */
-        SchemaSyncCheck("schemaSyncCheck", "SchemaSyncCheck", EMPTY_SISTERS)
+        SchemaSyncCheck("schemaSyncCheck", "SchemaSyncCheck", emptyStrings())
         ,
         /** ReplaceSchema: ReplaceSchema task */
-        ReplaceSchema("replaceSchema", "ReplaceSchema", EMPTY_SISTERS)
+        ReplaceSchema("replaceSchema", "ReplaceSchema", emptyStrings())
         ;
         private static final Map<String, TaskInstruction> _codeClsMap = new HashMap<String, TaskInstruction>();
         private static final Map<String, TaskInstruction> _nameClsMap = new HashMap<String, TaskInstruction>();
@@ -216,27 +215,27 @@ public interface AppCDef extends Classification {
         }
 
         public List<Classification> listAll() {
-            if (TaskInstruction.name().equals(name())) { return toClassificationList(AppCDef.TaskInstruction.listAll()); }
+            if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listByGroup(String groupName) { // exception if not found
-            if (TaskInstruction.name().equals(name())) { return toClassificationList(AppCDef.TaskInstruction.listByGroup(groupName)); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
+            if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.listByGroup(groupName)); }
+            throw new IllegalStateException("Unknown groupName: " + groupName + ", " + this); // basically unreachable
         }
 
-        public List<? extends Classification> listOf(Collection<String> codeList) {
-            if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.listOf(codeList); }
+        public List<Classification> listOf(Collection<String> codeList) {
+            if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.listOf(codeList)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> groupOf(String groupName) { // old style
-            if (TaskInstruction.name().equals(name())) { return toClassificationList(AppCDef.TaskInstruction.groupOf(groupName)); }
+            if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         @SuppressWarnings("unchecked")
-        private List<Classification> toClassificationList(List<?> clsList) {
+        private List<Classification> toClsList(List<?> clsList) {
             return (List<Classification>)clsList;
         }
 
@@ -258,17 +257,15 @@ public interface AppCDef extends Classification {
             });
         }
 
-        public static AppCDef.DefMeta meta(String classificationName) { // old style so use byName(name)
+        public static AppCDef.DefMeta meta(String classificationName) { // old style so use find(name)
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
             if (TaskInstruction.name().equalsIgnoreCase(classificationName)) { return AppCDef.DefMeta.TaskInstruction; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
         }
-    }
 
-    public static class ClassificationNotFoundException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-        public ClassificationNotFoundException(String msg) {
-            super(msg);
+        @SuppressWarnings("unused")
+        private String[] xinternalEmptyString() {
+            return emptyStrings(); // to suppress 'unused' warning of import statement
         }
     }
 }
