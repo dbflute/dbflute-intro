@@ -15,7 +15,7 @@ angular.module('dbflute-intro')
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
         dbfluteVersion: '',
-        jdbcDriver: {fileName: "", data: null}
+        jdbcDriver: {fileName: '', data: null}
     }; // model of current client
     $scope.needsJdbcDriver = false;
     $scope.oRMapperOptionsFlg = false;

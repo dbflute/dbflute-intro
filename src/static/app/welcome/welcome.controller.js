@@ -37,8 +37,8 @@ angular.module('dbflute-intro')
         create: true,
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
-        dbfluteVersion: "",
-        jdbcDriver: {fileName: "", data: null}
+        dbfluteVersion: '',
+        jdbcDriver: {fileName: '', data: null}
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
     $scope.needsJdbcDriver = false;
@@ -56,7 +56,7 @@ angular.module('dbflute-intro')
     $scope.registerEngineLatest = function() {
         ApiFactory.engineLatest().then(function (response) {
             $scope.client.dbfluteVersion = response.data.latestReleaseVersion;
-        })
+        });
     };
 
     // ===================================================================================
@@ -66,7 +66,7 @@ angular.module('dbflute-intro')
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
     $scope.changeDatabase = function (client) {
-    	var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
+    	var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
       $scope.needsJdbcDriver = !database.embeddedJar;
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
@@ -74,8 +74,8 @@ angular.module('dbflute-intro')
     };
     $scope.create = function (client, testConnection) {
       var modalInstance = $uibModal.open({
-        templateUrl:"progress.html",
-        backdrop:"static",keyboard:false
+        templateUrl:'progress.html',
+        backdrop:'static',keyboard:false
       });
       ApiFactory.createWelcomeClient(client, testConnection).then(function (success) {
         modalInstance.close();
