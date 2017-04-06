@@ -70,6 +70,8 @@ public class WelcomeAction extends IntroBaseAction {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
             TargetDatabase target = welcomeCreateBody.client.databaseCode;
+            // TODO hakiba add extension check by jflute (2017/04/06)
+            // TODO hakiba needs to check jar existence by jflute (2017/04/06)
             if (!databaseInfoLogic.isEmbeddedJar(target)){
                 messages.addErrorsDatabaseNeedsJar("database", target.alias());
             }

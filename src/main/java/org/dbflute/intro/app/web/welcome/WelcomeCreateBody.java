@@ -62,10 +62,12 @@ public class WelcomeCreateBody {
         @Required
         public String dbfluteVersion;
 
+        // TODO hakiba why no validation? comment it by jflute (2017/04/06)
         public JdbcDriverPart jdbcDriver;
 
         public static class JdbcDriverPart {
 
+            // TODO hakiba add required with ClientError by jflute (2017/04/06)
             public String fileName;
             public String data;
          }
