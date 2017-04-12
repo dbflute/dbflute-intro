@@ -15,7 +15,7 @@ angular.module('dbflute-intro')
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
         dbfluteVersion: '',
-        jdbcDriver: {fileName: '', data: null}
+        jdbcDriver: null
     }; // model of current client
     $scope.needsJdbcDriver = false;
     $scope.oRMapperOptionsFlg = false;
@@ -51,8 +51,9 @@ angular.module('dbflute-intro')
       var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
       $scope.needsJdbcDriver = !database.embeddedJar;
       client.jdbcDriverFqcn = database.driverName;
-        client.mainSchemaSettings.url = database.urlTemplate;
-        client.mainSchemaSettings.schema = database.defaultSchema;
+      client.mainSchemaSettings.url = database.urlTemplate;
+      client.mainSchemaSettings.schema = database.defaultSchema;
+      client.jdbcDriver = $scope.needsJdbcDriver ? {fileName: '', data: null} : null;
     };
     $scope.create = function (client, testConnection) {
         ApiFactory.createClient(client, testConnection).then(function (response) {

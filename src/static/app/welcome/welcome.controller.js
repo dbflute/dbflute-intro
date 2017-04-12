@@ -38,7 +38,7 @@ angular.module('dbflute-intro')
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
         dbfluteVersion: '',
-        jdbcDriver: {fileName: '', data: null}
+        jdbcDriver: null
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
     $scope.needsJdbcDriver = false;
@@ -71,6 +71,7 @@ angular.module('dbflute-intro')
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
     	client.mainSchemaSettings.schema = database.defaultSchema;
+      client.jdbcDriver = $scope.needsJdbcDriver ? {fileName: '', data: null} : null;
     };
     $scope.create = function (client, testConnection) {
       var modalInstance = $uibModal.open({

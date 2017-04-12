@@ -67,11 +67,14 @@ public class ClientCreateBody {
         @Required
         public String dbfluteVersion;
 
+        @Valid
         public JdbcDriverPart jdbcDriver;
 
         public static class JdbcDriverPart {
 
+            @Required
             public String fileName;
+            @Required
             public String data;
         }
 

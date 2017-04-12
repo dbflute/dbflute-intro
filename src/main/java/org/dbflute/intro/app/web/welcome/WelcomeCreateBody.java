@@ -63,12 +63,16 @@ public class WelcomeCreateBody {
         public String dbfluteVersion;
 
         // TODO hakiba why no validation? comment it by jflute (2017/04/06)
+        // you don't need jar file, when target database is embedded jar. so, no validation.
+        @Valid
         public JdbcDriverPart jdbcDriver;
 
         public static class JdbcDriverPart {
 
             // TODO hakiba add required with ClientError by jflute (2017/04/06)
+            @Required
             public String fileName;
+            @Required
             public String data;
          }
     }

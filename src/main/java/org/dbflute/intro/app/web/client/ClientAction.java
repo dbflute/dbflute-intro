@@ -40,9 +40,8 @@ import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 
 /**
  * @author p1us2er0
@@ -202,10 +201,10 @@ public class ClientAction extends IntroBaseAction {
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
-            TargetDatabase target = clientCreateBody.client.databaseCode;
-            if (!databaseInfoLogic.isEmbeddedJar(target)) {
-                messages.addErrorsDatabaseNeedsJar("database", target.alias());
-            }
+            Optional.ofNullable(clientCreateBody.client.jdbcDriver)
+                .map(driverPart -> driverPart.fileName)
+                .filter(s -> !s.endsWith(".jar"))
+                .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
         ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
@@ -239,7 +238,7 @@ public class ClientAction extends IntroBaseAction {
     }
 
     private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
-        if (clientBody.jdbcDriver.fileName.isEmpty() || Objects.isNull(clientBody.jdbcDriver.data)) {
+        if (Objects.isNull(clientBody.jdbcDriver)) {
             return new ProjectInfra(projectName, clientBody.dbfluteVersion);
         }
         return new ProjectInfra(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
