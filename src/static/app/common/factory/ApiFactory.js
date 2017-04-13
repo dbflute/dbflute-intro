@@ -117,14 +117,14 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/dfprop/' + projectName + '/document'
             });
         },
-        editDocument: function(projectName, documentSetting) {
+        editDocument: function(projectName, documentSettings) {
             return $http({
                 method: 'POST',
                 url: 'api/dfprop/' + projectName + '/document/edit',
               data: {
-                upperCaseBasic: documentSetting.upperCaseBasic,
-                aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-                dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis
+                upperCaseBasic: documentSettings.upperCaseBasic,
+                aliasDelimiterInDbComment: documentSettings.aliasDelimiterInDbComment,
+                dbCommentOnAliasBasis: documentSettings.dbCommentOnAliasBasis
               }
             });
         },

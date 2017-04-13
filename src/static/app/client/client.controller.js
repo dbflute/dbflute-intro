@@ -11,7 +11,7 @@ angular.module('dbflute-intro')
     $scope.configuration = {}; // intro configuration
     $scope.client = null; // model of current client
     $scope.syncSchemaSetting = {};
-    $scope.documentSetting = {};
+    $scope.documentSettings = {};
     $scope.classificationMap = {}; // e.g. targetDatabase
 
     // ===================================================================================
@@ -62,11 +62,11 @@ angular.module('dbflute-intro')
     $scope.editDocumentSettings = function() {
       var modalParam = {
           projectName: $scope.projectName,
-          documentSetting: $scope.documentSetting
+          documentSettings: $scope.documentSettings
       };
       $uibModal.open({
-          templateUrl: "app/client/document-setting.html",
-          controller: "DocumentSettingController",
+          templateUrl: "app/client/document-settings.html",
+          controller: "DocumentSettingsController",
           resolve: {
               modalParam : function () {
                   return modalParam;
@@ -121,9 +121,9 @@ angular.module('dbflute-intro')
         });
     };
 
-    $scope.documentSetting = function(projectName) {
+    $scope.documentSettings = function(projectName) {
         ApiFactory.document(projectName).then(function(response) {
-            $scope.documentSetting = response.data;
+            $scope.documentSettings = response.data;
         });
     };
 
@@ -156,7 +156,7 @@ angular.module('dbflute-intro')
     $scope.prepareCurrentProject($scope.projectName);
     $scope.configuration();
     $scope.syncSchemaSetting($scope.projectName);
-    $scope.documentSetting($scope.projectName);
+    $scope.documentSettings($scope.projectName);
     $scope.findClassifications();
 });
 
@@ -193,18 +193,18 @@ angular.module('dbflute-intro').controller('SchemaSyncCheckSettingController',
 /**
  * Document Controller
  */
-angular.module('dbflute-intro').controller('DocumentSettingController',
+angular.module('dbflute-intro').controller('DocumentSettingsController',
         function($scope, $uibModalInstance, modalParam, ApiFactory) {
     'use strict';
 
     $scope.projectName = modalParam.projectName;
-    $scope.documentSetting = modalParam.documentSetting;
+    $scope.documentSettings = modalParam.documentSettings;
 
     // ===================================================================================
     //                                                                            Document
     //                                                                            ========
     $scope.doEditDocumentSettings = function () {
-        ApiFactory.editDocument(modalParam.projectName, $scope.documentSetting).then(function(response) {
+        ApiFactory.editDocument(modalParam.projectName, $scope.documentSettings).then(function(response) {
              $uibModalInstance.close();
         });
     };
