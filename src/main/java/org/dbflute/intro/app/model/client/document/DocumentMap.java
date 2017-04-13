@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.model.client.document;
 
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.util.Lato;
 
 /**
  * @author p1us2er0
@@ -33,6 +34,14 @@ public class DocumentMap {
     protected boolean checkProcedureDiff;
     protected SchemaSyncCheckMap schemaSyncCheckMap;
 
+    // ===================================================================================
+    //                                                                      Basic Override
+    //                                                                      ==============
+    @Override
+    public String toString() {
+        return Lato.string(this);
+    }
+    
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========

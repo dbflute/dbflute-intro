@@ -91,4 +91,8 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
             throw new LaSystemException("Cannot delete dir:" + clientDir, e);
         }
     }
+
+    protected String getTestClientProject() {
+        return TEST_CLIENT_PROJECT;
+    }
 }
