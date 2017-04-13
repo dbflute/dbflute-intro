@@ -166,8 +166,8 @@ public class ClientAction extends IntroBaseAction {
     //                                             ---------
     @Execute
     public JsonResponse<ClientOperationResult> operation(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseTranslatingThrow(cause -> {
+            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject, cause);
         });
         ClientOperationResult detailBean = mappingToOperationResult(clientModel);
         return asJson(detailBean);

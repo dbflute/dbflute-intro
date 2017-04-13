@@ -15,6 +15,8 @@
  */
 package org.dbflute.intro.app.web.settings;
 
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -27,15 +29,12 @@ import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart;
+import org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.DatabaseSettingsPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-
-import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.*;
-import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.*;
 
 /**
  * @author hakiba
@@ -67,9 +66,8 @@ public class SettingsAction extends IntroBaseAction {
     //                                              --------
     @Execute
     public JsonResponse<SettingsResult> index(String clientProject) {
-        // TODO hakiba recyle orElseThrow() by jflute (2017/01/12)
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseTranslatingThrow(cause -> {
+            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject, cause);
         });
         SettingsResult result = mappingToSettingsResult(clientModel);
         return asJson(result);
