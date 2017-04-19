@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.welcome;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
@@ -30,6 +31,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.welcome.WelcomeCreateBody.ClientPart;
+import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -71,11 +73,15 @@ public class WelcomeAction extends IntroBaseAction {
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
-            // TODO hakiba add extension check by jflute (2017/04/06)
             // TODO hakiba needs to check jar existence by jflute (2017/04/06)
+            TargetDatabase databaseCd = client.databaseCode;
+            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver.data)) {
+                messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
+            }
+            // TODO hakiba add extension check by jflute (2017/04/06)
             Optional.ofNullable(client.jdbcDriver)
                 .map(driverPart -> driverPart.fileName)
-                .filter(s -> !s.endsWith(".jar"))
+                .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
                 .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
         String latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();

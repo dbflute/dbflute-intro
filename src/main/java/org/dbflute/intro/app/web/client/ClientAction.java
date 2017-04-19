@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
@@ -31,6 +32,7 @@ import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
+import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
@@ -198,12 +200,17 @@ public class ClientAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {
+            ClientPart client = clientCreateBody.client;
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
-            Optional.ofNullable(clientCreateBody.client.jdbcDriver)
+            TargetDatabase databaseCd = client.databaseCode;
+            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
+                messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
+            }
+            Optional.ofNullable(client.jdbcDriver)
                 .map(driverPart -> driverPart.fileName)
-                .filter(s -> !s.endsWith(".jar"))
+                .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
                 .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
         ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
