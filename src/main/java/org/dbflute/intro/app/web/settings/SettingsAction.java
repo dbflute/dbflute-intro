@@ -67,7 +67,6 @@ public class SettingsAction extends IntroBaseAction {
     //                                              --------
     @Execute
     public JsonResponse<SettingsResult> index(String clientProject) {
-        // TODO hakiba recyle orElseThrow() by jflute (2017/01/12)
         ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
         });

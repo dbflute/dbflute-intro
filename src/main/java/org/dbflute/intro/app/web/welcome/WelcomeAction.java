@@ -33,6 +33,7 @@ import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.welcome.WelcomeCreateBody.ClientPart;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.util.LaStringUtil;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
