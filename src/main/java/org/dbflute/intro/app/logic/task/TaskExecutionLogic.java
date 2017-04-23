@@ -122,7 +122,9 @@ public class TaskExecutionLogic {
                     break;
                 }
 
-                logSb.append(line).append("\n"); // for error message, fixedly LF
+                if (isErrorMessageLine(line)) {
+                    logSb.append(line).append("\n"); // for error message, fixedly LF
+                }
 
                 if (isErrorLine(line)) {
                     resultCode = 1;
@@ -146,6 +148,10 @@ public class TaskExecutionLogic {
         }
         throwIfSchemaNotSynchronized(schemaNotSynchronized, resultCode, logSb);
         handleErrorResultCode(resultCode, logSb);
+    }
+
+    private boolean isErrorMessageLine(String line) {
+        return !line.contains("[df-doc] \tat ");
     }
 
     private boolean isErrorLine(String line) { // depending on Apache Ant
