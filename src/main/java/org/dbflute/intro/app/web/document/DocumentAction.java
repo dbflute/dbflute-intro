@@ -71,8 +71,8 @@ public class DocumentAction extends IntroBaseAction {
     //                                                                        Assist Logic
     //                                                                        ============
     private StreamResponse createHtmlStreamResponse(File file) {
-        // TODO deco dummy name or comment about it by jflute (2017/01/12)
-        StreamResponse stream = asStream("schema-...html");
+        // TODO done deco dummy name or comment about it by jflute (2017/01/12)
+        StreamResponse stream = asStream("schema-...html"); // dummy name because unused
         stream.headerContentDispositionInline();
         return stream.contentType("text/html; encoding=\"UTF-8\"").stream(out -> {
             try (InputStream ins = FileUtils.openInputStream(file)) {

@@ -15,11 +15,9 @@ public class LittleAdjustmentMap {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    // TODO deco factory method by jflute (2017/03/30)
-    public LittleAdjustmentMap(Boolean isUpperCaseBasic) {
-        this.isTableDispNameUpperCase = isUpperCaseBasic;
-        this.isTableSqlNameUpperCase = isUpperCaseBasic;
-        this.isColumnSqlNameUpperCase = isUpperCaseBasic;
+    // TODO done deco factory method by jflute (2017/03/30)
+    public static LittleAdjustmentMap createTableNameUpperCase(Boolean isUpperCaseBasic) {
+        return new LittleAdjustmentMap(isUpperCaseBasic, isUpperCaseBasic, isUpperCaseBasic);
     }
 
     public LittleAdjustmentMap(Boolean isTableDispNameUpperCase, Boolean isTableSqlNameUpperCase, Boolean isColumnSqlNameUpperCase) {

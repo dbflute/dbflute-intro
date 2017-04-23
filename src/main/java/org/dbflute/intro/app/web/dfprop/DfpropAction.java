@@ -116,7 +116,7 @@ public class DfpropAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word/@word")
     public JsonResponse<Void> documentEdit(String project, DfpropDocumentEditBody body) {
         validate(body, messages -> {});
-        final LittleAdjustmentMap littleAdjustmentMap = new LittleAdjustmentMap(body.upperCaseBasic);
+        final LittleAdjustmentMap littleAdjustmentMap = LittleAdjustmentMap.createTableNameUpperCase(body.upperCaseBasic);
         dfpropUpdateLogic.replaceLittleAdjustmentMap(project, littleAdjustmentMap);
         final DocumentMap documentMap = new DocumentMap();
         documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
