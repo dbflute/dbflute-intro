@@ -33,7 +33,6 @@ import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.welcome.WelcomeCreateBody.ClientPart;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
-import org.lastaflute.core.util.LaStringUtil;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -74,10 +73,10 @@ public class WelcomeAction extends IntroBaseAction {
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
-            // TODO hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
+            // TODO done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
             // done hakiba needs to check jar existence by jflute (2017/04/06)
             TargetDatabase databaseCd = client.databaseCode;
-            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver.data)) {
+            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
             }
             // done hakiba add extension check by jflute (2017/04/06)

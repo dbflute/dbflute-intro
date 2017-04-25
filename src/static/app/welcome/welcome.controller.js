@@ -67,11 +67,13 @@ angular.module('dbflute-intro')
     };
     $scope.changeDatabase = function (client) {
     	var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
+      // switch showing JDBCDriver select form
       $scope.needsJdbcDriver = !database.embeddedJar;
+      // initialize JDBC Driver
+      client.jdbcDriver = null;
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
     	client.mainSchemaSettings.schema = database.defaultSchema;
-      client.jdbcDriver = $scope.needsJdbcDriver ? {fileName: '', data: null} : null;
     };
     $scope.create = function (client, testConnection) {
       var modalInstance = $uibModal.open({
@@ -92,6 +94,7 @@ angular.module('dbflute-intro')
         return function() {
           // encode base64
           var result = window.btoa(reader.result);
+          $scope.client.jdbcDriver = {fileName: null, data: null};
           $scope.client.jdbcDriver.fileName = file.name;
           $scope.client.jdbcDriver.data = result;
         };

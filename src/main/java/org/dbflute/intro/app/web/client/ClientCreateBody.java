@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.web.client;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
 import javax.validation.Valid;
@@ -67,14 +68,16 @@ public class ClientCreateBody {
         @Required
         public String dbfluteVersion;
 
+        // you don't need jar file, when target database is embedded jar. so, no validation.
         @Valid
         public JdbcDriverPart jdbcDriver;
 
         public static class JdbcDriverPart {
 
-            @Required
+            // if fileName or data is null, it's client problem.
+            @Required(groups=ClientError.class)
             public String fileName;
-            @Required
+            @Required(groups=ClientError.class)
             public String data;
         }
 

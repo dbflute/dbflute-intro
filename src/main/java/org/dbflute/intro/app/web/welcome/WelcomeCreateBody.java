@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.web.welcome;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
 import javax.validation.Valid;
@@ -62,17 +63,18 @@ public class WelcomeCreateBody {
         @Required
         public String dbfluteVersion;
 
-        // TODO hakiba why no validation? comment it by jflute (2017/04/06)
+        // TODO done hakiba why no validation? comment it by jflute (2017/04/06)
         // you don't need jar file, when target database is embedded jar. so, no validation.
         @Valid
         public JdbcDriverPart jdbcDriver;
 
         public static class JdbcDriverPart {
 
-            // TODO hakiba add required with ClientError by jflute (2017/04/06)
-            @Required
+            // TODO done hakiba add required with ClientError by jflute (2017/04/06)
+            // if fileName or data is null, it's client problem.
+            @Required(groups=ClientError.class)
             public String fileName;
-            @Required
+            @Required(groups=ClientError.class)
             public String data;
          }
     }
