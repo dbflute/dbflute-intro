@@ -73,7 +73,7 @@ public class WelcomeAction extends IntroBaseAction {
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
             }
-            // TODO done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
+            // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
             // done hakiba needs to check jar existence by jflute (2017/04/06)
             TargetDatabase databaseCd = client.databaseCode;
             if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {

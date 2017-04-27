@@ -15,8 +15,8 @@ public class LittleAdjustmentMap {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    // TODO done deco factory method by jflute (2017/03/30)
-    public static LittleAdjustmentMap createTableNameUpperCase(Boolean isUpperCaseBasic) {
+    // done deco factory method by jflute (2017/03/30)
+    public static LittleAdjustmentMap createAsTableNameUpperCase(Boolean isUpperCaseBasic) {
         return new LittleAdjustmentMap(isUpperCaseBasic, isUpperCaseBasic, isUpperCaseBasic);
     }
 
