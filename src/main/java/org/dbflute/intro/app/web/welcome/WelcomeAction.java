@@ -73,7 +73,7 @@ public class WelcomeAction extends IntroBaseAction {
             ClientPart client = welcomeCreateBody.client;
             String projectName = client.projectName;
             if (clientInfoLogic.getProjectList().contains(projectName)) {
-                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
+                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
             }
             // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
             // done hakiba needs to check jar existence by jflute (2017/04/06)
@@ -90,7 +90,9 @@ public class WelcomeAction extends IntroBaseAction {
         String latestVersion;
         try {
             latestVersion = publicPropertiesLogic.findProperties(welcomeCreateBody.useSystemProxies).getDBFluteLatestReleaseVersion();
-            engineInstallLogic.downloadUnzipping(latestVersion, welcomeCreateBody.useSystemProxies);
+            if (!engineInstallLogic.isDownloaded(latestVersion)) {
+                engineInstallLogic.downloadUnzipping(latestVersion, welcomeCreateBody.useSystemProxies);
+            }
         } catch (EngineDownloadErrorException e) {
             throw new NetworkErrorException(e.getMessage());
         }

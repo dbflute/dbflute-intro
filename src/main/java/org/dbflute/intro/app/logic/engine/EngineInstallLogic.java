@@ -61,6 +61,11 @@ public class EngineInstallLogic {
     // ===================================================================================
     //                                                                            Download
     //                                                                            ========
+    public boolean isDownloaded(String dbfluteVersion) {
+        final File engineDir = introPhysicalLogic.findEngineDir(dbfluteVersion);
+        return engineDir.exists();
+    }
+
     public void downloadUnzipping(String dbfluteVersion, boolean useSystemProxies) throws EngineDownloadErrorException { // overriding if already exists
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
             throw new IllegalArgumentException("dbfluteVersion is null or empty: " + dbfluteVersion);

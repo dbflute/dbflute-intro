@@ -202,7 +202,7 @@ public class ClientAction extends IntroBaseAction {
         validate(clientCreateBody, messages -> {
             ClientPart client = clientCreateBody.client;
             if (clientInfoLogic.getProjectList().contains(projectName)) {
-                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName); // TODO: hakiba refactor type-safe (2016/10/10)
+                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
             }
             TargetDatabase databaseCd = client.databaseCode;
             if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
