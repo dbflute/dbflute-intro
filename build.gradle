@@ -129,6 +129,7 @@ war {
     includeEmptyDirs = false
 
     version = ''
+    extension = 'jar'
 
     def scmBranch = 'unknown'
     def scmRevision = 'unknown'
