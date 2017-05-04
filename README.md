@@ -4,8 +4,8 @@ The GUI Application for DBFlute Management
 
 # For Intro users
 ## How to use Intro
-1. download war file
-2. `$ java -jar dbflute-intro.war`
+1. download jar file
+2. `$ java -jar dbflute-intro.jar`
 
 http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html
 
@@ -29,11 +29,9 @@ http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html
 ## How to refresh application
 1. $ `./gradlew refresh`
 
-TODO jflute what is this?
-
 ## How to build
 1. `$ ./gradlew build`
-2. `$ java -jar build/libs/dbflute-intro.war`
+2. `$ java -jar build/libs/dbflute-intro.jar`
 
 ## Server-side Framework
 
