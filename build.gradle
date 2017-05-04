@@ -31,7 +31,7 @@ ext {
         [
             // Basic Resource
             jdk : '1.8',
-            gradle : '3.1',
+            gradle : '3.5',
             node : '6.7.0',
 
             // Main Framework
@@ -40,13 +40,13 @@ ext {
             lastaflute : '0.9.6',
 
             // Partner Library
-            slf4j : '1.7.21',
-            logback : '1.1.7',
+            slf4j : '1.7.25',
+            logback : '1.2.3',
             jettyboot : '0.4.7',
 
             // GoodNeighbor Library
-            commonslang : '3.4',
-            commonsio : '2.4',
+            commonslang : '3.5',
+            commonsio : '2.5',
 
             // Testing
             junit : '4.8.2',
@@ -114,8 +114,11 @@ war {
     def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all']
     configurations.compile.collect { file ->
         if (embeddedArtifactList.any {file.getName().startsWith(it)}) {
-            from {
-                file.isDirectory() ? file : zipTree(file)
+            from(file.isDirectory() ? file : zipTree(file)) {
+                exclude 'META-INF/*NOTICE*'
+                exclude 'META-INF/*LICENSE*'
+                exclude 'META-INF/*DEPENDENCIES*'
+                exclude 'META-INF/maven/**'
             }
         }
     }
@@ -145,6 +148,15 @@ war {
         attributes 'Jenkins-Build-Number': System.getenv()['BUILD_NUMBER'] ?: ''
         attributes 'Main-Class' : mainClassName
     }
+
+    // license
+    from('LICENSE') {
+        into 'META-INF'
+        rename('LICENSE', 'LICENSE.txt')
+    }
+    from('etc/dist-license') {
+        into 'META-INF/dist-license'
+    }
 }
 
 
@@ -152,6 +164,7 @@ war {
 //                                                                                 License
 //                                                                                 =======
 license {
+    header file('LICENSE_HEADER')
     strictCheck true
     include "**/*.java"
     mapping {
