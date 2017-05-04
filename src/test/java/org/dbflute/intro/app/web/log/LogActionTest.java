@@ -17,6 +17,7 @@ package org.dbflute.intro.app.web.log;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -101,6 +102,6 @@ public class LogActionTest extends UnitIntroTestCase {
             logFile.getParentFile().mkdirs();
         }
         logFile.createNewFile();
-        FileUtils.write(logFile, content);
+        FileUtils.write(logFile, content, StandardCharsets.UTF_8);
     }
 }

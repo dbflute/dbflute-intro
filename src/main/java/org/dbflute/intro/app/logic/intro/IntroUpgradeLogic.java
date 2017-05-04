@@ -21,8 +21,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -40,7 +40,8 @@ public class IntroUpgradeLogic {
 
         if (path.lastIndexOf("!") != -1) {
             try {
-                jarPathFile = new File(URLDecoder.decode(path.substring("file:/".length(), path.lastIndexOf("!")), Charsets.UTF_8.name()));
+                jarPathFile = new File(
+                        URLDecoder.decode(path.substring("file:/".length(), path.lastIndexOf("!")), StandardCharsets.UTF_8.name()));
             } catch (UnsupportedEncodingException e) {
                 throw new IllegalStateException(e);
             }
