@@ -17,7 +17,7 @@ package org.dbflute.intro.app.logic.core;
 
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
-import org.dbflute.intro.mylasta.direction.IntroConfig;
+import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 
 import javax.annotation.Resource;
 
@@ -30,13 +30,14 @@ public class PublicPropertiesLogic {
     private static DfPublicProperties publicProperties; // cached
 
     @Resource
-    private IntroConfig introConfig;
+    private IntroInfoLogic introInfoLogic;
 
-    public DfPublicProperties findProperties() throws EngineDownloadErrorException {
+    public DfPublicProperties findProperties(boolean useSystemProxies) throws EngineDownloadErrorException {
         if (publicProperties != null) {
             return publicProperties;
         }
         try {
+            introInfoLogic.setProxy(useSystemProxies);
             synchronized (PublicPropertiesLogic.class) {
                 if (publicProperties != null) {
                     return publicProperties;

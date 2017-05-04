@@ -15,9 +15,9 @@
  */
 package org.dbflute.intro.app.logic.intro;
 
-import java.util.Map;
-
 import org.dbflute.intro.IntroBoot;
+
+import java.util.Map;
 
 /**
  * @author p1us2er0
@@ -36,36 +36,13 @@ public class IntroInfoLogic {
      */
     public static final String BASE_DIR_PATH = ".";
 
-    public static final String INI_FILE_PATH = BASE_DIR_PATH + "/dbflute-intro.ini";
-
     public Map<String, Object> getManifestMap() {
         return IntroBoot.getManifestMap();
     }
 
-    // TODO jflute intro: unused? (2016/07/05)
-    //public void loadProxy() {
-    //    System.clearProperty("proxySet");
-    //    System.clearProperty("proxyHost");
-    //    System.clearProperty("proxyPort");
-    //
-    //    Properties properties = getProperties();
-    //    String proxyHost = properties.getProperty("proxyHost");
-    //    String proxyPort = properties.getProperty("proxyPort");
-    //    boolean useSystemProxies = Boolean.parseBoolean(properties.getProperty("java.net.useSystemProxies"));
-    //
-    //    if (useSystemProxies) {
-    //        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
-    //    } else {
-    //        if (proxyHost != null && !proxyHost.equals("")) {
-    //            System.setProperty("proxySet", "true");
-    //            System.setProperty("proxyHost", proxyHost);
-    //        }
-    //
-    //        if (proxyPort != null && !proxyPort.equals("")) {
-    //            System.setProperty("proxyPort", proxyPort);
-    //        }
-    //    }
-    //}
+    public void setProxy(boolean useSystemProxies) {
+        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
+    }
 
     // TODO jflute intro: unused? (2016/07/05)
     //public String getVersion() {

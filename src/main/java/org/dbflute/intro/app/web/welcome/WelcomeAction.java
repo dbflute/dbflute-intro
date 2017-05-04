@@ -89,8 +89,8 @@ public class WelcomeAction extends IntroBaseAction {
         });
         String latestVersion;
         try {
-            latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
-            engineInstallLogic.downloadUnzipping(latestVersion);
+            latestVersion = publicPropertiesLogic.findProperties(welcomeCreateBody.useSystemProxies).getDBFluteLatestReleaseVersion();
+            engineInstallLogic.downloadUnzipping(latestVersion, welcomeCreateBody.useSystemProxies);
         } catch (EngineDownloadErrorException e) {
             throw new NetworkErrorException(e.getMessage());
         }

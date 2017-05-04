@@ -178,6 +178,18 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 method: 'POST',
                 url: 'api/task/execute/' + projectName + '/' + task
             });
+        },
+        // ===============================================================================
+        //                                                                           Retry
+        //                                                                           =====
+        retry: function(method, url, data, useSystemProxies) {
+            data = data || {};
+            data['useSystemProxies'] = useSystemProxies;
+            return $http({
+                method : method,
+                url : url,
+                data : data
+            });
         }
     };
 });

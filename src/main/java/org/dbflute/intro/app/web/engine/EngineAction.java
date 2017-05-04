@@ -47,9 +47,9 @@ public class EngineAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<EngineLatestBean> latest() {
+    public JsonResponse<EngineLatestBean> latest(EngineLatestBody engineLatestBody) {
         try {
-            DfPublicProperties prop = publicPropertiesLogic.findProperties();
+            DfPublicProperties prop = publicPropertiesLogic.findProperties(engineLatestBody.useSystemProxies);
             EngineLatestBean bean = mappingToLatestVersion(prop);
             return asJson(bean);
         } catch (EngineDownloadErrorException e) {
@@ -68,9 +68,9 @@ public class EngineAction extends IntroBaseAction {
     }
 
     @Execute
-    public JsonResponse<Void> download(String dbfluteVersion) {
+    public JsonResponse<Void> download(String dbfluteVersion, EngineDownloadBody engineDownloadBody) {
         try {
-            engineInstallLogic.downloadUnzipping(dbfluteVersion);
+            engineInstallLogic.downloadUnzipping(dbfluteVersion, engineDownloadBody.useSystemProxies);
             return JsonResponse.asEmptyBody();
         } catch (EngineDownloadErrorException e) {
             throw new NetworkErrorException(e.getMessage());

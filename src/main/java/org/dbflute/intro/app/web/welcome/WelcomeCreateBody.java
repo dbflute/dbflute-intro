@@ -84,4 +84,6 @@ public class WelcomeCreateBody {
     //                                                                       =============
     @Required
     public Boolean testConnection;
+
+    public Boolean useSystemProxies = false; // only use if user selected
 }

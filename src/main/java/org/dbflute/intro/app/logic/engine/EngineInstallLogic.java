@@ -61,12 +61,12 @@ public class EngineInstallLogic {
     // ===================================================================================
     //                                                                            Download
     //                                                                            ========
-    public void downloadUnzipping(String dbfluteVersion) throws EngineDownloadErrorException { // overriding if already exists
+    public void downloadUnzipping(String dbfluteVersion, boolean useSystemProxies) throws EngineDownloadErrorException { // overriding if already exists
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
             throw new IllegalArgumentException("dbfluteVersion is null or empty: " + dbfluteVersion);
         }
         logger.debug("...Downloading DBflute Engine: {}", dbfluteVersion);
-        final String downloadUrl = calcDownloadUrl(dbfluteVersion);
+        final String downloadUrl = publicPropertiesLogic.findProperties(useSystemProxies).getDBFluteDownloadUrl(dbfluteVersion);
         final File engineDir = introPhysicalLogic.findEngineDir(dbfluteVersion);
         engineDir.getParentFile().mkdirs(); // make 'mydbflute' directory
         final Path zipFile = doDownloadToZip(downloadUrl, engineDir);
@@ -84,18 +84,6 @@ public class EngineInstallLogic {
             throw new IllegalStateException("Failed to copy the downloaded data to zip file: " + zipFile, e);
         }
         return zipFile;
-    }
-
-    private String calcDownloadUrl(String dbfluteVersion) throws EngineDownloadErrorException {
-        return publicPropertiesLogic.findProperties().getDBFluteDownloadUrl(dbfluteVersion);
-    }
-
-    // ===================================================================================
-    //                                                                        Unzip Client
-    //                                                                        ============
-    public void unzipClient(String dbfluteVersion, File clientDir) {
-        ZipUtil.decrypt(enginePhysicalLogic.buildDfClientZipPath(dbfluteVersion), introPhysicalLogic.buildIntroPath());
-        introPhysicalLogic.findClientDir("dfclient").renameTo(clientDir);
     }
 
     // ===================================================================================
