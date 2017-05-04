@@ -5,6 +5,7 @@
   "LABEL_INTRO_HOME_TITLE" : "DBFlute Intro",
 
   "LABEL_projectName" : "プロジェクト名(DB名)",
+  "LABEL_database" : "DBMS",
   "LABEL_databaseCode" : "DBMS",
   "LABEL_languageCode" : "言語",
   "LABEL_containerCode": "DIコンテナ",

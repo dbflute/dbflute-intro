@@ -105,10 +105,14 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                                 if (key.lastIndexOf('.')) {
                                     key = key.substring(key.lastIndexOf('.') + 1);
                                 }
-                                var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
-                                var $translate = $injector.get('$translate')
-                                var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
-                                messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');
+                                if (key === '_global') { // don't use key if global
+                                    messageList.push(message + '\r\n');
+                                } else {
+                                    var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
+                                    var $translate = $injector.get('$translate');
+                                    var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
+                                    messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');
+                                }
                             }
                         }
                         $rootScope.messages = messageList;
