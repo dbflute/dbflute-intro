@@ -29,7 +29,7 @@ public class DatabaseInfoLogic {
     private ClsTargetDatabaseBhv databaseBhv;
 
     public boolean isEmbeddedJar(CDef.TargetDatabase target) {
-        // TODO done hakiba pri.B orElseTranslatingThrow() is better by jflute (2017/04/27)
+        // done hakiba pri.B orElseTranslatingThrow() is better by jflute (2017/04/27)
         return databaseBhv.selectEntity(cb -> cb.query().setDatabaseCode_Equal_AsTargetDatabase(target))
             .map(database -> database.isEmbeddedJarFlgTrue())
             .orElseTranslatingThrow(cause -> new IllegalStateException("not found target database:" + target.alias(), cause));
