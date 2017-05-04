@@ -48,7 +48,7 @@
         </div>
         <div class="modal-body">
             <p ng-repeat="message in messages track by $index">
-                {{message}}
+                <span class="modal-message">{{message}}</span>
             </p>
         </div>
         <div class="modal-footer">
@@ -56,21 +56,21 @@
         </div>
     </script>
     <script type="text/ng-template" id="networkErrorView.html">
-      <div class="modal-header">
-        <button class="close" ng-click="$dismiss()">×</button>
-      </div>
-      <div class="modal-body">
-        <p ng-repeat="message in messages track by $index">
-          {{message}}
-        </p>
-      </div>
-      <div class="modal-footer">
-        <label for="systemProxiesSetting" class="control-label">
-          Use system proxies setting
-        </label>
-        <input id="systemProxiesSetting" type="checkbox" class="btn btn-primary" ng-model="useSystemProxies"/>
-        <button class="btn btn-primary" ng-click="retry()">Retry</button>
-      </div>
+        <div class="modal-header">
+            <button class="close" ng-click="$dismiss()">×</button>
+        </div>
+        <div class="modal-body">
+            <p ng-repeat="message in messages track by $index">
+                <span class="modal-message">{{message}}</span>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <label for="systemProxiesSetting" class="control-label">
+                Use system proxies setting
+            </label>
+            <input id="systemProxiesSetting" type="checkbox" class="btn btn-primary" ng-model="useSystemProxies"/>
+            <button class="btn btn-primary" ng-click="retry()">Retry</button>
+        </div>
     </script>
   </body>
 </html>

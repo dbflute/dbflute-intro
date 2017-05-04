@@ -46,3 +46,8 @@ button .glyphicon {
   font-size: 85%;
   font-style: italic;
 }
+
+.modal-message {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
