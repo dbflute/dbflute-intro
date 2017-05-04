@@ -15,17 +15,6 @@
  */
 package org.dbflute.intro.app.logic.engine;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
@@ -34,6 +23,16 @@ import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  * @author p1us2er0
@@ -61,6 +60,11 @@ public class EngineInstallLogic {
     // ===================================================================================
     //                                                                            Download
     //                                                                            ========
+    public boolean isDownloaded(String dbfluteVersion) {
+        final File engineDir = introPhysicalLogic.findEngineDir(dbfluteVersion);
+        return engineDir.exists();
+    }
+
     public void downloadUnzipping(String dbfluteVersion) { // overriding if already exists
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
             throw new IllegalArgumentException("dbfluteVersion is null or empty: " + dbfluteVersion);
