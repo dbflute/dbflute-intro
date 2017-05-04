@@ -20,7 +20,6 @@ import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.util.ZipUtil;
-import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,11 +49,7 @@ public class EngineInstallLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private IntroConfig introConfig;
-    @Resource
     private IntroPhysicalLogic introPhysicalLogic;
-    @Resource
-    private EnginePhysicalLogic enginePhysicalLogic;
     @Resource
     private PublicPropertiesLogic publicPropertiesLogic;
 

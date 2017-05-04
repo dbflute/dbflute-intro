@@ -34,7 +34,6 @@ import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
-import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -66,8 +65,6 @@ public class ClientAction extends IntroBaseAction {
     private DocumentPhysicalLogic documentLogic;
     @Resource
     private DatabaseInfoLogic databaseInfoLogic;
-    @Resource
-    private TimeManager timeManager;
 
     // ===================================================================================
     //                                                                             Execute
