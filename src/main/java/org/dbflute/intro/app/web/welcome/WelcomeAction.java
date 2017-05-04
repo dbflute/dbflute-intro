@@ -86,7 +86,9 @@ public class WelcomeAction extends IntroBaseAction {
                 .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
         String latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
-        engineInstallLogic.downloadUnzipping(latestVersion);
+        if (!engineInstallLogic.isDownloaded(latestVersion)) {
+            engineInstallLogic.downloadUnzipping(latestVersion);
+        }
         ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);

@@ -6,7 +6,7 @@
 angular.module('dbflute-intro')
         .controller('WelcomeCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
-    // TODO hakiba implement as you like it by jflute (2016/08/22)
+    // done hakiba implement as you like it by jflute (2016/08/22)
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     // << Entry Page >>
     // *Project Name   // e.g. maihamadb
