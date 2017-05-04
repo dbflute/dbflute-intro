@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**
@@ -158,6 +157,9 @@ public class IntroMessages extends IntroLabels {
 
     /** The key of the message: the DBFlute task execution failure: {0} */
     public static final String ERRORS_APP_TASK_EXECUTE_FAILURE = "{errors.app.task.execute.failure}";
+
+    /** The key of the message: the Network error. Please check your proxy setting */
+    public static final String ERRORS_APP_NETWORK_ERROR = "{errors.app.network.error}";
 
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
@@ -812,6 +814,20 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppTaskExecuteFailure(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_TASK_EXECUTE_FAILURE, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.network.error' with parameters.
+     * <pre>
+     * message: the Network error. Please check your proxy setting
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppNetworkError(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_NETWORK_ERROR));
         return this;
     }
 

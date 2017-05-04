@@ -22,6 +22,7 @@ import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
+import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -31,6 +32,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.welcome.WelcomeCreateBody.ClientPart;
+import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
@@ -85,8 +87,13 @@ public class WelcomeAction extends IntroBaseAction {
                 .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
                 .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
-        String latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
-        engineInstallLogic.downloadUnzipping(latestVersion);
+        String latestVersion;
+        try {
+            latestVersion = publicPropertiesLogic.findProperties().getDBFluteLatestReleaseVersion();
+            engineInstallLogic.downloadUnzipping(latestVersion);
+        } catch (EngineDownloadErrorException e) {
+            throw new NetworkErrorException(e.getMessage());
+        }
         ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);

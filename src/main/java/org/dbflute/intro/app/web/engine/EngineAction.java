@@ -15,17 +15,18 @@
  */
 package org.dbflute.intro.app.web.engine;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
+import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author p1us2er0
@@ -47,9 +48,13 @@ public class EngineAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<EngineLatestBean> latest() {
-        DfPublicProperties prop = publicPropertiesLogic.findProperties();
-        EngineLatestBean bean = mappingToLatestVersion(prop);
-        return asJson(bean);
+        try {
+            DfPublicProperties prop = publicPropertiesLogic.findProperties();
+            EngineLatestBean bean = mappingToLatestVersion(prop);
+            return asJson(bean);
+        } catch (EngineDownloadErrorException e) {
+            throw new NetworkErrorException(e.getMessage());
+        }
     }
 
     private EngineLatestBean mappingToLatestVersion(DfPublicProperties prop) {
@@ -64,8 +69,13 @@ public class EngineAction extends IntroBaseAction {
 
     @Execute
     public JsonResponse<Void> download(String dbfluteVersion) {
-        engineInstallLogic.downloadUnzipping(dbfluteVersion);
-        return JsonResponse.asEmptyBody();
+        try {
+            engineInstallLogic.downloadUnzipping(dbfluteVersion);
+            return JsonResponse.asEmptyBody();
+        } catch (EngineDownloadErrorException e) {
+            throw new NetworkErrorException(e.getMessage());
+        }
+
     }
 
     @Execute

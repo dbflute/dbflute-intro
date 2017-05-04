@@ -15,12 +15,7 @@
  */
 package org.dbflute.intro.mylasta.direction.sponsor;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
-
+import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.Srl;
@@ -35,6 +30,11 @@ import org.lastaflute.web.response.ApiResponse;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.RequestManager;
 import org.lastaflute.web.validation.Required;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author p1us2er0
@@ -68,6 +68,7 @@ public class IntroApiFailureHook implements ApiFailureHook {
         failureTypeMapping = new BusinessFailureMapping<UnifiedFailureType>(failureMap -> {
             failureMap.put(LoginFailureException.class, UnifiedFailureType.LOGIN_FAILURE);
             failureMap.put(LoginRequiredException.class, UnifiedFailureType.LOGIN_REQUIRED);
+            failureMap.put(NetworkErrorException.class, UnifiedFailureType.NETWORK_ERROR);
         });
     }
 
@@ -186,5 +187,6 @@ public class IntroApiFailureHook implements ApiFailureHook {
         , LOGIN_FAILURE, LOGIN_REQUIRED // specific type of application exception
         , APPLICATION_EXCEPTION // default type of application exception
         , CLIENT_EXCEPTION, SERVER_EXCEPTION
+        , NETWORK_ERROR // for proxy setting
     }
 }

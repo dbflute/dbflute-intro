@@ -15,14 +15,11 @@
  */
 package org.dbflute.intro.app.logic.core;
 
-import java.lang.reflect.Field;
-import java.util.Properties;
+import org.dbflute.infra.dfprop.DfPublicProperties;
+import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 
 import javax.annotation.Resource;
-
-import org.dbflute.infra.dfprop.DfPublicProperties;
-import org.dbflute.intro.mylasta.direction.IntroConfig;
-import org.dbflute.util.DfReflectionUtil;
 
 /**
  * @author p1us2er0
@@ -35,24 +32,21 @@ public class PublicPropertiesLogic {
     @Resource
     private IntroConfig introConfig;
 
-    public DfPublicProperties findProperties() {
+    public DfPublicProperties findProperties() throws EngineDownloadErrorException {
         if (publicProperties != null) {
             return publicProperties;
         }
-        synchronized (PublicPropertiesLogic.class) {
-            if (publicProperties != null) {
+        try {
+            synchronized (PublicPropertiesLogic.class) {
+                if (publicProperties != null) {
+                    return publicProperties;
+                }
+                publicProperties = new DfPublicProperties();
+                publicProperties.load();
                 return publicProperties;
             }
-            publicProperties = new DfPublicProperties();
-            publicProperties.load();
-            return publicProperties;
+        } catch (Exception e) {
+            throw new EngineDownloadErrorException("Cannot download dbflute engine");
         }
-    }
-
-    public Properties asPlainProperties() {
-        // TODO jflute intro: quit reflection (2016/08/12)
-        DfPublicProperties prop = findProperties();
-        Field field = DfReflectionUtil.getWholeField(DfPublicProperties.class, "_publicProp");
-        return (Properties) DfReflectionUtil.getValueForcedly(field, prop);
     }
 }
