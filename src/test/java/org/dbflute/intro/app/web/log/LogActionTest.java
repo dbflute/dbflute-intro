@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.dbflute.intro.app.web.log;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -101,6 +102,6 @@ public class LogActionTest extends UnitIntroTestCase {
             logFile.getParentFile().mkdirs();
         }
         logFile.createNewFile();
-        FileUtils.write(logFile, content);
+        FileUtils.write(logFile, content, StandardCharsets.UTF_8);
     }
 }
