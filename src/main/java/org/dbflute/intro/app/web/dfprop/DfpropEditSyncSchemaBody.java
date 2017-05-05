@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
+import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -28,6 +29,6 @@ public class DfpropEditSyncSchemaBody {
     @Required
     public String user;
     public String password;
-    @Required
+    @Required(groups = ClientError.class)
     public Boolean isSuppressCraftDiff;
 }
