@@ -107,7 +107,7 @@ angular.module('dbflute-intro').factory('ApiFactory',
                     schema: syncSchemaSettingData.schema,
                     user: syncSchemaSettingData.user,
                     password: syncSchemaSettingData.password,
-                    isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff
+                    isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
                 }
             });
         },
