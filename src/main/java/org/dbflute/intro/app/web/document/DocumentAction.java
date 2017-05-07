@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class DocumentAction extends IntroBaseAction {
     public StreamResponse schemahtml(String clientProject) {
         File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientProject);
         if (!schemaHtml.exists()) {
-            return null;
+            return StreamResponse.asEmptyBody();
         }
         return createHtmlStreamResponse(schemaHtml);
     }
@@ -53,16 +53,26 @@ public class DocumentAction extends IntroBaseAction {
     public StreamResponse historyhtml(String clientProject) {
         File historyHtml = documentPhysicalLogic.findHistoryHtml(clientProject);
         if (!historyHtml.exists()) {
-            return null;
+            return StreamResponse.asEmptyBody();
         }
         return createHtmlStreamResponse(historyHtml);
+    }
+
+    @Execute(urlPattern = "{}/@word")
+    public StreamResponse synccheckresulthtml(String clientProject) {
+        File syncCheckResultHtml = documentPhysicalLogic.findSyncCheckResultHtml(clientProject);
+        if (!syncCheckResultHtml.exists()) {
+            return null;
+        }
+        return createHtmlStreamResponse(syncCheckResultHtml);
     }
 
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
     private StreamResponse createHtmlStreamResponse(File file) {
-        StreamResponse stream = asStream("schema-...html");
+        // done deco dummy name or comment about it by jflute (2017/01/12)
+        StreamResponse stream = asStream("schema-...html"); // dummy name because unused (not download)
         stream.headerContentDispositionInline();
         return stream.contentType("text/html; encoding=\"UTF-8\"").stream(out -> {
             try (InputStream ins = FileUtils.openInputStream(file)) {

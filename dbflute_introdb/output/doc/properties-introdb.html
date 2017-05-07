@@ -205,7 +205,7 @@ table.child, table.child td, table.child th {
 			<td class="filecell"><strong>../../dbflute-intro/src/main/resources/intro_env.properties</strong></td>
 			<td class="envtypecell">-</td>
 			<td class="langtypecell">-</td>
-			<td class="sizecell">13</td>
+			<td class="sizecell">14</td>
 			<td>&nbsp;</td>
 			<td class="markcell">-</td>
 			<td class="markcell">-</td>
@@ -214,15 +214,9 @@ table.child, table.child td, table.child th {
 			<td class="filecell">../../dbflute-intro/src/main/resources/intro_env_production.properties</td>
 			<td class="envtypecell">production</td>
 			<td class="langtypecell">-</td>
-			<td class="sizecell">18</td>
+			<td class="sizecell">14</td>
 			<td>&nbsp;</td>
-			<td class="keylistcell">
-				<p class="diffprop">mail.send.mock</p>
-				<p class="diffprop">mail.smtp.server.main.host.and.port</p>
-				<p class="diffprop">mail.subject.test.prefix</p>
-				<p class="diffprop">mail.return.path</p>
-				<p class="diffprop">server.domain</p>
-			</td>
+			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 		</tr>
 	</tbody>
@@ -298,7 +292,7 @@ table.child, table.child td, table.child th {
 			<td class="filecell"><strong>../../dbflute-intro/src/main/resources/intro_message.properties</strong></td>
 			<td class="envtypecell">-</td>
 			<td class="langtypecell">-</td>
-			<td class="sizecell">43</td>
+			<td class="sizecell">46</td>
 			<td class="extendsfilecell">../../dbflute-intro/src/main/resources/intro_label.properties</td>
 			<td>&nbsp;</td>
 			<td class="markcell">-</td>
@@ -484,9 +478,9 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">production</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">info</td>
-					<td class="uniquenocell">2</td>
-					<td class="commentcell">The&nbsp;log&nbsp;level&nbsp;for&nbsp;logback</td>
+					<td class="valuecell">debug</td>
+					<td class="uniquenocell">1</td>
+					<td class="commentcell">The&nbsp;log&nbsp;level&nbsp;for&nbsp;logback&nbsp;TODO&nbsp;jflute&nbsp;debug&nbsp;for&nbsp;now&nbsp;until&nbsp;first&nbsp;release</td>
 				</tr>
 			</table>
 		</td>
@@ -513,8 +507,8 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">production</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">off</td>
-					<td class="uniquenocell">2</td>
+					<td class="valuecell">debug</td>
+					<td class="uniquenocell">1</td>
 					<td class="commentcell">The&nbsp;log&nbsp;console&nbsp;level&nbsp;for&nbsp;logback</td>
 				</tr>
 			</table>
@@ -542,7 +536,7 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">production</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">/tmp/lastaflute/harbor</td>
+					<td class="valuecell">./mydbflute/intro_resources/log</td>
 					<td class="uniquenocell">2</td>
 					<td class="commentcell">The&nbsp;log&nbsp;file&nbsp;basedir</td>
 				</tr>
@@ -600,8 +594,8 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">production</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">jdbc:h2:file:$classes(org.docksidestage.dbflute.allcommon.DBCurrent.class)/../../etc/testdb/maihamadb</td>
-					<td class="uniquenocell">2</td>
+					<td class="valuecell">jdbc:h2:mem:introdb;DB_CLOSE_DELAY=-1</td>
+					<td class="uniquenocell">1</td>
 					<td class="commentcell">The&nbsp;URL&nbsp;of&nbsp;database&nbsp;connection&nbsp;for&nbsp;JDBC</td>
 				</tr>
 			</table>
@@ -629,8 +623,8 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">production</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">maihamadb</td>
-					<td class="uniquenocell">2</td>
+					<td class="valuecell">introdb</td>
+					<td class="uniquenocell">1</td>
 					<td class="commentcell">The&nbsp;user&nbsp;of&nbsp;database&nbsp;connection&nbsp;for&nbsp;JDBC</td>
 				</tr>
 			</table>
@@ -696,94 +690,6 @@ table.child, table.child td, table.child th {
 	</tr>
 	<tr>
 		<td class="rownumcell">14</td>
-		<td class="keycell">mail.send.mock</td>
-		<td>
-			<table class="child">
-				<tr>
-					<th>Env</th>
-					<th>Lang</th>
-					<th>Property</th>
-					<th><span title="Unique No (same value, same No)">uq</span></th>
-					<th>Comment</th>
-				</tr>
-				<tr>
-					<td class="envtypecell">production</td>
-					<td class="langtypecell">-</td>
-					<td class="valuecell">false</td>
-					<td class="uniquenocell">1</td>
-					<td class="commentcell">Does&nbsp;it&nbsp;send&nbsp;mock&nbsp;mail?&nbsp;(true:&nbsp;no&nbsp;send&nbsp;actually,&nbsp;logging&nbsp;only)</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">15</td>
-		<td class="keycell">mail.smtp.server.main.host.and.port</td>
-		<td>
-			<table class="child">
-				<tr>
-					<th>Env</th>
-					<th>Lang</th>
-					<th>Property</th>
-					<th><span title="Unique No (same value, same No)">uq</span></th>
-					<th>Comment</th>
-				</tr>
-				<tr>
-					<td class="envtypecell">production</td>
-					<td class="langtypecell">-</td>
-					<td class="valuecell">localhost:25</td>
-					<td class="uniquenocell">1</td>
-					<td class="commentcell">SMTP&nbsp;server&nbsp;settings&nbsp;for&nbsp;main:&nbsp;host:port</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">16</td>
-		<td class="keycell">mail.subject.test.prefix</td>
-		<td>
-			<table class="child">
-				<tr>
-					<th>Env</th>
-					<th>Lang</th>
-					<th>Property</th>
-					<th><span title="Unique No (same value, same No)">uq</span></th>
-					<th>Comment</th>
-				</tr>
-				<tr>
-					<td class="envtypecell">production</td>
-					<td class="langtypecell">-</td>
-					<td class="valuecell"> &nbsp;</td>
-					<td class="uniquenocell">1</td>
-					<td class="commentcell">The&nbsp;prefix&nbsp;of&nbsp;subject&nbsp;to&nbsp;show&nbsp;test&nbsp;environment&nbsp;or&nbsp;not</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">17</td>
-		<td class="keycell">mail.return.path</td>
-		<td>
-			<table class="child">
-				<tr>
-					<th>Env</th>
-					<th>Lang</th>
-					<th>Property</th>
-					<th><span title="Unique No (same value, same No)">uq</span></th>
-					<th>Comment</th>
-				</tr>
-				<tr>
-					<td class="envtypecell">production</td>
-					<td class="langtypecell">-</td>
-					<td class="valuecell">returnpath@docksidestage.org</td>
-					<td class="uniquenocell">1</td>
-					<td class="commentcell">The&nbsp;common&nbsp;return&nbsp;path&nbsp;of&nbsp;all&nbsp;mail</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">18</td>
 		<td class="keycell">server.domain</td>
 		<td>
 			<table class="child">
@@ -795,11 +701,18 @@ table.child, table.child td, table.child th {
 					<th>Comment</th>
 				</tr>
 				<tr>
+					<td class="envtypecell">-</td>
+					<td class="langtypecell">-</td>
+					<td class="valuecell">localhost</td>
+					<td class="uniquenocell">1</td>
+					<td class="commentcell">domain&nbsp;to&nbsp;access&nbsp;this&nbsp;application&nbsp;from&nbsp;internet&nbsp;without&nbsp;port&nbsp;number</td>
+				</tr>
+				<tr>
 					<td class="envtypecell">production</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">docksidestage.org</td>
+					<td class="valuecell">localhost</td>
 					<td class="uniquenocell">1</td>
-					<td class="commentcell">domain&nbsp;to&nbsp;access&nbsp;this&nbsp;application&nbsp;from&nbsp;internet,&nbsp;e.g.&nbsp;for&nbsp;registration&nbsp;mail</td>
+					<td class="commentcell">domain&nbsp;to&nbsp;access&nbsp;this&nbsp;application&nbsp;from&nbsp;internet&nbsp;without&nbsp;port&nbsp;number</td>
 				</tr>
 			</table>
 		</td>
@@ -942,9 +855,9 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">-</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">HRB</td>
+					<td class="valuecell">ITR</td>
 					<td class="uniquenocell">1</td>
-					<td class="commentcell">The&nbsp;cookie&nbsp;key&nbsp;of&nbsp;remember-me&nbsp;for&nbsp;Harbor&nbsp;#change_it_first</td>
+					<td class="commentcell">The&nbsp;cookie&nbsp;key&nbsp;of&nbsp;remember-me&nbsp;for&nbsp;Intro&nbsp;#changed</td>
 				</tr>
 			</table>
 		</td>
@@ -1716,7 +1629,7 @@ table.child, table.child td, table.child th {
 				<tr>
 					<td class="envtypecell">-</td>
 					<td class="langtypecell">-</td>
-					<td class="valuecell">Intro&nbsp;Error:&nbsp;{0}</td>
+					<td class="valuecell">Intro&nbsp;Error&nbsp;=&gt;&nbsp;{0}</td>
 					<td class="uniquenocell">1</td>
 					<td class="commentcell">---------------------</td>
 				</tr>
@@ -1838,6 +1751,68 @@ table.child, table.child td, table.child th {
 					<td class="envtypecell">-</td>
 					<td class="langtypecell">-</td>
 					<td class="valuecell">the&nbsp;playsql&nbsp;file&nbsp;is&nbsp;not&nbsp;found:&nbsp;{0}</td>
+					<td class="uniquenocell">1</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="rownumcell">44</td>
+		<td class="keycell">errors.app.task.execute.failure</td>
+		<td>
+			<table class="child">
+				<tr>
+					<th>Env</th>
+					<th>Lang</th>
+					<th>Property</th>
+					<th><span title="Unique No (same value, same No)">uq</span></th>
+				</tr>
+				<tr>
+					<td class="envtypecell">-</td>
+					<td class="langtypecell">-</td>
+					<td class="valuecell">the&nbsp;DBFlute&nbsp;task&nbsp;execution&nbsp;failure:&nbsp;{0}</td>
+					<td class="uniquenocell">1</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="rownumcell">45</td>
+		<td class="keycell">errors.welcome.client.alreadyExists</td>
+		<td>
+			<table class="child">
+				<tr>
+					<th>Env</th>
+					<th>Lang</th>
+					<th>Property</th>
+					<th><span title="Unique No (same value, same No)">uq</span></th>
+					<th>Comment</th>
+				</tr>
+				<tr>
+					<td class="envtypecell">-</td>
+					<td class="langtypecell">-</td>
+					<td class="valuecell">client&nbsp;already&nbsp;exists:&nbsp;{0}</td>
+					<td class="uniquenocell">1</td>
+					<td class="commentcell">---------------------</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="rownumcell">46</td>
+		<td class="keycell">errors.database.needsJar</td>
+		<td>
+			<table class="child">
+				<tr>
+					<th>Env</th>
+					<th>Lang</th>
+					<th>Property</th>
+					<th><span title="Unique No (same value, same No)">uq</span></th>
+				</tr>
+				<tr>
+					<td class="envtypecell">-</td>
+					<td class="langtypecell">-</td>
+					<td class="valuecell">needs&nbsp;jar&nbsp;file:&nbsp;{0}</td>
 					<td class="uniquenocell">1</td>
 				</tr>
 			</table>

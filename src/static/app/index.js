@@ -19,7 +19,8 @@ angular.module('dbflute-intro', [
         'ui.router',
         'ui.bootstrap',
         'ngStorage',
-        'pascalprecht.translate']);
+        'pascalprecht.translate',
+        'ngFlash']);
 
 /**
  * Module for exceptionHandler
@@ -39,6 +40,7 @@ angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvi
         .state('home', { url: '/', templateUrl: 'app/main/main.html', controller: 'MainCtrl'})
         .state('operate', { url: '/operate/:projectName', templateUrl: 'app/client/client.html', controller: 'ClientCtrl'})
         .state('create', { url: '/create', templateUrl: 'app/client/create.html', controller: 'ClientCreateCtrl'})
+        .state('settings', { url: '/settings/:projectName', templateUrl: 'app/settings/settings.html', controller: 'SettingsCtrl'})
         .state('welcome', { url: '/welcome', templateUrl: 'app/welcome/welcome.html', controller: 'WelcomeCtrl'})
         ;
 
@@ -103,10 +105,14 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                                 if (key.lastIndexOf('.')) {
                                     key = key.substring(key.lastIndexOf('.') + 1);
                                 }
-                                var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
-                                var $translate = $injector.get('$translate')
-                                var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
-                                messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');
+                                if (key === '_global') { // don't use key if global
+                                    messageList.push(message + '\r\n');
+                                } else {
+                                    var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
+                                    var $translate = $injector.get('$translate');
+                                    var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
+                                    messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');
+                                }
                             }
                         }
                         $rootScope.messages = messageList;
@@ -123,9 +129,32 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                     $rootScope.messages.unshift('500 Server Error');
                 }
                 if (!dialog && $rootScope.messages) {
-                	// TODO jflute intro: what is resultView.html?
-                    dialog = $injector.get('$uibModal').open({templateUrl: 'resultView.html', scope: $rootScope});
-                    dialog.result.then(function () {
+                    if(response.data.failureType === 'NETWORK_ERROR') {
+                      dialog = $injector.get('$uibModal').open({
+                        templateUrl: 'networkErrorView.html',
+                        controller: 'NetworkErrorController',
+                        resolve: {
+                          modalParam: function () {
+                            return response.config;
+                          }}
+                        ,
+                        scope: $rootScope
+                      });
+                      dialog.result.then(function () {
+                        dialog = null;
+                        if (reload) {
+                          window.location.reload(reload);
+                        }
+                      }, function () {
+                        dialog = null;
+                        if (reload) {
+                          window.location.reload(reload);
+                        }
+                      });
+                    } else {
+                        // TODO jflute intro: what is resultView.html?
+                        dialog = $injector.get('$uibModal').open({templateUrl: 'resultView.html', scope: $rootScope});
+                        dialog.result.then(function () {
                             dialog = null;
                             if (reload) {
                                 window.location.reload(reload);
@@ -136,9 +165,24 @@ angular.module('dbflute-intro').config(function($httpProvider) {
                                 window.location.reload(reload);
                             }
                         });
+                    }
                 }
                 return $q.reject(response);
             }
         }
     }]);
+});
+
+/**
+ * NetworkError Modal
+ */
+angular.module('dbflute-intro').controller('NetworkErrorController', function($scope, $uibModalInstance, ApiFactory, modalParam) {
+  'use strict';
+  $scope.config = modalParam;
+  $scope.useSystemProxies = false;
+
+  $scope.retry = function() {
+    ApiFactory.retry(this.config.method, this.config.url, this.config.data, this.useSystemProxies);
+    $uibModalInstance.close();
+  };
 });

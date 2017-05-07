@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package org.dbflute.intro.app.logic.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +26,8 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.helper.mapstring.MapListString;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
@@ -36,6 +40,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class ClientUpdateLogic {
 
@@ -52,20 +57,12 @@ public class ClientUpdateLogic {
     private EnginePhysicalLogic enginePhysicalLogic;
 
     // ===================================================================================
-    //                                                                Create/Update Client
-    //                                                                ====================
-    public void createClient(ClientModel clientParam) {
-        doCreateClient(clientParam, false);
-    }
-
-    public void updateClient(ClientModel clientParam) {
-        doCreateClient(clientParam, true);
-    }
-
-    private void doCreateClient(ClientModel clientModel, boolean update) {
-        final String clientProject = clientModel.getProjectMeta().getClientProject();
+    //                                                                       Create Client
+    //                                                                       =============
+    public void createClient(ClientModel clientModel) {
+        final String clientProject = clientModel.getProjectInfra().getClientProject();
         final File clientDir = introPhysicalLogic.findClientDir(clientProject);
-        readyClient(clientModel, update, clientProject, clientDir);
+        readyCreateClient(clientModel, clientProject, clientDir);
         try {
             replaceClientFilePlainly(clientModel, clientProject);
             replaceClientFileRegex(clientModel, clientProject);
@@ -78,25 +75,15 @@ public class ClientUpdateLogic {
         }
     }
 
-    // -----------------------------------------------------
-    //                                          Ready Client
-    //                                          ------------
-    private void readyClient(ClientModel clientModel, boolean update, String clientProject, File clientDir) {
-        if (!clientDir.exists()) { // new-create
-            if (update) {
-                throw new IllegalStateException("The DBFlute client has already been deleted: clientProject=" + clientProject);
-            }
-            clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectMeta().getDbfluteVersion(), clientDir);
-        } else { // already exists so update
-            if (!update) {
-                throw new IllegalStateException("The DBFlute client already exists (but new-create): clientProject=" + clientProject);
-            }
+    private void readyCreateClient(ClientModel clientModel, String clientProject, File clientDir) {
+        if (!clientDir.exists()) { // yes, new-create!
+            clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
+        } else { // no no no no, already exists
+            // #hope to be application excecption by jflute
+            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientProject=" + clientProject);
         }
     }
 
-    // -----------------------------------------------------
-    //                                   Replace Client File
-    //                                   -------------------
     private void replaceClientFilePlainly(ClientModel clientModel, String clientProject) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         {
@@ -136,7 +123,7 @@ public class ClientUpdateLogic {
     private void replaceClientFileRegex(ClientModel clientModel, final String clientProject) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-        replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getProjectMeta().getDbfluteVersion());
+        replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getProjectInfra().getDbfluteVersion());
         fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientProject), replaceMap);
         fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientProject), replaceMap);
         doReplaceClientFile(fileReplaceMap, true);
@@ -158,33 +145,21 @@ public class ClientUpdateLogic {
         }
     }
 
-    // -----------------------------------------------------
-    //                                              Jar File
-    //                                              --------
     private void copyJarFileToExtlib(ClientModel clientModel, String clientProject) {
-        clientModel.getProjectMeta().getJdbcDriverJarPath().ifPresent(jarPath -> {
+        clientModel.getProjectInfra().getJdbcDriverExtlibFile().ifPresent(jarFile -> {
             final File extlibDir = clientPhysicalLogic.findExtlibDir(clientProject);
-            final File previousJar = new File(extlibDir, new File(jarPath).getName());
+            final String fileName = jarFile.getFile().getName();
+            final File previousJar = new File(extlibDir, fileName);
             try {
-                final boolean alreadyExists =
-                        previousJar.exists() && new File(jarPath).getCanonicalPath().equals(previousJar.getCanonicalPath());
-                if (!alreadyExists) {
-                    for (File existingJarFile : FileUtils.listFiles(extlibDir, new String[] { ".jar" }, false)) {
-                        existingJarFile.delete(); // all jar files (cannot identity old version file)
-                    }
-                    FileUtils.copyFileToDirectory(new File(jarPath), extlibDir);
+                if (!previousJar.exists()) {
+                    // all jar files (cannot identity old version file)
+                    FileUtils.listFiles(extlibDir, new String[] { ".jar" }, false).forEach(File::delete);
+                    Files.write(Paths.get(extlibDir.getCanonicalPath(), fileName), jarFile.getFileData());
                 }
             } catch (IOException e) {
-                throw new IllegalStateException("Failed to copy the jar file to extlib: " + jarPath, e);
+                throw new IllegalStateException("Failed to copy the jar file to extlib: " + jarFile, e);
             }
         });
-    }
-
-    // -----------------------------------------------------
-    //                                          Assist Logic
-    //                                          ------------
-    private String escapeControlMark(Object value) {
-        return new MapListString().escapeControlMark(value);
     }
 
     private void recoveryFailureClient(File dbfluteClientDir) {
@@ -193,61 +168,51 @@ public class ClientUpdateLogic {
         } catch (IOException ignored) {}
     }
 
-    // #pending SchemaSyncCheck by jflute
-    //    private void createSchemaSyncCheck(ClientModel clientParam) {
-    //        final File dbfluteClientDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientParam.getClientProject());
-    //        URL schemaSyncCheckURL = ClassLoader.getSystemResource("dfprop/documentMap+schemaSyncCheck.dfprop");
-    //
-    //        for (Entry<String, DatabaseInfoMap> entry : clientParam.getSchemaSyncCheckMap().entrySet()) {
-    //            final File dfpropEnvDir = new File(dbfluteClientDir, "dfprop/schemaSyncCheck_" + entry.getKey());
-    //            dfpropEnvDir.mkdir();
-    //
-    //            File documentMapFile = new File(dfpropEnvDir, "documentMap+.dfprop");
-    //            try {
-    //                FileUtils.copyURLToFile(schemaSyncCheckURL, documentMapFile);
-    //            } catch (IOException e) {
-    //                throw new RuntimeException(e);
-    //            }
-    //
-    //            Map<File, Map<String, Object>> fileMap = new LinkedHashMap<File, Map<String, Object>>();
-    //
-    //            Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-    //            replaceMap.put("@url@", escapeControlMark(entry.getValue().getUrl()));
-    //            replaceMap.put("@schema@", escapeControlMark(entry.getValue().getSchema()));
-    //            replaceMap.put("@user@", escapeControlMark(entry.getValue().getUser()));
-    //            replaceMap.put("@password@", escapeControlMark(entry.getValue().getPassword()));
-    //            replaceMap.put("@env@", escapeControlMark(entry.getKey()));
-    //            fileMap.put(documentMapFile, replaceMap);
-    //
-    //            replaceFile(fileMap, false);
-    //        }
-    //    }
+    // ===================================================================================
+    //                                                                       Update Client
+    //                                                                       =============
+    public void updateClient(ClientModel clientModel) {
+        doUpdateClient(clientModel);
+    }
 
-    // #pending option and system user by jflute
-    //            OptionModel optionParam = clientModel.getOptionModel();
-    //
-    //            replaceMap = new LinkedHashMap<String, Object>();
-    //            replaceMap.put("@isDbCommentOnAliasBasis@", optionParam.isDbCommentOnAliasBasis());
-    //            replaceMap.put("@aliasDelimiterInDbComment@", optionParam.getAliasDelimiterInDbComment());
-    //            replaceMap.put("@isCheckColumnDefOrderDiff@", optionParam.isCheckColumnDefOrderDiff());
-    //            replaceMap.put("@isCheckDbCommentDiff@", optionParam.isCheckDbCommentDiff());
-    //            replaceMap.put("@isCheckProcedureDiff@", optionParam.isCheckProcedureDiff());
-    //            fileMap.put(new File(dbfluteClientDir, "/dfprop/documentMap+.dfprop"), replaceMap);
-    //
-    //            replaceMap = new LinkedHashMap<String, Object>();
-    //            replaceMap.put("@isGenerateProcedureParameterParam@", optionParam.isGenerateProcedureParameterBean());
-    //            replaceMap.put("@procedureSynonymHandlingType@", optionParam.getProcedureSynonymHandlingType());
-    //            fileMap.put(new File(dbfluteClientDir, "/dfprop/outsideSqlMap+.dfprop"), replaceMap);
-    //
-    //            replaceMap = new LinkedHashMap<String, Object>();
-    //            replaceMap.put("@driver@", escapeControlMark(clientModel.getDriver()));
-    //            replaceMap.put("@url@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUrl()));
-    //            replaceMap.put("@schema@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getSchema()));
-    //            replaceMap.put("@user@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getUser()));
-    //            replaceMap.put("@password@", escapeControlMark(clientModel.getSystemUserDatabaseModel().getPassword()));
-    //            fileMap.put(new File(dbfluteClientDir, "/dfprop/replaceSchemaMap+.dfprop"), replaceMap);
-    //
-    //            createSchemaSyncCheck(clientModel);
+    private void doUpdateClient(ClientModel clientModel) {
+        final String clientProject = clientModel.getProjectInfra().getClientProject();
+        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
+        // done hakiba 2016/12/27 make readyClient for update
+        readyUpdateClient(clientModel, clientProject, clientDir);
+
+        // #for_now hakiba update only minimum database items here (for settings), may increase at future (2017/01/19)
+        replaceDfpropDatabaseInfoMap(clientModel, clientProject);
+    }
+
+    private void readyUpdateClient(ClientModel clientModel, String clientProject, File clientDir) {
+        if (!clientDir.exists()) { // no no no no, new-create
+            throw new IllegalStateException("The DBFlute client has already been deleted: clientProject=" + clientProject);
+        }
+    }
+
+    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
+        final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
+        final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
+
+        new FileTextIO().encodeAsUTF8().rewriteFilteringLine(databaseInfoMapPath, line -> {
+            String trimmedLine = line.trim();
+            if (trimmedLine.startsWith("; url") && line.contains("=")) {
+                return "    ; url      = " + StringUtils.defaultString(box.getUrl());
+            }
+            if (trimmedLine.startsWith("; schema") && line.contains("=")) {
+                return "    ; schema   = " + StringUtils.defaultString(box.getSchema());
+            }
+            if (trimmedLine.startsWith("; user") && line.contains("=")) {
+                return "    ; user     = " + StringUtils.defaultString(box.getUser());
+            }
+            if (trimmedLine.startsWith("; password") && line.contains("=")) {
+                return "    ; password = " + StringUtils.defaultString(box.getPassword());
+            }
+            return line;
+        });
+    }
 
     // ===================================================================================
     //                                                                       Delete Client
@@ -257,7 +222,15 @@ public class ClientUpdateLogic {
         try {
             FileUtils.deleteDirectory(clientDir);
         } catch (IOException e) {
+            // #for_now should be application exception by jflute (2017/01/19)
             throw new IllegalStateException("Failed to delete the DBFlute client: " + clientDir);
         }
+    }
+
+    // ===================================================================================
+    //                                                                        Small Helper
+    //                                                                        ============
+    private String escapeControlMark(Object value) {
+        return new MapListString().escapeControlMark(value);
     }
 }

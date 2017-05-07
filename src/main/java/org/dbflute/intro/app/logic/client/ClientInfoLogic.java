@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,13 @@
  */
 package org.dbflute.intro.app.logic.client;
 
-import java.io.File;
-import java.io.UncheckedIOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-
+import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.app.model.client.ProjectMeta;
+import org.dbflute.intro.app.model.client.ExtlibFile;
+import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
@@ -47,9 +37,17 @@ import org.dbflute.jdbc.Classification;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.util.LaClassificationUtil;
 
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.UncheckedIOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class ClientInfoLogic {
 
@@ -140,17 +138,17 @@ public class ClientInfoLogic {
     }
 
     private ClientModel newClientModel(String clientProject, Map<String, Map<String, Object>> dfpropMap) {
-        final ProjectMeta projectMeta = prepareProjectMeta(clientProject);
+        final ProjectInfra projectInfra = prepareProjectMeta(clientProject);
         final BasicInfoMap basicInfoMap = prepareBasicInfoMap(dfpropMap);
         final DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(dfpropMap);
-        return new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
+        return new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
     }
 
     // -----------------------------------------------------
     //                                          Project Core
     //                                          ------------
-    private ProjectMeta prepareProjectMeta(String clientProject) {
-        return new ProjectMeta(clientProject, prepareDBFluteVersion(clientProject), prepareJdbcDriverJarPath(clientProject));
+    private ProjectInfra prepareProjectMeta(String clientProject) {
+        return new ProjectInfra(clientProject, prepareDBFluteVersion(clientProject), prepareJdbcDriverExtlibFile(clientProject));
     }
 
     private String prepareDBFluteVersion(String clientProject) {
@@ -165,17 +163,15 @@ public class ClientInfoLogic {
         }
     }
 
-    private String prepareJdbcDriverJarPath(String clientProject) {
+    private ExtlibFile prepareJdbcDriverExtlibFile(String clientProject) {
         final File extlibDir = clientPhysicalLogic.findExtlibDir(clientProject);
-        if (extlibDir.exists()) {
-            File[] extlibFiles = extlibDir.listFiles();
-            for (File file : extlibFiles) {
-                if (file.getName().endsWith(".jar")) {
-                    return file.getPath();
-                }
-            }
+        if (!extlibDir.exists()) {
+            return null;
         }
-        return null;
+        return FileUtils.listFiles(extlibDir, new String[]{".jar"}, false).stream()
+            .filter(file -> file.getName().endsWith(".jar"))
+            .findFirst()
+            .map(ExtlibFile::new).orElse(null);
     }
 
     // -----------------------------------------------------

@@ -1,0 +1,86 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+  <flash-message></flash-message>
+  <h2>DBFlute Client {{client.projectName}}</h2>
+  <div class="col-sm-6">
+    <p class="text-right">
+      for {{client.databaseCode}}, {{client.languageCode}}, {{client.containerCode}}
+    </p>
+  </div>
+  <div class="col-sm-12" ng-show="!editFlg">
+    <uib-tabset>
+      <uib-tab heading="DB info">
+          <form class="col-sm-8 form-horizontal">
+            <div class="row">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">URL</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.url"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">スキーマ</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.schema"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">ユーザー</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.user"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">パスワード</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" ng-model="client.mainSchemaSettings.password"/>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <input type="button" class="btn btn-primary" value="Edit" ng-click="edit(client)"/>
+                  </div>
+                  <div class="col-sm-12">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+      </uib-tab>
+      <!-- PlaySQL -->
+      <uib-tab heading="PlaySQL" ng-click="playsql(client)">
+        <form class="form-horizontal">
+          <div ng-repeat="bean in playsqlBeanList">
+            <input type="button" class="btn btn-default" ng-click="displaysPlaysql=displaysPlaysql?false:true;"
+                   value="{{bean.fileName}}"/>
+            <pre ng-bind-html="bean.content" ng-show="displaysPlaysql"></pre>
+          </div>
+        </form>
+      </uib-tab>
+      <!-- log -->
+      <uib-tab heading="log" ng-click="log(client)">
+        <form class="form-horizontal">
+          <div ng-repeat="bean in logBeanList">
+            <input type="button" class="btn btn-default" ng-click="displaysLog=displaysLog?false:true;"
+                   value="{{bean.fileName}}"/>
+            <pre ng-bind-html="bean.content" ng-show="displaysLog"></pre>
+          </div>
+        </form>
+      </uib-tab>
+    </uib-tabset>
+
+    <div class="col-sm-9">
+    </div>
+  </div>
+</div>
+<!-- progress modal -->
+<script type="text/ng-template" id="progress.html">
+  <div class="modal-header">
+    Generating...
+  </div>
+  <div class="modal-body">
+    <progressbar class="progress-striped active" animate="false" value="100">
+    </progressbar>
+  </div>
+</script>

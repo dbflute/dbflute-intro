@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,43 +15,62 @@
  */
 package org.dbflute.intro.app.model.client;
 
-import org.dbflute.optional.OptionalThing;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Base64;
 
 /**
- * @author jflute
+ * @author ryohei
  */
-public class ProjectMeta {
+public class ExtlibFile {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String clientProject; // not null, torque.project
-    protected final String dbfluteVersion; // not null, e.g. 1.1.1 (at _project.sh)
-    protected final String jdbcDriverJarPath; // path to extlib
+    protected final File file;
+    protected final byte[] fileData;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ProjectMeta(String clientProject, String dbfluteVersion, String jdbcDriverJarPath) {
-        this.clientProject = clientProject;
-        this.dbfluteVersion = dbfluteVersion;
-        this.jdbcDriverJarPath = jdbcDriverJarPath;
+    public ExtlibFile(String fileName, String fileDataBase64) {
+        this.fileData = Base64.getDecoder().decode(fileDataBase64);
+        this.file = new File(fileName);
+    }
+
+    public ExtlibFile(File file) {
+        this.file = file;
+        try {
+            this.fileData = IOUtils.toByteArray(Files.newInputStream(file.toPath()));
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to copy the jar file to extlib: " + file.getName(), e);
+        }
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getClientProject() {
-        return clientProject;
+    public File getFile() {
+        return file;
     }
 
-    public String getDbfluteVersion() {
-        return dbfluteVersion;
+    public byte[] getFileData() {
+        return fileData;
     }
-    
-    public OptionalThing<String> getJdbcDriverJarPath() {
-        return OptionalThing.ofNullable(jdbcDriverJarPath, () -> {
-            throw new IllegalStateException("Not found the jdbcDriverJarPath.");
-        });
+
+    public String getFileName() {
+        return file.getName();
     }
+
+    public String getCanonicalPath() {
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to get the canonicalPath: " + file.getName(), e);
+        }
+    }
+
 }

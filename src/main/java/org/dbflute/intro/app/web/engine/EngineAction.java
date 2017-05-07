@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,18 @@
  */
 package org.dbflute.intro.app.web.engine;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
+import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author p1us2er0
@@ -46,10 +47,14 @@ public class EngineAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<EngineLatestBean> latest() {
-        DfPublicProperties prop = publicPropertiesLogic.findProperties();
-        EngineLatestBean bean = mappingToLatestVersion(prop);
-        return asJson(bean);
+    public JsonResponse<EngineLatestBean> latest(EngineLatestBody engineLatestBody) {
+        try {
+            DfPublicProperties prop = publicPropertiesLogic.findProperties(engineLatestBody.useSystemProxies);
+            EngineLatestBean bean = mappingToLatestVersion(prop);
+            return asJson(bean);
+        } catch (EngineDownloadErrorException e) {
+            throw new NetworkErrorException(e.getMessage());
+        }
     }
 
     private EngineLatestBean mappingToLatestVersion(DfPublicProperties prop) {
@@ -63,9 +68,14 @@ public class EngineAction extends IntroBaseAction {
     }
 
     @Execute
-    public JsonResponse<Void> download(String dbfluteVersion) {
-        engineInstallLogic.downloadUnzipping(dbfluteVersion);
-        return JsonResponse.asEmptyBody();
+    public JsonResponse<Void> download(String dbfluteVersion, EngineDownloadBody engineDownloadBody) {
+        try {
+            engineInstallLogic.downloadUnzipping(dbfluteVersion, engineDownloadBody.useSystemProxies);
+            return JsonResponse.asEmptyBody();
+        } catch (EngineDownloadErrorException e) {
+            throw new NetworkErrorException(e.getMessage());
+        }
+
     }
 
     @Execute

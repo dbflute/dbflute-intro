@@ -73,10 +73,59 @@ angular.module('dbflute-intro').factory('ApiFactory',
                 url : 'api/client/delete/' + clientBody.project
             });
         },
+        settings: function (projectName) {
+          return $http({
+            method : 'POST',
+            url : 'api/settings/' + projectName
+          })
+        },
+        updateSettings: function(clientBody) {
+          return $http({
+            method : 'POST',
+            url : 'api/settings/edit/' + clientBody.projectName,
+            data : {client: clientBody}
+          });
+        },
         dfporpBeanList: function(clientBody) {
             return $http({
                 method : 'POST',
                 url : 'api/dfprop/' + clientBody.projectName + '/list'
+            });
+        },
+        syncSchema: function(projectName) {
+            return $http({
+                method: 'POST',
+                url : 'api/dfprop/' + projectName + '/syncschema'
+            });
+        },
+        editSyncSchema: function(projectName, syncSchemaSettingData) {
+            return $http({
+                method: 'POST',
+                url: 'api/dfprop/' + projectName + '/syncschema/edit',
+                data: {
+                    url: syncSchemaSettingData.url,
+                    schema: syncSchemaSettingData.schema,
+                    user: syncSchemaSettingData.user,
+                    password: syncSchemaSettingData.password,
+                    isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
+                }
+            });
+        },
+        document: function(projectName) {
+            return $http({
+                method: 'POST',
+                url : 'api/dfprop/' + projectName + '/document'
+            });
+        },
+        editDocument: function(projectName, documentSetting) {
+            return $http({
+                method: 'POST',
+                url: 'api/dfprop/' + projectName + '/document/edit',
+              data: {
+                upperCaseBasic: documentSetting.upperCaseBasic,
+                aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
+                dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis
+              }
             });
         },
         playsqlBeanList: function(clientBody) {
@@ -128,6 +177,18 @@ angular.module('dbflute-intro').factory('ApiFactory',
             return $http({
                 method: 'POST',
                 url: 'api/task/execute/' + projectName + '/' + task
+            });
+        },
+        // ===============================================================================
+        //                                                                           Retry
+        //                                                                           =====
+        retry: function(method, url, data, useSystemProxies) {
+            data = data || {};
+            data['useSystemProxies'] = useSystemProxies;
+            return $http({
+                method : method,
+                url : url,
+                data : data
             });
         }
     };

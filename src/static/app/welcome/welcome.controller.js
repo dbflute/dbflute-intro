@@ -6,7 +6,7 @@
 angular.module('dbflute-intro')
         .controller('WelcomeCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
-    // TODO hakiba implement as you like it by jflute (2016/08/22)
+    // done hakiba implement as you like it by jflute (2016/08/22)
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     // << Entry Page >>
     // *Project Name   // e.g. maihamadb
@@ -37,11 +37,11 @@ angular.module('dbflute-intro')
         create: true,
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
-        dbfluteVersion: ""
+        dbfluteVersion: '',
+        jdbcDriver: null
     }; // model of current client
     // TODO make function with create.controller.js by hakiba
-    $scope.needsJdbcDriverJarPath = false;
-    $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
+    $scope.needsJdbcDriver = false;
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
 
@@ -56,7 +56,7 @@ angular.module('dbflute-intro')
     $scope.registerEngineLatest = function() {
         ApiFactory.engineLatest().then(function (response) {
             $scope.client.dbfluteVersion = response.data.latestReleaseVersion;
-        })
+        });
     };
 
     // ===================================================================================
@@ -66,16 +66,19 @@ angular.module('dbflute-intro')
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
     $scope.changeDatabase = function (client) {
-      $scope.needsJdbcDriverJarPath = !$scope.databaseCodeNotNeedsJdbcDriverJarPath.includes(client.databaseCode);
-    	var database = $scope.classificationMap["targetDatabaseMap"][client.databaseCode];
+    	var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
+      // switch showing JDBCDriver select form
+      $scope.needsJdbcDriver = !database.embeddedJar;
+      // initialize JDBC Driver
+      client.jdbcDriver = null;
     	client.jdbcDriverFqcn = database.driverName;
     	client.mainSchemaSettings.url = database.urlTemplate;
     	client.mainSchemaSettings.schema = database.defaultSchema;
     };
     $scope.create = function (client, testConnection) {
       var modalInstance = $uibModal.open({
-        templateUrl:"progress.html",
-        backdrop:"static",keyboard:false
+        templateUrl:'progress.html',
+        backdrop:'static',keyboard:false
       });
       ApiFactory.createWelcomeClient(client, testConnection).then(function (success) {
         modalInstance.close();
@@ -83,6 +86,22 @@ angular.module('dbflute-intro')
       }, function(error) {
         modalInstance.close();
       });
+    };
+    $scope.changeFile = function(files) {
+      var file = files[0];
+      var reader = new FileReader();
+      reader.onload = (function() {
+        return function() {
+          // encode base64
+          var result = window.btoa(reader.result);
+          $scope.client.jdbcDriver = {fileName: null, data: null};
+          $scope.client.jdbcDriver.fileName = file.name;
+          $scope.client.jdbcDriver.data = result;
+        };
+      }(file));
+      if (file) {
+        reader.readAsBinaryString(file);
+      }
     };
 
     // ===================================================================================

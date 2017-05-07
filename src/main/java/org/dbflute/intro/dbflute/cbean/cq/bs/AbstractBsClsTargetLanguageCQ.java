@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
      * @param languageCodeList The collection of languageCode as inScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setLanguageCode_InScope(Collection<String> languageCodeList) {
+    protected void setLanguageCode_InScope(Collection<String> languageCodeList) {
         doSetLanguageCode_InScope(languageCodeList);
     }
 
@@ -180,7 +180,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
      * @param languageCodeList The collection of languageCode as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setLanguageCode_NotInScope(Collection<String> languageCodeList) {
+    protected void setLanguageCode_NotInScope(Collection<String> languageCodeList) {
         doSetLanguageCode_NotInScope(languageCodeList);
     }
 

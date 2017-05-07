@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,15 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
+import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.app.model.client.ProjectMeta;
+import org.dbflute.intro.app.model.client.ExtlibFile;
+import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
@@ -29,20 +32,23 @@ import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
+import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
-import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * @author p1us2er0
  * @author deco
  * @author jflute
+ * @author hakiba
  */
 public class ClientAction extends IntroBaseAction {
 
@@ -58,13 +64,13 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private DocumentPhysicalLogic documentLogic;
     @Resource
-    private TimeManager timeManager;
+    private DatabaseInfoLogic databaseInfoLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     // -----------------------------------------------------
-    //                                                Select
+    //                                                 List
     //                                                ------
     @Execute
     public JsonResponse<List<ClientRowResult>> list() {
@@ -108,24 +114,24 @@ public class ClientAction extends IntroBaseAction {
         //        });
         //    }
 
-        String clientProject = clientModel.getProjectMeta().getClientProject();
-        rowBean.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
-        rowBean.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        String clientProject = clientModel.getProjectInfra().getClientProject();
+        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
+        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
         rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
         return rowBean;
     }
 
     private void prepareBasic(ClientRowResult client, ClientModel clientModel) {
-        ProjectMeta projectMeta = clientModel.getProjectMeta();
+        ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        client.projectName = projectMeta.getClientProject();
+        client.projectName = projectInfra.getClientProject();
         client.databaseCode = basicInfoMap.getDatabase();
         client.languageCode = basicInfoMap.getTargetLanguage();
         client.containerCode = basicInfoMap.getTargetContainer();
         client.packageBase = basicInfoMap.getPackageBase();
         client.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
-        client.dbfluteVersion = projectMeta.getDbfluteVersion();
-        client.jdbcDriverJarPath = projectMeta.getJdbcDriverJarPath().orElse(null);
+        client.dbfluteVersion = projectInfra.getDbfluteVersion();
+        client.jdbcDriverJarPath = projectInfra.getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath).orElse(null);
     }
 
     private void prepareDatabase(ClientRowResult client, ClientModel clientModel) {
@@ -154,6 +160,9 @@ public class ClientAction extends IntroBaseAction {
         return optionBean;
     }
 
+    // -----------------------------------------------------
+    //                                             Operation
+    //                                             ---------
     @Execute
     public JsonResponse<ClientOperationResult> operation(String clientProject) {
         ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
@@ -166,16 +175,17 @@ public class ClientAction extends IntroBaseAction {
     private ClientOperationResult mappingToOperationResult(ClientModel clientModel) {
         ClientOperationResult operation = new ClientOperationResult();
         prepareBasic(operation, clientModel);
-        String clientProject = clientModel.getProjectMeta().getClientProject();
-        operation.hasSchemahtml = documentLogic.existsSchemaHtml(clientProject);
-        operation.hasHistoryhtml = documentLogic.existsHistoryHtml(clientProject);
+        String clientProject = clientModel.getProjectInfra().getClientProject();
+        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
+        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
+        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         return operation;
     }
 
     private void prepareBasic(ClientOperationResult client, ClientModel clientModel) {
-        ProjectMeta projectMeta = clientModel.getProjectMeta();
+        ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        client.projectName = projectMeta.getClientProject();
+        client.projectName = projectInfra.getClientProject();
         client.databaseCode = basicInfoMap.getDatabase();
         client.languageCode = basicInfoMap.getTargetLanguage();
         client.containerCode = basicInfoMap.getTargetContainer();
@@ -186,7 +196,20 @@ public class ClientAction extends IntroBaseAction {
     //                                                ------
     @Execute
     public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
-        validate(clientCreateBody, messages -> {});
+        validate(clientCreateBody, messages -> {
+            ClientPart client = clientCreateBody.client;
+            if (clientInfoLogic.getProjectList().contains(projectName)) {
+                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
+            }
+            TargetDatabase databaseCd = client.databaseCode;
+            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
+                messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
+            }
+            Optional.ofNullable(client.jdbcDriver)
+                .map(driverPart -> driverPart.fileName)
+                .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
+                .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
+        });
         ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
@@ -207,21 +230,22 @@ public class ClientAction extends IntroBaseAction {
     }
 
     private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
-        ClientModel clientModel = newClientModel(projectName, clientBody);
-        // TODO jflute intro: re-making (2016/08/12)
-        return clientModel;
+        return newClientModel(projectName, clientBody);
     }
 
     private ClientModel newClientModel(String projectName, ClientPart clientBody) {
-        ProjectMeta projectMeta = prepareProjectMeta(projectName, clientBody);
+        ProjectInfra projectInfra = prepareProjectInfra(projectName, clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
-        ClientModel clientModel = new ClientModel(projectMeta, basicInfoMap, databaseInfoMap);
+        ClientModel clientModel = new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
         return clientModel;
     }
 
-    private ProjectMeta prepareProjectMeta(String projectName, ClientPart clientBody) {
-        return new ProjectMeta(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarPath);
+    private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
+        if (Objects.isNull(clientBody.jdbcDriver)) {
+            return new ProjectInfra(projectName, clientBody.dbfluteVersion);
+        }
+        return new ProjectInfra(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
@@ -240,8 +264,8 @@ public class ClientAction extends IntroBaseAction {
     }
 
     private void testConnectionIfPossible(ClientModel clientModel) {
-        String dbfluteVersion = clientModel.getProjectMeta().getDbfluteVersion();
-        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectMeta().getJdbcDriverJarPath();
+        String dbfluteVersion = clientModel.getProjectInfra().getDbfluteVersion();
+        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectInfra().getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath);
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
         testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
     }

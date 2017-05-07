@@ -6,7 +6,7 @@
       for {{client.databaseCode}}, {{client.languageCode}}, {{client.containerCode}}
     </p>
   </div>
-  <div class="col-sm-12" ng-show="!editFlg">
+  <div class="col-sm-12">
     <div class="col-sm-9">
     </div>
     <h3>Documents</h3>
@@ -14,15 +14,56 @@
       <input type="button" class="btn btn-primary" ng-click="task('doc')" value="Generate Documents (jdbc, doc)" />
     </div>
     <div class="col-sm-9">
-      <p ng-show="client.hasSchemahtml"><strong><a href="" ng-click="openSchemaHTML(client)">Open the table layout, SchemaHTML</a></strong></p>
-      <p ng-show="client.hasHistoryhtml"><strong><a href="" ng-click="openHistoryHTML(client)">Open the table history, HistoryHTML</a></strong></p>
+      <p ng-show="client.hasSchemaHtml"><strong><a href="" ng-click="openSchemaHTML(client)">Open the table layout, SchemaHTML</a></strong></p>
+      <p ng-show="client.hasHistoryHtml"><strong><a href="" ng-click="openHistoryHTML(client)">Open the table history, HistoryHTML</a></strong></p>
+    </div>
+    <div class="col-sm-12">
+      <input type="button" class="btn btn-success btn-sm" ng-click="editDocumentSettings()" value="Edit document settings"/>
+    </div>
+  </div>
+  <div class="col-sm-12">
+    <h3>Schema Sync Check</h3>
+    <div class="clearfix">
+      <p class="col-sm-6 text-right" ng-show="canCheckSchemaSetting()">
+        for {{syncSchemaSetting.url}}, <span ng-show="syncSchemaSetting.schema">{{syncSchemaSetting.schema}}, </span>{{syncSchemaSetting.user}}
+      </p>
+    </div>
+    <div ng-show="canCheckSchemaSetting()" class="clearfix">
+      <div class="col-sm-3">
+        <input type="button" class="btn btn-primary" ng-click="schemaSyncCheck()" value="Check schema (schema-sync-check)"/>
+      </div>
+      <p ng-show="client.hasSyncCheckResultHtml" class="col-sm-9">
+        <strong><a href="" ng-click="openSyncCheckResultHTML(client)">Open the table layout, SyncCheckResultHTML</a></strong>
+      </p>
+    </div>
+    <div class="col-sm-3">
+      <input type="button" class="btn btn-success btn-sm" ng-click="editSyncSchema()" value="Edit sync settings"/>
     </div>
   </div>
 </div>
 <!-- progress modal -->
-<script type="text/ng-template" id="progress.html">
+<script type="text/ng-template" id="generating.html">
   <div class="modal-header">
     Generating...
+  </div>
+  <div class="modal-body">
+    <progressbar class="progress-striped active" animate="false" value="100">
+    </progressbar>
+  </div>
+</script>
+<script type="text/ng-template" id="checking.html">
+  <div class="modal-header">
+    Checking...
+  </div>
+  <div class="modal-body">
+    <progressbar class="progress-striped active" animate="false" value="100">
+    </progressbar>
+  </div>
+</script>
+<!-- success model -->
+<script type="text/ng-template" id="success.html">
+  <div class="modal-header">
+    Success
   </div>
   <div class="modal-body">
     <progressbar class="progress-striped active" animate="false" value="100">

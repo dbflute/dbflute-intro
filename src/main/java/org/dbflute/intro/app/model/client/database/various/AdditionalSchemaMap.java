@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.model.client.database.various;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -25,13 +26,17 @@ public class AdditionalSchemaMap {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final Map<String, AdditionalSchemaBox> schemaBoxMap;
+    protected final Map<String, AdditionalSchemaBox> schemaBoxMap; // not null, read-only
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
     public AdditionalSchemaMap(Map<String, AdditionalSchemaBox> schemaBoxMap) {
-        this.schemaBoxMap = schemaBoxMap;
+        this.schemaBoxMap = Collections.unmodifiableMap(schemaBoxMap);
+    }
+
+    public static AdditionalSchemaMap empty() {
+        return new AdditionalSchemaMap(Collections.emptyMap());
     }
 
     // #waiting_for function of additional schema implementation by jflute (2016/08/13)

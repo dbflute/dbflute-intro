@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class PlaysqlAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                  list
     //                                                  ----
-    // TODO deco with directory? by jflute (2016/07/26)
+    // TODO deco pri.C with directory? by jflute (2016/07/26)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<PlaysqlBean>> list(String project) {
         List<File> playsqlFileList = playsqlPhysicalLogic.findPlaysqlFileAllList(project);
@@ -60,7 +60,7 @@ public class PlaysqlAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                update
     //                                                ------
-    // TODO jflute intro: needs adjustment? (2016/07/26)
+    // TODO jflute pri.C intro: needs adjustment? (2016/07/26)
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, PlaysqlUpdateBody body) {
         validate(body, messages -> {});

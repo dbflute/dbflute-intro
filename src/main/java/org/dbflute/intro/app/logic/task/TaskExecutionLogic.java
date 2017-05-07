@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,14 @@
  */
 package org.dbflute.intro.app.logic.task;
 
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.util.ProcessUtil;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.dbflute.optional.OptionalThing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -24,15 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.util.ProcessUtil;
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.dbflute.optional.OptionalThing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -52,7 +51,6 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    // TODO jflute intro: make TaskInstruction class (2016/07/14)
     public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
@@ -114,6 +112,7 @@ public class TaskExecutionLogic {
             throw new IllegalStateException(e);
         }
         int resultCode = 0;
+        boolean schemaNotSynchronized = false;
         StringBuilder logSb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
         ) {
@@ -123,10 +122,16 @@ public class TaskExecutionLogic {
                     break;
                 }
 
-                logSb.append(line).append("\n"); // for error message, fixedly LF
+                if (isErrorMessageLine(line)) {
+                    logSb.append(line).append("\n"); // for error message, fixedly LF
+                }
 
                 if (isErrorLine(line)) {
                     resultCode = 1;
+                }
+
+                if (isSchemaNotSynchronized(line)) {
+                    schemaNotSynchronized = true;
                 }
             }
         } catch (IOException e) {
@@ -141,11 +146,20 @@ public class TaskExecutionLogic {
         if (resultCode == 0) {
             resultCode = waitForProcessEnding(process);
         }
+        throwIfSchemaNotSynchronized(schemaNotSynchronized, resultCode, logSb);
         handleErrorResultCode(resultCode, logSb);
+    }
+
+    private boolean isErrorMessageLine(String line) {
+        return !line.contains("[df-doc] \tat ");
     }
 
     private boolean isErrorLine(String line) { // depending on Apache Ant
         return line.equals("BUILD FAILED");
+    }
+
+    private boolean isSchemaNotSynchronized(String line) {
+        return line.contains("org.dbflute.exception.DfSchemaSyncCheckGhastlyTragedyException");
     }
 
     private boolean isNazoErrorByJetty(IOException e) {
@@ -158,6 +172,13 @@ public class TaskExecutionLogic {
         } catch (InterruptedException continued) {
             logger.warn("Failed to wait for the process: " + process, continued);
             return 0; // unknown as success for now
+        }
+    }
+
+    private void throwIfSchemaNotSynchronized(boolean schemaNotSynchronized, int resultCode, StringBuilder logSb) throws SchemaNotSynchronizedException {
+        if (schemaNotSynchronized) {
+            String msg = "Schema not synchronized";
+            throw new SchemaNotSynchronizedException(msg, resultCode, logSb.toString());
         }
     }
 
@@ -187,6 +208,14 @@ public class TaskExecutionLogic {
 
         public String getProcessLog() {
             return processLog;
+        }
+    }
+
+    public static class SchemaNotSynchronizedException extends TaskErrorResultException {
+        private static final long serialVersionUID = 1L;
+
+        public SchemaNotSynchronizedException(String msg, int resultCode, String processLog) {
+            super(msg, resultCode, processLog);
         }
     }
 }

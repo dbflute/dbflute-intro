@@ -31,7 +31,7 @@ public class Bs${table.camelizedName} extends EsAbstractEntity {
 #set ($tableMetaSettings = ${table.indexSettings.settings.index.dbflute.get($table.name)})
 #foreach ($column in $table.columnList)
 #if ($column.isNormalColumn)
-#set ($javaNative = ${column.type})
+#if (${column.type} == "keyword" || ${column.type} == "text")#set ($javaNative = "String")#else#set ($javaNative = ${column.type})#end
 #elseif ($column.isRefColumn)
 #set ($javaNative = ${column.camelizedName})
 #end
@@ -70,7 +70,7 @@ public class Bs${table.camelizedName} extends EsAbstractEntity {
 #if ($column.isNormalColumn)
 #if ($column.name != $idColumn)
         if (${column.uncapCamelName} != null) {
-            sourceMap.put("${column.name}", ${column.uncapCamelName});
+            addFieldToSource(sourceMap, "${column.name}", ${column.uncapCamelName});
         }
 #else
         if (asDocMeta().id() != null) {
@@ -80,6 +80,10 @@ public class Bs${table.camelizedName} extends EsAbstractEntity {
 #end
 #end
         return sourceMap;
+    }
+
+    protected void addFieldToSource(Map<String, Object> sourceMap, String field, Object value) {
+        sourceMap.put(field, value);
     }
 
     // ===================================================================================
@@ -112,7 +116,7 @@ public class Bs${table.camelizedName} extends EsAbstractEntity {
 
 #end
 #if ($column.isNormalColumn)
-#set ($javaNative = ${column.type})
+#if (${column.type} == "keyword" || ${column.type} == "text")#set ($javaNative = "String")#else#set ($javaNative = ${column.type})#end
 #elseif ($column.isRefColumn)
 #set ($javaNative = ${column.camelizedName})
 #end

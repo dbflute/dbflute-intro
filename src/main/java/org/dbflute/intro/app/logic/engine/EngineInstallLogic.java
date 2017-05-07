@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,16 @@
  */
 package org.dbflute.intro.app.logic.engine;
 
+import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
+import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.util.ZipUtil;
+import org.dbflute.util.DfStringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,17 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.util.ZipUtil;
-import org.dbflute.intro.mylasta.direction.IntroConfig;
-import org.dbflute.util.DfStringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -50,23 +49,24 @@ public class EngineInstallLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private IntroConfig introConfig;
-    @Resource
     private IntroPhysicalLogic introPhysicalLogic;
-    @Resource
-    private EnginePhysicalLogic enginePhysicalLogic;
     @Resource
     private PublicPropertiesLogic publicPropertiesLogic;
 
     // ===================================================================================
     //                                                                            Download
     //                                                                            ========
-    public void downloadUnzipping(String dbfluteVersion) { // overriding if already exists
+    public boolean isDownloaded(String dbfluteVersion) {
+        final File engineDir = introPhysicalLogic.findEngineDir(dbfluteVersion);
+        return engineDir.exists();
+    }
+
+    public void downloadUnzipping(String dbfluteVersion, boolean useSystemProxies) throws EngineDownloadErrorException { // overriding if already exists
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
             throw new IllegalArgumentException("dbfluteVersion is null or empty: " + dbfluteVersion);
         }
         logger.debug("...Downloading DBflute Engine: {}", dbfluteVersion);
-        final String downloadUrl = calcDownloadUrl(dbfluteVersion);
+        final String downloadUrl = publicPropertiesLogic.findProperties(useSystemProxies).getDBFluteDownloadUrl(dbfluteVersion);
         final File engineDir = introPhysicalLogic.findEngineDir(dbfluteVersion);
         engineDir.getParentFile().mkdirs(); // make 'mydbflute' directory
         final Path zipFile = doDownloadToZip(downloadUrl, engineDir);
@@ -84,18 +84,6 @@ public class EngineInstallLogic {
             throw new IllegalStateException("Failed to copy the downloaded data to zip file: " + zipFile, e);
         }
         return zipFile;
-    }
-
-    private String calcDownloadUrl(String dbfluteVersion) {
-        return publicPropertiesLogic.findProperties().getDBFluteDownloadUrl(dbfluteVersion);
-    }
-
-    // ===================================================================================
-    //                                                                        Unzip Client
-    //                                                                        ============
-    public void unzipClient(String dbfluteVersion, File clientDir) {
-        ZipUtil.decrypt(enginePhysicalLogic.buildDfClientZipPath(dbfluteVersion), introPhysicalLogic.buildIntroPath());
-        introPhysicalLogic.findClientDir("dfclient").renameTo(clientDir);
     }
 
     // ===================================================================================

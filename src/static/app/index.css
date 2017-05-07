@@ -7,7 +7,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   color: #222;
-  font-family: Times, "Times New Roman", "Hiragino Mincho Pro", "ƒqƒ‰ƒMƒm–¾’© Pro W3", "MS P Mincho", "‚l‚r ‚o–¾’©", serif;
+  font-family: Times, "Times New Roman", "Hiragino Mincho Pro", "ï¿½qï¿½ï¿½ï¿½Mï¿½mï¿½ï¿½ï¿½ï¿½ Pro W3", "MS P Mincho", "ï¿½lï¿½r ï¿½oï¿½ï¿½ï¿½ï¿½", serif;
 }
 h2 {
   padding: 1px 10px 0 40px;
@@ -45,4 +45,9 @@ button .glyphicon {
 :placeholder-shown {
   font-size: 85%;
   font-style: italic;
+}
+
+.modal-message {
+  white-space: pre-wrap;
+  word-break: break-all;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**
@@ -159,8 +158,14 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: the DBFlute task execution failure: {0} */
     public static final String ERRORS_APP_TASK_EXECUTE_FAILURE = "{errors.app.task.execute.failure}";
 
+    /** The key of the message: the Network error. Please check your proxy setting */
+    public static final String ERRORS_APP_NETWORK_ERROR = "{errors.app.network.error}";
+
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
+
+    /** The key of the message: needs jar file: {0} */
+    public static final String ERRORS_DATABASE_NEEDS_JAR = "{errors.database.needsJar}";
 
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
@@ -813,6 +818,20 @@ public class IntroMessages extends IntroLabels {
     }
 
     /**
+     * Add the created action message for the key 'errors.app.network.error' with parameters.
+     * <pre>
+     * message: the Network error. Please check your proxy setting
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppNetworkError(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_NETWORK_ERROR));
+        return this;
+    }
+
+    /**
      * Add the created action message for the key 'errors.welcome.client.alreadyExists' with parameters.
      * <pre>
      * message: client already exists: {0}
@@ -825,6 +844,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsWelcomeClientAlreadyExists(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_WELCOME_CLIENT_ALREADY_EXISTS, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.database.needsJar' with parameters.
+     * <pre>
+     * message: needs jar file: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsDatabaseNeedsJar(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_DATABASE_NEEDS_JAR, arg0));
         return this;
     }
 }

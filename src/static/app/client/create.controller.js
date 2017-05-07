@@ -14,10 +14,10 @@ angular.module('dbflute-intro')
         create: true,
         mainSchemaSettings: {},
         schemaSyncCheckMap: {},
-        dbfluteVersion: ''
+        dbfluteVersion: '',
+        jdbcDriver: null
     }; // model of current client
-    $scope.needsJdbcDriverJarPath = false;
-    $scope.databaseCodeNotNeedsJdbcDriverJarPath = ["MySQL", "PostgreSQL", "H2 Database"];
+    $scope.needsJdbcDriver = false;
     $scope.oRMapperOptionsFlg = false;
     $scope.option = {testConnection: true};
     $scope.versions = [];
@@ -48,17 +48,35 @@ angular.module('dbflute-intro')
         $scope.oRMapperOptionsFlg = !$scope.oRMapperOptionsFlg;
     };
     $scope.changeDatabase = function (client) {
-        $scope.needsJdbcDriverJarPath = !$scope.databaseCodeNotNeedsJdbcDriverJarPath.includes(client.databaseCode);
-        client.jdbcDriverFqcn = client.driverName;
-        var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
-        client.jdbcDriverFqcn = database.driverName;
-        client.mainSchemaSettings.url = database.urlTemplate;
-        client.mainSchemaSettings.schema = database.defaultSchema;
+      var database = $scope.classificationMap['targetDatabaseMap'][client.databaseCode];
+      // switch showing JDBCDriver select form
+      $scope.needsJdbcDriver = !database.embeddedJar;
+      // initialize JDBC Driver
+      client.jdbcDriver = null;
+      client.jdbcDriverFqcn = database.driverName;
+      client.mainSchemaSettings.url = database.urlTemplate;
+      client.mainSchemaSettings.schema = database.defaultSchema;
     };
     $scope.create = function (client, testConnection) {
         ApiFactory.createClient(client, testConnection).then(function (response) {
             $state.go('home');
         });
+    };
+    $scope.changeFile = function(files) {
+      var file = files[0];
+      var reader = new FileReader();
+      reader.onload = (function() {
+        return function() {
+          // encode base64
+          var result = window.btoa(reader.result);
+          $scope.client.jdbcDriver = {fileName: null, data: null};
+          $scope.client.jdbcDriver.fileName = file.name;
+          $scope.client.jdbcDriver.data = result;
+        };
+      }(file));
+      if (file) {
+        reader.readAsBinaryString(file);
+      }
     };
 
     // ===================================================================================

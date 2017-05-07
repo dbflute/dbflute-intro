@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package org.dbflute.intro.app.web.welcome;
 
-import javax.validation.Valid;
-
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
+
+import javax.validation.Valid;
 
 /**
  * @author hakiba
@@ -53,7 +54,7 @@ public class WelcomeCreateBody {
 
             @Required
             public String url;
-            public String schema; // contains additional schema by comma
+            public String schema;
             @Required
             public String user;
             public String password;
@@ -62,7 +63,20 @@ public class WelcomeCreateBody {
         @Required
         public String dbfluteVersion;
 
-        public String jdbcDriverJarPath;
+        // done hakiba why no validation? comment it by jflute (2017/04/06)
+        // you don't need jar file, when target database is embedded jar. so, no validation.
+        @Valid
+        public JdbcDriverPart jdbcDriver;
+
+        public static class JdbcDriverPart {
+
+            // done hakiba add required with ClientError by jflute (2017/04/06)
+            // if fileName or data is null, it's client problem.
+            @Required(groups=ClientError.class)
+            public String fileName;
+            @Required(groups=ClientError.class)
+            public String data;
+         }
     }
 
     // ===================================================================================
@@ -70,4 +84,6 @@ public class WelcomeCreateBody {
     //                                                                       =============
     @Required
     public Boolean testConnection;
+
+    public Boolean useSystemProxies = false; // only use if user selected
 }

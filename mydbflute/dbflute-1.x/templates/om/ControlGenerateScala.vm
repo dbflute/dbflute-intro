@@ -1,5 +1,5 @@
 ##
-## Copyright 2014-2016 the original author or authors.
+## Copyright 2014-2017 the original author or authors.
 ##
 ## Licensed under the Apache License, Version 2.0 (the "License");
 ## you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ $database.checkProperties()
 ##                                                                              Prefix
 ##                                                                              ======
 #set ($glProjectPrefix = ${database.projectPrefix})
+#set ($glAllcommonPrefix = ${database.allcommonPrefix})
 #set ($glBasePrefix = ${database.basePrefix})
 #set ($glBaseSuffixForEntity = ${database.baseSuffixForEntity})
 
@@ -72,7 +73,7 @@ $database.checkProperties()
 ##                                               -------
 ## [AllCommon]
 #set ($glAccessContext = "${glProjectPrefix}AccessContext")
-#set ($glCDef = "${glProjectPrefix}CDef")
+#set ($glCDef = "${glProjectPrefix}${glAllcommonPrefix}CDef")
 #set ($glDBCurrent = "${glProjectPrefix}DBCurrent")
 #set ($glDBFluteConfig = "${glProjectPrefix}DBFluteConfig")
 #set ($glDBFluteInitializer = "${glProjectPrefix}DBFluteInitializer")

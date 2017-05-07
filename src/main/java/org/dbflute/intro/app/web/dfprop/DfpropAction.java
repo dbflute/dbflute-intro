@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,23 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author deco
@@ -37,6 +43,10 @@ public class DfpropAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
+    @Resource
+    private DfpropInfoLogic dfpropInfoLogic;
+    @Resource
+    private DfpropUpdateLogic dfpropUpdateLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
 
@@ -65,6 +75,53 @@ public class DfpropAction extends IntroBaseAction {
         File dfpropFile = dfpropPhysicalLogic.findDfpropFile(project, fileName);
         flutyFileLogic.writeFile(dfpropFile, body.content);
 
+        return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
+    //                                         GetSyncSchema
+    //                                         -------------
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String project) {
+        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
+        final DfpropSchemaSyncCheckResult bean = schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElse(new DfpropSchemaSyncCheckResult());
+        return asJson(bean);
+    }
+
+    // -----------------------------------------------------
+    //                                        EditSyncSchema
+    //                                        --------------
+    @Execute(urlPattern = "{}/@word/@word")
+    public JsonResponse<Void> syncschemaEdit(String project, DfpropEditSyncSchemaBody body) {
+        validate(body, messages -> {});
+        final DbConnectionBox dbConnectionBox = new DbConnectionBox(body.url, body.schema, body.user, body.password);
+        final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
+        dfpropUpdateLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
+        return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
+    //                                           GetDocument
+    //                                           -----------
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<DfpropDocumentResult> document(String project) {
+        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(project);
+        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(project);
+        return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
+    }
+
+    // -----------------------------------------------------
+    //                                          EditDocument
+    //                                          ------------
+    @Execute(urlPattern = "{}/@word/@word")
+    public JsonResponse<Void> documentEdit(String project, DfpropDocumentEditBody body) {
+        validate(body, messages -> {});
+        final LittleAdjustmentMap littleAdjustmentMap = LittleAdjustmentMap.createAsTableNameUpperCase(body.upperCaseBasic);
+        dfpropUpdateLogic.replaceLittleAdjustmentMap(project, littleAdjustmentMap);
+        final DocumentMap documentMap = new DocumentMap();
+        documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
+        documentMap.setDbCommentOnAliasBasis(body.dbCommentOnAliasBasis);
+        dfpropUpdateLogic.replaceDocumentMap(project, documentMap);
         return JsonResponse.asEmptyBody();
     }
 }

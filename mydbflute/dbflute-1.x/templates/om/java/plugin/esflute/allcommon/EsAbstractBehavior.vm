@@ -1,7 +1,9 @@
 ${manager.allClassCopyright}package ${request.package}.allcommon;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -27,6 +29,7 @@ import org.dbflute.cbean.result.ListResultBean;
 import org.dbflute.exception.FetchingOverSafetySizeException;
 import org.dbflute.exception.IllegalBehaviorStateException;
 import org.dbflute.util.DfTypeUtil;
+import org.elasticsearch.action.DocWriteResponse.Result;
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -50,7 +53,7 @@ import org.elasticsearch.search.SearchHits;
 public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends ConditionBean> extends AbstractBehaviorWritable<ENTITY, CB> {
 
     @Resource
-    protected Client client;
+    private Client client;
 
     protected int sizeForDelete = 100;
     protected String scrollForDelete = "1m";
@@ -125,7 +128,7 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
         esCb.request().build(builder);
         final SearchResponse response = esCb.build(builder).execute().actionGet(searchTimeout);
 
-        final EsPagingResultBean<RESULT> list = new EsPagingResultBean<>();
+        final EsPagingResultBean<RESULT> list = new EsPagingResultBean<>(builder);
         final SearchHits searchHits = response.getHits();
         searchHits.forEach(hit -> {
             final Map<String, Object> source = hit.getSource();
@@ -144,6 +147,9 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
         list.setTotalShards(response.getTotalShards());
         list.setSuccessfulShards(response.getSuccessfulShards());
         list.setFailedShards(response.getFailedShards());
+
+        list.setAggregation(response.getAggregations());
+
         // #pending others
 
         return list;
@@ -249,11 +255,11 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
 
         final IndexResponse response = builder.execute().actionGet(indexTimeout);
         esEntity.asDocMeta().id(response.getId());
-        return response.isCreated() ? 1 : 0;
+        return response.getResult() == Result.CREATED ? 1 : 0;
     }
 
     protected IndexRequestBuilder createInsertRequest(final EsAbstractEntity esEntity) {
-        final IndexRequestBuilder builder = client.prepareIndex(asEsIndex(), asEsIndexType()).setSource(esEntity.toSource());
+        final IndexRequestBuilder builder = client.prepareIndex(asEsIndex(), asEsIndexType()).setSource(toSource(esEntity));
         final String id = esEntity.asDocMeta().id();
         if (id != null) {
             builder.setId(id);
@@ -280,7 +286,7 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
 
     protected IndexRequestBuilder createUpdateRequest(final EsAbstractEntity esEntity) {
         final IndexRequestBuilder builder =
-                client.prepareIndex(asEsIndex(), asEsIndexType(), esEntity.asDocMeta().id()).setSource(esEntity.toSource());
+                client.prepareIndex(asEsIndex(), asEsIndexType(), esEntity.asDocMeta().id()).setSource(toSource(esEntity));
         final RequestOptionCall<IndexRequestBuilder> indexOption = esEntity.asDocMeta().indexOption();
         if (indexOption != null) {
             indexOption.callback(builder);
@@ -292,13 +298,17 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
         return builder;
     }
 
+    protected Map<String, Object> toSource(final EsAbstractEntity esEntity) {
+        return esEntity.toSource();
+    }
+
     @Override
     protected int delegateDelete(final Entity entity, final DeleteOption<? extends ConditionBean> option) {
         final EsAbstractEntity esEntity = (EsAbstractEntity) entity;
         final DeleteRequestBuilder builder = createDeleteRequest(esEntity);
 
         final DeleteResponse response = builder.execute().actionGet(deleteTimeout);
-        return response.isFound() ? 1 : 0;
+        return response.getResult() == Result.DELETED ? 1 : 0;
     }
 
     protected DeleteRequestBuilder createDeleteRequest(final EsAbstractEntity esEntity) {
@@ -476,7 +486,7 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
-    public static String[] toStringArray(final Object value) {
+    protected String[] toStringArray(final Object value) {
         if (value instanceof String[]) {
             return (String[]) value;
         } else if (value instanceof List) {
@@ -487,6 +497,14 @@ public abstract class EsAbstractBehavior<ENTITY extends Entity, CB extends Condi
             return null;
         }
         return new String[] { str };
+    }
+
+    protected LocalDateTime toLocalDateTime(Object value) {
+        return DfTypeUtil.toLocalDateTime(value);
+    }
+
+    protected Date toDate(Object value) {
+        return DfTypeUtil.toDate(value);
     }
 
     public static class BulkList<E, B> implements List<E> {

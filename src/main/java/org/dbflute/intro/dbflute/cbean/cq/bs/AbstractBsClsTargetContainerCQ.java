@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -189,7 +189,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
      * @param containerCodeList The collection of containerCode as inScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setContainerCode_InScope(Collection<String> containerCodeList) {
+    protected void setContainerCode_InScope(Collection<String> containerCodeList) {
         doSetContainerCode_InScope(containerCodeList);
     }
 
@@ -212,7 +212,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
      * @param containerCodeList The collection of containerCode as notInScope. (NullAllowed: if null (or empty), no condition)
      */
-    public void setContainerCode_NotInScope(Collection<String> containerCodeList) {
+    protected void setContainerCode_NotInScope(Collection<String> containerCodeList) {
         doSetContainerCode_NotInScope(containerCodeList);
     }
 

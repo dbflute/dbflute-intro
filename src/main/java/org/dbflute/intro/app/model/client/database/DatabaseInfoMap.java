@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,26 @@ public class DatabaseInfoMap {
     //                                                                         Constructor
     //                                                                         ===========
     public DatabaseInfoMap(String driver, DbConnectionBox dbConnectionInfo, AdditionalSchemaMap additionalSchemaMap) {
+        if (driver == null) {
+            throw new IllegalArgumentException("The argument 'driver' should be not null.");
+        }
+        if (dbConnectionInfo == null) {
+            throw new IllegalArgumentException("The argument 'dbConnectionInfo' should be not null.");
+        }
+        if (additionalSchemaMap == null) {
+            throw new IllegalArgumentException("The argument 'additionalSchemaMap' should be not null.");
+        }
         this.driver = driver;
         this.dbConnectionInfo = dbConnectionInfo;
         this.additionalSchemaMap = additionalSchemaMap;
+    }
+
+    public static DatabaseInfoMap createWithoutAdditional(String driver, DbConnectionBox dbConnectionInfo) {
+        return new DatabaseInfoMap(driver, dbConnectionInfo);
+    }
+
+    protected DatabaseInfoMap(String driver, DbConnectionBox dbConnectionInfo) {
+        this(driver, dbConnectionInfo, AdditionalSchemaMap.empty());
     }
 
     // ===================================================================================
@@ -55,5 +72,9 @@ public class DatabaseInfoMap {
 
     public DbConnectionBox getDbConnectionBox() {
         return dbConnectionInfo;
+    }
+
+    public AdditionalSchemaMap getAdditionalSchemaMap() {
+        return additionalSchemaMap;
     }
 }

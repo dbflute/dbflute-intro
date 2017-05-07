@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,41 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 
 /**
  * @author jflute
+ * @author deco
  */
 public class SchemaSyncCheckMap {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final DbConnectionBox dbConnectionModel;
+    public DbConnectionBox dbConnectionModel;
+    public boolean isSuppressCraftDiff;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public SchemaSyncCheckMap(DbConnectionBox dbConnectionModel) {
+    public SchemaSyncCheckMap() {
+    }
+
+    public SchemaSyncCheckMap(DbConnectionBox dbConnectionModel, boolean isSuppressCraftDiff) {
         this.dbConnectionModel = dbConnectionModel;
+        this.isSuppressCraftDiff = isSuppressCraftDiff;
     }
 
     // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
-    public DbConnectionBox getDbConnectionModel() {
-        return dbConnectionModel;
+    //                                                                           to Dfprop
+    //                                                                           =========
+    public String convertToDfpropStr() {
+        final String url = dbConnectionModel.getUrl();
+        final String schema = dbConnectionModel.getSchema();
+        final String user = dbConnectionModel.getUser();
+        final String password = dbConnectionModel.getPassword();
+        return "    ; schemaSyncCheckMap = map:{" + "\n" + //
+                "        ; url = " + url + "\n" + //
+                "        ; schema = " + (schema != null ? schema : "") + "\n" + //
+                "        ; user = " + user + "\n" + //
+                "        ; password = " + (password != null ? password : "") + "\n" + //
+                "        ; isSuppressCraftDiff = " + isSuppressCraftDiff + "\n" + //
+                "    }";
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,19 @@ package org.dbflute.intro.dbflute.allcommon;
 
 import java.util.*;
 
+import org.dbflute.exception.ClassificationNotFoundException;
 import org.dbflute.jdbc.Classification;
 import org.dbflute.jdbc.ClassificationCodeType;
 import org.dbflute.jdbc.ClassificationMeta;
 import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
 import org.dbflute.optional.OptionalThing;
+import static org.dbflute.util.DfTypeUtil.emptyStrings;
 
 /**
  * The definition of classification.
  * @author DBFlute(AutoGenerator)
  */
 public interface CDef extends Classification {
-
-    /** The empty array for no sisters. */
-    String[] EMPTY_SISTERS = new String[]{};
 
     /**
      * general boolean classification for every flg-column
@@ -159,25 +158,25 @@ public interface CDef extends Classification {
      */
     public enum TargetDatabase implements CDef {
         /** MySQL */
-        MySQL("mysql", "MySQL", EMPTY_SISTERS)
+        MySQL("mysql", "MySQL", emptyStrings())
         ,
         /** PostgreSQL */
-        PostgreSQL("postgresql", "PostgreSQL", EMPTY_SISTERS)
+        PostgreSQL("postgresql", "PostgreSQL", emptyStrings())
         ,
         /** Oracle */
-        Oracle("oracle", "Oracle", EMPTY_SISTERS)
+        Oracle("oracle", "Oracle", emptyStrings())
         ,
         /** DB2 */
-        Db2("db2", "DB2", EMPTY_SISTERS)
+        Db2("db2", "DB2", emptyStrings())
         ,
         /** SQLServer */
-        SQLServer("sqlserver", "SQLServer", EMPTY_SISTERS)
+        SQLServer("sqlserver", "SQLServer", emptyStrings())
         ,
         /** H2 Database */
-        H2Database("h2", "H2 Database", EMPTY_SISTERS)
+        H2Database("h2", "H2 Database", emptyStrings())
         ,
         /** Apache Derby */
-        ApacheDerby("derby", "Apache Derby", EMPTY_SISTERS)
+        ApacheDerby("derby", "Apache Derby", emptyStrings())
         ;
         private static final Map<String, TargetDatabase> _codeClsMap = new HashMap<String, TargetDatabase>();
         private static final Map<String, TargetDatabase> _nameClsMap = new HashMap<String, TargetDatabase>();
@@ -296,13 +295,13 @@ public interface CDef extends Classification {
      */
     public enum TargetLanguage implements CDef {
         /** Java */
-        Java("java", "Java", EMPTY_SISTERS)
+        Java("java", "Java", emptyStrings())
         ,
         /** C# */
-        C("csharp", "C#", EMPTY_SISTERS)
+        C("csharp", "C#", emptyStrings())
         ,
         /** Scala */
-        Scala("scala", "Scala", EMPTY_SISTERS)
+        Scala("scala", "Scala", emptyStrings())
         ;
         private static final Map<String, TargetLanguage> _codeClsMap = new HashMap<String, TargetLanguage>();
         private static final Map<String, TargetLanguage> _nameClsMap = new HashMap<String, TargetLanguage>();
@@ -421,19 +420,19 @@ public interface CDef extends Classification {
      */
     public enum TargetContainer implements CDef {
         /** Lasta Di */
-        LastaDi("lasta_di", "Lasta Di", EMPTY_SISTERS)
+        LastaDi("lasta_di", "Lasta Di", emptyStrings())
         ,
         /** Spring Framework */
-        SpringFramework("spring", "Spring Framework", EMPTY_SISTERS)
+        SpringFramework("spring", "Spring Framework", emptyStrings())
         ,
         /** Google Guice */
-        GoogleGuice("guice", "Google Guice", EMPTY_SISTERS)
+        GoogleGuice("guice", "Google Guice", emptyStrings())
         ,
         /** Seasar (S2Container) */
-        SeasarS2Container("seasar", "Seasar (S2Container)", EMPTY_SISTERS)
+        SeasarS2Container("seasar", "Seasar (S2Container)", emptyStrings())
         ,
         /** CDI */
-        Cdi("cdi", "CDI", EMPTY_SISTERS)
+        Cdi("cdi", "CDI", emptyStrings())
         ;
         private static final Map<String, TargetContainer> _codeClsMap = new HashMap<String, TargetContainer>();
         private static final Map<String, TargetContainer> _nameClsMap = new HashMap<String, TargetContainer>();
@@ -552,28 +551,28 @@ public interface CDef extends Classification {
      */
     public enum TaskType implements CDef {
         /** JDBC */
-        JDBC("jdbc", "JDBC", EMPTY_SISTERS)
+        JDBC("jdbc", "JDBC", emptyStrings())
         ,
         /** Doc */
-        Doc("doc", "Doc", EMPTY_SISTERS)
+        Doc("doc", "Doc", emptyStrings())
         ,
         /** Generate */
-        Generate("generate", "Generate", EMPTY_SISTERS)
+        Generate("generate", "Generate", emptyStrings())
         ,
         /** OutsideSqlTest */
-        OutsideSqlTest("outside_sql_test", "OutsideSqlTest", EMPTY_SISTERS)
+        OutsideSqlTest("outside_sql_test", "OutsideSqlTest", emptyStrings())
         ,
         /** Sql2Entity */
-        Sql2Entity("sql2entity", "Sql2Entity", EMPTY_SISTERS)
+        Sql2Entity("sql2entity", "Sql2Entity", emptyStrings())
         ,
         /** ReplaceSchema */
-        ReplaceSchema("replace_schema", "ReplaceSchema", EMPTY_SISTERS)
+        ReplaceSchema("replace_schema", "ReplaceSchema", emptyStrings())
         ,
         /** LoadDataReverse */
-        LoadDataReverse("load_data_reverse", "LoadDataReverse", EMPTY_SISTERS)
+        LoadDataReverse("load_data_reverse", "LoadDataReverse", emptyStrings())
         ,
         /** SchemaSyncCheck */
-        SchemaSyncCheck("schema_sync_check", "SchemaSyncCheck", EMPTY_SISTERS)
+        SchemaSyncCheck("schema_sync_check", "SchemaSyncCheck", emptyStrings())
         ;
         private static final Map<String, TaskType> _codeClsMap = new HashMap<String, TaskType>();
         private static final Map<String, TaskType> _nameClsMap = new HashMap<String, TaskType>();
@@ -791,43 +790,43 @@ public interface CDef extends Classification {
         }
 
         public List<Classification> listAll() {
-            if (Flg.name().equals(name())) { return toClassificationList(CDef.Flg.listAll()); }
-            if (TargetDatabase.name().equals(name())) { return toClassificationList(CDef.TargetDatabase.listAll()); }
-            if (TargetLanguage.name().equals(name())) { return toClassificationList(CDef.TargetLanguage.listAll()); }
-            if (TargetContainer.name().equals(name())) { return toClassificationList(CDef.TargetContainer.listAll()); }
-            if (TaskType.name().equals(name())) { return toClassificationList(CDef.TaskType.listAll()); }
+            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.listAll()); }
+            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.listAll()); }
+            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listAll()); }
+            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listAll()); }
+            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listByGroup(String groupName) { // exception if not found
-            if (Flg.name().equals(name())) { return toClassificationList(CDef.Flg.listByGroup(groupName)); }
-            if (TargetDatabase.name().equals(name())) { return toClassificationList(CDef.TargetDatabase.listByGroup(groupName)); }
-            if (TargetLanguage.name().equals(name())) { return toClassificationList(CDef.TargetLanguage.listByGroup(groupName)); }
-            if (TargetContainer.name().equals(name())) { return toClassificationList(CDef.TargetContainer.listByGroup(groupName)); }
-            if (TaskType.name().equals(name())) { return toClassificationList(CDef.TaskType.listByGroup(groupName)); }
+            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.listByGroup(groupName)); }
+            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.listByGroup(groupName)); }
+            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listByGroup(groupName)); }
+            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listByGroup(groupName)); }
+            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listByGroup(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public List<? extends Classification> listOf(Collection<String> codeList) {
-            if (Flg.name().equals(name())) { return CDef.Flg.listOf(codeList); }
-            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.listOf(codeList); }
-            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.listOf(codeList); }
-            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.listOf(codeList); }
-            if (TaskType.name().equals(name())) { return CDef.TaskType.listOf(codeList); }
+        public List<Classification> listOf(Collection<String> codeList) {
+            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.listOf(codeList)); }
+            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.listOf(codeList)); }
+            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listOf(codeList)); }
+            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listOf(codeList)); }
+            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listOf(codeList)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> groupOf(String groupName) { // old style
-            if (Flg.name().equals(name())) { return toClassificationList(CDef.Flg.groupOf(groupName)); }
-            if (TargetDatabase.name().equals(name())) { return toClassificationList(CDef.TargetDatabase.groupOf(groupName)); }
-            if (TargetLanguage.name().equals(name())) { return toClassificationList(CDef.TargetLanguage.groupOf(groupName)); }
-            if (TargetContainer.name().equals(name())) { return toClassificationList(CDef.TargetContainer.groupOf(groupName)); }
-            if (TaskType.name().equals(name())) { return toClassificationList(CDef.TaskType.groupOf(groupName)); }
+            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.groupOf(groupName)); }
+            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.groupOf(groupName)); }
+            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.groupOf(groupName)); }
+            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.groupOf(groupName)); }
+            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         @SuppressWarnings("unchecked")
-        private List<Classification> toClassificationList(List<?> clsList) {
+        private List<Classification> toClsList(List<?> clsList) {
             return (List<Classification>)clsList;
         }
 
@@ -861,7 +860,7 @@ public interface CDef extends Classification {
             });
         }
 
-        public static CDef.DefMeta meta(String classificationName) { // old style so use byName(name)
+        public static CDef.DefMeta meta(String classificationName) { // old style so use find(name)
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
             if (Flg.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.Flg; }
             if (TargetDatabase.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetDatabase; }
@@ -870,12 +869,10 @@ public interface CDef extends Classification {
             if (TaskType.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TaskType; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
         }
-    }
 
-    public static class ClassificationNotFoundException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-        public ClassificationNotFoundException(String msg) {
-            super(msg);
+        @SuppressWarnings("unused")
+        private String[] xinternalEmptyString() {
+            return emptyStrings(); // to suppress 'unused' warning of import statement
         }
     }
 }
