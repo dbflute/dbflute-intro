@@ -22,7 +22,7 @@ apply plugin: 'project-report'
 //                                                                              Basic Info
 //                                                                              ==========
 group = 'org.dbflute'
-version = '0.1.2'
+version = '0.1.3-SNAPSHOT'
 
 ext {
     encoding = 'UTF-8'
@@ -37,7 +37,7 @@ ext {
             // Main Framework
             dbflute : '1.1.2',
             h2 : '1.4.193',
-            lastaflute : '0.9.6',
+            lastaflute : '0.9.8',
 
             // Partner Library
             slf4j : '1.7.25',
@@ -50,8 +50,7 @@ ext {
 
             // Testing
             junit : '4.8.2',
-            utflute : '0.7.5',
-            javaparser : '3.1.3'
+            utflute : '0.7.8'
         ]
 }
 
@@ -101,7 +100,6 @@ dependencies {
     // Testing
     testCompile "junit:junit:${versions.junit}"
     testCompile "org.dbflute.utflute:utflute-lastaflute:${versions.utflute}"
-    testCompile "com.github.javaparser:javaparser-core:${versions.javaparser}"
 }
 
 
