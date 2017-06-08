@@ -35,7 +35,7 @@ ext {
             node : '6.7.0',
 
             // Main Framework
-            dbflute : '1.1.2',
+            dbflute : '1.1.3',
             h2 : '1.4.193',
             lastaflute : '0.9.8',
 
