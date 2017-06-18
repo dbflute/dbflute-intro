@@ -18,8 +18,9 @@ log/
 .settings/
 
 # IntelliJ
-.idea/
-*.iml
+/.idea/workspace.xml
+/.idea/libraries
+/*.iml
 
 # Java
 classes/
