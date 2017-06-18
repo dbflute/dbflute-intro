@@ -18,8 +18,12 @@ log/
 .settings/
 
 # IntelliJ
-/.idea/workspace.xml
 /.idea/libraries
+/.idea/modules
+/.idea/compiler.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
 /*.iml
 
 # Java
