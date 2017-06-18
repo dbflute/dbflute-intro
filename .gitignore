@@ -18,6 +18,7 @@ log/
 .settings/
 
 # IntelliJ
+/.idea/artifacts
 /.idea/libraries
 /.idea/modules
 /.idea/compiler.xml
