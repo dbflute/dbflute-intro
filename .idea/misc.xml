@@ -3,6 +3,9 @@
   <component name="EntryPointsManager">
     <writeAnnotations>
       <writeAnnotation name="javax.annotation.Resource" />
+      <writeAnnotation name="javax.inject.Inject" />
+      <writeAnnotation name="com.google.inject" />
+      <writeAnnotation name="org.springframework.beans.factory.annotation.Autowired" />
     </writeAnnotations>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
