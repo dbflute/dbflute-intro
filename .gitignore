@@ -26,6 +26,7 @@ log/
 /.idea/vcs.xml
 /.idea/workspace.xml
 /*.iml
+/out
 
 # Java
 classes/
