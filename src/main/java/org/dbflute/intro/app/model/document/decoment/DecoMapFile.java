@@ -9,7 +9,7 @@ import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
 
 /**
- * @author yuto.eguma
+ * @author cabos
  */
 public class DecoMapFile {
 
