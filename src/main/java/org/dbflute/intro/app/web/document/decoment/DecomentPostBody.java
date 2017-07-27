@@ -17,6 +17,7 @@ public class DecomentPostBody {
 
         @Required
         public String tableName;
+        // TODO cabos List<DecomentColumnPart> by jflute (2017/07/27)
         @Valid
         @Required
         public DecomentColumnPart column;
@@ -27,8 +28,10 @@ public class DecomentPostBody {
             public String columnName;
             @Required
             public String decoment;
+            // TODO cabos not required by jflute (2017/07/27)
             @Required
             public String databaseComment;
+            // TODO cabos not required by jflute (2017/07/27)
             @Required
             public String previousWholeComment;
         }
