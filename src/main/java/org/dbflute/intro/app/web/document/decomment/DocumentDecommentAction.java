@@ -46,7 +46,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         pieceMap.setAuthor(getAuthor());
         pieceMap.setDecommentDatetime(timeManager.currentDateTime());
         pieceMap.setMerged(body.merged);
-        pieceMap.setDecoMap(convert(body.table));
+        pieceMap.setDecoMap(convertTablePartToDecoMapPiece(body.table));
         return pieceMap;
     }
 
@@ -54,7 +54,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return System.getProperty("user.home");
     }
 
-    private DfDecoMapTablePart convert(DecommentTablePart tablePart) {
+    private DfDecoMapTablePart convertTablePartToDecoMapPiece(DecommentTablePart tablePart) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
         tablePartMap.setColumn(tablePart.columns.stream().map(columnPart -> {
