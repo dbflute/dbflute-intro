@@ -1,5 +1,7 @@
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.lastaflute.web.validation.Required;
@@ -17,10 +19,10 @@ public class DecommentPostBody {
 
         @Required
         public String tableName;
-        // TODO cabos List<DecommentColumnPart> by jflute (2017/07/27)
+        // TODO done cabos List<DecommentColumnPart> by jflute (2017/07/27)
         @Valid
         @Required
-        public DecommentColumnPart column;
+        public List<DecommentColumnPart> column;
 
         public static class DecommentColumnPart {
 
@@ -28,11 +30,9 @@ public class DecommentPostBody {
             public String columnName;
             @Required
             public String decomment;
-            // TODO cabos not required by jflute (2017/07/27)
-            @Required
+            // TODO done cabos not required by jflute (2017/07/27)
             public String databaseComment;
-            // TODO cabos not required by jflute (2017/07/27)
-            @Required
+            // TODO done cabos not required by jflute (2017/07/27)
             public String previousWholeComment;
         }
     }
