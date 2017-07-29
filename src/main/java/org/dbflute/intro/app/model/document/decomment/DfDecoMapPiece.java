@@ -11,7 +11,7 @@ import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 public class DfDecoMapPiece {
 
     protected String fileName;
-    protected long formatVersion;
+    protected String formatVersion;
     protected String author;
     protected LocalDateTime decommentDatetime;
     protected boolean merged;
@@ -23,10 +23,10 @@ public class DfDecoMapPiece {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    public long getFormatVersion() {
+    public String getFormatVersion() {
         return formatVersion;
     }
-    public void setFormatVersion(long formatVersion) {
+    public void setFormatVersion(String formatVersion) {
         this.formatVersion = formatVersion;
     }
     public String getAuthor() {
