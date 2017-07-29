@@ -12,6 +12,8 @@ import org.lastaflute.web.validation.Required;
 public class DecommentPostBody {
 
     @Required
+    public Boolean merged;
+    @Required
     @Valid
     public DecommentTablePart table;
 
