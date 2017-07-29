@@ -1,6 +1,8 @@
 package org.dbflute.intro.app.model.document.decomment;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 
@@ -10,6 +12,9 @@ import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
  */
 public class DfDecoMapPiece {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     protected String fileName;
     protected String formatVersion;
     protected String author;
@@ -17,6 +22,9 @@ public class DfDecoMapPiece {
     protected boolean merged;
     protected DfDecoMapTablePart decoMap;
 
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
     public String getFileName() {
         return fileName;
     }
@@ -52,5 +60,34 @@ public class DfDecoMapPiece {
     }
     public void setDecoMap(DfDecoMapTablePart decoMap) {
         this.decoMap = decoMap;
+    }
+
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    // map:{
+    //    ; formatVersion = 1.0
+    //    ; author = cabos
+    //    ; decommentDatetime = 2017/12:31 12:34:56
+    //    ; merged = false
+    //    ; decoMap = map:{
+    //        ; MEMBER = map:{
+    //            ; MEMBER_NAME = map:{
+    //                ; decomment = piari
+    //                ; databaseComment = sea
+    //                ; previousWholeComment = seasea
+    //                ; commentVersion = 1
+    //                ; authorList = list: { cabos }
+    //            }
+    //        }
+    //    }
+    // }
+    public Map<String, Object> convertMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("formatVersion", this.formatVersion);
+        map.put("author", this.author);
+        map.put("merged", this.merged);
+        map.put("decoMap", this.decoMap.convertMap());
+        return map;
     }
 }

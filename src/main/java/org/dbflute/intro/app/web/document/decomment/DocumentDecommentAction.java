@@ -1,9 +1,12 @@
 package org.dbflute.intro.app.web.document.decomment;
 
+import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
+
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
@@ -23,6 +26,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private TimeManager timeManager;
+    @Resource
+    private DocumentDecommentPhysicalLogic decommentPhysicalLogic;
 
     // ===================================================================================
     //                                                                           Piece Map
@@ -31,7 +36,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentPostBody body) {
         validate(body, messages -> {});
-        // TODO cabos create decomap file (2017/07/20)
+        decommentPhysicalLogic.saveDecommentPieceMap(projectName, body.table.tableName, convertBodyToDecoMapPiece(body).convertMap());
         return JsonResponse.asEmptyBody();
     }
 
@@ -42,22 +47,24 @@ public class DocumentDecommentAction extends IntroBaseAction {
         pieceMap.setDecommentDatetime(timeManager.currentDateTime());
         pieceMap.setMerged(body.merged);
         pieceMap.setDecoMap(convert(body.table));
-        return null;
+        return pieceMap;
     }
 
     private String getAuthor() {
         return System.getProperty("user.home");
     }
 
-    private DfDecoMapTablePart convert(DecommentPostBody.DecommentTablePart tablePart) {
+    private DfDecoMapTablePart convert(DecommentTablePart tablePart) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
-        tablePartMap.setColumn(tablePart.columns.stream().map(column -> {
+        tablePartMap.setColumn(tablePart.columns.stream().map(columnPart -> {
             DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
-            columnPartMap.setColumnName(column.columnName);
-            columnPartMap.setDecomment(column.decomment);
-            columnPartMap.setDatabaseComment(column.databaseComment);
-            columnPartMap.setPreviousWholeComment(column.previousWholeComment);
+            columnPartMap.setColumnName(columnPart.columnName);
+            columnPartMap.setDecomment(columnPart.decomment);
+            columnPartMap.setDatabaseComment(columnPart.databaseComment);
+            columnPartMap.setPreviousWholeComment(columnPart.previousWholeComment);
+            columnPartMap.setCommentVersion(columnPart.commentVersion);
+            columnPartMap.setAuthorList(columnPart.authorList);
             return columnPartMap;
         }).collect(Collectors.toList()));
         return tablePartMap;
