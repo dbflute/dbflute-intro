@@ -36,7 +36,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentPostBody body) {
         validate(body, messages -> {});
-        decommentPhysicalLogic.saveDecommentPieceMap(projectName, body.table.tableName, convertBodyToDecoMapPiece(body).convertMap());
+        decommentPhysicalLogic.saveDecommentPieceMap(projectName, convertBodyToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
 
