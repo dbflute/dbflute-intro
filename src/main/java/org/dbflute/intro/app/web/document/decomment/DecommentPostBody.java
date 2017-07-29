@@ -24,7 +24,7 @@ public class DecommentPostBody {
         // TODO done cabos List<DecommentColumnPart> by jflute (2017/07/27)
         @Valid
         @Required
-        public List<DecommentColumnPart> column;
+        public List<DecommentColumnPart> columns;
 
         public static class DecommentColumnPart {
 

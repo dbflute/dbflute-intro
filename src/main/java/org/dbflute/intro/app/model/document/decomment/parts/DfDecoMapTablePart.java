@@ -8,7 +8,7 @@ import java.util.List;
 public class DfDecoMapTablePart {
 
     protected String tableName;
-    protected List<DfDecoMapColumnPart> column;
+    protected List<DfDecoMapColumnPart> columns;
 
     public String getTableName() {
         return tableName;
@@ -17,9 +17,9 @@ public class DfDecoMapTablePart {
         this.tableName = tableName;
     }
     public List<DfDecoMapColumnPart> getColumn() {
-        return column;
+        return columns;
     }
-    public void setColumn(List<DfDecoMapColumnPart> column) {
-        this.column = column;
+    public void setColumn(List<DfDecoMapColumnPart> columns) {
+        this.columns = columns;
     }
 }
