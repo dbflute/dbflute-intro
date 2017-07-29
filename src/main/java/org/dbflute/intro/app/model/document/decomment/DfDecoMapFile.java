@@ -8,11 +8,11 @@ import org.dbflute.exception.DfPropFileReadFailureException;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
 
-// TODO cabos DfDecoMapFile by jflute (2017/07/27)
+// TODO done cabos DfDecoMapFile by jflute (2017/07/27)
 /**
  * @author cabos
  */
-public class DecoMapFile {
+public class DfDecoMapFile {
 
     // ===================================================================================
     //                                                                                Read
