@@ -463,7 +463,7 @@ dl.procedurelist dd.column pre {
 member
 </h2>
 <p class="tablecomment">会員:&nbsp;会員のプロフィールやアカウントなどの基本情報を保持する。<br>基本的に物理削除はなく、退会したらステータスが退会会員になる。<br>ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。</p>
-<table>
+<table class="tablecontent">
 	<thead>
 	<tr>
 		<th class="rownumhead">No.</th>
@@ -483,14 +483,14 @@ member
 		<th>JavaType</th>
 	</tr>
 	</thead>
-	<tr>
+	<tr class="tablecolumn">
 		<td class="rownumcell">1</td>
 		<td class="flgcell" title="PRIMARY">o</td>
 		<td class="flgcell">o</td>
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
-		<td id="member_member_id">MEMBER_ID</td>
+		<td id="member_member_id" class="columnnamecell">MEMBER_ID</td>
 		<td class="typecell">INT</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
@@ -500,14 +500,14 @@ member
 		<td class="subcell">memberId</td>
 		<td class="subcell">Integer</td>
 	</tr>
-	<tr>
+	<tr class="tablecolumn">
 		<td class="rownumcell">2</td>
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell"> &nbsp;</td>
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell" title="IX_MEMBER_MEMBER_NAME(MEMBER_NAME)">o</td>
 		<td class="flgcell">*</td>
-		<td id="member_member_name">MEMBER_NAME</td>
+		<td id="member_member_name" class="columnnamecell">MEMBER_NAME</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 180 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
@@ -3398,6 +3398,104 @@ var searcher = new Incremental(document.getElementById('incremental-search-field
 searcher.init();
 </script>
 <script>
+function Decomment() {
+}
+
+Decomment.prototype = {
+
+  /**
+   * @method init
+   */
+  init: function () {
+    var schemeName = this.getSchemeName();
+    var tables = document.getElementsByClassName('tablecontent');
+    var that = this;
+    Array.prototype.forEach.call(tables, function (table) {
+      var columns = table.getElementsByClassName('tablecolumn');
+      Array.prototype.forEach.call(columns, function (column) {
+        var previousWholeComment = column.querySelector('.commentcell');
+        var columnName = column.querySelector('.columnnamecell').innerText;
+        previousWholeComment.onclick = function () {
+          var docomment = window.prompt('Input new column comment.');
+          // click cancel
+          if (docomment === null) {
+            return;
+          }
+          // click ok
+          if (docomment) {
+            var tableName = that.getTableName(table);
+            var params = that.buildRequestParams(tableName, columnName, docomment, previousWholeComment.innerText);
+            that.requestSaveDecomment(schemeName, params);
+          } else {
+            alert('Cannot save empty comment');
+          }
+        };
+      });
+    });
+  },
+
+  /**
+   * @method getSchemeName
+   * @returns {String}
+   */
+  getSchemeName: function () {
+    return document.querySelector('.mainschema').querySelector('strong').innerText;
+  },
+
+  /**
+   * @method getTableName
+   * @param table {Object}
+   * @returns {String}
+   */
+  getTableName: function (table) {
+    return table.previousElementSibling.previousElementSibling.id;
+  },
+
+  /**
+   * @method buildRequestBody
+   * @param tableName {String}
+   * @param columnName {String}
+   * @param docomment {String}
+   * @param previousWholeComment {String}
+   * @return requestBody {Object}
+   */
+  buildRequestParams: function (tableName, columnName, docomment, previousWholeComment) {
+    return {
+      'merged': false,
+      'table': {
+        'tableName': tableName,
+        'column': [
+          {
+            'columnName': columnName,
+            'decomment': docomment,
+            'previousWholeComment': previousWholeComment
+          }
+        ]
+      }
+    };
+  },
+
+  /**
+   * @method requestDecomment
+   * @param schemeName {String}
+   * @param params {Object}
+   */
+  requestSaveDecomment: function (schemeName, params) {
+    var http = new XMLHttpRequest();
+    http.withCredentials = true;
+    var url = 'http://localhost:8925/api/document/decomment/' + schemeName + '/save';
+    http.open('POST', url, true);
+
+    http.onreadystatechange = function () {
+      if (http.readyState === 4 && http.status !== 200) {
+        alert('Error!! cannot save new column comment.');
+      }
+    };
+    http.send(JSON.stringify(params));
+  }
+};
+
+new Decomment().init();
 </script>
 </body>
 </html>
