@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.logic.document.decoment;
+package org.dbflute.intro.app.logic.document.decomment;
 
 import javax.annotation.Resource;
 
@@ -7,7 +7,7 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 /**
  * @author cabos
  */
-public class DocumentDecomentPhysicalLogic {
+public class DocumentDecommentPhysicalLogic {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -18,11 +18,11 @@ public class DocumentDecomentPhysicalLogic {
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
-    public String buildDecomentDiffDirPath(String clientProject) {
+    public String buildDecommentDiffDirPath(String clientProject) {
         return null;
     }
 
-    public String buildDecomentPickupDirPath(String clientProject) {
+    public String buildDecommentPickupDirPath(String clientProject) {
         return null;
     }
 }

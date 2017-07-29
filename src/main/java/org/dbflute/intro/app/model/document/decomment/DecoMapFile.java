@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.model.document.decoment;
+package org.dbflute.intro.app.model.document.decomment;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,7 +33,7 @@ public class DecoMapFile {
         br.addItem("Advice");
         br.addElement("Make sure the map-string is correct in the file.");
         br.addElement("For example, the number of start and end braces are the same.");
-        br.addItem("Decoment Map");
+        br.addItem("Decomment Map");
         br.addElement(ins);
         final String msg = br.buildExceptionMessage();
         throw new DfPropFileReadFailureException(msg, e);
@@ -54,7 +54,7 @@ public class DecoMapFile {
     protected void throwDecoMapWriteFailureException(OutputStream ous, Exception e) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
         br.addNotice("Failed to write the deco-map file.");
-        br.addItem("Decoment Map");
+        br.addItem("Decomment Map");
         br.addElement(ous);
         final String msg = br.buildExceptionMessage();
         throw new DfPropFileReadFailureException(msg, e);

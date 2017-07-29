@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.web.document.decoment;
+package org.dbflute.intro.app.web.document.decomment;
 
 import javax.validation.Valid;
 
@@ -7,27 +7,27 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author cabos
  */
-public class DecomentPostBody {
+public class DecommentPostBody {
 
     @Required
     @Valid
-    public DecomentTablePart table;
+    public DecommentTablePart table;
 
-    public static class DecomentTablePart {
+    public static class DecommentTablePart {
 
         @Required
         public String tableName;
-        // TODO cabos List<DecomentColumnPart> by jflute (2017/07/27)
+        // TODO cabos List<DecommentColumnPart> by jflute (2017/07/27)
         @Valid
         @Required
-        public DecomentColumnPart column;
+        public DecommentColumnPart column;
 
-        public static class DecomentColumnPart {
+        public static class DecommentColumnPart {
 
             @Required
             public String columnName;
             @Required
-            public String decoment;
+            public String decomment;
             // TODO cabos not required by jflute (2017/07/27)
             @Required
             public String databaseComment;
