@@ -6,11 +6,13 @@ import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class DfDecoMapPickup {
 
     protected String fileName;
     protected String formatVersion;
+    protected List<DfDecoMapTablePart> decoMap;
 
     public String getFileName() {
         return fileName;
@@ -30,5 +32,4 @@ public class DfDecoMapPickup {
     public void setDecoMap(List<DfDecoMapTablePart> decoMap) {
         this.decoMap = decoMap;
     }
-    protected List<DfDecoMapTablePart> decoMap;
 }

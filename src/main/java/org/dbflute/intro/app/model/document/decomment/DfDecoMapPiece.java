@@ -1,12 +1,12 @@
 package org.dbflute.intro.app.model.document.decomment;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class DfDecoMapPiece {
 
@@ -15,7 +15,7 @@ public class DfDecoMapPiece {
     protected String author;
     protected LocalDateTime decommentDatetime;
     protected boolean merged;
-    protected List<DfDecoMapTablePart> decoMap;
+    protected DfDecoMapTablePart decoMap;
 
     public String getFileName() {
         return fileName;
@@ -47,10 +47,10 @@ public class DfDecoMapPiece {
     public void setMerged(boolean merged) {
         this.merged = merged;
     }
-    public List<DfDecoMapTablePart> getDecoMap() {
+    public DfDecoMapTablePart getDecoMap() {
         return decoMap;
     }
-    public void setDecoMap(List<DfDecoMapTablePart> decoMap) {
+    public void setDecoMap(DfDecoMapTablePart decoMap) {
         this.decoMap = decoMap;
     }
 }
