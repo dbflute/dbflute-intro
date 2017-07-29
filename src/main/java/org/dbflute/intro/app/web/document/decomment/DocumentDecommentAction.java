@@ -13,16 +13,16 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    // TODO cabos post to save, get to diff by jflute (2017/07/27)
+    // TODO done cabos post to save, get to diff by jflute (2017/07/27)
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> post(String projectName, DecommentPostBody body) {
+    public JsonResponse<Void> save(String projectName, DecommentPostBody body) {
         validate(body, messages -> {});
         // TODO cabos create decomap file (2017/07/20)
         return JsonResponse.asEmptyBody();
     }
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> get(String projectName) {
+    public JsonResponse<Void> piece(String projectName) {
         // TODO hakiba create new decomment response (2017/07/20)
         return JsonResponse.asEmptyBody();
     }
