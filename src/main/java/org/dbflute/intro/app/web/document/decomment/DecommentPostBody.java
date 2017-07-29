@@ -36,6 +36,10 @@ public class DecommentPostBody {
             public String databaseComment;
             // TODO done cabos not required by jflute (2017/07/27)
             public String previousWholeComment;
+            @Required
+            public Long commentVersion;
+            @Required
+            public List<String> authorList;
         }
     }
 }

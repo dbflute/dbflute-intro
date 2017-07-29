@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.text.SimpleDateFormat;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
+import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.lastaflute.core.time.TimeManager;
 
 /**
@@ -30,29 +30,27 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
-    public void saveDecommentPieceMap(String clientProject, String tableName, Map<String, Object> decomentPieceMap) {
-        File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName)));
+    public void saveDecommentPieceMap(String clientProject, DfDecoMapPiece decoMapPiece) {
+        String tableName = decoMapPiece.getDecoMap().getTableName();
+        String author = decoMapPiece.getAuthor();
+        File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
         createPieceMapFile(pieceMapFile);
         try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
             DfDecoMapFile dfDecoMapFile = new DfDecoMapFile();
-            dfDecoMapFile.writeMap(outputStream, decomentPieceMap);
+            dfDecoMapFile.writeMap(outputStream, decoMapPiece.convertMap());
         } catch (IOException e) {
             // TODO cabos throw more detail exception (2017/07/29)
             throw new UncheckedIOException(e);
         }
     }
 
-    private String buildPieceFileName(String tableName) { // e.g decomment-piece-MEMBER-20170316-123456-789-jflute.dfmap
-        return " decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + getAuthor() + ".dfmap";
+    private String buildPieceFileName(String tableName, String author) { // e.g decomment-piece-MEMBER-20170316-123456-789-jflute.dfmap
+        return "decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + author + ".dfmap";
     }
 
     private String getCurrentDateStr() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");
         return formatter.format(timeManager.currentDate());
-    }
-
-    private String getAuthor() {
-        return System.getProperty("user.home");
     }
 
     private void createPieceMapFile(File pieceMapFile) {

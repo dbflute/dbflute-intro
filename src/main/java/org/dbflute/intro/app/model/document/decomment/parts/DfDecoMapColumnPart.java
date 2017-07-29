@@ -1,13 +1,18 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class DfDecoMapColumnPart {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     protected String columnName;
     protected String decomment;
     protected String databaseComment;
@@ -15,6 +20,9 @@ public class DfDecoMapColumnPart {
     protected long commentVersion;
     protected List<String> authorList;
 
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
     public DfDecoMapColumnPart() {
     }
 
@@ -30,6 +38,12 @@ public class DfDecoMapColumnPart {
         this.authorList = (List<String>) columnMap.get("authorList");
     }
 
+    public String getColumnName() {
+        return columnName;
+    }
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
     public String getDecomment() {
         return decomment;
     }
@@ -48,11 +62,29 @@ public class DfDecoMapColumnPart {
     public void setPreviousWholeComment(String previousWholeComment) {
         this.previousWholeComment = previousWholeComment;
     }
-    public String getColumnName() {
-
-        return columnName;
+    public long getCommentVersion() {
+        return commentVersion;
     }
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
+    public void setCommentVersion(long commentVersion) {
+        this.commentVersion = commentVersion;
+    }
+    public List<String> getAuthorList() {
+        return authorList;
+    }
+    public void setAuthorList(List<String> authorList) {
+        this.authorList = authorList;
+    }
+
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    public Map<String, Object> convertMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("decomment", this.decomment);
+        map.put("databaseComment", this.databaseComment);
+        map.put("previousWholeComment", this.previousWholeComment);
+        map.put("commentVersion", this.commentVersion);
+        map.put("authorList", this.authorList);
+        return map;
     }
 }
