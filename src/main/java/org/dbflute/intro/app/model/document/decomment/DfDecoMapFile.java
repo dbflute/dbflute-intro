@@ -2,29 +2,60 @@ package org.dbflute.intro.app.model.document.decomment;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.dbflute.exception.DfPropFileReadFailureException;
+import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
+import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 
 // TODO done cabos DfDecoMapFile by jflute (2017/07/27)
+
 /**
  * @author cabos
+ * @author hakiba
  */
 public class DfDecoMapFile {
 
     // ===================================================================================
     //                                                                                Read
     //                                                                                ====
-    public Map<String, Object> readMap(InputStream ins) {
+    public DfDecoMapPiece readPiece(String fileName, InputStream ins) {
         final MapListFile mapListFile = createMapListFile();
         try {
-            return mapListFile.readMap(ins);
+            Map<String, Object> mapList = mapListFile.readMap(ins);
+            return convertDecoMapPiece(fileName, mapList);
         } catch (Exception e) {
             throwDecoMapReadFailureException(ins, e);
             return null; // unreachable
         }
+    }
+
+    // TODO hakiba cast check by hakiba (2017/07/29)
+    @SuppressWarnings("unchecked")
+    private DfDecoMapPiece convertDecoMapPiece(String fileName, Map<String, Object> mapList) throws Exception {
+        String formatVersion = (String) mapList.get("formatVersion");
+        String author = (String) mapList.get("author");
+        LocalDateTime decommentDatetime = new HandyDate((String) mapList.get("decommentDatetime")).getLocalDateTime();
+        Boolean merged = Boolean.valueOf((String) mapList.get("merged"));
+        Map<String, Object> decoMap = (Map<String, Object>) mapList.get("decoMap");
+        DfDecoMapTablePart decoMapTablePart =
+            decoMap.entrySet().stream().map(entry -> new DfDecoMapTablePart(entry)).findFirst().orElseThrow(() ->{
+                // TODO hakiba handle exception by hakiba (2017/07/29)
+                return new IllegalStateException();
+            });
+
+        DfDecoMapPiece piece = new DfDecoMapPiece();
+        piece.setFileName(fileName);
+        piece.setFormatVersion(formatVersion);
+        piece.setAuthor(author);
+        piece.setDecommentDatetime(decommentDatetime);
+        piece.setMerged(merged);
+        piece.setDecoMap(decoMapTablePart);
+
+        return piece;
     }
 
     protected void throwDecoMapReadFailureException(InputStream ins, Exception e) {

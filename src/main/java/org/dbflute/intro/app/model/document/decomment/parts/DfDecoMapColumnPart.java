@@ -1,6 +1,7 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hakiba
@@ -13,6 +14,21 @@ public class DfDecoMapColumnPart {
     protected String previousWholeComment;
     protected long commentVersion;
     protected List<String> authorList;
+
+    public DfDecoMapColumnPart() {
+    }
+
+    @SuppressWarnings("unchecked")
+    // TODO hakiba check cast by hakiba (2017/07/29)
+    public DfDecoMapColumnPart(Map.Entry<String, Object> columnEntry) {
+        this.columnName = columnEntry.getKey();
+        final Map<String, Object> columnMap = (Map<String, Object>) columnEntry.getValue();
+        this.columnName = (String) columnMap.get("columnName");
+        this.decomment = (String) columnMap.get("decomment");
+        this.databaseComment = (String) columnMap.get("databaseComment");
+        this.commentVersion = Long.valueOf((String) columnMap.get("commentVersion"));
+        this.authorList = (List<String>) columnMap.get("authorList");
+    }
 
     public String getDecomment() {
         return decomment;
