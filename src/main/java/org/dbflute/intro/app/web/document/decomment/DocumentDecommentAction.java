@@ -51,13 +51,13 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String getAuthor() {
-        return System.getProperty("user.home");
+        return decommentPhysicalLogic.getAuthorFromGitSystem();
     }
 
     private DfDecoMapTablePart convertTablePartToDecoMapPiece(DecommentTablePart tablePart) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
-        tablePartMap.setColumn(tablePart.columns.stream().map(columnPart -> {
+        tablePartMap.setColumns(tablePart.columns.stream().map(columnPart -> {
             DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
             columnPartMap.setColumnName(columnPart.columnName);
             columnPartMap.setDecomment(columnPart.decomment);

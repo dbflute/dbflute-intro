@@ -39,7 +39,7 @@ public class DfDecoMapTablePart {
     public List<DfDecoMapColumnPart> getColumn() {
         return columns;
     }
-    public void setColumn(List<DfDecoMapColumnPart> columns) {
+    public void setColumns(List<DfDecoMapColumnPart> columns) {
         this.columns = columns;
     }
 
