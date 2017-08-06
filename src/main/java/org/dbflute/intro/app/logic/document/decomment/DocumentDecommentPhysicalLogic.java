@@ -1,19 +1,17 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
@@ -29,6 +27,8 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private DocumentAuthorLogic documentAuthorLogic;
     @Resource
     private TimeManager timeManager;
 
@@ -69,21 +69,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                              Author
     //                                                                              ======
     public String getAuthorFromGitSystem() {
-        // get user name from git
-        Runtime runtime = Runtime.getRuntime();
-        Process p;
-        try {
-            p = runtime.exec("git config user.name");
-        } catch (IOException e) {
-            throw new UncheckedIOException("fail to execute git command", e);
-        }
-
-        // read user name
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
-            return reader.readLine();
-        } catch (IOException e) {
-            throw new UncheckedIOException("fail to read execute command result", e);
-        }
+        return documentAuthorLogic.getAuthorFromGitSystem();
     }
 
     // ===================================================================================
