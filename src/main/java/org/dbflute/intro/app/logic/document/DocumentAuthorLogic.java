@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  */
 public class DocumentAuthorLogic {
 
-    private static Supplier<String> _gitAuthorSupplier = new Supplier<String>() {
+    private static final Supplier<String> _gitAuthorSupplier = new Supplier<String>() {
 
         private String _gitAuthor;
 
