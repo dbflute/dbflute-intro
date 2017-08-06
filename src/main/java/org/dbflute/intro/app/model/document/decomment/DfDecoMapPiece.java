@@ -86,6 +86,7 @@ public class DfDecoMapPiece {
         HashMap<String, Object> map = new HashMap<>();
         map.put("formatVersion", this.formatVersion);
         map.put("author", this.author);
+        map.put("decommentDatetime", this.decommentDatetime);
         map.put("merged", this.merged);
         map.put("decoMap", this.decoMap.convertMap());
         return map;
