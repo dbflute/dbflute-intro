@@ -1,6 +1,7 @@
 package org.dbflute.intro.app.web.document.decomment;
 
 import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
+import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
 
 import java.util.stream.Collectors;
 
@@ -57,17 +58,19 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapTablePart convertTablePartToDecoMapPiece(DecommentTablePart tablePart) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
-        tablePartMap.setColumns(tablePart.columns.stream().map(columnPart -> {
-            DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
-            columnPartMap.setColumnName(columnPart.columnName);
-            columnPartMap.setDecomment(columnPart.decomment);
-            columnPartMap.setDatabaseComment(columnPart.databaseComment);
-            columnPartMap.setPreviousWholeComment(columnPart.previousWholeComment);
-            columnPartMap.setCommentVersion(columnPart.commentVersion);
-            columnPartMap.setAuthorList(columnPart.authorList);
-            return columnPartMap;
-        }).collect(Collectors.toList()));
+        tablePartMap.setColumns(tablePart.columns.stream().map(this::convertColumnPartToDecoMapPiece).collect(Collectors.toList()));
         return tablePartMap;
+    }
+
+    private DfDecoMapColumnPart convertColumnPartToDecoMapPiece(DecommentColumnPart columnPart) {
+        DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
+        columnPartMap.setColumnName(columnPart.columnName);
+        columnPartMap.setDecomment(columnPart.decomment);
+        columnPartMap.setDatabaseComment(columnPart.databaseComment);
+        columnPartMap.setPreviousWholeComment(columnPart.previousWholeComment);
+        columnPartMap.setCommentVersion(columnPart.commentVersion);
+        columnPartMap.setAuthorList(columnPart.authorList);
+        return columnPartMap;
     }
 
     // ===================================================================================
