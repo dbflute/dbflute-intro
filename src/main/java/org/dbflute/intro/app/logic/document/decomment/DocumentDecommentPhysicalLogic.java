@@ -44,8 +44,7 @@ public class DocumentDecommentPhysicalLogic {
             DfDecoMapFile dfDecoMapFile = new DfDecoMapFile();
             dfDecoMapFile.writeMap(outputStream, decoMapPiece.convertMap());
         } catch (IOException e) {
-            // TODO cabos throw more detail exception (2017/07/29)
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("fail to save decomment piece map file" , e);
         }
     }
 
@@ -62,8 +61,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
-            // TODO cabos throw more detail exception (2017/07/29)
-            throw new UncheckedIOException("fail to create piece map file " + pieceMapFile.getAbsolutePath(), e);
+            throw new UncheckedIOException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(), e);
         }
     }
 
