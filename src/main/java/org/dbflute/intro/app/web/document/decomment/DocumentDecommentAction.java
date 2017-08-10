@@ -1,8 +1,5 @@
 package org.dbflute.intro.app.web.document.decomment;
 
-import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
-import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
-
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -12,6 +9,8 @@ import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
+import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -30,6 +29,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Resource
     private DocumentDecommentPhysicalLogic decommentPhysicalLogic;
 
+    // TODO cabos use _taexec and use _tanest by jflute (2017/08/10)
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
@@ -41,6 +41,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    // TODO cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece convertBodyToDecoMapPiece(DecommentPostBody body) {
         DfDecoMapPiece pieceMap = new DfDecoMapPiece();
         pieceMap.setFormatVersion("1.0");
@@ -69,6 +70,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         columnPartMap.setDatabaseComment(columnPart.databaseComment);
         columnPartMap.setPreviousWholeComment(columnPart.previousWholeComment);
         columnPartMap.setCommentVersion(columnPart.commentVersion);
+        // TODO cabos add (merge) top author by jflute (2017/08/10)
         columnPartMap.setAuthorList(columnPart.authorList);
         return columnPartMap;
     }

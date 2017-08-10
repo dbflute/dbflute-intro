@@ -42,10 +42,10 @@ public class DfDecoMapFile {
         Boolean merged = Boolean.valueOf((String) mapList.get("merged"));
         Map<String, Object> decoMap = (Map<String, Object>) mapList.get("decoMap");
         DfDecoMapTablePart decoMapTablePart =
-            decoMap.entrySet().stream().map(entry -> new DfDecoMapTablePart(entry)).findFirst().orElseThrow(() ->{
-                // TODO hakiba handle exception by hakiba (2017/07/29)
-                return new IllegalStateException();
-            });
+                decoMap.entrySet().stream().map(entry -> new DfDecoMapTablePart(entry)).findFirst().orElseThrow(() -> {
+                    // TODO hakiba handle exception by hakiba (2017/07/29)
+                    return new IllegalStateException();
+                });
 
         DfDecoMapPiece piece = new DfDecoMapPiece();
         piece.setFileName(fileName);
@@ -88,6 +88,7 @@ public class DfDecoMapFile {
         br.addItem("Decomment Map");
         br.addElement(ous);
         final String msg = br.buildExceptionMessage();
+        // TODO cabos use WriteFailure by jflute (2017/08/10)
         throw new DfPropFileReadFailureException(msg, e);
     }
 

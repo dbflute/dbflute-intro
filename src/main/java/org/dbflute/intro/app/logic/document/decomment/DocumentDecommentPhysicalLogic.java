@@ -41,10 +41,12 @@ public class DocumentDecommentPhysicalLogic {
         File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
         createPieceMapFile(pieceMapFile);
         try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
+            // TODO cabos remove 'df' from variable name by jflute (2017/08/10)
             DfDecoMapFile dfDecoMapFile = new DfDecoMapFile();
             dfDecoMapFile.writeMap(outputStream, decoMapPiece.convertMap());
+            // TODO cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (IOException e) {
-            throw new UncheckedIOException("fail to save decomment piece map file" , e);
+            throw new UncheckedIOException("fail to save decomment piece map file", e);
         }
     }
 

@@ -6,11 +6,13 @@ import javax.validation.Valid;
 
 import org.lastaflute.web.validation.Required;
 
+// TODO cabos rename DecommentSaveBody by jflute (2017/08/10)
 /**
  * @author cabos
  */
 public class DecommentPostBody {
 
+    // TODO cabos system parameter, use (groups = ClientError.class) _lavc... by jflute (2017/08/10)
     @Required
     public Boolean merged;
     @Required
@@ -21,7 +23,7 @@ public class DecommentPostBody {
 
         @Required
         public String tableName;
-        // TODO done cabos List<DecommentColumnPart> by jflute (2017/07/27)
+        // done cabos List<DecommentColumnPart> by jflute (2017/07/27)
         @Valid
         @Required
         public List<DecommentColumnPart> columns;
@@ -32,9 +34,9 @@ public class DecommentPostBody {
             public String columnName;
             @Required
             public String decomment;
-            // TODO done cabos not required by jflute (2017/07/27)
+            // done cabos not required by jflute (2017/07/27)
             public String databaseComment;
-            // TODO done cabos not required by jflute (2017/07/27)
+            // done cabos not required by jflute (2017/07/27)
             public String previousWholeComment;
             @Required
             public Long commentVersion;
