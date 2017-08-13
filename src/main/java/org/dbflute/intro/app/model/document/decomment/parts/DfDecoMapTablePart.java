@@ -18,9 +18,10 @@ public class DfDecoMapTablePart {
     protected List<DfDecoMapColumnPart> columns;
 
     // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
-    public DfDecoMapTablePart() {}
+    //                                                                         Constructor
+    //                                                                         ===========
+    public DfDecoMapTablePart() {
+    }
 
     // TODO hakiba check cast by hakiba (2017/07/29)
     @SuppressWarnings("unchecked")
@@ -30,13 +31,16 @@ public class DfDecoMapTablePart {
         this.columns = columnPartSet.stream().map(columnEntry -> new DfDecoMapColumnPart(columnEntry)).collect(Collectors.toList());
     }
 
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
     public String getTableName() {
         return tableName;
     }
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-    public List<DfDecoMapColumnPart> getColumn() {
+    public List<DfDecoMapColumnPart> getColumns() {
         return columns;
     }
     public void setColumns(List<DfDecoMapColumnPart> columns) {

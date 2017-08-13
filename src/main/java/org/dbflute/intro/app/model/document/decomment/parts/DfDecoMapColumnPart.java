@@ -21,8 +21,8 @@ public class DfDecoMapColumnPart {
     protected List<String> authorList;
 
     // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
+    //                                                                         Constructor
+    //                                                                         ===========
     public DfDecoMapColumnPart() {
     }
 
@@ -38,6 +38,9 @@ public class DfDecoMapColumnPart {
         this.authorList = (List<String>) columnMap.get("authorList");
     }
 
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
     public String getColumnName() {
         return columnName;
     }
