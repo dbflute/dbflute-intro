@@ -51,10 +51,14 @@ public class DfDecoMapTablePart {
     //                                                                           Converter
     //                                                                           =========
     public Map<String, Object> convertMap() {
-        Map<String, Map<String, Object>> columnNameMap =
-            columns.stream().collect(Collectors.toMap(column -> column.columnName, column -> column.convertMap(), (c1, c2) -> c1));
-        HashMap<String, Object> map = new HashMap<>();
-        map.put(this.tableName, columnNameMap);
+        Map<String, Object> map = new HashMap<>();
+        map.put(tableName, columns.stream().map(column -> column.convertMap()).collect(Collectors.toList()));
+        return map;
+    }
+
+    public Map<String, Object> convertPieceMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(tableName, columns.stream().map(column -> column.convertPieceMap()).collect(Collectors.toList()));
         return map;
     }
 }

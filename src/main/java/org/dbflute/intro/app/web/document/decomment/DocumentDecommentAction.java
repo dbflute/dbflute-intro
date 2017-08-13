@@ -16,6 +16,7 @@ import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 // TODO done cabos decoment to decomment by jflute (2017/07/27)
+
 /**
  * @author cabos
  */
@@ -66,12 +67,14 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapColumnPart convertColumnPartToDecoMapPiece(DecommentColumnPart columnPart) {
         DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
         columnPartMap.setColumnName(columnPart.columnName);
-        columnPartMap.setDecomment(columnPart.decomment);
-        columnPartMap.setDatabaseComment(columnPart.databaseComment);
-        columnPartMap.setPreviousWholeComment(columnPart.previousWholeComment);
-        columnPartMap.setCommentVersion(columnPart.commentVersion);
+        DfDecoMapColumnPart.ColumnProperty columnProperty = new DfDecoMapColumnPart.ColumnProperty();
+        columnProperty.setDecomment(columnPart.decomment);
+        columnProperty.setDatabaseComment(columnPart.databaseComment);
+        columnProperty.setPreviousWholeComment(columnPart.previousWholeComment);
+        columnProperty.setCommentVersion(columnPart.commentVersion);
         // TODO cabos add (merge) top author by jflute (2017/08/10)
-        columnPartMap.setAuthorList(columnPart.authorList);
+        columnProperty.setAuthorList(columnPart.authorList);
+        columnPartMap.setProperty(columnProperty);
         return columnPartMap;
     }
 

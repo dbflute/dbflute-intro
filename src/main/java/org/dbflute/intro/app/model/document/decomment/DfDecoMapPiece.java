@@ -101,7 +101,7 @@ public class DfDecoMapPiece {
         map.put("author", this.author);
         map.put("decommentDatetime", this.decommentDatetime);
         map.put("merged", this.merged);
-        map.put("decoMap", this.decoMap.convertMap());
+        map.put("decoMap", this.decoMap.convertPieceMap());
         return map;
     }
 }
