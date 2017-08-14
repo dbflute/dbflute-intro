@@ -25,7 +25,7 @@ public class DfDecoMapColumnPart {
         public ColumnProperty() {
         }
 
-        public ColumnProperty(Map columnEntry) {
+        public ColumnProperty(Map<String, Object> columnEntry) {
             this.decomment = (String) columnEntry.get("decomment");
             this.databaseComment = (String) columnEntry.get("databaseComment");
             this.previousWholeComment = (String) columnEntry.get("previousWholeComment");
@@ -85,19 +85,36 @@ public class DfDecoMapColumnPart {
     protected List<ColumnProperty> properties;
 
     // ===================================================================================
-    //                                                                         Constructor
-    //                                                                         ===========
-    public DfDecoMapColumnPart() {
+    //                                                                           Converter
+    //                                                                           =========
+    public static DfDecoMapColumnPart createPieceColumnPart(Map.Entry<String, Object> columnEntry) {
+        //noinspection unchecked
+        ColumnProperty property = new ColumnProperty((Map<String, Object>) columnEntry.getValue());
+
+        DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+        column.setColumnName(columnEntry.getKey());
+        column.setProperties(Collections.singletonList(property));
+        return column;
     }
 
-    // done hakiba check cast by hakiba (2017/07/29)
-    public DfDecoMapColumnPart(Map.Entry<String, Object> columnEntry) {
-        this.columnName = columnEntry.getKey();
-        this.properties = ((List<?>) columnEntry.getValue()).stream()
-            .filter(propertiesObject -> propertiesObject instanceof Map<?, ?>)
-            .map(propertiesObject -> (Map<?, ?>) propertiesObject)
+    public static DfDecoMapColumnPart createPickupColumnPart(Map.Entry<String, Object> columnEntry) {
+        final List<ColumnProperty> properties = ((List<?>) columnEntry.getValue()).stream()
+            .map(propertiesObject -> (Map<String, Object>) propertiesObject)
             .map(propertiesMap -> new ColumnProperty(propertiesMap))
             .collect(Collectors.toList());
+
+        DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+        column.setColumnName(columnEntry.getKey());
+        column.setProperties(properties);
+        return column;
+    }
+
+    public Map<String, Object> convertPieceMap() {
+        return properties.stream().map(property -> property.convertMap()).findFirst().orElse(null);
+    }
+
+    public List<Map<String, Object>> convertPickupMap() {
+        return properties.stream().map(property -> property.convertMap()).collect(Collectors.toList());
     }
 
     // ===================================================================================
@@ -116,24 +133,5 @@ public class DfDecoMapColumnPart {
 
     public void setProperties(List<ColumnProperty> properties) {
         this.properties = properties;
-    }
-
-    public void setProperty(ColumnProperty property) {
-        this.properties = Collections.singletonList(property);
-    }
-
-    // ===================================================================================
-    //                                                                           Converter
-    //                                                                           =========
-    public Map<String, Object> convertMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(columnName, properties.stream().map(property -> property.convertMap()).collect(Collectors.toList()));
-        return map;
-    }
-
-    public Map<String, Object> convertPieceMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(columnName, properties.stream().map(property -> property.convertMap()).findFirst().orElse(new HashMap<>()));
-        return map;
     }
 }

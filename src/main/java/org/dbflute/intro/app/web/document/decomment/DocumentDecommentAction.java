@@ -1,5 +1,6 @@
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author cabos
+ * @author hakiba
  */
 public class DocumentDecommentAction extends IntroBaseAction {
 
@@ -67,14 +69,14 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapColumnPart convertColumnPartToDecoMapPiece(DecommentColumnPart columnPart) {
         DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
         columnPartMap.setColumnName(columnPart.columnName);
-        DfDecoMapColumnPart.ColumnProperty columnProperty = new DfDecoMapColumnPart.ColumnProperty();
-        columnProperty.setDecomment(columnPart.decomment);
-        columnProperty.setDatabaseComment(columnPart.databaseComment);
-        columnProperty.setPreviousWholeComment(columnPart.previousWholeComment);
-        columnProperty.setCommentVersion(columnPart.commentVersion);
+        DfDecoMapColumnPart.ColumnProperty property = new DfDecoMapColumnPart.ColumnProperty();
+        property.setDecomment(columnPart.decomment);
+        property.setDatabaseComment(columnPart.databaseComment);
+        property.setPreviousWholeComment(columnPart.previousWholeComment);
+        property.setCommentVersion(columnPart.commentVersion);
         // TODO cabos add (merge) top author by jflute (2017/08/10)
-        columnProperty.setAuthorList(columnPart.authorList);
-        columnPartMap.setProperty(columnProperty);
+        property.setAuthorList(columnPart.authorList);
+        columnPartMap.setProperties(Collections.singletonList(property));
         return columnPartMap;
     }
 

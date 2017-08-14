@@ -1,13 +1,11 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -19,6 +17,7 @@ import org.lastaflute.core.time.TimeManager;
 
 /**
  * @author cabos
+ * @author hakiba
  */
 public class DocumentDecommentPhysicalLogic {
 
@@ -67,6 +66,23 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
+    public List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
+        String dirPath = buildDecommentPieceDirPath(clientProject);
+        try {
+            return Files.list(Paths.get(dirPath)).map(path -> {
+                try {
+                    String fileName = path.toFile().getName();
+                    DfDecoMapFile decoMapFile = new DfDecoMapFile();
+                    return decoMapFile.readPiece(fileName, Files.newInputStream(path));
+                } catch (IOException e) {
+                    throw new UncheckedIOException("fail to read decomment piece map file. path : " + path.toAbsolutePath(), e);
+                }
+            }).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new UncheckedIOException("fail to read decomment piece map directory. path : " + dirPath, e);
+        }
+    }
+
     // ===================================================================================
     //                                                                              Author
     //                                                                              ======
@@ -77,11 +93,15 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
+    private String buildDecommentPieceDirPath(String clientProject) {
+        return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "piece");
+    }
+
     private String buildDecommentPiecePath(String clientProject, String fileName) {
         return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "piece", fileName);
     }
 
-    private String buildDecommentPickupPath(String clientProject) {
+    private String buildDecommentPickupDirPath(String clientProject) {
         return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "pickup");
     }
 }

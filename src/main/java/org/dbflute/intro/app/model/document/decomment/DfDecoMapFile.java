@@ -26,26 +26,28 @@ public class DfDecoMapFile {
         final MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> mapList = mapListFile.readMap(ins);
-            return convertDecoMapPiece(fileName, mapList);
+            return createDecoMapPiece(fileName, mapList);
         } catch (Exception e) {
             throwDecoMapReadFailureException(ins, e);
             return null; // unreachable
         }
     }
 
-    // TODO hakiba cast check by hakiba (2017/07/29)
-    @SuppressWarnings("unchecked")
-    private DfDecoMapPiece convertDecoMapPiece(String fileName, Map<String, Object> mapList) throws Exception {
+    // done hakiba cast check by hakiba (2017/07/29)
+    private DfDecoMapPiece createDecoMapPiece(String fileName, Map<String, Object> mapList) throws Exception {
         String formatVersion = (String) mapList.get("formatVersion");
         String author = (String) mapList.get("author");
         LocalDateTime decommentDatetime = new HandyDate((String) mapList.get("decommentDatetime")).getLocalDateTime();
         Boolean merged = Boolean.valueOf((String) mapList.get("merged"));
-        Map<String, Object> decoMap = (Map<String, Object>) mapList.get("decoMap");
-        DfDecoMapTablePart decoMapTablePart =
-                decoMap.entrySet().stream().map(entry -> new DfDecoMapTablePart(entry)).findFirst().orElseThrow(() -> {
-                    // TODO hakiba handle exception by hakiba (2017/07/29)
-                    return new IllegalStateException();
-                });
+        @SuppressWarnings("unchecked")
+        DfDecoMapTablePart decoMapTablePart = ((Map<String, Object>) mapList.get("decoMap")).entrySet()
+            .stream()
+            .map(entry -> DfDecoMapTablePart.createPieceTablePart(entry))
+            .findFirst()
+            .orElseThrow(() -> {
+                // TODO hakiba handle exception by hakiba (2017/07/29)
+                return new IllegalStateException();
+            });
 
         DfDecoMapPiece piece = new DfDecoMapPiece();
         piece.setFileName(fileName);
