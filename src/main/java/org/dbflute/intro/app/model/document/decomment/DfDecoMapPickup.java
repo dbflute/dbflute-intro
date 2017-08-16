@@ -1,7 +1,11 @@
 package org.dbflute.intro.app.model.document.decomment;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.dbflute.helper.mapstring.MapListString;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 
 /**
@@ -10,10 +14,50 @@ import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
  */
 public class DfDecoMapPickup {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     protected String fileName;
     protected String formatVersion;
     protected List<DfDecoMapTablePart> decoMap;
 
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; decoMap = map:{
+    //         ; MEMBER = map:{
+    //             ; MEMBER_NAME = list:{
+    //                 ; map:{
+    //                     ; decomment = piari
+    //                     ; databaseComment = sea
+    //                     ; previousWholeComment = seasea
+    //                     ; commentVersion = 1
+    //                     ; authorList = list:{ jflute ; cabos }
+    //                 }
+    //                 ; map:{
+    //                     ; decomment = bonvo
+    //                     ; databaseComment = sea
+    //                     ; previousWholeComment = seasea
+    //                     ; commentVersion = 1
+    //                     ; authorList = list:{ jflute ; cabos }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    public Map<String, Object> convertMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("formatVersion", formatVersion);
+        map.put("decoMap", decoMap.stream()
+            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1)));
+        return map;
+    }
+
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
     public String getFileName() {
         return fileName;
     }
@@ -31,5 +75,13 @@ public class DfDecoMapPickup {
     }
     public void setDecoMap(List<DfDecoMapTablePart> decoMap) {
         this.decoMap = decoMap;
+    }
+
+    // ===================================================================================
+    //                                                                            Override
+    //                                                                            ========
+    @Override
+    public String toString() {
+        return new MapListString().buildMapString(this.convertMap());
     }
 }

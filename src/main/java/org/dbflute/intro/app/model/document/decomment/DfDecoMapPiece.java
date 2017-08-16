@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dbflute.helper.mapstring.MapListString;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 
 /**
@@ -103,5 +104,13 @@ public class DfDecoMapPiece {
         map.put("merged", this.merged);
         map.put("decoMap", this.decoMap.convertPieceMap());
         return map;
+    }
+
+    // ===================================================================================
+    //                                                                            Override
+    //                                                                            ========
+    @Override
+    public String toString() {
+        return new MapListString().buildMapString(this.convertMap());
     }
 }

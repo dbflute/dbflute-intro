@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
+import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.lastaflute.core.time.TimeManager;
 
@@ -20,6 +21,11 @@ import org.lastaflute.core.time.TimeManager;
  * @author hakiba
  */
 public class DocumentDecommentPhysicalLogic {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String PICKUP_FILE_NAME = "decomment-pickup.dfmap";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -66,6 +72,13 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
+    public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
+        List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject);
+        DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
+        DfDecoMapFile decoMapFile = new DfDecoMapFile();
+        return decoMapFile.merge(pickup, pieces);
+    }
+
     public List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
         String dirPath = buildDecommentPieceDirPath(clientProject);
         try {
@@ -83,6 +96,15 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
+    public DfDecoMapPickup readDecommentPickupMap(String clientProject) {
+        String filePath = buildDecommentPickupPath(clientProject);
+        try {
+            DfDecoMapFile decoMapFile = new DfDecoMapFile();
+            return decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath)));
+        } catch (IOException e) {
+            throw new UncheckedIOException("fail to read decomment pickup map. path : " + filePath, e);
+        }
+    }
     // ===================================================================================
     //                                                                              Author
     //                                                                              ======
@@ -101,7 +123,7 @@ public class DocumentDecommentPhysicalLogic {
         return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "piece", fileName);
     }
 
-    private String buildDecommentPickupDirPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "pickup");
+    private String buildDecommentPickupPath(String clientProject) {
+        return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "pickup", PICKUP_FILE_NAME);
     }
 }
