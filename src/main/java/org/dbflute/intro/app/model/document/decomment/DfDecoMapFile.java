@@ -46,14 +46,12 @@ public class DfDecoMapFile {
         Boolean merged = Boolean.valueOf((String) map.get("merged"));
         @SuppressWarnings("unchecked")
         Map<String, Object> decoMap = (Map<String, Object>) map.get("decoMap");
-        DfDecoMapTablePart tablePart = decoMap.entrySet()
-            .stream()
-            .map(tableEntry -> DfDecoMapTablePart.createPieceTablePart(tableEntry))
-            .findFirst()
-            .orElseThrow(() -> {
-                // TODO hakiba handle exception by hakiba (2017/07/29)
-                return new IllegalStateException();
-            });
+        DfDecoMapTablePart tablePart =
+                decoMap.entrySet().stream().map(tableEntry -> DfDecoMapTablePart.createPieceTablePart(tableEntry)).findFirst().orElseThrow(
+                        () -> {
+                            // TODO hakiba handle exception by hakiba (2017/07/29)
+                            return new IllegalStateException();
+                        });
 
         DfDecoMapPiece piece = new DfDecoMapPiece();
         piece.setFileName(fileName);
@@ -66,6 +64,7 @@ public class DfDecoMapFile {
         return piece;
     }
 
+    // TODO hakiba sub tag comment by jflute (2017/08/17)
     public DfDecoMapPickup readPickup(String fileName, InputStream ins) {
         MapListFile mapListFile = createMapListFile();
         try {
@@ -76,14 +75,14 @@ public class DfDecoMapFile {
             return null; // unreachable
         }
     }
+
     private DfDecoMapPickup mappingToDecoMapPickup(String fileName, Map<String, Object> map) {
         String formatVersion = (String) map.get("formatVersion");
         @SuppressWarnings("unchecked")
         Map<String, Object> decoMap = (Map<String, Object>) map.get("decoMap");
-        List<DfDecoMapTablePart> tablePartList = decoMap.entrySet()
-            .stream()
-            .map(tableEntry -> DfDecoMapTablePart.createPickupTablePart(tableEntry))
-            .collect(Collectors.toList());
+        List<DfDecoMapTablePart> tablePartList =
+                decoMap.entrySet().stream().map(tableEntry -> DfDecoMapTablePart.createPickupTablePart(tableEntry)).collect(
+                        Collectors.toList());
 
         DfDecoMapPickup pickup = new DfDecoMapPickup();
         pickup.setFileName(fileName);
@@ -131,23 +130,23 @@ public class DfDecoMapFile {
     //                                                                               =====
     public DfDecoMapPickup merge(DfDecoMapPickup pickup, List<DfDecoMapPiece> pieces) {
         final List<DfDecoMapTablePart> allTablePartList =
-            Stream.concat(pickup.getDecoMap().stream(), pieces.stream().map(dfDecoMapPiece -> dfDecoMapPiece.getDecoMap()))
-                .collect(Collectors.toList());
+                Stream.concat(pickup.getDecoMap().stream(), pieces.stream().map(dfDecoMapPiece -> dfDecoMapPiece.getDecoMap()))
+                        .collect(Collectors.toList());
         final Set<String> allTableNameSet =
-            allTablePartList.stream().map(tablePart -> tablePart.getTableName()).collect(Collectors.toSet());
+                allTablePartList.stream().map(tablePart -> tablePart.getTableName()).collect(Collectors.toSet());
         final Set<String> allColumnNameSet = allTablePartList.stream()
-            .flatMap(tablePart -> tablePart.getColumns().stream())
-            .map(columnPart -> columnPart.getColumnName())
-            .collect(Collectors.toSet());
+                .flatMap(tablePart -> tablePart.getColumns().stream())
+                .map(columnPart -> columnPart.getColumnName())
+                .collect(Collectors.toSet());
 
         final List<DfDecoMapTablePart> mergedDecoMap = allTableNameSet.stream().map(tableName -> {
             List<DfDecoMapColumnPart> mergedColumnPartList = allColumnNameSet.stream().map(columnName -> {
                 List<DfDecoMapColumnPart.ColumnProperty> mergedProperties = allTablePartList.stream()
-                    .filter(tablePart -> tableName.equals(tablePart.getTableName()))
-                    .flatMap(tablePart -> tablePart.getColumns().stream())
-                    .filter(columnPart -> columnName.equals(columnPart.getColumnName()))
-                    .flatMap(columnPart -> columnPart.getProperties().stream())
-                    .collect(Collectors.toList());
+                        .filter(tablePart -> tableName.equals(tablePart.getTableName()))
+                        .flatMap(tablePart -> tablePart.getColumns().stream())
+                        .filter(columnPart -> columnName.equals(columnPart.getColumnName()))
+                        .flatMap(columnPart -> columnPart.getProperties().stream())
+                        .collect(Collectors.toList());
 
                 DfDecoMapColumnPart mergedColumn = new DfDecoMapColumnPart();
                 mergedColumn.setColumnName(columnName);
@@ -167,6 +166,7 @@ public class DfDecoMapFile {
         mergedPickup.setDecoMap(mergedDecoMap);
         return mergedPickup;
     }
+
     // ===================================================================================
     //                                                                        MapList File
     //                                                                        ============

@@ -37,7 +37,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
-    // TODO done cabos post to save, get to diff by jflute (2017/07/27)
+    // done cabos post to save, get to diff by jflute (2017/07/27)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentPostBody body) {
         validate(body, messages -> {});
@@ -84,6 +84,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                          Pickup Map
     //                                                                          ==========
+    // TODO hakiba rename piece to pickup by jflute (2017/08/17)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> piece(String projectName) {
         DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedDecommentPickupMap(projectName);

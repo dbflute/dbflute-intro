@@ -1,15 +1,15 @@
 package org.dbflute.intro.app.web.document.decomment;
 
-import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
-import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
-
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.google.gson.GsonBuilder;
+import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
+import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
+
+import com.google.gson.GsonBuilder;
 
 /**
  * @author cabos
@@ -65,6 +65,11 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         JsonResponse<DecommentPickupResult> result = action.piece("introdb");
 
         // ## Assert ##
+        // TODO hakiba like this by jflute (2017/08/17)
+        //showJson(response);
+        //TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
+        //DecommentPickupResult result = jsonData.getJsonResult();
+
         // TODO hakiba fix assertion by hakiba (2017/08/17)
         String prettyJson = new GsonBuilder().setPrettyPrinting().create().toJson(result);
         log(prettyJson);

@@ -14,6 +14,8 @@ public class DecommentPickupResult {
     // ===================================================================================
     //                                                                         Inner Class
     //                                                                         ===========
+    // TODO hakiba move it under tables by jflute (2017/08/17)
+    // TODO hakiba validator annotation (Required only) by jflute (2017/08/17)
     public static class TablePart {
         public String tableName;
         public List<ColumnPart> columns;
@@ -32,6 +34,7 @@ public class DecommentPickupResult {
                 this.properties = columnPart.getProperties().stream().map(property -> new Property(property)).collect(Collectors.toList());
             }
 
+            // TODO hakiba PropertyPart by jflute (2017/08/17)
             public static class Property {
                 public String decomment;
                 public String databaseComment;

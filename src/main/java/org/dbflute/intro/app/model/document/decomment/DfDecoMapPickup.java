@@ -50,8 +50,8 @@ public class DfDecoMapPickup {
     public Map<String, Object> convertMap() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("formatVersion", formatVersion);
-        map.put("decoMap", decoMap.stream()
-            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1)));
+        map.put("decoMap", decoMap.stream().collect(
+                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1)));
         return map;
     }
 
@@ -61,22 +61,28 @@ public class DfDecoMapPickup {
     public String getFileName() {
         return fileName;
     }
+
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
     public String getFormatVersion() {
         return formatVersion;
     }
+
     public void setFormatVersion(String formatVersion) {
         this.formatVersion = formatVersion;
     }
+
     public List<DfDecoMapTablePart> getDecoMap() {
         return decoMap;
     }
+
     public void setDecoMap(List<DfDecoMapTablePart> decoMap) {
         this.decoMap = decoMap;
     }
 
+    // TODO hakiba move to before Accessor by jflute (2017/08/17)
     // ===================================================================================
     //                                                                            Override
     //                                                                            ========

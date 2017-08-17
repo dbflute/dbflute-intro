@@ -1,6 +1,10 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
@@ -72,6 +76,7 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
+    // TODO hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject);
         DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
@@ -79,6 +84,7 @@ public class DocumentDecommentPhysicalLogic {
         return decoMapFile.merge(pickup, pieces);
     }
 
+    // TODO hakoba public on demand, so private now by jflute (2017/08/17)
     public List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
         String dirPath = buildDecommentPieceDirPath(clientProject);
         try {
@@ -105,6 +111,7 @@ public class DocumentDecommentPhysicalLogic {
             throw new UncheckedIOException("fail to read decomment pickup map. path : " + filePath, e);
         }
     }
+
     // ===================================================================================
     //                                                                              Author
     //                                                                              ======

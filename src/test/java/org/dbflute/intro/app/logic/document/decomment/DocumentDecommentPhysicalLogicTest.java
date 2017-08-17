@@ -19,6 +19,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         inject(logic);
 
         // ## Act ##
+        // TODO hakiba use testdb by jflute (2017/08/17)
         String clientProject = "introdb";
         List<DfDecoMapPiece> pieces = logic.readAllDecommentPieceMap(clientProject);
 
