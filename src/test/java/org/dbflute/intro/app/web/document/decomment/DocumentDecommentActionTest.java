@@ -6,8 +6,10 @@ import static org.dbflute.intro.app.web.document.decomment.DecommentPostBody.Dec
 import java.util.Arrays;
 import java.util.Collections;
 
+import com.google.gson.GsonBuilder;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
+import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author cabos
@@ -51,5 +53,20 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         columnPart.databaseComment = "rime";
         columnPart.previousWholeComment = "lemon";
         return columnPart;
+    }
+
+    @Test
+    public void test_read_PickupResult() throws Exception {
+        // ## Arrange ##
+        DocumentDecommentAction action = new DocumentDecommentAction();
+        inject(action);
+
+        // ## Act ##
+        JsonResponse<DecommentPickupResult> result = action.piece("introdb");
+
+        // ## Assert ##
+        // TODO hakiba fix assertion by hakiba (2017/08/17)
+        String prettyJson = new GsonBuilder().setPrettyPrinting().create().toJson(result);
+        log(prettyJson);
     }
 }

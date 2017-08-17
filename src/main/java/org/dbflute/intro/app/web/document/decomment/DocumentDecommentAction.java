@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
+import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
@@ -84,8 +85,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     //                                                                          Pickup Map
     //                                                                          ==========
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> piece(String projectName) {
-        // TODO hakiba create new decomment response (2017/07/20)
-        return JsonResponse.asEmptyBody();
+    public JsonResponse<DecommentPickupResult> piece(String projectName) {
+        DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedDecommentPickupMap(projectName);
+        return asJson(new DecommentPickupResult(dfDecoMapPickup.getDecoMap()));
     }
 }
