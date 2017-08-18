@@ -56,6 +56,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     @Test
     public void test_read_PickupResult() throws Exception {
         // ## Arrange ##
+        // TODO hakiba put test data in test/resources by hakiba (2017/08/18)
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);
 

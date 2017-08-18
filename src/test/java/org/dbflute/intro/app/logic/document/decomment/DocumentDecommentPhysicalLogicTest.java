@@ -11,6 +11,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
 
     @Test
     public void test_readMergedDecommentPickupMap() {
+        // TODO hakiba put test data in test/resources by hakiba (2017/08/18)
         // ## Arrange ##
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
