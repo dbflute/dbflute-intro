@@ -1,10 +1,6 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
@@ -76,7 +72,10 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    // TODO hakiba tag comment: Pickup Map by jflute (2017/08/17)
+    // ===================================================================================
+    //                                                                          Pickup Map
+    //                                                                          ==========
+    // TODO done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject);
         DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
@@ -84,8 +83,8 @@ public class DocumentDecommentPhysicalLogic {
         return decoMapFile.merge(pickup, pieces);
     }
 
-    // TODO hakoba public on demand, so private now by jflute (2017/08/17)
-    public List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
+    // TODO done hakoba public on demand, so private now by jflute (2017/08/17)
+    private List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
         String dirPath = buildDecommentPieceDirPath(clientProject);
         try {
             return Files.list(Paths.get(dirPath)).map(path -> {
@@ -102,7 +101,7 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    public DfDecoMapPickup readDecommentPickupMap(String clientProject) {
+    private DfDecoMapPickup readDecommentPickupMap(String clientProject) {
         String filePath = buildDecommentPickupPath(clientProject);
         try {
             DfDecoMapFile decoMapFile = new DfDecoMapFile();

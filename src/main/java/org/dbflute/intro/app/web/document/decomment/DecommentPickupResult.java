@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author hakiba
@@ -12,12 +13,19 @@ import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 public class DecommentPickupResult {
 
     // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    public List<TablePart> tables;
+
+    // ===================================================================================
     //                                                                         Inner Class
     //                                                                         ===========
-    // TODO hakiba move it under tables by jflute (2017/08/17)
-    // TODO hakiba validator annotation (Required only) by jflute (2017/08/17)
+    // TODO done hakiba move it under tables by jflute (2017/08/17)
+    // TODO done hakiba validator annotation (Required only) by jflute (2017/08/17)
     public static class TablePart {
+        @Required
         public String tableName;
+        @Required
         public List<ColumnPart> columns;
 
         public TablePart(DfDecoMapTablePart tablePart) {
@@ -26,23 +34,31 @@ public class DecommentPickupResult {
         }
 
         public static class ColumnPart {
+            @Required
             public String columnName;
-            public List<Property> properties;
+            @Required
+            public List<PropertyPart> properties;
 
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
-                this.properties = columnPart.getProperties().stream().map(property -> new Property(property)).collect(Collectors.toList());
+                this.properties =
+                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
 
-            // TODO hakiba PropertyPart by jflute (2017/08/17)
-            public static class Property {
+            // TODO done hakiba PropertyPart by jflute (2017/08/17)
+            public static class PropertyPart {
+                @Required
                 public String decomment;
+                @Required
                 public String databaseComment;
+                @Required
                 public String previousWholeComment;
+                @Required
                 public Long commentVersion;
+                @Required
                 public List<String> authorList;
 
-                public Property(DfDecoMapColumnPart.ColumnProperty property) {
+                public PropertyPart(DfDecoMapColumnPart.ColumnPropertyPart property) {
                     this.decomment = property.getDecomment();
                     this.databaseComment = property.getDatabaseComment();
                     this.previousWholeComment = property.getPreviousWholeComment();
@@ -52,11 +68,6 @@ public class DecommentPickupResult {
             }
         }
     }
-
-    // ===================================================================================
-    //                                                                           Attribute
-    //                                                                           =========
-    public List<TablePart> tables;
 
     // ===================================================================================
     //                                                                         Constructor

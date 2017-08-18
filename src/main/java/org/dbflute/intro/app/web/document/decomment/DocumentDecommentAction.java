@@ -70,7 +70,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapColumnPart convertColumnPartToDecoMapPiece(DecommentColumnPart columnPart) {
         DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
         columnPartMap.setColumnName(columnPart.columnName);
-        DfDecoMapColumnPart.ColumnProperty property = new DfDecoMapColumnPart.ColumnProperty();
+        DfDecoMapColumnPart.ColumnPropertyPart property = new DfDecoMapColumnPart.ColumnPropertyPart();
         property.setDecomment(columnPart.decomment);
         property.setDatabaseComment(columnPart.databaseComment);
         property.setPreviousWholeComment(columnPart.previousWholeComment);
@@ -84,9 +84,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                          Pickup Map
     //                                                                          ==========
-    // TODO hakiba rename piece to pickup by jflute (2017/08/17)
+    // TODO done hakiba rename piece to pickup by jflute (2017/08/17)
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DecommentPickupResult> piece(String projectName) {
+    public JsonResponse<DecommentPickupResult> pickup(String projectName) {
         DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedDecommentPickupMap(projectName);
         return asJson(new DecommentPickupResult(dfDecoMapPickup.getDecoMap()));
     }

@@ -9,8 +9,6 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
 
-import com.google.gson.GsonBuilder;
-
 /**
  * @author cabos
  */
@@ -62,16 +60,15 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<DecommentPickupResult> result = action.piece("introdb");
+        JsonResponse<DecommentPickupResult> response = action.pickup("introdb");
 
         // ## Assert ##
-        // TODO hakiba like this by jflute (2017/08/17)
+        // TODO done hakiba like this by jflute (2017/08/17)
         //showJson(response);
         //TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
         //DecommentPickupResult result = jsonData.getJsonResult();
 
-        // TODO hakiba fix assertion by hakiba (2017/08/17)
-        String prettyJson = new GsonBuilder().setPrettyPrinting().create().toJson(result);
-        log(prettyJson);
+        showJson(response);
+        validateJsonData(response);
     }
 }
