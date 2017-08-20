@@ -14,6 +14,7 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
+import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
 import org.lastaflute.core.time.TimeManager;
 
 /**
@@ -46,12 +47,15 @@ public class DocumentDecommentPhysicalLogic {
         File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
         createPieceMapFile(pieceMapFile);
         try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
-            // TODO cabos remove 'df' from variable name by jflute (2017/08/10)
-            DfDecoMapFile dfDecoMapFile = new DfDecoMapFile();
-            dfDecoMapFile.writeMap(outputStream, decoMapPiece.convertMap());
-            // TODO cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
+            // TODO done cabos remove 'df' from variable name by jflute (2017/08/10)
+            DfDecoMapFile decoMapFile = new DfDecoMapFile();
+            decoMapFile.writeMap(outputStream, decoMapPiece.convertMap());
+            // TODO done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
+        } catch (FileNotFoundException | SecurityException e) {
+            throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
+                pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
-            throw new UncheckedIOException("fail to save decomment piece map file", e);
+            throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -68,7 +72,8 @@ public class DocumentDecommentPhysicalLogic {
             Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
-            throw new UncheckedIOException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(), e);
+            throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
+                pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -115,7 +120,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                              Author
     //                                                                              ======
     public String getAuthorFromGitSystem() {
-        return documentAuthorLogic.getAuthorFromGitSystem();
+        return documentAuthorLogic.getAuthor();
     }
 
     // ===================================================================================

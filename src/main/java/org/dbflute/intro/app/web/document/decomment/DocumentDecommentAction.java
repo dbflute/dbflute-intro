@@ -1,6 +1,10 @@
 package org.dbflute.intro.app.web.document.decomment;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -11,8 +15,8 @@ import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
-import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
+import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
+import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -33,26 +37,30 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Resource
     private DocumentDecommentPhysicalLogic decommentPhysicalLogic;
 
-    // TODO cabos use _taexec and use _tanest by jflute (2017/08/10)
+    // TODO done cabos use _taexec and use _tanest by jflute (2017/08/10)
     // ===================================================================================
-    //                                                                           Piece Map
-    //                                                                           =========
+    //                                                                             Execute
+    //                                                                             =======
+    // -----------------------------------------------------
+    //                                             Piece Map
+    //                                             ---------
     // done cabos post to save, get to diff by jflute (2017/07/27)
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> save(String projectName, DecommentPostBody body) {
+    public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
         validate(body, messages -> {});
-        decommentPhysicalLogic.saveDecommentPieceMap(projectName, convertBodyToDecoMapPiece(body));
+        decommentPhysicalLogic.saveDecommentPieceMap(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
 
-    // TODO cabos use mappingTo... by jflute (2017/08/10)
-    private DfDecoMapPiece convertBodyToDecoMapPiece(DecommentPostBody body) {
+    // TODO done cabos use mappingTo... by jflute (2017/08/10)
+    private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
+        String author = getAuthor();
         DfDecoMapPiece pieceMap = new DfDecoMapPiece();
         pieceMap.setFormatVersion("1.0");
-        pieceMap.setAuthor(getAuthor());
+        pieceMap.setAuthor(author);
         pieceMap.setDecommentDatetime(timeManager.currentDateTime());
         pieceMap.setMerged(body.merged);
-        pieceMap.setDecoMap(convertTablePartToDecoMapPiece(body.table));
+        pieceMap.setDecoMap(mappingToDecoMapPiece(body.table, author));
         return pieceMap;
     }
 
@@ -60,14 +68,15 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return decommentPhysicalLogic.getAuthorFromGitSystem();
     }
 
-    private DfDecoMapTablePart convertTablePartToDecoMapPiece(DecommentTablePart tablePart) {
+    private DfDecoMapTablePart mappingToDecoMapPiece(DecommentTablePart tablePart, String author) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
-        tablePartMap.setColumns(tablePart.columns.stream().map(this::convertColumnPartToDecoMapPiece).collect(Collectors.toList()));
+        tablePartMap.setColumns(
+            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
         return tablePartMap;
     }
 
-    private DfDecoMapColumnPart convertColumnPartToDecoMapPiece(DecommentColumnPart columnPart) {
+    private DfDecoMapColumnPart mappingPartToDecoMapPiece(DecommentColumnPart columnPart, String author) {
         DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
         columnPartMap.setColumnName(columnPart.columnName);
         DfDecoMapColumnPart.ColumnPropertyPart property = new DfDecoMapColumnPart.ColumnPropertyPart();
@@ -75,15 +84,21 @@ public class DocumentDecommentAction extends IntroBaseAction {
         property.setDatabaseComment(columnPart.databaseComment);
         property.setPreviousWholeComment(columnPart.previousWholeComment);
         property.setCommentVersion(columnPart.commentVersion);
-        // TODO cabos add (merge) top author by jflute (2017/08/10)
-        property.setAuthorList(columnPart.authorList);
+        // TODO done cabos add (merge) top author by jflute (2017/08/10)
+        property.setAuthorList(mergeAuthorList(columnPart.authorList, author));
         columnPartMap.setProperties(Collections.singletonList(property));
         return columnPartMap;
     }
 
-    // ===================================================================================
-    //                                                                          Pickup Map
-    //                                                                          ==========
+    private List<String> mergeAuthorList(List<String> authorList, String author) {
+        Set<String> authorSet = new HashSet<>(authorList);
+        authorSet.add(author);
+        return new ArrayList<>(authorSet);
+    }
+
+    // -----------------------------------------------------
+    //                                            Pickup Map
+    //                                            ----------
     // TODO done hakiba rename piece to pickup by jflute (2017/08/17)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {
