@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.dbflute.exception.DfPropFileReadFailureException;
+import org.dbflute.exception.DfPropFileWriteFailureException;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
@@ -127,8 +128,8 @@ public class DfDecoMapFile {
         br.addItem("Decomment Map");
         br.addElement(ous);
         final String msg = br.buildExceptionMessage();
-        // TODO cabos use WriteFailure by jflute (2017/08/10)
-        throw new DfPropFileReadFailureException(msg, e);
+        // TODO done cabos use WriteFailure by jflute (2017/08/10)
+        throw new DfPropFileWriteFailureException(msg, e);
     }
 
     // ===================================================================================

@@ -61,7 +61,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
-     * @param containerCode The value of containerCode as equal. (NullAllowed: if null (or empty), no condition)
+     * @param containerCode The value of containerCode as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setContainerCode_Equal(String containerCode) {
         doSetContainerCode_Equal(fRES(containerCode));
@@ -124,7 +124,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
     /**
      * NotEqual(&lt;&gt;). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
-     * @param containerCode The value of containerCode as notEqual. (NullAllowed: if null (or empty), no condition)
+     * @param containerCode The value of containerCode as notEqual. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setContainerCode_NotEqual(String containerCode) {
         doSetContainerCode_NotEqual(fRES(containerCode));
@@ -187,7 +187,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
     /**
      * InScope {in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
-     * @param containerCodeList The collection of containerCode as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param containerCodeList The collection of containerCode as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setContainerCode_InScope(Collection<String> containerCodeList) {
         doSetContainerCode_InScope(containerCodeList);
@@ -197,7 +197,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * InScope {in ('a', 'b')}. As TargetContainer. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer} <br>
      * containers DBFlute cau use
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setContainerCode_InScope_AsTargetContainer(Collection<CDef.TargetContainer> cdefList) {
         doSetContainerCode_InScope(cTStrL(cdefList));
@@ -210,7 +210,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
     /**
      * NotInScope {not in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}
-     * @param containerCodeList The collection of containerCode as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param containerCodeList The collection of containerCode as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setContainerCode_NotInScope(Collection<String> containerCodeList) {
         doSetContainerCode_NotInScope(containerCodeList);
@@ -220,7 +220,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * NotInScope {not in ('a', 'b')}. As TargetContainer. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer} <br>
      * containers DBFlute cau use
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setContainerCode_NotInScope_AsTargetContainer(Collection<CDef.TargetContainer> cdefList) {
         doSetContainerCode_NotInScope(cTStrL(cdefList));
@@ -248,7 +248,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * CONTAINER_NAME: {NotNull, VARCHAR(100)}
-     * @param containerName The value of containerName as equal. (NullAllowed: if null (or empty), no condition)
+     * @param containerName The value of containerName as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setContainerName_Equal(String containerName) {
         doSetContainerName_Equal(fRES(containerName));
@@ -262,7 +262,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * CONTAINER_NAME: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setContainerName_LikeSearch("xxx", op <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> op.<span style="color: #CC4747">likeContain()</span>);</pre>
-     * @param containerName The value of containerName as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param containerName The value of containerName as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setContainerName_LikeSearch(String containerName, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -273,7 +273,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * CONTAINER_NAME: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setContainerName_LikeSearch("xxx", new <span style="color: #CC4747">LikeSearchOption</span>().likeContain());</pre>
-     * @param containerName The value of containerName as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param containerName The value of containerName as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of like-search. (NotNull)
      */
     protected void setContainerName_LikeSearch(String containerName, LikeSearchOption likeSearchOption) {
@@ -284,7 +284,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * CONTAINER_NAME: {NotNull, VARCHAR(100)}
-     * @param containerName The value of containerName as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param containerName The value of containerName as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setContainerName_NotLikeSearch(String containerName, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -295,7 +295,7 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * CONTAINER_NAME: {NotNull, VARCHAR(100)}
-     * @param containerName The value of containerName as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param containerName The value of containerName as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of not-like-search. (NotNull)
      */
     protected void setContainerName_NotLikeSearch(String containerName, LikeSearchOption likeSearchOption) {
@@ -323,8 +323,8 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * {(default) minNumber &lt;= column &lt;= maxNumber} <br>
      * And NullIgnored, OnlyOnceRegistered. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
-     * @param minNumber The min number of displayOrder. (NullAllowed: if null, no from-condition)
-     * @param maxNumber The max number of displayOrder. (NullAllowed: if null, no to-condition)
+     * @param minNumber The min number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
+     * @param maxNumber The max number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
      * @param opLambda The callback for option of range-of. (NotNull)
      */
     public void setDisplayOrder_RangeOf(Integer minNumber, Integer maxNumber, ConditionOptionCall<RangeOfOption> opLambda) {
@@ -336,8 +336,8 @@ public abstract class AbstractBsClsTargetContainerCQ extends AbstractConditionQu
      * {(default) minNumber &lt;= column &lt;= maxNumber} <br>
      * And NullIgnored, OnlyOnceRegistered. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
-     * @param minNumber The min number of displayOrder. (NullAllowed: if null, no from-condition)
-     * @param maxNumber The max number of displayOrder. (NullAllowed: if null, no to-condition)
+     * @param minNumber The min number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
+     * @param maxNumber The max number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
      * @param rangeOfOption The option of range-of. (NotNull)
      */
     protected void setDisplayOrder_RangeOf(Integer minNumber, Integer maxNumber, RangeOfOption rangeOfOption) {

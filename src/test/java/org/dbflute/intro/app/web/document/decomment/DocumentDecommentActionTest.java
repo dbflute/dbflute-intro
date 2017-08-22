@@ -4,9 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart;
-import org.dbflute.intro.app.web.document.decomment.DecommentPostBody.DecommentTablePart.DecommentColumnPart;
+import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
+import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
@@ -50,7 +49,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         // ## Arrange ##
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);
-        DecommentPostBody body = createSampleBody();
+        DecommentSaveBody body = createSampleBody();
 
         // ## Act ##
         action.save("introdb", body);
@@ -59,8 +58,8 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         // Assert by visual confirmation
     }
 
-    private DecommentPostBody createSampleBody() {
-        DecommentPostBody body = new DecommentPostBody();
+    private DecommentSaveBody createSampleBody() {
+        DecommentSaveBody body = new DecommentSaveBody();
         body.merged = false;
         body.table = createSampleTablePart();
         return body;

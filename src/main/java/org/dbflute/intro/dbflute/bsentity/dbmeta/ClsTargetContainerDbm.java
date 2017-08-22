@@ -87,9 +87,9 @@ public class ClsTargetContainerDbm extends AbstractDBMeta {
     // ===================================================================================
     //                                                                         Column Info
     //                                                                         ===========
-    protected final ColumnInfo _columnContainerCode = cci("CONTAINER_CODE", "CONTAINER_CODE", null, null, String.class, "containerCode", null, true, false, true, "VARCHAR", 10, 0, null, false, null, null, null, null, CDef.DefMeta.TargetContainer, false);
-    protected final ColumnInfo _columnContainerName = cci("CONTAINER_NAME", "CONTAINER_NAME", null, null, String.class, "containerName", null, false, false, true, "VARCHAR", 100, 0, null, false, null, null, null, null, null, false);
-    protected final ColumnInfo _columnDisplayOrder = cci("DISPLAY_ORDER", "DISPLAY_ORDER", null, null, Integer.class, "displayOrder", null, false, false, true, "INTEGER", 10, 0, null, false, null, null, null, null, null, false);
+    protected final ColumnInfo _columnContainerCode = cci("CONTAINER_CODE", "CONTAINER_CODE", null, null, String.class, "containerCode", null, true, false, true, "VARCHAR", 10, 0, null, null, false, null, null, null, null, CDef.DefMeta.TargetContainer, false);
+    protected final ColumnInfo _columnContainerName = cci("CONTAINER_NAME", "CONTAINER_NAME", null, null, String.class, "containerName", null, false, false, true, "VARCHAR", 100, 0, null, null, false, null, null, null, null, null, false);
+    protected final ColumnInfo _columnDisplayOrder = cci("DISPLAY_ORDER", "DISPLAY_ORDER", null, null, Integer.class, "displayOrder", null, false, false, true, "INTEGER", 10, 0, null, null, false, null, null, null, null, null, false);
 
     /**
      * CONTAINER_CODE: {PK, NotNull, VARCHAR(10), classification=TargetContainer}

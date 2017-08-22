@@ -87,9 +87,9 @@ public class ClsTargetLanguageDbm extends AbstractDBMeta {
     // ===================================================================================
     //                                                                         Column Info
     //                                                                         ===========
-    protected final ColumnInfo _columnLanguageCode = cci("LANGUAGE_CODE", "LANGUAGE_CODE", null, null, String.class, "languageCode", null, true, false, true, "VARCHAR", 10, 0, null, false, null, null, null, null, CDef.DefMeta.TargetLanguage, false);
-    protected final ColumnInfo _columnLanguageName = cci("LANGUAGE_NAME", "LANGUAGE_NAME", null, null, String.class, "languageName", null, false, false, true, "VARCHAR", 100, 0, null, false, null, null, null, null, null, false);
-    protected final ColumnInfo _columnDisplayOrder = cci("DISPLAY_ORDER", "DISPLAY_ORDER", null, null, Integer.class, "displayOrder", null, false, false, true, "INTEGER", 10, 0, null, false, null, null, null, null, null, false);
+    protected final ColumnInfo _columnLanguageCode = cci("LANGUAGE_CODE", "LANGUAGE_CODE", null, null, String.class, "languageCode", null, true, false, true, "VARCHAR", 10, 0, null, null, false, null, null, null, null, CDef.DefMeta.TargetLanguage, false);
+    protected final ColumnInfo _columnLanguageName = cci("LANGUAGE_NAME", "LANGUAGE_NAME", null, null, String.class, "languageName", null, false, false, true, "VARCHAR", 100, 0, null, null, false, null, null, null, null, null, false);
+    protected final ColumnInfo _columnDisplayOrder = cci("DISPLAY_ORDER", "DISPLAY_ORDER", null, null, Integer.class, "displayOrder", null, false, false, true, "INTEGER", 10, 0, null, null, false, null, null, null, null, null, false);
 
     /**
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}

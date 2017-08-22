@@ -23,6 +23,46 @@ public class DfDecoMapPiece {
     protected boolean merged;
     protected DfDecoMapTablePart decoMap;
 
+    // TODO done cabos move to before accessor by jflute (2017/08/10)
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    // map:{
+    //    ; formatVersion = 1.0
+    //    ; author = cabos
+    //    ; decommentDatetime = 2017/12:31 12:34:56
+    //    ; merged = false
+    //    ; decoMap = map:{
+    //        ; MEMBER = map:{
+    //            ; MEMBER_NAME = map:{
+    //                ; decomment = piari
+    //                ; databaseComment = sea
+    //                ; previousWholeComment = seasea
+    //                ; commentVersion = 1
+    //                ; authorList = list: { cabos }
+    //            }
+    //        }
+    //    }
+    // }
+    public Map<String, Object> convertMap() {
+        // TODO done cabos Map by jflute (2017/08/10)
+        Map<String, Object> map = new HashMap<>();
+        map.put("formatVersion", this.formatVersion);
+        map.put("author", this.author);
+        map.put("decommentDatetime", this.decommentDatetime);
+        map.put("merged", this.merged);
+        map.put("decoMap", this.decoMap.convertPieceMap());
+        return map;
+    }
+
+    // ===================================================================================
+    //                                                                            Override
+    //                                                                            ========
+    @Override
+    public String toString() {
+        return new MapListString().buildMapString(this.convertMap());
+    }
+
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
@@ -72,45 +112,5 @@ public class DfDecoMapPiece {
 
     public void setDecoMap(DfDecoMapTablePart decoMap) {
         this.decoMap = decoMap;
-    }
-
-    // TODO cabos move to before accessor by jflute (2017/08/10)
-    // ===================================================================================
-    //                                                                           Converter
-    //                                                                           =========
-    // map:{
-    //    ; formatVersion = 1.0
-    //    ; author = cabos
-    //    ; decommentDatetime = 2017/12:31 12:34:56
-    //    ; merged = false
-    //    ; decoMap = map:{
-    //        ; MEMBER = map:{
-    //            ; MEMBER_NAME = map:{
-    //                ; decomment = piari
-    //                ; databaseComment = sea
-    //                ; previousWholeComment = seasea
-    //                ; commentVersion = 1
-    //                ; authorList = list: { cabos }
-    //            }
-    //        }
-    //    }
-    // }
-    public Map<String, Object> convertMap() {
-        // TODO cabos Map by jflute (2017/08/10)
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("formatVersion", this.formatVersion);
-        map.put("author", this.author);
-        map.put("decommentDatetime", this.decommentDatetime);
-        map.put("merged", this.merged);
-        map.put("decoMap", this.decoMap.convertPieceMap());
-        return map;
-    }
-
-    // ===================================================================================
-    //                                                                            Override
-    //                                                                            ========
-    @Override
-    public String toString() {
-        return new MapListString().buildMapString(this.convertMap());
     }
 }

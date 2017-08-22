@@ -61,7 +61,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
-     * @param languageCode The value of languageCode as equal. (NullAllowed: if null (or empty), no condition)
+     * @param languageCode The value of languageCode as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setLanguageCode_Equal(String languageCode) {
         doSetLanguageCode_Equal(fRES(languageCode));
@@ -108,7 +108,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
     /**
      * NotEqual(&lt;&gt;). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
-     * @param languageCode The value of languageCode as notEqual. (NullAllowed: if null (or empty), no condition)
+     * @param languageCode The value of languageCode as notEqual. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setLanguageCode_NotEqual(String languageCode) {
         doSetLanguageCode_NotEqual(fRES(languageCode));
@@ -155,7 +155,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
     /**
      * InScope {in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
-     * @param languageCodeList The collection of languageCode as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param languageCodeList The collection of languageCode as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setLanguageCode_InScope(Collection<String> languageCodeList) {
         doSetLanguageCode_InScope(languageCodeList);
@@ -165,7 +165,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * InScope {in ('a', 'b')}. As TargetLanguage. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage} <br>
      * databases DBFlute cau use
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setLanguageCode_InScope_AsTargetLanguage(Collection<CDef.TargetLanguage> cdefList) {
         doSetLanguageCode_InScope(cTStrL(cdefList));
@@ -178,7 +178,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
     /**
      * NotInScope {not in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
-     * @param languageCodeList The collection of languageCode as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param languageCodeList The collection of languageCode as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setLanguageCode_NotInScope(Collection<String> languageCodeList) {
         doSetLanguageCode_NotInScope(languageCodeList);
@@ -188,7 +188,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * NotInScope {not in ('a', 'b')}. As TargetLanguage. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage} <br>
      * databases DBFlute cau use
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setLanguageCode_NotInScope_AsTargetLanguage(Collection<CDef.TargetLanguage> cdefList) {
         doSetLanguageCode_NotInScope(cTStrL(cdefList));
@@ -216,7 +216,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * LANGUAGE_NAME: {NotNull, VARCHAR(100)}
-     * @param languageName The value of languageName as equal. (NullAllowed: if null (or empty), no condition)
+     * @param languageName The value of languageName as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setLanguageName_Equal(String languageName) {
         doSetLanguageName_Equal(fRES(languageName));
@@ -230,7 +230,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * LANGUAGE_NAME: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setLanguageName_LikeSearch("xxx", op <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> op.<span style="color: #CC4747">likeContain()</span>);</pre>
-     * @param languageName The value of languageName as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param languageName The value of languageName as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setLanguageName_LikeSearch(String languageName, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -241,7 +241,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * LANGUAGE_NAME: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setLanguageName_LikeSearch("xxx", new <span style="color: #CC4747">LikeSearchOption</span>().likeContain());</pre>
-     * @param languageName The value of languageName as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param languageName The value of languageName as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of like-search. (NotNull)
      */
     protected void setLanguageName_LikeSearch(String languageName, LikeSearchOption likeSearchOption) {
@@ -252,7 +252,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * LANGUAGE_NAME: {NotNull, VARCHAR(100)}
-     * @param languageName The value of languageName as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param languageName The value of languageName as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setLanguageName_NotLikeSearch(String languageName, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -263,7 +263,7 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * LANGUAGE_NAME: {NotNull, VARCHAR(100)}
-     * @param languageName The value of languageName as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param languageName The value of languageName as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of not-like-search. (NotNull)
      */
     protected void setLanguageName_NotLikeSearch(String languageName, LikeSearchOption likeSearchOption) {
@@ -291,8 +291,8 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * {(default) minNumber &lt;= column &lt;= maxNumber} <br>
      * And NullIgnored, OnlyOnceRegistered. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
-     * @param minNumber The min number of displayOrder. (NullAllowed: if null, no from-condition)
-     * @param maxNumber The max number of displayOrder. (NullAllowed: if null, no to-condition)
+     * @param minNumber The min number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
+     * @param maxNumber The max number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
      * @param opLambda The callback for option of range-of. (NotNull)
      */
     public void setDisplayOrder_RangeOf(Integer minNumber, Integer maxNumber, ConditionOptionCall<RangeOfOption> opLambda) {
@@ -304,8 +304,8 @@ public abstract class AbstractBsClsTargetLanguageCQ extends AbstractConditionQue
      * {(default) minNumber &lt;= column &lt;= maxNumber} <br>
      * And NullIgnored, OnlyOnceRegistered. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
-     * @param minNumber The min number of displayOrder. (NullAllowed: if null, no from-condition)
-     * @param maxNumber The max number of displayOrder. (NullAllowed: if null, no to-condition)
+     * @param minNumber The min number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
+     * @param maxNumber The max number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
      * @param rangeOfOption The option of range-of. (NotNull)
      */
     protected void setDisplayOrder_RangeOf(Integer minNumber, Integer maxNumber, RangeOfOption rangeOfOption) {

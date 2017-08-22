@@ -61,7 +61,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase}
-     * @param databaseCode The value of databaseCode as equal. (NullAllowed: if null (or empty), no condition)
+     * @param databaseCode The value of databaseCode as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setDatabaseCode_Equal(String databaseCode) {
         doSetDatabaseCode_Equal(fRES(databaseCode));
@@ -140,7 +140,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotEqual(&lt;&gt;). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase}
-     * @param databaseCode The value of databaseCode as notEqual. (NullAllowed: if null (or empty), no condition)
+     * @param databaseCode The value of databaseCode as notEqual. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setDatabaseCode_NotEqual(String databaseCode) {
         doSetDatabaseCode_NotEqual(fRES(databaseCode));
@@ -219,7 +219,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase}
-     * @param databaseCodeList The collection of databaseCode as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param databaseCodeList The collection of databaseCode as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setDatabaseCode_InScope(Collection<String> databaseCodeList) {
         doSetDatabaseCode_InScope(databaseCodeList);
@@ -229,7 +229,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * InScope {in ('a', 'b')}. As TargetDatabase. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase} <br>
      * databases DBFlute cau use
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDatabaseCode_InScope_AsTargetDatabase(Collection<CDef.TargetDatabase> cdefList) {
         doSetDatabaseCode_InScope(cTStrL(cdefList));
@@ -242,7 +242,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase}
-     * @param databaseCodeList The collection of databaseCode as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param databaseCodeList The collection of databaseCode as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setDatabaseCode_NotInScope(Collection<String> databaseCodeList) {
         doSetDatabaseCode_NotInScope(databaseCodeList);
@@ -252,7 +252,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotInScope {not in ('a', 'b')}. As TargetDatabase. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase} <br>
      * databases DBFlute cau use
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDatabaseCode_NotInScope_AsTargetDatabase(Collection<CDef.TargetDatabase> cdefList) {
         doSetDatabaseCode_NotInScope(cTStrL(cdefList));
@@ -280,7 +280,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * DATABASE_NAME: {NotNull, VARCHAR(100)}
-     * @param databaseName The value of databaseName as equal. (NullAllowed: if null (or empty), no condition)
+     * @param databaseName The value of databaseName as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDatabaseName_Equal(String databaseName) {
         doSetDatabaseName_Equal(fRES(databaseName));
@@ -294,7 +294,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DATABASE_NAME: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setDatabaseName_LikeSearch("xxx", op <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> op.<span style="color: #CC4747">likeContain()</span>);</pre>
-     * @param databaseName The value of databaseName as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param databaseName The value of databaseName as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setDatabaseName_LikeSearch(String databaseName, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -305,7 +305,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DATABASE_NAME: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setDatabaseName_LikeSearch("xxx", new <span style="color: #CC4747">LikeSearchOption</span>().likeContain());</pre>
-     * @param databaseName The value of databaseName as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param databaseName The value of databaseName as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of like-search. (NotNull)
      */
     protected void setDatabaseName_LikeSearch(String databaseName, LikeSearchOption likeSearchOption) {
@@ -316,7 +316,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DATABASE_NAME: {NotNull, VARCHAR(100)}
-     * @param databaseName The value of databaseName as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param databaseName The value of databaseName as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setDatabaseName_NotLikeSearch(String databaseName, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -327,7 +327,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DATABASE_NAME: {NotNull, VARCHAR(100)}
-     * @param databaseName The value of databaseName as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param databaseName The value of databaseName as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of not-like-search. (NotNull)
      */
     protected void setDatabaseName_NotLikeSearch(String databaseName, LikeSearchOption likeSearchOption) {
@@ -340,7 +340,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
-     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as equal. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setJdbcDriverFqcn_Equal(String jdbcDriverFqcn) {
         doSetJdbcDriverFqcn_Equal(fRES(jdbcDriverFqcn));
@@ -353,7 +353,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotEqual(&lt;&gt;). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
-     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as notEqual. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as notEqual. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setJdbcDriverFqcn_NotEqual(String jdbcDriverFqcn) {
         doSetJdbcDriverFqcn_NotEqual(fRES(jdbcDriverFqcn));
@@ -366,7 +366,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
-     * @param jdbcDriverFqcnList The collection of jdbcDriverFqcn as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcnList The collection of jdbcDriverFqcn as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setJdbcDriverFqcn_InScope(Collection<String> jdbcDriverFqcnList) {
         doSetJdbcDriverFqcn_InScope(jdbcDriverFqcnList);
@@ -379,7 +379,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
-     * @param jdbcDriverFqcnList The collection of jdbcDriverFqcn as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcnList The collection of jdbcDriverFqcn as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setJdbcDriverFqcn_NotInScope(Collection<String> jdbcDriverFqcnList) {
         doSetJdbcDriverFqcn_NotInScope(jdbcDriverFqcnList);
@@ -393,7 +393,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setJdbcDriverFqcn_LikeSearch("xxx", op <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> op.<span style="color: #CC4747">likeContain()</span>);</pre>
-     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setJdbcDriverFqcn_LikeSearch(String jdbcDriverFqcn, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -404,7 +404,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setJdbcDriverFqcn_LikeSearch("xxx", new <span style="color: #CC4747">LikeSearchOption</span>().likeContain());</pre>
-     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of like-search. (NotNull)
      */
     protected void setJdbcDriverFqcn_LikeSearch(String jdbcDriverFqcn, LikeSearchOption likeSearchOption) {
@@ -415,7 +415,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
-     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setJdbcDriverFqcn_NotLikeSearch(String jdbcDriverFqcn, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -426,7 +426,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
-     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param jdbcDriverFqcn The value of jdbcDriverFqcn as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of not-like-search. (NotNull)
      */
     protected void setJdbcDriverFqcn_NotLikeSearch(String jdbcDriverFqcn, LikeSearchOption likeSearchOption) {
@@ -439,7 +439,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
-     * @param urlTemplate The value of urlTemplate as equal. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplate The value of urlTemplate as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setUrlTemplate_Equal(String urlTemplate) {
         doSetUrlTemplate_Equal(fRES(urlTemplate));
@@ -452,7 +452,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotEqual(&lt;&gt;). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
-     * @param urlTemplate The value of urlTemplate as notEqual. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplate The value of urlTemplate as notEqual. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setUrlTemplate_NotEqual(String urlTemplate) {
         doSetUrlTemplate_NotEqual(fRES(urlTemplate));
@@ -465,7 +465,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
-     * @param urlTemplateList The collection of urlTemplate as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplateList The collection of urlTemplate as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setUrlTemplate_InScope(Collection<String> urlTemplateList) {
         doSetUrlTemplate_InScope(urlTemplateList);
@@ -478,7 +478,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
-     * @param urlTemplateList The collection of urlTemplate as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplateList The collection of urlTemplate as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setUrlTemplate_NotInScope(Collection<String> urlTemplateList) {
         doSetUrlTemplate_NotInScope(urlTemplateList);
@@ -492,7 +492,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setUrlTemplate_LikeSearch("xxx", op <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> op.<span style="color: #CC4747">likeContain()</span>);</pre>
-     * @param urlTemplate The value of urlTemplate as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplate The value of urlTemplate as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setUrlTemplate_LikeSearch(String urlTemplate, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -503,7 +503,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)} <br>
      * <pre>e.g. setUrlTemplate_LikeSearch("xxx", new <span style="color: #CC4747">LikeSearchOption</span>().likeContain());</pre>
-     * @param urlTemplate The value of urlTemplate as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplate The value of urlTemplate as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of like-search. (NotNull)
      */
     protected void setUrlTemplate_LikeSearch(String urlTemplate, LikeSearchOption likeSearchOption) {
@@ -514,7 +514,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
-     * @param urlTemplate The value of urlTemplate as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplate The value of urlTemplate as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setUrlTemplate_NotLikeSearch(String urlTemplate, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -525,7 +525,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
-     * @param urlTemplate The value of urlTemplate as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param urlTemplate The value of urlTemplate as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of not-like-search. (NotNull)
      */
     protected void setUrlTemplate_NotLikeSearch(String urlTemplate, LikeSearchOption likeSearchOption) {
@@ -538,7 +538,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * Equal(=). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
-     * @param defaultSchema The value of defaultSchema as equal. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchema The value of defaultSchema as equal. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDefaultSchema_Equal(String defaultSchema) {
         doSetDefaultSchema_Equal(fRES(defaultSchema));
@@ -551,7 +551,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotEqual(&lt;&gt;). And NullOrEmptyIgnored, OnlyOnceRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
-     * @param defaultSchema The value of defaultSchema as notEqual. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchema The value of defaultSchema as notEqual. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDefaultSchema_NotEqual(String defaultSchema) {
         doSetDefaultSchema_NotEqual(fRES(defaultSchema));
@@ -564,7 +564,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
-     * @param defaultSchemaList The collection of defaultSchema as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchemaList The collection of defaultSchema as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDefaultSchema_InScope(Collection<String> defaultSchemaList) {
         doSetDefaultSchema_InScope(defaultSchemaList);
@@ -577,7 +577,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in ('a', 'b')}. And NullOrEmptyIgnored, NullOrEmptyElementIgnored, SeveralRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
-     * @param defaultSchemaList The collection of defaultSchema as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchemaList The collection of defaultSchema as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setDefaultSchema_NotInScope(Collection<String> defaultSchemaList) {
         doSetDefaultSchema_NotInScope(defaultSchemaList);
@@ -591,7 +591,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)} <br>
      * <pre>e.g. setDefaultSchema_LikeSearch("xxx", op <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> op.<span style="color: #CC4747">likeContain()</span>);</pre>
-     * @param defaultSchema The value of defaultSchema as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchema The value of defaultSchema as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setDefaultSchema_LikeSearch(String defaultSchema, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -602,7 +602,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * LikeSearch with various options. (versatile) {like '%xxx%' escape ...}. And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)} <br>
      * <pre>e.g. setDefaultSchema_LikeSearch("xxx", new <span style="color: #CC4747">LikeSearchOption</span>().likeContain());</pre>
-     * @param defaultSchema The value of defaultSchema as likeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchema The value of defaultSchema as likeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of like-search. (NotNull)
      */
     protected void setDefaultSchema_LikeSearch(String defaultSchema, LikeSearchOption likeSearchOption) {
@@ -613,7 +613,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
-     * @param defaultSchema The value of defaultSchema as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchema The value of defaultSchema as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param opLambda The callback for option of like-search. (NotNull)
      */
     public void setDefaultSchema_NotLikeSearch(String defaultSchema, ConditionOptionCall<LikeSearchOption> opLambda) {
@@ -624,7 +624,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotLikeSearch with various options. (versatile) {not like 'xxx%' escape ...} <br>
      * And NullOrEmptyIgnored, SeveralRegistered. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
-     * @param defaultSchema The value of defaultSchema as notLikeSearch. (NullAllowed: if null (or empty), no condition)
+     * @param defaultSchema The value of defaultSchema as notLikeSearch. (basically NotNull, NotEmpty: error as default, or no condition as option)
      * @param likeSearchOption The option of not-like-search. (NotNull)
      */
     protected void setDefaultSchema_NotLikeSearch(String defaultSchema, LikeSearchOption likeSearchOption) {
@@ -743,7 +743,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_REQUIRED_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param schemaRequiredFlgList The collection of schemaRequiredFlg as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param schemaRequiredFlgList The collection of schemaRequiredFlg as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setSchemaRequiredFlg_InScope(Collection<Integer> schemaRequiredFlgList) {
         doSetSchemaRequiredFlg_InScope(schemaRequiredFlgList);
@@ -753,7 +753,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * InScope {in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_REQUIRED_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setSchemaRequiredFlg_InScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetSchemaRequiredFlg_InScope(cTNumL(cdefList, Integer.class));
@@ -766,7 +766,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_REQUIRED_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param schemaRequiredFlgList The collection of schemaRequiredFlg as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param schemaRequiredFlgList The collection of schemaRequiredFlg as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setSchemaRequiredFlg_NotInScope(Collection<Integer> schemaRequiredFlgList) {
         doSetSchemaRequiredFlg_NotInScope(schemaRequiredFlgList);
@@ -776,7 +776,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotInScope {not in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_REQUIRED_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setSchemaRequiredFlg_NotInScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetSchemaRequiredFlg_NotInScope(cTNumL(cdefList, Integer.class));
@@ -880,7 +880,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_UPPER_CASE_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param schemaUpperCaseFlgList The collection of schemaUpperCaseFlg as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param schemaUpperCaseFlgList The collection of schemaUpperCaseFlg as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setSchemaUpperCaseFlg_InScope(Collection<Integer> schemaUpperCaseFlgList) {
         doSetSchemaUpperCaseFlg_InScope(schemaUpperCaseFlgList);
@@ -890,7 +890,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * InScope {in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_UPPER_CASE_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setSchemaUpperCaseFlg_InScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetSchemaUpperCaseFlg_InScope(cTNumL(cdefList, Integer.class));
@@ -903,7 +903,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_UPPER_CASE_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param schemaUpperCaseFlgList The collection of schemaUpperCaseFlg as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param schemaUpperCaseFlgList The collection of schemaUpperCaseFlg as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setSchemaUpperCaseFlg_NotInScope(Collection<Integer> schemaUpperCaseFlgList) {
         doSetSchemaUpperCaseFlg_NotInScope(schemaUpperCaseFlgList);
@@ -913,7 +913,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotInScope {not in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * SCHEMA_UPPER_CASE_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setSchemaUpperCaseFlg_NotInScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetSchemaUpperCaseFlg_NotInScope(cTNumL(cdefList, Integer.class));
@@ -1017,7 +1017,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * USER_INPUT_ASSIST_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param userInputAssistFlgList The collection of userInputAssistFlg as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param userInputAssistFlgList The collection of userInputAssistFlg as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setUserInputAssistFlg_InScope(Collection<Integer> userInputAssistFlgList) {
         doSetUserInputAssistFlg_InScope(userInputAssistFlgList);
@@ -1027,7 +1027,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * InScope {in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * USER_INPUT_ASSIST_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setUserInputAssistFlg_InScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetUserInputAssistFlg_InScope(cTNumL(cdefList, Integer.class));
@@ -1040,7 +1040,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * USER_INPUT_ASSIST_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param userInputAssistFlgList The collection of userInputAssistFlg as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param userInputAssistFlgList The collection of userInputAssistFlg as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setUserInputAssistFlg_NotInScope(Collection<Integer> userInputAssistFlgList) {
         doSetUserInputAssistFlg_NotInScope(userInputAssistFlgList);
@@ -1050,7 +1050,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotInScope {not in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * USER_INPUT_ASSIST_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setUserInputAssistFlg_NotInScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetUserInputAssistFlg_NotInScope(cTNumL(cdefList, Integer.class));
@@ -1154,7 +1154,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * InScope {in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * EMBEDDED_JAR_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param embeddedJarFlgList The collection of embeddedJarFlg as inScope. (NullAllowed: if null (or empty), no condition)
+     * @param embeddedJarFlgList The collection of embeddedJarFlg as inScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setEmbeddedJarFlg_InScope(Collection<Integer> embeddedJarFlgList) {
         doSetEmbeddedJarFlg_InScope(embeddedJarFlgList);
@@ -1164,7 +1164,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * InScope {in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * EMBEDDED_JAR_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setEmbeddedJarFlg_InScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetEmbeddedJarFlg_InScope(cTNumL(cdefList, Integer.class));
@@ -1177,7 +1177,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
     /**
      * NotInScope {not in (1, 2)}. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * EMBEDDED_JAR_FLG: {NotNull, INTEGER(10), classification=Flg}
-     * @param embeddedJarFlgList The collection of embeddedJarFlg as notInScope. (NullAllowed: if null (or empty), no condition)
+     * @param embeddedJarFlgList The collection of embeddedJarFlg as notInScope. (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     protected void setEmbeddedJarFlg_NotInScope(Collection<Integer> embeddedJarFlgList) {
         doSetEmbeddedJarFlg_NotInScope(embeddedJarFlgList);
@@ -1187,7 +1187,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * NotInScope {not in (1, 2)}. As Flg. And NullIgnored, NullElementIgnored, SeveralRegistered. <br>
      * EMBEDDED_JAR_FLG: {NotNull, INTEGER(10), classification=Flg} <br>
      * general boolean classification for every flg-column
-     * @param cdefList The list of classification definition (as ENUM type). (NullAllowed: if null (or empty), no condition)
+     * @param cdefList The list of classification definition (as ENUM type). (basically NotNull, NotEmpty: error as default, or no condition as option)
      */
     public void setEmbeddedJarFlg_NotInScope_AsFlg(Collection<CDef.Flg> cdefList) {
         doSetEmbeddedJarFlg_NotInScope(cTNumL(cdefList, Integer.class));
@@ -1218,8 +1218,8 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * {(default) minNumber &lt;= column &lt;= maxNumber} <br>
      * And NullIgnored, OnlyOnceRegistered. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
-     * @param minNumber The min number of displayOrder. (NullAllowed: if null, no from-condition)
-     * @param maxNumber The max number of displayOrder. (NullAllowed: if null, no to-condition)
+     * @param minNumber The min number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
+     * @param maxNumber The max number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
      * @param opLambda The callback for option of range-of. (NotNull)
      */
     public void setDisplayOrder_RangeOf(Integer minNumber, Integer maxNumber, ConditionOptionCall<RangeOfOption> opLambda) {
@@ -1231,8 +1231,8 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * {(default) minNumber &lt;= column &lt;= maxNumber} <br>
      * And NullIgnored, OnlyOnceRegistered. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
-     * @param minNumber The min number of displayOrder. (NullAllowed: if null, no from-condition)
-     * @param maxNumber The max number of displayOrder. (NullAllowed: if null, no to-condition)
+     * @param minNumber The min number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
+     * @param maxNumber The max number of displayOrder. (basically NotNull: if op.allowOneSide(), null allowed)
      * @param rangeOfOption The option of range-of. (NotNull)
      */
     protected void setDisplayOrder_RangeOf(Integer minNumber, Integer maxNumber, RangeOfOption rangeOfOption) {
