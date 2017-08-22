@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
 import org.dbflute.intro.unit.UnitIntroTestCase;
@@ -30,6 +31,8 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     // ===================================================================================
     //                                                                            Override
     //                                                                            ========
+    // TODO hakiba fix duplicate by hakiba (2017/08/22)
+    @SuppressWarnings("Duplicates")
     @Override
     public void setUp() throws Exception {
         super.setUp();
