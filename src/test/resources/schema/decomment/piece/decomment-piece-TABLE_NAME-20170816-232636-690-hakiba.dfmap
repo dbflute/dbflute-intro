@@ -1,0 +1,20 @@
+map:{
+    ; decoMap = map:{
+        ; TABLE_NAME = map:{
+            ; COLUMN_NAME = map:{
+                ; databaseComment = rime
+                ; previousWholeComment = lemon
+                ; commentVersion = 1
+                ; authorList = list:{
+                    ; cabos
+                    ; sudachi
+                }
+                ; decomment = orange
+            }
+        }
+    }
+    ; decommentDatetime = 2017-08-16T23:26:36.690
+    ; author = hakiba
+    ; merged = false
+    ; formatVersion = 1.0
+}
