@@ -42,17 +42,17 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
 
     @Test
     public void test_readMergedDecommentPickupMap() {
-        // TODO done hakiba put test data in test/resources by hakiba (2017/08/18)
+        // done hakiba put test data in test/resources by hakiba (2017/08/18)
         // ## Arrange ##
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
 
         // ## Act ##
-        // TODO done hakiba use testdb by jflute (2017/08/17)
+        // done hakiba use testdb by jflute (2017/08/17)
         DfDecoMapPickup pickup = logic.readMergedDecommentPickupMap(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // Assert by visual confirmation
-        log(pickup);
+        log(ln() + pickup);
     }
 }

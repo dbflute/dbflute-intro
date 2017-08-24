@@ -9,19 +9,18 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author hakiba
+ * @author jflute
  */
 public class DecommentPickupResult {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    @Required
     public List<TablePart> tables;
 
-    // ===================================================================================
-    //                                                                         Inner Class
-    //                                                                         ===========
-    // TODO done hakiba move it under tables by jflute (2017/08/17)
-    // TODO done hakiba validator annotation (Required only) by jflute (2017/08/17)
+    // done hakiba move it under tables by jflute (2017/08/17)
+    // done hakiba validator annotation (Required only) by jflute (2017/08/17)
     public static class TablePart {
         @Required
         public String tableName;
@@ -42,10 +41,10 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
 
-            // TODO done hakiba PropertyPart by jflute (2017/08/17)
+            // done hakiba PropertyPart by jflute (2017/08/17)
             public static class PropertyPart {
                 @Required
                 public String decomment;

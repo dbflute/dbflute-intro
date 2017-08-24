@@ -89,7 +89,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     @Test
     public void test_read_PickupResult() throws Exception {
         // ## Arrange ##
-        // TODO done hakiba put test data in test/resources by hakiba (2017/08/18)
+        // done hakiba put test data in test/resources by hakiba (2017/08/18)
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);
 
@@ -97,7 +97,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         JsonResponse<DecommentPickupResult> response = action.pickup(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        // TODO done hakiba like this by jflute (2017/08/17)
+        // done hakiba like this by jflute (2017/08/17)
         //showJson(response);
         //TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
         //DecommentPickupResult result = jsonData.getJsonResult();
