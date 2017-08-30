@@ -3497,5 +3497,80 @@ Decomment.prototype = {
 
 new Decomment().init();
 </script>
+
+<script>
+  function DecommentFetcher() {
+  }
+
+  DecommentFetcher.prototype = {
+    /**
+     * @method init
+     */
+    init: function () {
+      var schemeName = this.getSchemeName();
+      // this.fetchDecomment(schemeName);
+      this.fetchDecommentMock();
+    },
+
+    /**
+     * @method getSchemeName
+     * @returns {String}
+     */
+    getSchemeName: function () {
+      return document.querySelector('.mainschema').querySelector('strong').innerText;
+    },
+
+    fetchDecomment: function (schemeName) {
+      var http = new XMLHttpRequest();
+      http.withCredentials = true;
+      var url = 'http://localhost:8925/api/document/decomment/' + schemeName + '/pickup';
+      http.open('GET', url, true);
+
+      http.onreadystatechange = function () {
+        if (http.readyState === 4) {
+          if (http.status === 200) {
+            this.handleResponse(http.response);
+          } else {
+            alert('Error!! cannot fetch decomment.');
+          }
+        }
+      };
+      http.send();
+    },
+
+    fetchDecommentMock: function () {
+      var response = "{  \"tables\": [  {  \"tableName\": \"MEMBER\",  \"columns\": [  {  \"columnName\": \"MEMBER_ID\",  \"properties\": [  {  \"decomment\": \"orange\",  \"databaseComment\": \"rime\",  \"previousWholeComment\": \"lemon\",  \"commentVersion\": 1,  \"authorList\": [  \"cabos\",  \"sudachi\"  ]  },  {  \"decomment\": \"orange\",  \"databaseComment\": \"rime\",  \"previousWholeComment\": \"lemon\",  \"commentVersion\": 1,  \"authorList\": [  \"tominaga\",  \"sudachi\",  \"cabos\"  ]  }  ]  }  ]  }  ] }";
+      this.handleResponse(response);
+    },
+
+    handleResponse: function (response) {
+      var json = JSON.parse(response);
+      that = this;
+      Array.prototype.forEach.call(json["tables"], function (table) {
+        Array.prototype.forEach.call(table["columns"], function (column) {
+          var element = that.extractColumnElement(table, column);
+          that.updateComment(element, column);
+        });
+      });
+    },
+
+    extractColumnElement: function (table, column) {
+      var columnId = (table["tableName"] + "_" + column["columnName"]);
+      columnId = columnId.toLowerCase();
+      var element = document.getElementById(columnId);
+      return element.parentElement
+    },
+
+    updateComment: function (element, column) {
+      var comment = null;
+      Array.prototype.forEach.call(column["properties"], function (property) {
+        comment = comment === null ? comment : comment += "<br>";
+        comment += property["decomment"];
+      });
+      element.querySelector('.commentcell').innerHTML = comment;
+    }
+  };
+  new DecommentFetcher().init();
+</script>
 </body>
 </html>
