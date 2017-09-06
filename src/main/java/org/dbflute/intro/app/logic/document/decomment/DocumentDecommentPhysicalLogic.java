@@ -4,7 +4,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -15,6 +17,7 @@ import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
+import org.dbflute.util.DfStringUtil;
 import org.lastaflute.core.time.TimeManager;
 
 /**
@@ -27,6 +30,13 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                          Definition
     //                                                                          ==========
     private static final String PICKUP_FILE_NAME = "decomment-pickup.dfmap";
+    private static final Map<String, String> REPLACE_CHAR_MAP;
+
+    static {
+        List<String> notAvailableCharList = Arrays.asList("/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0");
+        String replaceChar = "x";
+        REPLACE_CHAR_MAP = notAvailableCharList.stream().collect(Collectors.toMap(ch -> ch, ch -> replaceChar));
+    }
 
     // ===================================================================================
     //                                                                           Attribute
@@ -120,7 +130,11 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                              Author
     //                                                                              ======
     public String getAuthor() {
-        return documentAuthorLogic.getAuthor();
+        return filterAuthor(documentAuthorLogic.getAuthor());
+    }
+
+    private String filterAuthor(String author) {
+        return DfStringUtil.replaceBy(author, REPLACE_CHAR_MAP);
     }
 
     // ===================================================================================
