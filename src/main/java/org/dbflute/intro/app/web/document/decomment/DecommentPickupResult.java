@@ -3,6 +3,8 @@ package org.dbflute.intro.app.web.document.decomment;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.lastaflute.web.validation.Required;
@@ -10,12 +12,14 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author hakiba
  * @author jflute
+ * @author cabos
  */
 public class DecommentPickupResult {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    @Valid
     @Required
     public List<TablePart> tables;
 
@@ -24,6 +28,7 @@ public class DecommentPickupResult {
     public static class TablePart {
         @Required
         public String tableName;
+        @Valid
         @Required
         public List<ColumnPart> columns;
 
@@ -35,13 +40,14 @@ public class DecommentPickupResult {
         public static class ColumnPart {
             @Required
             public String columnName;
+            @Valid
             @Required
             public List<PropertyPart> properties;
 
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                        columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
 
             // done hakiba PropertyPart by jflute (2017/08/17)
@@ -54,6 +60,7 @@ public class DecommentPickupResult {
                 public String previousWholeComment;
                 @Required
                 public Long commentVersion;
+                @Valid
                 @Required
                 public List<String> authorList;
 
