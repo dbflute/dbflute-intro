@@ -119,7 +119,7 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                              Author
     //                                                                              ======
-    public String getAuthorFromGitSystem() {
+    public String getAuthor() {
         return documentAuthorLogic.getAuthor();
     }
 

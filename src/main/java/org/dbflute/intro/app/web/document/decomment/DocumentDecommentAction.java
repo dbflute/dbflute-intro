@@ -65,7 +65,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String getAuthor() {
-        return decommentPhysicalLogic.getAuthorFromGitSystem();
+        return decommentPhysicalLogic.getAuthor();
     }
 
     private DfDecoMapTablePart mappingToDecoMapPiece(DecommentTablePart tablePart, String author) {
