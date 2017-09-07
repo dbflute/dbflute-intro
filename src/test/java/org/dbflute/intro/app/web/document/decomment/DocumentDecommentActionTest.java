@@ -6,7 +6,6 @@ import java.util.Collections;
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
-import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
@@ -16,9 +15,8 @@ import org.lastaflute.web.response.JsonResponse;
 public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestCase {
 
     // ===================================================================================
-    //                                                                                Test
-    //                                                                                ====
-    @Test
+    //                                                                               Save
+    //                                                                              ======
     public void test_save_createHakiMap() throws Exception {
         // ## Arrange ##
         DocumentDecommentAction action = new DocumentDecommentAction();
@@ -30,6 +28,7 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
 
         // ## Assert ##
         // Assert by visual confirmation
+        // TODO cabos file assert by testdb by jflute (2017/09/07)
     }
 
     private DecommentSaveBody createSampleBody() {
@@ -57,7 +56,9 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
         return columnPart;
     }
 
-    @Test
+    // ===================================================================================
+    //                                                                              Pickup
+    //                                                                              ======
     public void test_read_PickupResult() throws Exception {
         // ## Arrange ##
         // done hakiba put test data in test/resources by hakiba (2017/08/18)

@@ -28,6 +28,7 @@ import org.lastaflute.core.time.TimeManager;
 /**
  * @author cabos
  * @author hakiba
+ * @author jflute
  */
 public class DocumentDecommentPhysicalLogic {
 
@@ -35,9 +36,10 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                          Definition
     //                                                                          ==========
     private static final String PICKUP_FILE_NAME = "decomment-pickup.dfmap";
-    private static final Map<String, String> REPLACE_CHAR_MAP;
+    protected static final Map<String, String> REPLACE_CHAR_MAP;
 
     static {
+        // TODO cabos add spaces and replaceChar should be underscore? by jflute (2017/09/07)
         List<String> notAvailableCharList = Arrays.asList("/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0");
         String replaceChar = "x";
         REPLACE_CHAR_MAP = notAvailableCharList.stream().collect(Collectors.toMap(ch -> ch, ch -> replaceChar));

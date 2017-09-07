@@ -1,22 +1,27 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
-import java.util.Arrays;
-import java.util.List;
-
+import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
-import org.junit.Test;
 
 /**
  * @author hakiba
  * @author cabos
+ * @author jflute
  */
 public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitIntroTestCase {
 
-    @Test
+    // ===================================================================================
+    //                                                                              Author
+    //                                                                              ======
     public void test_getAuthor_checkAvailableUser() {
         // ## Arrange ##
-        List<String> notAvailableCharList = Arrays.asList("/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0");
+        registerMock(new DocumentAuthorLogic() {
+            @Override
+            public String getAuthor() {
+                return "ca/<bo*s";
+            }
+        });
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
 
@@ -24,11 +29,15 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         String author = logic.getAuthor();
 
         // ## Assert ##
+        log("author: {}", author);
         assertNotNull(author);
-        notAvailableCharList.forEach(ch -> assertFalse(author.contains(ch)));
+        assertEquals("caxxboxs", author);
+        DocumentDecommentPhysicalLogic.REPLACE_CHAR_MAP.keySet().forEach(ch -> assertFalse(author.contains(ch)));
     }
 
-    @Test
+    // ===================================================================================
+    //                                                                              Pickup
+    //                                                                              ======
     public void test_readMergedDecommentPickupMap() {
         // done hakiba put test data in test/resources by hakiba (2017/08/18)
         // ## Arrange ##
