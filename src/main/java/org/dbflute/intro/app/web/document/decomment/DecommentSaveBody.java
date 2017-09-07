@@ -7,14 +7,14 @@ import javax.validation.Valid;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
-// TODO done cabos rename DecommentSaveBody by jflute (2017/08/10)
+// done cabos rename DecommentSaveBody by jflute (2017/08/10)
 
 /**
  * @author cabos
  */
 public class DecommentSaveBody {
 
-    // TODO done cabos system parameter, use (groups = ClientError.class) _lavc... by jflute (2017/08/10)
+    // done cabos system parameter, use (groups = ClientError.class) _lavc... by jflute (2017/08/10)
     @Required(groups = ClientError.class)
     public Boolean merged;
     @Required(groups = ClientError.class)

@@ -23,7 +23,7 @@ public class DocumentAuthorLogic {
         // memorable code : load author from git system
         //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
         //private void loadAuthor() {
-        //    // TODO done cabos "memorable code" get from os user and filter it by jflute (2017/08/10)
+        //    // done cabos "memorable code" get from os user and filter it by jflute (2017/08/10)
         //    // get user name from git
         //    Runtime runtime = Runtime.getRuntime();
         //    Process p;

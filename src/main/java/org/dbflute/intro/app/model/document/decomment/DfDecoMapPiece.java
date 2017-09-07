@@ -23,7 +23,7 @@ public class DfDecoMapPiece {
     protected boolean merged;
     protected DfDecoMapTablePart decoMap;
 
-    // TODO done cabos move to before accessor by jflute (2017/08/10)
+    // done cabos move to before accessor by jflute (2017/08/10)
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
@@ -45,7 +45,8 @@ public class DfDecoMapPiece {
     //    }
     // }
     public Map<String, Object> convertMap() {
-        // TODO done cabos Map by jflute (2017/08/10)
+        // done cabos Map by jflute (2017/08/10)
+        // TODO cabos use Linked by jflute (2017/09/07)
         Map<String, Object> map = new HashMap<>();
         map.put("formatVersion", this.formatVersion);
         map.put("author", this.author);

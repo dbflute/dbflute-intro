@@ -1,10 +1,10 @@
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -21,8 +21,7 @@ import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-// TODO done cabos decoment to decomment by jflute (2017/07/27)
-
+// done cabos decoment to decomment by jflute (2017/07/27)
 /**
  * @author cabos
  * @author hakiba
@@ -37,7 +36,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Resource
     private DocumentDecommentPhysicalLogic decommentPhysicalLogic;
 
-    // TODO done cabos use _taexec and use _tanest by jflute (2017/08/10)
+    // done cabos use _taexec and use _tanest by jflute (2017/08/10)
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
@@ -52,7 +51,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    // TODO done cabos use mappingTo... by jflute (2017/08/10)
+    // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         String author = getAuthor();
         DfDecoMapPiece pieceMap = new DfDecoMapPiece();
@@ -72,7 +71,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
         tablePartMap.setColumns(
-            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
+                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
         return tablePartMap;
     }
 
@@ -84,13 +83,14 @@ public class DocumentDecommentAction extends IntroBaseAction {
         property.setDatabaseComment(columnPart.databaseComment);
         property.setPreviousWholeComment(columnPart.previousWholeComment);
         property.setCommentVersion(columnPart.commentVersion);
-        // TODO done cabos add (merge) top author by jflute (2017/08/10)
+        // done cabos add (merge) top author by jflute (2017/08/10)
         property.setAuthorList(mergeAuthorList(columnPart.authorList, author));
         columnPartMap.setProperties(Collections.singletonList(property));
         return columnPartMap;
     }
 
     private List<String> mergeAuthorList(List<String> authorList, String author) {
+        // TODO cabos use LinkedHashSet to keep order by jflute (2017/09/07)
         Set<String> authorSet = new HashSet<>(authorList);
         authorSet.add(author);
         return new ArrayList<>(authorSet);
@@ -99,7 +99,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                            Pickup Map
     //                                            ----------
-    // TODO done hakiba rename piece to pickup by jflute (2017/08/17)
+    // done hakiba rename piece to pickup by jflute (2017/08/17)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {
         DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedDecommentPickupMap(projectName);

@@ -48,16 +48,16 @@ public class DfDecoMapPickup {
     //     }
     // }
     public Map<String, Object> convertMap() {
-        final Map<String, Map<String, Object>> convertedDecoMap = decoMap.stream()
-            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
-        
+        final Map<String, Map<String, Object>> convertedDecoMap = decoMap.stream().collect(
+                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("formatVersion", formatVersion);
         map.put("decoMap", convertedDecoMap);
         return map;
     }
 
-    // TODO done hakiba move to before Accessor by jflute (2017/08/17)
+    // done hakiba move to before Accessor by jflute (2017/08/17)
     // ===================================================================================
     //                                                                            Override
     //                                                                            ========
