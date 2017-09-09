@@ -162,6 +162,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: the Network error. Please check your proxy setting */
     public static final String ERRORS_APP_NETWORK_ERROR = "{errors.app.network.error}";
 
+    /** The key of the message: the decomap physical error occurred : {0} */
+    public static final String ERRORS_APP_DECO_MAP_PHYSICAL_ERROR = "{errors.app.deco.map.physical.error}";
+
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
 
@@ -829,6 +832,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppNetworkError(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_NETWORK_ERROR));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.deco.map.physical.error' with parameters.
+     * <pre>
+     * message: the decomap physical error occurred : {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppDecoMapPhysicalError(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_DECO_MAP_PHYSICAL_ERROR, arg0));
         return this;
     }
 

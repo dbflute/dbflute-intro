@@ -21,7 +21,7 @@ public class PhysicalDecoMapFileException extends IntroApplicationException {
     }
 
     private static Consumer<IntroMessages> prepareMessages(String failureHint) {
-        // TODO cabos use new message, add message to properties and go freegen and use it by jflute (2017/09/07)
-        return messages -> messages.addErrorsAppClientNotFound(GLOBAL, failureHint);
+        // TODO done cabos use new message, add message to properties and go freegen and use it by jflute (2017/09/07)
+        return messages -> messages.addErrorsAppDecoMapPhysicalError(GLOBAL, failureHint);
     }
 }
