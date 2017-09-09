@@ -1,7 +1,9 @@
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.regex.Pattern;
 
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
@@ -24,11 +26,22 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
         DecommentSaveBody body = createSampleBody();
 
         // ## Act ##
-        action.save("introdb", body);
+        action.save(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // Assert by visual confirmation
-        // TODO cabos file assert by testdb by jflute (2017/09/07)
+        // TODO done cabos file assert by testdb by jflute (2017/09/07)
+        File pieceDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/schema/decomment/piece");
+        assertTrue(pieceDir.exists());
+        assertTrue(pieceDir.isDirectory());
+        String[] pieceMaps = pieceDir.list();
+        assertNotNull(pieceMaps);
+        String regex = "^decomment-piece-.+-\\d{8}-\\d{6}-\\d{3}-.+\\.dfmap$";
+        Pattern pattern = Pattern.compile(regex);
+        Arrays.asList(pieceMaps).forEach(fileName -> {
+            log(fileName);
+            assertTrue(pattern.matcher(fileName).find());
+        });
     }
 
     private DecommentSaveBody createSampleBody() {
