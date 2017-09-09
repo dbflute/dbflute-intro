@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,7 +74,7 @@ public class DfDecoMapColumnPart {
         }
 
         public Map<String, Object> convertMap() {
-            HashMap<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("decomment", this.decomment);
             map.put("databaseComment", this.databaseComment);
             map.put("previousWholeComment", this.previousWholeComment);

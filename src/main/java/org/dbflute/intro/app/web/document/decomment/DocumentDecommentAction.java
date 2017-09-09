@@ -2,7 +2,7 @@ package org.dbflute.intro.app.web.document.decomment;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +22,7 @@ import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 // done cabos decoment to decomment by jflute (2017/07/27)
+
 /**
  * @author cabos
  * @author hakiba
@@ -71,7 +72,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
         tablePartMap.setColumns(
-                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
+            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
         return tablePartMap;
     }
 
@@ -90,8 +91,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private List<String> mergeAuthorList(List<String> authorList, String author) {
-        // TODO cabos use LinkedHashSet to keep order by jflute (2017/09/07)
-        Set<String> authorSet = new HashSet<>(authorList);
+        // TODO done cabos use LinkedHashSet to keep order by jflute (2017/09/07)
+        Set<String> authorSet = new LinkedHashSet<>(authorList);
         authorSet.add(author);
         return new ArrayList<>(authorSet);
     }
