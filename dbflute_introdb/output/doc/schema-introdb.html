@@ -335,7 +335,7 @@ dl.procedurelist dd.column pre {
 <h2 id="cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">
 CLS_TARGET_CONTAINER
 </h2>
-<table>
+<table class="tablecontent">
 	<thead>
 	<tr>
 		<th class="rownumhead">No.</th>
@@ -351,6 +351,7 @@ CLS_TARGET_CONTAINER
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
 		<th>Classification</th>
+		<th>ColumnComment</th>
 		<th>PropertyName</th>
 		<th>JavaType</th>
 	</tr>
@@ -363,12 +364,13 @@ CLS_TARGET_CONTAINER
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_container_container_code">CONTAINER_CODE</td>
+		<td class=" columnnamecell" id="cls_target_container_container_code">CONTAINER_CODE</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#TargetContainerCls">TargetContainer</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">containerCode</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -380,12 +382,13 @@ CLS_TARGET_CONTAINER
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_container_container_name">CONTAINER_NAME</td>
+		<td class=" columnnamecell" id="cls_target_container_container_name">CONTAINER_NAME</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 100 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">containerName</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -397,20 +400,22 @@ CLS_TARGET_CONTAINER
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_container_display_order">DISPLAY_ORDER</td>
+		<td class=" columnnamecell" id="cls_target_container_display_order">DISPLAY_ORDER</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">displayOrder</td>
 		<td class="subcell">Integer</td>
 	</tr>
 </table>
+
 <h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
 CLS_TARGET_DATABASE
 </h2>
-<table>
+<table class="tablecontent">
 	<thead>
 	<tr>
 		<th class="rownumhead">No.</th>
@@ -426,6 +431,7 @@ CLS_TARGET_DATABASE
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
 		<th>Classification</th>
+		<th>ColumnComment</th>
 		<th>PropertyName</th>
 		<th>JavaType</th>
 	</tr>
@@ -438,12 +444,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_database_code">DATABASE_CODE</td>
+		<td class=" columnnamecell" id="cls_target_database_database_code">DATABASE_CODE</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#TargetDatabaseCls">TargetDatabase</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">databaseCode</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -455,12 +462,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_database_name">DATABASE_NAME</td>
+		<td class=" columnnamecell" id="cls_target_database_database_name">DATABASE_NAME</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 100 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">databaseName</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -472,12 +480,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_jdbc_driver_fqcn">JDBC_DRIVER_FQCN</td>
+		<td class=" columnnamecell" id="cls_target_database_jdbc_driver_fqcn">JDBC_DRIVER_FQCN</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 100 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">jdbcDriverFqcn</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -489,12 +498,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_url_template">URL_TEMPLATE</td>
+		<td class=" columnnamecell" id="cls_target_database_url_template">URL_TEMPLATE</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 100 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">urlTemplate</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -506,12 +516,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell"> &nbsp;</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_default_schema">DEFAULT_SCHEMA</td>
+		<td class=" columnnamecell" id="cls_target_database_default_schema">DEFAULT_SCHEMA</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">defaultSchema</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -523,12 +534,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_schema_required_flg">SCHEMA_REQUIRED_FLG</td>
+		<td class=" columnnamecell" id="cls_target_database_schema_required_flg">SCHEMA_REQUIRED_FLG</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#FlgCls">Flg</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">schemaRequiredFlg</td>
 		<td class="subcell">Integer</td>
 	</tr>
@@ -540,12 +552,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_schema_upper_case_flg">SCHEMA_UPPER_CASE_FLG</td>
+		<td class=" columnnamecell" id="cls_target_database_schema_upper_case_flg">SCHEMA_UPPER_CASE_FLG</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#FlgCls">Flg</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">schemaUpperCaseFlg</td>
 		<td class="subcell">Integer</td>
 	</tr>
@@ -557,12 +570,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_user_input_assist_flg">USER_INPUT_ASSIST_FLG</td>
+		<td class=" columnnamecell" id="cls_target_database_user_input_assist_flg">USER_INPUT_ASSIST_FLG</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#FlgCls">Flg</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">userInputAssistFlg</td>
 		<td class="subcell">Integer</td>
 	</tr>
@@ -574,12 +588,13 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_embedded_jar_flg">EMBEDDED_JAR_FLG</td>
+		<td class=" columnnamecell" id="cls_target_database_embedded_jar_flg">EMBEDDED_JAR_FLG</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#FlgCls">Flg</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">embeddedJarFlg</td>
 		<td class="subcell">Integer</td>
 	</tr>
@@ -591,20 +606,22 @@ CLS_TARGET_DATABASE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_database_display_order">DISPLAY_ORDER</td>
+		<td class=" columnnamecell" id="cls_target_database_display_order">DISPLAY_ORDER</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">displayOrder</td>
 		<td class="subcell">Integer</td>
 	</tr>
 </table>
+
 <h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
 CLS_TARGET_LANGUAGE
 </h2>
-<table>
+<table class="tablecontent">
 	<thead>
 	<tr>
 		<th class="rownumhead">No.</th>
@@ -620,6 +637,7 @@ CLS_TARGET_LANGUAGE
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
 		<th>Classification</th>
+		<th>ColumnComment</th>
 		<th>PropertyName</th>
 		<th>JavaType</th>
 	</tr>
@@ -632,12 +650,13 @@ CLS_TARGET_LANGUAGE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_language_language_code">LANGUAGE_CODE</td>
+		<td class=" columnnamecell" id="cls_target_language_language_code">LANGUAGE_CODE</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"><a href="#TargetLanguageCls">TargetLanguage</a></td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">languageCode</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -649,12 +668,13 @@ CLS_TARGET_LANGUAGE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_language_language_name">LANGUAGE_NAME</td>
+		<td class=" columnnamecell" id="cls_target_language_language_name">LANGUAGE_NAME</td>
 		<td class="typecell">VARCHAR</td>
 		<td class="sizecell"> 100 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">languageName</td>
 		<td class="subcell">String</td>
 	</tr>
@@ -666,16 +686,18 @@ CLS_TARGET_LANGUAGE
 		<td class="flgcell">&nbsp;</td>
 		<td class="flgcell">*</td>
 		<td class="aliascell"></td>
-		<td id="cls_target_language_display_order">DISPLAY_ORDER</td>
+		<td class=" columnnamecell" id="cls_target_language_display_order">DISPLAY_ORDER</td>
 		<td class="typecell">INTEGER</td>
 		<td class="sizecell"> 10 </td>
 		<td class="relcell">&nbsp;&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell"> &nbsp;</td>
+		<td class="commentcell"> &nbsp;</td>
 		<td class="subcell">displayOrder</td>
 		<td class="subcell">Integer</td>
 	</tr>
 </table>
+
 
 <h2 id="cdef">Classification Definition</h2>
 <table>
@@ -1274,6 +1296,204 @@ Incremental.prototype.util = {
 
 var searcher = new Incremental(document.getElementById('incremental-search-field'), document.getElementById('table-list-body'));
 searcher.init();
+</script>
+<script>
+function Decomment() {
+}
+
+Decomment.prototype = {
+
+	/**
+	 * @method init
+	 */
+	init: function () {
+		var schemeName = this.getSchemeName();
+//		this.pickupDecomment(schemeName);
+		this.pickupDecommentMock()
+		this.setupSaveDecomment(schemeName);
+	},
+
+	/**
+	 * @method getSchemeName
+	 * @returns {String}
+	 */
+	getSchemeName: function () {
+		var path = window.location.pathname;
+		return path[3];
+	},
+
+	/**
+	 * @method fetchDecomment
+	 * @param schemeName
+	 */
+	pickupDecomment: function (schemeName) {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var url = 'http://localhost:8925/api/document/decomment/' + schemeName + '/pickup';
+		http.open('GET', url, true);
+
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					this.handleResponse(http.response);
+				} else {
+					alert('Error!! cannot fetch decomment.');
+				}
+			}
+		};
+		http.send();
+	},
+
+	/**
+	 * @method fetchDecommentMock // TODO tominaga delete this method if the api is created!
+	 */
+	pickupDecommentMock: function () {
+		var response = "{	\"tables\": [	{	\"tableName\": \"CLS_TARGET_CONTAINER\",	\"columns\": [	{	\"columnName\": \"CONTAINER_CODE\",	\"properties\": [	{	\"decomment\": \"orange\",	\"databaseComment\": \"rime\",	\"previousWholeComment\": \"lemon\",	\"commentVersion\": 1,	\"authorList\": [	\"cabos\",	\"sudachi\"	]	},	{	\"decomment\": \"orange\",	\"databaseComment\": \"rime\",	\"previousWholeComment\": \"lemon\",	\"commentVersion\": 1,	\"authorList\": [	\"tominaga\",	\"sudachi\",	\"cabos\"	]	}	]	}	]	}	] }";
+		this.handleResponse(response);
+	},
+
+	/**
+	 * @method handleResponse
+	 * @param response
+	 */
+	handleResponse: function (response) {
+		var json = JSON.parse(response);
+		that = this;
+		Array.prototype.forEach.call(json["tables"], function (table) {
+			Array.prototype.forEach.call(table["columns"], function (column) {
+				var element = that.extractColumnElement(table, column);
+				that.updateComment(element, column);
+			});
+		});
+	},
+
+	/**
+	 * @method extractColumnElement
+	 * @param table
+	 * @param column
+	 * @returns columnElement
+	 */
+	extractColumnElement: function (table, column) {
+		var columnId = (table["tableName"] + "_" + column["columnName"]);
+		columnId = columnId.toLowerCase();
+		var element = document.getElementById(columnId);
+		return element.parentElement
+	},
+
+	/**
+	 * @method updateComment
+	 * @param element
+	 * @param column
+	 */
+	updateComment: function (element, column) {
+		var comment = null;
+		Array.prototype.forEach.call(column["properties"], function (property) {
+			comment = comment === null ? comment : comment += "<br>";
+			comment += property["decomment"];
+		});
+		element.querySelector('.commentcell').innerHTML = comment;
+	},
+
+	/**
+	 * @method setupSaveDecomment
+	 * @param table {String}
+	 */
+	setupSaveDecomment: function(schemeName) {
+		var tables = document.getElementsByClassName('tablecontent');
+		var that = this;
+		Array.prototype.forEach.call(tables, function (table) {
+			var columns = table.getElementsByTagName('tr');
+			Array.prototype.forEach.call(columns, function (column, index) {
+				if (index === 0) {
+					return
+				}
+				var previousWholeComment = column.querySelector('.commentcell');
+				var columnName = column.querySelector('.columnnamecell').innerText;
+				previousWholeComment.onclick = function () {
+					var docomment = window.prompt('Input new column comment.');
+					// click cancel
+					if (docomment === null) {
+						return;
+					}
+					// click ok
+					if (docomment) {
+						var tableName = that.getTableName(table);
+						var params = that.buildRequestParams(tableName, columnName, docomment, previousWholeComment.innerText);
+						that.requestSaveDecomment(schemeName, params);
+					} else {
+						alert('Cannot save empty comment');
+					}
+				};
+			});
+		});
+	},
+
+
+	/**
+	 * @method getHostName
+	 * @returns {String}
+	 */
+	getHostName: function () {
+		return window.location.host;
+	},
+
+	/**
+	 * @method getTableName
+	 * @param table {Object}
+	 * @returns {String}
+	 */
+	getTableName: function (table) {
+		return table.previousElementSibling.innerText;
+	},
+
+	/**
+	 * @method buildRequestBody
+	 * @param tableName {String}
+	 * @param columnName {String}
+	 * @param docomment {String}
+	 * @param previousWholeComment {String}
+	 * @return requestBody {Object}
+	 */
+	buildRequestParams: function (tableName, columnName, docomment, previousWholeComment) {
+		// TODO tominaga change request params if the pickup api is created
+		return {
+			'merged': false,
+			'table': {
+				'tableName': tableName,
+				'columns': [
+					{
+						'columnName': columnName,
+						'decomment': docomment,
+						'previousWholeComment': previousWholeComment,
+						'commentVersion': 1,
+						'authorList': []
+					}
+				]
+			}
+		};
+	},
+
+	/**
+	 * @method requestDecomment
+	 * @param schemeName {String}
+	 * @param params {Object}
+	 */
+	requestSaveDecomment: function (schemeName, params) {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var url = 'http://' + this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
+		http.open('POST', url, true);
+
+		http.onreadystatechange = function () {
+			if (http.readyState === 4 && http.status !== 200) {
+				alert('Error!! cannot save new column comment.');
+			}
+		};
+		http.send(JSON.stringify(params));
+	}
+};
+
+new Decomment().init();
 </script>
 </body>
 </html>
