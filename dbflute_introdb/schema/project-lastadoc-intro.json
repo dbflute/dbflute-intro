@@ -2457,6 +2457,390 @@
       "methodLineCount": 10
     },
     {
+      "url": "/document/decomment/{projectName}/save",
+      "typeName": "org.dbflute.intro.app.web.document.decomment.DocumentDecommentAction",
+      "simpleTypeName": "DocumentDecommentAction",
+      "description": "@author cabos",
+      "typeComment": "@author cabos\n@author hakiba",
+      "fieldTypeDocMetaList": [
+        {
+          "name": "timeManager",
+          "typeName": "org.lastaflute.core.time.TimeManager",
+          "simpleTypeName": "TimeManager",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "decommentPhysicalLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic",
+          "simpleTypeName": "DocumentDecommentPhysicalLogic",
+          "value": null,
+          "description": "@author cabos",
+          "comment": "@author cabos\n@author hakiba\n@author jflute",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "methodName": "save",
+      "methodComment": null,
+      "annotationList": [
+        "Execute{urlPattern\u003d{}/@word}"
+      ],
+      "parameterTypeDocMetaList": [
+        {
+          "name": "projectName",
+          "typeName": "java.lang.String",
+          "simpleTypeName": "String",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "formTypeDocMeta": {
+        "name": null,
+        "typeName": "org.dbflute.intro.app.web.document.decomment.DecommentSaveBody",
+        "simpleTypeName": "DecommentSaveBody",
+        "value": null,
+        "description": "@author cabos",
+        "comment": "@author cabos",
+        "annotationList": [],
+        "nestTypeDocMetaList": [
+          {
+            "name": "merged",
+            "typeName": "java.lang.Boolean",
+            "simpleTypeName": "Boolean",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Required{groups\u003d[ClientError]}"
+            ],
+            "nestTypeDocMetaList": []
+          },
+          {
+            "name": "table",
+            "typeName": "org.dbflute.intro.app.web.document.decomment.DecommentSaveBody$DecommentTablePart",
+            "simpleTypeName": "DecommentTablePart",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Required{groups\u003d[ClientError]}",
+              "Valid"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "tableName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required{groups\u003d[ClientError]}"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "columns",
+                "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentSaveBody$DecommentTablePart$DecommentColumnPart\u003e",
+                "simpleTypeName": "List\u003cDecommentColumnPart\u003e",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Valid",
+                  "Required{groups\u003d[ClientError]}"
+                ],
+                "nestTypeDocMetaList": [
+                  {
+                    "name": "columnName",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [
+                      "Required{groups\u003d[ClientError]}"
+                    ],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "decomment",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [
+                      "Required"
+                    ],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "databaseComment",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "previousWholeComment",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "commentVersion",
+                    "typeName": "java.lang.Long",
+                    "simpleTypeName": "Long",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [
+                      "Required{groups\u003d[ClientError]}"
+                    ],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "authorList",
+                    "typeName": "java.util.List\u003cString\u003e",
+                    "simpleTypeName": "List\u003cString\u003e",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [
+                      "Required{groups\u003d[ClientError]}"
+                    ],
+                    "nestTypeDocMetaList": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "returnTypeDocMeta": {
+        "name": null,
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003cjava.lang.Void\u003e",
+        "simpleTypeName": "JsonResponse\u003cVoid\u003e",
+        "value": "JsonResponse.asEmptyBody()",
+        "description": null,
+        "comment": null,
+        "annotationList": [],
+        "nestTypeDocMetaList": []
+      },
+      "fileLineCount": 79,
+      "methodLineCount": 5
+    },
+    {
+      "url": "/document/decomment/{projectName}/pickup",
+      "typeName": "org.dbflute.intro.app.web.document.decomment.DocumentDecommentAction",
+      "simpleTypeName": "DocumentDecommentAction",
+      "description": "@author cabos",
+      "typeComment": "@author cabos\n@author hakiba",
+      "fieldTypeDocMetaList": [
+        {
+          "name": "timeManager",
+          "typeName": "org.lastaflute.core.time.TimeManager",
+          "simpleTypeName": "TimeManager",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "decommentPhysicalLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic",
+          "simpleTypeName": "DocumentDecommentPhysicalLogic",
+          "value": null,
+          "description": "@author cabos",
+          "comment": "@author cabos\n@author hakiba\n@author jflute",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "methodName": "pickup",
+      "methodComment": null,
+      "annotationList": [
+        "Execute{urlPattern\u003d{}/@word}"
+      ],
+      "parameterTypeDocMetaList": [
+        {
+          "name": "projectName",
+          "typeName": "java.lang.String",
+          "simpleTypeName": "String",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "formTypeDocMeta": null,
+      "returnTypeDocMeta": {
+        "name": null,
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult\u003e",
+        "simpleTypeName": "JsonResponse\u003cDecommentPickupResult\u003e",
+        "value": "asJson(new DecommentPickupResult(dfDecoMapPickup.getDecoMap()",
+        "description": null,
+        "comment": null,
+        "annotationList": [],
+        "nestTypeDocMetaList": [
+          {
+            "name": "tables",
+            "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart\u003e",
+            "simpleTypeName": "List\u003cTablePart\u003e",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Valid",
+              "Required"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "tableName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "columns",
+                "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart$ColumnPart\u003e",
+                "simpleTypeName": "List\u003cColumnPart\u003e",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Valid",
+                  "Required"
+                ],
+                "nestTypeDocMetaList": [
+                  {
+                    "name": "columnName",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [
+                      "Required"
+                    ],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "properties",
+                    "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart$ColumnPart$PropertyPart\u003e",
+                    "simpleTypeName": "List\u003cPropertyPart\u003e",
+                    "value": null,
+                    "description": null,
+                    "comment": null,
+                    "annotationList": [
+                      "Valid",
+                      "Required"
+                    ],
+                    "nestTypeDocMetaList": [
+                      {
+                        "name": "decomment",
+                        "typeName": "java.lang.String",
+                        "simpleTypeName": "String",
+                        "value": null,
+                        "description": null,
+                        "comment": null,
+                        "annotationList": [
+                          "Required"
+                        ],
+                        "nestTypeDocMetaList": []
+                      },
+                      {
+                        "name": "databaseComment",
+                        "typeName": "java.lang.String",
+                        "simpleTypeName": "String",
+                        "value": null,
+                        "description": null,
+                        "comment": null,
+                        "annotationList": [
+                          "Required"
+                        ],
+                        "nestTypeDocMetaList": []
+                      },
+                      {
+                        "name": "previousWholeComment",
+                        "typeName": "java.lang.String",
+                        "simpleTypeName": "String",
+                        "value": null,
+                        "description": null,
+                        "comment": null,
+                        "annotationList": [
+                          "Required"
+                        ],
+                        "nestTypeDocMetaList": []
+                      },
+                      {
+                        "name": "commentVersion",
+                        "typeName": "java.lang.Long",
+                        "simpleTypeName": "Long",
+                        "value": null,
+                        "description": null,
+                        "comment": null,
+                        "annotationList": [
+                          "Required"
+                        ],
+                        "nestTypeDocMetaList": []
+                      },
+                      {
+                        "name": "authorList",
+                        "typeName": "java.util.List\u003cString\u003e",
+                        "simpleTypeName": "List\u003cString\u003e",
+                        "value": null,
+                        "description": null,
+                        "comment": null,
+                        "annotationList": [
+                          "Valid",
+                          "Required"
+                        ],
+                        "nestTypeDocMetaList": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fileLineCount": 79,
+      "methodLineCount": 4
+    },
+    {
       "url": "/document/{clientProject}/schemahtml",
       "typeName": "org.dbflute.intro.app.web.document.DocumentAction",
       "simpleTypeName": "DocumentAction",
