@@ -42,7 +42,6 @@ public class DecommentSaveBody {
             public String previousWholeComment;
             @Required(groups = ClientError.class)
             public Long commentVersion;
-            @Required(groups = ClientError.class)
             public List<String> authorList;
         }
     }
