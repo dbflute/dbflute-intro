@@ -918,202 +918,202 @@ var searcher = new Incremental(document.getElementById('incremental-search-field
 searcher.init();
 </script>
 <script>
-function Decomment() {
-}
-
-Decomment.prototype = {
-
-	/**
-	 * @method init
-	 */
-	init: function () {
-		var schemeName = this.getSchemeName();
-//		this.pickupDecomment(schemeName);
-		this.pickupDecommentMock()
-		this.setupSaveDecomment(schemeName);
-	},
-
-	/**
-	 * @method getSchemeName
-	 * @returns {String}
-	 */
-	getSchemeName: function () {
-		var path = window.location.pathname;
-		return path[3];
-	},
-
-	/**
-	 * @method fetchDecomment
-	 * @param schemeName
-	 */
-	pickupDecomment: function (schemeName) {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
-		http.open('GET', url, true);
-
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					this.handleResponse(http.response);
-				} else {
-					alert('Error!! cannot fetch decomment.');
-				}
-			}
-		};
-		http.send();
-	},
-
-	/**
-	 * @method fetchDecommentMock // TODO tominaga delete this method if the api is created!
-	 */
-	pickupDecommentMock: function () {
-		var response = "{	\"tables\": [	{	\"tableName\": \"CLS_TARGET_CONTAINER\",	\"columns\": [	{	\"columnName\": \"CONTAINER_CODE\",	\"properties\": [	{	\"decomment\": \"orange\",	\"databaseComment\": \"rime\",	\"previousWholeComment\": \"lemon\",	\"commentVersion\": 1,	\"authorList\": [	\"cabos\",	\"sudachi\"	]	},	{	\"decomment\": \"orange\",	\"databaseComment\": \"rime\",	\"previousWholeComment\": \"lemon\",	\"commentVersion\": 1,	\"authorList\": [	\"tominaga\",	\"sudachi\",	\"cabos\"	]	}	]	}	]	}	] }";
-		this.handleResponse(response);
-	},
-
-	/**
-	 * @method handleResponse
-	 * @param response
-	 */
-	handleResponse: function (response) {
-		var json = JSON.parse(response);
-		that = this;
-		Array.prototype.forEach.call(json["tables"], function (table) {
-			Array.prototype.forEach.call(table["columns"], function (column) {
-				var element = that.extractColumnElement(table, column);
-				that.updateComment(element, column);
-			});
-		});
-	},
-
-	/**
-	 * @method extractColumnElement
-	 * @param table
-	 * @param column
-	 * @returns columnElement
-	 */
-	extractColumnElement: function (table, column) {
-		var columnId = (table["tableName"] + "_" + column["columnName"]);
-		columnId = columnId.toLowerCase();
-		var element = document.getElementById(columnId);
-		return element.parentElement
-	},
-
-	/**
-	 * @method updateComment
-	 * @param element
-	 * @param column
-	 */
-	updateComment: function (element, column) {
-		var comment = null;
-		Array.prototype.forEach.call(column["properties"], function (property) {
-			comment = comment === null ? comment : comment += "<br>";
-			comment += property["decomment"];
-		});
-		element.querySelector('.commentcell').innerHTML = comment;
-	},
-
-	/**
-	 * @method setupSaveDecomment
-	 * @param table {String}
-	 */
-	setupSaveDecomment: function(schemeName) {
-		var tables = document.getElementsByClassName('tablecontent');
-		var that = this;
-		Array.prototype.forEach.call(tables, function (table) {
-			var columns = table.getElementsByTagName('tr');
-			Array.prototype.forEach.call(columns, function (column, index) {
-				if (index === 0) {
-					return
-				}
-				var previousWholeComment = column.querySelector('.commentcell');
-				var columnName = column.querySelector('.columnnamecell').innerText;
-				previousWholeComment.onclick = function () {
-					var docomment = window.prompt('Input new column comment.');
-					// click cancel
-					if (docomment === null) {
-						return;
-					}
-					// click ok
-					if (docomment) {
-						var tableName = that.getTableName(table);
-						var params = that.buildRequestParams(tableName, columnName, docomment, previousWholeComment.innerText);
-						that.requestSaveDecomment(schemeName, params);
-					} else {
-						alert('Cannot save empty comment');
-					}
-				};
-			});
-		});
-	},
-
-
-	/**
-	 * @method getHostName
-	 * @returns {String}
-	 */
-	getHostName: function () {
-    return 'http://' + window.location.host;
-	},
-
-	/**
-	 * @method getTableName
-	 * @param table {Object}
-	 * @returns {String}
-	 */
-	getTableName: function (table) {
-		return table.previousElementSibling.innerText;
-	},
-
-	/**
-	 * @method buildRequestBody
-	 * @param tableName {String}
-	 * @param columnName {String}
-	 * @param docomment {String}
-	 * @param previousWholeComment {String}
-	 * @return requestBody {Object}
-	 */
-	buildRequestParams: function (tableName, columnName, docomment, previousWholeComment) {
-		// TODO tominaga change request params if the pickup api is created
-		return {
-			'merged': false,
-			'table': {
-				'tableName': tableName,
-				'columns': [
-					{
-						'columnName': columnName,
-						'decomment': docomment,
-						'previousWholeComment': previousWholeComment,
-						'commentVersion': 1,
-						'authorList': []
-					}
-				]
-			}
-		};
-	},
-
-	/**
-	 * @method requestDecomment
-	 * @param schemeName {String}
-	 * @param params {Object}
-	 */
-	requestSaveDecomment: function (schemeName, params) {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
-		http.open('POST', url, true);
-
-		http.onreadystatechange = function () {
-			if (http.readyState === 4 && http.status !== 200) {
-				alert('Error!! cannot save new column comment.');
-			}
-		};
-		http.send(JSON.stringify(params));
+if (document.getElementById("intro_opening") !== null) {
+	function Decomment() {
 	}
-};
+	Decomment.prototype = {
 
-new Decomment().init();
+		/**
+		 * @method init
+		 */
+		init: function () {
+			var schemeName = this.getSchemeName();
+	//		this.pickupDecomment(schemeName);
+			this.pickupDecommentMock()
+			this.setupSaveDecomment(schemeName);
+		},
+
+		/**
+		 * @method getSchemeName
+		 * @returns {String}
+		 */
+		getSchemeName: function () {
+			var path = window.location.pathname;
+			return path[3];
+		},
+
+		/**
+		 * @method fetchDecomment
+		 * @param schemeName
+		 */
+		pickupDecomment: function (schemeName) {
+			var http = new XMLHttpRequest();
+			http.withCredentials = true;
+			var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
+			http.open('GET', url, true);
+
+			http.onreadystatechange = function () {
+				if (http.readyState === 4) {
+					if (http.status === 200) {
+						this.handleResponse(http.response);
+					} else {
+						alert('Error!! cannot fetch decomment.');
+					}
+				}
+			};
+			http.send();
+		},
+
+		/**
+		 * @method fetchDecommentMock // TODO tominaga delete this method if the api is created!
+		 */
+		pickupDecommentMock: function () {
+			var response = "{	\"tables\": [	{	\"tableName\": \"CLS_TARGET_CONTAINER\",	\"columns\": [	{	\"columnName\": \"CONTAINER_CODE\",	\"properties\": [	{	\"decomment\": \"orange\",	\"databaseComment\": \"rime\",	\"previousWholeComment\": \"lemon\",	\"commentVersion\": 1,	\"authorList\": [	\"cabos\",	\"sudachi\"	]	},	{	\"decomment\": \"orange\",	\"databaseComment\": \"rime\",	\"previousWholeComment\": \"lemon\",	\"commentVersion\": 1,	\"authorList\": [	\"tominaga\",	\"sudachi\",	\"cabos\"	]	}	]	}	]	}	] }";
+			this.handleResponse(response);
+		},
+
+		/**
+		 * @method handleResponse
+		 * @param response
+		 */
+		handleResponse: function (response) {
+			var json = JSON.parse(response);
+			that = this;
+			Array.prototype.forEach.call(json["tables"], function (table) {
+				Array.prototype.forEach.call(table["columns"], function (column) {
+					var element = that.extractColumnElement(table, column);
+					that.updateComment(element, column);
+				});
+			});
+		},
+
+		/**
+		 * @method extractColumnElement
+		 * @param table
+		 * @param column
+		 * @returns columnElement
+		 */
+		extractColumnElement: function (table, column) {
+			var columnId = (table["tableName"] + "_" + column["columnName"]);
+			columnId = columnId.toLowerCase();
+			var element = document.getElementById(columnId);
+			return element.parentElement
+		},
+
+		/**
+		 * @method updateComment
+		 * @param element
+		 * @param column
+		 */
+		updateComment: function (element, column) {
+			var comment = null;
+			Array.prototype.forEach.call(column["properties"], function (property) {
+				comment = comment === null ? comment : comment += "<br>";
+				comment += property["decomment"];
+			});
+			element.querySelector('.commentcell').innerHTML = comment;
+		},
+
+		/**
+		 * @method setupSaveDecomment
+		 * @param table {String}
+		 */
+		setupSaveDecomment: function(schemeName) {
+			var tables = document.getElementsByClassName('tablecontent');
+			var that = this;
+			Array.prototype.forEach.call(tables, function (table) {
+				var columns = table.getElementsByTagName('tr');
+				Array.prototype.forEach.call(columns, function (column, index) {
+					if (index === 0) {
+						return
+					}
+					var previousWholeComment = column.querySelector('.commentcell');
+					var columnName = column.querySelector('.columnnamecell').innerText;
+					previousWholeComment.onclick = function () {
+						var docomment = window.prompt('Input new column comment.');
+						// click cancel
+						if (docomment === null) {
+							return;
+						}
+						// click ok
+						if (docomment) {
+							var tableName = that.getTableName(table);
+							var params = that.buildRequestParams(tableName, columnName, docomment, previousWholeComment.innerText);
+							that.requestSaveDecomment(schemeName, params);
+						} else {
+							alert('Cannot save empty comment');
+						}
+					};
+				});
+			});
+		},
+
+		/**
+		 * @method getHostName
+		 * @returns {String}
+		 */
+		getHostName: function () {
+			return 'http://' + window.location.host;
+		},
+
+		/**
+		 * @method getTableName
+		 * @param table {Object}
+		 * @returns {String}
+		 */
+		getTableName: function (table) {
+			return table.previousElementSibling.innerText;
+		},
+
+		/**
+		 * @method buildRequestBody
+		 * @param tableName {String}
+		 * @param columnName {String}
+		 * @param docomment {String}
+		 * @param previousWholeComment {String}
+		 * @return requestBody {Object}
+		 */
+		buildRequestParams: function (tableName, columnName, docomment, previousWholeComment) {
+			// TODO tominaga change request params if the pickup api is created
+			return {
+				'merged': false,
+				'table': {
+					'tableName': tableName,
+					'columns': [
+						{
+							'columnName': columnName,
+							'decomment': docomment,
+							'previousWholeComment': previousWholeComment,
+							'commentVersion': 1,
+							'authorList': []
+						}
+					]
+				}
+			};
+		},
+
+		/**
+		 * @method requestDecomment
+		 * @param schemeName {String}
+		 * @param params {Object}
+		 */
+		requestSaveDecomment: function (schemeName, params) {
+			var http = new XMLHttpRequest();
+			http.withCredentials = true;
+			var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
+			http.open('POST', url, true);
+
+			http.onreadystatechange = function () {
+				if (http.readyState === 4 && http.status !== 200) {
+					alert('Error!! cannot save new column comment.');
+				}
+			};
+			http.send(JSON.stringify(params));
+		}
+	};
+
+	new Decomment().init();
+}
 </script>
 </body>
 </html>
