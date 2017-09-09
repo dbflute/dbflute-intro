@@ -14,12 +14,12 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     // ===================================================================================
     //                                                                              Author
     //                                                                              ======
-    public void test_getAuthor_checkAvailableUser() {
+    public void test_getAuthor() {
         // ## Arrange ##
         registerMock(new DocumentAuthorLogic() {
             @Override
             public String getAuthor() {
-                return "ca/<bo*s";
+                return "ca/<bo s";
             }
         });
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
@@ -31,7 +31,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         // ## Assert ##
         log("author: {}", author);
         assertNotNull(author);
-        assertEquals("caxxboxs", author);
+        assertEquals("ca__bo_s", author);
         DocumentDecommentPhysicalLogic.REPLACE_CHAR_MAP.keySet().forEach(ch -> assertFalse(author.contains(ch)));
     }
 
