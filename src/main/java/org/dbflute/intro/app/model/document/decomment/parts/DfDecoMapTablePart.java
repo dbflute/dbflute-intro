@@ -1,12 +1,13 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class DfDecoMapTablePart {
 
@@ -49,7 +50,7 @@ public class DfDecoMapTablePart {
         Map<String, Object> columnMap = columns.stream()
             .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
         return map;
     }
@@ -58,7 +59,7 @@ public class DfDecoMapTablePart {
         Map<String, List<Map<String, Object>>> columnMap = columns.stream()
             .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
         return map;
     }

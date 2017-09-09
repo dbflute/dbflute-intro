@@ -1,6 +1,6 @@
 package org.dbflute.intro.app.model.document.decomment;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,10 +48,10 @@ public class DfDecoMapPickup {
     //     }
     // }
     public Map<String, Object> convertMap() {
-        final Map<String, Map<String, Object>> convertedDecoMap = decoMap.stream().collect(
-                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
+        final Map<String, Map<String, Object>> convertedDecoMap = decoMap.stream()
+            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
         map.put("decoMap", convertedDecoMap);
         return map;

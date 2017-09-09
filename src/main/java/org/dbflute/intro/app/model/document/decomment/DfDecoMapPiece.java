@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.model.document.decomment;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.dbflute.helper.mapstring.MapListString;
@@ -46,8 +46,8 @@ public class DfDecoMapPiece {
     // }
     public Map<String, Object> convertMap() {
         // done cabos Map by jflute (2017/08/10)
-        // TODO cabos use Linked by jflute (2017/09/07)
-        Map<String, Object> map = new HashMap<>();
+        // TODO done cabos use Linked by jflute (2017/09/07)
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", this.formatVersion);
         map.put("author", this.author);
         map.put("decommentDatetime", this.decommentDatetime);
