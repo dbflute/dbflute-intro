@@ -9,12 +9,12 @@ map:{
                     ; cabos
                     ; sudachi
                 }
-                ; decomment = hakiba 2 2017-08-16T23:26:36.690
+                ; decomment = cabos 2 2017-08-16T23:26:45.690
             }
         }
     }
-    ; decommentDatetime = 2017-08-16T23:26:36.690
-    ; author = hakiba
+    ; decommentDatetime = 2017-08-16T23:26:45.690
+    ; author = cabos
     ; merged = false
     ; formatVersion = 1.0
 }

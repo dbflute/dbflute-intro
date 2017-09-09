@@ -4,17 +4,17 @@ map:{
             ; COLUMN_NAME = map:{
                 ; databaseComment = rime
                 ; previousWholeComment = lemon
-                ; commentVersion = 2
+                ; commentVersion = 1
                 ; authorList = list:{
                     ; cabos
                     ; sudachi
                 }
-                ; decomment = hakiba 2 2017-08-16T23:26:36.690
+                ; decomment = cabos 1 2017-08-16T23:26:40.690
             }
         }
     }
-    ; decommentDatetime = 2017-08-16T23:26:36.690
-    ; author = hakiba
+    ; decommentDatetime = 2017-08-16T23:26:40.690
+    ; author = cabos
     ; merged = false
     ; formatVersion = 1.0
 }

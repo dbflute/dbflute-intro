@@ -1,6 +1,7 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,11 @@ import java.util.stream.Collectors;
  * @author cabos
  */
 public class DfDecoMapColumnPart {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static long MINIMUM_COMMENT_VERSION = 1L;
 
     // ===================================================================================
     //                                                                           Attribute
@@ -134,5 +140,13 @@ public class DfDecoMapColumnPart {
 
     public void setProperties(List<ColumnPropertyPart> properties) {
         this.properties = properties;
+    }
+
+    public long getLatestCommentVersion() {
+        return this.getProperties()
+            .stream()
+            .map(part -> part.getCommentVersion())
+            .max(Comparator.naturalOrder())
+            .orElse(MINIMUM_COMMENT_VERSION);
     }
 }
