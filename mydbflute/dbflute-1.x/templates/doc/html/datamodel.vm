@@ -949,7 +949,7 @@ Decomment.prototype = {
 	pickupDecomment: function (schemeName) {
 		var http = new XMLHttpRequest();
 		http.withCredentials = true;
-		var url = 'http://localhost:8925/api/document/decomment/' + schemeName + '/pickup';
+		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
 		http.open('GET', url, true);
 
 		http.onreadystatechange = function () {
@@ -1054,7 +1054,7 @@ Decomment.prototype = {
 	 * @returns {String}
 	 */
 	getHostName: function () {
-		return window.location.host;
+    return 'http://' + window.location.host;
 	},
 
 	/**
@@ -1101,7 +1101,7 @@ Decomment.prototype = {
 	requestSaveDecomment: function (schemeName, params) {
 		var http = new XMLHttpRequest();
 		http.withCredentials = true;
-		var url = 'http://' + this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
+		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
 		http.open('POST', url, true);
 
 		http.onreadystatechange = function () {
