@@ -46,7 +46,7 @@ public class DfDecoMapPiece {
     // }
     public Map<String, Object> convertMap() {
         // done cabos Map by jflute (2017/08/10)
-        // TODO done cabos use Linked by jflute (2017/09/07)
+        // done cabos use Linked by jflute (2017/09/07)
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", this.formatVersion);
         map.put("author", this.author);

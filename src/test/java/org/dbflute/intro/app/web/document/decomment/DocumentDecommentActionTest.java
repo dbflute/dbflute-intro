@@ -30,7 +30,7 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
 
         // ## Assert ##
         // Assert by visual confirmation
-        // TODO done cabos file assert by testdb by jflute (2017/09/07)
+        // done cabos file assert by testdb by jflute (2017/09/07)
         File pieceDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/schema/decomment/piece");
         assertTrue(pieceDir.exists());
         assertTrue(pieceDir.isDirectory());

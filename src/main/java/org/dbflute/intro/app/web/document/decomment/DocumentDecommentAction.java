@@ -72,7 +72,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
         tablePartMap.setColumns(
-            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
+                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
         return tablePartMap;
     }
 
@@ -91,7 +91,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private List<String> mergeAuthorList(List<String> authorList, String author) {
-        // TODO done cabos use LinkedHashSet to keep order by jflute (2017/09/07)
+        // done cabos use LinkedHashSet to keep order by jflute (2017/09/07)
         Set<String> authorSet = new LinkedHashSet<>(authorList);
         authorSet.add(author);
         return new ArrayList<>(authorSet);

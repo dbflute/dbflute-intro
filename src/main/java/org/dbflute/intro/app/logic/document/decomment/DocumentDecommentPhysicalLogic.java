@@ -1,6 +1,11 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
@@ -34,7 +39,7 @@ public class DocumentDecommentPhysicalLogic {
     protected static final Map<String, String> REPLACE_CHAR_MAP;
 
     static {
-        // TODO done cabos add spaces and replaceChar should be underscore? by jflute (2017/09/07)
+        // done cabos add spaces and replaceChar should be underscore? by jflute (2017/09/07)
         List<String> notAvailableCharList = Arrays.asList("/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0", " ");
         String replaceChar = "_";
         REPLACE_CHAR_MAP = notAvailableCharList.stream().collect(Collectors.toMap(ch -> ch, ch -> replaceChar));
@@ -65,7 +70,7 @@ public class DocumentDecommentPhysicalLogic {
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
@@ -85,7 +90,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -95,7 +100,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
         DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickup, pieces);
