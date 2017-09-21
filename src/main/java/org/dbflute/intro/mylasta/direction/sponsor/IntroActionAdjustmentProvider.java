@@ -17,6 +17,7 @@ package org.dbflute.intro.mylasta.direction.sponsor;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.web.path.ActionAdjustmentProvider;
 
@@ -28,16 +29,34 @@ public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
     protected static final String API_URL_PREFIX = "/api"; // to be separated from angular request
 
+    private final IntroConfig config;
+
+    public IntroActionAdjustmentProvider(IntroConfig config) {
+        this.config = config;
+    }
+
     @Override
     public boolean isForcedRoutingExcept(HttpServletRequest request, String requestPath) {
         // of course, request to angular resources does not need routing
         // (requestPath might contain /dbflute-intro/ so use contains())
-        return !requestPath.contains(API_URL_PREFIX);
+        return !(requestPath.contains(API_URL_PREFIX) || isSwaggerRequest(requestPath));
+    }
+
+    @Override
+    public boolean isForced404NotFoundRouting(HttpServletRequest request, String requestPath) {
+        return !config.isSwaggerEnabled() && isSwaggerRequest(requestPath);
     }
 
     @Override
     public String customizeActionMappingRequestPath(String requestPath) {
         // action class name does not need 'Api' prefix
-        return DfStringUtil.substringFirstRear(requestPath, API_URL_PREFIX);
+        if (DfStringUtil.startsWith(requestPath, API_URL_PREFIX)) {
+            return DfStringUtil.substringFirstRear(requestPath, API_URL_PREFIX);
+        }
+        return requestPath;
+    }
+
+    private boolean isSwaggerRequest(String requestPath) {
+        return requestPath.startsWith("/webjars/swagger-ui") || requestPath.startsWith("/swagger");
     }
 }

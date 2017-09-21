@@ -131,7 +131,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     }
 
     protected IntroActionAdjustmentProvider createActionAdjustmentProvider() {
-        return new IntroActionAdjustmentProvider();
+        return new IntroActionAdjustmentProvider(config);
     }
 
     protected ApiFailureHook createApiFailureHook() {

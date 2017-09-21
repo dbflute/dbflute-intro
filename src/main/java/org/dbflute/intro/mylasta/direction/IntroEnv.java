@@ -65,6 +65,9 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. localhost */
     String SERVER_DOMAIN = "server.domain";
 
+    /** The key of the configuration. e.g. true */
+    String SWAGGER_ENABLED = "swagger.enabled";
+
     /**
      * Get the value of property as {@link String}.
      * @param propertyKey The key of the property. (NotNull)
@@ -228,6 +231,22 @@ public interface IntroEnv {
     String getServerDomain();
 
     /**
+     * Get the value for the key 'swagger.enabled'. <br>
+     * The value is, e.g. true <br>
+     * comment: is it use swagger in this environment?
+     * @return The value of found property. (NotNull: if not found, exception but basically no way)
+     */
+    String getSwaggerEnabled();
+
+    /**
+     * Is the property for the key 'swagger.enabled' true? <br>
+     * The value is, e.g. true <br>
+     * comment: is it use swagger in this environment?
+     * @return The determination, true or false. (if not found, exception but basically no way)
+     */
+    boolean isSwaggerEnabled();
+
+    /**
      * The simple implementation for configuration.
      * @author FreeGen
      */
@@ -306,6 +325,14 @@ public interface IntroEnv {
 
         public String getServerDomain() {
             return get(IntroEnv.SERVER_DOMAIN);
+        }
+
+        public String getSwaggerEnabled() {
+            return get(IntroEnv.SWAGGER_ENABLED);
+        }
+
+        public boolean isSwaggerEnabled() {
+            return is(IntroEnv.SWAGGER_ENABLED);
         }
     }
 }
