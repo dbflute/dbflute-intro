@@ -24,11 +24,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
-import org.dbflute.jetty.JettyBoot;
+import org.dbflute.tomcat.TomcatBoot;
 
 /**
  * @author p1us2er0
  * @author jflute
+ * @author cabos
  */
 public class IntroBoot {
 
@@ -39,14 +40,15 @@ public class IntroBoot {
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        JettyBoot boot = new JettyBoot(getPort(), CONTEXT); // no context path
+        TomcatBoot boot = new TomcatBoot(getPort(), CONTEXT); // no context path
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
             boot.browseOnDesktop();
         }
-        // TODO yuto confirm we can load only "swagger-ui" (2017/09/12)
-        boot.useMetaInfoResourceDetect().useWebFragmentsDetect();
+        boot.useMetaInfoResourceDetect().useWebFragmentsDetect(jarName -> {
+            return jarName.contains("swagger-ui");
+        });
         boot.bootAwait();
     }
 
