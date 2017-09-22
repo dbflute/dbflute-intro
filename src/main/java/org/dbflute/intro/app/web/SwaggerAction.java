@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
+import org.dbflute.optional.OptionalThing;
 import org.lastaflute.doc.SwaggerGenerator;
 import org.lastaflute.doc.agent.SwaggerAgent;
 import org.lastaflute.doc.web.LaActionSwaggerable;
@@ -20,6 +21,11 @@ import org.lastaflute.web.servlet.request.RequestManager;
  */
 @AllowAnyoneAccess
 public class SwaggerAction extends IntroBaseAction implements LaActionSwaggerable {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String _apiPrefix = "api";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -42,7 +48,11 @@ public class SwaggerAction extends IntroBaseAction implements LaActionSwaggerabl
     @Execute
     public JsonResponse<Map<String, Object>> json() {
         verifySwaggerAllowed();
-        return asJson(new SwaggerGenerator().generateSwaggerMap());
+        return asJson(new SwaggerGenerator() {
+            protected OptionalThing<String> prepareApplicationVersion() {
+                return OptionalThing.of(_apiPrefix);
+            }
+        }.generateSwaggerMap());
     }
 
     private void verifySwaggerAllowed() { // also check in ActionAdjustmentProvider
