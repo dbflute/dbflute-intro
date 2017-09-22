@@ -49,6 +49,7 @@ public class SwaggerAction extends IntroBaseAction implements LaActionSwaggerabl
     public JsonResponse<Map<String, Object>> json() {
         verifySwaggerAllowed();
         return asJson(new SwaggerGenerator() {
+            @Override
             protected OptionalThing<String> prepareApplicationVersion() {
                 return OptionalThing.of(_apiPrefix);
             }
