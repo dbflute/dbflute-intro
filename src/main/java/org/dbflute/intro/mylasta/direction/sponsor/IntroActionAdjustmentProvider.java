@@ -24,6 +24,7 @@ import org.lastaflute.web.path.ActionAdjustmentProvider;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author cabos
  */
 public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
