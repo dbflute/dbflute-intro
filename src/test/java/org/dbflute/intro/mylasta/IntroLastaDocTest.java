@@ -15,14 +15,26 @@
  */
 package org.dbflute.intro.mylasta;
 
+import org.dbflute.intro.IntroBoot;
+import org.dbflute.intro.app.web.SwaggerAction;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 
 /**
  * @author t-awane
+ * @author cabos
  */
 public class IntroLastaDocTest extends UnitIntroTestCase {
 
+    @Override
+    protected String prepareMockContextPath() {
+        return IntroBoot.CONTEXT; // basically for swagger
+    }
+
     public void test_document() {
         saveLastaDocMeta();
+    }
+
+    public void test_swaggerJson() throws Exception {
+        saveSwaggerMeta(new SwaggerAction());
     }
 }

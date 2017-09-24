@@ -42,7 +42,9 @@ ext {
             // Partner Library
             slf4j : '1.7.25',
             logback : '1.2.3',
-            jettyboot : '0.4.8',
+            tomcatboot : '0.5.8',
+            lastadoc : '0.2.8-RC1',
+            swaggerui : '2.2.8',
 
             // GoodNeighbor Library
             commonslang : '3.5',
@@ -50,7 +52,7 @@ ext {
 
             // Testing
             junit : '4.8.2',
-            utflute : '0.7.8'
+            utflute : '0.7.9'
         ]
 }
 
@@ -91,7 +93,9 @@ dependencies {
     compile "org.slf4j:slf4j-api:${versions.slf4j}"
     runtime "ch.qos.logback:logback-classic:${versions.logback}"
     compile "javax.servlet:javax.servlet-api:3.1.0"
-    compile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
+    compile "org.dbflute.tomcat:tomcat-boot:${versions.tomcatboot}"
+    compile "org.lastaflute.doc:lasta-doc:${versions.lastadoc}"
+    runtime "org.webjars:swagger-ui:${versions.swaggerui}"
 
     // GoodNeighbor Library
     compile "org.apache.commons:commons-lang3:${versions.commonslang}"
