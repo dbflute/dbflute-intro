@@ -15,6 +15,7 @@ import org.lastaflute.web.validation.Required;
 public class DecommentSaveBody {
 
     // done cabos system parameter, use (groups = ClientError.class) _lavc... by jflute (2017/08/10)
+    // TODO cabos javadoc and add e.g. (above annotation) by jflute (2017/09/28)
     @Required(groups = ClientError.class)
     public Boolean merged;
     @Required(groups = ClientError.class)
@@ -25,6 +26,7 @@ public class DecommentSaveBody {
 
         @Required(groups = ClientError.class)
         public String tableName;
+
         // done cabos List<DecommentColumnPart> by jflute (2017/07/27)
         @Valid
         @Required(groups = ClientError.class)

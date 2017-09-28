@@ -109,6 +109,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakoba public on demand, so private now by jflute (2017/08/17)
     private List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
         String dirPath = buildDecommentPieceDirPath(clientProject);
+        // TODO hakiba support no-existing directory by jflute (2017/09/28)
         try {
             return Files.list(Paths.get(dirPath)).map(path -> {
                 try {
@@ -127,6 +128,7 @@ public class DocumentDecommentPhysicalLogic {
     private DfDecoMapPickup readDecommentPickupMap(String clientProject) {
         String filePath = buildDecommentPickupPath(clientProject);
         try {
+            // TODO hakiba support no-existing directory or file by jflute (2017/09/28)
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
             return decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath)));
         } catch (IOException e) {
