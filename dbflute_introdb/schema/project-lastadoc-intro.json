@@ -100,7 +100,7 @@
             "name": "databaseCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
             "simpleTypeName": "CDef.TargetDatabase",
-            "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+            "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -112,7 +112,7 @@
             "name": "languageCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
             "simpleTypeName": "CDef.TargetLanguage",
-            "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+            "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -124,7 +124,7 @@
             "name": "containerCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
             "simpleTypeName": "CDef.TargetContainer",
-            "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+            "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -571,7 +571,7 @@
             "name": "databaseCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
             "simpleTypeName": "CDef.TargetDatabase",
-            "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+            "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -583,7 +583,7 @@
             "name": "languageCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
             "simpleTypeName": "CDef.TargetLanguage",
-            "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+            "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -595,7 +595,7 @@
             "name": "containerCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
             "simpleTypeName": "CDef.TargetContainer",
-            "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+            "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -754,7 +754,7 @@
                 "name": "databaseCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
-                "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+                "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -766,7 +766,7 @@
                 "name": "languageCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
-                "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+                "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -778,7 +778,7 @@
                 "name": "containerCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
-                "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+                "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -1225,7 +1225,7 @@
                 "name": "databaseCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
-                "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+                "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -1237,7 +1237,7 @@
                 "name": "languageCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
-                "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+                "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -1249,7 +1249,7 @@
                 "name": "containerCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
-                "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+                "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -2519,8 +2519,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "xxxx e.g. false",
+            "comment": "xxxx e.g. false",
             "annotationList": [
               "Required{groups\u003d[ClientError]}"
             ],
@@ -2543,8 +2543,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "database table name e.g. MEMBER",
+                "comment": "database table name e.g. MEMBER",
                 "annotationList": [
                   "Required{groups\u003d[ClientError]}"
                 ],
@@ -2625,9 +2625,7 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [
-                      "Required{groups\u003d[ClientError]}"
-                    ],
+                    "annotationList": [],
                     "nestTypeDocMetaList": []
                   }
                 ]
@@ -2858,6 +2856,18 @@
             "Resource"
           ],
           "nestTypeDocMetaList": []
+        },
+        {
+          "name": "documentUpdateLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.DocumentUpdateLogic",
+          "simpleTypeName": "DocumentUpdateLogic",
+          "value": null,
+          "description": "@author deco",
+          "comment": "@author deco",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
         }
       ],
       "methodName": "schemahtml",
@@ -2882,14 +2892,14 @@
         "name": null,
         "typeName": "org.lastaflute.web.response.StreamResponse",
         "simpleTypeName": "StreamResponse",
-        "value": "StreamResponse.asEmptyBody(),createHtmlStreamResponse(schemaHtml)",
+        "value": "StreamResponse.asEmptyBody(),createStringSteamResponse(schemaHtmlContent)",
         "description": null,
         "comment": null,
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 51,
-      "methodLineCount": 7
+      "fileLineCount": 64,
+      "methodLineCount": 8
     },
     {
       "url": "/document/{clientProject}/historyhtml",
@@ -2905,6 +2915,18 @@
           "value": null,
           "description": "@author deco",
           "comment": "@author deco\n@author jflute",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "documentUpdateLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.DocumentUpdateLogic",
+          "simpleTypeName": "DocumentUpdateLogic",
+          "value": null,
+          "description": "@author deco",
+          "comment": "@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -2939,7 +2961,7 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 51,
+      "fileLineCount": 64,
       "methodLineCount": 7
     },
     {
@@ -2956,6 +2978,18 @@
           "value": null,
           "description": "@author deco",
           "comment": "@author deco\n@author jflute",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "documentUpdateLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.DocumentUpdateLogic",
+          "simpleTypeName": "DocumentUpdateLogic",
+          "value": null,
+          "description": "@author deco",
+          "comment": "@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -2990,7 +3024,7 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 51,
+      "fileLineCount": 64,
       "methodLineCount": 7
     },
     {
@@ -3920,7 +3954,7 @@
             "name": "databaseCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
             "simpleTypeName": "CDef.TargetDatabase",
-            "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+            "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -3932,7 +3966,7 @@
             "name": "languageCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
             "simpleTypeName": "CDef.TargetLanguage",
-            "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+            "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -3944,7 +3978,7 @@
             "name": "containerCode",
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
             "simpleTypeName": "CDef.TargetContainer",
-            "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+            "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
             "description": null,
             "comment": null,
             "annotationList": [
@@ -4183,7 +4217,7 @@
                 "name": "databaseCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
-                "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+                "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -4195,7 +4229,7 @@
                 "name": "languageCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
-                "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+                "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -4207,7 +4241,7 @@
                 "name": "containerCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
-                "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+                "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -4334,6 +4368,132 @@
         "nestTypeDocMetaList": []
       },
       "fileLineCount": 91,
+      "methodLineCount": 6
+    },
+    {
+      "url": "/swagger/",
+      "typeName": "org.dbflute.intro.app.web.SwaggerAction",
+      "simpleTypeName": "SwaggerAction",
+      "description": "@author cabos",
+      "typeComment": "@author cabos",
+      "fieldTypeDocMetaList": [
+        {
+          "name": "_apiPrefix",
+          "typeName": "java.lang.String",
+          "simpleTypeName": "String",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "requestManager",
+          "typeName": "org.lastaflute.web.servlet.request.RequestManager",
+          "simpleTypeName": "RequestManager",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "config",
+          "typeName": "org.dbflute.intro.mylasta.direction.IntroConfig",
+          "simpleTypeName": "IntroConfig",
+          "value": null,
+          "description": "@author FreeGen",
+          "comment": "@author FreeGen",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "methodName": "index",
+      "methodComment": null,
+      "annotationList": [
+        "AllowAnyoneAccess",
+        "Execute"
+      ],
+      "parameterTypeDocMetaList": [],
+      "formTypeDocMeta": null,
+      "returnTypeDocMeta": {
+        "name": null,
+        "typeName": "org.lastaflute.web.response.HtmlResponse",
+        "simpleTypeName": "HtmlResponse",
+        "value": "new SwaggerAgent(requestManager)",
+        "description": null,
+        "comment": null,
+        "annotationList": [],
+        "nestTypeDocMetaList": []
+      },
+      "fileLineCount": 37,
+      "methodLineCount": 5
+    },
+    {
+      "url": "/swagger/json",
+      "typeName": "org.dbflute.intro.app.web.SwaggerAction",
+      "simpleTypeName": "SwaggerAction",
+      "description": "@author cabos",
+      "typeComment": "@author cabos",
+      "fieldTypeDocMetaList": [
+        {
+          "name": "_apiPrefix",
+          "typeName": "java.lang.String",
+          "simpleTypeName": "String",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "requestManager",
+          "typeName": "org.lastaflute.web.servlet.request.RequestManager",
+          "simpleTypeName": "RequestManager",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        },
+        {
+          "name": "config",
+          "typeName": "org.dbflute.intro.mylasta.direction.IntroConfig",
+          "simpleTypeName": "IntroConfig",
+          "value": null,
+          "description": "@author FreeGen",
+          "comment": "@author FreeGen",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "methodName": "json",
+      "methodComment": null,
+      "annotationList": [
+        "AllowAnyoneAccess",
+        "Execute"
+      ],
+      "parameterTypeDocMetaList": [],
+      "formTypeDocMeta": null,
+      "returnTypeDocMeta": {
+        "name": null,
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003cjava.util.Map\u003cjava.lang.String, java.lang.Object\u003e\u003e",
+        "simpleTypeName": "JsonResponse\u003cMap\u003cString, Object\u003e\u003e",
+        "value": "asJson(new SwaggerGenerator()",
+        "description": null,
+        "comment": null,
+        "annotationList": [],
+        "nestTypeDocMetaList": []
+      },
+      "fileLineCount": 37,
       "methodLineCount": 6
     },
     {
@@ -4553,7 +4713,7 @@
                 "name": "databaseCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
-                "value": "{oracle\u003dOracle, sqlserver\u003dSQLServer, postgresql\u003dPostgreSQL, db2\u003dDB2, derby\u003dApache Derby, h2\u003dH2 Database, mysql\u003dMySQL}",
+                "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -4565,7 +4725,7 @@
                 "name": "languageCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
-                "value": "{csharp\u003dC#, java\u003dJava, scala\u003dScala}",
+                "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
@@ -4577,7 +4737,7 @@
                 "name": "containerCode",
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
-                "value": "{spring\u003dSpring Framework, lasta_di\u003dLasta Di, cdi\u003dCDI, seasar\u003dSeasar (S2Container), guice\u003dGoogle Guice}",
+                "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
                 "description": null,
                 "comment": null,
                 "annotationList": [
