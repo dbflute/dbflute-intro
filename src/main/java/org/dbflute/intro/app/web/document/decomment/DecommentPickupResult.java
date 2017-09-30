@@ -19,6 +19,7 @@ public class DecommentPickupResult {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    /** tables */
     @Valid
     @Required
     public List<TablePart> tables;
@@ -26,8 +27,10 @@ public class DecommentPickupResult {
     // done hakiba move it under tables by jflute (2017/08/17)
     // done hakiba validator annotation (Required only) by jflute (2017/08/17)
     public static class TablePart {
+        /** table name e.g. "MEMBER" */
         @Required
         public String tableName;
+        /** columns */
         @Valid
         @Required
         public List<ColumnPart> columns;
@@ -38,8 +41,10 @@ public class DecommentPickupResult {
         }
 
         public static class ColumnPart {
+            /** column name e.g. "MEMBER_NAME" */
             @Required
             public String columnName;
+            /** properties */
             @Valid
             @Required
             public List<PropertyPart> properties;
@@ -52,14 +57,19 @@ public class DecommentPickupResult {
 
             // done hakiba PropertyPart by jflute (2017/08/17)
             public static class PropertyPart {
+                /** decomment e.g. "edited column comment" */
                 @Required
                 public String decomment;
+                /** database comment e.g. "database comment" */
                 @Required
                 public String databaseComment;
+                /** previous whole comment e.g. "previous whole comment" */
                 @Required
                 public String previousWholeComment;
+                /** comment version e.g. 3 */
                 @Required
                 public Long commentVersion;
+                /** author list e.g. ["cabos", "hakiba", "deco"] */
                 @Valid
                 @Required
                 public List<String> authorList;
