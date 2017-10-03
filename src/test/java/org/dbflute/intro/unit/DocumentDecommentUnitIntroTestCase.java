@@ -19,8 +19,8 @@ public abstract class DocumentDecommentUnitIntroTestCase extends UnitIntroTestCa
     private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
 
     // ===================================================================================
-    //                                                                            Override
-    //                                                                            ========
+    //                                                                        Assist Logic
+    //                                                                        ============
     protected void prepareTestFiles() throws IOException {
         // TODO done hakiba change to call way to test plain state by jflute (2017/09/28)
         File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_PICKUP_FILE_PATH);
