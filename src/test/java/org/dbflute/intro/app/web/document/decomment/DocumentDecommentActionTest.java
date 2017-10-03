@@ -74,6 +74,7 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
     //                                                                              ======
     public void test_read_PickupResult() throws Exception {
         // ## Arrange ##
+        prepareTestFiles();
         // done hakiba put test data in test/resources by hakiba (2017/08/18)
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);

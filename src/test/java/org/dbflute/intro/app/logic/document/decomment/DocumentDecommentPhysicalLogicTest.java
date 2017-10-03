@@ -14,7 +14,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     // ===================================================================================
     //                                                                              Author
     //                                                                              ======
-    public void test_getAuthor() {
+    public void test_getAuthor() throws Exception {
         // ## Arrange ##
         registerMock(new DocumentAuthorLogic() {
             @Override
@@ -38,9 +38,10 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     // ===================================================================================
     //                                                                              Pickup
     //                                                                              ======
-    public void test_readMergedDecommentPickupMap() {
+    public void test_readMergedDecommentPickupMap() throws Exception {
         // done hakiba put test data in test/resources by hakiba (2017/08/18)
         // ## Arrange ##
+        prepareTestFiles();
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
 
