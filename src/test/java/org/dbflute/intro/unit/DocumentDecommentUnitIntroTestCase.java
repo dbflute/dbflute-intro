@@ -21,11 +21,6 @@ public abstract class DocumentDecommentUnitIntroTestCase extends UnitIntroTestCa
     // ===================================================================================
     //                                                                            Override
     //                                                                            ========
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-
     protected void prepareTestFiles() throws IOException {
         // TODO done hakiba change to call way to test plain state by jflute (2017/09/28)
         File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_PICKUP_FILE_PATH);
