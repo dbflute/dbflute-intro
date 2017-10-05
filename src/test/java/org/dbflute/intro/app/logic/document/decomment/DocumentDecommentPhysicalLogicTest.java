@@ -38,7 +38,22 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     // ===================================================================================
     //                                                                              Pickup
     //                                                                              ======
-    public void test_readMergedDecommentPickupMap() throws Exception {
+    public void test_readMergedDecommentPickupMap_init() throws Exception {
+        // ## Arrange ##
+        // TODO hakiba null pointer at init state by jflute (2017/10/05)
+        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
+        inject(logic);
+
+        // ## Act ##
+        // done hakiba use testdb by jflute (2017/08/17)
+        DfDecoMapPickup pickup = logic.readMergedDecommentPickupMap(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        // Assert by visual confirmation
+        log(ln() + pickup);
+    }
+
+    public void test_readMergedDecommentPickupMap_prepared() throws Exception {
         // done hakiba put test data in test/resources by hakiba (2017/08/18)
         // ## Arrange ##
         prepareTestFiles();

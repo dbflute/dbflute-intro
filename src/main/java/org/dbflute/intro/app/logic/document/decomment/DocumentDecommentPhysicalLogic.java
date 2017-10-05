@@ -71,7 +71,7 @@ public class DocumentDecommentPhysicalLogic {
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
@@ -91,7 +91,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -101,7 +101,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
         DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickup, pieces);
@@ -110,7 +110,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakoba public on demand, so private now by jflute (2017/08/17)
     private List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
         String dirPath = buildDecommentPieceDirPath(clientProject);
-        // TODO done hakiba support no-existing directory by jflute (2017/09/28)
+        // done hakiba support no-existing directory by jflute (2017/09/28)
         if (Files.notExists(Paths.get(dirPath))) {
             return Collections.emptyList();
         }
@@ -131,8 +131,9 @@ public class DocumentDecommentPhysicalLogic {
 
     private DfDecoMapPickup readDecommentPickupMap(String clientProject) {
         String filePath = buildDecommentPickupPath(clientProject);
-        // TODO done hakiba support no-existing directory or file by jflute (2017/09/28)
+        // done hakiba support no-existing directory or file by jflute (2017/09/28)
         if (Files.notExists(Paths.get(filePath))) {
+            // TODO hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
             return null;
         }
         try {
