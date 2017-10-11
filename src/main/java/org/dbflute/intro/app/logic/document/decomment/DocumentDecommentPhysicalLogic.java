@@ -23,6 +23,7 @@ import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
+import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.core.time.TimeManager;
 
@@ -71,7 +72,7 @@ public class DocumentDecommentPhysicalLogic {
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                    pieceMapFile.getAbsolutePath(), e);
+                pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
@@ -91,7 +92,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                    pieceMapFile.getAbsolutePath(), e);
+                pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -101,10 +102,10 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
-        DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
+            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+        OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
-        return decoMapFile.merge(pickup, pieces);
+        return decoMapFile.merge(pickupOpt, pieces);
     }
 
     // done hakoba public on demand, so private now by jflute (2017/08/17)
@@ -129,16 +130,16 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    private DfDecoMapPickup readDecommentPickupMap(String clientProject) {
+    private OptionalThing<DfDecoMapPickup> readDecommentPickupMap(String clientProject) {
         String filePath = buildDecommentPickupPath(clientProject);
         // done hakiba support no-existing directory or file by jflute (2017/09/28)
         if (Files.notExists(Paths.get(filePath))) {
-            // TODO hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
-            return null;
+            // TODO done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
+            return OptionalThing.empty();
         }
         try {
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
-            return decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath)));
+            return OptionalThing.of(decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath))));
         } catch (IOException e) {
             throw new UncheckedIOException("fail to read decomment pickup map. path : " + filePath, e);
         }
