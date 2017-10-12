@@ -20,12 +20,12 @@ public class DfDecoMapTablePart {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    public static DfDecoMapTablePart createPieceTablePart(Map.Entry tablePartEntry) {
-        @SuppressWarnings("unchecked")
-        final List<DfDecoMapColumnPart> pieceColumns = ((Map<String, Object>) tablePartEntry.getValue()).entrySet()
-            .stream()
-            .map(columnEntry -> DfDecoMapColumnPart.createPieceColumnPart(columnEntry))
-            .collect(Collectors.toList());
+    public static DfDecoMapTablePart createPieceTablePart(Map.Entry<String, Map<String, Map<String, Object>>> tablePartEntry) {
+        final List<DfDecoMapColumnPart> pieceColumns = tablePartEntry.getValue()
+                .entrySet()
+                .stream()
+                .map(columnEntry -> DfDecoMapColumnPart.createPieceColumnPart(columnEntry))
+                .collect(Collectors.toList());
 
         DfDecoMapTablePart table = new DfDecoMapTablePart();
         table.setTableName((String) tablePartEntry.getKey());
@@ -33,12 +33,12 @@ public class DfDecoMapTablePart {
         return table;
     }
 
-    public static DfDecoMapTablePart createPickupTablePart(Map.Entry tablePartEntry) {
-        @SuppressWarnings("unchecked")
-        final List<DfDecoMapColumnPart> pickupColumns = ((Map<String, Object>) tablePartEntry.getValue()).entrySet()
-            .stream()
-            .map(columnEntry -> DfDecoMapColumnPart.createPickupColumnPart(columnEntry))
-            .collect(Collectors.toList());
+    public static DfDecoMapTablePart createPickupTablePart(Map.Entry<String, Map<String, List<Map<String, Object>>>> tablePartEntry) {
+        final List<DfDecoMapColumnPart> pickupColumns = tablePartEntry.getValue()
+                .entrySet()
+                .stream()
+                .map(columnEntry -> DfDecoMapColumnPart.createPickupColumnPart(columnEntry))
+                .collect(Collectors.toList());
 
         DfDecoMapTablePart table = new DfDecoMapTablePart();
         table.setTableName((String) tablePartEntry.getKey());
@@ -48,7 +48,7 @@ public class DfDecoMapTablePart {
 
     public Map<String, Object> convertPieceMap() {
         Map<String, Object> columnMap = columns.stream()
-            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
+                .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
@@ -57,7 +57,7 @@ public class DfDecoMapTablePart {
 
     public Map<String, Object> convertPickupMap() {
         Map<String, List<Map<String, Object>>> columnMap = columns.stream()
-            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
+                .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
@@ -70,12 +70,15 @@ public class DfDecoMapTablePart {
     public String getTableName() {
         return tableName;
     }
+
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
+
     public List<DfDecoMapColumnPart> getColumns() {
         return columns;
     }
+
     public void setColumns(List<DfDecoMapColumnPart> columns) {
         this.columns = columns;
     }

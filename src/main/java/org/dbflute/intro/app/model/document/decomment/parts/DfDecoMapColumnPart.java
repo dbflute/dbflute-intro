@@ -42,39 +42,45 @@ public class DfDecoMapColumnPart {
             this.databaseComment = (String) columnEntry.get("databaseComment");
             this.previousWholeComment = (String) columnEntry.get("previousWholeComment");
             this.commentVersion = Long.valueOf((String) columnEntry.get("commentVersion"));
-            this.authorList = ((List<?>) columnEntry.get("authorList")).stream()
-                .filter(authorObject -> authorObject instanceof String)
-                .map(authorObject -> (String) authorObject)
-                .collect(Collectors.toList());
+            this.authorList = ((List<?>) columnEntry.get("authorList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
         }
 
         public String getDecomment() {
             return decomment;
         }
+
         public void setDecomment(String decomment) {
             this.decomment = decomment;
         }
+
         public String getDatabaseComment() {
             return databaseComment;
         }
+
         public void setDatabaseComment(String databaseComment) {
             this.databaseComment = databaseComment;
         }
+
         public String getPreviousWholeComment() {
             return previousWholeComment;
         }
+
         public void setPreviousWholeComment(String previousWholeComment) {
             this.previousWholeComment = previousWholeComment;
         }
+
         public long getCommentVersion() {
             return commentVersion;
         }
+
         public void setCommentVersion(long commentVersion) {
             this.commentVersion = commentVersion;
         }
+
         public List<String> getAuthorList() {
             return authorList;
         }
+
         public void setAuthorList(List<String> authorList) {
             this.authorList = authorList;
         }
@@ -93,23 +99,18 @@ public class DfDecoMapColumnPart {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    public static DfDecoMapColumnPart createPieceColumnPart(Map.Entry<String, Object> columnEntry) {
-        //noinspection unchecked
-        final ColumnPropertyPart property = new ColumnPropertyPart((Map<String, Object>) columnEntry.getValue());
-
+    public static DfDecoMapColumnPart createPieceColumnPart(Map.Entry<String, Map<String, Object>> columnEntry) {
+        final ColumnPropertyPart property = new ColumnPropertyPart(columnEntry.getValue());
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName(columnEntry.getKey());
         column.setProperties(Collections.singletonList(property));
         return column;
     }
 
-    public static DfDecoMapColumnPart createPickupColumnPart(Map.Entry<String, Object> columnEntry) {
-        //noinspection unchecked
-        final List<ColumnPropertyPart> properties = ((List<?>) columnEntry.getValue()).stream()
-            .map(propertiesObject -> (Map<String, Object>) propertiesObject)
-            .map(propertiesMap -> new ColumnPropertyPart(propertiesMap))
-            .collect(Collectors.toList());
-
+    public static DfDecoMapColumnPart createPickupColumnPart(Map.Entry<String, List<Map<String, Object>>> columnEntry) {
+        final List<ColumnPropertyPart> properties = columnEntry.getValue().stream().map(propertiesMap -> {
+            return new ColumnPropertyPart(propertiesMap);
+        }).collect(Collectors.toList());
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName(columnEntry.getKey());
         column.setProperties(properties);
@@ -130,6 +131,7 @@ public class DfDecoMapColumnPart {
     public String getColumnName() {
         return this.columnName;
     }
+
     public void setColumnName(String columnName) {
         this.columnName = columnName;
     }
@@ -143,10 +145,7 @@ public class DfDecoMapColumnPart {
     }
 
     public long getLatestCommentVersion() {
-        return this.getProperties()
-            .stream()
-            .map(part -> part.getCommentVersion())
-            .max(Comparator.naturalOrder())
-            .orElse(MINIMUM_COMMENT_VERSION);
+        return this.getProperties().stream().map(part -> part.getCommentVersion()).max(Comparator.naturalOrder()).orElse(
+                MINIMUM_COMMENT_VERSION);
     }
 }

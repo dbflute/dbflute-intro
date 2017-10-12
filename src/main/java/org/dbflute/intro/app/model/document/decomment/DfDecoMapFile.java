@@ -32,6 +32,9 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Read
     //                                                                              ======
+    // -----------------------------------------------------
+    //                                                 Piece
+    //                                                 -----
     /* e.g. piece map
     map:{
         ; decoMap = map:{
@@ -72,7 +75,7 @@ public class DfDecoMapFile {
         LocalDateTime decommentDatetime = new HandyDate((String) map.get("decommentDatetime")).getLocalDateTime();
         Boolean merged = Boolean.valueOf((String) map.get("merged"));
         @SuppressWarnings("unchecked")
-        Map<String, Object> decoMap = (Map<String, Object>) map.get("decoMap");
+        Map<String, Map<String, Map<String, Object>>> decoMap = (Map<String, Map<String, Map<String, Object>>>) map.get("decoMap");
         DfDecoMapTablePart tablePart = decoMap.entrySet().stream().map(tableEntry -> {
             return DfDecoMapTablePart.createPieceTablePart(tableEntry);
         }).findFirst().orElseThrow(() -> createDecoMapTableElementNotFoundException(fileName, map));
@@ -151,11 +154,11 @@ public class DfDecoMapFile {
     private DfDecoMapPickup mappingToDecoMapPickup(String fileName, Map<String, Object> map) {
         String formatVersion = (String) map.get("formatVersion");
         @SuppressWarnings("unchecked")
-        Map<String, Object> decoMap = (Map<String, Object>) map.get("decoMap");
-        List<DfDecoMapTablePart> tablePartList = decoMap.entrySet()
-            .stream()
-            .map(tableEntry -> DfDecoMapTablePart.createPickupTablePart(tableEntry))
-            .collect(Collectors.toList());
+        Map<String, Map<String, List<Map<String, Object>>>> decoMap =
+                (Map<String, Map<String, List<Map<String, Object>>>>) map.get("decoMap");
+        List<DfDecoMapTablePart> tablePartList =
+                decoMap.entrySet().stream().map(tableEntry -> DfDecoMapTablePart.createPickupTablePart(tableEntry)).collect(
+                        Collectors.toList());
 
         DfDecoMapPickup pickup = new DfDecoMapPickup();
         pickup.setFileName(fileName);
@@ -206,16 +209,16 @@ public class DfDecoMapFile {
     public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces) {
         // Create all table part list
         final List<DfDecoMapTablePart> allTablePartList =
-            generateLatestCommentVersionStream(pickupOpt, pieces).collect(Collectors.toList());
+                generateLatestCommentVersionStream(pickupOpt, pieces).collect(Collectors.toList());
 
         // Extract all table name
         final Set<String> allTableNameSet =
-            allTablePartList.stream().map(tablePart -> tablePart.getTableName()).collect(Collectors.toSet());
+                allTablePartList.stream().map(tablePart -> tablePart.getTableName()).collect(Collectors.toSet());
         // Extract all column name
         final Set<String> allColumnNameSet = allTablePartList.stream()
-            .flatMap(tablePart -> tablePart.getColumns().stream())
-            .map(columnPart -> columnPart.getColumnName())
-            .collect(Collectors.toSet());
+                .flatMap(tablePart -> tablePart.getColumns().stream())
+                .map(columnPart -> columnPart.getColumnName())
+                .collect(Collectors.toSet());
 
         // Merge tables
         final List<DfDecoMapTablePart> mergedDecoMap = allTableNameSet.stream().map(tableName -> {
@@ -223,11 +226,11 @@ public class DfDecoMapFile {
             final List<DfDecoMapColumnPart> mergedColumnPartList = allColumnNameSet.stream().map(columnName -> {
                 // Merge properties of column with filtering max comment version
                 final List<DfDecoMapColumnPart.ColumnPropertyPart> mergedProperties = allTablePartList.stream()
-                    .filter(tablePart -> tableName.equals(tablePart.getTableName()))
-                    .flatMap(tablePart -> tablePart.getColumns().stream())
-                    .filter(columnPart -> columnName.equals(columnPart.getColumnName()))
-                    .flatMap(columnPart -> columnPart.getProperties().stream())
-                    .collect(Collectors.toList());
+                        .filter(tablePart -> tableName.equals(tablePart.getTableName()))
+                        .flatMap(tablePart -> tablePart.getColumns().stream())
+                        .filter(columnPart -> columnName.equals(columnPart.getColumnName()))
+                        .flatMap(columnPart -> columnPart.getProperties().stream())
+                        .collect(Collectors.toList());
 
                 DfDecoMapColumnPart mergedColumn = new DfDecoMapColumnPart();
                 mergedColumn.setColumnName(columnName);
@@ -251,19 +254,21 @@ public class DfDecoMapFile {
     }
 
     private Stream<DfDecoMapTablePart> generateLatestCommentVersionStream(OptionalThing<DfDecoMapPickup> pickupOpt,
-        List<DfDecoMapPiece> pieces) {
+            List<DfDecoMapPiece> pieces) {
         final Map<String, Long> latestCommentVersionMap = generateAllColumnLatestCommentVersionMap(pickupOpt, pieces);
 
         // Pickup: Extract latest comment version column
         Stream<DfDecoMapTablePart> pickupStream =
-            pickupOpt.map(pickup -> pickup.getDecoMap()).map(tableParts -> tableParts.stream()).orElse(Stream.empty()).map(tablePart -> {
-                final List<DfDecoMapColumnPart> maxCommentVersionColumnPartList = tablePart.getColumns()
-                    .stream()
-                    .filter(columnPart -> columnPart.getLatestCommentVersion() == latestCommentVersionMap.get(columnPart.getColumnName()))
-                    .collect(Collectors.toList());
-                tablePart.setColumns(maxCommentVersionColumnPartList);
-                return tablePart;
-            });
+                pickupOpt.map(pickup -> pickup.getDecoMap()).map(tableParts -> tableParts.stream()).orElse(Stream.empty()).map(
+                        tablePart -> {
+                            final List<DfDecoMapColumnPart> maxCommentVersionColumnPartList = tablePart.getColumns()
+                                    .stream()
+                                    .filter(columnPart -> columnPart.getLatestCommentVersion() == latestCommentVersionMap
+                                            .get(columnPart.getColumnName()))
+                                    .collect(Collectors.toList());
+                            tablePart.setColumns(maxCommentVersionColumnPartList);
+                            return tablePart;
+                        });
 
         // Piece: Extract latest comment version column
         BinaryOperator<DfDecoMapPiece> filteringLatestDecommentDatetime = (v1, v2) -> {
@@ -271,33 +276,30 @@ public class DfDecoMapFile {
             final LocalDateTime v2LocalDateTime = v2.getDecommentDatetime();
             return v1LocalDateTime.isAfter(v2LocalDateTime) ? v1 : v2;
         };
-        Stream<DfDecoMapTablePart> piecesStream = pieces.stream()
-            .map(piece -> {
-                final List<DfDecoMapColumnPart> maxCommentVersionColumnPartList = piece.getDecoMap()
+        Stream<DfDecoMapTablePart> piecesStream = pieces.stream().map(piece -> {
+            final List<DfDecoMapColumnPart> maxCommentVersionColumnPartList = piece.getDecoMap()
                     .getColumns()
                     .stream()
                     .filter(columnPart -> columnPart.getLatestCommentVersion() == latestCommentVersionMap.get(columnPart.getColumnName()))
                     .collect(Collectors.toList());
-                piece.getDecoMap().setColumns(maxCommentVersionColumnPartList);
-                return piece;
-            })
-            .collect(Collectors.toMap(piece -> piece.getAuthor(), Function.identity(), filteringLatestDecommentDatetime))
-            .entrySet()
-            .stream()
-            .map(stringDfDecoMapPieceEntry -> stringDfDecoMapPieceEntry.getValue())
-            .map(dfDecoMapPiece -> dfDecoMapPiece.getDecoMap());
+            piece.getDecoMap().setColumns(maxCommentVersionColumnPartList);
+            return piece;
+        })
+                .collect(Collectors.toMap(piece -> piece.getAuthor(), Function.identity(), filteringLatestDecommentDatetime))
+                .entrySet()
+                .stream()
+                .map(stringDfDecoMapPieceEntry -> stringDfDecoMapPieceEntry.getValue())
+                .map(dfDecoMapPiece -> dfDecoMapPiece.getDecoMap());
 
         return Stream.concat(pickupStream, piecesStream);
     }
 
     private Map<String, Long> generateAllColumnLatestCommentVersionMap(OptionalThing<DfDecoMapPickup> pickupOpt,
-        List<DfDecoMapPiece> pieces) {
+            List<DfDecoMapPiece> pieces) {
         Stream<DfDecoMapTablePart> pickupStream =
-            pickupOpt.map(pickup -> pickup.getDecoMap()).map(tableParts -> tableParts.stream()).orElse(Stream.empty());
+                pickupOpt.map(pickup -> pickup.getDecoMap()).map(tableParts -> tableParts.stream()).orElse(Stream.empty());
         Stream<DfDecoMapTablePart> pieceStream = pieces.stream().map(dfDecoMapPiece -> dfDecoMapPiece.getDecoMap());
-        return Stream.concat(pickupStream, pieceStream)
-            .flatMap(tablePart -> tablePart.getColumns().stream())
-            .collect(Collectors.toMap(// Convert Map
+        return Stream.concat(pickupStream, pieceStream).flatMap(tablePart -> tablePart.getColumns().stream()).collect(Collectors.toMap(// Convert Map
                 column -> column.getColumnName(), // key: column name
                 column -> column.getLatestCommentVersion(), // value: max comment version
                 (v1, v2) -> Math.max(v1, v2)));

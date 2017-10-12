@@ -79,8 +79,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapTablePart mappingToDecoMapPiece(DecommentTablePart tablePart, String author) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
-        tablePartMap.setColumns(
-                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
+        List<DfDecoMapColumnPart> columns =
+                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList());
+        tablePartMap.setColumns(columns);
         return tablePartMap;
     }
 

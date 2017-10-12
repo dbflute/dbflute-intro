@@ -72,7 +72,7 @@ public class DocumentDecommentPhysicalLogic {
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
@@ -92,7 +92,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -102,7 +102,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);
@@ -134,7 +134,7 @@ public class DocumentDecommentPhysicalLogic {
         String filePath = buildDecommentPickupPath(clientProject);
         // done hakiba support no-existing directory or file by jflute (2017/09/28)
         if (Files.notExists(Paths.get(filePath))) {
-            // TODO done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
+            // done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
             return OptionalThing.empty();
         }
         try {
