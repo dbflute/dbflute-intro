@@ -72,13 +72,13 @@ public class DocumentDecommentPhysicalLogic {
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                    pieceMapFile.getAbsolutePath(), e);
+                pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
     }
 
-    private String buildPieceFileName(String tableName, String author) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
+    protected String buildPieceFileName(String tableName, String author) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
         return "decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + author + ".dfmap";
     }
 
@@ -92,7 +92,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                    pieceMapFile.getAbsolutePath(), e);
+                pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -102,7 +102,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);
