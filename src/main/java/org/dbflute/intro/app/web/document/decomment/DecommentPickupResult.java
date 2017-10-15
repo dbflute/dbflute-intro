@@ -19,7 +19,7 @@ public class DecommentPickupResult {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    /** tables */
+    /** list of table part */
     @Valid
     @Required
     public List<TablePart> tables;
@@ -28,7 +28,10 @@ public class DecommentPickupResult {
     // done hakiba validator annotation (Required only) by jflute (2017/08/17)
     public static class TablePart {
 
-        /** table name e.g. "MEMBER" */
+        /**
+         * table name
+         * e.g. "MEMBER"
+         */
         @Required
         public String tableName;
 
@@ -37,49 +40,61 @@ public class DecommentPickupResult {
         @Required
         public List<ColumnPart> columns;
 
-        public TablePart(DfDecoMapTablePart tablePart) {
-            this.tableName = tablePart.getTableName();
-            this.columns = tablePart.getColumns().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
-        }
-
         public static class ColumnPart {
 
-            /** column name e.g. "MEMBER_NAME" */
+            /**
+             * column name
+             * e.g. "MEMBER_NAME"
+             */
             @Required
             public String columnName;
 
-            /** properties */
+            /** list of decomment properties associated column  */
             @Valid
             @Required
             public List<PropertyPart> properties;
 
-            public ColumnPart(DfDecoMapColumnPart columnPart) {
-                this.columnName = columnPart.getColumnName();
-                this.properties =
-                        columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
-            }
-
             public static class PropertyPart {
 
-                /** decomment e.g. "edited column comment" */
+                /**
+                 * decomment saved as decomment piece map
+                 * e.g. "decomment means 'deco' + 'database comment'"
+                 */
                 @Required
                 public String decomment;
 
-                /** database comment e.g. "let's cabos" (NullAllowed) */
+                /**
+                 * column comment on table definition
+                 * The comments on database may be blank so null allowed.
+                 * e.g. "let's cabos" (NullAllowed)
+                 */
                 public String databaseComment;
 
-                /** previous whole comment e.g. "my name is hakiba" (NullAllowed) */
+                /**
+                 * column comment before editing on the schema.html
+                 * e.g. "my name is hakiba" (NullAllowed)
+                 */
                 public String previousWholeComment;
 
-                /** comment version e.g. 3 */
+                /**
+                 * column comment version
+                 * The comment version will update when the decomment.dfprop file is picked up.
+                 * e.g. 3
+                 */
                 @Required
                 public Long commentVersion;
 
-                /** author list e.g. ["cabos", "hakiba", "deco"] */
+                /**
+                 * the list of ancestor authors
+                 * e.g. ["cabos", "hakiba", "deco"]
+                 */
                 @Valid
                 @Required
                 public List<String> authorList;
 
+                // =======================================================================
+                //                                                             Constructor
+                //                                                             ===========
                 public PropertyPart(DfDecoMapColumnPart.ColumnPropertyPart property) {
                     this.decomment = property.getDecomment();
                     this.databaseComment = property.getDatabaseComment();
@@ -88,12 +103,20 @@ public class DecommentPickupResult {
                     this.authorList = property.getAuthorList();
                 }
             }
+
+            public ColumnPart(DfDecoMapColumnPart columnPart) {
+                this.columnName = columnPart.getColumnName();
+                this.properties =
+                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+            }
+        }
+
+        public TablePart(DfDecoMapTablePart tablePart) {
+            this.tableName = tablePart.getTableName();
+            this.columns = tablePart.getColumns().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
         }
     }
 
-    // ===================================================================================
-    //                                                                         Constructor
-    //                                                                         ===========
     public DecommentPickupResult(List<DfDecoMapTablePart> tableParts) {
         this.tables = tableParts.stream().map(tablePart -> new TablePart(tablePart)).collect(Collectors.toList());
     }
