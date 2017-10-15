@@ -64,7 +64,9 @@ public class DocumentDecommentPhysicalLogic {
         String tableName = decoMapPiece.getDecoMap().getTableName();
         String author = decoMapPiece.getAuthor();
         File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
-        createPieceMapFile(pieceMapFile);
+        if (!pieceMapFile.exists()) {
+            createPieceMapFile(pieceMapFile);
+        }
         try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
             // done cabos remove 'df' from variable name by jflute (2017/08/10)
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
@@ -78,15 +80,16 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    protected String buildPieceFileName(String tableName, String author) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
+    protected String buildPieceFileName(String tableName, String author) {
+        // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
         return "decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + author + ".dfmap";
     }
 
-    private String getCurrentDateStr() {
+    protected String getCurrentDateStr() {
         return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(timeManager.currentDateTime());
     }
 
-    private void createPieceMapFile(File pieceMapFile) {
+    protected void createPieceMapFile(File pieceMapFile) {
         try {
             Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
@@ -159,11 +162,11 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
-    private String buildDecommentPieceDirPath(String clientProject) {
+    protected String buildDecommentPieceDirPath(String clientProject) {
         return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "piece");
     }
 
-    private String buildDecommentPiecePath(String clientProject, String fileName) {
+    protected String buildDecommentPiecePath(String clientProject, String fileName) {
         return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "piece", fileName);
     }
 
