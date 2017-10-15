@@ -1163,7 +1163,7 @@ Incremental.prototype = {
 
 	/**
 	 * Set input value
-	 * @param {Object} ev 
+	 * @param {Object} ev
 	 */
 	setInputValue: function (ev) {
 		var keyCode = ev.keyCode,
@@ -1230,8 +1230,8 @@ Incremental.prototype = {
 
 	/**
 	 * Get selected section
-	 * @param {Object} suggestionNode 
-	 * @return {number} Selected Index 
+	 * @param {Object} suggestionNode
+	 * @return {number} Selected Index
 	 */
 	getSelectedSection: function (suggestionNode) {
 		var selectedIdx;
@@ -1357,7 +1357,8 @@ if (document.getElementById("intro_opening") !== null) {
 			Array.prototype.forEach.call(json["tables"], function (table) {
 				Array.prototype.forEach.call(table["columns"], function (column) {
 					var element = that.extractColumnElement(table, column);
-					that.updateComment(element, column);
+					var newComment = that.buildCommentFromServer(column);
+					that.updateComment(element, newComment);
 				});
 			});
 		},
@@ -1376,11 +1377,11 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * Update comment
-		 * @param {Object} element - html element
-		 * @param {Object} column - Column data
+		 * Build new scheme comment from server response
+		 * @param {Object} column - Column data from server
+		 * @returns {string} New scheme comment
 		 */
-		updateComment: function (element, column) {
+		buildCommentFromServer: function (column) {
 			var comment = null;
 			var author = [];
 			Array.prototype.forEach.call(column["properties"], function (property) {
@@ -1393,8 +1394,16 @@ if (document.getElementById("intro_opening") !== null) {
 				return self.indexOf(x) === i;
 			});
 
-			comment = comment + "<br>@author(" + author.join(',') + ")";
-			element.querySelector('.commentcell').innerHTML = comment;
+			return comment = comment + "<br>@author(" + author.join(',') + ")";
+		},
+
+		/**
+		 * Update comment
+		 * @param {Object} element - html element
+		 * @param {string} newComment - New scheme comment
+		 */
+		updateComment: function (element, newComment) {
+			element.querySelector('.commentcell').innerHTML = newComment;
 		},
 
 		/**
