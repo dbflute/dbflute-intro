@@ -972,7 +972,7 @@ function Incremental (targetInput, dist) {
 Incremental.prototype = {
 
 	/**
-	 * @method init
+	 * Init
 	 */
 	init: function () {
 		var dataList = this.getDataList();
@@ -984,7 +984,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method buildSuggetList
+	 * Build sugget list
 	 */
 	buildSuggestList: function () {
 		var fragment = document.createDocumentFragment(),
@@ -999,7 +999,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method setupLinkElement
+	 * Setup link element
 	 */
 	setupLinkElement: function (fragment) {
 		var li, anchor;
@@ -1024,7 +1024,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method attachEvent
+	 * Attach event
 	 */
 	attachEvent: function () {
 		var self = this,
@@ -1037,7 +1037,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method displaySuggestion
+	 * Display suggestion
 	 */
 	displaySuggestion: function () {
 		this.query = (this.util.trim(this.targetInput.value)).toLowerCase();
@@ -1087,7 +1087,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method getDataList
+	 * Get data list
 	 */
 	getDataList: function () {
 		var tr = this.dist.getElementsByTagName('tr'),
@@ -1106,7 +1106,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method attachSuggestionEvent
+	 * Attach suggestion event
 	 */
 	attachSuggestionEvent: function () {
 		var self = this;
@@ -1123,7 +1123,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method selectSuggestion
+	 * Select suggestion
 	 */
 	selectSuggestion: function (ev) {
 		var keyCode = ev.keyCode,
@@ -1162,8 +1162,8 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method setInputValue
-	 * @param ev {Object}
+	 * Set input value
+	 * @param {Object} ev 
 	 */
 	setInputValue: function (ev) {
 		var keyCode = ev.keyCode,
@@ -1185,7 +1185,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method filterVisibleChild
+	 * Filter visible child
 	 */
 	filterVisibleChild: function () {
 		var visibleChildNodes = [];
@@ -1208,7 +1208,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method clearSuggestion
+	 * Clear suggestion
 	 */
 	clearSuggestion: function () {
 		for (var i = 0, max = this.ul.childNodes.length; i < max; i++) {
@@ -1220,7 +1220,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method resetSuggestion
+	 * Reset suggestion
 	 */
 	resetSuggestion: function () {
 		this.clearSuggestion();
@@ -1229,9 +1229,9 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method getSelectedSection
-	 * @param suggestionNode {Object}
-	 * @return selectedIdx {Number}
+	 * Get selected section
+	 * @param {Object} suggestionNode 
+	 * @return {number} Selected Index 
 	 */
 	getSelectedSection: function (suggestionNode) {
 		var selectedIdx;
@@ -1247,8 +1247,8 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method scrollToSelectedSection
-	 * @param idx {Number}
+	 * Scroll to selected section
+	 * @param {number} idx
 	 */
 	scrollToSelectedSection: function (idx) {
 		var selectedId = this.ul.childNodes[idx].getElementsByTagName('a')[0].href.split('#')[1],
@@ -1259,7 +1259,7 @@ Incremental.prototype = {
 	},
 
 	/**
-	 * @method setHash
+	 * Set hash
 	 */
 	setHash: function (idx) {
 		var selectedId = this.ul.childNodes[idx].getElementsByTagName('a')[0].href.split('#')[1];
@@ -1299,12 +1299,15 @@ searcher.init();
 </script>
 <script>
 if (document.getElementById("intro_opening") !== null) {
+	/**
+	 * @author deco
+	 */
 	function Decomment() {
 	}
 	Decomment.prototype = {
 
 		/**
-		 * @method init
+		 * init
 		 */
 		init: function () {
 			var schemeName = this.getSchemeName();
@@ -1313,8 +1316,8 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method getSchemeName
-		 * @returns {String}
+		 * Get scheme name from url
+		 * @returns {string} Scheme name
 		 */
 		getSchemeName: function () {
 			var path = window.location.pathname;
@@ -1322,8 +1325,8 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method fetchDecomment
-		 * @param schemeName
+		 * Fetch decomment from server
+		 * @param {string} schemeName - Scheme name
 		 */
 		pickupDecomment: function (schemeName) {
 			var http = new XMLHttpRequest();
@@ -1345,8 +1348,8 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method handleResponse
-		 * @param response
+		 * Handle response
+		 * @param {Object} response - Response from server
 		 */
 		handleResponse: function (response) {
 			var json = JSON.parse(response);
@@ -1360,10 +1363,10 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method extractColumnElement
-		 * @param table
-		 * @param column
-		 * @returns columnElement
+		 * Extract column element
+		 * @param {Object} table - Table element
+		 * @param {Object} column - Column element
+		 * @returns {Object} Column element
 		 */
 		extractColumnElement: function (table, column) {
 			var columnId = (table["tableName"] + "_" + column["columnName"]);
@@ -1373,9 +1376,9 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method updateComment
-		 * @param element
-		 * @param column
+		 * Update comment
+		 * @param {Object} element - html element
+		 * @param {Object} column - Column data
 		 */
 		updateComment: function (element, column) {
 			var comment = null;
@@ -1395,8 +1398,8 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method setupSaveDecomment
-		 * @param table {String}
+		 * Setup save decomment event
+		 * @param {string} table - Table name
 		 */
 		setupSaveDecomment: function(schemeName) {
 			var tables = document.getElementsByClassName('tablecontent');
@@ -1429,29 +1432,29 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method getHostName
-		 * @returns {String}
+		 * Get host name
+		 * @returns {string} Host name
 		 */
 		getHostName: function () {
 			return 'http://' + window.location.host;
 		},
 
 		/**
-		 * @method getTableName
-		 * @param table {Object}
-		 * @returns {String}
+		 * Get table name
+		 * @param {Object} table - Table element
+		 * @returns {string} table name
 		 */
 		getTableName: function (table) {
 			return table.previousElementSibling.innerText;
 		},
 
 		/**
-		 * @method buildRequestBody
-		 * @param tableName {String}
-		 * @param columnName {String}
-		 * @param docomment {String}
-		 * @param previousWholeComment {String}
-		 * @return requestBody {Object}
+		 * Build request body
+		 * @param {string} tableName - Table name
+		 * @param {string} columnName - Column name
+		 * @param {string} docomment - Inputed decomment
+		 * @param {string} previousWholeComment - Previous whole comment
+		 * @return {Object} Request body
 		 */
 		buildRequestParams: function (tableName, columnName, docomment, previousWholeComment) {
 			// TODO tominaga change request params if the pickup api is created
@@ -1473,9 +1476,9 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * @method requestDecomment
-		 * @param schemeName {String}
-		 * @param params {Object}
+		 * Request decomment
+		 * @param {string} schemeName - Scheme name
+		 * @param {Object} params - Request parameters
 		 */
 		requestSaveDecomment: function (schemeName, params) {
 			var http = new XMLHttpRequest();
