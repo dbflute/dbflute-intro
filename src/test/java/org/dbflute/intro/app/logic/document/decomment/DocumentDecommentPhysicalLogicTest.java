@@ -128,11 +128,13 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
 
         // ## Act ##
         // done hakiba use testdb by jflute (2017/08/17)
-        final String finelName = logic.buildPieceFileName(sampleTableName, sampleAuthor);
+        final String fileName = logic.buildPieceFileName(sampleTableName, sampleAuthor);
 
         // ## Assert ##
-        // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
-        // assertEquals("decomment-piece-" + sampleTableName + "-" + currentLocalDate() + "-" + sampleTableName + ".dfmap", finelName);
+        // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
+        String regex = "^decomment-piece-" + sampleTableName + "-\\d{8}-\\d{6}-\\d{3}-" + sampleAuthor + "\\.dfmap$";
+        Pattern pattern = Pattern.compile(regex);
+        assertTrue(pattern.matcher(fileName).find());
     }
 
     // ===================================================================================
