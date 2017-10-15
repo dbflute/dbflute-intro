@@ -976,32 +976,32 @@ if (document.getElementById("intro_opening") !== null) {
 			that = this;
 			Array.prototype.forEach.call(json["tables"], function (table) {
 				Array.prototype.forEach.call(table["columns"], function (column) {
-					var element = that.extractColumnElement(table, column);
-					var newComment = that.buildCommentFromServer(column);
-					that.updateComment(element, newComment);
+					var columnElement = that.extractColumnElement(table, column);
+					var newComment = that.buildColumnCommentFromServer(column);
+					that.updateComment(columnElement, newComment);
 				});
 			});
 		},
 
 		/**
 		 * Extract column element
-		 * @param {Object} table - Table element
-		 * @param {Object} column - Column element
+		 * @param {Object} table - Table object
+		 * @param {Object} column - Column object
 		 * @returns {Object} Column element
 		 */
 		extractColumnElement: function (table, column) {
 			var columnId = (table["tableName"] + "_" + column["columnName"]);
 			columnId = columnId.toLowerCase();
-			var element = document.getElementById(columnId);
-			return element.parentElement
+			var columnElement = document.getElementById(columnId);
+			return columnElement.parentElement
 		},
 
 		/**
 		 * Build new scheme comment from server response
-		 * @param {Object} column - Column data from server
+		 * @param {Object} column - Column object
 		 * @returns {string} New scheme comment
 		 */
-		buildCommentFromServer: function (column) {
+		buildColumnCommentFromServer: function (column) {
 			var comment = null;
 			var author = [];
 			Array.prototype.forEach.call(column["properties"], function (property) {
@@ -1019,11 +1019,11 @@ if (document.getElementById("intro_opening") !== null) {
 
 		/**
 		 * Update comment
-		 * @param {Object} element - html element
+		 * @param {Object} columnElement - Column element
 		 * @param {string} newComment - New scheme comment
 		 */
-		updateComment: function (element, newComment) {
-			element.querySelector('.commentcell').innerHTML = newComment;
+		updateComment: function (columnElement, newComment) {
+			columnElement.querySelector('.commentcell').innerHTML = newComment;
 		},
 
 		/**
@@ -1036,13 +1036,13 @@ if (document.getElementById("intro_opening") !== null) {
 			Array.prototype.forEach.call(tables, function (table) {
 				var columns = table.getElementsByTagName('tr');
 				Array.prototype.forEach.call(columns, function (column, index) {
-					if (index === 0) {
+					if (index === 0) { // because table header
 						return
 					}
 					var previousWholeComment = column.querySelector('.commentcell');
 					var columnName = column.querySelector('.columnnamecell').innerText;
 					previousWholeComment.onclick = function () {
-						var docomment = window.prompt('Input new column comment.');
+						var docomment = window.prompt('Input new column comment.', that.extractPreviousComment(previousWholeComment));
 						// click cancel
 						if (docomment === null) {
 							return;
@@ -1075,6 +1075,19 @@ if (document.getElementById("intro_opening") !== null) {
 		 */
 		getTableName: function (table) {
 			return table.previousElementSibling.innerText;
+		},
+
+		/**
+		 * Extract previous comment
+		 * @param {Object} columnCommentElemnet - Ccolumn comment elemnet
+		 * @returns {string} Previous comment
+		 */
+		extractPreviousComment: function (columnCommentElemnet) {
+			var child = columnCommentElemnet.childNodes[0];
+			if (child !== null && child.nodeName === "#text") {
+				return child.nodeValue;
+			}
+			return "";
 		},
 
 		/**
@@ -1115,9 +1128,16 @@ if (document.getElementById("intro_opening") !== null) {
 			var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
 			http.open('POST', url, true);
 
+			var that = this;
 			http.onreadystatechange = function () {
-				if (http.readyState === 4 && http.status !== 200) {
-					alert('Error!! cannot save new column comment.');
+				if (http.readyState === 4) {
+					if (http.status === 200) {
+						// request success
+						that.pickupDecomment(schemeName);
+					} else {
+						// request failed
+						alert('Error!! cannot save new column comment.');
+					}
 				}
 			};
 			http.send(JSON.stringify(params));
