@@ -1,9 +1,11 @@
 package org.dbflute.intro.unit;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
+// TODO hakiba unfortunately, move to super by jflute (2017/10/05)
 /**
  * @author hakiba
  */
@@ -18,12 +20,10 @@ public abstract class DocumentDecommentUnitIntroTestCase extends UnitIntroTestCa
     private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
 
     // ===================================================================================
-    //                                                                            Override
-    //                                                                            ========
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        // TODO hakiba change to call way to test plain state by jflute (2017/09/28)
+    //                                                                        Assist Logic
+    //                                                                        ============
+    protected void prepareTestFiles() throws IOException {
+        // done hakiba change to call way to test plain state by jflute (2017/09/28)
         File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_PICKUP_FILE_PATH);
         File srcPieceDir = new File(getProjectDir(), TEST_RESOURCE_PICKUP_PATH);
         File destPickupFile = new File(getProjectDir(), TEST_CLIENT_PATH + PICKUP_FILE_PATH);

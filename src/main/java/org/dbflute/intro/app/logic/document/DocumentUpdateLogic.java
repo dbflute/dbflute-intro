@@ -24,6 +24,7 @@ import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author deco
+ * @author jflute
  */
 public class DocumentUpdateLogic {
 
@@ -44,7 +45,7 @@ public class DocumentUpdateLogic {
             }
             return sb.toString();
         } catch (IOException e) {
-            throw new LaSystemException("Cannot replace schema sync check map", e);
+            throw new LaSystemException("Cannot mark intro opening at document HTML: " + file, e);
         }
     }
 }

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
+import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.core.time.TimeManager;
 
@@ -101,15 +103,18 @@ public class DocumentDecommentPhysicalLogic {
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
                 readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
-        DfDecoMapPickup pickup = readDecommentPickupMap(clientProject);
+        OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
-        return decoMapFile.merge(pickup, pieces);
+        return decoMapFile.merge(pickupOpt, pieces);
     }
 
     // done hakoba public on demand, so private now by jflute (2017/08/17)
     private List<DfDecoMapPiece> readAllDecommentPieceMap(String clientProject) {
         String dirPath = buildDecommentPieceDirPath(clientProject);
-        // TODO hakiba support no-existing directory by jflute (2017/09/28)
+        // done hakiba support no-existing directory by jflute (2017/09/28)
+        if (Files.notExists(Paths.get(dirPath))) {
+            return Collections.emptyList();
+        }
         try {
             return Files.list(Paths.get(dirPath)).map(path -> {
                 try {
@@ -125,12 +130,16 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    private DfDecoMapPickup readDecommentPickupMap(String clientProject) {
+    private OptionalThing<DfDecoMapPickup> readDecommentPickupMap(String clientProject) {
         String filePath = buildDecommentPickupPath(clientProject);
+        // done hakiba support no-existing directory or file by jflute (2017/09/28)
+        if (Files.notExists(Paths.get(filePath))) {
+            // done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
+            return OptionalThing.empty();
+        }
         try {
-            // TODO hakiba support no-existing directory or file by jflute (2017/09/28)
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
-            return decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath)));
+            return OptionalThing.of(decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath))));
         } catch (IOException e) {
             throw new UncheckedIOException("fail to read decomment pickup map. path : " + filePath, e);
         }

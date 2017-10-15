@@ -27,10 +27,12 @@ public class DecommentPickupResult {
     // done hakiba move it under tables by jflute (2017/08/17)
     // done hakiba validator annotation (Required only) by jflute (2017/08/17)
     public static class TablePart {
+
         /** table name e.g. "MEMBER" */
         @Required
         public String tableName;
-        /** columns */
+
+        /** list of column part, contains saved comments */
         @Valid
         @Required
         public List<ColumnPart> columns;
@@ -41,9 +43,11 @@ public class DecommentPickupResult {
         }
 
         public static class ColumnPart {
+
             /** column name e.g. "MEMBER_NAME" */
             @Required
             public String columnName;
+
             /** properties */
             @Valid
             @Required
@@ -52,23 +56,25 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
 
-            // done hakiba PropertyPart by jflute (2017/08/17)
             public static class PropertyPart {
+
                 /** decomment e.g. "edited column comment" */
                 @Required
                 public String decomment;
-                /** database comment e.g. "database comment" */
-                @Required
+
+                /** database comment e.g. "let's cabos" (NullAllowed) */
                 public String databaseComment;
-                /** previous whole comment e.g. "previous whole comment" */
-                @Required
+
+                /** previous whole comment e.g. "my name is hakiba" (NullAllowed) */
                 public String previousWholeComment;
+
                 /** comment version e.g. 3 */
                 @Required
                 public Long commentVersion;
+
                 /** author list e.g. ["cabos", "hakiba", "deco"] */
                 @Valid
                 @Required

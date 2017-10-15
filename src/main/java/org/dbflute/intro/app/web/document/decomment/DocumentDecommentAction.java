@@ -45,13 +45,13 @@ public class DocumentDecommentAction extends IntroBaseAction {
     //                                             Piece Map
     //                                             ---------
     // done cabos post to save, get to diff by jflute (2017/07/27)
-    // TODO done cabos javadoc with e.g. value by jflute (2017/09/28)
+    // done cabos javadoc with e.g. value by jflute (2017/09/28)
     /**
      * save decomment piece map
      *
-     * @param projectName project name e.g. maihamadb
-     * @param body decomment save body
-     * @return JsonResponse.asEmptyBody()
+     * @param projectName project name e.g. maihamadb (NotNull)
+     * @param body decomment save body (NotNull)
+     * @return void (NotNull)
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
@@ -79,8 +79,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapTablePart mappingToDecoMapPiece(DecommentTablePart tablePart, String author) {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
-        tablePartMap.setColumns(
-            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList()));
+        List<DfDecoMapColumnPart> columns =
+                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList());
+        tablePartMap.setColumns(columns);
         return tablePartMap;
     }
 
@@ -112,8 +113,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     /**
      * save decomment piece map
      *
-     * @param projectName project name e.g. maihamadb
-     * @return DecommentPickupResult as json
+     * @param projectName project name e.g. maihamadb (NotNull)
+     * @return merged pickup as json (NotNull)
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {

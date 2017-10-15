@@ -929,7 +929,7 @@ if (document.getElementById("intro_opening") !== null) {
 		init: function () {
 			var schemeName = this.getSchemeName();
 	//		this.pickupDecomment(schemeName);
-			this.pickupDecommentMock()
+//			this.pickupDecommentMock()
 			this.setupSaveDecomment(schemeName);
 		},
 
@@ -939,7 +939,7 @@ if (document.getElementById("intro_opening") !== null) {
 		 */
 		getSchemeName: function () {
 			var path = window.location.pathname;
-			return path[3];
+			return path.split('/')[3];
 		},
 
 		/**
