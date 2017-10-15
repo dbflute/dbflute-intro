@@ -14,8 +14,8 @@ import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 
 /**
  * @author hakiba
- * @author cabos
  * @author jflute
+ * @author cabos at garden place plaza
  */
 public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitIntroTestCase {
 
@@ -117,6 +117,22 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         assertNotNull(author);
         assertEquals("ca__bo_s", author);
         DocumentDecommentPhysicalLogic.REPLACE_CHAR_MAP.keySet().forEach(ch -> assertFalse(author.contains(ch)));
+    }
+
+    public void test_buildPieceFileName() throws Exception {
+        // ## Arrange ##
+        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
+        inject(logic);
+        final String sampleTableName = "EBISU_GARDEN_PLACE_PLAZA";
+        final String sampleAuthor = "cabos";
+
+        // ## Act ##
+        // done hakiba use testdb by jflute (2017/08/17)
+        final String finelName = logic.buildPieceFileName(sampleTableName, sampleAuthor);
+
+        // ## Assert ##
+        // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
+        // assertEquals("decomment-piece-" + sampleTableName + "-" + currentLocalDate() + "-" + sampleTableName + ".dfmap", finelName);
     }
 
     // ===================================================================================
