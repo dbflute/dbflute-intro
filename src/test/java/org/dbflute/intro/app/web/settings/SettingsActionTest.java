@@ -14,9 +14,10 @@ public class SettingsActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<SettingsResult> result = action.index(TEST_CLIENT_PROJECT);
+        JsonResponse<SettingsResult> response = action.index(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        assertNotNull(result);
+        showJson(response);
+        assertNotNull(response);
     }
 }
