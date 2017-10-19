@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.lastaflute.web.validation.Required;
 
 /**
+ * The pickup result of decomment as virtual pickup.
  * @author hakiba
  * @author jflute
  * @author cabos
@@ -21,7 +23,7 @@ public class DecommentPickupResult {
     //                                                                           =========
     /** list of table part */
     @Valid
-    @Required
+    @NotNull // can be empty first
     public List<TablePart> tables;
 
     // done hakiba move it under tables by jflute (2017/08/17)
@@ -107,7 +109,7 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 
