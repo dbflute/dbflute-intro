@@ -1454,7 +1454,12 @@ if (document.getElementById("intro_opening") !== null) {
 		 * @returns {string} table name
 		 */
 		getTableName: function (table) {
-			return table.previousElementSibling.innerText;
+			var previousElement = table.previousElementSibling;
+			if (previousElement.className) {
+				return previousElement.previousElementSibling.innerText
+			} else {
+				return previousElement.innerText
+			}
 		},
 
 		/**
