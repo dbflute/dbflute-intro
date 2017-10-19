@@ -26,6 +26,8 @@ import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.core.time.TimeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author cabos
@@ -37,6 +39,7 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    private static final Logger logger = LoggerFactory.getLogger(DocumentDecommentPhysicalLogic.class);
     private static final String PICKUP_FILE_NAME = "decomment-pickup.dfmap";
     protected static final Map<String, String> REPLACE_CHAR_MAP;
 
@@ -65,6 +68,9 @@ public class DocumentDecommentPhysicalLogic {
         String author = decoMapPiece.getAuthor();
         File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
         createPieceMapFile(pieceMapFile);
+        if (logger.isDebugEnabled()) {
+            logger.debug("...Saving #decomment piece: client={}\n{}", clientProject, decoMapPiece);
+        }
         try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
             // done cabos remove 'df' from variable name by jflute (2017/08/10)
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
@@ -72,7 +78,7 @@ public class DocumentDecommentPhysicalLogic {
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
         }
@@ -92,7 +98,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -102,7 +108,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);
