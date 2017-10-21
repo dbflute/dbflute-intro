@@ -114,4 +114,12 @@ public class DfDecoMapPiece {
     public void setDecoMap(DfDecoMapTablePart decoMap) {
         this.decoMap = decoMap;
     }
+
+    public String getTableName() {
+        return this.decoMap.getTableName();
+    }
+
+    public String getColumnName() {
+        return this.getDecoMap().getColumns().stream().findFirst().map(columnPart -> columnPart.getColumnName()).orElse(null);
+    }
 }
