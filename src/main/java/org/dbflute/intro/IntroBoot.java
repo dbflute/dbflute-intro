@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
-import org.dbflute.tomcat.TomcatBoot;
+import org.dbflute.jetty.JettyBoot;
 
 /**
  * @author p1us2er0
@@ -40,7 +40,7 @@ public class IntroBoot {
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        TomcatBoot boot = new TomcatBoot(getPort(), CONTEXT); // no context path
+        JettyBoot boot = new JettyBoot(getPort(), CONTEXT); // no context path
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
