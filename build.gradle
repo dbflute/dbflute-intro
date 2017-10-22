@@ -31,28 +31,28 @@ ext {
         [
             // Basic Resource
             jdk : '1.8',
-            gradle : '3.5',
-            node : '6.7.0',
+            gradle : '4.2',
+            node : '8.7.0',
 
             // Main Framework
             dbflute : '1.1.4',
-            h2 : '1.4.193',
-            lastaflute : '0.9.8',
+            h2 : '1.4.196',
+            lastaflute : '1.0.1',
 
             // Partner Library
             slf4j : '1.7.25',
             logback : '1.2.3',
-            tomcatboot : '0.5.8',
-            lastadoc : '0.2.8-RC1',
+            tomcatboot : '0.5.9',
+            lastadoc : '0.2.9',
             swaggerui : '2.2.8',
 
             // GoodNeighbor Library
-            commonslang : '3.5',
+            commonslang : '3.6',
             commonsio : '2.5',
 
             // Testing
-            junit : '4.8.2',
-            utflute : '0.7.9'
+            junit : '4.12',
+            utflute : '0.8.3'
         ]
 }
 
