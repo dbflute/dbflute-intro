@@ -984,7 +984,7 @@ CLS_TARGET_LANGUAGE
 <!-- Only used by dbflute intro http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html -->
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
-		<p>Input new column comment</p>
+		<p>Input the new column comment of <span id="decomment-modal-column-name"></span></p>
 		<textarea id="decomment-input" class="decommentinput"></textarea>
 		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
 		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
@@ -1480,11 +1480,15 @@ if (document.getElementById("intro_opening") !== null) {
 						var modalElement = document.getElementById("decomment-modal");
 						modalElement.style.display = "block";
 
+						document.getElementById("decomment-modal-column-name").innerText = columnName;
+
 						var inputElement = document.getElementById("decomment-input");
 						inputElement.value = that.extractPreviousComment(previousWholeComment);
+
 						document.getElementById("decomment-cancel").onclick = function() {
 							modalElement.style.display = "none";
 						};
+
 						document.getElementById("decomment-ok").onclick = function() {
 							var tableName = that.getTableName(table);
 							var params = that.buildRequestParams(tableName, columnName, inputElement.value, previousWholeComment.innerText);
