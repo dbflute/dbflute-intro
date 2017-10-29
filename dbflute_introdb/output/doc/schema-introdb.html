@@ -268,6 +268,36 @@ dl.procedurelist dd.column span.type {
 dl.procedurelist dd.column pre {
 	padding-left: 1em;
 }
+
+/** decomment modal for dbflute intro */
+.decommentmodal {
+	display: none;
+	position: fixed;
+	z-index: 5;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	padding-top: 50px;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+.decommentmodalcontent {
+	z-index: 10;
+	width: 50%;
+	margin: 0 auto;
+	border: 1px solid #999999;
+	padding: 15px;
+	background-color: #ffffff;
+}
+.decommentinput {
+	display: block;
+	width: 100%;
+	margin-top: 10px;
+}
+.decommentmodalbtn {
+	margin: 10px 5px 0 0;
+	padding: 5px 10px;
+}
 	</style>
 </head>
 
@@ -950,6 +980,16 @@ CLS_TARGET_LANGUAGE
 <p>
 	Created by <a href="http://dbflute.org/">DBFlute(AutoGenerator)</a>
 </p>
+
+<!-- Only used by dbflute intro http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html -->
+<div id="decomment-modal" class="decommentmodal">
+	<div class="decommentmodalcontent">
+		<p>Input new column comment</p>
+		<textarea id="decomment-input" class="decommentinput"></textarea>
+		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
+		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
+	</div>
+</div>
 <script>
 /**
  * Incremental Search contributed by makotot (Thanks!)
@@ -1389,7 +1429,7 @@ if (document.getElementById("intro_opening") !== null) {
 			var comment = null;
 			var author = [];
 			Array.prototype.forEach.call(column["properties"], function (property) {
-				comment = comment === null ? "" : comment += "<br>";
+				comment = comment === null ? "" : comment += "\n";
 				comment += property["decomment"];
 				author = author.concat(property["authorList"]);
 			});
@@ -1437,19 +1477,26 @@ if (document.getElementById("intro_opening") !== null) {
 					var previousWholeComment = column.querySelector('.commentcell');
 					var columnName = column.querySelector('.columnnamecell').innerText;
 					previousWholeComment.onclick = function () {
-						var docomment = window.prompt('Input new column comment.', that.extractPreviousComment(previousWholeComment));
-						// click cancel
-						if (docomment === null) {
-							return;
-						}
-						// click ok
-						if (docomment) {
+						var modalElement = document.getElementById("decomment-modal");
+						modalElement.style.display = "block";
+
+						var inputElement = document.getElementById("decomment-input");
+						inputElement.value = that.extractPreviousComment(previousWholeComment);
+						document.getElementById("decomment-cancel").onclick = function() {
+							modalElement.style.display = "none";
+						};
+						document.getElementById("decomment-ok").onclick = function() {
 							var tableName = that.getTableName(table);
-							var params = that.buildRequestParams(tableName, columnName, docomment, previousWholeComment.innerText);
+							var params = that.buildRequestParams(tableName, columnName, inputElement.value, previousWholeComment.innerText);
 							that.requestSaveDecomment(schemeName, params);
-						} else {
-							alert('Cannot save empty comment');
-						}
+							modalElement.style.display = "none";
+						};
+
+						window.onclick = function(event) {
+							if (event.target == modalElement) {
+								modalElement.style.display = "none";
+							}
+						};
 					};
 				});
 			});
