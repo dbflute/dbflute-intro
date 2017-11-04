@@ -21,7 +21,7 @@ public class DfDecoMapColumnPart {
     //                                                                           Attribute
     //                                                                           =========
     protected String columnName;
-    protected List<DfDecoMapPropertyPart> properties;
+    protected List<DfDecoMapPropertyPart> propertyList;
 
     // ===================================================================================
     //                                                                           Converter
@@ -30,7 +30,7 @@ public class DfDecoMapColumnPart {
         final DfDecoMapPropertyPart property = new DfDecoMapPropertyPart(columnEntry.getValue());
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName(columnEntry.getKey());
-        column.setProperties(Collections.singletonList(property));
+        column.setPropertyList(Collections.singletonList(property));
         return column;
     }
 
@@ -40,16 +40,16 @@ public class DfDecoMapColumnPart {
         }).collect(Collectors.toList());
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName(columnEntry.getKey());
-        column.setProperties(properties);
+        column.setPropertyList(properties);
         return column;
     }
 
     public Map<String, Object> convertPieceMap() {
-        return properties.stream().map(property -> property.convertMap()).findFirst().orElse(null);
+        return propertyList.stream().map(property -> property.convertMap()).findFirst().orElse(null);
     }
 
     public List<Map<String, Object>> convertPickupMap() {
-        return properties.stream().map(property -> property.convertMap()).collect(Collectors.toList());
+        return propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList());
     }
 
     // ===================================================================================
@@ -63,17 +63,16 @@ public class DfDecoMapColumnPart {
         this.columnName = columnName;
     }
 
-    public List<DfDecoMapPropertyPart> getProperties() {
-        return this.properties;
+    public List<DfDecoMapPropertyPart> getPropertyList() {
+        return this.propertyList;
     }
 
-    public void setProperties(List<DfDecoMapPropertyPart> properties) {
-        this.properties = properties;
+    public void setPropertyList(List<DfDecoMapPropertyPart> properties) {
+        this.propertyList = properties;
     }
 
     public long getLatestCommentVersion() {
-        return this.getProperties()
-            .stream()
+        return this.propertyList.stream()
             .map(part -> part.getCommentVersion())
             .max(Comparator.naturalOrder())
             .orElse(MINIMUM_COMMENT_VERSION);

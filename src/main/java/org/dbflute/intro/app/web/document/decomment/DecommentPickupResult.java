@@ -102,7 +102,7 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                    columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 

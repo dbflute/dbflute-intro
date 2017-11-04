@@ -1,20 +1,27 @@
 map:{
+    ; author = yuto
+    ; merged = false
+    ; formatVersion = 1.0
     ; decoMap = map:{
-        ; TABLE_NAME = map:{
-            ; COLUMN_NAME = map:{
-                ; databaseComment = rime
-                ; previousWholeComment = lemon
-                ; commentVersion = 2
-                ; authorList = list:{
-                    ; cabos
-                    ; sudachi
+        ; tableList = list:{
+            ; map:{
+                ; tableName = MEMBER
+                ; propertyList = list:{}
+                ; columnList = map:{
+                    ; MEMBER_NAME = map:{
+                        ; decomment = this column's value is always null ...??  DO NOT BE SILLY!!!
+                        ; databaseComment = this column's value allowed null?
+                        ; pieceDatetime = 2017-11-04T23:28:02.846
+                        ; commentVersion = 2
+                        ; authorList = list:{
+                            ; cabos
+                            ; hakiba
+                            ; deco
+                            ; yuto
+                        }
+                    }
                 }
-                ; decomment = cabos 2 2017-08-16T23:26:42.690
             }
         }
     }
-    ; decommentDatetime = 2017-08-16T23:26:42.690
-    ; author = cabos
-    ; merged = false
-    ; formatVersion = 1.0
 }

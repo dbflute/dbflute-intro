@@ -81,6 +81,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         tablePartMap.setTableName(tablePart.tableName);
         List<DfDecoMapColumnPart> columns =
             tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList());
+        tablePartMap.setPropertyList(Collections.emptyList());
         tablePartMap.setColumnList(columns);
         return tablePartMap;
     }
@@ -95,7 +96,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         property.setCommentVersion(columnPart.commentVersion);
         // done cabos add (merge) top author by jflute (2017/08/10)
         property.setAuthorList(mergeAuthorList(columnPart.authorList, author));
-        columnPartMap.setProperties(Collections.singletonList(property));
+        columnPartMap.setPropertyList(Collections.singletonList(property));
         return columnPartMap;
     }
 

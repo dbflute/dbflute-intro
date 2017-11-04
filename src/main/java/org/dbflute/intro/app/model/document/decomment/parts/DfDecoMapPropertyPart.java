@@ -53,6 +53,7 @@ public class DfDecoMapPropertyPart {
     public void setPieceDatetime(LocalDateTime pieceDatetime) {
         this.pieceDatetime = pieceDatetime;
     }
+
     public long getCommentVersion() {
         return commentVersion;
     }

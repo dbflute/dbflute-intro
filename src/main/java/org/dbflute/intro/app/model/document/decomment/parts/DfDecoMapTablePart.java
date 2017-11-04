@@ -52,7 +52,9 @@ public class DfDecoMapTablePart {
             .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put(tableName, columnMap);
+        map.put("tableName", this.tableName);
+        map.put("propertyList", this.propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList()));
+        map.put("columnList", columnMap);
         return map;
     }
 

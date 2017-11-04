@@ -67,7 +67,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
             .stream()
             .map(tablePart -> tablePart.getColumnList())
             .flatMap(columnParts -> columnParts.stream())
-            .map(columnPart -> columnPart.getProperties())
+            .map(columnPart -> columnPart.getPropertyList())
             .flatMap(propertyParts -> propertyParts.stream())
             .map(columnPropertyPart -> columnPropertyPart.getCommentVersion())
             .forEach(commentVersion -> assertEquals(commentVersion, LATEST_COMMENT_VERSION));
@@ -82,7 +82,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
 
         DfDecoMapColumnPart columnPart = new DfDecoMapColumnPart();
         columnPart.setColumnName("MEMBER");
-        columnPart.setProperties(Collections.singletonList(propertyPart));
+        columnPart.setPropertyList(Collections.singletonList(propertyPart));
 
         DfDecoMapTablePart tablePart = new DfDecoMapTablePart();
         tablePart.setTableName("MEMBER_NAME");
@@ -105,7 +105,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
 
         DfDecoMapColumnPart columnPart = new DfDecoMapColumnPart();
         columnPart.setColumnName(columnName);
-        columnPart.setProperties(Collections.singletonList(propertyPart));
+        columnPart.setPropertyList(Collections.singletonList(propertyPart));
 
         DfDecoMapTablePart tablePart = new DfDecoMapTablePart();
         tablePart.setTableName(tableName);

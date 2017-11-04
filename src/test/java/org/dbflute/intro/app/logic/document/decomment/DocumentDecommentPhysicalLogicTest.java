@@ -248,6 +248,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     private DfDecoMapTablePart createDfDecoMapTablePart() {
         DfDecoMapTablePart decoMapTablePart = new DfDecoMapTablePart();
         decoMapTablePart.setTableName("MEMBER");
+        decoMapTablePart.setPropertyList(Collections.emptyList());
         decoMapTablePart.setColumnList(Collections.singletonList(createDfDecoMapColumnPart()));
         return decoMapTablePart;
     }
@@ -255,7 +256,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     private DfDecoMapColumnPart createDfDecoMapColumnPart() {
         DfDecoMapColumnPart decoMapColumnPart = new DfDecoMapColumnPart();
         decoMapColumnPart.setColumnName("MEMBER_NAME");
-        decoMapColumnPart.setProperties(Collections.singletonList(createColumnPropertyPart()));
+        decoMapColumnPart.setPropertyList(Collections.singletonList(createColumnPropertyPart()));
         return decoMapColumnPart;
     }
 
