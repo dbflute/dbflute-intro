@@ -2,7 +2,6 @@ package org.dbflute.intro.app.model.document.decomment.parts;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,91 +15,19 @@ public class DfDecoMapColumnPart {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    private static long MINIMUM_COMMENT_VERSION = 1L;
+    private static final Long MINIMUM_COMMENT_VERSION = 1L;
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     protected String columnName;
-    protected List<ColumnPropertyPart> properties;
-
-    // ===================================================================================
-    //                                                                         Inner Class
-    //                                                                         ===========
-    public static class ColumnPropertyPart {
-        protected String decomment;
-        protected String databaseComment;
-        protected String previousWholeComment;
-        protected long commentVersion;
-        protected List<String> authorList;
-
-        public ColumnPropertyPart() {
-        }
-
-        public ColumnPropertyPart(Map<String, Object> columnEntry) {
-            this.decomment = (String) columnEntry.get("decomment");
-            this.databaseComment = (String) columnEntry.get("databaseComment");
-            this.previousWholeComment = (String) columnEntry.get("previousWholeComment");
-            this.commentVersion = Long.valueOf((String) columnEntry.get("commentVersion"));
-            this.authorList = ((List<?>) columnEntry.get("authorList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
-        }
-
-        public String getDecomment() {
-            return decomment;
-        }
-
-        public void setDecomment(String decomment) {
-            this.decomment = decomment;
-        }
-
-        public String getDatabaseComment() {
-            return databaseComment;
-        }
-
-        public void setDatabaseComment(String databaseComment) {
-            this.databaseComment = databaseComment;
-        }
-
-        public String getPreviousWholeComment() {
-            return previousWholeComment;
-        }
-
-        public void setPreviousWholeComment(String previousWholeComment) {
-            this.previousWholeComment = previousWholeComment;
-        }
-
-        public long getCommentVersion() {
-            return commentVersion;
-        }
-
-        public void setCommentVersion(long commentVersion) {
-            this.commentVersion = commentVersion;
-        }
-
-        public List<String> getAuthorList() {
-            return authorList;
-        }
-
-        public void setAuthorList(List<String> authorList) {
-            this.authorList = authorList;
-        }
-
-        public Map<String, Object> convertMap() {
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("decomment", this.decomment);
-            map.put("databaseComment", this.databaseComment);
-            map.put("previousWholeComment", this.previousWholeComment);
-            map.put("commentVersion", this.commentVersion);
-            map.put("authorList", this.authorList);
-            return map;
-        }
-    }
+    protected List<DfDecoMapPropertyPart> properties;
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
     public static DfDecoMapColumnPart createPieceColumnPart(Map.Entry<String, Map<String, Object>> columnEntry) {
-        final ColumnPropertyPart property = new ColumnPropertyPart(columnEntry.getValue());
+        final DfDecoMapPropertyPart property = new DfDecoMapPropertyPart(columnEntry.getValue());
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName(columnEntry.getKey());
         column.setProperties(Collections.singletonList(property));
@@ -108,8 +35,8 @@ public class DfDecoMapColumnPart {
     }
 
     public static DfDecoMapColumnPart createPickupColumnPart(Map.Entry<String, List<Map<String, Object>>> columnEntry) {
-        final List<ColumnPropertyPart> properties = columnEntry.getValue().stream().map(propertiesMap -> {
-            return new ColumnPropertyPart(propertiesMap);
+        final List<DfDecoMapPropertyPart> properties = columnEntry.getValue().stream().map(propertiesMap -> {
+            return new DfDecoMapPropertyPart(propertiesMap);
         }).collect(Collectors.toList());
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName(columnEntry.getKey());
@@ -136,16 +63,19 @@ public class DfDecoMapColumnPart {
         this.columnName = columnName;
     }
 
-    public List<ColumnPropertyPart> getProperties() {
+    public List<DfDecoMapPropertyPart> getProperties() {
         return this.properties;
     }
 
-    public void setProperties(List<ColumnPropertyPart> properties) {
+    public void setProperties(List<DfDecoMapPropertyPart> properties) {
         this.properties = properties;
     }
 
     public long getLatestCommentVersion() {
-        return this.getProperties().stream().map(part -> part.getCommentVersion()).max(Comparator.naturalOrder()).orElse(
-                MINIMUM_COMMENT_VERSION);
+        return this.getProperties()
+            .stream()
+            .map(part -> part.getCommentVersion())
+            .max(Comparator.naturalOrder())
+            .orElse(MINIMUM_COMMENT_VERSION);
     }
 }

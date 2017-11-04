@@ -15,40 +15,41 @@ public class DfDecoMapTablePart {
     //                                                                           Attribute
     //                                                                           =========
     protected String tableName;
-    protected List<DfDecoMapColumnPart> columns;
+    protected List<DfDecoMapPropertyPart> propertyList;
+    protected List<DfDecoMapColumnPart> columnList;
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
     public static DfDecoMapTablePart createPieceTablePart(Map.Entry<String, Map<String, Map<String, Object>>> tablePartEntry) {
         final List<DfDecoMapColumnPart> pieceColumns = tablePartEntry.getValue()
-                .entrySet()
-                .stream()
-                .map(columnEntry -> DfDecoMapColumnPart.createPieceColumnPart(columnEntry))
-                .collect(Collectors.toList());
+            .entrySet()
+            .stream()
+            .map(columnEntry -> DfDecoMapColumnPart.createPieceColumnPart(columnEntry))
+            .collect(Collectors.toList());
 
         DfDecoMapTablePart table = new DfDecoMapTablePart();
-        table.setTableName((String) tablePartEntry.getKey());
-        table.setColumns(pieceColumns);
+        table.setTableName(tablePartEntry.getKey());
+        table.setColumnList(pieceColumns);
         return table;
     }
 
     public static DfDecoMapTablePart createPickupTablePart(Map.Entry<String, Map<String, List<Map<String, Object>>>> tablePartEntry) {
         final List<DfDecoMapColumnPart> pickupColumns = tablePartEntry.getValue()
-                .entrySet()
-                .stream()
-                .map(columnEntry -> DfDecoMapColumnPart.createPickupColumnPart(columnEntry))
-                .collect(Collectors.toList());
+            .entrySet()
+            .stream()
+            .map(columnEntry -> DfDecoMapColumnPart.createPickupColumnPart(columnEntry))
+            .collect(Collectors.toList());
 
         DfDecoMapTablePart table = new DfDecoMapTablePart();
-        table.setTableName((String) tablePartEntry.getKey());
-        table.setColumns(pickupColumns);
+        table.setTableName(tablePartEntry.getKey());
+        table.setColumnList(pickupColumns);
         return table;
     }
 
     public Map<String, Object> convertPieceMap() {
-        Map<String, Object> columnMap = columns.stream()
-                .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
+        Map<String, Object> columnMap = columnList.stream()
+            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
@@ -56,8 +57,8 @@ public class DfDecoMapTablePart {
     }
 
     public Map<String, Object> convertPickupMap() {
-        Map<String, List<Map<String, Object>>> columnMap = columns.stream()
-                .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
+        Map<String, List<Map<String, Object>>> columnMap = columnList.stream()
+            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
@@ -75,12 +76,20 @@ public class DfDecoMapTablePart {
         this.tableName = tableName;
     }
 
-    public List<DfDecoMapColumnPart> getColumns() {
-        return columns;
+    public List<DfDecoMapPropertyPart> getPropertyList() {
+        return propertyList;
     }
 
-    public void setColumns(List<DfDecoMapColumnPart> columns) {
-        this.columns = columns;
+    public void setPropertyList(List<DfDecoMapPropertyPart> propertyList) {
+        this.propertyList = propertyList;
+    }
+
+    public List<DfDecoMapColumnPart> getColumnList() {
+        return columnList;
+    }
+
+    public void setColumnList(List<DfDecoMapColumnPart> columns) {
+        this.columnList = columns;
     }
 
 }

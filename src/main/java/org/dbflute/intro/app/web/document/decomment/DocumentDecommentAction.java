@@ -13,6 +13,7 @@ import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalL
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
@@ -66,9 +67,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
         DfDecoMapPiece pieceMap = new DfDecoMapPiece();
         pieceMap.setFormatVersion("1.0");
         pieceMap.setAuthor(author);
-        pieceMap.setDecommentDatetime(timeManager.currentDateTime());
         pieceMap.setMerged(body.merged);
-        pieceMap.setDecoMap(mappingToDecoMapPiece(body.table, author));
+        pieceMap.setTableList(Collections.singletonList(mappingToDecoMapPiece(body.table, author)));
         return pieceMap;
     }
 
@@ -80,18 +80,18 @@ public class DocumentDecommentAction extends IntroBaseAction {
         DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
         tablePartMap.setTableName(tablePart.tableName);
         List<DfDecoMapColumnPart> columns =
-                tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList());
-        tablePartMap.setColumns(columns);
+            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList());
+        tablePartMap.setColumnList(columns);
         return tablePartMap;
     }
 
     private DfDecoMapColumnPart mappingPartToDecoMapPiece(DecommentColumnPart columnPart, String author) {
         DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
         columnPartMap.setColumnName(columnPart.columnName);
-        DfDecoMapColumnPart.ColumnPropertyPart property = new DfDecoMapColumnPart.ColumnPropertyPart();
+        DfDecoMapPropertyPart property = new DfDecoMapPropertyPart();
         property.setDecomment(columnPart.decomment);
         property.setDatabaseComment(columnPart.databaseComment);
-        property.setPreviousWholeComment(columnPart.previousWholeComment);
+        property.setPieceDatetime(timeManager.currentDateTime());
         property.setCommentVersion(columnPart.commentVersion);
         // done cabos add (merge) top author by jflute (2017/08/10)
         property.setAuthorList(mergeAuthorList(columnPart.authorList, author));
@@ -119,6 +119,6 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {
         DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedDecommentPickupMap(projectName);
-        return asJson(new DecommentPickupResult(dfDecoMapPickup.getDecoMap()));
+        return asJson(new DecommentPickupResult(dfDecoMapPickup.getTableList()));
     }
 }

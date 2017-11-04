@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.lastaflute.web.validation.Required;
 
@@ -22,8 +23,7 @@ public class DecommentPickupResult {
     //                                                                           Attribute
     //                                                                           =========
     /** list of table part */
-    @Valid
-    @NotNull // can be empty first
+    @Valid @NotNull // can be empty first
     public List<TablePart> tables;
 
     // done hakiba move it under tables by jflute (2017/08/17)
@@ -73,12 +73,6 @@ public class DecommentPickupResult {
                 public String databaseComment;
 
                 /**
-                 * column comment before editing on the schema.html
-                 * e.g. "my name is hakiba" (NullAllowed)
-                 */
-                public String previousWholeComment;
-
-                /**
                  * column comment version
                  * The comment version will update when the decomment.dfprop file is picked up.
                  * e.g. 3
@@ -97,10 +91,9 @@ public class DecommentPickupResult {
                 // =======================================================================
                 //                                                             Constructor
                 //                                                             ===========
-                public PropertyPart(DfDecoMapColumnPart.ColumnPropertyPart property) {
+                public PropertyPart(DfDecoMapPropertyPart property) {
                     this.decomment = property.getDecomment();
                     this.databaseComment = property.getDatabaseComment();
-                    this.previousWholeComment = property.getPreviousWholeComment();
                     this.commentVersion = property.getCommentVersion();
                     this.authorList = property.getAuthorList();
                 }
@@ -109,13 +102,13 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                        columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                    columnPart.getProperties().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 
         public TablePart(DfDecoMapTablePart tablePart) {
             this.tableName = tablePart.getTableName();
-            this.columns = tablePart.getColumns().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
+            this.columns = tablePart.getColumnList().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
         }
     }
 

@@ -15,41 +15,68 @@ import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 public class DfDecoMapPickup {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String DECO_MAP_KEY = "tableList";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected String fileName;
     protected String formatVersion;
-    protected List<DfDecoMapTablePart> decoMap;
+    protected Map<String, List<DfDecoMapTablePart>> decoMap;
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    // map:{
-    //     ; formatVersion = 1.0
-    //     ; decoMap = map:{
-    //         ; MEMBER = map:{
-    //             ; MEMBER_NAME = list:{
-    //                 ; map:{
-    //                     ; decomment = piari
-    //                     ; databaseComment = sea
-    //                     ; previousWholeComment = seasea
-    //                     ; commentVersion = 1
-    //                     ; authorList = list:{ jflute ; cabos }
-    //                 }
-    //                 ; map:{
-    //                     ; decomment = bonvo
-    //                     ; databaseComment = sea
-    //                     ; previousWholeComment = seasea
-    //                     ; commentVersion = 1
-    //                     ; authorList = list:{ jflute ; cabos }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    //    map:{
+    //        ; formatVersion = 1.0
+    //        ; author = jflute
+    //        ; decommentDatetime = 2017-10-26T12:35:39.262
+    //        ; merged = false
+    //        ; decoMap = map:{
+    //            ; tableList = list:{
+    //                ; map:{
+    //                    ; tableName = MEMBER
+    //                    ; propertyList = list:{
+    //                        ; map:{
+    //                            ; decomment = first decomment
+    //                            ; databaseComment = ...
+    //                            ; commentVersion = ...
+    //                            ; authorList = list:{ ... }
+    //                        }
+    //                        ; map:{   // propertyList size is more than 2 if decomment conflicts exists
+    //                            ; decomment = second decomment
+    //                            ; databaseComment = ...
+    //                            ; commentVersion = ...
+    //                            ; authorList = list:{ ... }
+    //                        }
+    //                    }
+    //                    ; columnList = list:{
+    //                        ; map:{
+    //                            ; columnName = MEMBER_NAME
+    //                            ; propertyList = list:{
+    //                                ; map:{
+    //                                    ; decomment = sea mystic land oneman
+    //                                    ; databaseComment = sea mystic
+    //                                    ; commentVersion = 2 // incremented
+    //                                    ; authorList = list:{ cabos, hakiba, deco, jflute }
+    //                                }
+    //                            }
+    //                        }
+    //                        ; ... // more column maps (also conflict column)
+    //                    }
+    //                }
+    //                ; map:{ // Of course, other table decomment info is exists that
+    //                    ; tableName = MEMBER_LOGIN
+    //                    ; ...
+    //                }
+    //            }
+    //        }
+    //    }
     public Map<String, Object> convertMap() {
-        final Map<String, Map<String, Object>> convertedDecoMap = decoMap.stream().collect(
-                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
+        final Map<String, Map<String, Object>> convertedDecoMap = decoMap.get("tableList")
+            .stream()
+            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
@@ -69,14 +96,6 @@ public class DfDecoMapPickup {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getFormatVersion() {
         return formatVersion;
     }
@@ -85,11 +104,13 @@ public class DfDecoMapPickup {
         this.formatVersion = formatVersion;
     }
 
-    public List<DfDecoMapTablePart> getDecoMap() {
-        return decoMap;
+    public List<DfDecoMapTablePart> getTableList() {
+        return decoMap.get(DECO_MAP_KEY);
     }
 
-    public void setDecoMap(List<DfDecoMapTablePart> decoMap) {
-        this.decoMap = decoMap;
+    public void setTableList(List<DfDecoMapTablePart> tableList) {
+        Map<String, List<DfDecoMapTablePart>> map = new LinkedHashMap<>();
+        map.put(DECO_MAP_KEY, tableList);
+        this.decoMap = map;
     }
 }

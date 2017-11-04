@@ -11,6 +11,7 @@ import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 import org.lastaflute.core.time.SimpleTimeManager;
@@ -239,16 +240,15 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         DfDecoMapPiece decoMapPiece = new DfDecoMapPiece();
         decoMapPiece.setFormatVersion("1.0");
         decoMapPiece.setAuthor("cabos");
-        decoMapPiece.setDecommentDatetime(currentLocalDateTime());
         decoMapPiece.setMerged(false);
-        decoMapPiece.setDecoMap(createDfDecoMapTablePart());
+        decoMapPiece.setTableList(Collections.singletonList(createDfDecoMapTablePart()));
         return decoMapPiece;
     }
 
     private DfDecoMapTablePart createDfDecoMapTablePart() {
         DfDecoMapTablePart decoMapTablePart = new DfDecoMapTablePart();
         decoMapTablePart.setTableName("MEMBER");
-        decoMapTablePart.setColumns(Collections.singletonList(createDfDecoMapColumnPart()));
+        decoMapTablePart.setColumnList(Collections.singletonList(createDfDecoMapColumnPart()));
         return decoMapTablePart;
     }
 
@@ -259,11 +259,11 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         return decoMapColumnPart;
     }
 
-    private DfDecoMapColumnPart.ColumnPropertyPart createColumnPropertyPart() {
-        DfDecoMapColumnPart.ColumnPropertyPart columnPropertyPart = new DfDecoMapColumnPart.ColumnPropertyPart();
+    private DfDecoMapPropertyPart createColumnPropertyPart() {
+        DfDecoMapPropertyPart columnPropertyPart = new DfDecoMapPropertyPart();
         columnPropertyPart.setDecomment("piari");
         columnPropertyPart.setDatabaseComment("sea");
-        columnPropertyPart.setPreviousWholeComment("seasea");
+        columnPropertyPart.setPieceDatetime(currentLocalDateTime());
         columnPropertyPart.setCommentVersion(1);
         columnPropertyPart.setAuthorList(Collections.singletonList("cabos"));
         return columnPropertyPart;

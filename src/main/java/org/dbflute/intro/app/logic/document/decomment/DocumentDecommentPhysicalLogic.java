@@ -61,7 +61,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                           Piece Map
     //                                                                           =========
     public void saveDecommentPieceMap(String clientProject, DfDecoMapPiece decoMapPiece) {
-        String tableName = decoMapPiece.getDecoMap().getTableName();
+        String tableName = decoMapPiece.getTableList().get(0).getTableName();
         String author = decoMapPiece.getAuthor();
         File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
         createPieceMapFile(pieceMapFile);
