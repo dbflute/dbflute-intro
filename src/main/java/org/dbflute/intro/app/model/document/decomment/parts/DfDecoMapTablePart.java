@@ -21,16 +21,18 @@ public class DfDecoMapTablePart {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    public static DfDecoMapTablePart createPieceTablePart(Map.Entry<String, Map<String, Map<String, Object>>> tablePartEntry) {
-        final List<DfDecoMapColumnPart> pieceColumns = tablePartEntry.getValue()
-            .entrySet()
-            .stream()
-            .map(columnEntry -> DfDecoMapColumnPart.createPieceColumnPart(columnEntry))
-            .collect(Collectors.toList());
-
+    @SuppressWarnings("unchecked")
+    public static DfDecoMapTablePart createTablePart(Map<String, Object> tablePartMap) {
         DfDecoMapTablePart table = new DfDecoMapTablePart();
-        table.setTableName(tablePartEntry.getKey());
-        table.setColumnList(pieceColumns);
+        table.setTableName((String) tablePartMap.get("tableName"));
+        List<DfDecoMapPropertyPart> propertyList = ((List<Map<String, Object>>) tablePartMap.get("propertyList")).stream()
+            .map(DfDecoMapPropertyPart::new)
+            .collect(Collectors.toList());
+        table.setPropertyList(propertyList);
+        List<DfDecoMapColumnPart> columnList = ((List<Map<String, Object>>) tablePartMap.get("columnList")).stream()
+            .map(DfDecoMapColumnPart::createColumnPart)
+            .collect(Collectors.toList());
+        table.setColumnList(columnList);
         return table;
     }
 
@@ -48,13 +50,10 @@ public class DfDecoMapTablePart {
     }
 
     public Map<String, Object> convertPieceMap() {
-        Map<String, Object> columnMap = columnList.stream()
-            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPieceMap(), (c1, c2) -> c1));
-
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("tableName", this.tableName);
         map.put("propertyList", this.propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList()));
-        map.put("columnList", columnMap);
+        map.put("columnList", this.columnList.stream().map(column -> column.convertMap()).collect(Collectors.toList()));
         return map;
     }
 

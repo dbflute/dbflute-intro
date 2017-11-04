@@ -1,7 +1,7 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,11 +26,14 @@ public class DfDecoMapColumnPart {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    public static DfDecoMapColumnPart createPieceColumnPart(Map.Entry<String, Map<String, Object>> columnEntry) {
-        final DfDecoMapPropertyPart property = new DfDecoMapPropertyPart(columnEntry.getValue());
+    @SuppressWarnings("unchecked")
+    public static DfDecoMapColumnPart createColumnPart(Map<String, Object> columnPartMap) {
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-        column.setColumnName(columnEntry.getKey());
-        column.setPropertyList(Collections.singletonList(property));
+        column.setColumnName((String) columnPartMap.get("columnName"));
+        List<DfDecoMapPropertyPart> propertyList = ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream()
+            .map(DfDecoMapPropertyPart::new)
+            .collect(Collectors.toList());
+        column.setPropertyList(propertyList);
         return column;
     }
 
@@ -44,8 +47,11 @@ public class DfDecoMapColumnPart {
         return column;
     }
 
-    public Map<String, Object> convertPieceMap() {
-        return propertyList.stream().map(property -> property.convertMap()).findFirst().orElse(null);
+    public Map<String, Object> convertMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("columnName", columnName);
+        map.put("propertyList", propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList()));
+        return map;
     }
 
     public List<Map<String, Object>> convertPickupMap() {

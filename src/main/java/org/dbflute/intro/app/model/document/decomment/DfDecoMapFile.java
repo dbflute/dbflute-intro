@@ -106,9 +106,9 @@ public class DfDecoMapFile {
         String author = (String) map.get("author");
         Boolean merged = Boolean.valueOf((String) map.get("merged"));
         @SuppressWarnings("unchecked")
-        Map<String, Map<String, Map<String, Object>>> decoMap = (Map<String, Map<String, Map<String, Object>>>) map.get("decoMap");
-        DfDecoMapTablePart tablePart = decoMap.entrySet().stream().map(tableEntry -> {
-            return DfDecoMapTablePart.createPieceTablePart(tableEntry);
+        Map<String, List<Map<String, Object>>> decoMap = (Map<String, List<Map<String, Object>>>) map.get("decoMap");
+        DfDecoMapTablePart tablePart = decoMap.get("tableList").stream().map(tablePartMap -> {
+            return DfDecoMapTablePart.createTablePart(tablePartMap);
         }).findFirst().orElseThrow(() -> createDecoMapTableElementNotFoundException(fileName, map));
 
         DfDecoMapPiece piece = new DfDecoMapPiece();
@@ -189,30 +189,27 @@ public class DfDecoMapFile {
     //        }
     //    }
     // done hakiba sub tag comment by jflute (2017/08/17)
-    public DfDecoMapPickup readPickup(String fileName, InputStream ins) {
+    public DfDecoMapPickup readPickup(InputStream ins) {
         MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
-            return mappingToDecoMapPickup(fileName, map);
+            return mappingToDecoMapPickup(map);
         } catch (Exception e) {
             throwDecoMapReadFailureException(ins, e);
             return null; // unreachable
         }
     }
 
-    private DfDecoMapPickup mappingToDecoMapPickup(String fileName, Map<String, Object> map) {
+    private DfDecoMapPickup mappingToDecoMapPickup(Map<String, Object> map) {
         String formatVersion = (String) map.get("formatVersion");
         @SuppressWarnings("unchecked")
-        Map<String, Map<String, List<Map<String, Object>>>> decoMap =
-            (Map<String, Map<String, List<Map<String, Object>>>>) map.get("decoMap");
-        List<DfDecoMapTablePart> tablePartList = decoMap.entrySet()
-            .stream()
-            .map(tableEntry -> DfDecoMapTablePart.createPickupTablePart(tableEntry))
-            .collect(Collectors.toList());
-
+        Map<String, List<Map<String, Object>>> decoMap = (Map<String, List<Map<String, Object>>>) map.get("decoMap");
+        List<DfDecoMapTablePart> tableList = decoMap.get("tableList").stream().map(tablePartMap -> {
+            return DfDecoMapTablePart.createTablePart(tablePartMap);
+        }).collect(Collectors.toList());
         DfDecoMapPickup pickup = new DfDecoMapPickup();
         pickup.setFormatVersion(formatVersion);
-        pickup.setTableList(tablePartList);
+        pickup.setTableList(tableList);
         return pickup;
     }
 
@@ -331,13 +328,17 @@ public class DfDecoMapFile {
         BinaryOperator<DfDecoMapPiece> filteringLatestDecommentDatetime = (v1, v2) -> {
             final Optional<LocalDateTime> optV1LocalDateTime = v1.getTableList()
                 .stream()
-                .flatMap(table -> table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()))
+                .flatMap(table -> table.getColumnList().stream())
+                .flatMap(column -> column.getPropertyList().stream())
                 .map(property -> property.getPieceDatetime())
+                .filter(time -> time != null)  // TODO cabos why does here need null check?
                 .findFirst();
             final Optional<LocalDateTime> optV2LocalDateTime = v2.getTableList()
                 .stream()
-                .flatMap(table -> table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()))
+                .flatMap(table -> table.getColumnList().stream())
+                .flatMap(column -> column.getPropertyList().stream())
                 .map(property -> property.getPieceDatetime())
+                .filter(time -> time != null)
                 .findFirst();
 
             return optV1LocalDateTime.flatMap(v1LocalDateTime -> optV2LocalDateTime.map(v2LocalDateTime -> {

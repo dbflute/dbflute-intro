@@ -22,12 +22,12 @@ public class DfDecoMapPropertyPart {
     public DfDecoMapPropertyPart() {
     }
 
-    public DfDecoMapPropertyPart(Map<String, Object> columnEntry) {
-        this.decomment = (String) columnEntry.get("decomment");
-        this.databaseComment = (String) columnEntry.get("databaseComment");
-        this.pieceDatetime = new HandyDate((String) columnEntry.get("pieceDatetime")).getLocalDateTime();
-        this.commentVersion = Long.valueOf((String) columnEntry.get("commentVersion"));
-        this.authorList = ((List<?>) columnEntry.get("authorList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
+    public DfDecoMapPropertyPart(Map<String, Object> propertyMap) {
+        this.decomment = (String) propertyMap.get("decomment");
+        this.databaseComment = (String) propertyMap.get("databaseComment");
+        this.pieceDatetime = new HandyDate((String) propertyMap.get("pieceDatetime")).getLocalDateTime();
+        this.commentVersion = Long.valueOf((String) propertyMap.get("commentVersion"));
+        this.authorList = ((List<?>) propertyMap.get("authorList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
     }
 
     public String getDecomment() {

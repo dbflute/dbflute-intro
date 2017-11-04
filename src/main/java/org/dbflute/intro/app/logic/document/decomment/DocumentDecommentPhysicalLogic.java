@@ -140,7 +140,7 @@ public class DocumentDecommentPhysicalLogic {
         }
         try {
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
-            return OptionalThing.of(decoMapFile.readPickup(PICKUP_FILE_NAME, Files.newInputStream(Paths.get(filePath))));
+            return OptionalThing.of(decoMapFile.readPickup(Files.newInputStream(Paths.get(filePath))));
         } catch (IOException e) {
             throw new UncheckedIOException("fail to read decomment pickup map. path : " + filePath, e);
         }
