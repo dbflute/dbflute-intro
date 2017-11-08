@@ -600,7 +600,7 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 <!-- Only used by dbflute intro http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html -->
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
-		<p>Input the new column comment of <span id="decomment-modal-column-name"></span></p>
+		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
 		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
 		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
 		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
@@ -1049,7 +1049,7 @@ if (document.getElementById("intro_opening") !== null) {
 			var comment = null;
 			var author = [];
 			Array.prototype.forEach.call(column["properties"], function (property) {
-				comment = comment === null ? "" : comment += "\n";
+				comment = comment === null ? "" : comment += "\n\n";
 				comment += property["decomment"];
 				author = author.concat(property["authorList"]);
 			});
@@ -1094,13 +1094,17 @@ if (document.getElementById("intro_opening") !== null) {
 					if (index === 0) { // because table header
 						return
 					}
-					var previousWholeComment = column.querySelector('.commentcell').querySelector('pre');
-					var columnName = column.querySelector('.columnnamecell').innerText;
+
+					var commentCellElement = column.querySelector('.commentcell')
+					var previousWholeComment = commentCellElement.querySelector('pre');
 					previousWholeComment.onclick = function () {
 						var modalElement = document.getElementById("decomment-modal");
 						modalElement.style.display = "block";
 
-						document.getElementById("decomment-modal-column-name").innerText = columnName;
+						var columnName = column.querySelector('.columnnamecell').innerText;
+						var isConflict = commentCellElement.classList.contains('commentcellerror')
+						var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
+						document.getElementById("decomment-modal-column-info").innerText = columnInfo;
 
 						var inputElement = document.getElementById("decomment-input");
 						inputElement.value = that.extractPreviousComment(previousWholeComment);
@@ -1111,7 +1115,7 @@ if (document.getElementById("intro_opening") !== null) {
 
 						document.getElementById("decomment-ok").onclick = function() {
 							var tableName = that.getTableName(table);
-							var params = that.buildRequestParams(tableName, columnName, inputElement.value, previousWholeComment.innerText);
+							var params = that.buildRequestParams(isConflict, tableName, columnName, inputElement.value, previousWholeComment.innerText);
 							that.requestSaveDecomment(schemeName, params);
 							modalElement.style.display = "none";
 						};
@@ -1163,16 +1167,17 @@ if (document.getElementById("intro_opening") !== null) {
 
 		/**
 		 * Build request body
+		 * @param {boolean} merged - Merged
 		 * @param {string} tableName - Table name
 		 * @param {string} columnName - Column name
 		 * @param {string} docomment - Inputed decomment
 		 * @param {string} previousWholeComment - Previous whole comment
 		 * @return {Object} Request body
 		 */
-		buildRequestParams: function (tableName, columnName, docomment, previousWholeComment) {
+		buildRequestParams: function (merged, tableName, columnName, docomment, previousWholeComment) {
 			// TODO tominaga change request params if the pickup api is created
 			return {
-				'merged': false,
+				'merged': merged,
 				'table': {
 					'tableName': tableName,
 					'columns': [
