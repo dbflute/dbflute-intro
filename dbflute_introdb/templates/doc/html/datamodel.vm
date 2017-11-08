@@ -601,7 +601,7 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
 		<p>Input the new column comment of <span id="decomment-modal-column-name"></span></p>
-		<textarea id="decomment-input" class="decommentinput"></textarea>
+		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
 		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
 		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
 	</div>
@@ -1058,7 +1058,7 @@ if (document.getElementById("intro_opening") !== null) {
 				return self.indexOf(x) === i;
 			});
 
-			return comment = comment + "<br>@author(" + author.join(',') + ")";
+			return comment = comment + "\n<span>@author(" + author.join(',') + ")</span>";
 		},
 
 		/**
@@ -1067,7 +1067,7 @@ if (document.getElementById("intro_opening") !== null) {
 		 * @param {string} newComment - New scheme comment
 		 */
 		updateComment: function (columnElement, newComment) {
-			columnElement.querySelector('.commentcell').innerHTML = newComment;
+			columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = newComment;
 		},
 
 		/**
@@ -1094,7 +1094,7 @@ if (document.getElementById("intro_opening") !== null) {
 					if (index === 0) { // because table header
 						return
 					}
-					var previousWholeComment = column.querySelector('.commentcell');
+					var previousWholeComment = column.querySelector('.commentcell').querySelector('pre');
 					var columnName = column.querySelector('.columnnamecell').innerText;
 					previousWholeComment.onclick = function () {
 						var modalElement = document.getElementById("decomment-modal");
