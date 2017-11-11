@@ -1,13 +1,12 @@
 package org.dbflute.intro.app.model.document.decomment;
 
-import static org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
-
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.dbflute.helper.mapstring.MapListString;
+import org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
 
 /**
  * @author hakiba
@@ -36,7 +35,37 @@ public class DfDecoMapPiece {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    // TODO yuto write e.g. (2017/11/11)
+    // done (by jflute) yuto write e.g. (2017/11/11)
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; merged = false
+    //     ; tableName = MEMBER
+    //     ; columnName = null
+    //     ; targetType = TABLE
+    //     ; decomment = loginable user, my name is deco
+    //     ; databaseComment = loginable user
+    //     ; commentVersion = 0
+    //     ; authorList = list:{ deco }
+    //     ; pieceCode = AL3OR1P
+    //     ; pieceDatetime = 2017-12-31T12:34:56.789
+    //     ; pieceOwner = deco
+    //     ; previousPieceList = list:{}
+    // }
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; merged = false
+    //     ; tableName = MEMBER
+    //     ; columnName = MEMBER_NAME
+    //     ; targetType = COLUMN
+    //     ; decomment = sea mystic land oneman
+    //     ; databaseComment = sea mystic
+    //     ; commentVersion = 1
+    //     ; authorList = list:{ cabos ; hakiba ; deco ; jflute }
+    //     ; pieceCode = HF7ELSE
+    //     ; pieceDatetime = 2017-10-15T16:17:18.199
+    //     ; pieceOwner = jflute
+    //     ; previousPieceList = list:{ FE893L1 }
+    // }
     public Map<String, Object> convertMap() {
         // done cabos Map by jflute (2017/08/10)
         // done cabos use Linked by jflute (2017/09/07)
