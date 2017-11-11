@@ -78,7 +78,8 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner,
+        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
@@ -92,7 +93,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                    pieceMapFile.getAbsolutePath(), e);
+                pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -101,7 +102,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                          ==========
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
-        List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject).stream().collect(Collectors.toList());
+        List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject);
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);

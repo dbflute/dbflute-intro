@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -101,7 +103,29 @@ public class DecommentPickupResult {
                  */
                 @Valid
                 @Required
-                public List<String> authorList;
+                public List<String> authors;
+
+                /**
+                 * piece code generated when decomment edited
+                 * e.g. "EF89371"
+                 */
+                @Required
+                public String pieceCode;
+
+                /**
+                 * time of edit decomment
+                 * e.g. "2017-11-11T18:32:22.235"
+                 */
+                @Required
+                public LocalDateTime pieceDatetime;
+
+                /**
+                 * list of merged piece code
+                 * e.g. ["HF7ELSE"]
+                 */
+                @Valid
+                @Required
+                public List<String> previousPieces;
 
                 // =======================================================================
                 //                                                             Constructor
@@ -110,7 +134,10 @@ public class DecommentPickupResult {
                     this.decomment = property.getDecomment();
                     this.databaseComment = property.getDatabaseComment();
                     this.commentVersion = property.getCommentVersion();
-                    this.authorList = property.getAuthorList();
+                    this.authors = property.getAuthorList();
+                    this.pieceCode = property.getPieceCode();
+                    this.pieceDatetime = property.getPieceDatetime();
+                    this.previousPieces = property.getPreviousPieceList();
                 }
             }
 
@@ -129,5 +156,10 @@ public class DecommentPickupResult {
 
     public DecommentPickupResult(List<DfDecoMapTablePart> tableParts) {
         this.tables = tableParts.stream().map(tablePart -> new TablePart(tablePart)).collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return Lato.string(this);
     }
 }

@@ -1,6 +1,5 @@
 package org.dbflute.intro.app.model.document.decomment.parts;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
