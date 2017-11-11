@@ -272,7 +272,7 @@ public class DfDecoMapFile {
         return pickUp;
     }
 
-    private void mergeInternal(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp) {
+    protected void mergeInternal(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp) {
         filteredPieces.forEach(piece -> {
             DfDecoMapPropertyPart property = mappingPieceToProperty(piece);
 
@@ -281,7 +281,7 @@ public class DfDecoMapFile {
 
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists other table decomment
-                    addProperty(property, table);
+                    addTableProperty(property, table);
                     return table;
                 }).orElseGet(() -> {
                     // not exists other table decoment
@@ -289,7 +289,7 @@ public class DfDecoMapFile {
                     table.setTableName(piece.getTableName());
                     table.setColumnList(Collections.emptyList());
                     table.setPropertyList(Collections.singletonList(property));
-                    addTable(pickUp, tableList, table);
+                    addTable(table, pickUp);
                     return table;
                 });
 
@@ -303,7 +303,7 @@ public class DfDecoMapFile {
                         .findFirst()
                         .map(column -> {
                             // exists column comment
-                            addProperty(property, table);
+                            addColumnProperty(property, column);
                             return column;
                         })
                         .orElseGet(() -> {
@@ -311,7 +311,7 @@ public class DfDecoMapFile {
                             DfDecoMapColumnPart column = new DfDecoMapColumnPart();
                             column.setColumnName(piece.getColumnName());
                             column.setPropertyList(Collections.singletonList(property));
-                            addColumn(table, column);
+                            addColumn(column, table);
                             return column;
                         });
                     return table;
@@ -325,29 +325,35 @@ public class DfDecoMapFile {
                     table.setTableName(piece.getTableName());
                     table.setColumnList(Collections.singletonList(column));
                     table.setPropertyList(Collections.emptyList());
-                    addTable(pickUp, tableList, table);
+                    addTable(table, pickUp);
                     return table;
                 });
             }
         });
     }
 
-    private void addProperty(DfDecoMapPropertyPart property, DfDecoMapTablePart table) {
+    private void addTableProperty(DfDecoMapPropertyPart property, DfDecoMapTablePart table) {
         ArrayList<DfDecoMapPropertyPart> propertyPartArrayList = new ArrayList<>(table.getPropertyList());
         propertyPartArrayList.add(property);
         table.setPropertyList(propertyPartArrayList);
     }
 
-    private void addColumn(DfDecoMapTablePart table, DfDecoMapColumnPart column) {
+    private void addColumnProperty(DfDecoMapPropertyPart property, DfDecoMapColumnPart column) {
+        ArrayList<DfDecoMapPropertyPart> propertyPartArrayList = new ArrayList<>(column.getPropertyList());
+        propertyPartArrayList.add(property);
+        column.setPropertyList(propertyPartArrayList);
+    }
+
+    private void addColumn(DfDecoMapColumnPart column, DfDecoMapTablePart table) {
         ArrayList<DfDecoMapColumnPart> columnPartArrayList = new ArrayList<>(table.getColumnList());
         columnPartArrayList.add(column);
         table.setColumnList(columnPartArrayList);
     }
 
-    private void addTable(DfDecoMapPickup pickUp, List<DfDecoMapTablePart> tableList, DfDecoMapTablePart table) {
-        ArrayList<DfDecoMapTablePart> tableArrayList = new ArrayList<>(tableList);
+    private void addTable(DfDecoMapTablePart table, DfDecoMapPickup pickUp) {
+        ArrayList<DfDecoMapTablePart> tableArrayList = new ArrayList<>(pickUp.getTableList());
         tableArrayList.add(table);
-        pickUp.setTableList(Collections.unmodifiableList(tableArrayList));
+        pickUp.setTableList(tableArrayList);
     }
 
     private DfDecoMapPropertyPart mappingPieceToProperty(DfDecoMapPiece piece) {
