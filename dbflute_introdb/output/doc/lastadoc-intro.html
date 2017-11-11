@@ -166,7 +166,7 @@ table.child, table.child td, table.child th {
 
 <p class="sisterneighborlink">
     <a href="#lastadoc_action">to action(32)</a>
-    | <a href="#lastadoc_appcls">to appcls(1)</a>
+    | <a href="#lastadoc_appcls">to appcls(2)</a>
 </p>
 </div>
 
@@ -351,7 +351,7 @@ table.child, table.child td, table.child th {
     <tr>
         <td class="rowcellnum">12</td>
         <td class="rowcell"><a href="#/document/decomment/{projectName}/save">/document/decomment/{projectName}/save</a></td>
-        <td class="rowcell">@author&nbsp;cabos</td>
+        <td class="rowcell">@author&nbsp;cabos,&nbsp;save&nbsp;decomment&nbsp;piece&nbsp;map</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.document.decomment.DocumentDecommentAction">DocumentDecommentAction</span>#save()</td>
         <td class="rowcell">
             <span title="org.dbflute.intro.app.web.document.decomment.DecommentSaveBody">DecommentSaveBody</span>
@@ -360,13 +360,13 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.lang.Void&gt;">JsonResponse&lt;Void&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">79</td>
+        <td class="rowcellnum">94</td>
         <td class="rowcellnum">5</td>
     </tr>
     <tr>
         <td class="rowcellnum">13</td>
         <td class="rowcell"><a href="#/document/decomment/{projectName}/pickup">/document/decomment/{projectName}/pickup</a></td>
-        <td class="rowcell">@author&nbsp;cabos</td>
+        <td class="rowcell">@author&nbsp;cabos,&nbsp;save&nbsp;decomment&nbsp;piece&nbsp;map</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.document.decomment.DocumentDecommentAction">DocumentDecommentAction</span>#pickup()</td>
         <td class="rowcell">
         </td>
@@ -374,7 +374,7 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.document.decomment.DecommentPickupResult&gt;">JsonResponse&lt;DecommentPickupResult&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">79</td>
+        <td class="rowcellnum">94</td>
         <td class="rowcellnum">4</td>
     </tr>
     <tr>
@@ -2904,6 +2904,7 @@ table.child, table.child td, table.child th {
 <span class="docannotations docsubvalue">&#64;Execute{urlPattern={}/@word}</span>
 </p>
 <p class="tablecomment" style="white-space:pre-wrap;">@author&nbsp;cabos<br>@author&nbsp;hakiba</p>
+<p class="tablecomment" style="white-space:pre-wrap;">save&nbsp;decomment&nbsp;piece&nbsp;map<br><br>@param&nbsp;projectName&nbsp;project&nbsp;name&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)<br>@param&nbsp;body&nbsp;decomment&nbsp;save&nbsp;body&nbsp;(NotNull)<br>@return&nbsp;void&nbsp;(NotNull)</p>
 <span class="doctitle">URL Parameter:</span>
 <table>
     <thead>
@@ -2920,7 +2921,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="project&nbsp;name&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)">project&nbsp;name</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2945,7 +2946,7 @@ table.child, table.child td, table.child th {
         <td>merged</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title="xxxx&nbsp;e.g.&nbsp;false">xxxx&nbsp;e.g.&nbsp;false</p>
+            <p title="whether&nbsp;decomment&nbsp;merged&nbsp;or&nbsp;not<br>This&nbsp;field&nbsp;true&nbsp;if&nbsp;decomment&nbsp;mered.<br>e.g.&nbsp;false">whether&nbsp;decomment&nbsp;merged&nbsp;or&nbsp;not<br>This&nbsp;field&nbsp;true&nbsp;if&nbsp;decomment&nbsp;mered</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2957,13 +2958,13 @@ table.child, table.child td, table.child th {
         <td>table</td>
         <td><p title="org.dbflute.intro.app.web.document.decomment.DecommentSaveBody$DecommentTablePart">DecommentTablePart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="table&nbsp;part">table&nbsp;part</p>
             <p></p>
         </td>
         <td class="fieldannotations">
-            &#64;Required{groups=[ClientError]}
-,
             &#64;Valid
+,
+            &#64;Required{groups=[ClientError]}
         </td>
     </tr>
     <tr>
@@ -2984,7 +2985,7 @@ table.child, table.child td, table.child th {
         <td>tableName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="database&nbsp;table&nbsp;name&nbsp;e.g.&nbsp;MEMBER">database&nbsp;table&nbsp;name&nbsp;e.g.&nbsp;MEMBER</p>
+            <p title="table&nbsp;name<br>e.g.&nbsp;"MEMBER"">table&nbsp;name<br>e.g.&nbsp;"MEMBER"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2996,7 +2997,7 @@ table.child, table.child td, table.child th {
         <td>columns</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.document.decomment.DecommentSaveBody$DecommentTablePart$DecommentColumnPart&gt;">List&lt;DecommentColumnPart&gt;</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="the&nbsp;list&nbsp;of&nbsp;column&nbsp;part">the&nbsp;list&nbsp;of&nbsp;column&nbsp;part</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3023,7 +3024,7 @@ table.child, table.child td, table.child th {
         <td>columnName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;name<br>e.g.&nbsp;"MEMBER_NAME"">column&nbsp;name<br>e.g.&nbsp;"MEMBER_NAME"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3035,7 +3036,7 @@ table.child, table.child td, table.child th {
         <td>decomment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="inputted&nbsp;column&nbsp;comment&nbsp;on&nbsp;the&nbsp;schema.html<br>e.g.&nbsp;"this&nbsp;column's&nbsp;value&nbsp;is&nbsp;always&nbsp;null&nbsp;...??&nbsp;&nbsp;DO&nbsp;NOT&nbsp;BE&nbsp;SILLY!!!"&nbsp;(NullAllowed)">inputted&nbsp;column&nbsp;comment&nbsp;on&nbsp;the&nbsp;schema</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3047,7 +3048,7 @@ table.child, table.child td, table.child th {
         <td>databaseComment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;comment&nbsp;on&nbsp;table&nbsp;definition<br>The&nbsp;comments&nbsp;on&nbsp;database&nbsp;may&nbsp;be&nbsp;blank&nbsp;so&nbsp;null&nbsp;allowed.<br>e.g.&nbsp;"this&nbsp;column's&nbsp;value&nbsp;allowed&nbsp;null?"&nbsp;(NullAllowed)">column&nbsp;comment&nbsp;on&nbsp;table&nbsp;definition<br>The&nbsp;comments&nbsp;on&nbsp;database&nbsp;may&nbsp;be&nbsp;blank&nbsp;so&nbsp;null&nbsp;allowed</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3058,7 +3059,7 @@ table.child, table.child td, table.child th {
         <td>previousWholeComment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;comment&nbsp;before&nbsp;editing&nbsp;on&nbsp;the&nbsp;schema.html<br>The&nbsp;comments&nbsp;on&nbsp;scheme.html&nbsp;may&nbsp;be&nbsp;blank&nbsp;so&nbsp;null&nbsp;allowed.<br>e.g.&nbsp;"this&nbsp;column's&nbsp;value&nbsp;is&nbsp;not&nbsp;always&nbsp;null."&nbsp;(NullAllowed)">column&nbsp;comment&nbsp;before&nbsp;editing&nbsp;on&nbsp;the&nbsp;schema</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3069,7 +3070,7 @@ table.child, table.child td, table.child th {
         <td>commentVersion</td>
         <td><p title="java.lang.Long">Long</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;comment&nbsp;version<br>The&nbsp;comment&nbsp;version&nbsp;will&nbsp;update&nbsp;when&nbsp;the&nbsp;decomment.dfprop&nbsp;file&nbsp;is&nbsp;picked&nbsp;up.<br>e.g.&nbsp;2">column&nbsp;comment&nbsp;version<br>The&nbsp;comment&nbsp;version&nbsp;will&nbsp;update&nbsp;when&nbsp;the&nbsp;decomment</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3081,10 +3082,11 @@ table.child, table.child td, table.child th {
         <td>authorList</td>
         <td><p title="java.util.List&lt;String&gt;">List&lt;String&gt;</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="the&nbsp;list&nbsp;of&nbsp;ancestor&nbsp;authors<br>Current&nbsp;piece&nbsp;author&nbsp;is&nbsp;derived&nbsp;by&nbsp;server&nbsp;at&nbsp;first&nbsp;decomment&nbsp;so&nbsp;empty&nbsp;allowed.<br>e.g.&nbsp;["cabos",&nbsp;"hakiba",&nbsp;"deco"]&nbsp;&nbsp;(EmptyAllowed)">the&nbsp;list&nbsp;of&nbsp;ancestor&nbsp;authors<br>Current&nbsp;piece&nbsp;author&nbsp;is&nbsp;derived&nbsp;by&nbsp;server&nbsp;at&nbsp;first&nbsp;decomment&nbsp;so&nbsp;empty&nbsp;allowed</p>
             <p></p>
         </td>
         <td class="fieldannotations">
+            &#64;NotNull
         </td>
     </tr>
 </table>
@@ -3113,6 +3115,7 @@ table.child, table.child td, table.child th {
 <span class="docannotations docsubvalue">&#64;Execute{urlPattern={}/@word}</span>
 </p>
 <p class="tablecomment" style="white-space:pre-wrap;">@author&nbsp;cabos<br>@author&nbsp;hakiba</p>
+<p class="tablecomment" style="white-space:pre-wrap;">save&nbsp;decomment&nbsp;piece&nbsp;map<br><br>@param&nbsp;projectName&nbsp;project&nbsp;name&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)<br>@return&nbsp;merged&nbsp;pickup&nbsp;as&nbsp;json&nbsp;(NotNull)</p>
 <span class="doctitle">URL Parameter:</span>
 <table>
     <thead>
@@ -3129,7 +3132,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="project&nbsp;name&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)">project&nbsp;name</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3154,13 +3157,13 @@ table.child, table.child td, table.child th {
         <td>tables</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart&gt;">List&lt;TablePart&gt;</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="list&nbsp;of&nbsp;table&nbsp;part">list&nbsp;of&nbsp;table&nbsp;part</p>
             <p></p>
         </td>
         <td class="fieldannotations">
             &#64;Valid
 ,
-            &#64;Required
+            &#64;NotNull
         </td>
     </tr>
     <tr>
@@ -3181,7 +3184,7 @@ table.child, table.child td, table.child th {
         <td>tableName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="table&nbsp;name<br>e.g.&nbsp;"MEMBER"">table&nbsp;name<br>e.g.&nbsp;"MEMBER"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3193,7 +3196,7 @@ table.child, table.child td, table.child th {
         <td>columns</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart$ColumnPart&gt;">List&lt;ColumnPart&gt;</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="list&nbsp;of&nbsp;column&nbsp;part,&nbsp;contains&nbsp;saved&nbsp;comments">list&nbsp;of&nbsp;column&nbsp;part,&nbsp;contains&nbsp;saved&nbsp;comments</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3220,7 +3223,7 @@ table.child, table.child td, table.child th {
         <td>columnName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;name<br>e.g.&nbsp;"MEMBER_NAME"">column&nbsp;name<br>e.g.&nbsp;"MEMBER_NAME"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3232,7 +3235,7 @@ table.child, table.child td, table.child th {
         <td>properties</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart$ColumnPart$PropertyPart&gt;">List&lt;PropertyPart&gt;</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="list&nbsp;of&nbsp;decomment&nbsp;properties&nbsp;associated&nbsp;column">list&nbsp;of&nbsp;decomment&nbsp;properties&nbsp;associated&nbsp;column</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3259,7 +3262,7 @@ table.child, table.child td, table.child th {
         <td>decomment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="decomment&nbsp;saved&nbsp;as&nbsp;decomment&nbsp;piece&nbsp;map<br>e.g.&nbsp;"decomment&nbsp;means&nbsp;'deco'&nbsp;+&nbsp;'database&nbsp;comment'"">decomment&nbsp;saved&nbsp;as&nbsp;decomment&nbsp;piece&nbsp;map<br>e.g.&nbsp;"decomment&nbsp;means&nbsp;'deco'&nbsp;+&nbsp;'database&nbsp;comment'"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3271,19 +3274,18 @@ table.child, table.child td, table.child th {
         <td>databaseComment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;comment&nbsp;on&nbsp;table&nbsp;definition<br>The&nbsp;comments&nbsp;on&nbsp;database&nbsp;may&nbsp;be&nbsp;blank&nbsp;so&nbsp;null&nbsp;allowed.<br>e.g.&nbsp;"let's&nbsp;cabos"&nbsp;(NullAllowed)">column&nbsp;comment&nbsp;on&nbsp;table&nbsp;definition<br>The&nbsp;comments&nbsp;on&nbsp;database&nbsp;may&nbsp;be&nbsp;blank&nbsp;so&nbsp;null&nbsp;allowed</p>
             <p></p>
         </td>
         <td class="fieldannotations">
-            &#64;Required
         </td>
     </tr>
     <tr>
         <td class="rowcellnum" rowspan="1">3</td>
-        <td>previousWholeComment</td>
-        <td><p title="java.lang.String">String</p></td>
+        <td>commentVersion</td>
+        <td><p title="java.lang.Long">Long</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="column&nbsp;comment&nbsp;version<br>The&nbsp;comment&nbsp;version&nbsp;will&nbsp;update&nbsp;when&nbsp;the&nbsp;decomment.dfprop&nbsp;file&nbsp;is&nbsp;picked&nbsp;up.<br>e.g.&nbsp;3">column&nbsp;comment&nbsp;version<br>The&nbsp;comment&nbsp;version&nbsp;will&nbsp;update&nbsp;when&nbsp;the&nbsp;decomment</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3292,22 +3294,10 @@ table.child, table.child td, table.child th {
     </tr>
     <tr>
         <td class="rowcellnum" rowspan="1">4</td>
-        <td>commentVersion</td>
-        <td><p title="java.lang.Long">Long</p></td>
-        <td class="fieldcomment">
-            <p title=""></p>
-            <p></p>
-        </td>
-        <td class="fieldannotations">
-            &#64;Required
-        </td>
-    </tr>
-    <tr>
-        <td class="rowcellnum" rowspan="1">5</td>
         <td>authorList</td>
         <td><p title="java.util.List&lt;String&gt;">List&lt;String&gt;</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="the&nbsp;list&nbsp;of&nbsp;ancestor&nbsp;authors<br>e.g.&nbsp;["cabos",&nbsp;"hakiba",&nbsp;"deco"]">the&nbsp;list&nbsp;of&nbsp;ancestor&nbsp;authors<br>e.g.&nbsp;["cabos",&nbsp;"hakiba",&nbsp;"deco"]</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -5610,6 +5600,30 @@ $manager.htmlEscape($mail.title)
                 <td>ReplaceSchema</td>
                 <td class="commentcell">ReplaceSchema&nbsp;task</td>
                 <td>relatedTasks=replace_schema</td>
+            </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>PieceTargetType</td>
+        <td class="clstypecell"> implicit</td>
+        <td>target&nbsp;type&nbsp;of&nbsp;decomment</td>
+        <td>
+            <table class="child">
+            <tr>
+                <th id="PieceTargetTypeCls">Code</th>
+                <th>Name</th>
+                <th>Comment</th>
+            </tr>
+            <tr>
+                <td>CLM</td>
+                <td>Column</td>
+                <td class="commentcell">Column</td>
+            </tr>
+            <tr>
+                <td>TBL</td>
+                <td>Table</td>
+                <td class="commentcell">Table</td>
             </tr>
             </table>
         </td>

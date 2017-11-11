@@ -2460,7 +2460,7 @@
       "url": "/document/decomment/{projectName}/save",
       "typeName": "org.dbflute.intro.app.web.document.decomment.DocumentDecommentAction",
       "simpleTypeName": "DocumentDecommentAction",
-      "description": "@author cabos",
+      "description": "@author cabos, save decomment piece map",
       "typeComment": "@author cabos\n@author hakiba",
       "fieldTypeDocMetaList": [
         {
@@ -2489,7 +2489,7 @@
         }
       ],
       "methodName": "save",
-      "methodComment": null,
+      "methodComment": "save decomment piece map\n\n@param projectName project name e.g. maihamadb (NotNull)\n@param body decomment save body (NotNull)\n@return void (NotNull)",
       "annotationList": [
         "Execute{urlPattern\u003d{}/@word}"
       ],
@@ -2499,8 +2499,8 @@
           "typeName": "java.lang.String",
           "simpleTypeName": "String",
           "value": null,
-          "description": null,
-          "comment": null,
+          "description": "project name",
+          "comment": "project name e.g. maihamadb (NotNull)",
           "annotationList": [],
           "nestTypeDocMetaList": []
         }
@@ -2519,8 +2519,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": "xxxx e.g. false",
-            "comment": "xxxx e.g. false",
+            "description": "whether decomment merged or not\nThis field true if decomment mered",
+            "comment": "whether decomment merged or not\nThis field true if decomment mered.\ne.g. false",
             "annotationList": [
               "Required{groups\u003d[ClientError]}"
             ],
@@ -2531,11 +2531,11 @@
             "typeName": "org.dbflute.intro.app.web.document.decomment.DecommentSaveBody$DecommentTablePart",
             "simpleTypeName": "DecommentTablePart",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "table part",
+            "comment": "table part",
             "annotationList": [
-              "Required{groups\u003d[ClientError]}",
-              "Valid"
+              "Valid",
+              "Required{groups\u003d[ClientError]}"
             ],
             "nestTypeDocMetaList": [
               {
@@ -2543,8 +2543,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": "database table name e.g. MEMBER",
-                "comment": "database table name e.g. MEMBER",
+                "description": "table name\ne.g. \"MEMBER\"",
+                "comment": "table name\ne.g. \"MEMBER\"",
                 "annotationList": [
                   "Required{groups\u003d[ClientError]}"
                 ],
@@ -2555,8 +2555,8 @@
                 "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentSaveBody$DecommentTablePart$DecommentColumnPart\u003e",
                 "simpleTypeName": "List\u003cDecommentColumnPart\u003e",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "the list of column part",
+                "comment": "the list of column part",
                 "annotationList": [
                   "Valid",
                   "Required{groups\u003d[ClientError]}"
@@ -2567,8 +2567,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "column name\ne.g. \"MEMBER_NAME\"",
+                    "comment": "column name\ne.g. \"MEMBER_NAME\"",
                     "annotationList": [
                       "Required{groups\u003d[ClientError]}"
                     ],
@@ -2579,8 +2579,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "inputted column comment on the schema",
+                    "comment": "inputted column comment on the schema.html\ne.g. \"this column\u0027s value is always null ...??  DO NOT BE SILLY!!!\" (NullAllowed)",
                     "annotationList": [
                       "Required"
                     ],
@@ -2591,8 +2591,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "column comment on table definition\nThe comments on database may be blank so null allowed",
+                    "comment": "column comment on table definition\nThe comments on database may be blank so null allowed.\ne.g. \"this column\u0027s value allowed null?\" (NullAllowed)",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   },
@@ -2601,8 +2601,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "column comment before editing on the schema",
+                    "comment": "column comment before editing on the schema.html\nThe comments on scheme.html may be blank so null allowed.\ne.g. \"this column\u0027s value is not always null.\" (NullAllowed)",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   },
@@ -2611,8 +2611,8 @@
                     "typeName": "java.lang.Long",
                     "simpleTypeName": "Long",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "column comment version\nThe comment version will update when the decomment",
+                    "comment": "column comment version\nThe comment version will update when the decomment.dfprop file is picked up.\ne.g. 2",
                     "annotationList": [
                       "Required{groups\u003d[ClientError]}"
                     ],
@@ -2623,9 +2623,11 @@
                     "typeName": "java.util.List\u003cString\u003e",
                     "simpleTypeName": "List\u003cString\u003e",
                     "value": null,
-                    "description": null,
-                    "comment": null,
-                    "annotationList": [],
+                    "description": "the list of ancestor authors\nCurrent piece author is derived by server at first decomment so empty allowed",
+                    "comment": "the list of ancestor authors\nCurrent piece author is derived by server at first decomment so empty allowed.\ne.g. [\"cabos\", \"hakiba\", \"deco\"]  (EmptyAllowed)",
+                    "annotationList": [
+                      "NotNull"
+                    ],
                     "nestTypeDocMetaList": []
                   }
                 ]
@@ -2644,14 +2646,14 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 79,
+      "fileLineCount": 94,
       "methodLineCount": 5
     },
     {
       "url": "/document/decomment/{projectName}/pickup",
       "typeName": "org.dbflute.intro.app.web.document.decomment.DocumentDecommentAction",
       "simpleTypeName": "DocumentDecommentAction",
-      "description": "@author cabos",
+      "description": "@author cabos, save decomment piece map",
       "typeComment": "@author cabos\n@author hakiba",
       "fieldTypeDocMetaList": [
         {
@@ -2680,7 +2682,7 @@
         }
       ],
       "methodName": "pickup",
-      "methodComment": null,
+      "methodComment": "save decomment piece map\n\n@param projectName project name e.g. maihamadb (NotNull)\n@return merged pickup as json (NotNull)",
       "annotationList": [
         "Execute{urlPattern\u003d{}/@word}"
       ],
@@ -2690,8 +2692,8 @@
           "typeName": "java.lang.String",
           "simpleTypeName": "String",
           "value": null,
-          "description": null,
-          "comment": null,
+          "description": "project name",
+          "comment": "project name e.g. maihamadb (NotNull)",
           "annotationList": [],
           "nestTypeDocMetaList": []
         }
@@ -2701,7 +2703,7 @@
         "name": null,
         "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult\u003e",
         "simpleTypeName": "JsonResponse\u003cDecommentPickupResult\u003e",
-        "value": "asJson(new DecommentPickupResult(dfDecoMapPickup.getDecoMap()",
+        "value": "asJson(new DecommentPickupResult(dfDecoMapPickup.getTableList()",
         "description": null,
         "comment": null,
         "annotationList": [],
@@ -2711,11 +2713,11 @@
             "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart\u003e",
             "simpleTypeName": "List\u003cTablePart\u003e",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "list of table part",
+            "comment": "list of table part",
             "annotationList": [
               "Valid",
-              "Required"
+              "NotNull"
             ],
             "nestTypeDocMetaList": [
               {
@@ -2723,8 +2725,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "table name\ne.g. \"MEMBER\"",
+                "comment": "table name\ne.g. \"MEMBER\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -2735,8 +2737,8 @@
                 "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart$ColumnPart\u003e",
                 "simpleTypeName": "List\u003cColumnPart\u003e",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "list of column part, contains saved comments",
+                "comment": "list of column part, contains saved comments",
                 "annotationList": [
                   "Valid",
                   "Required"
@@ -2747,8 +2749,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "column name\ne.g. \"MEMBER_NAME\"",
+                    "comment": "column name\ne.g. \"MEMBER_NAME\"",
                     "annotationList": [
                       "Required"
                     ],
@@ -2759,8 +2761,8 @@
                     "typeName": "java.util.List\u003corg.dbflute.intro.app.web.document.decomment.DecommentPickupResult$TablePart$ColumnPart$PropertyPart\u003e",
                     "simpleTypeName": "List\u003cPropertyPart\u003e",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "list of decomment properties associated column",
+                    "comment": "list of decomment properties associated column",
                     "annotationList": [
                       "Valid",
                       "Required"
@@ -2771,8 +2773,8 @@
                         "typeName": "java.lang.String",
                         "simpleTypeName": "String",
                         "value": null,
-                        "description": null,
-                        "comment": null,
+                        "description": "decomment saved as decomment piece map\ne.g. \"decomment means \u0027deco\u0027 + \u0027database comment\u0027\"",
+                        "comment": "decomment saved as decomment piece map\ne.g. \"decomment means \u0027deco\u0027 + \u0027database comment\u0027\"",
                         "annotationList": [
                           "Required"
                         ],
@@ -2783,23 +2785,9 @@
                         "typeName": "java.lang.String",
                         "simpleTypeName": "String",
                         "value": null,
-                        "description": null,
-                        "comment": null,
-                        "annotationList": [
-                          "Required"
-                        ],
-                        "nestTypeDocMetaList": []
-                      },
-                      {
-                        "name": "previousWholeComment",
-                        "typeName": "java.lang.String",
-                        "simpleTypeName": "String",
-                        "value": null,
-                        "description": null,
-                        "comment": null,
-                        "annotationList": [
-                          "Required"
-                        ],
+                        "description": "column comment on table definition\nThe comments on database may be blank so null allowed",
+                        "comment": "column comment on table definition\nThe comments on database may be blank so null allowed.\ne.g. \"let\u0027s cabos\" (NullAllowed)",
+                        "annotationList": [],
                         "nestTypeDocMetaList": []
                       },
                       {
@@ -2807,8 +2795,8 @@
                         "typeName": "java.lang.Long",
                         "simpleTypeName": "Long",
                         "value": null,
-                        "description": null,
-                        "comment": null,
+                        "description": "column comment version\nThe comment version will update when the decomment",
+                        "comment": "column comment version\nThe comment version will update when the decomment.dfprop file is picked up.\ne.g. 3",
                         "annotationList": [
                           "Required"
                         ],
@@ -2819,8 +2807,8 @@
                         "typeName": "java.util.List\u003cString\u003e",
                         "simpleTypeName": "List\u003cString\u003e",
                         "value": null,
-                        "description": null,
-                        "comment": null,
+                        "description": "the list of ancestor authors\ne.g. [\"cabos\", \"hakiba\", \"deco\"]",
+                        "comment": "the list of ancestor authors\ne.g. [\"cabos\", \"hakiba\", \"deco\"]",
                         "annotationList": [
                           "Valid",
                           "Required"
@@ -2835,7 +2823,7 @@
           }
         ]
       },
-      "fileLineCount": 79,
+      "fileLineCount": 94,
       "methodLineCount": 4
     },
     {
@@ -2863,7 +2851,7 @@
           "simpleTypeName": "DocumentUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco",
+          "comment": "@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2926,7 +2914,7 @@
           "simpleTypeName": "DocumentUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco",
+          "comment": "@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2989,7 +2977,7 @@
           "simpleTypeName": "DocumentUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco",
+          "comment": "@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
