@@ -3,10 +3,15 @@ package org.dbflute.intro.app.web.document.decomment;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import org.dbflute.intro.app.web.document.decomment.DecommentPickupResult.TablePart;
+import org.dbflute.intro.app.web.document.decomment.DecommentPickupResult.TablePart.ColumnPart;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
+import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
@@ -24,6 +29,9 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);
         DecommentSaveBody body = createSampleBody();
+        File pieceDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/schema/decomment/piece");
+        assertFalse(pieceDir.exists());
+        assertFalse(pieceDir.isDirectory());
 
         // ## Act ##
         action.save(TEST_CLIENT_PROJECT, body);
@@ -31,7 +39,6 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
         // ## Assert ##
         // Assert by visual confirmation
         // done cabos file assert by testdb by jflute (2017/09/07)
-        File pieceDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/schema/decomment/piece");
         assertTrue(pieceDir.exists());
         assertTrue(pieceDir.isDirectory());
         String[] pieceMaps = pieceDir.list();
@@ -64,6 +71,7 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
     public void test_read_PickupResult() throws Exception {
         // ## Arrange ##
         prepareTestFiles();
+
         // done hakiba put test data in test/resources by hakiba (2017/08/18)
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);
@@ -73,11 +81,38 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
 
         // ## Assert ##
         // done hakiba like this by jflute (2017/08/17)
-        //showJson(response);
-        //TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
-        //DecommentPickupResult result = jsonData.getJsonResult();
-
         showJson(response);
-        validateJsonData(response);
+        TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
+        DecommentPickupResult result = jsonData.getJsonResult();
+        {
+            TablePart member = extractPickupTableAsOne(result, "MEMBER");
+            {
+                ColumnPart birthdate = extractPickupColumnAsOne(member, "BIRTHDATE");
+                assertHasOnlyOneElement(birthdate.properties);
+                assertEquals("hakiba", birthdate.properties.get(0).pieceOwner);
+            }
+        }
+        {
+            TablePart member = extractPickupTableAsOne(result, "PURCHASE");
+            {
+                ColumnPart birthdate = extractPickupColumnAsOne(member, "PURCHASE_DATETIME");
+                assertEquals(3, birthdate.properties); // conflict, should be cabos, hakiba, deco
+            }
+        }
+    }
+
+    private TablePart extractPickupTableAsOne(DecommentPickupResult result, String tableName) {
+        List<TablePart> tableList = result.tables.stream().filter(table -> {
+            return table.tableName.equals(tableName);
+        }).collect(Collectors.toList());
+        assertHasOnlyOneElement(tableList);
+        return tableList.get(0);
+    }
+
+    private ColumnPart extractPickupColumnAsOne(TablePart member, String columnName) {
+        List<ColumnPart> columnList =
+                member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
+        assertHasOnlyOneElement(columnList);
+        return columnList.get(0);
     }
 }
