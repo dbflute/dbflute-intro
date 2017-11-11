@@ -30,6 +30,7 @@ public class DfDecoMapPropertyPart {
         this.databaseComment = (String) propertyMap.get("databaseComment");
         this.pieceCode = (String) propertyMap.get("pieceCode");
         this.pieceDatetime = new HandyDate((String) propertyMap.get("pieceDatetime")).getLocalDateTime();
+        this.pieceOwner = (String) propertyMap.get("pieceOwner");
         this.previousPieceList =
             ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
         this.commentVersion = Long.valueOf((String) propertyMap.get("commentVersion"));

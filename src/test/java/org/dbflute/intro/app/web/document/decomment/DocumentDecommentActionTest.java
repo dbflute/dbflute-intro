@@ -95,8 +95,8 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
         {
             TablePart member = extractPickupTableAsOne(result, "PURCHASE");
             {
-                ColumnPart birthdate = extractPickupColumnAsOne(member, "PURCHASE_DATETIME");
-                assertEquals(3, birthdate.properties); // conflict, should be cabos, hakiba, deco
+                ColumnPart purchaseDatetime = extractPickupColumnAsOne(member, "PURCHASE_DATETIME");
+                assertEquals(3, purchaseDatetime.properties.size()); // conflict, should be cabos, hakiba, deco
             }
         }
     }
@@ -111,7 +111,7 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
 
     private ColumnPart extractPickupColumnAsOne(TablePart member, String columnName) {
         List<ColumnPart> columnList =
-                member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
+            member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
         assertHasOnlyOneElement(columnList);
         return columnList.get(0);
     }

@@ -388,7 +388,11 @@ public class DfDecoMapFile {
     }
 
     private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
-        return pieces.stream().filter(piece -> !pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
+        Set<String> previousAllPieceSet =
+            pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream()).collect(Collectors.toSet());
+        return pieces.stream()
+            .filter(piece -> !previousAllPieceSet.contains(piece.getPieceCode()) && !pieceCodeSet.contains(piece.getPieceCode()))
+            .collect(Collectors.toList());
     }
 
     // hakiba's memorable code by jflute (2017/11/11)
