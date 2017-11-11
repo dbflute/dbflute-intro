@@ -114,8 +114,8 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         DfDecoMapPiece piece = new DfDecoMapPiece();
         piece.setMerged(false);
         piece.setFormatVersion("1.0");
-        piece.setAuthor(author);
-        piece.setTableList(Collections.singletonList(tablePart));
+        piece.setPieceOwner(author);
+//        piece.setTableList(Collections.singletonList(tablePart)); // TODO deco improve test code if complete piece structure change
         return piece;
     }
 }

@@ -36,12 +36,12 @@ map:{
         }
     }
     ; PieceTargetType = list:{
-        ; map:{ topComment=target type of decomment ; codeType=String }
+        ; map:{ topComment=target type of decomment piece ; codeType=String }
         ; map:{
-            ; code=CLM; name=Column; comment=Column
+            ; code=COLUMN; name=Column; comment=piece for column
         }
         ; map:{
-            ; code=TBL; name=Table; comment=Table
+            ; code=TABLE; name=Table; comment=piece for table
         }
     }
 }

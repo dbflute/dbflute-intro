@@ -1119,7 +1119,7 @@ if (document.getElementById("intro_opening") !== null) {
 
 						document.getElementById("decomment-ok").onclick = function() {
 							var tableName = that.getTableName(table);
-							var params = that.buildRequestParams(isConflict, tableName, columnName, inputElement.value, previousWholeComment.innerText);
+							var params = that.buildColumnCommentRequestParams(isConflict, tableName, columnName, inputElement.value, column);
 							that.requestSaveDecomment(schemeName, params);
 							modalElement.style.display = "none";
 						};
@@ -1170,30 +1170,25 @@ if (document.getElementById("intro_opening") !== null) {
 		},
 
 		/**
-		 * Build request body
+		 * Build column comment request body
 		 * @param {boolean} merged - Merged
 		 * @param {string} tableName - Table name
 		 * @param {string} columnName - Column name
 		 * @param {string} docomment - Inputed decomment
-		 * @param {string} previousWholeComment - Previous whole comment
+		 * @param {string} previousCommentElement - Previous comment element
 		 * @return {Object} Request body
 		 */
-		buildRequestParams: function (merged, tableName, columnName, docomment, previousWholeComment) {
-			// TODO tominaga change request params if the pickup api is created
+		buildColumnCommentRequestParams: function (merged, tableName, columnName, docomment, previousCommentElement) {
 			return {
 				'merged': merged,
-				'table': {
-					'tableName': tableName,
-					'columns': [
-						{
-							'columnName': columnName,
-							'decomment': docomment,
-							'previousWholeComment': previousWholeComment,
-							'commentVersion': 1,
-							'authorList': []
-						}
-					]
-				}
+				'tableName': tableName,
+				'columnName': columnName,
+				'targetType': 'COLUMN',
+				'decomment': decomment,
+				'databaseComment': '', // TODO tominaga add database comment
+				'commentVersion': 1,
+				'authors': [], // TODO tominaga add authors
+				'previousPieces': [] // TODO tominaga add previous pieces
 			};
 		},
 
