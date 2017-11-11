@@ -120,6 +120,13 @@ public class DecommentPickupResult {
                 public LocalDateTime pieceDatetime;
 
                 /**
+                 * author of this decomment piece
+                 * e.g. "deco"
+                 */
+                @Required
+                public String pieceOwner;
+
+                /**
                  * list of merged piece code
                  * e.g. ["HF7ELSE"]
                  */
@@ -137,6 +144,7 @@ public class DecommentPickupResult {
                     this.authors = property.getAuthorList();
                     this.pieceCode = property.getPieceCode();
                     this.pieceDatetime = property.getPieceDatetime();
+                    this.pieceOwner = property.getPieceOwner();
                     this.previousPieces = property.getPreviousPieceList();
                 }
             }
