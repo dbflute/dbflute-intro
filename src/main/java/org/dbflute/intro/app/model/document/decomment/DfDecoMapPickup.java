@@ -86,7 +86,7 @@ public class DfDecoMapPickup {
     //         }
     //     }
     // }
-    public Map<String, Object> convertMap() {
+    public Map<String, Object> convertToMap() {
         final Map<String, Map<String, Object>> convertedDecoMap = decoMap.get("tableList").stream().collect(
                 Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
 
@@ -102,7 +102,7 @@ public class DfDecoMapPickup {
     //                                                                            ========
     @Override
     public String toString() {
-        return new MapListString().buildMapString(this.convertMap());
+        return new MapListString().buildMapString(this.convertToMap());
     }
 
     // ===================================================================================

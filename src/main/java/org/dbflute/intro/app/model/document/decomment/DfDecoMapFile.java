@@ -221,7 +221,7 @@ public class DfDecoMapFile {
         }
         createPieceMapFile(pieceMapFile);
         try (OutputStream ous = new FileOutputStream(pieceMapFile)) {
-            writeMap(ous, decoMapPiece.convertMap());
+            writeMap(ous, decoMapPiece.convertToMap());
         }
     }
 

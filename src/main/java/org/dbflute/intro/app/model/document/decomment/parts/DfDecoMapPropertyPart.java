@@ -98,7 +98,7 @@ public class DfDecoMapPropertyPart {
         this.authorList = authorList;
     }
 
-    public Map<String, Object> convertMap() {
+    public Map<String, Object> convertToMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("decomment", this.decomment);
         map.put("databaseComment", this.databaseComment);

@@ -66,7 +66,7 @@ public class DfDecoMapPiece {
     //     ; pieceOwner = jflute
     //     ; previousPieceList = list:{ FE893L1 }
     // }
-    public Map<String, Object> convertMap() {
+    public Map<String, Object> convertToMap() {
         // done cabos Map by jflute (2017/08/10)
         // done cabos use Linked by jflute (2017/09/07)
         Map<String, Object> map = new LinkedHashMap<>();
@@ -90,7 +90,7 @@ public class DfDecoMapPiece {
     //                                                                            ========
     @Override
     public String toString() {
-        return new MapListString().buildMapString(this.convertMap());
+        return new MapListString().buildMapString(this.convertToMap());
     }
 
     // ===================================================================================

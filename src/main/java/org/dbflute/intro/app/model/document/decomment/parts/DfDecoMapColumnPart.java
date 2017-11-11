@@ -37,25 +37,8 @@ public class DfDecoMapColumnPart {
         return column;
     }
 
-    public static DfDecoMapColumnPart createPickupColumnPart(Map.Entry<String, List<Map<String, Object>>> columnEntry) {
-        final List<DfDecoMapPropertyPart> properties = columnEntry.getValue().stream().map(propertiesMap -> {
-            return new DfDecoMapPropertyPart(propertiesMap);
-        }).collect(Collectors.toList());
-        DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-        column.setColumnName(columnEntry.getKey());
-        column.setPropertyList(properties);
-        return column;
-    }
-
-    public Map<String, Object> convertMap() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("columnName", columnName);
-        map.put("propertyList", propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList()));
-        return map;
-    }
-
     public List<Map<String, Object>> convertPickupMap() {
-        return propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList());
+        return propertyList.stream().map(property -> property.convertToMap()).collect(Collectors.toList());
     }
 
     // ===================================================================================
