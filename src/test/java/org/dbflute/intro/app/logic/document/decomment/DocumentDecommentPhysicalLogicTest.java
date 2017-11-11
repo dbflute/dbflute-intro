@@ -93,9 +93,8 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         inject(logic);
 
         // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
-        final String expFileName =
-            "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-"
-                + samplePieceCode + ".dfmap";
+        final String expFileName = "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-"
+                + sampleAuthor + "-" + samplePieceCode + ".dfmap";
 
         // ## Act ##
         final String fileName = logic.buildPieceFileName(sampleTableName, sampleColumnName, sampleAuthor, samplePieceCode);
@@ -216,11 +215,12 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         String[] pieceMaps = pieceDir.list();
         assertNotNull(pieceMaps);
         assertTrue(pieceMaps.length > 0);
-        Arrays.stream(pieceMaps).filter(fileName -> fileName.endsWith(".dfmap")) // exclude un need filed
-            .forEach(fileName -> {
-                log(fileName);
-                assertTrue(expFileNamePattern.matcher(fileName).find());
-            });
+        Arrays.stream(pieceMaps)
+                .filter(fileName -> fileName.endsWith(".dfmap")) // exclude un need filed
+                .forEach(fileName -> {
+                    log(fileName);
+                    assertTrue(expFileNamePattern.matcher(fileName).find());
+                });
     }
 
     // map:{
@@ -263,7 +263,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     //                                                                              ======
     public void test_readMergedDecommentPickupMap_init() throws Exception {
         // ## Arrange ##
-        // TODO hakiba null pointer at init state by jflute (2017/10/05)
+        // done (by cabos) hakiba null pointer at init state by jflute (2017/10/05)
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
 
