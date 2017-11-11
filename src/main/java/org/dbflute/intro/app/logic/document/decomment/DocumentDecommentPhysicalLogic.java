@@ -2,9 +2,7 @@ package org.dbflute.intro.app.logic.document.decomment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -64,23 +62,20 @@ public class DocumentDecommentPhysicalLogic {
         String tableName = decoMapPiece.getTableName();
         String owner = decoMapPiece.getPieceOwner();
         String pieceCode = decoMapPiece.getPieceCode();
-        File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, owner, pieceCode)));
-        createPieceMapFile(pieceMapFile);
-        try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
+        String pieceMapPath = buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, owner, pieceCode));
+        try {
             // done cabos remove 'df' from variable name by jflute (2017/08/10)
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
-            decoMapFile.writeMap(outputStream, decoMapPiece.convertMap());
+            decoMapFile.writePiece(pieceMapPath, decoMapPiece);
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         } catch (FileNotFoundException | SecurityException e) {
-            throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+            throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapPath, pieceMapPath, e);
         } catch (IOException e) {
-            throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapFile.getAbsolutePath(), e);
+            throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapPath, e);
         }
     }
 
-    protected String buildPieceFileName(String tableName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
+    protected String buildPieceFileName(String tableName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
         return "decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
@@ -94,7 +89,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -104,7 +99,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
         List<DfDecoMapPiece> pieces =
-            readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);
