@@ -187,14 +187,14 @@ public interface AppCDef extends Classification {
     }
 
     /**
-     * target type of decomment
+     * target type of decomment piece
      */
     public enum PieceTargetType implements AppCDef {
-        /** Column: Column */
-        Column("CLM", "Column", emptyStrings())
+        /** Column: piece for column */
+        Column("COLUMN", "Column", emptyStrings())
         ,
-        /** Table: Table */
-        Table("TBL", "Table", emptyStrings())
+        /** Table: piece for table */
+        Table("TABLE", "Table", emptyStrings())
         ;
         private static final Map<String, PieceTargetType> _codeClsMap = new HashMap<String, PieceTargetType>();
         private static final Map<String, PieceTargetType> _nameClsMap = new HashMap<String, PieceTargetType>();
@@ -312,7 +312,7 @@ public interface AppCDef extends Classification {
         /** Instruction for DBFlute task */
         TaskInstruction
         ,
-        /** target type of decomment */
+        /** target type of decomment piece */
         PieceTargetType
         ;
         public String classificationName() {
