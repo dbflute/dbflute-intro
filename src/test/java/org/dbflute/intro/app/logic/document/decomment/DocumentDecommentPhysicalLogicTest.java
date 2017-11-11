@@ -77,7 +77,8 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
 
     public void test_buildPieceFileName() throws Exception {
         // ## Arrange ##
-        final String sampleTableName = "EBISU_GARDEN_PLACE_PLAZA";
+        final String sampleTableName = "EBISU_GARDEN_PLACE";
+        final String sampleColumnName = "PLAZA";
         final String sampleAuthor = "cabos";
         final String samplePieceCode = "FE893L1";
         final LocalDateTime current = currentLocalDateTime();
@@ -93,10 +94,11 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
 
         // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
         final String expFileName =
-            "decomment-piece-" + sampleTableName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-" + samplePieceCode + ".dfmap";
+            "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-"
+                + samplePieceCode + ".dfmap";
 
         // ## Act ##
-        final String fileName = logic.buildPieceFileName(sampleTableName, sampleAuthor, samplePieceCode);
+        final String fileName = logic.buildPieceFileName(sampleTableName, sampleColumnName, sampleAuthor, samplePieceCode);
 
         // ## Assert ##
         assertEquals(fileName, expFileName);
