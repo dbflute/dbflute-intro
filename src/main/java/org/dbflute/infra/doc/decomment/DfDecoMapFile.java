@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.model.document.decomment;
+package org.dbflute.infra.doc.decomment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,9 +20,9 @@ import java.util.stream.Stream;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
 import org.dbflute.optional.OptionalThing;
 
@@ -263,7 +263,7 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Merge
     //                                                                               =====
-    // TODO hakiba write unit test by jflute (2017/09/21)
+    // done (by cabos) hakiba write unit test by jflute (2017/09/21)
     public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces) {
         Set<String> pieceCodeSet = pickupOpt.map(this::extractAllPieceCode).orElse(Collections.emptySet());
         List<DfDecoMapPiece> filteredPieces = filterPieces(pieces, pieceCodeSet);
@@ -298,22 +298,22 @@ public class DfDecoMapFile {
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists table or column decoment, but we don't know that target decomment exists now...
                     table.getColumnList()
-                        .stream()
-                        .filter(column -> column.getColumnName().equals(piece.getColumnName()))
-                        .findFirst()
-                        .map(column -> {
-                            // exists column comment
-                            addColumnProperty(property, column);
-                            return column;
-                        })
-                        .orElseGet(() -> {
-                            // not exists column comment
-                            DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-                            column.setColumnName(piece.getColumnName());
-                            column.setPropertyList(Collections.singletonList(property));
-                            addColumn(column, table);
-                            return column;
-                        });
+                            .stream()
+                            .filter(column -> column.getColumnName().equals(piece.getColumnName()))
+                            .findFirst()
+                            .map(column -> {
+                                // exists column comment
+                                addColumnProperty(property, column);
+                                return column;
+                            })
+                            .orElseGet(() -> {
+                                // not exists column comment
+                                DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+                                column.setColumnName(piece.getColumnName());
+                                column.setPropertyList(Collections.singletonList(property));
+                                addColumn(column, table);
+                                return column;
+                            });
                     return table;
                 }).orElseGet(() -> {
                     // not exists table and column decoment
@@ -372,23 +372,24 @@ public class DfDecoMapFile {
     private Set<String> extractAllPieceCode(DfDecoMapPickup pickup) {
         return pickup.getTableList().stream().flatMap(table -> {
             Stream<String> previousTablePieceStream =
-                table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-            Stream<String> previousColumnPieceStream = table.getColumnList()
-                .stream()
-                .flatMap(column -> column.getPropertyList().stream())
-                .flatMap(property -> property.getPreviousPieceList().stream());
+                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+            Stream<String> previousColumnPieceStream =
+                    table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).flatMap(
+                            property -> property.getPreviousPieceList().stream());
             Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-            Stream<String> columnPieceStream = table.getColumnList()
-                .stream()
-                .flatMap(column -> column.getPropertyList().stream())
-                .map(property -> property.getPieceCode());
+            Stream<String> columnPieceStream = table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).map(
+                    property -> property.getPieceCode());
             return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                columnPieceStream);
+                    columnPieceStream);
         }).collect(Collectors.toSet());
     }
 
     private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
-        return pieces.stream().filter(piece -> !pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
+        Set<String> previousAllPieceSet =
+                pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream()).collect(Collectors.toSet());
+        return pieces.stream()
+                .filter(piece -> !previousAllPieceSet.contains(piece.getPieceCode()) && !pieceCodeSet.contains(piece.getPieceCode()))
+                .collect(Collectors.toList());
     }
 
     // hakiba's memorable code by jflute (2017/11/11)

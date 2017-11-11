@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.model.document.decomment;
+package org.dbflute.infra.doc.decomment;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;

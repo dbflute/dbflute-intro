@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
 
@@ -59,6 +59,10 @@ public class DecommentPickupResult {
         @Required
         public List<ColumnPart> columns;
 
+        @Valid
+        @Required
+        public List<PropertyPart> properties;
+
         public static class ColumnPart {
 
             /**
@@ -73,82 +77,6 @@ public class DecommentPickupResult {
             @Required
             public List<PropertyPart> properties;
 
-            public static class PropertyPart {
-
-                /**
-                 * decomment saved as decomment piece map
-                 * e.g. "decomment means 'deco' + 'database comment'"
-                 */
-                @Required
-                public String decomment;
-
-                /**
-                 * column comment on table definition
-                 * The comments on database may be blank so null allowed.
-                 * e.g. "let's cabos" (NullAllowed)
-                 */
-                public String databaseComment;
-
-                /**
-                 * column comment version
-                 * The comment version will update when the decomment.dfprop file is picked up.
-                 * e.g. 3
-                 */
-                @Required
-                public Long commentVersion;
-
-                /**
-                 * the list of ancestor authors
-                 * e.g. ["cabos", "hakiba", "deco"]
-                 */
-                @Valid
-                @Required
-                public List<String> authors;
-
-                /**
-                 * piece code generated when decomment edited
-                 * e.g. "EF89371"
-                 */
-                @Required
-                public String pieceCode;
-
-                /**
-                 * time of edit decomment
-                 * e.g. "2017-11-11T18:32:22.235"
-                 */
-                @Required
-                public LocalDateTime pieceDatetime;
-
-                /**
-                 * author of this decomment piece
-                 * e.g. "deco"
-                 */
-                @Required
-                public String pieceOwner;
-
-                /**
-                 * list of merged piece code
-                 * e.g. ["HF7ELSE"]
-                 */
-                @Valid
-                @Required
-                public List<String> previousPieces;
-
-                // =======================================================================
-                //                                                             Constructor
-                //                                                             ===========
-                public PropertyPart(DfDecoMapPropertyPart property) {
-                    this.decomment = property.getDecomment();
-                    this.databaseComment = property.getDatabaseComment();
-                    this.commentVersion = property.getCommentVersion();
-                    this.authors = property.getAuthorList();
-                    this.pieceCode = property.getPieceCode();
-                    this.pieceDatetime = property.getPieceDatetime();
-                    this.pieceOwner = property.getPieceOwner();
-                    this.previousPieces = property.getPreviousPieceList();
-                }
-            }
-
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
@@ -159,6 +87,83 @@ public class DecommentPickupResult {
         public TablePart(DfDecoMapTablePart tablePart) {
             this.tableName = tablePart.getTableName();
             this.columns = tablePart.getColumnList().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
+            this.properties = tablePart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+        }
+    }
+
+    public static class PropertyPart {
+
+        /**
+         * decomment saved as decomment piece map
+         * e.g. "decomment means 'deco' + 'database comment'"
+         */
+        @Required
+        public String decomment;
+
+        /**
+         * table or column comment on table definition
+         * The comments on database may be blank so null allowed.
+         * e.g. "let's cabos" (NullAllowed)
+         */
+        public String databaseComment;
+
+        /**
+         * table or column comment version
+         * The comment version will update when the decomment.dfprop file is picked up.
+         * e.g. 3
+         */
+        @Required
+        public Long commentVersion;
+
+        /**
+         * the list of ancestor authors
+         * e.g. ["cabos", "hakiba", "deco"]
+         */
+        @Valid
+        @Required
+        public List<String> authors;
+
+        /**
+         * piece code generated when decomment edited
+         * e.g. "EF89371"
+         */
+        @Required
+        public String pieceCode;
+
+        /**
+         * time of edit decomment
+         * e.g. "2017-11-11T18:32:22.235"
+         */
+        @Required
+        public LocalDateTime pieceDatetime;
+
+        /**
+         * author of this decomment piece
+         * e.g. "deco"
+         */
+        @Required
+        public String pieceOwner;
+
+        /**
+         * list of merged piece code
+         * e.g. ["HF7ELSE"]
+         */
+        @Valid
+        @NotNull
+        public List<String> previousPieces;
+
+        // =======================================================================
+        //                                                             Constructor
+        //                                                             ===========
+        public PropertyPart(DfDecoMapPropertyPart property) {
+            this.decomment = property.getDecomment();
+            this.databaseComment = property.getDatabaseComment();
+            this.commentVersion = property.getCommentVersion();
+            this.authors = property.getAuthorList();
+            this.pieceCode = property.getPieceCode();
+            this.pieceDatetime = property.getPieceDatetime();
+            this.pieceOwner = property.getPieceOwner();
+            this.previousPieces = property.getPreviousPieceList();
         }
     }
 

@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.model.document.decomment;
+package org.dbflute.infra.doc.decomment;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.dbflute.helper.mapstring.MapListString;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 
 /**
  * @author hakiba
