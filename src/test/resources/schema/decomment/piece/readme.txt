@@ -16,8 +16,10 @@ decomment-piece-MEMBER-MEMBER_NAME-20171015-161718-199-jflute-HF7ELSE.dfmap = sa
 #
 # PURCHASE
 #
-decomment-piece-PURCHASE-20171229-123456-789-deco-DSL93FPP.dfmap = previous of deco
-decomment-piece-PURCHASE-20171230-123456-789-deco-FLS83FSF.dfmap = same author's next decomment
+decomment-piece-PURCHASE-20171229-123456-789-deco-DSL93FPP.dfmap = conflict with deco (myself)
+decomment-piece-PURCHASE-20171230-123456-789-deco-FLS83FSF.dfmap = conflict with deco (myself)
 
-decomment-piece-PURCHASE-PURCHASE_DATETIME-20171230-123456-789-cabos-KS322LLF.dfmap = same date-time with hakiba
-decomment-piece-PURCHASE-PURCHASE_DATETIME-20171230-123456-789-hakiba-GHJKFS36.dfmap = same date-time with cabos
+decomment-piece-PURCHASE-PURCHASE_DATETIME-20171229-123456-789-jflute-TYUFSEFQ.dfmap = previous of deco
+decomment-piece-PURCHASE-PURCHASE_DATETIME-20171230-123456-789-cabos-KS322LLF.dfmap = conflict with hakiba, deco
+decomment-piece-PURCHASE-PURCHASE_DATETIME-20171230-123456-789-hakiba-GHJKFS36.dfmap = conflict with cabos, deco
+decomment-piece-PURCHASE-PURCHASE_DATETIME-20171231-123456-789-deco-J8765SPK.dfmap = conflict with cabos, hakiba

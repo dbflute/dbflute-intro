@@ -11,5 +11,5 @@ map:{
     ; pieceCode = FLS83FSF
     ; pieceDatetime = 2017-12-30T12:34:56.789
     ; pieceOwner = deco
-    ; previousPieceList = list:{ DSL93FPP }
+    ; previousPieceList = list:{}
 }
