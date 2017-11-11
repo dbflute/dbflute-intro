@@ -1,7 +1,13 @@
 package org.dbflute.intro.app.model.document.decomment;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -196,24 +202,40 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Write
     //                                                                               =====
-    // TODO hakiba be more rich method, e.g. saveDecommentPieceMap()'s logic by jflute (2017/09/21)
-    public void writeMap(OutputStream ous, Map<String, Object> map) {
-        final MapListFile mapListFile = createMapListFile();
-        try {
-            mapListFile.writeMap(ous, map);
-        } catch (Exception e) {
-            throwDecoMapWriteFailureException(ous, e);
+    public void writePiece(String pieceMapPath, DfDecoMapPiece decoMapPiece) throws FileNotFoundException, IOException {
+        File pieceMapFile = new File(pieceMapPath);
+        if (pieceMapFile.exists()) { // no way, but just in case
+            pieceMapFile.delete(); // simply delete old file
+        }
+        createPieceMapFile(pieceMapFile);
+        try (OutputStream ous = new FileOutputStream(pieceMapFile)) {
+            writeMap(ous, decoMapPiece.convertMap());
         }
     }
 
-    protected void throwDecoMapWriteFailureException(OutputStream ous, Exception e) {
+    protected void createPieceMapFile(File pieceMapFile) throws IOException {
+        Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
+        Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
+    }
+
+    // done (by jflute) hakiba be more rich method, e.g. saveDecommentPieceMap()'s logic by jflute (2017/09/21)
+    protected void writeMap(OutputStream ous, Map<String, Object> decoMap) {
+        final MapListFile mapListFile = createMapListFile();
+        try {
+            mapListFile.writeMap(ous, decoMap);
+        } catch (Exception e) {
+            throwDecoMapWriteFailureException(decoMap, e);
+        }
+    }
+
+    protected void throwDecoMapWriteFailureException(Map<String, Object> decoMap, Exception cause) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
         br.addNotice("Failed to write the deco-map file.");
         br.addItem("Decomment Map");
-        br.addElement(ous);
+        br.addElement(decoMap);
         final String msg = br.buildExceptionMessage();
         // done cabos use WriteFailure by jflute (2017/08/10)
-        throw new DfPropFileWriteFailureException(msg, e);
+        throw new DfPropFileWriteFailureException(msg, cause);
     }
 
     // ===================================================================================
