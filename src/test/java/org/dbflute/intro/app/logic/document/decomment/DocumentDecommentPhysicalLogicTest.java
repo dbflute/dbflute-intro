@@ -10,9 +10,7 @@ import java.util.regex.Pattern;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 import org.lastaflute.core.time.SimpleTimeManager;
 
@@ -20,6 +18,7 @@ import org.lastaflute.core.time.SimpleTimeManager;
  * @author hakiba
  * @author jflute
  * @author cabos at garden place plaza
+ * @author deco
  */
 public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitIntroTestCase {
 
@@ -80,6 +79,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         // ## Arrange ##
         final String sampleTableName = "EBISU_GARDEN_PLACE_PLAZA";
         final String sampleAuthor = "cabos";
+        final String samplePieceCode = "FE893L1";
         final LocalDateTime current = currentLocalDateTime();
         registerMock(new SimpleTimeManager() {
             @Override
@@ -92,10 +92,11 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         inject(logic);
 
         // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
-        final String expFileName = "decomment-piece-" + sampleTableName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + ".dfmap";
+        final String expFileName =
+            "decomment-piece-" + sampleTableName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-" + samplePieceCode + ".dfmap";
 
         // ## Act ##
-        final String fileName = logic.buildPieceFileName(sampleTableName, sampleAuthor);
+        final String fileName = logic.buildPieceFileName(sampleTableName, sampleAuthor, samplePieceCode);
 
         // ## Assert ##
         assertEquals(fileName, expFileName);
@@ -239,35 +240,19 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
     private DfDecoMapPiece createDfDecoMapPiece() {
         DfDecoMapPiece decoMapPiece = new DfDecoMapPiece();
         decoMapPiece.setFormatVersion("1.0");
-        decoMapPiece.setAuthor("cabos");
         decoMapPiece.setMerged(false);
-        decoMapPiece.setTableList(Collections.singletonList(createDfDecoMapTablePart()));
+        decoMapPiece.setTableName("MEMBER");
+        decoMapPiece.setColumnName("MEMBER_NAME");
+        decoMapPiece.setTargetType(AppCDef.PieceTargetType.Column);
+        decoMapPiece.setDecomment("piari");
+        decoMapPiece.setDatabaseComment("sea");
+        decoMapPiece.setCommentVersion(1L);
+        decoMapPiece.setAuthorList(Collections.singletonList("cabos"));
+        decoMapPiece.setPieceCode("FE893L1");
+        decoMapPiece.setPieceDatetime(currentLocalDateTime());
+        decoMapPiece.setPieceOwner("cabos");
+        decoMapPiece.setPreviousPieceList(Collections.singletonList("FE893L1"));
         return decoMapPiece;
-    }
-
-    private DfDecoMapTablePart createDfDecoMapTablePart() {
-        DfDecoMapTablePart decoMapTablePart = new DfDecoMapTablePart();
-        decoMapTablePart.setTableName("MEMBER");
-        decoMapTablePart.setPropertyList(Collections.emptyList());
-        decoMapTablePart.setColumnList(Collections.singletonList(createDfDecoMapColumnPart()));
-        return decoMapTablePart;
-    }
-
-    private DfDecoMapColumnPart createDfDecoMapColumnPart() {
-        DfDecoMapColumnPart decoMapColumnPart = new DfDecoMapColumnPart();
-        decoMapColumnPart.setColumnName("MEMBER_NAME");
-        decoMapColumnPart.setPropertyList(Collections.singletonList(createColumnPropertyPart()));
-        return decoMapColumnPart;
-    }
-
-    private DfDecoMapPropertyPart createColumnPropertyPart() {
-        DfDecoMapPropertyPart columnPropertyPart = new DfDecoMapPropertyPart();
-        columnPropertyPart.setDecomment("piari");
-        columnPropertyPart.setDatabaseComment("sea");
-        columnPropertyPart.setPieceDatetime(currentLocalDateTime());
-        columnPropertyPart.setCommentVersion(1);
-        columnPropertyPart.setAuthorList(Collections.singletonList("cabos"));
-        return columnPropertyPart;
     }
 
     // ===================================================================================
