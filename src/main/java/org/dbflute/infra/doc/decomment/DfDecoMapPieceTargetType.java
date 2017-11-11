@@ -11,23 +11,32 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.dbflute.exception.ClassificationNotFoundException;
 import org.dbflute.jdbc.Classification;
+import org.dbflute.jdbc.ClassificationCodeType;
 import org.dbflute.jdbc.ClassificationMeta;
+import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
 import org.dbflute.optional.OptionalThing;
 
 /**
  * target type of decomment piece
- *
  * @author cabos
+ * @author jflute
  */
+// TODO cabos delete empty lines by jflute (2017/11/11)
 
 public enum DfDecoMapPieceTargetType implements Classification {
 
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // copied from intro's appcls by cabos (commented by jflute) (2017/11/11)
+    // _/_/_/_/_/_/_/_/_/_/
     /** Column: piece for column */
-    Column("COLUMN", "Column", emptyStrings()), /** Table: piece for table */
+    Column("COLUMN", "Column", emptyStrings()), // comment to avoid intellij formatter headache
+    /** Table: piece for table */
     Table("TABLE", "Table", emptyStrings());
+
     private static final Map<String, DfDecoMapPieceTargetType> _codeClsMap = new HashMap<String, DfDecoMapPieceTargetType>();
     private static final Map<String, DfDecoMapPieceTargetType> _nameClsMap = new HashMap<String, DfDecoMapPieceTargetType>();
 
@@ -43,25 +52,70 @@ public enum DfDecoMapPieceTargetType implements Classification {
     private String _code;
     private String _alias;
     private Set<String> _sisterSet;
+
     private DfDecoMapPieceTargetType(String code, String alias, String[] sisters) {
         _code = code;
         _alias = alias;
         _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters)));
     }
+
     public String code() {
         return _code;
     }
+
     public String alias() {
         return _alias;
     }
+
     public Set<String> sisterSet() {
         return _sisterSet;
     }
+
     public Map<String, Object> subItemMap() {
         return Collections.emptyMap();
     }
+
     public ClassificationMeta meta() {
-        return null;
+        // TODO cabos confirm it by jflute (2017/11/11)
+        return new ClassificationMeta() { // may be used by LastaFlute (in DBFlute Intro)
+
+            @Override
+            public String classificationName() {
+                return DfDecoMapPieceTargetType.class.getSimpleName();
+            }
+
+            @Override
+            public Classification codeOf(Object code) { // null if not found
+                return DfDecoMapPieceTargetType.of(code).orElse(null);
+            }
+
+            @Override
+            public Classification nameOf(String name) { // null if not found
+                return DfDecoMapPieceTargetType.byName(name).orElse(null);
+            }
+
+            @Override
+            public List<Classification> listAll() {
+                return DfDecoMapPieceTargetType.listAll().stream().map(el -> {
+                    return (Classification) el; // cannot cast directly so convert explicitly for now
+                }).collect(Collectors.toList());
+            }
+
+            @Override
+            public List<Classification> groupOf(String groupName) {
+                return Collections.emptyList(); // empty if not found (see javadoc)
+            }
+
+            @Override
+            public ClassificationCodeType codeType() {
+                return ClassificationCodeType.String;
+            }
+
+            @Override
+            public ClassificationUndefinedHandlingType undefinedHandlingType() {
+                return ClassificationUndefinedHandlingType.EXCEPTION;
+            }
+        };
     }
 
     public boolean inGroup(String groupName) {
@@ -75,7 +129,9 @@ public enum DfDecoMapPieceTargetType implements Classification {
      */
     public static OptionalThing<DfDecoMapPieceTargetType> of(Object code) {
         if (code == null) {
-            return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); });
+            return OptionalThing.ofNullable(null, () -> {
+                throw new ClassificationNotFoundException("null code specified");
+            });
         }
         if (code instanceof DfDecoMapPieceTargetType) {
             return OptionalThing.of((DfDecoMapPieceTargetType) code);

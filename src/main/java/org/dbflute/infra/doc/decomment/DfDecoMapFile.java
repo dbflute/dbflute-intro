@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.dbflute.infra.doc.decomment;
 
 import java.io.File;
@@ -26,7 +41,7 @@ import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.optional.OptionalThing;
 
 // done cabos DfDecoMapFile by jflute (2017/07/27)
-
+// TODO cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
 /**
  * @author cabos
  * @author hakiba
@@ -297,22 +312,22 @@ public class DfDecoMapFile {
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists table or column decoment, but we don't know that target decomment exists now...
                     table.getColumnList()
-                        .stream()
-                        .filter(column -> column.getColumnName().equals(piece.getColumnName()))
-                        .findFirst()
-                        .map(column -> {
-                            // exists column comment
-                            addColumnProperty(property, column);
-                            return column;
-                        })
-                        .orElseGet(() -> {
-                            // not exists column comment
-                            DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-                            column.setColumnName(piece.getColumnName());
-                            column.setPropertyList(Collections.singletonList(property));
-                            addColumn(column, table);
-                            return column;
-                        });
+                            .stream()
+                            .filter(column -> column.getColumnName().equals(piece.getColumnName()))
+                            .findFirst()
+                            .map(column -> {
+                                // exists column comment
+                                addColumnProperty(property, column);
+                                return column;
+                            })
+                            .orElseGet(() -> {
+                                // not exists column comment
+                                DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+                                column.setColumnName(piece.getColumnName());
+                                column.setPropertyList(Collections.singletonList(property));
+                                addColumn(column, table);
+                                return column;
+                            });
                     return table;
                 }).orElseGet(() -> {
                     // not exists table and column decoment
@@ -371,27 +386,24 @@ public class DfDecoMapFile {
     private Set<String> extractAllPieceCode(DfDecoMapPickup pickup) {
         return pickup.getTableList().stream().flatMap(table -> {
             Stream<String> previousTablePieceStream =
-                table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-            Stream<String> previousColumnPieceStream = table.getColumnList()
-                .stream()
-                .flatMap(column -> column.getPropertyList().stream())
-                .flatMap(property -> property.getPreviousPieceList().stream());
+                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+            Stream<String> previousColumnPieceStream =
+                    table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).flatMap(
+                            property -> property.getPreviousPieceList().stream());
             Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-            Stream<String> columnPieceStream = table.getColumnList()
-                .stream()
-                .flatMap(column -> column.getPropertyList().stream())
-                .map(property -> property.getPieceCode());
+            Stream<String> columnPieceStream = table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).map(
+                    property -> property.getPieceCode());
             return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                columnPieceStream);
+                    columnPieceStream);
         }).collect(Collectors.toSet());
     }
 
     private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
         Set<String> previousAllPieceSet =
-            pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream()).collect(Collectors.toSet());
+                pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream()).collect(Collectors.toSet());
         return pieces.stream()
-            .filter(piece -> !previousAllPieceSet.contains(piece.getPieceCode()) && !pieceCodeSet.contains(piece.getPieceCode()))
-            .collect(Collectors.toList());
+                .filter(piece -> !previousAllPieceSet.contains(piece.getPieceCode()) && !pieceCodeSet.contains(piece.getPieceCode()))
+                .collect(Collectors.toList());
     }
 
     // hakiba's memorable code by jflute (2017/11/11)

@@ -10,6 +10,7 @@ import org.dbflute.helper.mapstring.MapListString;
 /**
  * @author hakiba
  * @author cabos
+ * @author jflute
  */
 public class DfDecoMapPiece {
 
@@ -96,6 +97,7 @@ public class DfDecoMapPiece {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
+    // TODO cabos order get/set, get/set, ... please m(_ _)m by jflute (2017/11/11)
     public void setFormatVersion(String formatVersion) {
         this.formatVersion = formatVersion;
     }

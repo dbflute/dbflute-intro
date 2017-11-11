@@ -24,6 +24,7 @@ public class DfDecoMapPickup {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    // TODO cabos add pickupDatetime by jflute (2017/11/11)
     protected String formatVersion;
     protected Map<String, List<DfDecoMapTablePart>> decoMap;
 
@@ -87,9 +88,8 @@ public class DfDecoMapPickup {
     //     }
     // }
     public Map<String, Object> convertToMap() {
-        final Map<String, Map<String, Object>> convertedDecoMap = this.getTableList()
-            .stream()
-            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
+        final Map<String, Map<String, Object>> convertedDecoMap = this.getTableList().stream().collect(
+                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
