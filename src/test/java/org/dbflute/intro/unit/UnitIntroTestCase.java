@@ -114,6 +114,12 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         File destPieceDir = getTestDecommentPieceDir();
         FileUtils.copyFile(srcPickupFile, destPickupFile);
         FileUtils.copyDirectory(srcPieceDir, destPieceDir);
+        File[] unneededFiles = destPieceDir.listFiles(file -> file.isFile() && !file.getName().endsWith(".dfmap"));
+        if (unneededFiles != null) {
+            for (File unneededFile : unneededFiles) {
+                unneededFile.delete(); // e.g. readme.txt
+            }
+        }
     }
 
     protected File getTestDecommentPickupFile() {
