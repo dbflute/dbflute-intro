@@ -161,8 +161,6 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     public void test_pickup_basic() throws Exception {
         // ## Arrange ##
         prepareTestDecommentFiles();
-
-        // done hakiba put test data in test/resources by hakiba (2017/08/18)
         DocumentDecommentAction action = new DocumentDecommentAction();
         inject(action);
 
@@ -170,12 +168,12 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         JsonResponse<DecommentPickupResult> response = action.pickup(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        // done hakiba like this by jflute (2017/08/17)
         showJson(response);
         TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
         DecommentPickupResult result = jsonData.getJsonResult();
         {
             TablePart member = extractPickupTableAsOne(result, "MEMBER");
+            assertEquals(1, member.properties.size()); // from piece
             {
                 ColumnPart birthdate = extractPickupColumnAsOne(member, "BIRTHDATE");
                 assertHasOnlyOneElement(birthdate.properties);
@@ -183,14 +181,46 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             }
         }
         {
-            TablePart member = extractPickupTableAsOne(result, "PURCHASE");
+            TablePart login = extractPickupTableAsOne(result, "MEMBER_LOGIN");
+            assertEquals(1, login.properties.size()); // from pickup
             {
-                ColumnPart purchaseDatetime = extractPickupColumnAsOne(member, "PURCHASE_DATETIME");
+                ColumnPart loginDatetime = extractPickupColumnAsOne(login, "LOGIN_DATETIME");
+                assertHasOnlyOneElement(loginDatetime.properties); // from pickup
+                assertEquals("hakiba", loginDatetime.properties.get(0).pieceOwner);
+            }
+            {
+                ColumnPart statusCode = extractPickupColumnAsOne(login, "LOGIN_MEMBER_STATUS_CODE");
+                assertEquals(2, statusCode.properties.size()); // conflict from pickup
+                assertEquals("deco", statusCode.properties.get(0).pieceOwner);
+            }
+        }
+        {
+            TablePart purchase = extractPickupTableAsOne(result, "PURCHASE");
+            assertEquals(2, purchase.properties.size()); // conflict
+            {
+                ColumnPart purchaseDatetime = extractPickupColumnAsOne(purchase, "PURCHASE_DATETIME");
                 assertEquals(3, purchaseDatetime.properties.size()); // conflict, should be cabos, hakiba, deco
             }
         }
     }
 
+    public void test_pickup_empty() throws Exception {
+        // ## Arrange ##
+        DocumentDecommentAction action = new DocumentDecommentAction();
+        inject(action);
+
+        // ## Act ##
+        JsonResponse<DecommentPickupResult> response = action.pickup(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        showJson(response);
+        TestingJsonData<DecommentPickupResult> jsonData = validateJsonData(response);
+        assertHasZeroElement(jsonData.getJsonResult().tables);
+    }
+
+    // -----------------------------------------------------
+    //                                          Assist Logic
+    //                                          ------------
     private TablePart extractPickupTableAsOne(DecommentPickupResult result, String tableName) {
         List<TablePart> tableList = result.tables.stream().filter(table -> {
             return table.tableName.equals(tableName);
