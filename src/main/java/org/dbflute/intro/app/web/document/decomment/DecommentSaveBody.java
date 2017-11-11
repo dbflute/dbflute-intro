@@ -35,14 +35,6 @@ public class DecommentSaveBody {
     // done cabos javadoc and add e.g. (above annotation) by jflute (2017/09/28)
 
     /**
-     * column comment version
-     * The comment version will update when the decomment.dfprop file is picked up.
-     * e.g. 2
-     */
-    @Required(groups = ClientError.class)
-    public Long commentVersion;
-    
-    /**
      * whether decomment merged or not
      * This field true if decomment mered.
      * e.g. false
@@ -83,6 +75,14 @@ public class DecommentSaveBody {
      * e.g. "this column's value allowed null?" (NullAllowed)
      */
     public String databaseComment;
+
+    /**
+     * column comment version
+     * The comment version will update when the decomment.dfprop file is picked up.
+     * e.g. 2
+     */
+    @Required(groups = ClientError.class)
+    public Long commentVersion;
 
     /**
      * the list of ancestor authors
