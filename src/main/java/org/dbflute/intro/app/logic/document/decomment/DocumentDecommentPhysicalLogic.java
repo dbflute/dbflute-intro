@@ -76,8 +76,7 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
@@ -115,7 +114,7 @@ public class DocumentDecommentPhysicalLogic {
             return Collections.emptyList();
         }
         try {
-            return Files.list(Paths.get(dirPath)).map(path -> {
+            return Files.list(Paths.get(dirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
                 try {
                     DfDecoMapFile decoMapFile = new DfDecoMapFile();
                     return decoMapFile.readPiece(Files.newInputStream(path));
