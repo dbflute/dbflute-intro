@@ -84,14 +84,13 @@ public class DfDecoMapFile {
     // done hakiba cast check by hakiba (2017/07/29)
     @SuppressWarnings("unchecked")
     private DfDecoMapPiece mappingToDecoMapPiece(Map<String, Object> map) throws Exception {
-
         Boolean merged = Boolean.valueOf((String) map.get("merged"));
         String tableName = (String) map.get("tableName");
         String columnName = (String) map.get("columnName");
         PieceTargetType targetType = PieceTargetType.of(map.get("targetType")).get();
         String decomment = (String) map.get("decomment");
         String databaseComment = (String) map.get("databaseComment");
-        Long commentVersion = Long.valueOf("commentVersion");
+        Long commentVersion = Long.valueOf(map.get("commentVersion").toString());
         List<String> authorList = (List<String>) map.get("authorList");
         String pieceCode = (String) map.get("pieceCode");
         LocalDateTime pieceDatetime = new HandyDate((String) map.get("pieceDatetime")).getLocalDateTime();
