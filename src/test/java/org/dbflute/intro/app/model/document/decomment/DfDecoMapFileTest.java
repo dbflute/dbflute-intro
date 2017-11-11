@@ -23,7 +23,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
     // ===================================================================================
     //                                                                               Merge
     //                                                                               =====
-    public void test_merge_all_column_comment() throws Exception {
+    public void test_mergeAllColumnComment() throws Exception {
         // ## Arrange ##
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         OptionalThing<DfDecoMapPickup> optPickup = OptionalThing.empty(); // not exists pickup
