@@ -65,6 +65,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
+        // TODO cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
+        // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> {});
         decommentPhysicalLogic.saveDecommentPieceMap(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
@@ -73,6 +75,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         String author = getAuthor();
+        // TODO cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         DfDecoMapPiece pieceMap = new DfDecoMapPiece();
         pieceMap.setMerged(body.merged);
         pieceMap.setTableName(body.tableName);

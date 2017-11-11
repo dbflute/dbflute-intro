@@ -37,6 +37,7 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    // TODO cabos shugyo++: move it to infra's decomment classes, file name and path handling by jflute (2017/11/11)
     private static final String PICKUP_FILE_NAME = "decomment-pickup.dfmap";
     protected static final Map<String, String> REPLACE_CHAR_MAP;
 
@@ -54,12 +55,14 @@ public class DocumentDecommentPhysicalLogic {
     private IntroPhysicalLogic introPhysicalLogic;
     @Resource
     private DocumentAuthorLogic documentAuthorLogic;
+    // TODO cabos move this above logic DI variables, framework component should be top (jflute policy...) by jflute (2017/11/11)
     @Resource
     private TimeManager timeManager;
 
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
+    // TODO cabos also rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
     public void saveDecommentPieceMap(String clientProject, DfDecoMapPiece decoMapPiece) {
         String tableName = decoMapPiece.getTableName();
         String columnName = decoMapPiece.getColumnName();
@@ -78,8 +81,7 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
@@ -93,7 +95,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
@@ -158,8 +160,8 @@ public class DocumentDecommentPhysicalLogic {
     }
 
     // ===================================================================================
-    //                                                                                Path
-    //                                                                                ====
+    //                                                                               Path
+    //                                                                              ======
     protected String buildDecommentPieceDirPath(String clientProject) {
         return introPhysicalLogic.buildClientPath(clientProject, "schema", "decomment", "piece");
     }
