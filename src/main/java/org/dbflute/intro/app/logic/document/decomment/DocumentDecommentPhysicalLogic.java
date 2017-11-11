@@ -61,9 +61,10 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                           Piece Map
     //                                                                           =========
     public void saveDecommentPieceMap(String clientProject, DfDecoMapPiece decoMapPiece) {
-        String tableName = decoMapPiece.getTableList().get(0).getTableName();
-        String author = decoMapPiece.getAuthor();
-        File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, author)));
+        String tableName = decoMapPiece.getTableName();
+        String owner = decoMapPiece.getPieceOwner();
+        String pieceCode = decoMapPiece.getPieceCode();
+        File pieceMapFile = new File(buildDecommentPiecePath(clientProject, buildPieceFileName(tableName, owner, pieceCode)));
         createPieceMapFile(pieceMapFile);
         try (OutputStream outputStream = new FileOutputStream(pieceMapFile)) {
             // done cabos remove 'df' from variable name by jflute (2017/08/10)
@@ -78,9 +79,9 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    protected String buildPieceFileName(String tableName,
-        String author) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
-        return "decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + author + ".dfmap";
+    protected String buildPieceFileName(String tableName, String owner,
+        String pieceCode) { // e.g decomment-piece-TABLE_NAME-20170316-123456-789-jflute.dfmap
+        return "decomment-piece-" + tableName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
     protected String getCurrentDateStr() {
