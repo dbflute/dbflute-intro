@@ -8,8 +8,8 @@ map:{
     ; databaseComment = sea mystic
     ; commentVersion = 1
     ; authorList = list:{ hakiba ; cabos ; deco }
-    ; pieceCode = HF7ELSE
+    ; pieceCode = FE893L1
     ; pieceDatetime = 2017-09-15T16:17:18.199
-    ; pieceOwner = jflute
+    ; pieceOwner = deco
     ; previousPieceList = list:{ A1B1C1D1 }
 }
