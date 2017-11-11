@@ -1350,9 +1350,6 @@ searcher.init();
  */
 function Decomment() {
 	this.embeddedPickup = {}; // setup from dbflute if decomment pickup exists
-	this.conflictStoreKey = 'isConflict';
-	this.previousPiecesStoreKey = 'previousPieces';
-	this.authorsStoreKey = 'authors';
 	this.pickupStore = {}; // store of comment info
 	// {
 	//   tableName: {
@@ -1487,10 +1484,17 @@ Decomment.prototype = {
 		if (this.pickupStore[tableName] === undefined) {
 			this.pickupStore[tableName] = {};
 		}
+
+    var isConflict = column['properties'].length > 1;
+    var previousPieces = column['previousPieces'];
+    var authors = column['authors'];
+    var commentVersion = column['commentVersion'];
+
 		this.pickupStore[tableName][columnName] = {
-			this.conflictStoreKey: column["properties"].length > 1,
-			this.previousPiecesStoreKey: column['previousPieces'],
-			this.authorsStoreKey: column['authors']
+			'isConflict': isConflict,
+			'previousPieces': previousPieces,
+			'authors': authors,
+      'commentVersion': commentVersion
 		}
 	},
 
@@ -1607,6 +1611,11 @@ Decomment.prototype = {
 	 * @return {Object} Request body
 	 */
 	buildColumnCommentRequestParams: function (merged, tableName, columnName, decomment, previousCommentElement) {
+	  var authors = this.pickupStore[tableName][columnName]['authors'] || [];
+	  var previousPieces = this.pickupStore[tableName][columnName]['previousPieces'] || [];
+    var commentVersion = this.pickupStore[tableName][columnName]['commentVersion'];
+
+	  console.log(this.pickupStore);
 		return {
 			'merged': merged,
 			'tableName': tableName,
@@ -1615,8 +1624,8 @@ Decomment.prototype = {
 			'decomment': decomment,
 			'databaseComment': '',
 			'commentVersion': 1,
-			'authors': this.pickupStore[tableName][columnName][this.authorsStoreKey],
-			'previousPieces': this.pickupStore[tableName][columnName][this.previousPiecesStoreKey]
+			'authors': authors,
+			'previousPieces': previousPieces
 		};
 	},
 
