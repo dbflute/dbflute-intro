@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.dbflute.intro.mylasta.appcls.AppCDef;
+import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
@@ -61,7 +61,7 @@ public class DecommentSaveBody {
      * e.g. COLUMN
      */
     @Required
-    public AppCDef.PieceTargetType targetType;
+    public DfDecoMapPieceTargetType targetType;
 
     /**
      * inputted column comment on the schema.html

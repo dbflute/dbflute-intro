@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
+import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
-import org.dbflute.intro.mylasta.appcls.AppCDef;
+import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 import org.lastaflute.core.time.SimpleTimeManager;
 
@@ -93,8 +93,9 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         inject(logic);
 
         // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
-        final String expFileName = "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-"
-                + sampleAuthor + "-" + samplePieceCode + ".dfmap";
+        final String expFileName =
+            "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-"
+                + samplePieceCode + ".dfmap";
 
         // ## Act ##
         final String fileName = logic.buildPieceFileName(sampleTableName, sampleColumnName, sampleAuthor, samplePieceCode);
@@ -215,12 +216,11 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         String[] pieceMaps = pieceDir.list();
         assertNotNull(pieceMaps);
         assertTrue(pieceMaps.length > 0);
-        Arrays.stream(pieceMaps)
-                .filter(fileName -> fileName.endsWith(".dfmap")) // exclude un need filed
-                .forEach(fileName -> {
-                    log(fileName);
-                    assertTrue(expFileNamePattern.matcher(fileName).find());
-                });
+        Arrays.stream(pieceMaps).filter(fileName -> fileName.endsWith(".dfmap")) // exclude un need filed
+            .forEach(fileName -> {
+                log(fileName);
+                assertTrue(expFileNamePattern.matcher(fileName).find());
+            });
     }
 
     // map:{
@@ -246,7 +246,7 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         decoMapPiece.setMerged(false);
         decoMapPiece.setTableName("MEMBER");
         decoMapPiece.setColumnName("MEMBER_NAME");
-        decoMapPiece.setTargetType(AppCDef.PieceTargetType.Column);
+        decoMapPiece.setTargetType(DfDecoMapPieceTargetType.Column);
         decoMapPiece.setDecomment("piari");
         decoMapPiece.setDatabaseComment("sea");
         decoMapPiece.setCommentVersion(1L);

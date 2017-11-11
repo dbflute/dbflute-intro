@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.dbflute.helper.mapstring.MapListString;
-import org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
 
 /**
  * @author hakiba
@@ -21,7 +20,7 @@ public class DfDecoMapPiece {
     protected boolean merged;
     protected String tableName;
     protected String columnName;
-    protected PieceTargetType targetType;
+    protected DfDecoMapPieceTargetType targetType;
     protected String decomment;
     protected String databaseComment;
     protected Long commentVersion;
@@ -113,7 +112,7 @@ public class DfDecoMapPiece {
         this.columnName = columnName;
     }
 
-    public void setTargetType(PieceTargetType targetType) {
+    public void setTargetType(DfDecoMapPieceTargetType targetType) {
         this.targetType = targetType;
     }
 
@@ -165,7 +164,7 @@ public class DfDecoMapPiece {
         return columnName;
     }
 
-    public PieceTargetType getTargetType() {
+    public DfDecoMapPieceTargetType getTargetType() {
         return targetType;
     }
 

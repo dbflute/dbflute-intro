@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.web.document.decomment.DecommentPickupResult.TablePart;
 import org.dbflute.intro.app.web.document.decomment.DecommentPickupResult.TablePart.ColumnPart;
-import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
@@ -56,7 +56,7 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
         body.merged = false;
         body.tableName = "TABLE_NAME";
         body.columnName = "COLUMN_NAME";
-        body.targetType = AppCDef.PieceTargetType.Column;
+        body.targetType = DfDecoMapPieceTargetType.Column;
         body.decomment = "orange";
         body.databaseComment = "rime";
         body.commentVersion = 1L;
