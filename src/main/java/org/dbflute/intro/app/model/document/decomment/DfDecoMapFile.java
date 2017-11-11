@@ -1,7 +1,5 @@
 package org.dbflute.intro.app.model.document.decomment;
 
-import static org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
@@ -15,6 +13,7 @@ import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
 import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
 import org.dbflute.optional.OptionalThing;
 
 // done cabos DfDecoMapFile by jflute (2017/07/27)
@@ -29,7 +28,37 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Read
     //                                                                              ======
-    // TODO yuto write e.g. (2017/11/11)
+    // done yuto write e.g. (2017/11/11)
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; merged = false
+    //     ; tableName = MEMBER
+    //     ; columnName = null
+    //     ; targetType = TABLE
+    //     ; decomment = loginable user, my name is deco
+    //     ; databaseComment = loginable user
+    //     ; commentVersion = 0
+    //     ; authorList = list:{ deco }
+    //     ; pieceCode = AL3OR1P
+    //     ; pieceDatetime = 2017-12-31T12:34:56.789
+    //     ; pieceOwner = deco
+    //     ; previousPieceList = list:{}
+    // }
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; merged = false
+    //     ; tableName = MEMBER
+    //     ; columnName = MEMBER_NAME
+    //     ; targetType = COLUMN
+    //     ; decomment = sea mystic land oneman
+    //     ; databaseComment = sea mystic
+    //     ; commentVersion = 1
+    //     ; authorList = list:{ cabos ; hakiba ; deco ; jflute }
+    //     ; pieceCode = HF7ELSE
+    //     ; pieceDatetime = 2017-10-15T16:17:18.199
+    //     ; pieceOwner = jflute
+    //     ; previousPieceList = list:{ FE893L1 }
+    // }
     public DfDecoMapPiece readPiece(InputStream ins) {
         final MapListFile mapListFile = createMapListFile();
         try {
@@ -79,51 +108,54 @@ public class DfDecoMapFile {
     // -----------------------------------------------------
     //                                                Pickup
     //                                                ------
-    //    map:{
-    //        ; formatVersion = 1.0
-    //        ; author = jflute
-    //        ; decommentDatetime = 2017-10-26T12:35:39.262
-    //        ; merged = false
-    //        ; decoMap = map:{
-    //            ; tableList = list:{
-    //                ; map:{
-    //                    ; tableName = MEMBER
-    //                    ; propertyList = list:{
-    //                        ; map:{
-    //                            ; decomment = first decomment
-    //                            ; databaseComment = ...
-    //                            ; commentVersion = ...
-    //                            ; authorList = list:{ ... }
-    //                        }
-    //                        ; map:{   // propertyList size is more than 2 if decomment conflicts exists
-    //                            ; decomment = second decomment
-    //                            ; databaseComment = ...
-    //                            ; commentVersion = ...
-    //                            ; authorList = list:{ ... }
-    //                        }
-    //                    }
-    //                    ; columnList = list:{
-    //                        ; map:{
-    //                            ; columnName = MEMBER_NAME
-    //                            ; propertyList = list:{
-    //                                ; map:{
-    //                                    ; decomment = sea mystic land oneman
-    //                                    ; databaseComment = sea mystic
-    //                                    ; commentVersion = 2 // incremented
-    //                                    ; authorList = list:{ cabos, hakiba, deco, jflute }
-    //                                }
-    //                            }
-    //                        }
-    //                        ; ... // more column maps (also conflict column)
-    //                    }
-    //                }
-    //                ; map:{ // Of course, other table decomment info is exists that
-    //                    ; tableName = MEMBER_LOGIN
-    //                    ; ...
-    //                }
-    //            }
-    //        }
-    //    }
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; pickupDatetime = 2017-11-09T09:09:09.009
+    //     ; decoMap = map:{
+    //         ; tableList = list:{
+    //             ; map:{
+    //                 ; tableName = MEMBER
+    //                 ; propertyList = list:{
+    //                     ; map:{
+    //                         ; decomment = first decomment
+    //                         ; databaseComment = ...
+    //                         ; commentVersion = ...
+    //                         ; authorList = list:{ deco }
+    //                         ; pieceCode = DECO0000
+    //                         ; pieceDatetime = 2017-11-05T00:38:13.645
+    //                         ; pieceOwner = cabos
+    //                         ; previousPieceList = list:{}
+    //                     }
+    //                     ; map:{ // propertyList size is more than 2 if decomment conflicts exists
+    //                         ; ...
+    //                     }
+    //                 }
+    //                 ; columnList = list:{
+    //                     ; map:{
+    //                         ; columnName = MEMBER_NAME
+    //                         ; propertyList = list:{
+    //                             ; map:{
+    //                                 ; decomment = sea mystic land oneman
+    //                                 ; databaseComment = sea mystic
+    //                                 ; commentVersion = 1
+    //                                 ; authorList = list:{ cabos, hakiba, deco, jflute }
+    //                                 ; pieceCode = HAKIBA00
+    //                                 ; pieceDatetime = 2017-11-05T00:38:13.645
+    //                                 ; pieceOwner = cabos
+    //                                 ; previousPieceList = list:{ JFLUTE00, CABOS000 }
+    //                             }
+    //                         }
+    //                     }
+    //                     ; ... // more other columns
+    //                 }
+    //             }
+    //             ; map:{ // Of course, other table decomment info is exists that
+    //                 ; tableName = MEMBER_LOGIN
+    //                 ; ...
+    //             }
+    //         }
+    //     }
+    // }
     // done hakiba sub tag comment by jflute (2017/08/17)
     public DfDecoMapPickup readPickup(InputStream ins) {
         MapListFile mapListFile = createMapListFile();
