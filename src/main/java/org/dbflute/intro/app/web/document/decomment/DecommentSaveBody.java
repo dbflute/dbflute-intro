@@ -60,6 +60,7 @@ public class DecommentSaveBody {
      * decomment target type
      * e.g. COLUMN
      */
+    @Required
     public AppCDef.PieceTargetType targetType;
 
     /**

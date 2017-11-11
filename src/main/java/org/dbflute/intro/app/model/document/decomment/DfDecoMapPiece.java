@@ -74,6 +74,7 @@ public class DfDecoMapPiece {
         map.put("merged", this.merged);
         map.put("tableName", this.tableName);
         map.put("columnName", this.columnName);
+        map.put("targetType", this.targetType.code());
         map.put("decomment", this.decomment);
         map.put("databaseComment", this.databaseComment);
         map.put("commentVersion", this.commentVersion);
