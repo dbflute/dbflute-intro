@@ -1,5 +1,6 @@
 package org.dbflute.intro.app.model.document.decomment;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,14 @@ public class DfDecoMapPickup {
     //                                                                           =========
     protected String formatVersion;
     protected Map<String, List<DfDecoMapTablePart>> decoMap;
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    public DfDecoMapPickup() {
+        this.decoMap = new LinkedHashMap<>();
+        this.decoMap.put(DECO_MAP_KEY, new ArrayList<>()); // avoid null pointer exception
+    }
 
     // ===================================================================================
     //                                                                           Converter
@@ -109,8 +118,6 @@ public class DfDecoMapPickup {
     }
 
     public void setTableList(List<DfDecoMapTablePart> tableList) {
-        Map<String, List<DfDecoMapTablePart>> map = new LinkedHashMap<>();
-        map.put(DECO_MAP_KEY, tableList);
-        this.decoMap = map;
+        this.decoMap.put(DECO_MAP_KEY, tableList);
     }
 }
