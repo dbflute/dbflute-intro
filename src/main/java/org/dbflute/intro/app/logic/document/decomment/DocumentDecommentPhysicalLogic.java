@@ -120,9 +120,8 @@ public class DocumentDecommentPhysicalLogic {
         try {
             return Files.list(Paths.get(dirPath)).map(path -> {
                 try {
-                    String fileName = path.toFile().getName();
                     DfDecoMapFile decoMapFile = new DfDecoMapFile();
-                    return decoMapFile.readPiece(fileName, Files.newInputStream(path));
+                    return decoMapFile.readPiece(Files.newInputStream(path));
                 } catch (IOException e) {
                     throw new UncheckedIOException("fail to read decomment piece map file. path : " + path.toAbsolutePath(), e);
                 }

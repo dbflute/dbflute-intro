@@ -36,27 +36,6 @@ public class DfDecoMapTablePart {
         return table;
     }
 
-    public static DfDecoMapTablePart createPickupTablePart(Map.Entry<String, Map<String, List<Map<String, Object>>>> tablePartEntry) {
-        final List<DfDecoMapColumnPart> pickupColumns = tablePartEntry.getValue()
-            .entrySet()
-            .stream()
-            .map(columnEntry -> DfDecoMapColumnPart.createPickupColumnPart(columnEntry))
-            .collect(Collectors.toList());
-
-        DfDecoMapTablePart table = new DfDecoMapTablePart();
-        table.setTableName(tablePartEntry.getKey());
-        table.setColumnList(pickupColumns);
-        return table;
-    }
-
-    public Map<String, Object> convertPieceMap() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("tableName", this.tableName);
-        map.put("propertyList", this.propertyList.stream().map(property -> property.convertMap()).collect(Collectors.toList()));
-        map.put("columnList", this.columnList.stream().map(column -> column.convertMap()).collect(Collectors.toList()));
-        return map;
-    }
-
     public Map<String, Object> convertPickupMap() {
         Map<String, List<Map<String, Object>>> columnMap = columnList.stream()
             .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
