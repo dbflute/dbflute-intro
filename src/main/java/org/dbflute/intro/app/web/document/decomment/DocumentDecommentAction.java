@@ -1,23 +1,16 @@
 package org.dbflute.intro.app.web.document.decomment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
-import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -27,6 +20,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author cabos
  * @author hakiba
+ * @author deco
  */
 public class DocumentDecommentAction extends IntroBaseAction {
 
@@ -65,10 +59,18 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         String author = getAuthor();
         DfDecoMapPiece pieceMap = new DfDecoMapPiece();
-        pieceMap.setFormatVersion("1.0");
-        pieceMap.setAuthor(author);
         pieceMap.setMerged(body.merged);
-        pieceMap.setTableList(Collections.singletonList(mappingToDecoMapPiece(body.table, author)));
+        pieceMap.setTableName(body.tableName);
+        pieceMap.setColumnName(body.columnName);
+        pieceMap.setTargetType(body.targetType);
+        pieceMap.setDecomment(body.decomment);
+        pieceMap.setDatabaseComment(body.databaseComment);
+        pieceMap.setCommentVersion(body.commentVersion);
+        pieceMap.setAuthorList(mergeAuthorList(body.authors, author));
+        pieceMap.setPieceCode(buildPieceCode(body));
+        pieceMap.setPieceDatetime(timeManager.currentDateTime());
+        pieceMap.setPieceOwner(getAuthor());
+        pieceMap.setPreviousPieceList(body.previousPieces);
         return pieceMap;
     }
 
@@ -76,35 +78,15 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return decommentPhysicalLogic.getAuthor();
     }
 
-    private DfDecoMapTablePart mappingToDecoMapPiece(DecommentTablePart tablePart, String author) {
-        DfDecoMapTablePart tablePartMap = new DfDecoMapTablePart();
-        tablePartMap.setTableName(tablePart.tableName);
-        List<DfDecoMapColumnPart> columns =
-            tablePart.columns.stream().map(columnPart -> mappingPartToDecoMapPiece(columnPart, author)).collect(Collectors.toList());
-        tablePartMap.setPropertyList(Collections.emptyList());
-        tablePartMap.setColumnList(columns);
-        return tablePartMap;
-    }
-
-    private DfDecoMapColumnPart mappingPartToDecoMapPiece(DecommentColumnPart columnPart, String author) {
-        DfDecoMapColumnPart columnPartMap = new DfDecoMapColumnPart();
-        columnPartMap.setColumnName(columnPart.columnName);
-        DfDecoMapPropertyPart property = new DfDecoMapPropertyPart();
-        property.setDecomment(columnPart.decomment);
-        property.setDatabaseComment(columnPart.databaseComment);
-        property.setPieceDatetime(timeManager.currentDateTime());
-        property.setCommentVersion(columnPart.commentVersion);
-        // done cabos add (merge) top author by jflute (2017/08/10)
-        property.setAuthorList(mergeAuthorList(columnPart.authorList, author));
-        columnPartMap.setPropertyList(Collections.singletonList(property));
-        return columnPartMap;
-    }
-
     private List<String> mergeAuthorList(List<String> authorList, String author) {
         // done cabos use LinkedHashSet to keep order by jflute (2017/09/07)
         Set<String> authorSet = new LinkedHashSet<>(authorList);
         authorSet.add(author);
         return new ArrayList<>(authorSet);
+    }
+
+    private String buildPieceCode(DecommentSaveBody body) {
+        return Integer.toHexString(body.hashCode());
     }
 
     // -----------------------------------------------------

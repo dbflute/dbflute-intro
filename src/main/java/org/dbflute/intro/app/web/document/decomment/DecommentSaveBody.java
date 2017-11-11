@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
@@ -43,7 +44,7 @@ public class DecommentSaveBody {
      * decomment target type
      * e.g. COLUMN
      */
-    public String targetType; // TODO if application classification is created, change the type
+    public AppCDef.PieceTargetType targetType;
 
     /**
      * inputted column comment on the schema.html
