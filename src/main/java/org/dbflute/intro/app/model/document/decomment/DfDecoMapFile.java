@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -250,9 +251,7 @@ public class DfDecoMapFile {
         Set<String> pieceCodeSet = pickupOpt.map(this::extractAllPieceCode).orElse(Collections.emptySet());
         List<DfDecoMapPiece> filteredPieces = filterPieces(pieces, pieceCodeSet);
         DfDecoMapPickup pickUp = pickupOpt.orElse(new DfDecoMapPickup());
-
         mergeInternal(filteredPieces, pickUp);
-
         return pickUp;
     }
 
@@ -265,7 +264,7 @@ public class DfDecoMapFile {
 
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists other table decomment
-                    table.getPropertyList().add(property);
+                    addProperty(property, table);
                     return table;
                 }).orElseGet(() -> {
                     // not exists other table decoment
@@ -273,6 +272,7 @@ public class DfDecoMapFile {
                     table.setTableName(piece.getTableName());
                     table.setColumnList(Collections.emptyList());
                     table.setPropertyList(Collections.singletonList(property));
+                    addTable(pickUp, tableList, table);
                     return table;
                 });
 
@@ -286,7 +286,7 @@ public class DfDecoMapFile {
                         .findFirst()
                         .map(column -> {
                             // exists column comment
-                            column.getPropertyList().add(property);
+                            addProperty(property, table);
                             return column;
                         })
                         .orElseGet(() -> {
@@ -294,6 +294,7 @@ public class DfDecoMapFile {
                             DfDecoMapColumnPart column = new DfDecoMapColumnPart();
                             column.setColumnName(piece.getColumnName());
                             column.setPropertyList(Collections.singletonList(property));
+                            addColumn(table, column);
                             return column;
                         });
                     return table;
@@ -307,10 +308,29 @@ public class DfDecoMapFile {
                     table.setTableName(piece.getTableName());
                     table.setColumnList(Collections.singletonList(column));
                     table.setPropertyList(Collections.emptyList());
+                    addTable(pickUp, tableList, table);
                     return table;
                 });
             }
         });
+    }
+
+    private void addProperty(DfDecoMapPropertyPart property, DfDecoMapTablePart table) {
+        ArrayList<DfDecoMapPropertyPart> propertyPartArrayList = new ArrayList<>(table.getPropertyList());
+        propertyPartArrayList.add(property);
+        table.setPropertyList(propertyPartArrayList);
+    }
+
+    private void addColumn(DfDecoMapTablePart table, DfDecoMapColumnPart column) {
+        ArrayList<DfDecoMapColumnPart> columnPartArrayList = new ArrayList<>(table.getColumnList());
+        columnPartArrayList.add(column);
+        table.setColumnList(columnPartArrayList);
+    }
+
+    private void addTable(DfDecoMapPickup pickUp, List<DfDecoMapTablePart> tableList, DfDecoMapTablePart table) {
+        ArrayList<DfDecoMapTablePart> tableArrayList = new ArrayList<>(tableList);
+        tableArrayList.add(table);
+        pickUp.setTableList(Collections.unmodifiableList(tableArrayList));
     }
 
     private DfDecoMapPropertyPart mappingPieceToProperty(DfDecoMapPiece piece) {
@@ -345,7 +365,7 @@ public class DfDecoMapFile {
     }
 
     private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
-        return pieces.stream().filter(piece -> pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
+        return pieces.stream().filter(piece -> !pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
     }
 
     // hakiba's memorable code by jflute (2017/11/11)
