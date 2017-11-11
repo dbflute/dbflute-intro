@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
 

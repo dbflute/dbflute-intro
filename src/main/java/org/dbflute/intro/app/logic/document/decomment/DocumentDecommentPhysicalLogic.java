@@ -17,11 +17,11 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile.DfDecoMapFileReadFailureException;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile.DfDecoMapFileWriteFailureException;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
+import org.dbflute.infra.doc.decomment.DfDecoMapFile;
+import org.dbflute.infra.doc.decomment.DfDecoMapFile.DfDecoMapFileReadFailureException;
+import org.dbflute.infra.doc.decomment.DfDecoMapFile.DfDecoMapFileWriteFailureException;
+import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
+import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;

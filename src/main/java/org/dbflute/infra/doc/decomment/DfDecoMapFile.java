@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.model.document.decomment;
+package org.dbflute.infra.doc.decomment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,9 +20,9 @@ import java.util.stream.Stream;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapColumnPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapPropertyPart;
-import org.dbflute.intro.app.model.document.decomment.parts.DfDecoMapTablePart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
 import org.dbflute.optional.OptionalThing;
 

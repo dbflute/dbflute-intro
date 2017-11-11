@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
-import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
+import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
+import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 import org.lastaflute.core.time.SimpleTimeManager;

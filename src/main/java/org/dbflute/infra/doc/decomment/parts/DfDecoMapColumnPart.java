@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.model.document.decomment.parts;
+package org.dbflute.infra.doc.decomment.parts;
 
 import java.util.List;
 import java.util.Map;

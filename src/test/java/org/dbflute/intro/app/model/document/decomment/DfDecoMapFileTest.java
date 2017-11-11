@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.dbflute.infra.doc.decomment.DfDecoMapFile;
+import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
+import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.optional.OptionalThing;
