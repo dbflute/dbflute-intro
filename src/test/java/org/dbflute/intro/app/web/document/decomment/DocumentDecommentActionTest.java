@@ -5,14 +5,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart;
-import org.dbflute.intro.app.web.document.decomment.DecommentSaveBody.DecommentTablePart.DecommentColumnPart;
+import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.DocumentDecommentUnitIntroTestCase;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author cabos
  * @author hakiba
+ * @author deco
  */
 public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestCase {
 
@@ -47,26 +47,15 @@ public class DocumentDecommentActionTest extends DocumentDecommentUnitIntroTestC
     private DecommentSaveBody createSampleBody() {
         DecommentSaveBody body = new DecommentSaveBody();
         body.merged = false;
-        body.table = createSampleTablePart();
+        body.tableName = "TABLE_NAME";
+        body.columnName = "COLUMN_NAME";
+        body.targetType = AppCDef.PieceTargetType.Column;
+        body.decomment = "orange";
+        body.databaseComment = "rime";
+        body.commentVersion = 1L;
+        body.authors = Arrays.asList("cabos", "sudachi");
+        body.previousPieces = Collections.singletonList("FE893L1");
         return body;
-    }
-
-    private DecommentTablePart createSampleTablePart() {
-        DecommentTablePart tablePart = new DecommentTablePart();
-        tablePart.tableName = "TABLE_NAME";
-        tablePart.columns = Collections.singletonList(createSampleColumnPart());
-        return tablePart;
-    }
-
-    private DecommentColumnPart createSampleColumnPart() {
-        DecommentColumnPart columnPart = new DecommentColumnPart();
-        columnPart.authorList = Arrays.asList("cabos", "sudachi");
-        columnPart.columnName = "COLUMN_NAME";
-        columnPart.commentVersion = 1L;
-        columnPart.decomment = "orange";
-        columnPart.databaseComment = "rime";
-        columnPart.previousWholeComment = "lemon";
-        return columnPart;
     }
 
     // ===================================================================================
