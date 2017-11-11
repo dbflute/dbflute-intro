@@ -965,262 +965,279 @@ var searcher = new Incremental(document.getElementById('incremental-search-field
 searcher.init();
 </script>
 <script>
-if (document.getElementById("intro_opening") !== null) {
-	/**
-	 * @author deco
-	 */
-	function Decomment() {
-	}
-	Decomment.prototype = {
-
-		/**
-		 * init
-		 */
-		init: function () {
-			var schemeName = this.getSchemeName();
-			this.pickupDecomment(schemeName);
-			this.setupSaveDecomment(schemeName);
-		},
-
-		/**
-		 * Get scheme name from url
-		 * @returns {string} Scheme name
-		 */
-		getSchemeName: function () {
-			var path = window.location.pathname;
-			return path.split('/')[3];
-		},
-
-		/**
-		 * Fetch decomment from server
-		 * @param {string} schemeName - Scheme name
-		 */
-		pickupDecomment: function (schemeName) {
-			var http = new XMLHttpRequest();
-			http.withCredentials = true;
-			var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
-			http.open('GET', url, true);
-
-			that = this;
-			http.onreadystatechange = function () {
-				if (http.readyState === 4) {
-					if (http.status === 200) {
-						that.handleResponse(http.response);
-					} else {
-						alert('Error!! cannot fetch decomment.');
-					}
-				}
-			};
-			http.send();
-		},
-
-		/**
-		 * Handle response
-		 * @param {Object} response - Response from server
-		 */
-		handleResponse: function (response) {
-			var json = JSON.parse(response);
-			that = this;
-			Array.prototype.forEach.call(json["tables"], function (table) {
-				Array.prototype.forEach.call(table["columns"], function (column) {
-					var columnElement = that.extractColumnElement(table, column);
-					var newComment = that.buildColumnCommentFromServer(column);
-					that.updateComment(columnElement, newComment);
-					that.checkCommentConflict(columnElement, column);
-				});
-			});
-		},
-
-		/**
-		 * Extract column element
-		 * @param {Object} table - Table object
-		 * @param {Object} column - Column object
-		 * @returns {Object} Column element
-		 */
-		extractColumnElement: function (table, column) {
-			var columnId = (table["tableName"] + "_" + column["columnName"]);
-			columnId = columnId.toLowerCase();
-			var columnElement = document.getElementById(columnId);
-			return columnElement.parentElement
-		},
-
-		/**
-		 * Build new scheme comment from server response
-		 * @param {Object} column - Column object
-		 * @returns {string} New scheme comment
-		 */
-		buildColumnCommentFromServer: function (column) {
-			var comment = null;
-			var author = [];
-			Array.prototype.forEach.call(column["properties"], function (property) {
-				comment = comment === null ? "" : comment += "\n\n";
-				comment += property["decomment"];
-				author = author.concat(property["authorList"]);
-			});
-
-			author = author.filter(function (x, i, self) {
-				return self.indexOf(x) === i;
-			});
-
-			return comment = comment + "\n<span>@author(" + author.join(',') + ")</span>";
-		},
-
-		/**
-		 * Update comment
-		 * @param {Object} columnElement - Column element
-		 * @param {string} newComment - New scheme comment
-		 */
-		updateComment: function (columnElement, newComment) {
-			columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = newComment;
-		},
-
-		/**
-		 * Check the comment is comflict
-		 * @param {Object} columnElement - Column element
-		 * @param {Object} column - Column object
-		 */
-		checkCommentConflict: function(columnElement, column) {
-			if (column["properties"].length > 1) {
-				columnElement.querySelector('.commentcell').className += " commentcellerror"
-			}
-		},
-
-		/**
-		 * Setup save decomment event
-		 * @param {string} table - Table name
-		 */
-		setupSaveDecomment: function(schemeName) {
-			var tables = document.getElementsByClassName('tablecontent');
-			var that = this;
-			Array.prototype.forEach.call(tables, function (table) {
-				var columns = table.getElementsByTagName('tr');
-				Array.prototype.forEach.call(columns, function (column, index) {
-					if (index === 0) { // because table header
-						return
-					}
-
-					var commentCellElement = column.querySelector('.commentcell')
-					var previousWholeComment = commentCellElement.querySelector('pre');
-					previousWholeComment.onclick = function () {
-						var modalElement = document.getElementById("decomment-modal");
-						modalElement.style.display = "block";
-
-						var columnName = column.querySelector('.columnnamecell').innerText;
-						var isConflict = commentCellElement.classList.contains('commentcellerror')
-						var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
-						document.getElementById("decomment-modal-column-info").innerText = columnInfo;
-
-						var inputElement = document.getElementById("decomment-input");
-						inputElement.value = that.extractPreviousComment(previousWholeComment);
-
-						document.getElementById("decomment-cancel").onclick = function() {
-							modalElement.style.display = "none";
-						};
-
-						document.getElementById("decomment-ok").onclick = function() {
-							var tableName = that.getTableName(table);
-							var params = that.buildColumnCommentRequestParams(isConflict, tableName, columnName, inputElement.value, column);
-							that.requestSaveDecomment(schemeName, params);
-							modalElement.style.display = "none";
-						};
-
-						window.onclick = function(event) {
-							if (event.target == modalElement) {
-								modalElement.style.display = "none";
-							}
-						};
-					};
-				});
-			});
-		},
-
-		/**
-		 * Get host name
-		 * @returns {string} Host name
-		 */
-		getHostName: function () {
-			return 'http://' + window.location.host;
-		},
-
-		/**
-		 * Get table name
-		 * @param {Object} table - Table element
-		 * @returns {string} table name
-		 */
-		getTableName: function (table) {
-			var previousElement = table.previousElementSibling;
-			if (previousElement.className) {
-				return previousElement.previousElementSibling.innerText
-			} else {
-				return previousElement.innerText
-			}
-		},
-
-		/**
-		 * Extract previous comment
-		 * @param {Object} columnCommentElemnet - Ccolumn comment elemnet
-		 * @returns {string} Previous comment
-		 */
-		extractPreviousComment: function (columnCommentElemnet) {
-			var child = columnCommentElemnet.childNodes[0];
-			if (child !== null && child.nodeName === "#text") {
-				return child.nodeValue;
-			}
-			return "";
-		},
-
-		/**
-		 * Build column comment request body
-		 * @param {boolean} merged - Merged
-		 * @param {string} tableName - Table name
-		 * @param {string} columnName - Column name
-		 * @param {string} docomment - Inputed decomment
-		 * @param {string} previousCommentElement - Previous comment element
-		 * @return {Object} Request body
-		 */
-		buildColumnCommentRequestParams: function (merged, tableName, columnName, docomment, previousCommentElement) {
-			return {
-				'merged': merged,
-				'tableName': tableName,
-				'columnName': columnName,
-				'targetType': 'COLUMN',
-				'decomment': decomment,
-				'databaseComment': '', // TODO tominaga add database comment
-				'commentVersion': 1,
-				'authors': [], // TODO tominaga add authors
-				'previousPieces': [] // TODO tominaga add previous pieces
-			};
-		},
-
-		/**
-		 * Request decomment
-		 * @param {string} schemeName - Scheme name
-		 * @param {Object} params - Request parameters
-		 */
-		requestSaveDecomment: function (schemeName, params) {
-			var http = new XMLHttpRequest();
-			http.withCredentials = true;
-			var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
-			http.open('POST', url, true);
-
-			var that = this;
-			http.onreadystatechange = function () {
-				if (http.readyState === 4) {
-					if (http.status === 200) {
-						// request success
-						that.pickupDecomment(schemeName);
-					} else {
-						// request failed
-						alert('Error!! cannot save new column comment.');
-					}
-				}
-			};
-			http.send(JSON.stringify(params, null, "  "));
-		}
-	};
-
-	new Decomment().init();
+/**
+ * @author deco
+ */
+function Decomment() {
+	var embeddedPickup = {}; // setup from dbflute if decomment pickup exists
 }
+Decomment.prototype = {
+
+	/**
+	 * init
+	 */
+	init: function () {
+		if (document.getElementById("intro_opening") !== null) {
+			var schemeName = this.getSchemeName();
+			this.fetchVirtualPickup(schemeName);
+			this.setupSaveDecomment(schemeName);
+		} else {
+			this.reflectEmbeddedPickup();
+		}
+	},
+
+	/**
+	 * Get scheme name from url
+	 * @returns {string} Scheme name
+	 */
+	getSchemeName: function () {
+		var path = window.location.pathname;
+		return path.split('/')[3];
+	},
+
+	/**
+	 * Fetch virtual pickup from server
+	 * @param {string} schemeName - Scheme name
+	 */
+	fetchVirtualPickup: function (schemeName) {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
+		http.open('GET', url, true);
+
+		that = this;
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					that.handlePickupResponse(http.response);
+				} else {
+					alert('Error!! cannot fetch decomment.');
+				}
+			}
+		};
+		http.send();
+	},
+
+	/**
+	 * Reflect embedded pick
+	 */
+	reflectEmbeddedPickup: function () {
+		this.refrectPickup(this.embeddedPickup);
+	},
+
+	/**
+	 * Handle pickup response
+	 * @param {Object} response - Response from server
+	 */
+	handlePickupResponse: function (response) {
+		var decomment = JSON.parse(response);
+		this.refrectPickup(decomment);
+	},
+
+	/**
+	 * Reflect pickup
+	 * @param {Object} decomment - Decomment object
+	 */
+	refrectPickup: function (decomment) {
+		that = this;
+		Array.prototype.forEach.call(decomment["tables"], function (table) {
+			Array.prototype.forEach.call(table["columns"], function (column) {
+				var columnElement = that.extractColumnElement(table, column);
+				var newComment = that.buildColumnCommentFromServer(column);
+				that.updateComment(columnElement, newComment);
+				that.checkCommentConflict(columnElement, column);
+			});
+		});
+	},
+
+	/**
+	 * Extract column element
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 * @returns {Object} Column element
+	 */
+	extractColumnElement: function (table, column) {
+		var columnId = (table["tableName"] + "_" + column["columnName"]);
+		columnId = columnId.toLowerCase();
+		var columnElement = document.getElementById(columnId);
+		return columnElement.parentElement
+	},
+
+	/**
+	 * Build new scheme comment from server response
+	 * @param {Object} column - Column object
+	 * @returns {string} New scheme comment
+	 */
+	buildColumnCommentFromServer: function (column) {
+		var comment = null;
+		var author = [];
+		Array.prototype.forEach.call(column["properties"], function (property) {
+			comment = comment === null ? "" : comment += "\n\n";
+			comment += property["decomment"];
+			author = author.concat(property["authorList"]);
+		});
+
+		author = author.filter(function (x, i, self) {
+			return self.indexOf(x) === i;
+		});
+
+		return comment = comment + "\n<span>@author(" + author.join(',') + ")</span>";
+	},
+
+	/**
+	 * Update comment
+	 * @param {Object} columnElement - Column element
+	 * @param {string} newComment - New scheme comment
+	 */
+	updateComment: function (columnElement, newComment) {
+		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = newComment;
+	},
+
+	/**
+	 * Check the comment is comflict
+	 * @param {Object} columnElement - Column element
+	 * @param {Object} column - Column object
+	 */
+	checkCommentConflict: function(columnElement, column) {
+		if (column["properties"].length > 1) {
+			columnElement.querySelector('.commentcell').className += " commentcellerror"
+		}
+	},
+		/**
+	 * Setup save decomment event
+	 * @param {string} table - Table name
+	 */
+	setupSaveDecomment: function(schemeName) {
+		var tables = document.getElementsByClassName('tablecontent');
+		var that = this;
+		Array.prototype.forEach.call(tables, function (table) {
+			var columns = table.getElementsByTagName('tr');
+			Array.prototype.forEach.call(columns, function (column, index) {
+				if (index === 0) { // because table header
+					return
+				}
+
+				var commentCellElement = column.querySelector('.commentcell')
+				var previousWholeComment = commentCellElement.querySelector('pre');
+				previousWholeComment.onclick = function () {
+					var modalElement = document.getElementById("decomment-modal");
+					modalElement.style.display = "block";
+
+					var columnName = column.querySelector('.columnnamecell').innerText;
+					var isConflict = commentCellElement.classList.contains('commentcellerror')
+					var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
+					document.getElementById("decomment-modal-column-info").innerText = columnInfo;
+
+					var inputElement = document.getElementById("decomment-input");
+					inputElement.value = that.extractPreviousComment(previousWholeComment);
+
+					document.getElementById("decomment-cancel").onclick = function() {
+						modalElement.style.display = "none";
+					};
+
+					document.getElementById("decomment-ok").onclick = function() {
+						var tableName = that.getTableName(table);
+						var params = that.buildColumnCommentRequestParams(isConflict, tableName, columnName, inputElement.value, column);
+						that.requestSaveDecomment(schemeName, params);
+						modalElement.style.display = "none";
+					};
+
+					window.onclick = function(event) {
+						if (event.target == modalElement) {
+							modalElement.style.display = "none";
+						}
+					};
+				};
+			});
+		});
+	},
+
+	/**
+	 * Get host name
+	 * @returns {string} Host name
+	 */
+	getHostName: function () {
+		return 'http://' + window.location.host;
+	},
+
+	/**
+	 * Get table name
+	 * @param {Object} table - Table element
+	 * @returns {string} table name
+	 */
+	getTableName: function (table) {
+		var previousElement = table.previousElementSibling;
+		if (previousElement.className) {
+			return previousElement.previousElementSibling.innerText
+		} else {
+			return previousElement.innerText
+		}
+	},
+
+	/**
+	 * Extract previous comment
+	 * @param {Object} columnCommentElemnet - Ccolumn comment elemnet
+	 * @returns {string} Previous comment
+	 */
+	extractPreviousComment: function (columnCommentElemnet) {
+		var child = columnCommentElemnet.childNodes[0];
+		if (child !== null && child.nodeName === "#text") {
+			return child.nodeValue;
+		}
+		return "";
+	},
+
+	/**
+	 * Build column comment request body
+	 * @param {boolean} merged - Merged
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - Column name
+	 * @param {string} decomment - Inputed decomment
+	 * @param {string} previousCommentElement - Previous comment element
+	 * @return {Object} Request body
+	 */
+	buildColumnCommentRequestParams: function (merged, tableName, columnName, decomment, previousCommentElement) {
+		return {
+			'merged': merged,
+			'tableName': tableName,
+			'columnName': columnName,
+			'targetType': 'COLUMN',
+			'decomment': decomment,
+			'databaseComment': '', // TODO tominaga add database comment
+			'commentVersion': 1,
+			'authors': [], // TODO tominaga add authors
+			'previousPieces': [] // TODO tominaga add previous pieces
+		};
+	},
+
+	/**
+	 * Request decomment
+	 * @param {string} schemeName - Scheme name
+	 * @param {Object} params - Request parameters
+	 */
+	requestSaveDecomment: function (schemeName, params) {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
+		http.open('POST', url, true);
+
+		var that = this;
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					// request success
+					that.fetchVirtualPickup(schemeName);
+				} else {
+					// request failed
+					alert('Error!! cannot save new column comment.');
+				}
+			}
+		};
+		http.send(JSON.stringify(params, null, "  "));
+	}
+}
+
+new Decomment().init();
 </script>
 </body>
 </html>
