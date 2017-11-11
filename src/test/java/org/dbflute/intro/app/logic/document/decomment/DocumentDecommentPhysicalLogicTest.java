@@ -214,10 +214,11 @@ public class DocumentDecommentPhysicalLogicTest extends DocumentDecommentUnitInt
         String[] pieceMaps = pieceDir.list();
         assertNotNull(pieceMaps);
         assertTrue(pieceMaps.length > 0);
-        Arrays.asList(pieceMaps).forEach(fileName -> {
-            log(fileName);
-            assertTrue(expFileNamePattern.matcher(fileName).find());
-        });
+        Arrays.stream(pieceMaps).filter(fileName -> fileName.endsWith(".dfmap")) // exclude un need filed
+            .forEach(fileName -> {
+                log(fileName);
+                assertTrue(expFileNamePattern.matcher(fileName).find());
+            });
     }
 
     // map:{
