@@ -969,7 +969,18 @@ searcher.init();
  * @author deco
  */
 function Decomment() {
-	var embeddedPickup = {}; // setup from dbflute if decomment pickup exists
+	this.embeddedPickup = {}; // setup from dbflute if decomment pickup exists
+	this.conflictStoreKey = 'isConflict';
+	this.previousPiecesStoreKey = 'previousPieces';
+	this.authorsStoreKey = 'authors';
+	this.pickupStore = {}; // store of comment info
+	// {
+	//   tableName: {
+	//     columnName: {
+	//       propetyName: propertyValue
+	//     }, { ... }
+	//   }, { ... }
+	// }
 }
 Decomment.prototype = {
 
@@ -1044,6 +1055,7 @@ Decomment.prototype = {
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
 				var newComment = that.buildColumnCommentFromServer(column);
+				that.storePickupProperies(table, column);
 				that.updateComment(columnElement, newComment);
 				that.checkCommentConflict(columnElement, column);
 			});
@@ -1082,6 +1094,24 @@ Decomment.prototype = {
 		});
 
 		return comment = comment + "\n<span>@author(" + author.join(',') + ")</span>";
+	},
+
+	/**
+	 * Store comment properties
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 */
+	storePickupProperies: function (table, column) {
+		var tableName = table['tableName'];
+		var columnName = column['columnName'];
+		if (this.pickupStore[tableName] === undefined) {
+			this.pickupStore[tableName] = {};
+		}
+		this.pickupStore[tableName][columnName] = {
+			this.conflictStoreKey: column["properties"].length > 1,
+			this.previousPiecesStoreKey: column['previousPieces'],
+			this.authorsStoreKey: column['authors']
+		}
 	},
 
 	/**
@@ -1203,10 +1233,10 @@ Decomment.prototype = {
 			'columnName': columnName,
 			'targetType': 'COLUMN',
 			'decomment': decomment,
-			'databaseComment': '', // TODO tominaga add database comment
+			'databaseComment': '',
 			'commentVersion': 1,
-			'authors': [], // TODO tominaga add authors
-			'previousPieces': [] // TODO tominaga add previous pieces
+			'authors': this.pickupStore[tableName][columnName][this.authorsStoreKey],
+			'previousPieces': this.pickupStore[tableName][columnName][this.previousPiecesStoreKey]
 		};
 	},
 
