@@ -16,13 +16,9 @@ import org.dbflute.helper.mapstring.MapListString;
 public class DfDecoMapPiece {
 
     // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static String DEFAULT_FORMAT_VERSION = "1.0";
-
-    // ===================================================================================
-    //                                                                           =========
     //                                                                           Attribute
+    //                                                                           =========
+    protected String formatVersion;
     protected boolean merged;
     protected String tableName;
     protected String columnName;
@@ -35,7 +31,6 @@ public class DfDecoMapPiece {
     protected LocalDateTime pieceDatetime;
     protected String pieceOwner;
     protected List<String> previousPieceList;
-    protected String formatVersion = DEFAULT_FORMAT_VERSION;
 
     // done cabos move to before accessor by jflute (2017/08/10)
     // ===================================================================================
@@ -46,6 +41,7 @@ public class DfDecoMapPiece {
         // done cabos Map by jflute (2017/08/10)
         // done cabos use Linked by jflute (2017/09/07)
         Map<String, Object> map = new LinkedHashMap<>();
+        map.put("formatVersion", this.formatVersion);
         map.put("merged", this.merged);
         map.put("tableName", this.tableName);
         map.put("columnName", this.columnName);
@@ -57,7 +53,6 @@ public class DfDecoMapPiece {
         map.put("pieceDatetime", this.pieceDatetime);
         map.put("pieceOwner", this.pieceOwner);
         map.put("previousPieceList", this.previousPieceList);
-        map.put("formatVersion", this.formatVersion);
         return map;
     }
 
@@ -72,6 +67,10 @@ public class DfDecoMapPiece {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
+    public void setFormatVersion(String formatVersion) {
+        this.formatVersion = formatVersion;
+    }
+
     public void setMerged(boolean merged) {
         this.merged = merged;
     }
@@ -120,6 +119,10 @@ public class DfDecoMapPiece {
         this.previousPieceList = previousPieceList;
     }
 
+    public String getFormatVersion() {
+        return formatVersion;
+    }
+
     public boolean isMerged() {
         return merged;
     }
@@ -166,9 +169,5 @@ public class DfDecoMapPiece {
 
     public List<String> getPreviousPieceList() {
         return previousPieceList;
-    }
-
-    public String getFormatVersion() {
-        return formatVersion;
     }
 }
