@@ -101,6 +101,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildPieceCode(DecommentSaveBody body) {
+        // TODO deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
         return Integer.toHexString(body.hashCode());
     }
 
