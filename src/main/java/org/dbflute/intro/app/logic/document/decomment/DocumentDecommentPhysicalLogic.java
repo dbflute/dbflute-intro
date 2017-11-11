@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile;
+import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile.DfDecoMapFileReadFailureException;
+import org.dbflute.intro.app.model.document.decomment.DfDecoMapFile.DfDecoMapFileWriteFailureException;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPickup;
 import org.dbflute.intro.app.model.document.decomment.DfDecoMapPiece;
 import org.dbflute.intro.bizfw.tellfailure.PhysicalDecoMapFileException;
@@ -69,15 +71,14 @@ public class DocumentDecommentPhysicalLogic {
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
             decoMapFile.writePiece(pieceMapPath, decoMapPiece);
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
-        } catch (FileNotFoundException | SecurityException e) {
+        } catch (DfDecoMapFileWriteFailureException | FileNotFoundException | SecurityException e) {
             throw new PhysicalDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapPath, pieceMapPath, e);
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", pieceMapPath, e);
         }
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
@@ -100,8 +101,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                          ==========
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
-        List<DfDecoMapPiece> pieces =
-                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+        List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject).stream().collect(Collectors.toList());
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);
@@ -115,12 +115,13 @@ public class DocumentDecommentPhysicalLogic {
             return Collections.emptyList();
         }
         try {
-            return Files.list(Paths.get(dirPath)).map(path -> {
+            return Files.list(Paths.get(dirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
                 try {
                     DfDecoMapFile decoMapFile = new DfDecoMapFile();
                     return decoMapFile.readPiece(Files.newInputStream(path));
-                } catch (IOException e) {
-                    throw new UncheckedIOException("fail to read decomment piece map file. path : " + path.toAbsolutePath(), e);
+                } catch (DfDecoMapFileReadFailureException | IOException e) {
+                    String debugMsg = "Failed to read decomment piece map: filePath=" + path;
+                    throw new PhysicalDecoMapFileException(debugMsg, path.toString(), e);
                 }
             }).collect(Collectors.toList());
         } catch (IOException e) {
@@ -138,8 +139,9 @@ public class DocumentDecommentPhysicalLogic {
         try {
             DfDecoMapFile decoMapFile = new DfDecoMapFile();
             return OptionalThing.of(decoMapFile.readPickup(Files.newInputStream(Paths.get(filePath))));
-        } catch (IOException e) {
-            throw new UncheckedIOException("fail to read decomment pickup map. path : " + filePath, e);
+        } catch (DfDecoMapFileReadFailureException | IOException e) {
+            String debugMsg = "Failed to read decomment pickup map: filePath=" + filePath;
+            throw new PhysicalDecoMapFileException(debugMsg, filePath, e);
         }
     }
 
