@@ -35,5 +35,14 @@ map:{
             ; subItemMap = map:{ relatedTasks = replace_schema }
         }
     }
+    ; PieceTargetType = list:{
+        ; map:{ topComment=target type of decomment ; codeType=String }
+        ; map:{
+            ; code=CLM; name=Column; comment=Column
+        }
+        ; map:{
+            ; code=TBL; name=Table; comment=Table
+        }
+    }
 }
 # ----------------/
