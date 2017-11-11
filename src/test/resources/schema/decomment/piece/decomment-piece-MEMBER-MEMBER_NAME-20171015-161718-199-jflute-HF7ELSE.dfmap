@@ -1,4 +1,5 @@
 map:{
+    ; formatVersion = 1.0
     ; merged = false
     ; tableName = MEMBER
     ; columnName = MEMBER_NAME
@@ -11,5 +12,4 @@ map:{
     ; pieceDatetime = 2017-10-15T16:17:18.199
     ; pieceOwner = jflute
     ; previousPieceList = list:{ FE893L1 }
-    ; formatVersion = 1.0
 }
