@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.dbflute.exception.DfPropFileReadFailureException;
-import org.dbflute.exception.DfPropFileWriteFailureException;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
@@ -186,16 +184,25 @@ public class DfDecoMapFile {
         return pickup;
     }
 
-    protected void throwDecoMapReadFailureException(InputStream ins, Exception e) {
+    // -----------------------------------------------------
+    //                                          Assist Logic
+    //                                          ------------
+    protected void throwDecoMapReadFailureException(InputStream ins, Exception cause) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
         br.addNotice("Failed to read the deco-map file.");
-        br.addItem("Advice");
-        br.addElement("Make sure the map-string is correct in the file.");
-        br.addElement("For example, the number of start and end braces are the same.");
-        br.addItem("Decomment Map");
+        br.addItem("InputStream");
         br.addElement(ins);
         final String msg = br.buildExceptionMessage();
-        throw new DfPropFileReadFailureException(msg, e);
+        throw new DfDecoMapFileReadFailureException(msg, cause);
+    }
+
+    public static class DfDecoMapFileReadFailureException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public DfDecoMapFileReadFailureException(String msg, Throwable cause) {
+            super(msg, cause);
+        }
     }
 
     // ===================================================================================
@@ -223,18 +230,28 @@ public class DfDecoMapFile {
         try {
             mapListFile.writeMap(ous, decoMap);
         } catch (Exception e) {
-            throwDecoMapWriteFailureException(decoMap, e);
+            throwDecoMapWriteFailureException(ous, decoMap, e);
         }
     }
 
-    protected void throwDecoMapWriteFailureException(Map<String, Object> decoMap, Exception cause) {
+    protected void throwDecoMapWriteFailureException(OutputStream ous, Map<String, Object> decoMap, Exception cause) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
         br.addNotice("Failed to write the deco-map file.");
-        br.addItem("Decomment Map");
+        br.addItem("OutputStream");
+        br.addElement(ous);
+        br.addItem("Written decoMap");
         br.addElement(decoMap);
         final String msg = br.buildExceptionMessage();
-        // done cabos use WriteFailure by jflute (2017/08/10)
-        throw new DfPropFileWriteFailureException(msg, cause);
+        throw new DfDecoMapFileWriteFailureException(msg, cause);
+    }
+
+    public static class DfDecoMapFileWriteFailureException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public DfDecoMapFileWriteFailureException(String msg, Throwable cause) {
+            super(msg, cause);
+        }
     }
 
     // ===================================================================================
