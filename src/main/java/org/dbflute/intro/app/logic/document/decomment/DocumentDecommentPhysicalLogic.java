@@ -101,8 +101,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                          ==========
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedDecommentPickupMap(String clientProject) {
-        List<DfDecoMapPiece> pieces =
-                readAllDecommentPieceMap(clientProject).stream().filter(piece -> !piece.isMerged()).collect(Collectors.toList());
+        List<DfDecoMapPiece> pieces = readAllDecommentPieceMap(clientProject).stream().collect(Collectors.toList());
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickupMap(clientProject);
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         return decoMapFile.merge(pickupOpt, pieces);
