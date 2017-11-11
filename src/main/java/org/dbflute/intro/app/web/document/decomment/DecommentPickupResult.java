@@ -131,7 +131,7 @@ public class DecommentPickupResult {
                  * e.g. ["HF7ELSE"]
                  */
                 @Valid
-                @Required
+                @NotNull
                 public List<String> previousPieces;
 
                 // =======================================================================
