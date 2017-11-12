@@ -113,7 +113,7 @@ public class DfDecoMapPiece {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    // TODO done cabos order get/set, get/set, ... please m(_ _)m by jflute (2017/11/11)
+    // done cabos order get/set, get/set, ... please m(_ _)m by jflute (2017/11/11)
     public String getFormatVersion() {
         return formatVersion;
     }

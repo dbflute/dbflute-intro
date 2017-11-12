@@ -51,7 +51,7 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    // TODO done cabos move this above logic DI variables, framework component should be top (jflute policy...) by jflute (2017/11/11)
+    // done cabos move this above logic DI variables, framework component should be top (jflute policy...) by jflute (2017/11/11)
     @Resource
     private TimeManager timeManager;
     @Resource
@@ -62,7 +62,6 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
-    // TODO done cabos also rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
     public void saveDecommentPiece(String clientProject, DfDecoMapPiece decoMapPiece) {
         String tableName = decoMapPiece.getTableName();
         String columnName = decoMapPiece.getColumnName();
@@ -81,8 +80,7 @@ public class DocumentDecommentPhysicalLogic {
         }
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + owner + "-" + pieceCode + ".dfmap";
     }
 
@@ -96,7 +94,7 @@ public class DocumentDecommentPhysicalLogic {
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
             throw new PhysicalDecoMapFileException("fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(),
-                pieceMapFile.getAbsolutePath(), e);
+                    pieceMapFile.getAbsolutePath(), e);
         }
     }
 
