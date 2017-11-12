@@ -96,6 +96,7 @@ public class DfDecoMapFile {
     // done hakiba cast check by hakiba (2017/07/29)
     @SuppressWarnings("unchecked")
     private DfDecoMapPiece mappingToDecoMapPiece(Map<String, Object> map) throws Exception {
+        String formatVersion = (String) map.get("formatVersion");
         String tableName = (String) map.get("tableName");
         String columnName = (String) map.get("columnName");
         DfDecoMapPieceTargetType targetType = DfDecoMapPieceTargetType.of(map.get("targetType")).get();
@@ -107,9 +108,9 @@ public class DfDecoMapFile {
         LocalDateTime pieceDatetime = new HandyDate((String) map.get("pieceDatetime")).getLocalDateTime();
         String pieceOwner = (String) map.get("pieceOwner");
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
-        String formatVersion = (String) map.get("formatVersion");
 
         DfDecoMapPiece piece = new DfDecoMapPiece();
+        piece.setFormatVersion(formatVersion);
         piece.setTableName(tableName);
         piece.setColumnName(columnName);
         piece.setTargetType(targetType);
@@ -121,7 +122,6 @@ public class DfDecoMapFile {
         piece.setPieceDatetime(pieceDatetime);
         piece.setPieceOwner(pieceOwner);
         piece.setPreviousPieceList(previousPieceList);
-        piece.setFormatVersion(formatVersion);
         return piece;
     }
 

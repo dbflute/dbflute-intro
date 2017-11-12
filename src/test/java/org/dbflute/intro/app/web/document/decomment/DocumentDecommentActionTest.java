@@ -58,8 +58,8 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
         });
-        // TODO cabos fail by formatVersion by jflute (2017/11/11)
-        //assertEquals("1.0", actualMap.get("formatVersion"));
+        // TODO done cabos fail by formatVersion by jflute (2017/11/11)
+        assertEquals("1.0", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
         assertEquals(body.decomment, actualMap.get("decomment"));
@@ -97,8 +97,8 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
         });
-        // TODO cabos fail by formatVersion by jflute (2017/11/11)
-        //assertEquals("1.0", actualMap.get("formatVersion"));
+        // TODO done cabos fail by formatVersion by jflute (2017/11/11)
+        assertEquals("1.0", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
         assertEquals(body.decomment, actualMap.get("decomment"));

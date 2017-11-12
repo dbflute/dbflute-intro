@@ -30,9 +30,14 @@ import org.dbflute.helper.mapstring.MapListString;
 public class DfDecoMapPiece {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String DEFAULT_FORMAT_VERSION = "1.0";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected String formatVersion;
+    protected String formatVersion = DEFAULT_FORMAT_VERSION;
     protected String tableName;
     protected String columnName;
     protected DfDecoMapPieceTargetType targetType;
@@ -192,6 +197,7 @@ public class DfDecoMapPiece {
     public String getPieceOwner() {
         return pieceOwner;
     }
+
     public void setPieceOwner(String pieceOwner) {
         this.pieceOwner = pieceOwner;
     }
