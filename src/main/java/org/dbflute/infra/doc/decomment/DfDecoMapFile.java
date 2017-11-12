@@ -41,7 +41,7 @@ import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.optional.OptionalThing;
 
 // done cabos DfDecoMapFile by jflute (2017/07/27)
-// TODO cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
+// TODO done cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
 
 /**
  * @author cabos

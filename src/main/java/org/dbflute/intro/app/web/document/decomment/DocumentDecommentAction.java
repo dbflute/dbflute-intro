@@ -67,7 +67,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
-        // TODO cabos done validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
+        // TODO done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> {});
         verifyOrClientError(buildDebugMessage(body), existColumnNameIfTargetTypeColumn(body));
