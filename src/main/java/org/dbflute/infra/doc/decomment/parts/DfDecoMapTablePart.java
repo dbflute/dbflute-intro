@@ -38,7 +38,7 @@ public class DfDecoMapTablePart {
 
     public Map<String, Object> convertPickupMap() {
         Map<String, List<Map<String, Object>>> columnMap = columnList.stream()
-            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
+            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertToMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);

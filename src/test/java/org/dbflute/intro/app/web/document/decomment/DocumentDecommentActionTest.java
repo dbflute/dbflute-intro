@@ -117,7 +117,6 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     //                                          ------------
     private DecommentSaveBody createSaveBodyOfTable() {
         DecommentSaveBody body = new DecommentSaveBody();
-        body.merged = false;
         body.tableName = "MEMBER";
         body.columnName = null;
         body.targetType = DfDecoMapPieceTargetType.Table;
@@ -131,7 +130,6 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
 
     private DecommentSaveBody createSaveBodyOfColumn() {
         DecommentSaveBody body = new DecommentSaveBody();
-        body.merged = false;
         body.tableName = "MEMBER";
         body.columnName = "MEMBER_NAME";
         body.targetType = DfDecoMapPieceTargetType.Column;
@@ -231,7 +229,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
 
     private ColumnPart extractPickupColumnAsOne(TablePart member, String columnName) {
         List<ColumnPart> columnList =
-                member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
+            member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
         assertHasOnlyOneElement(columnList);
         return columnList.get(0);
     }

@@ -24,9 +24,11 @@ import javax.annotation.Resource;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
+import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.core.time.TimeManager;
+import org.lastaflute.core.util.LaStringUtil;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -65,31 +67,43 @@ public class DocumentDecommentAction extends IntroBaseAction {
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
-        // TODO cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
+        // TODO cabos done validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> {});
-        decommentPhysicalLogic.saveDecommentPieceMap(projectName, mappingToDecoMapPiece(body));
+        verifyOrClientError(buildDebugMessage(body), existColumnNameIfTargetTypeColumn(body));
+        decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
+    }
+
+    public String buildDebugMessage(DecommentSaveBody body) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
+        sb.append("   targetType : ").append(body.targetType.code()).append("\n");
+        sb.append("   columnName : ").append(body.columnName).append("\n");
+        return sb.toString();
+    }
+
+    private boolean existColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
+        return !(DfDecoMapPieceTargetType.Column == body.targetType && LaStringUtil.isEmpty(body.columnName));
     }
 
     // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         String author = getAuthor();
-        // TODO cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
-        DfDecoMapPiece pieceMap = new DfDecoMapPiece();
-        pieceMap.setMerged(body.merged);
-        pieceMap.setTableName(body.tableName);
-        pieceMap.setColumnName(body.columnName);
-        pieceMap.setTargetType(body.targetType);
-        pieceMap.setDecomment(body.decomment);
-        pieceMap.setDatabaseComment(body.databaseComment);
-        pieceMap.setCommentVersion(body.commentVersion);
-        pieceMap.setAuthorList(mergeAuthorList(body.authors, author));
-        pieceMap.setPieceCode(buildPieceCode(body));
-        pieceMap.setPieceDatetime(timeManager.currentDateTime());
-        pieceMap.setPieceOwner(getAuthor());
-        pieceMap.setPreviousPieceList(body.previousPieces);
-        return pieceMap;
+        // TODO done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
+        DfDecoMapPiece piece = new DfDecoMapPiece();
+        piece.setTableName(body.tableName);
+        piece.setColumnName(body.columnName);
+        piece.setTargetType(body.targetType);
+        piece.setDecomment(body.decomment);
+        piece.setDatabaseComment(body.databaseComment);
+        piece.setCommentVersion(body.commentVersion);
+        piece.setAuthorList(mergeAuthorList(body.authors, author));
+        piece.setPieceCode(buildPieceCode(body));
+        piece.setPieceDatetime(timeManager.currentDateTime());
+        piece.setPieceOwner(getAuthor());
+        piece.setPreviousPieceList(body.previousPieces);
+        return piece;
     }
 
     private String getAuthor() {
@@ -120,7 +134,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {
-        DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedDecommentPickupMap(projectName);
+        DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedPickup(projectName);
         return asJson(new DecommentPickupResult(dfDecoMapPickup.getTableList()));
     }
 }

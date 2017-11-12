@@ -42,6 +42,7 @@ import org.dbflute.optional.OptionalThing;
 
 // done cabos DfDecoMapFile by jflute (2017/07/27)
 // TODO cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
+
 /**
  * @author cabos
  * @author hakiba
@@ -55,7 +56,6 @@ public class DfDecoMapFile {
     // done yuto write e.g. (2017/11/11)
     // map:{
     //     ; formatVersion = 1.0
-    //     ; merged = false
     //     ; tableName = MEMBER
     //     ; columnName = null
     //     ; targetType = TABLE
@@ -70,7 +70,6 @@ public class DfDecoMapFile {
     // }
     // map:{
     //     ; formatVersion = 1.0
-    //     ; merged = false
     //     ; tableName = MEMBER
     //     ; columnName = MEMBER_NAME
     //     ; targetType = COLUMN
@@ -97,7 +96,6 @@ public class DfDecoMapFile {
     // done hakiba cast check by hakiba (2017/07/29)
     @SuppressWarnings("unchecked")
     private DfDecoMapPiece mappingToDecoMapPiece(Map<String, Object> map) throws Exception {
-        Boolean merged = Boolean.valueOf((String) map.get("merged"));
         String tableName = (String) map.get("tableName");
         String columnName = (String) map.get("columnName");
         DfDecoMapPieceTargetType targetType = DfDecoMapPieceTargetType.of(map.get("targetType")).get();
@@ -112,7 +110,6 @@ public class DfDecoMapFile {
         String formatVersion = (String) map.get("formatVersion");
 
         DfDecoMapPiece piece = new DfDecoMapPiece();
-        piece.setMerged(merged);
         piece.setTableName(tableName);
         piece.setColumnName(columnName);
         piece.setTargetType(targetType);
@@ -244,7 +241,7 @@ public class DfDecoMapFile {
         Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
     }
 
-    // done (by jflute) hakiba be more rich method, e.g. saveDecommentPieceMap()'s logic by jflute (2017/09/21)
+    // done (by jflute) hakiba be more rich method, e.g. saveDecommentPiece()'s logic by jflute (2017/09/21)
     protected void writeMap(OutputStream ous, Map<String, Object> decoMap) {
         final MapListFile mapListFile = createMapListFile();
         try {
@@ -312,22 +309,22 @@ public class DfDecoMapFile {
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists table or column decoment, but we don't know that target decomment exists now...
                     table.getColumnList()
-                            .stream()
-                            .filter(column -> column.getColumnName().equals(piece.getColumnName()))
-                            .findFirst()
-                            .map(column -> {
-                                // exists column comment
-                                addColumnProperty(property, column);
-                                return column;
-                            })
-                            .orElseGet(() -> {
-                                // not exists column comment
-                                DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-                                column.setColumnName(piece.getColumnName());
-                                column.setPropertyList(Collections.singletonList(property));
-                                addColumn(column, table);
-                                return column;
-                            });
+                        .stream()
+                        .filter(column -> column.getColumnName().equals(piece.getColumnName()))
+                        .findFirst()
+                        .map(column -> {
+                            // exists column comment
+                            addColumnProperty(property, column);
+                            return column;
+                        })
+                        .orElseGet(() -> {
+                            // not exists column comment
+                            DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+                            column.setColumnName(piece.getColumnName());
+                            column.setPropertyList(Collections.singletonList(property));
+                            addColumn(column, table);
+                            return column;
+                        });
                     return table;
                 }).orElseGet(() -> {
                     // not exists table and column decoment
@@ -386,24 +383,27 @@ public class DfDecoMapFile {
     private Set<String> extractAllPieceCode(DfDecoMapPickup pickup) {
         return pickup.getTableList().stream().flatMap(table -> {
             Stream<String> previousTablePieceStream =
-                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-            Stream<String> previousColumnPieceStream =
-                    table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).flatMap(
-                            property -> property.getPreviousPieceList().stream());
+                table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+            Stream<String> previousColumnPieceStream = table.getColumnList()
+                .stream()
+                .flatMap(column -> column.getPropertyList().stream())
+                .flatMap(property -> property.getPreviousPieceList().stream());
             Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-            Stream<String> columnPieceStream = table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).map(
-                    property -> property.getPieceCode());
+            Stream<String> columnPieceStream = table.getColumnList()
+                .stream()
+                .flatMap(column -> column.getPropertyList().stream())
+                .map(property -> property.getPieceCode());
             return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                    columnPieceStream);
+                columnPieceStream);
         }).collect(Collectors.toSet());
     }
 
     private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
         Set<String> previousAllPieceSet =
-                pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream()).collect(Collectors.toSet());
+            pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream()).collect(Collectors.toSet());
         return pieces.stream()
-                .filter(piece -> !previousAllPieceSet.contains(piece.getPieceCode()) && !pieceCodeSet.contains(piece.getPieceCode()))
-                .collect(Collectors.toList());
+            .filter(piece -> !previousAllPieceSet.contains(piece.getPieceCode()) && !pieceCodeSet.contains(piece.getPieceCode()))
+            .collect(Collectors.toList());
     }
 
     // hakiba's memorable code by jflute (2017/11/11)

@@ -37,7 +37,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         final File pieceDir = new File(logic.buildDecommentPieceDirPath(TEST_CLIENT_PROJECT));
 
         // ## Act ##
-        logic.saveDecommentPieceMap(TEST_CLIENT_PROJECT, createDfDecoMapPiece());
+        logic.saveDecommentPiece(TEST_CLIENT_PROJECT, createDfDecoMapPiece());
 
         // ## Assert ##
         assertTrue(pieceDir.exists());
@@ -62,7 +62,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         final File pieceDir = new File(logic.buildDecommentPieceDirPath(TEST_CLIENT_PROJECT));
 
         // ## Act ##
-        logic.saveDecommentPieceMap(TEST_CLIENT_PROJECT, createDfDecoMapPiece());
+        logic.saveDecommentPiece(TEST_CLIENT_PROJECT, createDfDecoMapPiece());
 
         // ## Assert ##
         assertTrue(pieceDir.exists());
@@ -115,8 +115,9 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         inject(logic);
 
         // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
-        final String expFileName = "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-"
-                + sampleAuthor + "-" + samplePieceCode + ".dfmap";
+        final String expFileName =
+            "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-"
+                + samplePieceCode + ".dfmap";
 
         // ## Act ##
         final String fileName = logic.buildPieceFileName(sampleTableName, sampleColumnName, sampleAuthor, samplePieceCode);
@@ -196,7 +197,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
 
         // ## Act ##
         // done hakiba use testdb by jflute (2017/08/17)
-        DfDecoMapPickup pickup = logic.readMergedDecommentPickupMap(TEST_CLIENT_PROJECT);
+        DfDecoMapPickup pickup = logic.readMergedPickup(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // Assert by visual confirmation
@@ -212,7 +213,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
 
         // ## Act ##
         // done hakiba use testdb by jflute (2017/08/17)
-        DfDecoMapPickup pickup = logic.readMergedDecommentPickupMap(TEST_CLIENT_PROJECT);
+        DfDecoMapPickup pickup = logic.readMergedPickup(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // Assert by visual confirmation
