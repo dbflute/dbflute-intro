@@ -25,7 +25,7 @@ import org.dbflute.optional.OptionalThing;
  * @author cabos
  * @author jflute
  */
-// TODO done cabos delete empty lines by jflute (2017/11/11)
+// done cabos delete empty lines by jflute (2017/11/11)
 public enum DfDecoMapPieceTargetType implements Classification {
 
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/

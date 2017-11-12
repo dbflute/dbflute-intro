@@ -23,14 +23,14 @@ public class DfDecoMapColumnPart {
     public static DfDecoMapColumnPart createColumnPart(Map<String, Object> columnPartMap) {
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName((String) columnPartMap.get("columnName"));
-        List<DfDecoMapPropertyPart> propertyList = ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream()
-            .map(DfDecoMapPropertyPart::new)
-            .collect(Collectors.toList());
+        List<DfDecoMapPropertyPart> propertyList =
+                ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream().map(DfDecoMapPropertyPart::new).collect(
+                        Collectors.toList());
         column.setPropertyList(propertyList);
         return column;
     }
 
-    // TODO done cabos convertToMap()? by jflute (2017/11/11)
+    // done cabos convertToMap()? by jflute (2017/11/11)
     public List<Map<String, Object>> convertToMap() {
         return propertyList.stream().map(property -> property.convertToMap()).collect(Collectors.toList());
     }

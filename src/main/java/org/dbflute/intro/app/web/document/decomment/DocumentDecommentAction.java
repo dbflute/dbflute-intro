@@ -89,8 +89,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
 
     // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
+        // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
-        // TODO done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         DfDecoMapPiece piece = new DfDecoMapPiece();
         piece.setTableName(body.tableName);
         piece.setColumnName(body.columnName);
