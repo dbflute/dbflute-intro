@@ -79,7 +79,6 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
     private DfDecoMapPiece createDfDecoMapPiece() {
         DfDecoMapPiece decoMapPiece = new DfDecoMapPiece();
         decoMapPiece.setFormatVersion("1.0");
-        decoMapPiece.setMerged(false);
         decoMapPiece.setTableName("MEMBER");
         decoMapPiece.setColumnName("MEMBER_NAME");
         decoMapPiece.setTargetType(DfDecoMapPieceTargetType.Column);
