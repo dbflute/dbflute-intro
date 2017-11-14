@@ -58,7 +58,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
         });
-        // TODO done cabos fail by formatVersion by jflute (2017/11/11)
+        // done cabos fail by formatVersion by jflute (2017/11/11)
         assertEquals("1.0", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
@@ -97,7 +97,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
         });
-        // TODO done cabos fail by formatVersion by jflute (2017/11/11)
+        // done cabos fail by formatVersion by jflute (2017/11/11)
         assertEquals("1.0", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
@@ -229,7 +229,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
 
     private ColumnPart extractPickupColumnAsOne(TablePart member, String columnName) {
         List<ColumnPart> columnList =
-            member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
+                member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
         assertHasOnlyOneElement(columnList);
         return columnList.get(0);
     }

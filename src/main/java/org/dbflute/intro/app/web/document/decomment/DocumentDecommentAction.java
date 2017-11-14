@@ -67,7 +67,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
-        // TODO done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
+        // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> {});
         verifyOrClientError(buildDebugMessage(body), existColumnNameIfTargetTypeColumn(body));
@@ -75,6 +75,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    // TODO cabos unneeded public here, change to private by jflute (2017/11/12)
     public String buildDebugMessage(DecommentSaveBody body) {
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
@@ -83,6 +84,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
+    // TODO cabos change exist to exists for boolean expression by jflute (2017/11/12)
     private boolean existColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
         return !(DfDecoMapPieceTargetType.Column == body.targetType && LaStringUtil.isEmpty(body.columnName));
     }

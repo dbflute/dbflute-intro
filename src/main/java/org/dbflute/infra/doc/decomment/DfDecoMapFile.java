@@ -41,7 +41,7 @@ import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.optional.OptionalThing;
 
 // done cabos DfDecoMapFile by jflute (2017/07/27)
-// TODO done cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
+// done cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
 
 /**
  * @author cabos
@@ -275,10 +275,10 @@ public class DfDecoMapFile {
     //                                                                               Merge
     //                                                                               =====
     // done (by cabos) hakiba write unit test by jflute (2017/09/21)
-    public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> pieces) {
-        Set<String> pieceCodeSet = extractAllPieceCode(optPickup, pieces);
+    public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces) {
+        Set<String> pieceCodeSet = pickupOpt.map(this::extractAllPieceCode).orElse(Collections.emptySet());
         List<DfDecoMapPiece> filteredPieces = filterPieces(pieces, pieceCodeSet);
-        DfDecoMapPickup pickUp = optPickup.orElse(new DfDecoMapPickup());
+        DfDecoMapPickup pickUp = pickupOpt.orElse(new DfDecoMapPickup());
         mergeInternal(filteredPieces, pickUp);
         return pickUp;
     }
