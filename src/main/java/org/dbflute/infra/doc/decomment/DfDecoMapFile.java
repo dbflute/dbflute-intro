@@ -276,7 +276,7 @@ public class DfDecoMapFile {
     //                                                                               =====
     // done (by cabos) hakiba write unit test by jflute (2017/09/21)
     public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces) {
-        Set<String> pieceCodeSet = pickupOpt.map(this::extractAllPieceCode).orElse(Collections.emptySet());
+        Set<String> pieceCodeSet = extractAllPieceCode(pickupOpt, pieces);
         List<DfDecoMapPiece> filteredPieces = filterPieces(pieces, pieceCodeSet);
         DfDecoMapPickup pickUp = pickupOpt.orElse(new DfDecoMapPickup());
         mergeInternal(filteredPieces, pickUp);
