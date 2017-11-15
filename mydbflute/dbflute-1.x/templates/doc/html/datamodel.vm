@@ -1051,10 +1051,10 @@ Decomment.prototype = {
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
-				var newComment = that.buildColumnCommentFromServer(column);
 				that.storePickupProperies(table, column);
+				var newComment = that.buildColumnCommentFromServer(table, column);
 				that.updateComment(columnElement, newComment);
-				that.checkCommentConflict(columnElement, column);
+				that.checkCommentConflict(table, column, columnElement);
 			});
 		});
 	},
@@ -1073,27 +1073,6 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Build new scheme comment from server response
-	 * @param {Object} column - Column object
-	 * @returns {string} New scheme comment
-	 */
-	buildColumnCommentFromServer: function (column) {
-		var comment = null;
-		var author = [];
-		Array.prototype.forEach.call(column["properties"], function (property) {
-			comment = comment === null ? "" : comment += "\n\n";
-			comment += property["decomment"];
-			author = author.concat(property["authors"]);
-		});
-
-		author = author.filter(function (x, i, self) {
-			return self.indexOf(x) === i;
-		});
-
-		return comment = comment + "\n<span>@author(" + author.join(',') + ")</span>";
-	},
-
-	/**
 	 * Store comment properties
 	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
@@ -1107,10 +1086,12 @@ Decomment.prototype = {
 
 		var properties = column['properties'];
 		var isConflict = properties.length > 1;
+		var decomments = [];
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
 		Array.prototype.forEach.call(properties, function (property) {
+			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
 				previousPieces.push(property['pieceCode']);
 			}
@@ -1119,13 +1100,32 @@ Decomment.prototype = {
 				commentVersion = property['commentVersion'];
 			}
 		});
+		authors = authors.filter(function (x, i, self) {
+			return self.indexOf(x) === i;
+		});
 
 		this.pickupStore[tableName][columnName] = {
 			'isConflict': isConflict,
+			'decomments': decomments,
 			'previousPieces': previousPieces,
 			'authors': authors,
 			'commentVersion': commentVersion
 		}
+	},
+
+	/**
+	 * Build new scheme comment from server response
+	 * @param {Object} table - table object
+	 * @param {Object} column - Column object
+	 * @returns {string} New scheme comment
+	 */
+	buildColumnCommentFromServer: function (table, column) {
+		var tableName = table['tableName'];
+		var columnName = column['columnName'];
+		var columnMap = this.pickupStore[tableName][columnName];
+		var comment = columnMap['decomments'].join('\n\n');
+		var author = columnMap['authors'].join(',');
+		return comment + "\n<span>@author(" + author + ")</span>";
 	},
 
 	/**
@@ -1139,14 +1139,19 @@ Decomment.prototype = {
 
 	/**
 	 * Check the comment is comflict
-	 * @param {Object} columnElement - Column element
+	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
+	 * @param {Object} columnElement - Column element
 	 */
-	checkCommentConflict: function(columnElement, column) {
-		if (column["properties"].length > 1) {
+	checkCommentConflict: function(table, column, columnElement) {
+		var tableName = table['tableName'];
+		var columnName = column['columnName'];
+		var columnMap = this.pickupStore[tableName][columnName];
+		if (columnMap['isConflict']) {
 			columnElement.querySelector('.commentcell').className += " commentcellerror"
 		}
 	},
+
 	/**
 	 * Setup save decomment event
 	 * @param {string} table - Table name
@@ -1181,7 +1186,7 @@ Decomment.prototype = {
 
 					document.getElementById("decomment-ok").onclick = function() {
 						var tableName = that.getTableName(table);
-						var params = that.buildColumnCommentRequestParams(isConflict, tableName, columnName, inputElement.value, column);
+						var params = that.buildColumnCommentRequestParams(tableName, columnName, inputElement.value, column);
 						that.requestSaveDecomment(schemeName, params);
 						modalElement.style.display = "none";
 					};
@@ -1233,14 +1238,13 @@ Decomment.prototype = {
 
 	/**
 	 * Build column comment request body
-	 * @param {boolean} merged - Merged
 	 * @param {string} tableName - Table name
 	 * @param {string} columnName - Column name
 	 * @param {string} decomment - Inputed decomment
 	 * @param {string} previousCommentElement - Previous comment element
 	 * @return {Object} Request body
 	 */
-	buildColumnCommentRequestParams: function (merged, tableName, columnName, decomment, previousCommentElement) {
+	buildColumnCommentRequestParams: function (tableName, columnName, decomment, previousCommentElement) {
 		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
 			var authors = this.pickupStore[tableName][columnName]['authors'];
 			var previousPieces = this.pickupStore[tableName][columnName]['previousPieces'];
@@ -1248,7 +1252,6 @@ Decomment.prototype = {
 		}
 
 		return {
-			'merged': merged,
 			'tableName': tableName,
 			'columnName': columnName,
 			'targetType': 'COLUMN',
