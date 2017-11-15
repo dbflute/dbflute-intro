@@ -58,7 +58,7 @@ public class DecommentPickupResult {
         // done cabos move it above columns by jflute (2017/11/11)
         /** list of decomment properties associated table  */
         @Valid
-        @Required
+        @NotNull
         public List<PropertyPart> properties;
 
         /** list of column part, contains saved comments */

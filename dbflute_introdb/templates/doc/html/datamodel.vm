@@ -1083,7 +1083,7 @@ Decomment.prototype = {
 		Array.prototype.forEach.call(column["properties"], function (property) {
 			comment = comment === null ? "" : comment += "\n\n";
 			comment += property["decomment"];
-			author = author.concat(property["authorList"]);
+			author = author.concat(property["authors"]);
 		});
 
 		author = author.filter(function (x, i, self) {
@@ -1105,10 +1105,20 @@ Decomment.prototype = {
 			this.pickupStore[tableName] = {};
 		}
 
-		var isConflict = column['properties'].length > 1;
-		var previousPieces = column['previousPieces'];
-		var authors = column['authors'];
-		var commentVersion = column['commentVersion'];
+		var properties = column['properties'];
+		var isConflict = properties.length > 1;
+		var previousPieces = [];
+		var authors = [];
+		var commentVersion = 0;
+		Array.prototype.forEach.call(properties, function (property) {
+			if (property['pieceCode'] != null) {
+				previousPieces.push(property['pieceCode']);
+			}
+			authors = authors.concat(property['authors']);
+			if (commentVersion < property['commentVersion']) {
+				commentVersion = property['commentVersion'];
+			}
+		});
 
 		this.pickupStore[tableName][columnName] = {
 			'isConflict': isConflict,
@@ -1137,7 +1147,7 @@ Decomment.prototype = {
 			columnElement.querySelector('.commentcell').className += " commentcellerror"
 		}
 	},
-		/**
+	/**
 	 * Setup save decomment event
 	 * @param {string} table - Table name
 	 */
