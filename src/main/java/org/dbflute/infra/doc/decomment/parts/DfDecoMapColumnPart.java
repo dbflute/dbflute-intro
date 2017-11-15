@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.dbflute.infra.doc.decomment.parts;
 
 import java.util.List;
@@ -9,11 +24,6 @@ import java.util.stream.Collectors;
  * @author cabos
  */
 public class DfDecoMapColumnPart {
-
-    // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static final Long MINIMUM_COMMENT_VERSION = 1L;
 
     // ===================================================================================
     //                                                                           Attribute
@@ -28,14 +38,15 @@ public class DfDecoMapColumnPart {
     public static DfDecoMapColumnPart createColumnPart(Map<String, Object> columnPartMap) {
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
         column.setColumnName((String) columnPartMap.get("columnName"));
-        List<DfDecoMapPropertyPart> propertyList = ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream()
-            .map(DfDecoMapPropertyPart::new)
-            .collect(Collectors.toList());
+        List<DfDecoMapPropertyPart> propertyList =
+                ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream().map(DfDecoMapPropertyPart::new).collect(
+                        Collectors.toList());
         column.setPropertyList(propertyList);
         return column;
     }
 
-    public List<Map<String, Object>> convertPickupMap() {
+    // done cabos convertToMap()? by jflute (2017/11/11)
+    public List<Map<String, Object>> convertToMap() {
         return propertyList.stream().map(property -> property.convertToMap()).collect(Collectors.toList());
     }
 

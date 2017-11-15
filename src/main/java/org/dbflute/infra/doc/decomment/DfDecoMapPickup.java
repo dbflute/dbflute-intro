@@ -1,5 +1,21 @@
+/*
+ * Copyright 2014-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.dbflute.infra.doc.decomment;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +40,9 @@ public class DfDecoMapPickup {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    // done cabos add pickupDatetime by jflute (2017/11/11)
     protected String formatVersion;
+    protected LocalDateTime pickupDatetime;
     protected Map<String, List<DfDecoMapTablePart>> decoMap;
 
     // ===================================================================================
@@ -87,9 +105,8 @@ public class DfDecoMapPickup {
     //     }
     // }
     public Map<String, Object> convertToMap() {
-        final Map<String, Map<String, Object>> convertedDecoMap = this.getTableList()
-            .stream()
-            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
+        final Map<String, Map<String, Object>> convertedDecoMap = this.getTableList().stream().collect(
+                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
@@ -115,6 +132,14 @@ public class DfDecoMapPickup {
 
     public void setFormatVersion(String formatVersion) {
         this.formatVersion = formatVersion;
+    }
+
+    public LocalDateTime getPickupDatetime() {
+        return pickupDatetime;
+    }
+
+    public void setPickupDatetime(LocalDateTime pickupDatetime) {
+        this.pickupDatetime = pickupDatetime;
     }
 
     public List<DfDecoMapTablePart> getTableList() {

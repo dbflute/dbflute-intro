@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.dbflute.infra.doc.decomment.parts;
 
 import java.util.LinkedHashMap;
@@ -38,7 +53,7 @@ public class DfDecoMapTablePart {
 
     public Map<String, Object> convertPickupMap() {
         Map<String, List<Map<String, Object>>> columnMap = columnList.stream()
-            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertPickupMap(), (c1, c2) -> c1));
+            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertToMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);

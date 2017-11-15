@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.dbflute.intro.mylasta.appcls.AppCDef;
+import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
@@ -33,14 +33,7 @@ public class DecommentSaveBody {
 
     // done cabos system parameter, use (groups = ClientError.class) _lavc... by jflute (2017/08/10)
     // done cabos javadoc and add e.g. (above annotation) by jflute (2017/09/28)
-
-    /**
-     * whether decomment merged or not
-     * This field true if decomment mered.
-     * e.g. false
-     */
-    @Required(groups = ClientError.class)
-    public Boolean merged;
+    // done cabos delete merged property by jflute (2017/11/11)
 
     /**
      * table name
@@ -61,7 +54,7 @@ public class DecommentSaveBody {
      * e.g. COLUMN
      */
     @Required
-    public AppCDef.PieceTargetType targetType;
+    public DfDecoMapPieceTargetType targetType;
 
     /**
      * inputted column comment on the schema.html

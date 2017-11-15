@@ -8,7 +8,7 @@ import java.util.List;
 import org.dbflute.infra.doc.decomment.DfDecoMapFile;
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
-import org.dbflute.intro.mylasta.appcls.AppCDef;
+import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.optional.OptionalThing;
 
@@ -52,10 +52,9 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         LocalDateTime decommentDateTime) {
         DfDecoMapPiece piece = new DfDecoMapPiece();
         piece.setFormatVersion("1.0");
-        piece.setMerged(false);
         piece.setTableName(tableName);
         piece.setColumnName(columnName);
-        piece.setTargetType(AppCDef.PieceTargetType.Column);
+        piece.setTargetType(DfDecoMapPieceTargetType.Column);
         piece.setDecomment("decomment");
         piece.setDatabaseComment("databasecomment");
         piece.setCommentVersion(commentVersion);

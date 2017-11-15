@@ -40,7 +40,8 @@ public class DecommentPickupResult {
     //                                                                           Attribute
     //                                                                           =========
     /** list of table part */
-    @Valid @NotNull // can be empty first
+    @Valid
+    @NotNull // can be empty first
     public List<TablePart> tables;
 
     // done hakiba move it under tables by jflute (2017/08/17)
@@ -54,14 +55,16 @@ public class DecommentPickupResult {
         @Required
         public String tableName;
 
+        // done cabos move it above columns by jflute (2017/11/11)
+        /** list of decomment properties associated table  */
+        @Valid
+        @Required
+        public List<PropertyPart> properties;
+
         /** list of column part, contains saved comments */
         @Valid
         @Required
         public List<ColumnPart> columns;
-
-        @Valid
-        @Required
-        public List<PropertyPart> properties;
 
         public static class ColumnPart {
 
@@ -80,7 +83,7 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.properties =
-                    columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.dbflute.infra.doc.decomment;
 
 import java.time.LocalDateTime;
@@ -6,22 +21,26 @@ import java.util.List;
 import java.util.Map;
 
 import org.dbflute.helper.mapstring.MapListString;
-import org.dbflute.intro.mylasta.appcls.AppCDef.PieceTargetType;
 
 /**
  * @author hakiba
  * @author cabos
+ * @author jflute
  */
 public class DfDecoMapPiece {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String DEFAULT_FORMAT_VERSION = "1.0";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected String formatVersion;
-    protected boolean merged;
+    protected String formatVersion = DEFAULT_FORMAT_VERSION;
     protected String tableName;
     protected String columnName;
-    protected PieceTargetType targetType;
+    protected DfDecoMapPieceTargetType targetType;
     protected String decomment;
     protected String databaseComment;
     protected Long commentVersion;
@@ -38,7 +57,6 @@ public class DfDecoMapPiece {
     // done (by jflute) yuto write e.g. (2017/11/11)
     // map:{
     //     ; formatVersion = 1.0
-    //     ; merged = false
     //     ; tableName = MEMBER
     //     ; columnName = null
     //     ; targetType = TABLE
@@ -53,7 +71,6 @@ public class DfDecoMapPiece {
     // }
     // map:{
     //     ; formatVersion = 1.0
-    //     ; merged = false
     //     ; tableName = MEMBER
     //     ; columnName = MEMBER_NAME
     //     ; targetType = COLUMN
@@ -71,7 +88,6 @@ public class DfDecoMapPiece {
         // done cabos use Linked by jflute (2017/09/07)
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", this.formatVersion);
-        map.put("merged", this.merged);
         map.put("tableName", this.tableName);
         map.put("columnName", this.columnName);
         map.put("targetType", this.targetType.code());
@@ -97,107 +113,100 @@ public class DfDecoMapPiece {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public void setFormatVersion(String formatVersion) {
-        this.formatVersion = formatVersion;
-    }
-
-    public void setMerged(boolean merged) {
-        this.merged = merged;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
-    }
-
-    public void setTargetType(PieceTargetType targetType) {
-        this.targetType = targetType;
-    }
-
-    public void setDecomment(String decomment) {
-        this.decomment = decomment;
-    }
-
-    public void setDatabaseComment(String databaseComment) {
-        this.databaseComment = databaseComment;
-    }
-
-    public void setCommentVersion(Long commentVersion) {
-        this.commentVersion = commentVersion;
-    }
-
-    public void setAuthorList(List<String> authorList) {
-        this.authorList = authorList;
-    }
-
-    public void setPieceCode(String pieceCode) {
-        this.pieceCode = pieceCode;
-    }
-
-    public void setPieceDatetime(LocalDateTime pieceDatetime) {
-        this.pieceDatetime = pieceDatetime;
-    }
-
-    public void setPieceOwner(String pieceOwner) {
-        this.pieceOwner = pieceOwner;
-    }
-
-    public void setPreviousPieceList(List<String> previousPieceList) {
-        this.previousPieceList = previousPieceList;
-    }
-
+    // done cabos order get/set, get/set, ... please m(_ _)m by jflute (2017/11/11)
     public String getFormatVersion() {
         return formatVersion;
     }
 
-    public boolean isMerged() {
-        return merged;
+    public void setFormatVersion(String formatVersion) {
+        this.formatVersion = formatVersion;
     }
 
     public String getTableName() {
         return tableName;
     }
 
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
     public String getColumnName() {
         return columnName;
     }
 
-    public PieceTargetType getTargetType() {
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+    public DfDecoMapPieceTargetType getTargetType() {
         return targetType;
+    }
+
+    public void setTargetType(DfDecoMapPieceTargetType targetType) {
+        this.targetType = targetType;
     }
 
     public String getDecomment() {
         return decomment;
     }
 
+    public void setDecomment(String decomment) {
+        this.decomment = decomment;
+    }
+
     public String getDatabaseComment() {
         return databaseComment;
+    }
+
+    public void setDatabaseComment(String databaseComment) {
+        this.databaseComment = databaseComment;
     }
 
     public Long getCommentVersion() {
         return commentVersion;
     }
 
+    public void setCommentVersion(Long commentVersion) {
+        this.commentVersion = commentVersion;
+    }
+
     public List<String> getAuthorList() {
         return authorList;
+    }
+
+    public void setAuthorList(List<String> authorList) {
+        this.authorList = authorList;
     }
 
     public String getPieceCode() {
         return pieceCode;
     }
 
+    public void setPieceCode(String pieceCode) {
+        this.pieceCode = pieceCode;
+    }
+
     public LocalDateTime getPieceDatetime() {
         return pieceDatetime;
+    }
+
+    public void setPieceDatetime(LocalDateTime pieceDatetime) {
+        this.pieceDatetime = pieceDatetime;
     }
 
     public String getPieceOwner() {
         return pieceOwner;
     }
 
+    public void setPieceOwner(String pieceOwner) {
+        this.pieceOwner = pieceOwner;
+    }
+
     public List<String> getPreviousPieceList() {
         return previousPieceList;
+    }
+
+    public void setPreviousPieceList(List<String> previousPieceList) {
+        this.previousPieceList = previousPieceList;
     }
 }
