@@ -106,6 +106,7 @@ public class DfDecoMapFile {
     //     ; pieceOwner = jflute
     //     ; previousPieceList = list:{ FE893L1 }
     // }
+    // TODO cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
     public List<DfDecoMapPiece> readPiece(String clientDirPath) {
         String pieceDirPath = buildPieceDirPath(clientDirPath);
         if (Files.notExists(Paths.get(pieceDirPath))) {
