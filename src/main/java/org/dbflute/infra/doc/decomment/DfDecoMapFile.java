@@ -121,6 +121,8 @@ public class DfDecoMapFile {
                 }
             }).collect(Collectors.toList());
         } catch (IOException e) {
+            // TODO cabos catch DfDecoMapFileReadFailureException for debug by jflute (2017/11/18)
+            // TODO cabos use DfDecoMapFileException for unified interface by jflute (2017/11/18)
             throw new UncheckedIOException("fail to read decomment piece map directory. path : " + pieceDirPath, e);
         }
     }
@@ -137,6 +139,7 @@ public class DfDecoMapFile {
     }
 
     // done hakiba cast check by hakiba (2017/07/29)
+    // TODO cabos quit throws Exception, too abstract by jflute (2017/11/18)
     @SuppressWarnings("unchecked")
     private DfDecoMapPiece mappingToDecoMapPiece(Map<String, Object> map) throws Exception {
         String formatVersion = (String) map.get("formatVersion");
@@ -270,6 +273,7 @@ public class DfDecoMapFile {
         throw new DfDecoMapFileReadFailureException(msg, cause);
     }
 
+    // TODO cabos this exception can be checked exception? (should be translated by myself) by jflute (2017/11/18)
     public static class DfDecoMapFileReadFailureException extends RuntimeException {
 
         private static final long serialVersionUID = 1L;
@@ -299,10 +303,9 @@ public class DfDecoMapFile {
         }
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + filterOwner(owner) + "-" + pieceCode
-            + ".dfmap";
+                + ".dfmap";
     }
 
     protected String filterOwner(String owner) {
@@ -393,22 +396,22 @@ public class DfDecoMapFile {
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists table or column decoment, but we don't know that target decomment exists now...
                     table.getColumnList()
-                        .stream()
-                        .filter(column -> column.getColumnName().equals(piece.getColumnName()))
-                        .findFirst()
-                        .map(column -> {
-                            // exists column comment
-                            addColumnProperty(property, column);
-                            return column;
-                        })
-                        .orElseGet(() -> {
-                            // not exists column comment
-                            DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-                            column.setColumnName(piece.getColumnName());
-                            column.setPropertyList(Collections.singletonList(property));
-                            addColumn(column, table);
-                            return column;
-                        });
+                            .stream()
+                            .filter(column -> column.getColumnName().equals(piece.getColumnName()))
+                            .findFirst()
+                            .map(column -> {
+                                // exists column comment
+                                addColumnProperty(property, column);
+                                return column;
+                            })
+                            .orElseGet(() -> {
+                                // not exists column comment
+                                DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+                                column.setColumnName(piece.getColumnName());
+                                column.setPropertyList(Collections.singletonList(property));
+                                addColumn(column, table);
+                                return column;
+                            });
                     return table;
                 }).orElseGet(() -> {
                     // not exists table and column decoment
@@ -468,18 +471,15 @@ public class DfDecoMapFile {
         Stream<String> pickupPieceCodeStream = optPickup.map(pickup -> {
             return pickup.getTableList().stream().flatMap(table -> {
                 Stream<String> previousTablePieceStream =
-                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-                Stream<String> previousColumnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .flatMap(property -> property.getPreviousPieceList().stream());
+                        table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+                Stream<String> previousColumnPieceStream =
+                        table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).flatMap(
+                                property -> property.getPreviousPieceList().stream());
                 Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-                Stream<String> columnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .map(property -> property.getPieceCode());
+                Stream<String> columnPieceStream = table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).map(
+                        property -> property.getPieceCode());
                 return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                    columnPieceStream);
+                        columnPieceStream);
             });
         }).orElse(Stream.empty());
         Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream());
