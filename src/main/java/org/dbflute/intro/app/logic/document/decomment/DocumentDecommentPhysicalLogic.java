@@ -21,7 +21,7 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    // TODO cabos shugyo++: move it to infra's decomment classes, file name and path handling by jflute (2017/11/11)
+    // TODO done cabos shugyo++: move it to infra's decomment classes, file name and path handling by jflute (2017/11/11)
     DfDecoMapFile decoMapFile = new DfDecoMapFile();
 
     // ===================================================================================

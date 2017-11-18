@@ -20,8 +20,6 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  */
 public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
 
-    // TODO cabos move test (2017/11/18)
-
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
