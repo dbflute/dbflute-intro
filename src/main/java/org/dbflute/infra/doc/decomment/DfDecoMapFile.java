@@ -490,6 +490,24 @@ public class DfDecoMapFile {
         return pieces.stream().filter(piece -> !pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
     }
 
+    // ===================================================================================
+    //                                                                        MapList File
+    //                                                                        ============
+    protected MapListFile createMapListFile() {
+        return new MapListFile();
+    }
+
+    // ===================================================================================
+    //                                                                        Small Helper
+    //                                                                        ============
+    protected String buildPieceDirPath(String clientDirPath) {
+        return clientDirPath + BASE_PICKUP_DIR_PATH;
+    }
+
+    protected String buildPickupFilePath(String clientDirPath) {
+        return clientDirPath + BASE_PIECE_FILE_PATH;
+    }
+
     // hakiba's memorable code by jflute (2017/11/11)
     //public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces) {
     //    // Create all table part list
@@ -634,22 +652,4 @@ public class DfDecoMapFile {
     //            column -> column.getLatestCommentVersion(), // value: max comment version
     //            (v1, v2) -> Math.max(v1, v2)));
     //}
-
-    // ===================================================================================
-    //                                                                        MapList File
-    //                                                                        ============
-    protected MapListFile createMapListFile() {
-        return new MapListFile();
-    }
-
-    // ===================================================================================
-    //                                                                        Small Helper
-    //                                                                        ============
-    protected String buildPieceDirPath(String clientDirPath) {
-        return clientDirPath + BASE_PICKUP_DIR_PATH;
-    }
-
-    protected String buildPickupFilePath(String clientDirPath) {
-        return clientDirPath + BASE_PIECE_FILE_PATH;
-    }
 }
