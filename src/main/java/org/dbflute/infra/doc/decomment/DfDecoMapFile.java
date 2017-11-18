@@ -21,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -38,7 +37,7 @@ import java.util.stream.Stream;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
-import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileException;
+import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileWriteFailureException;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
@@ -77,6 +76,9 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Read
     //                                                                              ======
+    // -----------------------------------------------------
+    //                                                 Piece
+    //                                                 -----
     // done yuto write e.g. (2017/11/11)
     // map:{
     //     ; formatVersion = 1.0
@@ -107,6 +109,7 @@ public class DfDecoMapFile {
     //     ; previousPieceList = list:{ FE893L1 }
     // }
     // TODO cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
+    // TODO cabos write javadoc by jflute (2017/11/18)
     public List<DfDecoMapPiece> readPiece(String clientDirPath) {
         String pieceDirPath = buildPieceDirPath(clientDirPath);
         if (Files.notExists(Paths.get(pieceDirPath))) {
@@ -116,33 +119,30 @@ public class DfDecoMapFile {
             return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
                 try {
                     return readPieceInternal(Files.newInputStream(path));
-                } catch (DfDecoMapFileReadFailureException | IOException e) {
-                    String debugMsg = "Failed to read decomment piece map: filePath=" + path;
-                    throw new DfDecoMapFileException(debugMsg, e);
+                } catch (IOException e) {
+                    throw new DfDecoMapFileReadFailureException("Failed to read decomment piece map: filePath=" + path, e);
                 }
             }).collect(Collectors.toList());
         } catch (IOException e) {
-            // TODO cabos catch DfDecoMapFileReadFailureException for debug by jflute (2017/11/18)
-            // TODO cabos use DfDecoMapFileException for unified interface by jflute (2017/11/18)
-            throw new UncheckedIOException("fail to read decomment piece map directory. path : " + pieceDirPath, e);
+            throw new DfDecoMapFileReadFailureException("fail to read decomment piece map directory. path : " + pieceDirPath, e);
         }
     }
 
+    // TODO cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
     private DfDecoMapPiece readPieceInternal(InputStream ins) {
         final MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
             return mappingToDecoMapPiece(map);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throwDecoMapReadFailureException(ins, e);
             return null; // unreachable
         }
     }
 
     // done hakiba cast check by hakiba (2017/07/29)
-    // TODO cabos quit throws Exception, too abstract by jflute (2017/11/18)
     @SuppressWarnings("unchecked")
-    private DfDecoMapPiece mappingToDecoMapPiece(Map<String, Object> map) throws Exception {
+    private DfDecoMapPiece mappingToDecoMapPiece(Map<String, Object> map) {
         String formatVersion = (String) map.get("formatVersion");
         String tableName = (String) map.get("tableName");
         String columnName = (String) map.get("columnName");
@@ -232,18 +232,18 @@ public class DfDecoMapFile {
         }
         try {
             return OptionalThing.ofNullable(readPickupInternal(Files.newInputStream(Paths.get(filePath))), () -> {});
-        } catch (DfDecoMapFileReadFailureException | IOException e) {
+        } catch (IOException e) {
             String debugMsg = "Failed to read decomment pickup map: filePath=" + filePath;
-            throw new DfDecoMapFileException(debugMsg, e);
+            throw new DfDecoMapFileReadFailureException(debugMsg, e);
         }
     }
 
-    private DfDecoMapPickup readPickupInternal(InputStream ins) {
+    private DfDecoMapPickup readPickupInternal(InputStream ins) throws IOException {
         MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
             return mappingToDecoMapPickup(map);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throwDecoMapReadFailureException(ins, e);
             return null; // unreachable
         }
@@ -262,9 +262,6 @@ public class DfDecoMapFile {
         return pickup;
     }
 
-    // -----------------------------------------------------
-    //                                          Assist Logic
-    //                                          ------------
     protected void throwDecoMapReadFailureException(InputStream ins, Exception cause) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
         br.addNotice("Failed to read the deco-map file.");
@@ -274,7 +271,6 @@ public class DfDecoMapFile {
         throw new DfDecoMapFileReadFailureException(msg, cause);
     }
 
-    // TODO cabos this exception can be checked exception? (should be translated by myself) by jflute (2017/11/18)
     public static class DfDecoMapFileReadFailureException extends RuntimeException {
 
         private static final long serialVersionUID = 1L;
@@ -287,6 +283,9 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Write
     //                                                                               =====
+    // -----------------------------------------------------
+    //                                                 Piece
+    //                                                 -----
     public void writePiece(String projectDirPath, DfDecoMapPiece decoMapPiece) {
         String tableName = decoMapPiece.getTableName();
         String columnName = decoMapPiece.getColumnName();
@@ -297,10 +296,10 @@ public class DfDecoMapFile {
             // done cabos remove 'df' from variable name by jflute (2017/08/10)
             writePieceInternal(pieceMapPath, decoMapPiece);
             // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
-        } catch (DfDecoMapFileWriteFailureException | FileNotFoundException | SecurityException e) {
-            throw new DfDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapPath, e);
+        } catch (FileNotFoundException | SecurityException e) {
+            throw new DfDecoMapFileWriteFailureException("fail to open decomment piece map file, file path : " + pieceMapPath, e);
         } catch (IOException e) {
-            throw new DfDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", e);
+            throw new DfDecoMapFileWriteFailureException("maybe... fail to execute \"outputStream.close()\".", e);
         }
     }
 
@@ -314,7 +313,11 @@ public class DfDecoMapFile {
     }
 
     protected String getCurrentDateStr() {
-        return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(LocalDateTime.now());
+        return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(getCurrentLocalDateTime());
+    }
+
+    protected LocalDateTime getCurrentLocalDateTime() {
+        return LocalDateTime.now();
     }
 
     public void writePieceInternal(String pieceFilePath, DfDecoMapPiece decoMapPiece) throws IOException {
@@ -328,7 +331,7 @@ public class DfDecoMapFile {
             final MapListFile mapListFile = createMapListFile();
             try {
                 mapListFile.writeMap(ous, decoMap);
-            } catch (Exception e) {
+            } catch (IOException e) {
                 throwDecoMapWriteFailureException(ous, decoMap, e);
             }
         }
@@ -348,15 +351,6 @@ public class DfDecoMapFile {
         br.addElement(decoMap);
         final String msg = br.buildExceptionMessage();
         throw new DfDecoMapFileWriteFailureException(msg, cause);
-    }
-
-    public static class DfDecoMapFileWriteFailureException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
-
-        public DfDecoMapFileWriteFailureException(String msg, Throwable cause) {
-            super(msg, cause);
-        }
     }
 
     // ===================================================================================
@@ -499,8 +493,8 @@ public class DfDecoMapFile {
     }
 
     // ===================================================================================
-    //                                                                        Small Helper
-    //                                                                        ============
+    //                                                                           File Path
+    //                                                                           =========
     protected String buildPieceDirPath(String clientDirPath) {
         return clientDirPath + BASE_PICKUP_DIR_PATH;
     }
