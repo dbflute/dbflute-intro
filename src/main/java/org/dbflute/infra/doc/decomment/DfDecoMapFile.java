@@ -21,10 +21,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +38,12 @@ import java.util.stream.Stream;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
+import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileException;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.dbflute.optional.OptionalThing;
+import org.dbflute.util.DfStringUtil;
 
 // done cabos DfDecoMapFile by jflute (2017/07/27)
 // done cabos add copyright in source file header like this class to classes of infra.doc.decomment by jflute (2017/11/11)
@@ -49,6 +54,25 @@ import org.dbflute.optional.OptionalThing;
  * @author jflute
  */
 public class DfDecoMapFile {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    // e.g. dbflute_maihamadb/scheme/decomment/
+    private static final String BASE_DECOMMENT_DIR_PATH = "/schema/decomment/";
+    // e.g. dbflute_maihamadb/scheme/decomment/piece/
+    private static final String BASE_PICKUP_DIR_PATH = BASE_DECOMMENT_DIR_PATH + "piece/";
+    // e.g. dbflute_maihamadb/scheme/decomment/pickup/decomment-pickup.dfmap
+    private static final String BASE_PIECE_FILE_PATH = BASE_DECOMMENT_DIR_PATH + "pickup/decomment-pickup.dfmap";
+
+    private static final Map<String, String> REPLACE_CHAR_MAP;
+
+    static {
+        // done cabos add spaces and replaceChar should be underscore? by jflute (2017/09/07)
+        List<String> notAvailableCharList = Arrays.asList("/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0", " ");
+        String replaceChar = "_";
+        REPLACE_CHAR_MAP = notAvailableCharList.stream().collect(Collectors.toMap(ch -> ch, ch -> replaceChar));
+    }
 
     // ===================================================================================
     //                                                                               Read
@@ -82,7 +106,26 @@ public class DfDecoMapFile {
     //     ; pieceOwner = jflute
     //     ; previousPieceList = list:{ FE893L1 }
     // }
-    public DfDecoMapPiece readPiece(InputStream ins) {
+    public List<DfDecoMapPiece> readPiece(String clientDirPath) {
+        String pieceDirPath = buildPieceDirPath(clientDirPath);
+        if (Files.notExists(Paths.get(pieceDirPath))) {
+            return Collections.emptyList();
+        }
+        try {
+            return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
+                try {
+                    return readPieceInternal(Files.newInputStream(path));
+                } catch (DfDecoMapFileReadFailureException | IOException e) {
+                    String debugMsg = "Failed to read decomment piece map: filePath=" + path;
+                    throw new DfDecoMapFileException(debugMsg, e);
+                }
+            }).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new UncheckedIOException("fail to read decomment piece map directory. path : " + pieceDirPath, e);
+        }
+    }
+
+    private DfDecoMapPiece readPieceInternal(InputStream ins) {
         final MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
@@ -177,7 +220,21 @@ public class DfDecoMapFile {
     //     }
     // }
     // done hakiba sub tag comment by jflute (2017/08/17)
-    public DfDecoMapPickup readPickup(InputStream ins) {
+    public OptionalThing<DfDecoMapPickup> readPickup(String clientDirPath) {
+        String filePath = buildPickupFilePath(clientDirPath);
+        if (Files.notExists(Paths.get(filePath))) {
+            // done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
+            return OptionalThing.empty();
+        }
+        try {
+            return OptionalThing.ofNullable(readPickupInternal(Files.newInputStream(Paths.get(filePath))), () -> {});
+        } catch (DfDecoMapFileReadFailureException | IOException e) {
+            String debugMsg = "Failed to read decomment pickup map: filePath=" + filePath;
+            throw new DfDecoMapFileException(debugMsg, e);
+        }
+    }
+
+    private DfDecoMapPickup readPickupInternal(InputStream ins) {
         MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
@@ -225,30 +282,57 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                               Write
     //                                                                               =====
-    public void writePiece(String pieceMapPath, DfDecoMapPiece decoMapPiece) throws FileNotFoundException, IOException {
-        File pieceMapFile = new File(pieceMapPath);
+    public void writePiece(String projectDirPath, DfDecoMapPiece decoMapPiece) {
+        String tableName = decoMapPiece.getTableName();
+        String columnName = decoMapPiece.getColumnName();
+        String owner = decoMapPiece.getPieceOwner();
+        String pieceCode = decoMapPiece.getPieceCode();
+        String pieceMapPath = buildPieceDirPath(projectDirPath) + buildPieceFileName(tableName, columnName, owner, pieceCode);
+        try {
+            // done cabos remove 'df' from variable name by jflute (2017/08/10)
+            writePieceInternal(pieceMapPath, decoMapPiece);
+            // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
+        } catch (DfDecoMapFileWriteFailureException | FileNotFoundException | SecurityException e) {
+            throw new DfDecoMapFileException("fail to open decomment piece map file, file path : " + pieceMapPath, e);
+        } catch (IOException e) {
+            throw new DfDecoMapFileException("maybe... fail to execute \"outputStream.close()\".", e);
+        }
+    }
+
+    protected String buildPieceFileName(String tableName, String columnName, String owner,
+        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+        return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + filterOwner(owner) + "-" + pieceCode
+            + ".dfmap";
+    }
+
+    protected String filterOwner(String owner) {
+        return DfStringUtil.replaceBy(owner, REPLACE_CHAR_MAP);
+    }
+
+    protected String getCurrentDateStr() {
+        return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(LocalDateTime.now());
+    }
+
+    public void writePieceInternal(String pieceFilePath, DfDecoMapPiece decoMapPiece) throws IOException {
+        File pieceMapFile = new File(pieceFilePath);
         if (pieceMapFile.exists()) { // no way, but just in case
             pieceMapFile.delete(); // simply delete old file
         }
         createPieceMapFile(pieceMapFile);
         try (OutputStream ous = new FileOutputStream(pieceMapFile)) {
-            writeMap(ous, decoMapPiece.convertToMap());
+            Map<String, Object> decoMap = decoMapPiece.convertToMap();
+            final MapListFile mapListFile = createMapListFile();
+            try {
+                mapListFile.writeMap(ous, decoMap);
+            } catch (Exception e) {
+                throwDecoMapWriteFailureException(ous, decoMap, e);
+            }
         }
     }
 
     protected void createPieceMapFile(File pieceMapFile) throws IOException {
         Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
         Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
-    }
-
-    // done (by jflute) hakiba be more rich method, e.g. saveDecommentPiece()'s logic by jflute (2017/09/21)
-    protected void writeMap(OutputStream ous, Map<String, Object> decoMap) {
-        final MapListFile mapListFile = createMapListFile();
-        try {
-            mapListFile.writeMap(ous, decoMap);
-        } catch (Exception e) {
-            throwDecoMapWriteFailureException(ous, decoMap, e);
-        }
     }
 
     protected void throwDecoMapWriteFailureException(OutputStream ous, Map<String, Object> decoMap, Exception cause) {
@@ -556,5 +640,16 @@ public class DfDecoMapFile {
     //                                                                        ============
     protected MapListFile createMapListFile() {
         return new MapListFile();
+    }
+
+    // ===================================================================================
+    //                                                                        Small Helper
+    //                                                                        ============
+    protected String buildPieceDirPath(String clientDirPath) {
+        return clientDirPath + BASE_PICKUP_DIR_PATH;
+    }
+
+    protected String buildPickupFilePath(String clientDirPath) {
+        return clientDirPath + BASE_PIECE_FILE_PATH;
     }
 }
