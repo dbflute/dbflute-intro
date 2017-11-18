@@ -75,7 +75,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    // TODO done cabos unneeded public here, change to private by jflute (2017/11/12)
+    // done cabos unneeded public here, change to private by jflute (2017/11/12)
     private String buildDebugMessage(DecommentSaveBody body) {
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
@@ -84,7 +84,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
-    // TODO done cabos change exist to exists for boolean expression by jflute (2017/11/12)
+    // done cabos change exist to exists for boolean expression by jflute (2017/11/12)
     private boolean existsColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
         return !(DfDecoMapPieceTargetType.Column == body.targetType && LaStringUtil.isEmpty(body.columnName));
     }
