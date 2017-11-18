@@ -303,7 +303,11 @@ public class DfDecoMapFile {
     }
 
     protected String getCurrentDateStr() {
-        return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(LocalDateTime.now());
+        return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(getCurrentLocalDateTime());
+    }
+
+    protected LocalDateTime getCurrentLocalDateTime() {
+        return LocalDateTime.now();
     }
 
     public void writePieceInternal(String pieceFilePath, DfDecoMapPiece decoMapPiece) throws IOException {
