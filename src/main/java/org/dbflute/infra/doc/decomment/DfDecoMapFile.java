@@ -16,7 +16,6 @@
 package org.dbflute.infra.doc.decomment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +36,7 @@ import java.util.stream.Stream;
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
+import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileReadFailureException;
 import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileWriteFailureException;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
@@ -108,9 +108,9 @@ public class DfDecoMapFile {
     //     ; pieceOwner = jflute
     //     ; previousPieceList = list:{ FE893L1 }
     // }
-    // TODO cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
+    // TODO done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
     // TODO cabos write javadoc by jflute (2017/11/18)
-    public List<DfDecoMapPiece> readPiece(String clientDirPath) {
+    public List<DfDecoMapPiece> readPieceList(String clientDirPath) {
         String pieceDirPath = buildPieceDirPath(clientDirPath);
         if (Files.notExists(Paths.get(pieceDirPath))) {
             return Collections.emptyList();
@@ -118,7 +118,7 @@ public class DfDecoMapFile {
         try {
             return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
                 try {
-                    return readPieceInternal(Files.newInputStream(path));
+                    return doRead(Files.newInputStream(path));
                 } catch (IOException e) {
                     throw new DfDecoMapFileReadFailureException("Failed to read decomment piece map: filePath=" + path, e);
                 }
@@ -129,7 +129,7 @@ public class DfDecoMapFile {
     }
 
     // TODO cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
-    private DfDecoMapPiece readPieceInternal(InputStream ins) {
+    private DfDecoMapPiece doRead(InputStream ins) {
         final MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
@@ -271,15 +271,6 @@ public class DfDecoMapFile {
         throw new DfDecoMapFileReadFailureException(msg, cause);
     }
 
-    public static class DfDecoMapFileReadFailureException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
-
-        public DfDecoMapFileReadFailureException(String msg, Throwable cause) {
-            super(msg, cause);
-        }
-    }
-
     // ===================================================================================
     //                                                                               Write
     //                                                                               =====
@@ -292,20 +283,15 @@ public class DfDecoMapFile {
         String owner = decoMapPiece.getPieceOwner();
         String pieceCode = decoMapPiece.getPieceCode();
         String pieceMapPath = buildPieceDirPath(projectDirPath) + buildPieceFileName(tableName, columnName, owner, pieceCode);
-        try {
-            // done cabos remove 'df' from variable name by jflute (2017/08/10)
-            writePieceInternal(pieceMapPath, decoMapPiece);
-            // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
-        } catch (FileNotFoundException | SecurityException e) {
-            throw new DfDecoMapFileWriteFailureException("fail to open decomment piece map file, file path : " + pieceMapPath, e);
-        } catch (IOException e) {
-            throw new DfDecoMapFileWriteFailureException("maybe... fail to execute \"outputStream.close()\".", e);
-        }
+        // done cabos remove 'df' from variable name by jflute (2017/08/10)
+        // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
+        doWrite(pieceMapPath, decoMapPiece);
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner,
+        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + filterOwner(owner) + "-" + pieceCode
-                + ".dfmap";
+            + ".dfmap";
     }
 
     protected String filterOwner(String owner) {
@@ -320,7 +306,7 @@ public class DfDecoMapFile {
         return LocalDateTime.now();
     }
 
-    public void writePieceInternal(String pieceFilePath, DfDecoMapPiece decoMapPiece) throws IOException {
+    private void doWrite(String pieceFilePath, DfDecoMapPiece decoMapPiece) {
         File pieceMapFile = new File(pieceFilePath);
         if (pieceMapFile.exists()) { // no way, but just in case
             pieceMapFile.delete(); // simply delete old file
@@ -334,12 +320,19 @@ public class DfDecoMapFile {
             } catch (IOException e) {
                 throwDecoMapWriteFailureException(ous, decoMap, e);
             }
+        } catch (IOException e) {
+            throw new DfDecoMapFileWriteFailureException("maybe... fail to execute \"outputStream.close()\".", e);
         }
     }
 
-    protected void createPieceMapFile(File pieceMapFile) throws IOException {
-        Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
-        Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
+    protected void createPieceMapFile(File pieceMapFile) {
+        try {
+            Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
+            Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
+        } catch (IOException e) {
+            throw new DfDecoMapFileWriteFailureException(
+                "fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(), e);
+        }
     }
 
     protected void throwDecoMapWriteFailureException(OutputStream ous, Map<String, Object> decoMap, Exception cause) {
@@ -391,22 +384,22 @@ public class DfDecoMapFile {
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists table or column decoment, but we don't know that target decomment exists now...
                     table.getColumnList()
-                            .stream()
-                            .filter(column -> column.getColumnName().equals(piece.getColumnName()))
-                            .findFirst()
-                            .map(column -> {
-                                // exists column comment
-                                addColumnProperty(property, column);
-                                return column;
-                            })
-                            .orElseGet(() -> {
-                                // not exists column comment
-                                DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-                                column.setColumnName(piece.getColumnName());
-                                column.setPropertyList(Collections.singletonList(property));
-                                addColumn(column, table);
-                                return column;
-                            });
+                        .stream()
+                        .filter(column -> column.getColumnName().equals(piece.getColumnName()))
+                        .findFirst()
+                        .map(column -> {
+                            // exists column comment
+                            addColumnProperty(property, column);
+                            return column;
+                        })
+                        .orElseGet(() -> {
+                            // not exists column comment
+                            DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+                            column.setColumnName(piece.getColumnName());
+                            column.setPropertyList(Collections.singletonList(property));
+                            addColumn(column, table);
+                            return column;
+                        });
                     return table;
                 }).orElseGet(() -> {
                     // not exists table and column decoment
@@ -466,15 +459,18 @@ public class DfDecoMapFile {
         Stream<String> pickupPieceCodeStream = optPickup.map(pickup -> {
             return pickup.getTableList().stream().flatMap(table -> {
                 Stream<String> previousTablePieceStream =
-                        table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-                Stream<String> previousColumnPieceStream =
-                        table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).flatMap(
-                                property -> property.getPreviousPieceList().stream());
+                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+                Stream<String> previousColumnPieceStream = table.getColumnList()
+                    .stream()
+                    .flatMap(column -> column.getPropertyList().stream())
+                    .flatMap(property -> property.getPreviousPieceList().stream());
                 Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-                Stream<String> columnPieceStream = table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).map(
-                        property -> property.getPieceCode());
+                Stream<String> columnPieceStream = table.getColumnList()
+                    .stream()
+                    .flatMap(column -> column.getPropertyList().stream())
+                    .map(property -> property.getPieceCode());
                 return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                        columnPieceStream);
+                    columnPieceStream);
             });
         }).orElse(Stream.empty());
         Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream());

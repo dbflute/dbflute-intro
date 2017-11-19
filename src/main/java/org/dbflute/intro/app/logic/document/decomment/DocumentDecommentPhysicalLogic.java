@@ -53,7 +53,7 @@ public class DocumentDecommentPhysicalLogic {
     // done hakoba public on demand, so private now by jflute (2017/08/17)
     private List<DfDecoMapPiece> readDecommentPiece(String clientProject) {
         // done hakiba support no-existing directory by jflute (2017/09/28)
-        return decoMapFile.readPiece(buildClientPath(clientProject));
+        return decoMapFile.readPieceList(buildClientPath(clientProject));
     }
 
     private OptionalThing<DfDecoMapPickup> readDecommentPickup(String clientProject) {
