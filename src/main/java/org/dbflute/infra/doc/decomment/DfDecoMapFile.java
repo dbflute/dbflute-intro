@@ -108,8 +108,8 @@ public class DfDecoMapFile {
     //     ; pieceOwner = jflute
     //     ; previousPieceList = list:{ FE893L1 }
     // }
-    // TODO done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
-    // TODO done cabos write javadoc by jflute (2017/11/18)
+    // done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
+    // done cabos write javadoc by jflute (2017/11/18)
     /**
      * Read all decomment piece map file in "clientDirPath/schema/decomment/piece/".
      * @param clientDirPath The path of DBFlute client directory (NotNull)
@@ -131,7 +131,7 @@ public class DfDecoMapFile {
         }
     }
 
-    // TODO done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
+    // done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
     private DfDecoMapPiece doReadPiece(Path path) {
         final MapListFile mapListFile = createMapListFile();
         try {
@@ -299,10 +299,9 @@ public class DfDecoMapFile {
         doWrite(pieceMapPath, decoMapPiece);
     }
 
-    protected String buildPieceFileName(String tableName, String columnName, String owner,
-        String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
+    protected String buildPieceFileName(String tableName, String columnName, String owner, String pieceCode) { // e.g decomment-piece-TABLE_NAME-COLUMN_NAME-20170316-123456-789-jflute-FE893L1.dfmap
         return "decomment-piece-" + tableName + "-" + columnName + "-" + getCurrentDateStr() + "-" + filterOwner(owner) + "-" + pieceCode
-            + ".dfmap";
+                + ".dfmap";
     }
 
     protected String filterOwner(String owner) {
@@ -406,18 +405,15 @@ public class DfDecoMapFile {
         Stream<String> pickupPieceCodeStream = optPickup.map(pickup -> {
             return pickup.getTableList().stream().flatMap(table -> {
                 Stream<String> previousTablePieceStream =
-                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-                Stream<String> previousColumnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .flatMap(property -> property.getPreviousPieceList().stream());
+                        table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+                Stream<String> previousColumnPieceStream =
+                        table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).flatMap(
+                                property -> property.getPreviousPieceList().stream());
                 Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-                Stream<String> columnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .map(property -> property.getPieceCode());
+                Stream<String> columnPieceStream = table.getColumnList().stream().flatMap(column -> column.getPropertyList().stream()).map(
+                        property -> property.getPieceCode());
                 return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                    columnPieceStream);
+                        columnPieceStream);
             });
         }).orElse(Stream.empty());
         Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream());
@@ -454,22 +450,22 @@ public class DfDecoMapFile {
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists table or column decoment, but we don't know that target decomment exists now...
                     table.getColumnList()
-                        .stream()
-                        .filter(column -> column.getColumnName().equals(piece.getColumnName()))
-                        .findFirst()
-                        .map(column -> {
-                            // exists column comment
-                            addColumnProperty(property, column);
-                            return column;
-                        })
-                        .orElseGet(() -> {
-                            // not exists column comment
-                            DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-                            column.setColumnName(piece.getColumnName());
-                            column.setPropertyList(Collections.singletonList(property));
-                            addColumn(column, table);
-                            return column;
-                        });
+                            .stream()
+                            .filter(column -> column.getColumnName().equals(piece.getColumnName()))
+                            .findFirst()
+                            .map(column -> {
+                                // exists column comment
+                                addColumnProperty(property, column);
+                                return column;
+                            })
+                            .orElseGet(() -> {
+                                // not exists column comment
+                                DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+                                column.setColumnName(piece.getColumnName());
+                                column.setPropertyList(Collections.singletonList(property));
+                                addColumn(column, table);
+                                return column;
+                            });
                     return table;
                 }).orElseGet(() -> {
                     // not exists table and column decoment
