@@ -18,9 +18,9 @@ package org.dbflute.infra.doc.decomment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -123,25 +123,22 @@ public class DfDecoMapFile {
         }
         try {
             return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
-                try {
-                    return doReadPiece(Files.newInputStream(path));
-                } catch (IOException e) {
-                    throw new DfDecoMapFileReadFailureException("Failed to read decomment piece map: filePath=" + path, e);
-                }
+                return doReadPiece(path);
             }).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new DfDecoMapFileReadFailureException("fail to read decomment piece map directory. path : " + pieceDirPath, e);
+            throwDecoMapReadFailureException(pieceDirPath, e);
+            return Collections.emptyList(); // unreachable
         }
     }
 
     // TODO done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
-    private DfDecoMapPiece doReadPiece(InputStream ins) {
+    private DfDecoMapPiece doReadPiece(Path path) {
         final MapListFile mapListFile = createMapListFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(ins);
+            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapPiece(map);
         } catch (IOException e) {
-            throwDecoMapReadFailureException(ins, e);
+            throwDecoMapReadFailureException(path.toString(), e);
             return null; // unreachable
         }
     }
@@ -242,21 +239,16 @@ public class DfDecoMapFile {
             // done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
             return OptionalThing.empty();
         }
-        try {
-            return OptionalThing.ofNullable(doReadPickup(Files.newInputStream(Paths.get(filePath))), () -> {});
-        } catch (IOException e) {
-            String debugMsg = "Failed to read decomment pickup map: filePath=" + filePath;
-            throw new DfDecoMapFileReadFailureException(debugMsg, e);
-        }
+        return OptionalThing.ofNullable(doReadPickup(Paths.get(filePath)), () -> {});
     }
 
-    private DfDecoMapPickup doReadPickup(InputStream ins) throws IOException {
+    private DfDecoMapPickup doReadPickup(Path path) {
         MapListFile mapListFile = createMapListFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(ins);
+            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapPickup(map);
         } catch (IOException e) {
-            throwDecoMapReadFailureException(ins, e);
+            throwDecoMapReadFailureException(path.toString(), e);
             return null; // unreachable
         }
     }
@@ -274,11 +266,11 @@ public class DfDecoMapFile {
         return pickup;
     }
 
-    protected void throwDecoMapReadFailureException(InputStream ins, Exception cause) {
+    protected void throwDecoMapReadFailureException(String path, Exception cause) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
-        br.addNotice("Failed to read the deco-map file.");
-        br.addItem("InputStream");
-        br.addElement(ins);
+        br.addNotice("Failed to read the deco-map file or directory.");
+        br.addItem("path");
+        br.addElement(path);
         final String msg = br.buildExceptionMessage();
         throw new DfDecoMapFileReadFailureException(msg, cause);
     }
@@ -331,16 +323,17 @@ public class DfDecoMapFile {
             pieceMapFile.delete(); // simply delete old file
         }
         createPieceMapFile(pieceMapFile);
+
+        final Map<String, Object> decoMap = decoMapPiece.convertToMap();
+        final MapListFile mapListFile = createMapListFile();
         try (OutputStream ous = new FileOutputStream(pieceMapFile)) {
-            Map<String, Object> decoMap = decoMapPiece.convertToMap();
-            final MapListFile mapListFile = createMapListFile();
             try {
                 mapListFile.writeMap(ous, decoMap);
             } catch (IOException e) {
-                throwDecoMapWriteFailureException(ous, decoMap, e);
+                throwDecoMapWriteFailureException(pieceFilePath, decoMap, e);
             }
         } catch (IOException e) {
-            throw new DfDecoMapFileWriteFailureException("maybe... fail to execute \"outputStream.close()\".", e);
+            throwDecoMapResourceReleaseFailureException(pieceFilePath, decoMap, e);
         }
     }
 
@@ -349,17 +342,36 @@ public class DfDecoMapFile {
             Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
-            throw new DfDecoMapFileWriteFailureException(
-                "fail to create decomment piece map file, file path : " + pieceMapFile.getAbsolutePath(), e);
+            throwDecoMapWriteFailureException(pieceMapFile.getPath(), e);
         }
     }
 
-    protected void throwDecoMapWriteFailureException(OutputStream ous, Map<String, Object> decoMap, Exception cause) {
+    protected void throwDecoMapWriteFailureException(String path, Exception cause) {
+        final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
+        br.addNotice("Failed to create the deco-map file.");
+        br.addItem("Path");
+        br.addElement(path);
+        final String msg = br.buildExceptionMessage();
+        throw new DfDecoMapFileWriteFailureException(msg, cause);
+    }
+
+    protected void throwDecoMapWriteFailureException(String path, Map<String, Object> decoMap, Exception cause) {
         final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
         br.addNotice("Failed to write the deco-map file.");
-        br.addItem("OutputStream");
-        br.addElement(ous);
-        br.addItem("Written decoMap");
+        br.addItem("Path");
+        br.addElement(path);
+        br.addItem("DecoMap");
+        br.addElement(decoMap);
+        final String msg = br.buildExceptionMessage();
+        throw new DfDecoMapFileWriteFailureException(msg, cause);
+    }
+
+    protected void throwDecoMapResourceReleaseFailureException(String path, Map<String, Object> decoMap, Exception cause) {
+        final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
+        br.addNotice("Maybe... fail to execute \"outputStream.close()\".");
+        br.addItem("Path");
+        br.addElement(path);
+        br.addItem("DecoMap");
         br.addElement(decoMap);
         final String msg = br.buildExceptionMessage();
         throw new DfDecoMapFileWriteFailureException(msg, cause);
