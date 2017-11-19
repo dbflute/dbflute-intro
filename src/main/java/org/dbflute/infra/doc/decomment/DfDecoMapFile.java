@@ -109,8 +109,14 @@ public class DfDecoMapFile {
     //     ; previousPieceList = list:{ FE893L1 }
     // }
     // TODO done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
-    // TODO cabos write javadoc by jflute (2017/11/18)
+    // TODO done cabos write javadoc by jflute (2017/11/18)
+    /**
+     * Read all decomment piece map file in "clientDirPath/schema/decomment/piece/".
+     * @param clientDirPath The path of DBFlute client directory (NotNull)
+     * @return List of all decomment piece map (NotNull: If piece map file not exists, returns empty list)
+     */
     public List<DfDecoMapPiece> readPieceList(String clientDirPath) {
+        assertClientDirPath(clientDirPath);
         String pieceDirPath = buildPieceDirPath(clientDirPath);
         if (Files.notExists(Paths.get(pieceDirPath))) {
             return Collections.emptyList();
@@ -118,7 +124,7 @@ public class DfDecoMapFile {
         try {
             return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
                 try {
-                    return doRead(Files.newInputStream(path));
+                    return doReadPiece(Files.newInputStream(path));
                 } catch (IOException e) {
                     throw new DfDecoMapFileReadFailureException("Failed to read decomment piece map: filePath=" + path, e);
                 }
@@ -128,8 +134,8 @@ public class DfDecoMapFile {
         }
     }
 
-    // TODO cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
-    private DfDecoMapPiece doRead(InputStream ins) {
+    // TODO done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
+    private DfDecoMapPiece doReadPiece(InputStream ins) {
         final MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
@@ -224,21 +230,27 @@ public class DfDecoMapFile {
     //     }
     // }
     // done hakiba sub tag comment by jflute (2017/08/17)
+    /**
+     * Read decomment pickup map file at "clientDirPath/schema/decomment/pickup/decomment-pickup.dfmap".
+     * @param clientDirPath The path of DBFlute client directory (NotNull)
+     * @return pickup decomment map (NotNull: If pickup map file not exists, returns empty)
+     */
     public OptionalThing<DfDecoMapPickup> readPickup(String clientDirPath) {
+        assertClientDirPath(clientDirPath);
         String filePath = buildPickupFilePath(clientDirPath);
         if (Files.notExists(Paths.get(filePath))) {
             // done hakiba null pointer so use optional thing and stream empty by jflute (2017/10/05)
             return OptionalThing.empty();
         }
         try {
-            return OptionalThing.ofNullable(readPickupInternal(Files.newInputStream(Paths.get(filePath))), () -> {});
+            return OptionalThing.ofNullable(doReadPickup(Files.newInputStream(Paths.get(filePath))), () -> {});
         } catch (IOException e) {
             String debugMsg = "Failed to read decomment pickup map: filePath=" + filePath;
             throw new DfDecoMapFileReadFailureException(debugMsg, e);
         }
     }
 
-    private DfDecoMapPickup readPickupInternal(InputStream ins) throws IOException {
+    private DfDecoMapPickup doReadPickup(InputStream ins) throws IOException {
         MapListFile mapListFile = createMapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(ins);
@@ -277,12 +289,19 @@ public class DfDecoMapFile {
     // -----------------------------------------------------
     //                                                 Piece
     //                                                 -----
-    public void writePiece(String projectDirPath, DfDecoMapPiece decoMapPiece) {
+    /**
+     * Write single decomment piece map file at "clientDirPath/schema/decomment/piece".
+     * @param clientDirPath The path of DBFlute client directory (NotNull)
+     * @param decoMapPiece Decoment piece map (NotNull)
+     * @return pickup decomment map (NotNull: If pickup map file not exists, returns empty)
+     */
+    public void writePiece(String clientDirPath, DfDecoMapPiece decoMapPiece) {
+        assertClientDirPath(clientDirPath);
         String tableName = decoMapPiece.getTableName();
         String columnName = decoMapPiece.getColumnName();
         String owner = decoMapPiece.getPieceOwner();
         String pieceCode = decoMapPiece.getPieceCode();
-        String pieceMapPath = buildPieceDirPath(projectDirPath) + buildPieceFileName(tableName, columnName, owner, pieceCode);
+        String pieceMapPath = buildPieceDirPath(clientDirPath) + buildPieceFileName(tableName, columnName, owner, pieceCode);
         // done cabos remove 'df' from variable name by jflute (2017/08/10)
         // done cabos make and throw PhysicalCabosException (application exception) see ClientNotFoundException by jflute (2017/08/10)
         doWrite(pieceMapPath, decoMapPiece);
@@ -350,15 +369,54 @@ public class DfDecoMapFile {
     //                                                                               Merge
     //                                                                               =====
     // done (by cabos) hakiba write unit test by jflute (2017/09/21)
+    /**
+     * merge piece map and pickup map with previous piece code clue to go on.<br/>
+     * <br/>
+     * <b>Logic:</b>
+     * <ol>
+     *     <li>Filter already merged piece. <br/>
+     *         (If piece was already merged, Either previousPieceList(previous piece code) contains it's piece code)</li>
+     *     <li>Add PropertyList each table or column</li>
+     * </ol>
+     * @param pickupOpt Decoment pickup map (NotNull: If pickup map file not exists, Empty allowed)
+     * @param pieces Decoment piece map (NotNull: If piece map file not exists, Empty allowed)
+     * @return pickup decomment map (NotNull)
+     */
     public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces) {
-        Set<String> pieceCodeSet = extractAllPieceCode(pickupOpt, pieces);
+        Set<String> pieceCodeSet = extractAllMergedPieceCode(pickupOpt, pieces);
         List<DfDecoMapPiece> filteredPieces = filterPieces(pieces, pieceCodeSet);
         DfDecoMapPickup pickUp = pickupOpt.orElse(new DfDecoMapPickup());
-        mergeInternal(filteredPieces, pickUp);
+        doMerge(filteredPieces, pickUp);
         return pickUp;
     }
 
-    protected void mergeInternal(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp) {
+    private Set<String> extractAllMergedPieceCode(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> pieces) {
+        Stream<String> pickupPieceCodeStream = optPickup.map(pickup -> {
+            return pickup.getTableList().stream().flatMap(table -> {
+                Stream<String> previousTablePieceStream =
+                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+                Stream<String> previousColumnPieceStream = table.getColumnList()
+                    .stream()
+                    .flatMap(column -> column.getPropertyList().stream())
+                    .flatMap(property -> property.getPreviousPieceList().stream());
+                Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
+                Stream<String> columnPieceStream = table.getColumnList()
+                    .stream()
+                    .flatMap(column -> column.getPropertyList().stream())
+                    .map(property -> property.getPieceCode());
+                return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
+                    columnPieceStream);
+            });
+        }).orElse(Stream.empty());
+        Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream());
+        return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
+    }
+
+    private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
+        return pieces.stream().filter(piece -> !pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
+    }
+
+    protected void doMerge(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp) {
         filteredPieces.forEach(piece -> {
             DfDecoMapPropertyPart property = mappingPieceToProperty(piece);
 
@@ -455,32 +513,6 @@ public class DfDecoMapFile {
         return property;
     }
 
-    private Set<String> extractAllPieceCode(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> pieces) {
-        Stream<String> pickupPieceCodeStream = optPickup.map(pickup -> {
-            return pickup.getTableList().stream().flatMap(table -> {
-                Stream<String> previousTablePieceStream =
-                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-                Stream<String> previousColumnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .flatMap(property -> property.getPreviousPieceList().stream());
-                Stream<String> tablePieceStream = table.getPropertyList().stream().map(property -> property.getPieceCode());
-                Stream<String> columnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .map(property -> property.getPieceCode());
-                return Stream.concat(Stream.concat(Stream.concat(previousTablePieceStream, previousColumnPieceStream), tablePieceStream),
-                    columnPieceStream);
-            });
-        }).orElse(Stream.empty());
-        Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.getPreviousPieceList().stream());
-        return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
-    }
-
-    private List<DfDecoMapPiece> filterPieces(List<DfDecoMapPiece> pieces, Set<String> pieceCodeSet) {
-        return pieces.stream().filter(piece -> !pieceCodeSet.contains(piece.getPieceCode())).collect(Collectors.toList());
-    }
-
     // ===================================================================================
     //                                                                        MapList File
     //                                                                        ============
@@ -497,6 +529,16 @@ public class DfDecoMapFile {
 
     protected String buildPickupFilePath(String clientDirPath) {
         return clientDirPath + BASE_PIECE_FILE_PATH;
+    }
+
+    // ===================================================================================
+    //                                                                       Assert Helper
+    //                                                                       =============
+    protected void assertClientDirPath(String clientDirPath) {
+        if (clientDirPath == null || clientDirPath.trim().length() == 0) {
+            String msg = "The argument 'clientDirPath' should not be null or empty: " + clientDirPath;
+            throw new IllegalArgumentException(msg);
+        }
     }
 
     // hakiba's memorable code by jflute (2017/11/11)
