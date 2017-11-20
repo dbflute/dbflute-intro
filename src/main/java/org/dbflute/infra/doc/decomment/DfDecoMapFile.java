@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -167,11 +166,11 @@ public class DfDecoMapFile {
         piece.setDecomment(decomment);
         piece.setDatabaseComment(databaseComment);
         piece.setCommentVersion(commentVersion);
-        piece.setAuthorList(authorList);
+        piece.addAllAuthors(authorList);
         piece.setPieceCode(pieceCode);
         piece.setPieceDatetime(pieceDatetime);
         piece.setPieceOwner(pieceOwner);
-        piece.setPreviousPieceList(previousPieceList);
+        piece.addAllPieces(previousPieceList);
         return piece;
     }
 
@@ -258,11 +257,11 @@ public class DfDecoMapFile {
         @SuppressWarnings("unchecked")
         Map<String, List<Map<String, Object>>> decoMap = (Map<String, List<Map<String, Object>>>) map.get("decoMap");
         List<DfDecoMapTablePart> tableList = decoMap.get("tableList").stream().map(tablePartMap -> {
-            return DfDecoMapTablePart.createTablePart(tablePartMap);
+            return new DfDecoMapTablePart(tablePartMap);
         }).collect(Collectors.toList());
         DfDecoMapPickup pickup = new DfDecoMapPickup();
         pickup.setFormatVersion(formatVersion);
-        pickup.setTableList(tableList);
+        pickup.addAllTables(tableList);
         return pickup;
     }
 
@@ -437,15 +436,14 @@ public class DfDecoMapFile {
 
                 tableList.stream().filter(table -> table.getTableName().equals(piece.getTableName())).findFirst().map(table -> {
                     // exists other table decomment
-                    addTableProperty(property, table);
+                    table.addProperty(property);
                     return table;
                 }).orElseGet(() -> {
                     // not exists other table decoment
                     DfDecoMapTablePart table = new DfDecoMapTablePart();
                     table.setTableName(piece.getTableName());
-                    table.setColumnList(Collections.emptyList());
-                    table.setPropertyList(Collections.singletonList(property));
-                    addTable(table, pickUp);
+                    table.addProperty(property);
+                    pickUp.addTable(table);
                     return table;
                 });
 
@@ -459,15 +457,15 @@ public class DfDecoMapFile {
                         .findFirst()
                         .map(column -> {
                             // exists column comment
-                            addColumnProperty(property, column);
+                            column.addProperty(property);
                             return column;
                         })
                         .orElseGet(() -> {
                             // not exists column comment
                             DfDecoMapColumnPart column = new DfDecoMapColumnPart();
                             column.setColumnName(piece.getColumnName());
-                            column.setPropertyList(Collections.singletonList(property));
-                            addColumn(column, table);
+                            column.addProperty(property);
+                            table.addColumn(column);
                             return column;
                         });
                     return table;
@@ -475,41 +473,16 @@ public class DfDecoMapFile {
                     // not exists table and column decoment
                     DfDecoMapColumnPart column = new DfDecoMapColumnPart();
                     column.setColumnName(piece.getColumnName());
-                    column.setPropertyList(Collections.singletonList(property));
+                    column.addProperty(property);
 
                     DfDecoMapTablePart table = new DfDecoMapTablePart();
                     table.setTableName(piece.getTableName());
-                    table.setColumnList(Collections.singletonList(column));
-                    table.setPropertyList(Collections.emptyList());
-                    addTable(table, pickUp);
+                    table.addColumn(column);
+                    pickUp.addTable(table);
                     return table;
                 });
             }
         });
-    }
-
-    private void addTableProperty(DfDecoMapPropertyPart property, DfDecoMapTablePart table) {
-        ArrayList<DfDecoMapPropertyPart> propertyPartArrayList = new ArrayList<>(table.getPropertyList());
-        propertyPartArrayList.add(property);
-        table.setPropertyList(propertyPartArrayList);
-    }
-
-    private void addColumnProperty(DfDecoMapPropertyPart property, DfDecoMapColumnPart column) {
-        ArrayList<DfDecoMapPropertyPart> propertyPartArrayList = new ArrayList<>(column.getPropertyList());
-        propertyPartArrayList.add(property);
-        column.setPropertyList(propertyPartArrayList);
-    }
-
-    private void addColumn(DfDecoMapColumnPart column, DfDecoMapTablePart table) {
-        ArrayList<DfDecoMapColumnPart> columnPartArrayList = new ArrayList<>(table.getColumnList());
-        columnPartArrayList.add(column);
-        table.setColumnList(columnPartArrayList);
-    }
-
-    private void addTable(DfDecoMapTablePart table, DfDecoMapPickup pickUp) {
-        ArrayList<DfDecoMapTablePart> tableArrayList = new ArrayList<>(pickUp.getTableList());
-        tableArrayList.add(table);
-        pickUp.setTableList(tableArrayList);
     }
 
     private DfDecoMapPropertyPart mappingPieceToProperty(DfDecoMapPiece piece) {
@@ -517,11 +490,11 @@ public class DfDecoMapFile {
         property.setDecomment(piece.getDecomment());
         property.setDatabaseComment(piece.getDatabaseComment());
         property.setCommentVersion(piece.getCommentVersion());
-        property.setAuthorList(piece.getAuthorList());
+        property.addAllAuthors(piece.getAuthorList());
         property.setPieceCode(piece.getPieceCode());
         property.setPieceDatetime(piece.getPieceDatetime());
         property.setPieceOwner(piece.getPieceOwner());
-        property.setPreviousPieceList(piece.getPreviousPieceList());
+        property.addAllPreviousPieces(piece.getPreviousPieceList());
         return property;
     }
 

@@ -86,11 +86,11 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         decoMapPiece.setDecomment("piari");
         decoMapPiece.setDatabaseComment("sea");
         decoMapPiece.setCommentVersion(1L);
-        decoMapPiece.setAuthorList(Collections.singletonList("cabos"));
+        decoMapPiece.addAuthor("cabos");
         decoMapPiece.setPieceCode("FE893L1");
         decoMapPiece.setPieceDatetime(currentLocalDateTime());
         decoMapPiece.setPieceOwner("cabos");
-        decoMapPiece.setPreviousPieceList(Collections.singletonList("FE893L1"));
+        decoMapPiece.addAllPieces(Collections.singletonList("FE893L1"));
         return decoMapPiece;
     }
 
