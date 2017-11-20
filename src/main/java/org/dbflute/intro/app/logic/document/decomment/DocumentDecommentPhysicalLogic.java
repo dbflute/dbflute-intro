@@ -21,7 +21,9 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    // TODO done cabos shugyo++: move it to infra's decomment classes, file name and path handling by jflute (2017/11/11)
+    // done cabos shugyo++: move it to infra's decomment classes, file name and path handling by jflute (2017/11/11)
+    // TODO cabos why package scope? by jflute (2017/11/19)
+    // TODO cabos instance variable should be under Attribute tag comment by jflute (2017/11/19)
     DfDecoMapFile decoMapFile = new DfDecoMapFile();
 
     // ===================================================================================

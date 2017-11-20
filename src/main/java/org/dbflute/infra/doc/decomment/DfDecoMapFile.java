@@ -107,8 +107,8 @@ public class DfDecoMapFile {
     //     ; pieceOwner = jflute
     //     ; previousPieceList = list:{ FE893L1 }
     // }
-    // TODO done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
-    // TODO done cabos write javadoc by jflute (2017/11/18)
+    // done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
+    // done cabos write javadoc by jflute (2017/11/18)
     /**
      * Read all decomment piece map file in "clientDirPath/schema/decomment/piece/".
      * @param clientDirPath The path of DBFlute client directory (NotNull)
@@ -130,7 +130,7 @@ public class DfDecoMapFile {
         }
     }
 
-    // TODO done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
+    // done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
     private DfDecoMapPiece doReadPiece(Path path) {
         final MapListFile mapListFile = createMapListFile();
         try {
