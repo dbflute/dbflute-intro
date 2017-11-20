@@ -90,7 +90,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         decoMapPiece.setPieceCode("FE893L1");
         decoMapPiece.setPieceDatetime(currentLocalDateTime());
         decoMapPiece.setPieceOwner("cabos");
-        decoMapPiece.addAllPieces(Collections.singletonList("FE893L1"));
+        decoMapPiece.addAllPreviousPieces(Collections.singletonList("FE893L1"));
         return decoMapPiece;
     }
 

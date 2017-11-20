@@ -100,7 +100,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         piece.setPieceCode(buildPieceCode(body));
         piece.setPieceDatetime(timeManager.currentDateTime());
         piece.setPieceOwner(author);
-        piece.addAllPieces(body.previousPieces);
+        piece.addAllPreviousPieces(body.previousPieces);
         return piece;
     }
 

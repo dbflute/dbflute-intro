@@ -219,7 +219,9 @@ public class DfDecoMapPiece {
         return previousPieceList;
     }
 
-    public void addAllPieces(Collection<String> pieces) {
-        this.previousPieceList.addAll(pieces);
+    public void addAllPreviousPieces(Collection<String> previousPieces) {
+        Set<String> previousSet = new LinkedHashSet<>(this.authorList);
+        previousSet.addAll(previousPieces);
+        this.previousPieceList = new ArrayList<>(previousPieces);
     }
 }

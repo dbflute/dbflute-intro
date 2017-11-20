@@ -170,7 +170,7 @@ public class DfDecoMapFile {
         piece.setPieceCode(pieceCode);
         piece.setPieceDatetime(pieceDatetime);
         piece.setPieceOwner(pieceOwner);
-        piece.addAllPieces(previousPieceList);
+        piece.addAllPreviousPieces(previousPieceList);
         return piece;
     }
 

@@ -62,7 +62,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         piece.setPieceCode("DE000000");
         piece.setPieceDatetime(decommentDateTime);
         piece.setPieceOwner(author);
-        piece.addAllPieces(Collections.emptyList());
+        piece.addAllPreviousPieces(Collections.emptyList());
         return piece;
     }
 
