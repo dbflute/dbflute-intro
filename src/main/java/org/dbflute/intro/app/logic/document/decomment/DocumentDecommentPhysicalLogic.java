@@ -24,8 +24,9 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                           Attribute
     //                                                                           =========
     // done cabos move this above logic DI variables, framework component should be top (jflute policy...) by jflute (2017/11/11)
-    // TODO done cabos why package scope? by jflute (2017/11/19)
-    // TODO done cabos instance variable should be under Attribute tag comment by jflute (2017/11/19)
+    // done cabos why package scope? by jflute (2017/11/19)
+    // TODO cabos add private modifier to _decoMapFile by jflute (2017/11/21)
+    // done cabos instance variable should be under Attribute tag comment by jflute (2017/11/19)
     DfDecoMapFile _decoMapFile = new DfDecoMapFile();
 
     @Resource
