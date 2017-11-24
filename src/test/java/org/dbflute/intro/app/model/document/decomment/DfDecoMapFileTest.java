@@ -58,11 +58,11 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         piece.setDecomment("decomment");
         piece.setDatabaseComment("databasecomment");
         piece.setCommentVersion(commentVersion);
-        piece.setAuthorList(Collections.singletonList(author));
+        piece.addAllAuthors(Collections.singletonList(author));
         piece.setPieceCode("DE000000");
         piece.setPieceDatetime(decommentDateTime);
         piece.setPieceOwner(author);
-        piece.setPreviousPieceList(Collections.emptyList());
+        piece.addAllPreviousPieces(Collections.emptyList());
         return piece;
     }
 

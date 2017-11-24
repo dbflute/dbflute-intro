@@ -15,6 +15,7 @@
  */
 package org.dbflute.infra.doc.decomment.parts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,20 +30,23 @@ public class DfDecoMapColumnPart {
     //                                                                           Attribute
     //                                                                           =========
     protected String columnName;
-    protected List<DfDecoMapPropertyPart> propertyList;
+    protected List<DfDecoMapPropertyPart> propertyList = new ArrayList<>();
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
+    public DfDecoMapColumnPart() {
+    }
+
     @SuppressWarnings("unchecked")
-    public static DfDecoMapColumnPart createColumnPart(Map<String, Object> columnPartMap) {
+    public DfDecoMapColumnPart(Map<String, Object> columnPartMap) {
+        // TODO cabos unused variable? by jflute (2017/11/21)
         DfDecoMapColumnPart column = new DfDecoMapColumnPart();
-        column.setColumnName((String) columnPartMap.get("columnName"));
+        this.columnName = (String) columnPartMap.get("columnName");
         List<DfDecoMapPropertyPart> propertyList =
                 ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream().map(DfDecoMapPropertyPart::new).collect(
                         Collectors.toList());
-        column.setPropertyList(propertyList);
-        return column;
+        this.propertyList.addAll(propertyList);
     }
 
     // done cabos convertToMap()? by jflute (2017/11/11)
@@ -65,7 +69,7 @@ public class DfDecoMapColumnPart {
         return this.propertyList;
     }
 
-    public void setPropertyList(List<DfDecoMapPropertyPart> properties) {
-        this.propertyList = properties;
+    public void addProperty(DfDecoMapPropertyPart property) {
+        this.propertyList.add(property);
     }
 }

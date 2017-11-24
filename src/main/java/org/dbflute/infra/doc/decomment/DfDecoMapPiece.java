@@ -16,9 +16,13 @@
 package org.dbflute.infra.doc.decomment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.dbflute.helper.mapstring.MapListString;
 
@@ -44,11 +48,11 @@ public class DfDecoMapPiece {
     protected String decomment;
     protected String databaseComment;
     protected Long commentVersion;
-    protected List<String> authorList;
+    protected List<String> authorList = new ArrayList<>();
     protected String pieceCode;
     protected LocalDateTime pieceDatetime;
     protected String pieceOwner;
-    protected List<String> previousPieceList;
+    protected List<String> previousPieceList = new ArrayList<>();
 
     // done cabos move to before accessor by jflute (2017/08/10)
     // ===================================================================================
@@ -174,8 +178,17 @@ public class DfDecoMapPiece {
         return authorList;
     }
 
-    public void setAuthorList(List<String> authorList) {
-        this.authorList = authorList;
+    public void addAuthor(String author) {
+        // done cabos use LinkedHashSet to keep order by jflute (2017/09/07)
+        Set<String> authorSet = new LinkedHashSet<>(this.authorList);
+        authorSet.add(author);
+        this.authorList = new ArrayList<>(authorSet);
+    }
+
+    public void addAllAuthors(Collection<String> authors) {
+        Set<String> authorSet = new LinkedHashSet<>(this.authorList);
+        authorSet.addAll(authors);
+        this.authorList = new ArrayList<>(authorSet);
     }
 
     public String getPieceCode() {
@@ -206,7 +219,9 @@ public class DfDecoMapPiece {
         return previousPieceList;
     }
 
-    public void setPreviousPieceList(List<String> previousPieceList) {
-        this.previousPieceList = previousPieceList;
+    public void addAllPreviousPieces(Collection<String> previousPieces) {
+        Set<String> previousSet = new LinkedHashSet<>(this.authorList);
+        previousSet.addAll(previousPieces);
+        this.previousPieceList = new ArrayList<>(previousPieces);
     }
 }

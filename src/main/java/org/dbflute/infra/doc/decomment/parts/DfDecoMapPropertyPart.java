@@ -16,9 +16,13 @@
 package org.dbflute.infra.doc.decomment.parts;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.dbflute.helper.HandyDate;
@@ -33,9 +37,9 @@ public class DfDecoMapPropertyPart {
     protected String pieceCode;
     protected LocalDateTime pieceDatetime;
     protected String pieceOwner;
-    protected List<String> previousPieceList;
+    protected List<String> previousPieceList = new ArrayList<>();
     protected long commentVersion;
-    protected List<String> authorList;
+    protected List<String> authorList = new ArrayList<>();
 
     public DfDecoMapPropertyPart() {
     }
@@ -75,6 +79,7 @@ public class DfDecoMapPropertyPart {
     public String getPieceCode() {
         return pieceCode;
     }
+
     public LocalDateTime getPieceDatetime() {
         return pieceDatetime;
     }
@@ -90,8 +95,11 @@ public class DfDecoMapPropertyPart {
     public String getPieceOwner() {
         return pieceOwner;
     }
-    public void setPreviousPieceList(List<String> previousPieceList) {
-        this.previousPieceList = previousPieceList;
+
+    public void addAllPreviousPieces(Collection<String> previousPieces) {
+        Set<String> previousSet = new LinkedHashSet<>(this.authorList);
+        previousSet.addAll(previousPieces);
+        this.previousPieceList = new ArrayList<>(previousSet);
     }
 
     public List<String> getPreviousPieceList() {
@@ -110,8 +118,10 @@ public class DfDecoMapPropertyPart {
         return authorList;
     }
 
-    public void setAuthorList(List<String> authorList) {
-        this.authorList = authorList;
+    public void addAllAuthors(Collection<String> authors) {
+        Set<String> authorSet = new LinkedHashSet<>(this.authorList);
+        authorSet.addAll(authors);
+        this.authorList = new ArrayList<>(authors);
     }
 
     public Map<String, Object> convertToMap() {

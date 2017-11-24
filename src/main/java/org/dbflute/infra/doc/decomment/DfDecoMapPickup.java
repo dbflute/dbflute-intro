@@ -17,6 +17,7 @@ package org.dbflute.infra.doc.decomment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,8 +106,9 @@ public class DfDecoMapPickup {
     //     }
     // }
     public Map<String, Object> convertToMap() {
-        final Map<String, Map<String, Object>> convertedDecoMap = this.getTableList().stream().collect(
-                Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
+        final Map<String, Map<String, Object>> convertedDecoMap = this.getTableList()
+            .stream()
+            .collect(Collectors.toMap(tablePart -> tablePart.getTableName(), tablePart -> tablePart.convertPickupMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
@@ -146,7 +148,11 @@ public class DfDecoMapPickup {
         return decoMap.get(DECO_MAP_KEY);
     }
 
-    public void setTableList(List<DfDecoMapTablePart> tableList) {
-        this.decoMap.put(DECO_MAP_KEY, tableList);
+    public void addTable(DfDecoMapTablePart table) {
+        decoMap.get(DECO_MAP_KEY).add(table);
+    }
+
+    public void addAllTables(Collection<DfDecoMapTablePart> tables) {
+        decoMap.get(DECO_MAP_KEY).addAll(tables);
     }
 }

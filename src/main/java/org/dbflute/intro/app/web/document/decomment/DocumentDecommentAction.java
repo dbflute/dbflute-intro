@@ -15,11 +15,6 @@
  */
 package org.dbflute.intro.app.web.document.decomment;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.annotation.Resource;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
@@ -75,7 +70,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    // TODO done cabos unneeded public here, change to private by jflute (2017/11/12)
+    // done cabos unneeded public here, change to private by jflute (2017/11/12)
     private String buildDebugMessage(DecommentSaveBody body) {
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
@@ -84,7 +79,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
-    // TODO done cabos change exist to exists for boolean expression by jflute (2017/11/12)
+    // done cabos change exist to exists for boolean expression by jflute (2017/11/12)
     private boolean existsColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
         return !(DfDecoMapPieceTargetType.Column == body.targetType && LaStringUtil.isEmpty(body.columnName));
     }
@@ -100,23 +95,17 @@ public class DocumentDecommentAction extends IntroBaseAction {
         piece.setDecomment(body.decomment);
         piece.setDatabaseComment(body.databaseComment);
         piece.setCommentVersion(body.commentVersion);
-        piece.setAuthorList(mergeAuthorList(body.authors, author));
+        piece.addAllAuthors(body.authors);
+        piece.addAuthor(author);
         piece.setPieceCode(buildPieceCode(body));
         piece.setPieceDatetime(timeManager.currentDateTime());
-        piece.setPieceOwner(getAuthor());
-        piece.setPreviousPieceList(body.previousPieces);
+        piece.setPieceOwner(author);
+        piece.addAllPreviousPieces(body.previousPieces);
         return piece;
     }
 
     private String getAuthor() {
         return decommentPhysicalLogic.getAuthor();
-    }
-
-    private List<String> mergeAuthorList(List<String> authorList, String author) {
-        // done cabos use LinkedHashSet to keep order by jflute (2017/09/07)
-        Set<String> authorSet = new LinkedHashSet<>(authorList);
-        authorSet.add(author);
-        return new ArrayList<>(authorSet);
     }
 
     private String buildPieceCode(DecommentSaveBody body) {

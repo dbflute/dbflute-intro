@@ -15,6 +15,7 @@
  */
 package org.dbflute.infra.doc.decomment.parts;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,30 +31,33 @@ public class DfDecoMapTablePart {
     //                                                                           Attribute
     //                                                                           =========
     protected String tableName;
-    protected List<DfDecoMapPropertyPart> propertyList;
-    protected List<DfDecoMapColumnPart> columnList;
+    protected List<DfDecoMapPropertyPart> propertyList = new ArrayList<>();
+    protected List<DfDecoMapColumnPart> columnList = new ArrayList<>();
 
+    // TODO cabos tag comennt Constructor and Converter by jflute (2017/11/21)
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
+    public DfDecoMapTablePart() {
+    }
+
     @SuppressWarnings("unchecked")
-    public static DfDecoMapTablePart createTablePart(Map<String, Object> tablePartMap) {
-        DfDecoMapTablePart table = new DfDecoMapTablePart();
-        table.setTableName((String) tablePartMap.get("tableName"));
-        List<DfDecoMapPropertyPart> propertyList = ((List<Map<String, Object>>) tablePartMap.get("propertyList")).stream()
-            .map(DfDecoMapPropertyPart::new)
-            .collect(Collectors.toList());
-        table.setPropertyList(propertyList);
-        List<DfDecoMapColumnPart> columnList = ((List<Map<String, Object>>) tablePartMap.get("columnList")).stream()
-            .map(DfDecoMapColumnPart::createColumnPart)
-            .collect(Collectors.toList());
-        table.setColumnList(columnList);
-        return table;
+    public DfDecoMapTablePart(Map<String, Object> tablePartMap) {
+        this.tableName = (String) tablePartMap.get("tableName");
+        // TODO cabos extract propertyList and columnList to variable also for stack trace when cast exception by jflute (2017/11/21)
+        List<DfDecoMapPropertyPart> propertyList =
+                ((List<Map<String, Object>>) tablePartMap.get("propertyList")).stream().map(DfDecoMapPropertyPart::new).collect(
+                        Collectors.toList());
+        this.propertyList.addAll(propertyList);
+        List<DfDecoMapColumnPart> columnList =
+                ((List<Map<String, Object>>) tablePartMap.get("columnList")).stream().map(map -> new DfDecoMapColumnPart(map)).collect(
+                        Collectors.toList());
+        this.columnList.addAll(columnList);
     }
 
     public Map<String, Object> convertPickupMap() {
         Map<String, List<Map<String, Object>>> columnMap = columnList.stream()
-            .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertToMap(), (c1, c2) -> c1));
+                .collect(Collectors.toMap(column -> column.getColumnName(), column -> column.convertToMap(), (c1, c2) -> c1));
 
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(tableName, columnMap);
@@ -75,16 +79,15 @@ public class DfDecoMapTablePart {
         return propertyList;
     }
 
-    public void setPropertyList(List<DfDecoMapPropertyPart> propertyList) {
-        this.propertyList = propertyList;
+    public void addProperty(DfDecoMapPropertyPart property) {
+        this.propertyList.add(property);
     }
 
     public List<DfDecoMapColumnPart> getColumnList() {
         return columnList;
     }
 
-    public void setColumnList(List<DfDecoMapColumnPart> columns) {
-        this.columnList = columns;
+    public void addColumn(DfDecoMapColumnPart column) {
+        this.columnList.add(column);
     }
-
 }

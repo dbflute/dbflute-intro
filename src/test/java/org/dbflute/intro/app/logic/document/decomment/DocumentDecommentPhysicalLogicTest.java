@@ -1,8 +1,6 @@
 package org.dbflute.intro.app.logic.document.decomment;
 
 import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Pattern;
@@ -11,8 +9,8 @@ import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
-import org.lastaflute.core.time.SimpleTimeManager;
 
 /**
  * @author hakiba
@@ -32,9 +30,10 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         // ## Arrange ##
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
+        IntroPhysicalLogic physicalLogic = new IntroPhysicalLogic();
 
         final Pattern expFileNamePattern = Pattern.compile("^decomment-piece-.+-\\d{8}-\\d{6}-\\d{3}-.+\\.dfmap$");
-        final File pieceDir = new File(logic.buildDecommentPieceDirPath(TEST_CLIENT_PROJECT));
+        final File pieceDir = new File(physicalLogic.buildClientPath(TEST_CLIENT_PROJECT, "schema", "decomment", "piece"));
 
         // ## Act ##
         logic.saveDecommentPiece(TEST_CLIENT_PROJECT, createDfDecoMapPiece());
@@ -57,9 +56,11 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
 
         DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
         inject(logic);
+        IntroPhysicalLogic physicalLogic = new IntroPhysicalLogic();
+        inject(physicalLogic);
 
         final Pattern expFileNamePattern = Pattern.compile("^decomment-piece-.+-\\d{8}-\\d{6}-\\d{3}-.+\\.dfmap$");
-        final File pieceDir = new File(logic.buildDecommentPieceDirPath(TEST_CLIENT_PROJECT));
+        final File pieceDir = new File(physicalLogic.buildClientPath(TEST_CLIENT_PROJECT, "schema", "decomment", "piece"));
 
         // ## Act ##
         logic.saveDecommentPiece(TEST_CLIENT_PROJECT, createDfDecoMapPiece());
@@ -85,104 +86,12 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         decoMapPiece.setDecomment("piari");
         decoMapPiece.setDatabaseComment("sea");
         decoMapPiece.setCommentVersion(1L);
-        decoMapPiece.setAuthorList(Collections.singletonList("cabos"));
+        decoMapPiece.addAuthor("cabos");
         decoMapPiece.setPieceCode("FE893L1");
         decoMapPiece.setPieceDatetime(currentLocalDateTime());
         decoMapPiece.setPieceOwner("cabos");
-        decoMapPiece.setPreviousPieceList(Collections.singletonList("FE893L1"));
+        decoMapPiece.addAllPreviousPieces(Collections.singletonList("FE893L1"));
         return decoMapPiece;
-    }
-
-    // -----------------------------------------------------
-    //                                             file name
-    //                                             ---------
-    public void test_buildPieceFileName() throws Exception {
-        // ## Arrange ##
-        final String sampleTableName = "EBISU_GARDEN_PLACE";
-        final String sampleColumnName = "PLAZA";
-        final String sampleAuthor = "cabos";
-        final String samplePieceCode = "FE893L1";
-        final LocalDateTime current = currentLocalDateTime();
-        registerMock(new SimpleTimeManager() {
-            @Override
-            public LocalDateTime currentDateTime() {
-                return current;
-            }
-        });
-
-        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
-        inject(logic);
-
-        // e.g decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap
-        final String expFileName =
-            "decomment-piece-" + sampleTableName + "-" + sampleColumnName + "-" + logic.getCurrentDateStr() + "-" + sampleAuthor + "-"
-                + samplePieceCode + ".dfmap";
-
-        // ## Act ##
-        final String fileName = logic.buildPieceFileName(sampleTableName, sampleColumnName, sampleAuthor, samplePieceCode);
-
-        // ## Assert ##
-        assertEquals(fileName, expFileName);
-    }
-
-    public void test_getCurrentDateStr() throws Exception {
-        // ## Arrange ##
-        final LocalDateTime current = currentLocalDateTime();
-        registerMock(new SimpleTimeManager() {
-            @Override
-            public LocalDateTime currentDateTime() {
-                return current;
-            }
-        });
-        // e.g 20170316-123456-789
-        String expDatePattern = "yyyyMMdd-HHmmss-SSS";
-        final String expDateStr = DateTimeFormatter.ofPattern(expDatePattern).format(current);
-
-        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
-        inject(logic);
-
-        // ## Act ##
-        final String dateStr = logic.getCurrentDateStr();
-
-        // ## Assert ##
-        assertEquals(dateStr, expDateStr);
-    }
-
-    // -----------------------------------------------------
-    //                                           create file
-    //                                           -----------
-    public void test_createPieceMapFile_init() throws Exception {
-        // ## Arrange ##
-        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
-        inject(logic);
-        final String sampleFileName = "decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap";
-        final File sampleFile = new File(logic.buildDecommentPiecePath(TEST_CLIENT_PROJECT, sampleFileName));
-
-        assertFalse(sampleFile.exists()); // before check file not exits
-
-        // ## Act ##
-        logic.createPieceMapFile(sampleFile);
-
-        // ## Assert ##
-        assertTrue(sampleFile.exists());
-    }
-
-    public void test_createPieceMapFile_prepared() throws Exception {
-        // ## Arrange ##
-        super.prepareTestDecommentFiles();
-
-        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
-        inject(logic);
-        final String sampleFileName = "decomment-piece-TABLE_NAME-20170316-123456-789-authorName.dfmap";
-        final File sampleFile = new File(logic.buildDecommentPiecePath(TEST_CLIENT_PROJECT, sampleFileName));
-
-        assertFalse(sampleFile.exists()); // before check file not exits
-
-        // ## Act ##
-        logic.createPieceMapFile(sampleFile);
-
-        // ## Assert ##
-        assertTrue(sampleFile.exists());
     }
 
     // ===================================================================================
@@ -239,37 +148,6 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
         // ## Assert ##
         log("author: {}", author);
         assertNotNull(author);
-        assertEquals("ca__bo_s", author);
-        DocumentDecommentPhysicalLogic.REPLACE_CHAR_MAP.keySet().forEach(ch -> assertFalse(author.contains(ch)));
-    }
-
-    // ===================================================================================
-    //                                                                               Path
-    //                                                                              ======
-    public void test_buildDecommentPieceDirPath() throws Exception {
-        // ## Arrange ##
-        final String expDirPath = "./" + TEST_CLIENT_PATH + "/schema/decomment/piece";
-        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
-        inject(logic);
-
-        // ## Act ##
-        String pieceDirPath = logic.buildDecommentPieceDirPath(TEST_CLIENT_PROJECT);
-
-        // ## Assert ##
-        assertEquals(expDirPath, pieceDirPath);
-    }
-
-    public void test_buildDecommentPiecePath() throws Exception {
-        // ## Arrange ##
-        final String sampleFileName = "sampleFileName.exe";
-        final String expFilePath = "./" + TEST_CLIENT_PATH + "/schema/decomment/piece/" + sampleFileName;
-        DocumentDecommentPhysicalLogic logic = new DocumentDecommentPhysicalLogic();
-        inject(logic);
-
-        // ## Act ##
-        String pieceFilePath = logic.buildDecommentPiecePath(TEST_CLIENT_PROJECT, sampleFileName);
-
-        // ## Assert ##
-        assertEquals(expFilePath, pieceFilePath);
+        assertEquals("ca/<bo s", author);
     }
 }
