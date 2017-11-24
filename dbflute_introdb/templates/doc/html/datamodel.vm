@@ -1030,7 +1030,7 @@ Decomment.prototype = {
 	 * Reflect embedded pick
 	 */
 	reflectEmbeddedPickup: function () {
-		this.refrectPickup(this.embeddedPickup);
+		this.reflectPickup(this.embeddedPickup);
 	},
 
 	/**
@@ -1039,14 +1039,14 @@ Decomment.prototype = {
 	 */
 	handlePickupResponse: function (response) {
 		var decomment = JSON.parse(response);
-		this.refrectPickup(decomment);
+		this.reflectPickup(decomment);
 	},
 
 	/**
 	 * Reflect pickup
 	 * @param {Object} decomment - Decomment object
 	 */
-	refrectPickup: function (decomment) {
+	reflectPickup: function (decomment) {
 		that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			Array.prototype.forEach.call(table["columns"], function (column) {
