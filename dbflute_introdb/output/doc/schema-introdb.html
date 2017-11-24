@@ -1540,7 +1540,7 @@ Decomment.prototype = {
 	isCommentConflict: function(tableName, columnName) {
 		var table = this.pickupStore[tableName];
 		if (table === undefined || table[columnName] === undefined) {
-			return false
+			return false;
 		}
 		var columnMap = table[columnName];
 		return columnMap['isConflict'] || false;
