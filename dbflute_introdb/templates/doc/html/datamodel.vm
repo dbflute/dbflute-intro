@@ -1123,7 +1123,7 @@ Decomment.prototype = {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		var columnMap = this.pickupStore[tableName][columnName];
-		var comment = columnMap['decomments'].join('\n\n');
+		var comment = columnMap['decomments'].join('\n\n=======\n\n');
 		var author = columnMap['authors'].join(',');
 		return comment + "\n<span>@author(" + author + ")</span>";
 	},
@@ -1138,7 +1138,7 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Check the comment is comflict
+	 * Add error class if comment is conflict
 	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
 	 * @param {Object} columnElement - Column element
@@ -1146,10 +1146,20 @@ Decomment.prototype = {
 	checkCommentConflict: function(table, column, columnElement) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
-		var columnMap = this.pickupStore[tableName][columnName];
-		if (columnMap['isConflict']) {
+		if (this.isCommentConflict(tableName, columnName)) {
 			columnElement.querySelector('.commentcell').className += " commentcellerror"
 		}
+	},
+
+	/**
+	 * Check the comment is conflict
+	 * @param {String} tableName - Table name
+	 * @param {String} columnName - Column name
+	 * @returns {Boolean} comment is conflict
+	 */
+	isCommentConflict: function(tableName, columnName) {
+		var columnMap = this.pickupStore[tableName][columnName];
+		return columnMap['isConflict'] || false;
 	},
 
 	/**
@@ -1172,8 +1182,9 @@ Decomment.prototype = {
 					var modalElement = document.getElementById("decomment-modal");
 					modalElement.style.display = "block";
 
+					var tableName = that.getTableName(table);
 					var columnName = column.querySelector('.columnnamecell').innerText;
-					var isConflict = commentCellElement.classList.contains('commentcellerror')
+					var isConflict = that.isCommentConflict(tableName, columnName);
 					var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
 					document.getElementById("decomment-modal-column-info").innerText = columnInfo;
 
@@ -1185,7 +1196,6 @@ Decomment.prototype = {
 					};
 
 					document.getElementById("decomment-ok").onclick = function() {
-						var tableName = that.getTableName(table);
 						var params = that.buildColumnCommentRequestParams(tableName, columnName, inputElement.value, column);
 						that.requestSaveDecomment(schemeName, params);
 						modalElement.style.display = "none";
