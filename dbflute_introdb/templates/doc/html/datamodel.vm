@@ -1158,7 +1158,11 @@ Decomment.prototype = {
 	 * @returns {Boolean} comment is conflict
 	 */
 	isCommentConflict: function(tableName, columnName) {
-		var columnMap = this.pickupStore[tableName][columnName];
+		var table = this.pickupStore[tableName];
+		if (table === undefined || table[columnName] === undefined) {
+			return false
+		}
+		var columnMap = table[columnName];
 		return columnMap['isConflict'] || false;
 	},
 
