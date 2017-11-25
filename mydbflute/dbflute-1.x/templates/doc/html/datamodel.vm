@@ -985,9 +985,12 @@ function Decomment() {
 	// object structure
 	// {
 	//   tableName: {
-	//     columnName: {
-	//       propetyName: propertyValue
-	//     }, { ... }
+	//     propertyName: propertyValue,
+	//     columns: {
+	//       columnName: {
+	//         propetyName: propertyValue
+	//       }, { ... }
+	//     }
 	//   }, { ... }
 	// }
 	this.pickupStore = {
@@ -1123,6 +1126,7 @@ Decomment.prototype = {
 		var databaseComment = columnMap['databaseComment'];
 		var properties = column['properties'];
 
+		// properties to store
 		var isConflict = properties.length > 1;
 		var isDatabaseCommentConflict = false;
 		var decomments = [];
@@ -1146,12 +1150,12 @@ Decomment.prototype = {
 			return self.indexOf(x) === i;
 		});
 
-		this.pickupStore[tableName]['columns'][columnName]['isConflict'] = isConflict || isDatabaseCommentConflict;
-		this.pickupStore[tableName]['columns'][columnName]['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
-		this.pickupStore[tableName]['columns'][columnName]['decomments'] = decomments;
-		this.pickupStore[tableName]['columns'][columnName]['previousPieces'] = previousPieces;
-		this.pickupStore[tableName]['columns'][columnName]['authors'] = authors;
-		this.pickupStore[tableName]['columns'][columnName]['commentVersion'] = commentVersion;
+		columnMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		columnMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		columnMap['decomments'] = decomments;
+		columnMap['previousPieces'] = previousPieces;
+		columnMap['authors'] = authors;
+		columnMap['commentVersion'] = commentVersion;
 	},
 
 	/**
