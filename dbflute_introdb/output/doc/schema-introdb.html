@@ -1670,7 +1670,7 @@ Decomment.prototype = {
 	 * @param {string} decomment - decomment
 	 * @returns {Boolean} is changed
 	 */
-	isCommentChanged(tableName, columnName, decomment) {
+	isCommentChanged: function (tableName, columnName, decomment) {
 		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
 			var previousComment = this.pickupStore[tableName][columnName]['previousWholeComment'];
 			return previousComment.trim() !== decomment.trim();
@@ -1693,6 +1693,7 @@ Decomment.prototype = {
 			var commentVersion = this.pickupStore[tableName][columnName]['commentVersion'];
 		}
 
+		decomment = this.escapeInputText(decomment);
 		return {
 			'tableName': tableName,
 			'columnName': columnName,
@@ -1703,6 +1704,26 @@ Decomment.prototype = {
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
 		};
+	},
+
+	/**
+	 * Escape inputed text
+	 * @param {String} string - text 
+	*/
+	escapeInputText: function (string) {
+		if(typeof string !== 'string') {
+			return string;
+		}
+		return string.replace(/[&'`"<>]/g, function(match) {
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
+		});
 	},
 
 	/**

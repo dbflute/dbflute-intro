@@ -1313,6 +1313,7 @@ Decomment.prototype = {
 			var commentVersion = this.pickupStore[tableName][columnName]['commentVersion'];
 		}
 
+		decomment = this.escapeInputText(decomment);
 		return {
 			'tableName': tableName,
 			'columnName': columnName,
@@ -1323,6 +1324,26 @@ Decomment.prototype = {
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
 		};
+	},
+
+	/**
+	 * Escape inputed text
+	 * @param {String} string - text 
+	*/
+	escapeInputText: function (string) {
+		if(typeof string !== 'string') {
+			return string;
+		}
+		return string.replace(/[&'`"<>]/g, function(match) {
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
+		});
 	},
 
 	/**
