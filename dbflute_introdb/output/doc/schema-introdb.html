@@ -1736,11 +1736,12 @@ Decomment.prototype = {
 		var commentArray = string.split("\n");
 		var result = "";
 		for(var i = 0; i < commentArray.length; i++) {
+			result += commentArray[i].replace(/\s+$/g,'');
 			if (!(i == commentArray.length - 1)) {
-				result += commentArray[i].replace(/\s+$/g,'') + "\n";
+				result += '\n';
 			}
 		}
-		return result;
+		return result.trim();
 	},
 
 	/**
