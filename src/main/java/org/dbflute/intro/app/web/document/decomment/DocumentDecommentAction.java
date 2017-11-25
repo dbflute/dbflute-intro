@@ -17,11 +17,13 @@ package org.dbflute.intro.app.web.document.decomment;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.core.util.LaStringUtil;
 import org.lastaflute.web.Execute;
@@ -64,10 +66,16 @@ public class DocumentDecommentAction extends IntroBaseAction {
     public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
         // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
-        validate(body, messages -> {});
+        validate(body, messages -> moreValidate(body, messages));
         verifyOrClientError(buildDebugMessage(body), existsColumnNameIfTargetTypeColumn(body));
         decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
+    }
+
+    private void moreValidate(DecommentSaveBody body, IntroMessages messages) {
+        if (DfDecoMapPieceTargetType.Column == body.targetType && StringUtils.isEmpty(body.columnName)) {
+            messages.addConstraintsNotEmptyMessage("columnName");
+        }
     }
 
     // done cabos unneeded public here, change to private by jflute (2017/11/12)
