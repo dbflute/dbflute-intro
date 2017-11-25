@@ -1263,11 +1263,7 @@ Decomment.prototype = {
 	 */
 	getTableName: function (table) {
 		var previousElement = table.previousElementSibling;
-		if (previousElement.className) {
-			return previousElement.previousElementSibling.innerText
-		} else {
-			return previousElement.innerText
-		}
+		return previousElement.value;
 	},
 
 	/**

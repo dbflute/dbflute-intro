@@ -1030,7 +1030,7 @@ Decomment.prototype = {
 	 * Reflect embedded pick
 	 */
 	reflectEmbeddedPickup: function () {
-		this.refrectPickup(this.embeddedPickup);
+		this.reflectPickup(this.embeddedPickup);
 	},
 
 	/**
@@ -1039,21 +1039,23 @@ Decomment.prototype = {
 	 */
 	handlePickupResponse: function (response) {
 		var decomment = JSON.parse(response);
-		this.refrectPickup(decomment);
+		this.reflectPickup(decomment);
 	},
 
 	/**
 	 * Reflect pickup
 	 * @param {Object} decomment - Decomment object
 	 */
-	refrectPickup: function (decomment) {
+	reflectPickup: function (decomment) {
 		that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
 				that.storePickupProperies(table, column);
 				var newComment = that.buildColumnCommentFromServer(table, column);
-				that.updateComment(columnElement, newComment);
+				var authors = that.buildAuthorsFromServer(table, column);
+				that.storeNewComment(table, column, newComment);
+				that.updateComment(columnElement, newComment, authors);
 				that.checkCommentConflict(table, column, columnElement);
 			});
 		});
@@ -1114,6 +1116,18 @@ Decomment.prototype = {
 	},
 
 	/**
+	 * Store new comment properties
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 * @param {string} newComment - Comment from server
+	 */
+	storeNewComment: function (table, column, newComment) {
+		var tableName = table['tableName'];
+		var columnName = column['columnName'];
+		this.pickupStore[tableName][columnName]['previousWholeComment'] = newComment;
+	},
+
+	/**
 	 * Build new scheme comment from server response
 	 * @param {Object} table - table object
 	 * @param {Object} column - Column object
@@ -1123,18 +1137,32 @@ Decomment.prototype = {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		var columnMap = this.pickupStore[tableName][columnName];
-		var comment = columnMap['decomments'].join('\n\n=======\n\n');
-		var author = columnMap['authors'].join(',');
-		return comment + "\n<span>@author(" + author + ")</span>";
+		return columnMap['decomments'].join('\n\n=======\n\n');
+	},
+
+	/**
+	 * Build authoers from server response
+	 * @param {Object} table - table object
+	 * @param {Object} column - Column object
+	 * @returns {string} New scheme comment
+	 */
+	buildAuthorsFromServer: function (table, column) {
+		var tableName = table['tableName'];
+		var columnName = column['columnName'];
+		var columnMap = this.pickupStore[tableName][columnName];
+		return columnMap['authors'];
 	},
 
 	/**
 	 * Update comment
 	 * @param {Object} columnElement - Column element
 	 * @param {string} newComment - New scheme comment
+	 * @param {Array} authors - Comment authoers
 	 */
-	updateComment: function (columnElement, newComment) {
-		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = newComment;
+	updateComment: function (columnElement, newComment, authors) {
+		var author = authors.join(',');
+		var comment = newComment + "\n<span>@author(" + author + ")</span>";
+		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = comment;
 	},
 
 	/**
@@ -1160,7 +1188,7 @@ Decomment.prototype = {
 	isCommentConflict: function(tableName, columnName) {
 		var table = this.pickupStore[tableName];
 		if (table === undefined || table[columnName] === undefined) {
-			return false
+			return false;
 		}
 		var columnMap = table[columnName];
 		return columnMap['isConflict'] || false;
@@ -1200,7 +1228,12 @@ Decomment.prototype = {
 					};
 
 					document.getElementById("decomment-ok").onclick = function() {
-						var params = that.buildColumnCommentRequestParams(tableName, columnName, inputElement.value, column);
+						var decomment = inputElement.value;
+						if (!that.isCommentChanged(tableName, columnName, decomment)) {
+							modalElement.style.display = "none";
+							return;
+						}
+						var params = that.buildColumnCommentRequestParams(tableName, columnName, decomment, column);
 						that.requestSaveDecomment(schemeName, params);
 						modalElement.style.display = "none";
 					};
@@ -1230,11 +1263,7 @@ Decomment.prototype = {
 	 */
 	getTableName: function (table) {
 		var previousElement = table.previousElementSibling;
-		if (previousElement.className) {
-			return previousElement.previousElementSibling.innerText
-		} else {
-			return previousElement.innerText
-		}
+		return previousElement.value;
 	},
 
 	/**
@@ -1248,6 +1277,21 @@ Decomment.prototype = {
 			return child.nodeValue;
 		}
 		return "";
+	},
+
+	/**
+	 * Check new decomment and previous comment is different
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - Column name
+	 * @param {string} decomment - decomment
+	 * @returns {Boolean} is changed
+	 */
+	isCommentChanged: function (tableName, columnName, decomment) {
+		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
+			var previousComment = this.pickupStore[tableName][columnName]['previousWholeComment'];
+			return previousComment.trim() !== decomment.trim();
+		}
+		return decomment.trim().length != 0;
 	},
 
 	/**
@@ -1265,6 +1309,9 @@ Decomment.prototype = {
 			var commentVersion = this.pickupStore[tableName][columnName]['commentVersion'];
 		}
 
+		decomment = this.escapeInputText(decomment);
+		decomment = this.deleteUnnecessaryWhitespace(decomment);
+
 		return {
 			'tableName': tableName,
 			'columnName': columnName,
@@ -1275,6 +1322,42 @@ Decomment.prototype = {
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
 		};
+	},
+
+	/**
+	 * Escape inputed text
+	 * @param {String} string - text
+	 */
+	escapeInputText: function (string) {
+		if(typeof string !== 'string') {
+			return string;
+		}
+		return string.replace(/[&'`"<>]/g, function(match) {
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
+		});
+	},
+
+	/**
+	 * Delete unnecessary whitespace
+	 * @param {String} string - text
+	 */
+	deleteUnnecessaryWhitespace: function(string) {
+		var commentArray = string.split("\n");
+		var result = "";
+		for(var i = 0; i < commentArray.length; i++) {
+			result += commentArray[i].replace(/\s+$/g,'');
+			if (!(i == commentArray.length - 1)) {
+				result += '\n';
+			}
+		}
+		return result.trim();
 	},
 
 	/**

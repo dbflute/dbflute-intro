@@ -372,6 +372,7 @@ dl.procedurelist dd.column pre {
 <h2 id="cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">
 CLS_TARGET_CONTAINER
 </h2>
+<input type="hidden" value="CLS_TARGET_CONTAINER">
 <table class="tablecontent">
 	<thead>
 	<tr>
@@ -452,6 +453,7 @@ CLS_TARGET_CONTAINER
 <h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
 CLS_TARGET_DATABASE
 </h2>
+<input type="hidden" value="CLS_TARGET_DATABASE">
 <table class="tablecontent">
 	<thead>
 	<tr>
@@ -658,6 +660,7 @@ CLS_TARGET_DATABASE
 <h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
 CLS_TARGET_LANGUAGE
 </h2>
+<input type="hidden" value="CLS_TARGET_LANGUAGE">
 <table class="tablecontent">
 	<thead>
 	<tr>
@@ -1643,11 +1646,7 @@ Decomment.prototype = {
 	 */
 	getTableName: function (table) {
 		var previousElement = table.previousElementSibling;
-		if (previousElement.className) {
-			return previousElement.previousElementSibling.innerText
-		} else {
-			return previousElement.innerText
-		}
+		return previousElement.value;
 	},
 
 	/**
