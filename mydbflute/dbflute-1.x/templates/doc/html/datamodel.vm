@@ -1119,13 +1119,20 @@ Decomment.prototype = {
 			this.pickupStore[tableName]['columns'][columnName] = {};
 		}
 
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName)
+		var databaseComment = columnMap['databaseComment'];
 		var properties = column['properties'];
+
 		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
 		var decomments = [];
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
 		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
 				previousPieces.push(property['pieceCode']);
@@ -1139,7 +1146,8 @@ Decomment.prototype = {
 			return self.indexOf(x) === i;
 		});
 
-		this.pickupStore[tableName]['columns'][columnName]['isConflict'] = isConflict;
+		this.pickupStore[tableName]['columns'][columnName]['isConflict'] = isConflict || isDatabaseCommentConflict;
+		this.pickupStore[tableName]['columns'][columnName]['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
 		this.pickupStore[tableName]['columns'][columnName]['decomments'] = decomments;
 		this.pickupStore[tableName]['columns'][columnName]['previousPieces'] = previousPieces;
 		this.pickupStore[tableName]['columns'][columnName]['authors'] = authors;
@@ -1171,7 +1179,12 @@ Decomment.prototype = {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
-		return columnMap['decomments'].join('\n\n=======\n\n');
+		var result = "";
+		if (columnMap['isDatabaseCommentConflict']) {
+			result = columnMap['databaseComment'].replace('<br>', '\n') + '\n(from database comment)\n\n======\n\n';
+		}
+		result += columnMap['decomments'].join('\n\n=======\n\n');
+		return result;
 	},
 
 	/**
