@@ -1314,6 +1314,8 @@ Decomment.prototype = {
 		}
 
 		decomment = this.escapeInputText(decomment);
+		decomment = this.deleteUnnecessaryWhitespace(decomment);
+
 		return {
 			'tableName': tableName,
 			'columnName': columnName,
@@ -1328,8 +1330,8 @@ Decomment.prototype = {
 
 	/**
 	 * Escape inputed text
-	 * @param {String} string - text 
-	*/
+	 * @param {String} string - text
+	 */
 	escapeInputText: function (string) {
 		if(typeof string !== 'string') {
 			return string;
@@ -1344,6 +1346,21 @@ Decomment.prototype = {
 				'>': '&gt;',
 			}[match]
 		});
+	},
+
+	/**
+	 * Delete unnecessary whitespace
+	 * @param {String} string - text
+	 */
+	deleteUnnecessaryWhitespace: function(string) {
+		var commentArray = string.split("\n");
+		var result = "";
+		for(var i = 0; i < commentArray.length; i++) {
+			if (!(i == commentArray.length - 1)) {
+				result += commentArray[i].replace(/\s+$/g,'') + "\n";
+			}
+		}
+		return result;
 	},
 
 	/**
