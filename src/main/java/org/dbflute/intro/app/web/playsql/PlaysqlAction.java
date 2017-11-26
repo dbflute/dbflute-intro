@@ -47,7 +47,7 @@ public class PlaysqlAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                  list
     //                                                  ----
-    // TODO deco pri.C with directory? by jflute (2016/07/26)
+    // #forgot deco pri.C with directory? by jflute (2016/07/26)
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<PlaysqlBean>> list(String project) {
         List<File> playsqlFileList = playsqlPhysicalLogic.findPlaysqlFileAllList(project);
@@ -60,7 +60,7 @@ public class PlaysqlAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                update
     //                                                ------
-    // TODO jflute pri.C intro: needs adjustment? (2016/07/26)
+    // #forgot jflute pri.C intro: needs adjustment? (2016/07/26)
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, PlaysqlUpdateBody body) {
         validate(body, messages -> {});

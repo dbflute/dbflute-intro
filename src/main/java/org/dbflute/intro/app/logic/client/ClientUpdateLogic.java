@@ -28,11 +28,11 @@ import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.filesystem.FileTextIO;
-import org.dbflute.helper.mapstring.MapListString;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
+import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
@@ -87,8 +87,8 @@ public class ClientUpdateLogic {
     private void replaceClientFilePlainly(ClientModel clientModel, String clientProject) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         {
-            final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientProject);
+            final ProjectInfra projectInfra = clientModel.getProjectInfra();
+            final Map<String, Object> replaceMap = projectInfra.prepareInitReplaceMap();
             fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientProject), replaceMap);
             fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientProject), replaceMap);
         }
@@ -107,15 +107,8 @@ public class ClientUpdateLogic {
             fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(clientProject), replaceMap);
         }
         {
-            final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            final DbConnectionBox connectionBox = databaseInfoMap.getDbConnectionBox();
-            replaceMap.put("@driver@", escapeControlMark(databaseInfoMap.getDriver()));
-            replaceMap.put("@url@", escapeControlMark(connectionBox.getUrl()));
-            replaceMap.put("@schema@", escapeControlMark(connectionBox.getSchema()));
-            replaceMap.put("@user@", escapeControlMark(connectionBox.getUser()));
-            replaceMap.put("@password@", escapeControlMark(connectionBox.getPassword()));
-            fileReplaceMap.put(clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject), replaceMap);
+            fileReplaceMap.put(databaseInfoMap.findDfpropFile(clientProject), databaseInfoMap.prepareInitReplaceMap());
         }
         doReplaceClientFile(fileReplaceMap, false);
     }
@@ -225,12 +218,5 @@ public class ClientUpdateLogic {
             // #for_now should be application exception by jflute (2017/01/19)
             throw new IllegalStateException("Failed to delete the DBFlute client: " + clientDir);
         }
-    }
-
-    // ===================================================================================
-    //                                                                        Small Helper
-    //                                                                        ============
-    private String escapeControlMark(Object value) {
-        return new MapListString().escapeControlMark(value);
     }
 }

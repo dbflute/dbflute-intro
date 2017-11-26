@@ -37,6 +37,7 @@ import org.lastaflute.web.direction.FwWebDirection;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author cabos
  */
 public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
 
@@ -131,7 +132,7 @@ public class IntroFwAssistantDirector extends CachedFwAssistantDirector {
     }
 
     protected IntroActionAdjustmentProvider createActionAdjustmentProvider() {
-        return new IntroActionAdjustmentProvider();
+        return new IntroActionAdjustmentProvider(config);
     }
 
     protected ApiFailureHook createApiFailureHook() {

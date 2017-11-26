@@ -15,7 +15,11 @@
  */
 package org.dbflute.intro.app.model.client.basic;
 
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.core.util.ContainerUtil;
 
 /**
  * @author jflute
@@ -29,13 +33,20 @@ public class BasicInfoMap {
     private final CDef.TargetLanguage targetLanguage;
     private final CDef.TargetContainer targetContainer;
     private final String packageBase;
+    
+    @Resource
+    private ClientUpdateLogic clientUpdateLogic;
 
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
     public BasicInfoMap(CDef.TargetDatabase database, CDef.TargetLanguage targetLanguage, CDef.TargetContainer targetContainer,
             String packageBase) {
         this.database = database;
         this.targetLanguage = targetLanguage;
         this.targetContainer = targetContainer;
         this.packageBase = packageBase;
+        ContainerUtil.injectSimply(this);
     }
 
     // ===================================================================================

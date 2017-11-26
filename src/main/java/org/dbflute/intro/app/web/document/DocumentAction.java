@@ -15,15 +15,18 @@
  */
 package org.dbflute.intro.app.web.document;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
+import org.dbflute.intro.app.logic.document.DocumentUpdateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.StreamResponse;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.InputStream;
 
 /**
  * @author deco
@@ -36,6 +39,8 @@ public class DocumentAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private DocumentPhysicalLogic documentPhysicalLogic;
+    @Resource
+    private DocumentUpdateLogic documentUpdateLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -46,7 +51,8 @@ public class DocumentAction extends IntroBaseAction {
         if (!schemaHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        return createHtmlStreamResponse(schemaHtml);
+        String schemaHtmlContent = documentUpdateLogic.markIntroOpeningFileTag(schemaHtml);
+        return createStringSteamResponse(schemaHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")
@@ -70,6 +76,16 @@ public class DocumentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
+    private StreamResponse createStringSteamResponse(String schemaHtmlContent) {
+        StreamResponse stream = asStream("schema-...html"); // dummy name because unused (not download)
+        stream.headerContentDispositionInline();
+        return stream.contentType("text/html; encoding=\"UTF-8\"").stream(out -> {
+            try (InputStream ins = new ByteArrayInputStream(schemaHtmlContent.getBytes("UTF-8"))) {
+                out.write(ins);
+            }
+        });
+    }
+
     private StreamResponse createHtmlStreamResponse(File file) {
         // done deco dummy name or comment about it by jflute (2017/01/12)
         StreamResponse stream = asStream("schema-...html"); // dummy name because unused (not download)

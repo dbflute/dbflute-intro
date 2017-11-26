@@ -15,6 +15,18 @@
  */
 package org.dbflute.intro.app.logic.client;
 
+import java.io.File;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
@@ -36,13 +48,6 @@ import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.jdbc.Classification;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.util.LaClassificationUtil;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.UncheckedIOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author p1us2er0
@@ -168,10 +173,12 @@ public class ClientInfoLogic {
         if (!extlibDir.exists()) {
             return null;
         }
-        return FileUtils.listFiles(extlibDir, new String[]{".jar"}, false).stream()
-            .filter(file -> file.getName().endsWith(".jar"))
-            .findFirst()
-            .map(ExtlibFile::new).orElse(null);
+        return FileUtils.listFiles(extlibDir, new String[] { ".jar" }, false)
+                .stream()
+                .filter(file -> file.getName().endsWith(".jar"))
+                .findFirst()
+                .map(ExtlibFile::new)
+                .orElse(null);
     }
 
     // -----------------------------------------------------

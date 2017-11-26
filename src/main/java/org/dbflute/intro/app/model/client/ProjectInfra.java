@@ -15,7 +15,11 @@
  */
 package org.dbflute.intro.app.model.client;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.util.ContainerUtil;
 
 /**
  * @author jflute
@@ -34,21 +38,27 @@ public class ProjectInfra {
     //                                                                         Constructor
     //                                                                         ===========
     public ProjectInfra(String clientProject, String dbfluteVersion) {
-        this.clientProject = clientProject;
-        this.dbfluteVersion = dbfluteVersion;
-        this.jdbcDriverExtlibFile = null;
+        this(clientProject, dbfluteVersion, null);
     }
 
     public ProjectInfra(String clientProject, String dbfluteVersion, String jdbcDriverFileName, String jdbcDriverFileDataBase64) {
-        this.clientProject = clientProject;
-        this.dbfluteVersion = dbfluteVersion;
-        this.jdbcDriverExtlibFile = new ExtlibFile(jdbcDriverFileName, jdbcDriverFileDataBase64);
+        this(clientProject, dbfluteVersion, new ExtlibFile(jdbcDriverFileName, jdbcDriverFileDataBase64));
     }
 
     public ProjectInfra(String clientProject, String dbfluteVersion, ExtlibFile jdbcDriverFile) {
         this.clientProject = clientProject;
         this.dbfluteVersion = dbfluteVersion;
         this.jdbcDriverExtlibFile = jdbcDriverFile;
+        ContainerUtil.injectSimply(this);
+    }
+
+    // ===================================================================================
+    //                                                                         Replace Map
+    //                                                                         ===========
+    public Map<String, Object> prepareInitReplaceMap() {
+        final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
+        replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientProject);
+        return replaceMap;
     }
 
     // ===================================================================================

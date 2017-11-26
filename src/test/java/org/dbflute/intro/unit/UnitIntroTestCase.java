@@ -32,10 +32,21 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    // -----------------------------------------------------
+    //                                        DBFlute CLient
+    //                                        --------------
     private static final String SRC_CLIENT_PATH = "dbflute_introdb";
 
     protected static final String TEST_CLIENT_PATH = "dbflute_testdb";
     protected static final String TEST_CLIENT_PROJECT = "testdb";
+
+    // -----------------------------------------------------
+    //                                             Decomment
+    //                                             ---------
+    private static final String TEST_RESOURCE_PICKUP_FILE_PATH = "/src/test/resources/schema/decomment/pickup/decomment-pickup.dfmap";
+    private static final String TEST_RESOURCE_PICKUP_PATH = "/src/test/resources/schema/decomment/piece";
+    private static final String PICKUP_FILE_PATH = "/schema/decomment/pickup/decomment-pickup.dfmap";
+    private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
 
     // ===================================================================================
     //                                                                            Settings
@@ -90,5 +101,26 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         } catch (IOException e) {
             throw new LaSystemException("Cannot delete dir:" + clientDir, e);
         }
+    }
+
+    // ===================================================================================
+    //                                                                      Test Decomment
+    //                                                                      ==============
+    protected void prepareTestDecommentFiles() throws IOException {
+        // done hakiba change to call way to test plain state by jflute (2017/09/28)
+        File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_PICKUP_FILE_PATH);
+        File srcPieceDir = new File(getProjectDir(), TEST_RESOURCE_PICKUP_PATH);
+        File destPickupFile = getTestDecommentPickupFile();
+        File destPieceDir = getTestDecommentPieceDir();
+        FileUtils.copyFile(srcPickupFile, destPickupFile);
+        FileUtils.copyDirectory(srcPieceDir, destPieceDir, file -> file.isDirectory() || file.getName().endsWith(".dfmap"));
+    }
+
+    protected File getTestDecommentPickupFile() {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + PICKUP_FILE_PATH);
+    }
+
+    protected File getTestDecommentPieceDir() {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + PIECE_DIR_PATH);
     }
 }

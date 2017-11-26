@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.mylasta.action;
 
+import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**
@@ -161,6 +162,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: the Network error. Please check your proxy setting */
     public static final String ERRORS_APP_NETWORK_ERROR = "{errors.app.network.error}";
 
+    /** The key of the message: the decomap physical error occurred : {0} */
+    public static final String ERRORS_APP_DECO_MAP_PHYSICAL_ERROR = "{errors.app.deco.map.physical.error}";
+
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
 
@@ -232,13 +236,13 @@ public class IntroMessages extends IntroLabels {
      * message: numeric value out of bounds (&lt;{integer} digits&gt;.&lt;{fraction} digits&gt; expected)
      * </pre>
      * @param property The property name for the message. (NotNull)
-     * @param integer The parameter integer for message. (NotNull)
      * @param fraction The parameter fraction for message. (NotNull)
+     * @param integer The parameter integer for message. (NotNull)
      * @return this. (NotNull)
      */
-    public IntroMessages addConstraintsDigitsMessage(String property, String integer, String fraction) {
+    public IntroMessages addConstraintsDigitsMessage(String property, String fraction, String integer) {
         assertPropertyNotNull(property);
-        add(property, new UserMessage(CONSTRAINTS_Digits_MESSAGE, integer, fraction));
+        add(property, new UserMessage(CONSTRAINTS_Digits_MESSAGE, fraction, integer));
         return this;
     }
 
@@ -470,13 +474,13 @@ public class IntroMessages extends IntroLabels {
      * message: The check digit for ${value} is invalid, ${modType} checksum failed
      * </pre>
      * @param property The property name for the message. (NotNull)
-     * @param value The parameter value for message. (NotNull)
      * @param modType The parameter modType for message. (NotNull)
+     * @param value The parameter value for message. (NotNull)
      * @return this. (NotNull)
      */
-    public IntroMessages addConstraintsModCheckMessage(String property, String value, String modType) {
+    public IntroMessages addConstraintsModCheckMessage(String property, String modType, String value) {
         assertPropertyNotNull(property);
-        add(property, new UserMessage(CONSTRAINTS_ModCheck_MESSAGE, value, modType));
+        add(property, new UserMessage(CONSTRAINTS_ModCheck_MESSAGE, modType, value));
         return this;
     }
 
@@ -828,6 +832,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppNetworkError(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_NETWORK_ERROR));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.deco.map.physical.error' with parameters.
+     * <pre>
+     * message: the decomap physical error occurred : {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppDecoMapPhysicalError(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_DECO_MAP_PHYSICAL_ERROR, arg0));
         return this;
     }
 

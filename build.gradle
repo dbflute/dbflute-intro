@@ -22,7 +22,7 @@ apply plugin: 'project-report'
 //                                                                              Basic Info
 //                                                                              ==========
 group = 'org.dbflute'
-version = '0.1.2'
+version = '0.1.3'
 
 ext {
     encoding = 'UTF-8'
@@ -31,27 +31,28 @@ ext {
         [
             // Basic Resource
             jdk : '1.8',
-            gradle : '3.5',
-            node : '6.7.0',
+            gradle : '4.2',
+            node : '8.7.0',
 
             // Main Framework
-            dbflute : '1.1.2',
-            h2 : '1.4.193',
-            lastaflute : '0.9.6',
+            dbflute : '1.1.5',
+            h2 : '1.4.196',
+            lastaflute : '1.0.2',
 
             // Partner Library
             slf4j : '1.7.25',
             logback : '1.2.3',
-            jettyboot : '0.4.8',
+            jettyboot : '0.4.9-RC1',
+            lastadoc : '0.2.9-RC5',
+            swaggerui : '2.2.8',
 
             // GoodNeighbor Library
-            commonslang : '3.5',
+            commonslang : '3.6',
             commonsio : '2.5',
 
             // Testing
-            junit : '4.8.2',
-            utflute : '0.7.5',
-            javaparser : '3.1.3'
+            junit : '4.12',
+            utflute : '0.8.3'
         ]
 }
 
@@ -93,6 +94,8 @@ dependencies {
     runtime "ch.qos.logback:logback-classic:${versions.logback}"
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
+    compile "org.lastaflute.doc:lasta-doc:${versions.lastadoc}"
+    runtime "org.webjars:swagger-ui:${versions.swaggerui}"
 
     // GoodNeighbor Library
     compile "org.apache.commons:commons-lang3:${versions.commonslang}"
@@ -101,7 +104,6 @@ dependencies {
     // Testing
     testCompile "junit:junit:${versions.junit}"
     testCompile "org.dbflute.utflute:utflute-lastaflute:${versions.utflute}"
-    testCompile "com.github.javaparser:javaparser-core:${versions.javaparser}"
 }
 
 

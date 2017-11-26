@@ -29,21 +29,26 @@ import org.dbflute.jetty.JettyBoot;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author cabos
  */
 public class IntroBoot {
 
     private static final String LASTA_ENV_KEY = "lasta.env";
     private static final int DEVELOPMENT_PORT = 8925; // related to proxy.js
     private static final int PRODUCTION_PORT = 8926; // contains DBFlute birthdate
+    public static final String CONTEXT = "/";
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        JettyBoot boot = new JettyBoot(getPort(), "/"); // no context path
+        JettyBoot boot = new JettyBoot(getPort(), CONTEXT); // no context path
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
             boot.browseOnDesktop();
         }
+        boot.useMetaInfoResourceDetect().useWebFragmentsDetect(jarName -> {
+            return jarName.contains("swagger-ui");
+        });
         boot.bootAwait();
     }
 
