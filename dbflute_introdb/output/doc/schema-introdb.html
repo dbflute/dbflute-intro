@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"> <!-- main language (to avoid HTML validator) -->
 <head>
 	<meta charset="UTF-8" />
 	<title>introdb schema</title>
@@ -296,7 +296,7 @@ dl.procedurelist dd.column pre {
 	display: block;
 	width: 100%;
 	margin-top: 10px;
-  font-size: 12px;
+	font-size: 12px;
 }
 .decommentmodalbtn {
 	margin: 10px 5px 0 0;
@@ -313,7 +313,6 @@ dl.procedurelist dd.column pre {
  <a href="#cdef">Classification Definition</a>
 | <a href="#procedure">Procedure List</a>
 </p>
-<p class="sisterlink"><a href="./history-introdb.html">to HistoryHTML</a></p>
 <p class="sistersublink">
 <a href="./properties-introdb.html">to PropertiesHTML</a>
 | <a href="./lastadoc-intro.html">to lastadoc-intro.html</a>
@@ -1352,80 +1351,85 @@ searcher.init();
  * @author deco
  */
 function Decomment() {
-	this.embeddedPickup = {}; // setup from dbflute if decomment pickup exists
-	this.pickupStore = {}; // store of comment info
+	// setup from dbflute if decomment pickup exists
+	this.embeddedPickup = {};
+	// store of comment info
+	// object structure
 	// {
 	//   tableName: {
-	//     columnName: {
-	//       propetyName: propertyValue
-	//     }, { ... }
+	//     propertyName: propertyValue,
+	//     columns: {
+	//       columnName: {
+	//         propetyName: propertyValue
+	//       }, { ... }
+	//     }
 	//   }, { ... }
 	// }
-	this.databaseCommentMap = {
-				$'{table.tableDbName}': {
+	this.pickupStore = {
+		'CLS_TARGET_CONTAINER': {
 			'databaseComment': ''
 			, 'columns': {
-					$'{col.name}': {
+				'CONTAINER_CODE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'CONTAINER_NAME': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DISPLAY_ORDER': {
 					'databaseComment': ''
 				}
-				}
+			}
 		}
-				, $'{table.tableDbName}': {
+		, 'CLS_TARGET_DATABASE': {
 			'databaseComment': ''
 			, 'columns': {
-					$'{col.name}': {
+				'DATABASE_CODE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DATABASE_NAME': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'JDBC_DRIVER_FQCN': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'URL_TEMPLATE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DEFAULT_SCHEMA': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'SCHEMA_REQUIRED_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'SCHEMA_UPPER_CASE_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'USER_INPUT_ASSIST_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'EMBEDDED_JAR_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DISPLAY_ORDER': {
 					'databaseComment': ''
 				}
-				}
+			}
 		}
-				, $'{table.tableDbName}': {
+		, 'CLS_TARGET_LANGUAGE': {
 			'databaseComment': ''
 			, 'columns': {
-					$'{col.name}': {
+				'LANGUAGE_CODE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'LANGUAGE_NAME': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DISPLAY_ORDER': {
 					'databaseComment': ''
 				}
-				}
+			}
 		}
-		}
+	}
 }
 Decomment.prototype = {
 
@@ -1533,14 +1537,28 @@ Decomment.prototype = {
 		if (this.pickupStore[tableName] === undefined) {
 			this.pickupStore[tableName] = {};
 		}
+		if (this.pickupStore[tableName]['columns'] === undefined) {
+			this.pickupStore[tableName]['columns'] = {};
+		}
+		if (this.pickupStore[tableName]['columns'][columnName] === undefined) {
+			this.pickupStore[tableName]['columns'][columnName] = {};
+		}
 
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName)
+		var databaseComment = columnMap['databaseComment'];
 		var properties = column['properties'];
+
+		// properties to store
 		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
 		var decomments = [];
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
 		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
 				previousPieces.push(property['pieceCode']);
@@ -1554,13 +1572,12 @@ Decomment.prototype = {
 			return self.indexOf(x) === i;
 		});
 
-		this.pickupStore[tableName][columnName] = {
-			'isConflict': isConflict,
-			'decomments': decomments,
-			'previousPieces': previousPieces,
-			'authors': authors,
-			'commentVersion': commentVersion
-		}
+		columnMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		columnMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		columnMap['decomments'] = decomments;
+		columnMap['previousPieces'] = previousPieces;
+		columnMap['authors'] = authors;
+		columnMap['commentVersion'] = commentVersion;
 	},
 
 	/**
@@ -1572,7 +1589,10 @@ Decomment.prototype = {
 	storeNewComment: function (table, column, newComment) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
-		this.pickupStore[tableName][columnName]['previousWholeComment'] = newComment;
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		if (columnMap !== null) {
+			columnMap['previousWholeComment'] = newComment;
+		}
 	},
 
 	/**
@@ -1584,8 +1604,13 @@ Decomment.prototype = {
 	buildColumnCommentFromServer: function (table, column) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
-		var columnMap = this.pickupStore[tableName][columnName];
-		return columnMap['decomments'].join('\n\n=======\n\n');
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		var result = "";
+		if (columnMap['isDatabaseCommentConflict']) {
+			result = columnMap['databaseComment'].replace('<br>', '\n') + '\n(from database comment)\n\n======\n\n';
+		}
+		result += columnMap['decomments'].join('\n\n=======\n\n');
+		return result;
 	},
 
 	/**
@@ -1597,7 +1622,7 @@ Decomment.prototype = {
 	buildAuthorsFromServer: function (table, column) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
-		var columnMap = this.pickupStore[tableName][columnName];
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
 		return columnMap['authors'];
 	},
 
@@ -1634,11 +1659,10 @@ Decomment.prototype = {
 	 * @returns {Boolean} comment is conflict
 	 */
 	isCommentConflict: function(tableName, columnName) {
-		var table = this.pickupStore[tableName];
-		if (table === undefined || table[columnName] === undefined) {
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		if (columnMap === null) {
 			return false;
 		}
-		var columnMap = table[columnName];
 		return columnMap['isConflict'] || false;
 	},
 
@@ -1735,9 +1759,12 @@ Decomment.prototype = {
 	 * @returns {Boolean} is changed
 	 */
 	isCommentChanged: function (tableName, columnName, decomment) {
-		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
-			var previousComment = this.pickupStore[tableName][columnName]['previousWholeComment'];
-			return previousComment.trim() !== decomment.trim();
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		if (columnMap !== null) {
+			var previousComment = columnMap['previousWholeComment'];
+			if (previousComment) {
+				return previousComment.trim() !== decomment.trim();
+			}
 		}
 		return decomment.trim().length != 0;
 	},
@@ -1751,10 +1778,13 @@ Decomment.prototype = {
 	 * @return {Object} Request body
 	 */
 	buildColumnCommentRequestParams: function (tableName, columnName, decomment, previousCommentElement) {
-		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
-			var authors = this.pickupStore[tableName][columnName]['authors'];
-			var previousPieces = this.pickupStore[tableName][columnName]['previousPieces'];
-			var commentVersion = this.pickupStore[tableName][columnName]['commentVersion'];
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		if (columnMap !== null) {
+			var authors = columnMap['authors'];
+			var previousPieces = columnMap['previousPieces'];
+			var commentVersion = columnMap['commentVersion'];
+			var databaseComment = columnMap['databaseComment'];
+			databaseComment = databaseComment.replace('<br>', '\n');
 		}
 
 		decomment = this.escapeInputText(decomment);
@@ -1765,7 +1795,7 @@ Decomment.prototype = {
 			'columnName': columnName,
 			'targetType': 'COLUMN',
 			'decomment': decomment,
-			'databaseComment': '', // TODO deco add database comment from json created by DBFlute
+			'databaseComment': databaseComment,
 			'commentVersion': commentVersion || 0,
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
@@ -1832,8 +1862,30 @@ Decomment.prototype = {
 			}
 		};
 		http.send(JSON.stringify(params, null, "  "));
+	},
+
+	/**
+	 * Get column object from pickup store.
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - Column name
+	 * @return {Object} Column object
+	 */
+	getColumnMapInfoFromStore: function (tableName, columnName) {
+		var tableMap = this.pickupStore[tableName];
+		if (tableMap === undefined) {
+			return null;
+		}
+		var columns = tableMap['columns'];
+		if (columns === undefined) {
+			return null;
+		}
+		var columnMap = columns[columnName];
+		if (columnMap === undefined) {
+			return null;
+		}
+		return columnMap;
 	}
-}
+};
 
 new Decomment().init();
 </script>
