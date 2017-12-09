@@ -1,8 +1,30 @@
+##
+## Copyright 2014-2017 the original author or authors.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+## either express or implied. See the License for the specific language
+## governing permissions and limitations under the License.
+##
 <!DOCTYPE html>
 <html lang="en"> <!-- main language (to avoid HTML validator) -->
 <head>
 	<meta charset="UTF-8" />
-	<title>introdb schema</title>
+	<title>${database.projectName} schema</title>
+#if ($database.isSchemaHtmlStyleSheetEmbedded())
+	<style type="text/css">
+${database.schemaHtmlStyleSheetEmbedded}
+	</style>
+#elseif ($database.isSchemaHtmlStyleSheetLink())
+	${database.schemaHtmlStyleSheetLink}
+#else
 	<style type="text/css">
 * {
 	margin: 0;
@@ -303,22 +325,75 @@ dl.procedurelist dd.column pre {
 	padding: 5px 10px;
 }
 	</style>
+#end
+#if ($database.isSchemaHtmlJavaScriptEmbedded())
+	<script type="text/javascript">
+${database.schemaHtmlJavaScriptEmbedded}
+	</script>
+#elseif ($database.isSchemaHtmlJavaScriptLink())
+	${database.schemaHtmlJavaScriptLink}
+#end
 </head>
 
 <body>
-<h1>Schema for introdb (h2)</h1>
-<p class="mainschema">generated from <strong>INTRODB.PUBLIC</strong></p>
+<h1>Schema for ${database.projectName} (${database.databaseName})</h1>
+#if ($database.hasDatabaseSchema())
+<p class="mainschema">generated from <strong>${database.databaseSchema.catalogSchema}</strong></p>
+#end
 <div class="navilinkarea">
+#if ($database.hasClassificationDefinition() || $database.isSchemaHtmlOutsideSqlValid() || $database.isSchemaHtmlProcedureValid())
+#set ($linkDelimiter = "")
 <p class="sublink">
- <a href="#cdef">Classification Definition</a>
-| <a href="#procedure">Procedure List</a>
+#if ($database.hasClassificationDefinition())
+${linkDelimiter} <a href="#cdef">Classification Definition</a>
+#set ($linkDelimiter = "|")
+#end
+#if ($database.isSchemaHtmlOutsideSqlValid())
+${linkDelimiter} <a href="#outsidesql">OutsideSql List</a>
+#set ($linkDelimiter = "|")
+#end
+#if ($database.isSchemaHtmlProcedureValid())
+${linkDelimiter} <a href="#procedure">Procedure List</a>
+#end
+#if ($selector.hasSchemaDiagram())
+${linkDelimiter} <a href="#diagram">Schema Diagram</a>
+#end
 </p>
+#end
+## HistoryHtml is on fixed location
+#if ($selector.isSchemaHtmlToHistoryHtmlLink())
+<p class="sisterlink"><a href="./${selector.historyHtmlFileName}">to HistoryHTML</a></p>
+#end
+## PropertiesHtml and LastaDoc is also on fixed location
+#if ($selector.isSchemaHtmlToPropertiesHtmlLink() || $selector.isSchemaHtmlToLastaDocLink())
 <p class="sistersublink">
-<a href="./properties-introdb.html">to PropertiesHTML</a>
-| <a href="./lastadoc-intro.html">to lastadoc-intro.html</a>
+#set ($linkDelimiter = "")
+#if ($selector.isSchemaHtmlToPropertiesHtmlLink())
+<a href="./${selector.propertiesHtmlFileName}">to PropertiesHTML</a>
+#set ($linkDelimiter = "|")
+#end
+#if ($selector.isSchemaHtmlToLastaDocLink())
+#foreach ($lastaDocHtmlName in $selector.lastaDocHtmlNameList)
+${linkDelimiter} <a href="./${lastaDocHtmlName}">to ${lastaDocHtmlName}</a>
+#set ($linkDelimiter = "|")
+#end
+#end
 </p>
+#end
+#if ($selector.hasNeighborhoodSchemaHtml())
+#set ($linkDelimiter = "")
+<p class="sisterneighborlink">
+#foreach ($schemaHtmlKey in $selector.neighborhoodSchemaHtmlKeyList)
+${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKey)}">to ${schemaHtmlKey}</a>
+#set ($linkDelimiter = "|")
+#end
+</p>
+#end
 </div>
 
+#set ($hasAdditionalSchema = $database.hasAdditionalSchema())
+#set ($isAliasDelimiterInDbCommentValid = $database.isAliasDelimiterInDbCommentValid())
+#set ($hasTableComment = $database.hasTableComment())
 <h2>Table List</h2>
 <div class="keywordsearch">
 	<input type="text" id="incremental-search-field" tabindex=1 value="" placeholder="Table Search" />
@@ -329,415 +404,52 @@ dl.procedurelist dd.column pre {
 	<thead>
 	<tr>
 		<th class="rownumhead">No.</th>
+#if ($isAliasDelimiterInDbCommentValid)
 		<th>Alias</th>
+#end
 		<th>Name</th>
 		<th>Type</th>
+#if ($hasAdditionalSchema)
+		<th>Schema</th>
+#end
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
+#if ($hasTableComment)
+		<th>TableComment</th>
+#end
 		<th>EntityName</th>
 	</tr>
 	</thead>
 	<tbody id="table-list-body">
+#set ($rownum = 1)
+#foreach ($table in $database.tableDisplaySortedList)
 	<tr>
-		<td class="rownumcell">1</td>
-		<td class="aliascell"></td>
-		<td><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
-		<td class="typecell">TABLE</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="subcell">ClsTargetContainer</td>
+		<td class="rownumcell">${rownum}</td>
+#if ($isAliasDelimiterInDbCommentValid)
+		<td class="aliascell">${table.alias}</td>
+#end
+		<td><a href="#${table.tableIdForSchemaHtml}"${table.titleForSchemaHtml}>${table.tableDispName}</a></td>
+		<td class="typecell">${table.type}</td>
+#if ($hasAdditionalSchema)
+		<td class="schemacell">#if ($table.hasSchema()) ${table.documentSchema}#else &nbsp;#end</td>
+#end
+		<td class="relcell">${table.foreignTableNameCommaStringWithHtmlHref}</td>
+		<td class="relcell">${table.referrerTableNameCommaStringWithHtmlHref}</td>
+#if ($hasTableComment)
+		<td class="commentcell">#if ($table.hasComment()) ${table.commentForSchemaHtml}#else &nbsp;#end</td>
+#end
+		<td class="subcell">${table.javaName}</td>
 	</tr>
-	<tr>
-		<td class="rownumcell">2</td>
-		<td class="aliascell"></td>
-		<td><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
-		<td class="typecell">TABLE</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="subcell">ClsTargetDatabase</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">3</td>
-		<td class="aliascell"></td>
-		<td><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
-		<td class="typecell">TABLE</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="subcell">ClsTargetLanguage</td>
-	</tr>
+#set ($rownum = $rownum + 1)
+#end
 	</tbody>
 </table>
 
-<h2 id="cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">
-CLS_TARGET_CONTAINER
-</h2>
-<input type="hidden" value="CLS_TARGET_CONTAINER">
-<table class="tablecontent">
-	<thead>
-	<tr>
-		<th class="rownumhead">No.</th>
-		<th>PK</th>
-		<th>ID</th>
-		<th>UQ</th>
-		<th>IX</th>
-		<th>Not<br />Null</th>
-		<th>Alias</th>
-		<th>Name</th>
-		<th>Type</th>
-		<th>Size</th>
-		<th>ForeignTable</th>
-		<th>ReferrerTable</th>
-		<th>Classification</th>
-		<th>ColumnComment</th>
-		<th>PropertyName</th>
-		<th>JavaType</th>
-	</tr>
-	</thead>
-	<tr>
-		<td class="rownumcell">1</td>
-		<td class="flgcell" title="CONSTRAINT_C">o</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_container_container_code">CONTAINER_CODE</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#TargetContainerCls">TargetContainer</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">containerCode</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">2</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_container_container_name">CONTAINER_NAME</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 100 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">containerName</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">3</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_container_display_order">DISPLAY_ORDER</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">displayOrder</td>
-		<td class="subcell">Integer</td>
-	</tr>
-</table>
+#foreach ($table in $database.tableDisplaySortedList)
+$generator.parse("doc/html/table.vm", null, "table", $table)
+#end
 
-<h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
-CLS_TARGET_DATABASE
-</h2>
-<input type="hidden" value="CLS_TARGET_DATABASE">
-<table class="tablecontent">
-	<thead>
-	<tr>
-		<th class="rownumhead">No.</th>
-		<th>PK</th>
-		<th>ID</th>
-		<th>UQ</th>
-		<th>IX</th>
-		<th>Not<br />Null</th>
-		<th>Alias</th>
-		<th>Name</th>
-		<th>Type</th>
-		<th>Size</th>
-		<th>ForeignTable</th>
-		<th>ReferrerTable</th>
-		<th>Classification</th>
-		<th>ColumnComment</th>
-		<th>PropertyName</th>
-		<th>JavaType</th>
-	</tr>
-	</thead>
-	<tr>
-		<td class="rownumcell">1</td>
-		<td class="flgcell" title="CONSTRAINT_5">o</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_database_code">DATABASE_CODE</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#TargetDatabaseCls">TargetDatabase</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">databaseCode</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">2</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_database_name">DATABASE_NAME</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 100 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">databaseName</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">3</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_jdbc_driver_fqcn">JDBC_DRIVER_FQCN</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 100 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">jdbcDriverFqcn</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">4</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_url_template">URL_TEMPLATE</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 100 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">urlTemplate</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">5</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_default_schema">DEFAULT_SCHEMA</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">defaultSchema</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">6</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_schema_required_flg">SCHEMA_REQUIRED_FLG</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#FlgCls">Flg</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">schemaRequiredFlg</td>
-		<td class="subcell">Integer</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">7</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_schema_upper_case_flg">SCHEMA_UPPER_CASE_FLG</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#FlgCls">Flg</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">schemaUpperCaseFlg</td>
-		<td class="subcell">Integer</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">8</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_user_input_assist_flg">USER_INPUT_ASSIST_FLG</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#FlgCls">Flg</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">userInputAssistFlg</td>
-		<td class="subcell">Integer</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">9</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_embedded_jar_flg">EMBEDDED_JAR_FLG</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#FlgCls">Flg</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">embeddedJarFlg</td>
-		<td class="subcell">Integer</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">10</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_database_display_order">DISPLAY_ORDER</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">displayOrder</td>
-		<td class="subcell">Integer</td>
-	</tr>
-</table>
-
-<h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
-CLS_TARGET_LANGUAGE
-</h2>
-<input type="hidden" value="CLS_TARGET_LANGUAGE">
-<table class="tablecontent">
-	<thead>
-	<tr>
-		<th class="rownumhead">No.</th>
-		<th>PK</th>
-		<th>ID</th>
-		<th>UQ</th>
-		<th>IX</th>
-		<th>Not<br />Null</th>
-		<th>Alias</th>
-		<th>Name</th>
-		<th>Type</th>
-		<th>Size</th>
-		<th>ForeignTable</th>
-		<th>ReferrerTable</th>
-		<th>Classification</th>
-		<th>ColumnComment</th>
-		<th>PropertyName</th>
-		<th>JavaType</th>
-	</tr>
-	</thead>
-	<tr>
-		<td class="rownumcell">1</td>
-		<td class="flgcell" title="CONSTRAINT_8">o</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_language_language_code">LANGUAGE_CODE</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"><a href="#TargetLanguageCls">TargetLanguage</a></td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">languageCode</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">2</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_language_language_name">LANGUAGE_NAME</td>
-		<td class="typecell">VARCHAR</td>
-		<td class="sizecell"> 100 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">languageName</td>
-		<td class="subcell">String</td>
-	</tr>
-	<tr>
-		<td class="rownumcell">3</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell"> &nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">&nbsp;</td>
-		<td class="flgcell">*</td>
-		<td class="aliascell"></td>
-		<td class=" columnnamecell" id="cls_target_language_display_order">DISPLAY_ORDER</td>
-		<td class="typecell">INTEGER</td>
-		<td class="sizecell"> 10 </td>
-		<td class="relcell">&nbsp;&nbsp;</td>
-		<td class="relcell">&nbsp;</td>
-		<td class="relcell"> &nbsp;</td>
-		<td class="commentcell"><pre>&nbsp;</pre></td>
-		<td class="subcell">displayOrder</td>
-		<td class="subcell">Integer</td>
-	</tr>
-</table>
-
-
+#if ($database.hasClassificationDefinition())
 <h2 id="cdef">Classification Definition</h2>
 <table>
 	<thead>
@@ -749,238 +461,150 @@ CLS_TARGET_LANGUAGE
 	</tr>
 	</thead>
 	<tbody>
+#foreach ($classificationName in $database.classificationNameList)
+#set ($classificationTop = $database.getClassificationTop($classificationName))
 	<tr>
-		<td>Flg</td>
-		<td class="clstypecell"> implicit</td>
-		<td>general&nbsp;boolean&nbsp;classification&nbsp;for&nbsp;every&nbsp;flg-column</td>
+#if ($classificationTop.isDeprecated())
+		<td><del>${classificationName}</del></td>
+#else
+		<td>${classificationName}</td>
+#end
+		<td class="clstypecell">#if ($classificationTop.isTableClassification())table#else implicit#if ($classificationTop.isCheckImplicitSet())<br />(check)#end#end</td>
+		<td>#if ($classificationTop.hasTopComment())${classificationTop.topCommentForSchemaHtml}#else &nbsp;#end</td>
 		<td>
 			<table class="child">
 			<tr>
-				<th id="FlgCls">Code</th>
+				<th id="${classificationName}Cls">Code</th>
 				<th>Name</th>
+#if ($database.hasClassificationAlias($classificationName))
 				<th>Alias</th>
+#end
 				<th>Comment</th>
+#foreach ($group in $classificationTop.groupList)
+				<th><span class="clsgroup"${group.groupTitleForSchemaHtml}>${group.groupName}</span></th>
+#end
+#if ($classificationTop.hasSisterCode())
 				<th>Sisters</th>
-			</tr>
-			<tr>
-				<td>1</td>
-				<td>True</td>
-				<td>Checked</td>
-				<td class="commentcell">means&nbsp;yes</td>
-				<td>true</td>
-			</tr>
-			<tr>
-				<td>0</td>
-				<td>False</td>
-				<td>Unchecked</td>
-				<td class="commentcell">means&nbsp;no</td>
-				<td>false</td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>TargetDatabase</td>
-		<td class="clstypecell">table</td>
-		<td>databases&nbsp;DBFlute&nbsp;cau&nbsp;use</td>
-		<td>
-			<table class="child">
-			<tr>
-				<th id="TargetDatabaseCls">Code</th>
-				<th>Name</th>
-				<th>Alias</th>
-				<th>Comment</th>
-			</tr>
-			<tr>
-				<td>mysql</td>
-				<td>MySQL</td>
-				<td>MySQL</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>postgresql</td>
-				<td>PostgreSQL</td>
-				<td>PostgreSQL</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>oracle</td>
-				<td>Oracle</td>
-				<td>Oracle</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>db2</td>
-				<td>Db2</td>
-				<td>DB2</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>sqlserver</td>
-				<td>SQLServer</td>
-				<td>SQLServer</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>h2</td>
-				<td>H2Database</td>
-				<td>H2 Database</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>derby</td>
-				<td>ApacheDerby</td>
-				<td>Apache Derby</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>TargetLanguage</td>
-		<td class="clstypecell">table</td>
-		<td>databases&nbsp;DBFlute&nbsp;cau&nbsp;use</td>
-		<td>
-			<table class="child">
-			<tr>
-				<th id="TargetLanguageCls">Code</th>
-				<th>Name</th>
-				<th>Alias</th>
-				<th>Comment</th>
-			</tr>
-			<tr>
-				<td>java</td>
-				<td>Java</td>
-				<td>Java</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>csharp</td>
-				<td>C</td>
-				<td>C#</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>scala</td>
-				<td>Scala</td>
-				<td>Scala</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>TargetContainer</td>
-		<td class="clstypecell">table</td>
-		<td>containers&nbsp;DBFlute&nbsp;cau&nbsp;use</td>
-		<td>
-			<table class="child">
-			<tr>
-				<th id="TargetContainerCls">Code</th>
-				<th>Name</th>
-				<th>Alias</th>
-				<th>Comment</th>
-			</tr>
-			<tr>
-				<td>lasta_di</td>
-				<td>LastaDi</td>
-				<td>Lasta Di</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>spring</td>
-				<td>SpringFramework</td>
-				<td>Spring Framework</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>guice</td>
-				<td>GoogleGuice</td>
-				<td>Google Guice</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>seasar</td>
-				<td>SeasarS2Container</td>
-				<td>Seasar (S2Container)</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			<tr>
-				<td>cdi</td>
-				<td>Cdi</td>
-				<td>CDI</td>
-				<td class="commentcell"> &nbsp;</td>
-			</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>TaskType</td>
-		<td class="clstypecell"> implicit</td>
-		<td>DBFlute&nbsp;tasks&nbsp;e.g.&nbsp;jdbc,&nbsp;doc</td>
-		<td>
-			<table class="child">
-			<tr>
-				<th id="TaskTypeCls">Code</th>
-				<th>Name</th>
-				<th>Comment</th>
+#end
+#if ($classificationTop.hasSubItem())
 				<th>SubItem</th>
+#end
 			</tr>
+#foreach ($classificationElement in $classificationTop.classificationElementList)
 			<tr>
-				<td>jdbc</td>
-				<td>JDBC</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=jdbc</td>
+				<td>${classificationElement.code}</td>
+#if ($classificationElement.isDeprecated())
+				<td><del>${classificationElement.name}</del></td>
+#else
+				<td>${classificationElement.name}</td>
+#end
+#if ($database.hasClassificationAlias($classificationName))
+				<td>#if ($classificationElement.hasAlias())${classificationElement.alias}#else &nbsp;#end</td>
+#end
+				<td class="commentcell">#if ($classificationElement.hasCommentDisp())${classificationElement.commentForSchemaHtml}#else &nbsp;#end</td>
+#foreach ($group in $classificationTop.groupList)
+				<td class="flgcell">#if ($classificationElement.isGroup($group.groupName))o#else &nbsp;#end</td>
+#end
+#if ($classificationTop.hasSisterCode())
+				<td>${classificationElement.buildSisterCodeExpForSchemaHtml()}</td>
+#end
+#if ($classificationTop.hasSubItem())
+				<td>${classificationElement.buildSubItemExpForSchemaHtml()}</td>
+#end
 			</tr>
-			<tr>
-				<td>doc</td>
-				<td>Doc</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=doc</td>
-			</tr>
-			<tr>
-				<td>generate</td>
-				<td>Generate</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=generate</td>
-			</tr>
-			<tr>
-				<td>outside_sql_test</td>
-				<td>OutsideSqlTest</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=outside-sql-test</td>
-			</tr>
-			<tr>
-				<td>sql2entity</td>
-				<td>Sql2Entity</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=sql2entity</td>
-			</tr>
-			<tr>
-				<td>replace_schema</td>
-				<td>ReplaceSchema</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=replace-schema</td>
-			</tr>
-			<tr>
-				<td>load_data_reverse</td>
-				<td>LoadDataReverse</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=loadDataReverse</td>
-			</tr>
-			<tr>
-				<td>schema_sync_check</td>
-				<td>SchemaSyncCheck</td>
-				<td class="commentcell"> &nbsp;</td>
-				<td>manageArg=schema-sync-check</td>
-			</tr>
+#end
 			</table>
 		</td>
 	</tr>
+#end
 	</tbody>
 </table>
+#end
 
+#if ($database.isSchemaHtmlOutsideSqlValid())
+<h2 id="outsidesql">OutsideSql List</h2>
+#foreach ($table in $database.tableDisplaySortedList)
+#if ($table.hasBehaviorQueryPath())
+<h3 id="${table.tableIdForSchemaHtml}_sql"><a href="#${table.tableIdForSchemaHtml}">${table.tableDispName}</a></h3>
+<dl class="bqplist">
+#foreach ($behaviorQueryPath in $table.behaviorQueryPathList)
+	<dt>$table.getBehaviorQueryPathTitleForSchemaHtml($behaviorQueryPath)$table.getBehaviorQueryPathDisplayName($behaviorQueryPath)</dt>
+#if ($table.hasBehaviorQueryPathDescription($behaviorQueryPath))
+	<dd>
+		<pre class="commentdesc">$table.getBehaviorQueryPathDescriptionForSchemaHtml($behaviorQueryPath)</pre>
+	</dd>
+#end
+	<dd class="subinfo">
+#if ($table.isBehaviorQueryPathSqlAp($behaviorQueryPath))
+		<span class="sqlap">(${table.getBehaviorQueryPathSqlApProjectName($behaviorQueryPath)})</span>
+#end
+		<span class="file">$table.getBehaviorQueryPathFileName($behaviorQueryPath)</span>
+#if ($table.hasBehaviorQueryPathCustomizeEntity($behaviorQueryPath))
+		<span class="ctet">(${table.getBehaviorQueryPathCustomizeEntity($behaviorQueryPath)}${table.getBehaviorQueryPathCursorForSchemaHtml($behaviorQueryPath)})</span>
+#end
+#if ($table.hasBehaviorQueryPathParameterBean($behaviorQueryPath))
+		<span class="pmb">(${table.getBehaviorQueryPathParameterBean($behaviorQueryPath)})</span>
+#end
+	</dd>
+#end
+</dl>
+#end
+#end
+#end
+#if ($database.isSchemaHtmlProcedureValid())
 <h2 id="procedure">Procedure</h2>
+#set ($hasSeveralProcedureSchema = $database.hasSeveralProcedureSchema())
+#foreach ($procedureEntry in $database.availableSchemaProcedureMap.entrySet())
+#set ($procedureSchema = $procedureEntry.key)
+#set ($procedureList = $procedureEntry.value)
+#if ($hasSeveralProcedureSchema)
+<h3>${procedureSchema}</h3>
+#end
+<dl class="procedurelist">
+#foreach ($procedure in $procedureList)
+	<dt>${procedure.procedureDisplayNameForSchemaHtml}</dt>
+#if ($procedure.hasProcedureComment())
+	<dd>
+		<pre class="commentcell">${procedure.procedureCommentForSchemaHtml}</pre>
+	</dd>
+#end
+#if ($procedure.procedureColumnList.isEmpty())
+	<dd class="column">*no arguments</dd>
+#else
+#foreach ($column in $procedure.procedureColumnList)
+	<dd class="column">
+		${column.columnDisplayNameForSchemaHtml}
+#if ($column.hasColumnComment())
+		<pre class="commentdesc">${column.columnCommentForSchemaHtml}</pre>
+#end
+	</dd>
+#end
+#end
+#end
+</dl>
+#end
+#end
+#if ($selector.hasSchemaDiagram())
+
+<h2 id="diagram">Schema Diagram</h2>
+#foreach ($schemaHtmlKey in $selector.schemaDiagramKeyList)
+#set ($diagramPath = "${selector.getSchemaDiagramPath($schemaHtmlKey)}")
+<h3>${schemaHtmlKey}</h3>
+<p>
+	<a href="${diagramPath}">
+		<img src="${diagramPath}"
+			alt="ER Diagram"
+#if ($selector.hasSchemaDiagramWidth($schemaHtmlKey))
+			width="${selector.getSchemaDiagramWidth($schemaHtmlKey)}"
+#end
+#if ($selector.hasSchemaDiagramHeight($schemaHtmlKey))
+			height="${selector.getSchemaDiagramHeight($schemaHtmlKey)}"
+#end
+		/>
+	</a>
+</p>
+#end
+#end
 
 <h2 id="thanks">Thanks</h2>
 <p>
@@ -1008,7 +632,11 @@ CLS_TARGET_LANGUAGE
 
 // this index value depends on DBFlute settings
 // so defines it here as global for easy-to-understand
+#if ($isAliasDelimiterInDbCommentValid)
 var NAME_INDEX = 2; // number, alias, name
+#else
+var NAME_INDEX = 1; // number, name
+#end
 
 function Incremental (targetInput, dist) {
 	this.targetInput = targetInput;
@@ -1366,69 +994,19 @@ function Decomment() {
 	//   }, { ... }
 	// }
 	this.pickupStore = {
-		'CLS_TARGET_CONTAINER': {
-			'databaseComment': ''
+#foreach ($table in $database.tableDisplaySortedList)
+## decomment uses display name so fix later
+		#if ($velocityCount > 1), #end'${table.tableDbName}': {
+			'databaseComment': '${table.commentForSchemaHtml}'
 			, 'columns': {
-				'CONTAINER_CODE': {
-					'databaseComment': ''
+#foreach ($col in $table.columns)
+				#if ($velocityCount > 1), #end'${col.name}': {
+					'databaseComment': '${col.commentForSchemaHtml}'
 				}
-				, 'CONTAINER_NAME': {
-					'databaseComment': ''
-				}
-				, 'DISPLAY_ORDER': {
-					'databaseComment': ''
-				}
+#end
 			}
 		}
-		, 'CLS_TARGET_DATABASE': {
-			'databaseComment': ''
-			, 'columns': {
-				'DATABASE_CODE': {
-					'databaseComment': ''
-				}
-				, 'DATABASE_NAME': {
-					'databaseComment': ''
-				}
-				, 'JDBC_DRIVER_FQCN': {
-					'databaseComment': ''
-				}
-				, 'URL_TEMPLATE': {
-					'databaseComment': ''
-				}
-				, 'DEFAULT_SCHEMA': {
-					'databaseComment': ''
-				}
-				, 'SCHEMA_REQUIRED_FLG': {
-					'databaseComment': ''
-				}
-				, 'SCHEMA_UPPER_CASE_FLG': {
-					'databaseComment': ''
-				}
-				, 'USER_INPUT_ASSIST_FLG': {
-					'databaseComment': ''
-				}
-				, 'EMBEDDED_JAR_FLG': {
-					'databaseComment': ''
-				}
-				, 'DISPLAY_ORDER': {
-					'databaseComment': ''
-				}
-			}
-		}
-		, 'CLS_TARGET_LANGUAGE': {
-			'databaseComment': ''
-			, 'columns': {
-				'LANGUAGE_CODE': {
-					'databaseComment': ''
-				}
-				, 'LANGUAGE_NAME': {
-					'databaseComment': ''
-				}
-				, 'DISPLAY_ORDER': {
-					'databaseComment': ''
-				}
-			}
-		}
+#end
 	}
 }
 Decomment.prototype = {
