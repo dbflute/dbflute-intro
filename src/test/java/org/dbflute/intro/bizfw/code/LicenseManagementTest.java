@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package org.dbflute.intro.bizfw.code;
 
 import java.io.BufferedReader;
@@ -16,17 +31,25 @@ import org.dbflute.utflute.core.PlainTestCase;
 
 /**
  * @author hakiba
+ * @author jflute
  */
-
 public class LicenseManagementTest extends PlainTestCase {
 
     private static final String COPYRIGHT = "Copyright 2014-2017 the original author or authors.";
+
     // ===================================================================================
     //                                                                      License Header
     //                                                                      ==============
     public void test_license_header_main() {
+        doTest_license_header("src/main/java");
+    }
+
+    public void test_license_header_test() {
+        doTest_license_header("src/test/java");
+    }
+
+    private void doTest_license_header(String srcPathMark) {
         // ## Arrange ##
-        String srcPathMark = "src/main/java";
         File buildDir = getBuildDir(getClass());
         String buildPath = getCanonicalPath(buildDir);
         File srcDir = new File(buildPath + "/../../../" + srcPathMark);
@@ -115,8 +138,7 @@ public class LicenseManagementTest extends PlainTestCase {
             if (br != null) {
                 try {
                     br.close();
-                } catch (IOException ignored) {
-                }
+                } catch (IOException ignored) {}
             }
         }
         if (!contains) {
@@ -152,7 +174,7 @@ public class LicenseManagementTest extends PlainTestCase {
         if ("file".equals(url.getProtocol())) {
             int num = path.split("/").length;
             dir = new File(getFileName(url));
-            for (int i = 0; i < num; ) {
+            for (int i = 0; i < num;) {
                 i++;
                 dir = dir.getParentFile();
             }
