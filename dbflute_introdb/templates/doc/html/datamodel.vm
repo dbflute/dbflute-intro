@@ -1267,7 +1267,8 @@ Decomment.prototype = {
 					var tableName = that.getTableName(table);
 					var columnName = column.querySelector('.columnnamecell').innerText;
 					var isConflict = that.isCommentConflict(tableName, columnName);
-					var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
+					var columnNameOfTable = columnName + " of " + tableName;
+					var columnInfo = isConflict ? columnNameOfTable + " ... but now in CONFLICT!" : columnNameOfTable;
 					document.getElementById("decomment-modal-column-info").innerText = columnInfo;
 
 					var inputElement = document.getElementById("decomment-input");
