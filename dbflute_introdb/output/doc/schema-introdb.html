@@ -991,9 +991,9 @@ CLS_TARGET_LANGUAGE
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
-		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
-		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
-		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
+		<textarea id="decomment-input" class="decommentinput" rows="5" tabindex="1"></textarea>
+		<button id="decomment-cancel" class="decommentmodalbtn" tabindex="3">Cancel</button>
+		<button id="decomment-ok" class="decommentmodalbtn" tabindex="2">OK</button>
 	</div>
 </div>
 <script>
@@ -1694,6 +1694,7 @@ Decomment.prototype = {
 
 					var inputElement = document.getElementById("decomment-input");
 					inputElement.value = that.extractPreviousComment(previousWholeComment);
+					inputElement.focus();
 
 					document.getElementById("decomment-cancel").onclick = function() {
 						modalElement.style.display = "none";
