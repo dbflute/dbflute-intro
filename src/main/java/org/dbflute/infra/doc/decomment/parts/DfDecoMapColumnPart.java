@@ -40,12 +40,10 @@ public class DfDecoMapColumnPart {
 
     @SuppressWarnings("unchecked")
     public DfDecoMapColumnPart(Map<String, Object> columnPartMap) {
-        // TODO cabos unused variable? by jflute (2017/11/21)
-        DfDecoMapColumnPart column = new DfDecoMapColumnPart();
+        // TODO done cabos unused variable? by jflute (2017/11/21)
         this.columnName = (String) columnPartMap.get("columnName");
-        List<DfDecoMapPropertyPart> propertyList =
-                ((List<Map<String, Object>>) columnPartMap.get("propertyList")).stream().map(DfDecoMapPropertyPart::new).collect(
-                        Collectors.toList());
+        List<Map<String, Object>> propertyMapList = (List<Map<String, Object>>) columnPartMap.get("propertyList");
+        List<DfDecoMapPropertyPart> propertyList = propertyMapList.stream().map(DfDecoMapPropertyPart::new).collect(Collectors.toList());
         this.propertyList.addAll(propertyList);
     }
 

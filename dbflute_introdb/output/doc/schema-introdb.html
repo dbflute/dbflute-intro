@@ -991,9 +991,9 @@ CLS_TARGET_LANGUAGE
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
-		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
-		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
-		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
+		<textarea id="decomment-input" class="decommentinput" rows="5" tabindex="1"></textarea>
+		<button id="decomment-cancel" class="decommentmodalbtn" tabindex="3">Cancel</button>
+		<button id="decomment-ok" class="decommentmodalbtn" tabindex="2">OK</button>
 	</div>
 </div>
 <script>
@@ -1451,8 +1451,7 @@ Decomment.prototype = {
 	 * @returns {string} Scheme name
 	 */
 	getSchemeName: function () {
-		var path = window.location.pathname;
-		return path.split('/')[3];
+    return "introdb";
 	},
 
 	/**
@@ -1506,11 +1505,11 @@ Decomment.prototype = {
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
 				that.storePickupProperies(table, column);
-				var newComment = that.buildColumnCommentFromServer(table, column);
+				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
 				var authors = that.buildAuthorsFromServer(table, column);
-				that.storeNewComment(table, column, newComment);
-				that.updateComment(columnElement, newComment, authors);
-				that.checkCommentConflict(table, column, columnElement);
+				that.storePreviousWholeComment(table, column, newComment);
+				that.updateDisplayCommentToHtml(columnElement, newComment, authors);
+				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
 		});
 	},
@@ -1588,7 +1587,7 @@ Decomment.prototype = {
 	 * @param {Object} column - Column object
 	 * @param {string} newComment - Comment from server
 	 */
-	storeNewComment: function (table, column, newComment) {
+	storePreviousWholeComment: function (table, column, newComment) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
@@ -1603,7 +1602,7 @@ Decomment.prototype = {
 	 * @param {Object} column - Column object
 	 * @returns {string} New scheme comment
 	 */
-	buildColumnCommentFromServer: function (table, column) {
+	buildDisplayColumnCommentFromServer: function (table, column) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
@@ -1634,7 +1633,7 @@ Decomment.prototype = {
 	 * @param {string} newComment - New scheme comment
 	 * @param {Array} authors - Comment authoers
 	 */
-	updateComment: function (columnElement, newComment, authors) {
+	updateDisplayCommentToHtml: function (columnElement, newComment, authors) {
 		var author = authors.join(',');
 		var comment = newComment + "\n<span>@author(" + author + ")</span>";
 		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = comment;
@@ -1646,7 +1645,7 @@ Decomment.prototype = {
 	 * @param {Object} column - Column object
 	 * @param {Object} columnElement - Column element
 	 */
-	checkCommentConflict: function(table, column, columnElement) {
+	reflectCommentConflictIfNeed: function(table, column, columnElement) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		if (this.isCommentConflict(tableName, columnName)) {
@@ -1673,7 +1672,7 @@ Decomment.prototype = {
 	 * @param {string} table - Table name
 	 */
 	setupSaveDecomment: function(schemeName) {
-		this.setupSaveTableCommnt();
+    // this.setupSaveTableCommnt(); TODO tominaga create table comment event
 		this.setupSaveColumnComment();
 	},
 
@@ -1703,21 +1702,21 @@ Decomment.prototype = {
 				}
 
 				var commentCellElement = column.querySelector('.commentcell')
-				var previousWholeComment = commentCellElement.querySelector('pre');
-        		that.setupEvents(previousWholeComment, table, column);
+				var previousWholeCommentElement = commentCellElement.querySelector('pre');
+				that.setupEvents(previousWholeCommentElement, table, column);
 			});
 		});
 	},
 
 	/**
 	 * Setup click event
-	 * @param {Object} previousWholeComment - Previous whole comment
+	 * @param {Object} previousWholeCommentElement - Previous whole comment
 	 * @param {Object} table - Table
 	 * @param {Object} column - Column
 	 */
-	setupEvents: function (previousWholeComment, table, column) {
+	setupEvents: function (previousWholeCommentElement, table, column) {
 		that = this
-		previousWholeComment.onclick = function () {
+		previousWholeCommentElement.onclick = function () {
 			var modalElement = document.getElementById("decomment-modal");
 			modalElement.style.display = "block";
 
@@ -1728,7 +1727,7 @@ Decomment.prototype = {
 			document.getElementById("decomment-modal-column-info").innerText = columnInfo;
 
 			var inputElement = document.getElementById("decomment-input");
-			inputElement.value = that.extractPreviousComment(previousWholeComment);
+			inputElement.value = that.extractPreviousComment(previousWholeCommentElement);
 
 			document.getElementById("decomment-cancel").onclick = function () {
 				modalElement.style.display = "none";
@@ -1741,7 +1740,7 @@ Decomment.prototype = {
 					return;
 				}
 				var params = that.buildColumnCommentRequestParams(tableName, columnName, decomment, column);
-				that.requestSaveDecomment(schemeName, params);
+				that.requestSaveDecomment(that.getSchemeName(), params);
 				modalElement.style.display = "none";
 			};
 

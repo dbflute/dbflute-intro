@@ -615,9 +615,9 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
-		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
-		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
-		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
+		<textarea id="decomment-input" class="decommentinput" rows="5" tabindex="1"></textarea>
+		<button id="decomment-cancel" class="decommentmodalbtn" tabindex="3">Cancel</button>
+		<button id="decomment-ok" class="decommentmodalbtn" tabindex="2">OK</button>
 	</div>
 </div>
 <script>
@@ -1281,7 +1281,7 @@ Decomment.prototype = {
 
 				var commentCellElement = column.querySelector('.commentcell')
 				var previousWholeCommentElement = commentCellElement.querySelector('pre');
-        		that.setupEvents(previousWholeCommentElement, table, column);
+				that.setupEvents(previousWholeCommentElement, table, column);
 			});
 		});
 	},
