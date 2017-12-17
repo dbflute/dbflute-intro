@@ -334,6 +334,7 @@ dl.procedurelist dd.column pre {
 		<th>Type</th>
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
+		<th>TableComment</th>
 		<th>EntityName</th>
 	</tr>
 	</thead>
@@ -341,28 +342,31 @@ dl.procedurelist dd.column pre {
 	<tr>
 		<td class="rownumcell">1</td>
 		<td class="aliascell"></td>
-		<td><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
+		<td class="namecell"><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
+		<td class="commentcell"><span> &nbsp;</span></td>
 		<td class="subcell">ClsTargetContainer</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">2</td>
 		<td class="aliascell"></td>
-		<td><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
+		<td class="namecell"><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
+		<td class="commentcell"><span> &nbsp;</span></td>
 		<td class="subcell">ClsTargetDatabase</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">3</td>
 		<td class="aliascell"></td>
-		<td><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
+		<td class="namecell"><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
+		<td class="commentcell"><span> &nbsp;</span></td>
 		<td class="subcell">ClsTargetLanguage</td>
 	</tr>
 	</tbody>
@@ -1672,7 +1676,7 @@ Decomment.prototype = {
 	 * @param {string} table - Table name
 	 */
 	setupSaveDecomment: function(schemeName) {
-    // this.setupSaveTableCommnt(); TODO tominaga create table comment event
+		this.setupSaveTableCommnt();
 		this.setupSaveColumnComment();
 	},
 
@@ -1682,9 +1686,40 @@ Decomment.prototype = {
 	setupSaveTableCommnt: function() {
 		var tables = document.getElementById('table-list-body').querySelectorAll('tr');
 		Array.prototype.forEach.call(tables, function (table) {
-			var tableName = table.children[1].innerText;
-			var commentElement = table.children[5];
-			var comment = commentElement.innerText;
+			var tableName = table.querySelector('.namecell').querySelector('a').innerText;
+			var commentElement = table.querySelector('.commentcell');
+			commentElement.onclick = function() {
+				var modalElement = document.getElementById("decomment-modal");
+				modalElement.style.display = "block";
+
+// 				var isConflict = that.isCommentConflict(tableName, columnName); // TODO tominaga
+// 				var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName; // TODO tominaga
+// 				document.getElementById("decomment-modal-column-info").innerText = columnInfo;
+
+				var inputElement = document.getElementById("decomment-input");
+				inputElement.value = that.extractPreviousComment(commentElement);
+
+				document.getElementById("decomment-cancel").onclick = function () {
+					modalElement.style.display = "none";
+				};
+
+				document.getElementById("decomment-ok").onclick = function () {
+					var decomment = inputElement.value;
+					if (!that.isTableCommentChanged(tableName, decomment)) {
+						modalElement.style.display = "none";
+						return;
+					}
+					var params = that.buildTableCommentRequestParams(tableName, decomment);
+					that.requestSaveDecomment(that.getSchemeName(), params);
+					modalElement.style.display = "none";
+				};
+
+				window.onclick = function (event) {
+					if (event.target == modalElement) {
+						modalElement.style.display = "none";
+					}
+				};
+			}
 		});
 	},
 
@@ -1790,6 +1825,24 @@ Decomment.prototype = {
 	 * @param {string} decomment - decomment
 	 * @returns {Boolean} is changed
 	 */
+	isTableCommentChanged: function (tableName, decomment) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap !== null) {
+			var previousComment = tableMap['previousWholeComment'];
+			if (previousComment) {
+				return previousComment.trim() !== decomment.trim();
+			}
+		}
+		return decomment.trim().length != 0;
+	},
+
+	/**
+	 * Check new decomment and previous comment is different
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - Column name
+	 * @param {string} decomment - decomment
+	 * @returns {Boolean} is changed
+	 */
 	isCommentChanged: function (tableName, columnName, decomment) {
 		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
 		if (columnMap !== null) {
@@ -1799,6 +1852,37 @@ Decomment.prototype = {
 			}
 		}
 		return decomment.trim().length != 0;
+	},
+
+	/**
+	 * Build column comment request body
+	 * @param {string} tableName - Table name
+	 * @param {string} decomment - Inputed decomment
+	 * @return {Object} Request body
+	 */
+	buildTableCommentRequestParams: function (tableName, decomment) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap !== null) {
+			var authors = tableMap['authors'];
+			var previousPieces = tableMap['previousPieces'];
+			var commentVersion = tableMap['commentVersion'];
+			var databaseComment = tableMap['databaseComment'];
+			databaseComment = databaseComment.replace('<br>', '\n');
+		}
+
+		decomment = this.escapeInputText(decomment);
+		decomment = this.deleteUnnecessaryWhitespace(decomment);
+
+		console.log(tableName);
+		return {
+			'tableName': tableName,
+			'targetType': 'TABLE',
+			'decomment': decomment,
+			'databaseComment': databaseComment,
+			'commentVersion': commentVersion || 0,
+			'authors': authors || [],
+			'previousPieces': previousPieces || []
+		};
 	},
 
 	/**
@@ -1894,6 +1978,19 @@ Decomment.prototype = {
 			}
 		};
 		http.send(JSON.stringify(params, null, "  "));
+	},
+
+	/**
+	 * Get table object from pickup store.
+	 * @param {string} tableName - Table name
+	 * @return {Object} Column object
+	 */
+	getTableMapInfoFromStore: function (tableName) {
+		var tableMap = this.pickupStore[tableName];
+		if (tableMap === undefined) {
+			return null;
+		}
+		return tableMap;
 	},
 
 	/**

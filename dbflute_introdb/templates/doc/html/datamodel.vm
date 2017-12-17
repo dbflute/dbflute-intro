@@ -393,7 +393,6 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 
 #set ($hasAdditionalSchema = $database.hasAdditionalSchema())
 #set ($isAliasDelimiterInDbCommentValid = $database.isAliasDelimiterInDbCommentValid())
-#set ($hasTableComment = $database.hasTableComment())
 <h2>Table List</h2>
 <div class="keywordsearch">
 	<input type="text" id="incremental-search-field" tabindex=1 value="" placeholder="Table Search" />
@@ -414,9 +413,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 #end
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
-#if ($hasTableComment)
 		<th>TableComment</th>
-#end
 		<th>EntityName</th>
 	</tr>
 	</thead>
@@ -428,16 +425,14 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 #if ($isAliasDelimiterInDbCommentValid)
 		<td class="aliascell">${table.alias}</td>
 #end
-		<td><a href="#${table.tableIdForSchemaHtml}"${table.titleForSchemaHtml}>${table.tableDispName}</a></td>
+		<td class="namecell"><a href="#${table.tableIdForSchemaHtml}"${table.titleForSchemaHtml}>${table.tableDispName}</a></td>
 		<td class="typecell">${table.type}</td>
 #if ($hasAdditionalSchema)
 		<td class="schemacell">#if ($table.hasSchema()) ${table.documentSchema}#else &nbsp;#end</td>
 #end
 		<td class="relcell">${table.foreignTableNameCommaStringWithHtmlHref}</td>
 		<td class="relcell">${table.referrerTableNameCommaStringWithHtmlHref}</td>
-#if ($hasTableComment)
-		<td class="commentcell">#if ($table.hasComment()) ${table.commentForSchemaHtml}#else &nbsp;#end</td>
-#end
+		<td class="commentcell"><span>#if ($table.hasComment()) ${table.commentForSchemaHtml}#else &nbsp;#end</span></td>
 		<td class="subcell">${table.javaName}</td>
 	</tr>
 #set ($rownum = $rownum + 1)
@@ -1250,7 +1245,7 @@ Decomment.prototype = {
 	 * @param {string} table - Table name
 	 */
 	setupSaveDecomment: function(schemeName) {
-    // this.setupSaveTableCommnt(); TODO tominaga create table comment event
+		this.setupSaveTableCommnt();
 		this.setupSaveColumnComment();
 	},
 
@@ -1260,9 +1255,40 @@ Decomment.prototype = {
 	setupSaveTableCommnt: function() {
 		var tables = document.getElementById('table-list-body').querySelectorAll('tr');
 		Array.prototype.forEach.call(tables, function (table) {
-			var tableName = table.children[1].innerText;
-			var commentElement = table.children[5];
-			var comment = commentElement.innerText;
+			var tableName = table.querySelector('.namecell').querySelector('a').innerText;
+			var commentElement = table.querySelector('.commentcell');
+			commentElement.onclick = function() {
+				var modalElement = document.getElementById("decomment-modal");
+				modalElement.style.display = "block";
+
+// 				var isConflict = that.isCommentConflict(tableName, columnName); // TODO tominaga
+// 				var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName; // TODO tominaga
+// 				document.getElementById("decomment-modal-column-info").innerText = columnInfo;
+
+				var inputElement = document.getElementById("decomment-input");
+				inputElement.value = that.extractPreviousComment(commentElement);
+
+				document.getElementById("decomment-cancel").onclick = function () {
+					modalElement.style.display = "none";
+				};
+
+				document.getElementById("decomment-ok").onclick = function () {
+					var decomment = inputElement.value;
+					if (!that.isTableCommentChanged(tableName, decomment)) {
+						modalElement.style.display = "none";
+						return;
+					}
+					var params = that.buildTableCommentRequestParams(tableName, decomment);
+					that.requestSaveDecomment(that.getSchemeName(), params);
+					modalElement.style.display = "none";
+				};
+
+				window.onclick = function (event) {
+					if (event.target == modalElement) {
+						modalElement.style.display = "none";
+					}
+				};
+			}
 		});
 	},
 
@@ -1368,6 +1394,24 @@ Decomment.prototype = {
 	 * @param {string} decomment - decomment
 	 * @returns {Boolean} is changed
 	 */
+	isTableCommentChanged: function (tableName, decomment) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap !== null) {
+			var previousComment = tableMap['previousWholeComment'];
+			if (previousComment) {
+				return previousComment.trim() !== decomment.trim();
+			}
+		}
+		return decomment.trim().length != 0;
+	},
+
+	/**
+	 * Check new decomment and previous comment is different
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - Column name
+	 * @param {string} decomment - decomment
+	 * @returns {Boolean} is changed
+	 */
 	isCommentChanged: function (tableName, columnName, decomment) {
 		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
 		if (columnMap !== null) {
@@ -1377,6 +1421,37 @@ Decomment.prototype = {
 			}
 		}
 		return decomment.trim().length != 0;
+	},
+
+	/**
+	 * Build column comment request body
+	 * @param {string} tableName - Table name
+	 * @param {string} decomment - Inputed decomment
+	 * @return {Object} Request body
+	 */
+	buildTableCommentRequestParams: function (tableName, decomment) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap !== null) {
+			var authors = tableMap['authors'];
+			var previousPieces = tableMap['previousPieces'];
+			var commentVersion = tableMap['commentVersion'];
+			var databaseComment = tableMap['databaseComment'];
+			databaseComment = databaseComment.replace('<br>', '\n');
+		}
+
+		decomment = this.escapeInputText(decomment);
+		decomment = this.deleteUnnecessaryWhitespace(decomment);
+
+		console.log(tableName);
+		return {
+			'tableName': tableName,
+			'targetType': 'TABLE',
+			'decomment': decomment,
+			'databaseComment': databaseComment,
+			'commentVersion': commentVersion || 0,
+			'authors': authors || [],
+			'previousPieces': previousPieces || []
+		};
 	},
 
 	/**
@@ -1472,6 +1547,19 @@ Decomment.prototype = {
 			}
 		};
 		http.send(JSON.stringify(params, null, "  "));
+	},
+
+	/**
+	 * Get table object from pickup store.
+	 * @param {string} tableName - Table name
+	 * @return {Object} Column object
+	 */
+	getTableMapInfoFromStore: function (tableName) {
+		var tableMap = this.pickupStore[tableName];
+		if (tableMap === undefined) {
+			return null;
+		}
+		return tableMap;
 	},
 
 	/**
