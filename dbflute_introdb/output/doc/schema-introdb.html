@@ -1652,25 +1652,11 @@ Decomment.prototype = {
 	reflectCommentConflictIfNeed: function(table, column, columnElement) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
-		if (this.isCommentConflict(tableName, columnName)) {
+		if (this.isColumnCommentConflict(tableName, columnName)) {
 			columnElement.querySelector('.commentcell').className += " commentcellerror"
 		}
 	},
 
-	/**
-	 * Check the comment is conflict
-	 * @param {String} tableName - Table name
-	 * @param {String} columnName - Column name
-	 * @returns {Boolean} comment is conflict
-	 */
-	isCommentConflict: function(tableName, columnName) {
-		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
-		if (columnMap === null) {
-			return false;
-		}
-		return columnMap['isConflict'] || false;
-	},
-	
 	/**
 	 * Check the table comment is conflict
 	 * @param {String} tableName - Table name
@@ -1684,6 +1670,20 @@ Decomment.prototype = {
 		return tableMap['isConflict'] || false;
 	},
 
+	/**
+	 * Check the column comment is conflict
+	 * @param {String} tableName - Table name
+	 * @param {String} columnName - Column name
+	 * @returns {Boolean} comment is conflict
+	 */
+	isColumnCommentConflict: function(tableName, columnName) {
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		if (columnMap === null) {
+			return false;
+		}
+		return columnMap['isConflict'] || false;
+	},
+	
 	/**
 	 * Setup save decomment event
 	 * @param {string} table - Table name
@@ -1751,53 +1751,42 @@ Decomment.prototype = {
 
 				var commentCellElement = column.querySelector('.commentcell')
 				var previousWholeCommentElement = commentCellElement.querySelector('pre');
-				that.setupEvents(previousWholeCommentElement, table, column);
+				previousWholeCommentElement.onclick = function () {
+					var modalElement = document.getElementById("decomment-modal");
+					modalElement.style.display = "block";
+
+					var tableName = that.getTableName(table);
+					var columnName = column.querySelector('.columnnamecell').innerText;
+					var isConflict = that.isColumnCommentConflict(tableName, columnName);
+					var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
+					document.getElementById("decomment-modal-column-info").innerText = columnInfo;
+
+					var inputElement = document.getElementById("decomment-input");
+					inputElement.value = that.extractPreviousComment(previousWholeCommentElement);
+
+					document.getElementById("decomment-cancel").onclick = function () {
+						modalElement.style.display = "none";
+					};
+
+					document.getElementById("decomment-ok").onclick = function () {
+						var decomment = inputElement.value;
+						if (!that.isCommentChanged(tableName, columnName, decomment)) {
+							modalElement.style.display = "none";
+							return;
+						}
+						var params = that.buildColumnCommentRequestParams(tableName, columnName, decomment, column);
+						that.requestSaveDecomment(that.getSchemeName(), params);
+						modalElement.style.display = "none";
+					};
+
+					window.onclick = function (event) {
+						if (event.target == modalElement) {
+							modalElement.style.display = "none";
+						}
+					};
+				};
 			});
 		});
-	},
-
-	/**
-	 * Setup click event
-	 * @param {Object} previousWholeCommentElement - Previous whole comment
-	 * @param {Object} table - Table
-	 * @param {Object} column - Column
-	 */
-	setupEvents: function (previousWholeCommentElement, table, column) {
-		that = this
-		previousWholeCommentElement.onclick = function () {
-			var modalElement = document.getElementById("decomment-modal");
-			modalElement.style.display = "block";
-
-			var tableName = that.getTableName(table);
-			var columnName = column.querySelector('.columnnamecell').innerText;
-			var isConflict = that.isCommentConflict(tableName, columnName);
-			var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
-			document.getElementById("decomment-modal-column-info").innerText = columnInfo;
-
-			var inputElement = document.getElementById("decomment-input");
-			inputElement.value = that.extractPreviousComment(previousWholeCommentElement);
-
-			document.getElementById("decomment-cancel").onclick = function () {
-				modalElement.style.display = "none";
-			};
-
-			document.getElementById("decomment-ok").onclick = function () {
-				var decomment = inputElement.value;
-				if (!that.isCommentChanged(tableName, columnName, decomment)) {
-					modalElement.style.display = "none";
-					return;
-				}
-				var params = that.buildColumnCommentRequestParams(tableName, columnName, decomment, column);
-				that.requestSaveDecomment(that.getSchemeName(), params);
-				modalElement.style.display = "none";
-			};
-
-			window.onclick = function (event) {
-				if (event.target == modalElement) {
-					modalElement.style.display = "none";
-				}
-			};
-		};
 	},
 
 	/**
