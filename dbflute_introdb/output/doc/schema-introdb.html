@@ -1670,6 +1670,19 @@ Decomment.prototype = {
 		}
 		return columnMap['isConflict'] || false;
 	},
+	
+	/**
+	 * Check the table comment is conflict
+	 * @param {String} tableName - Table name
+	 * @returns {Boolean} comment is conflict
+	 */
+	isTableCommentConflict: function(tableName) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap == null) {
+			return false;
+		}
+		return tableMap['isConflict'] || false;
+	},
 
 	/**
 	 * Setup save decomment event
@@ -1692,9 +1705,9 @@ Decomment.prototype = {
 				var modalElement = document.getElementById("decomment-modal");
 				modalElement.style.display = "block";
 
-// 				var isConflict = that.isCommentConflict(tableName, columnName); // TODO tominaga
-// 				var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName; // TODO tominaga
-// 				document.getElementById("decomment-modal-column-info").innerText = columnInfo;
+				var isConflict = that.isTableCommentConflict(tableName);
+				var columnInfo = isConflict ? tableName + " ... but now in CONFLICT!" : tableName;
+				document.getElementById("decomment-modal-column-info").innerText = columnInfo;
 
 				var inputElement = document.getElementById("decomment-input");
 				inputElement.value = that.extractPreviousComment(commentElement);
@@ -1873,7 +1886,6 @@ Decomment.prototype = {
 		decomment = this.escapeInputText(decomment);
 		decomment = this.deleteUnnecessaryWhitespace(decomment);
 
-		console.log(tableName);
 		return {
 			'tableName': tableName,
 			'targetType': 'TABLE',
