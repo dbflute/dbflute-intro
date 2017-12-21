@@ -1758,11 +1758,13 @@ Decomment.prototype = {
 					var tableName = that.getTableName(table);
 					var columnName = column.querySelector('.columnnamecell').innerText;
 					var isConflict = that.isColumnCommentConflict(tableName, columnName);
-					var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
+					var columnNameOfTable = columnName + " of " + tableName;
+					var columnInfo = isConflict ? columnNameOfTable + " ... but now in CONFLICT!" : columnNameOfTable;
 					document.getElementById("decomment-modal-column-info").innerText = columnInfo;
 
 					var inputElement = document.getElementById("decomment-input");
 					inputElement.value = that.extractPreviousComment(previousWholeCommentElement);
+					inputElement.focus();
 
 					document.getElementById("decomment-cancel").onclick = function () {
 						modalElement.style.display = "none";
