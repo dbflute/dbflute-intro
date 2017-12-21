@@ -1506,9 +1506,10 @@ Decomment.prototype = {
 	reflectPickup: function (decomment) {
 		that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
+			that.storePickupTableProperties(table);
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
-				that.storePickupProperies(table, column);
+				that.storePickupColumnProperties(table, column);
 				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
 				var authors = that.buildAuthorsFromServer(table, column);
 				that.storePreviousWholeComment(table, column, newComment);
@@ -1532,11 +1533,57 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Store comment properties
+	 * Store table comment properties
+	 * @param {Object} table - Table object
+	 */
+	storePickupTableProperties: function(table) {
+		var tableName = table['tableName'];
+		if (this.pickupStore[tableName] === undefined) {
+			this.pickupStore[tableName] = {};
+		}
+
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		var databaseComment = tableMap['databaseComment'];
+		var properties = table['properties'];
+
+		// properties to store
+		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
+		var decomments = [];
+		var previousPieces = [];
+		var authors = [];
+		var commentVersion = 0;
+		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+			}
+			decomments.push(property["decomment"]);
+			if (property['pieceCode'] != null) {
+				previousPieces.push(property['pieceCode']);
+			}
+			authors = authors.concat(property['authors']);
+			if (commentVersion < property['commentVersion']) {
+				commentVersion = property['commentVersion'];
+			}
+		});
+		authors = authors.filter(function (x, i, self) {
+			return self.indexOf(x) === i;
+		});
+
+		tableMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		tableMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		tableMap['decomments'] = decomments;
+		tableMap['previousPieces'] = previousPieces;
+		tableMap['authors'] = authors;
+		tableMap['commentVersion'] = commentVersion;
+	},
+
+	/**
+	 * Store column comment properties
 	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
 	 */
-	storePickupProperies: function (table, column) {
+	storePickupColumnProperties: function (table, column) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		if (this.pickupStore[tableName] === undefined) {
