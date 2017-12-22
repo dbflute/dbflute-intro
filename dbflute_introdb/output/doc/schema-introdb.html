@@ -346,7 +346,7 @@ dl.procedurelist dd.column pre {
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
-		<td class="commentcell"><span> &nbsp;</span></td>
+		<td class="commentcell cls_target_container_comment"><pre> &nbsp;</pre></td>
 		<td class="subcell">ClsTargetContainer</td>
 	</tr>
 	<tr>
@@ -356,7 +356,7 @@ dl.procedurelist dd.column pre {
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
-		<td class="commentcell"><span> &nbsp;</span></td>
+		<td class="commentcell cls_target_database_comment"><pre> &nbsp;</pre></td>
 		<td class="subcell">ClsTargetDatabase</td>
 	</tr>
 	<tr>
@@ -366,7 +366,7 @@ dl.procedurelist dd.column pre {
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
-		<td class="commentcell"><span> &nbsp;</span></td>
+		<td class="commentcell cls_target_language_comment"><pre> &nbsp;</pre></td>
 		<td class="subcell">ClsTargetLanguage</td>
 	</tr>
 	</tbody>
@@ -375,6 +375,7 @@ dl.procedurelist dd.column pre {
 <h2 id="cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">
 CLS_TARGET_CONTAINER
 </h2>
+<div class="tablecomment cls_target_container_comment"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_CONTAINER">
 <table class="tablecontent">
 	<thead>
@@ -456,6 +457,7 @@ CLS_TARGET_CONTAINER
 <h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
 CLS_TARGET_DATABASE
 </h2>
+<div class="tablecomment cls_target_database_comment"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_DATABASE">
 <table class="tablecontent">
 	<thead>
@@ -663,6 +665,7 @@ CLS_TARGET_DATABASE
 <h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
 CLS_TARGET_LANGUAGE
 </h2>
+<div class="tablecomment cls_target_language_comment"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_LANGUAGE">
 <table class="tablecontent">
 	<thead>
@@ -1506,17 +1509,35 @@ Decomment.prototype = {
 	reflectPickup: function (decomment) {
 		that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
+			var tableElements = that.extractTableElements(table);
 			that.storePickupTableProperties(table);
+			var newTableComment = that.buildDisplayTableCommentFromServer(table);
+			var authors = that.getTableMapInfoFromStore(table['tableName'])['authors'];
+			that.storePreviousWholeTableComment(table, newTableComment, authors);
+			that.updateDisplayTableCommentToHtml(tableElements, newTableComment, authors);
+			that.reflectCommentConflictIfNeed(table, tableElements);
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
 				that.storePickupColumnProperties(table, column);
 				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
 				var authors = that.buildAuthorsFromServer(table, column);
-				that.storePreviousWholeComment(table, column, newComment);
-				that.updateDisplayCommentToHtml(columnElement, newComment, authors);
+				that.storePreviousWholeColumnComment(table, column, newComment);
+				that.updateDisplayColumnCommentToHtml(columnElement, newComment, authors);
 				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
 		});
+	},
+
+	/**
+	 * Extract table element
+	 * @param {Object} table - Table object
+	 * @returns {Object} Column element
+	 */
+	extractTableElements: function (table) {
+		var className = (table["tableName"] + "_" + "comment");
+		className = className.toLowerCase();
+		var tableElements = document.getElementsByClassName(className);
+		return tableElements;
 	},
 
 	/**
@@ -1633,12 +1654,26 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Store new comment properties
+	 * Store new column comment properties
 	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
 	 * @param {string} newComment - Comment from server
 	 */
-	storePreviousWholeComment: function (table, column, newComment) {
+	storePreviousWholeTableComment: function (table, newComment) {
+		var tableName = table['tableName'];
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap !== null) {
+			tableMap['previousWholeComment'] = newComment;
+		}
+	},
+
+	/**
+	 * Store new column comment properties
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 * @param {string} newComment - Comment from server
+	 */
+	storePreviousWholeColumnComment: function (table, column, newComment) {
 		var tableName = table['tableName'];
 		var columnName = column['columnName'];
 		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
@@ -1648,7 +1683,23 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Build new scheme comment from server response
+	 * Build new table comment from server response
+	 * @param {Object} table - table object
+	 * @returns {string} New scheme comment
+	 */
+	buildDisplayTableCommentFromServer: function (table) {
+		var tableName = table['tableName'];
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		var result = "";
+		if (tableMap['isDatabaseCommentConflict']) {
+			result = tableMap['databaseComment'].replace('<br>', '\n') + '\n(from database comment)\n\n======\n\n';
+		}
+		result += tableMap['decomments'].join('\n\n=======\n\n');
+		return result;
+	},
+
+	/**
+	 * Build new column comment from server response
 	 * @param {Object} table - table object
 	 * @param {Object} column - Column object
 	 * @returns {string} New scheme comment
@@ -1679,12 +1730,27 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Update comment
+	 * Update table comment of html
+	 * @param {Object} tableElements - Table elements
+	 * @param {string} newComment - New scheme comment
+	 * @param {Array} authors - Comment authoers
+	 */
+	updateDisplayTableCommentToHtml: function (tableElements, newComment, authors) {
+		var author = authors.join(',');
+		var comment = newComment + "\n<span>@author(" + author + ")</span>";
+		Array.prototype.forEach.call(tableElements, function (element) {
+			console.log(element);
+			element.querySelector('pre').innerHTML = comment;
+		});
+	},
+
+	/**
+	 * Update column comment of html
 	 * @param {Object} columnElement - Column element
 	 * @param {string} newComment - New scheme comment
 	 * @param {Array} authors - Comment authoers
 	 */
-	updateDisplayCommentToHtml: function (columnElement, newComment, authors) {
+	updateDisplayColumnCommentToHtml: function (columnElement, newComment, authors) {
 		var author = authors.join(',');
 		var comment = newComment + "\n<span>@author(" + author + ")</span>";
 		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = comment;
@@ -1730,7 +1796,7 @@ Decomment.prototype = {
 		}
 		return columnMap['isConflict'] || false;
 	},
-	
+
 	/**
 	 * Setup save decomment event
 	 * @param {string} table - Table name
@@ -1747,7 +1813,7 @@ Decomment.prototype = {
 		var tables = document.getElementById('table-list-body').querySelectorAll('tr');
 		Array.prototype.forEach.call(tables, function (table) {
 			var tableName = table.querySelector('.namecell').querySelector('a').innerText;
-			var commentElement = table.querySelector('.commentcell');
+			var commentElement = table.querySelector('.commentcell').querySelector('pre');
 			commentElement.onclick = function() {
 				var modalElement = document.getElementById("decomment-modal");
 				modalElement.style.display = "block";
@@ -1862,6 +1928,7 @@ Decomment.prototype = {
 	 * @returns {string} Previous comment
 	 */
 	extractPreviousComment: function (columnCommentElemnet) {
+		console.log(columnCommentElemnet);
 		var child = columnCommentElemnet.childNodes[0];
 		if (child !== null && child.nodeName === "#text") {
 			return child.nodeValue;
