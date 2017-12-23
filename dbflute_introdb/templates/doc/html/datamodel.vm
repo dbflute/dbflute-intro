@@ -1018,7 +1018,6 @@ searcher.init();
         }
         #end
       ]}
-  }
 	this.pickupStore = {
 #foreach ($table in $database.tableDisplaySortedList)
 ## decomment uses display name so fix later
