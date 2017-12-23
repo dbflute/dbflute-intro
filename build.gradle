@@ -35,24 +35,24 @@ ext {
             node : '8.7.0',
 
             // Main Framework
-            dbflute : '1.1.5',
+            dbflute : '1.1.6-RC1',
             h2 : '1.4.196',
-            lastaflute : '1.0.2',
+            lastaflute : '1.0.4-RC1',
 
             // Partner Library
             slf4j : '1.7.25',
             logback : '1.2.3',
-            jettyboot : '0.4.9-RC1',
-            lastadoc : '0.2.9-RC5',
-            swaggerui : '2.2.8',
+            jettyboot : '0.4.9',
+            lastadoc : '0.3.1',
+            swaggerui : '2.2.10',
 
             // GoodNeighbor Library
-            commonslang : '3.6',
-            commonsio : '2.5',
+            commonslang : '3.7',
+            commonsio : '2.6',
 
             // Testing
             junit : '4.12',
-            utflute : '0.8.3'
+            utflute : '0.8.5'
         ]
 }
 
@@ -68,6 +68,11 @@ task refreshResourceAfter {
 }
 
 // include plugin's gradle settings (using application settings, e.g. versions)
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// if ./gradlew eclipse => module.js:529 throw err; Error: Cannot find module 'internal/errors'
+// you can avoid this: by jflute (2017/12/23)
+//  e.g. fileTree(dir: 'gradle/gradlePlugin', includes: ['common.gradle', 'commonJava.gradle', 'eclipse.gradle']).each { apply from: it }
+// _/_/_/_/_/_/_/_/_/_/
 fileTree(dir: 'gradle/gradlePlugin', includes: ['*.gradle']).each { apply from: it }
 
 
