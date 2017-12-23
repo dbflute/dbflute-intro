@@ -1082,7 +1082,7 @@ Decomment.prototype = {
 				var authors = that.getTableMapInfoFromStore(that.getTableNameFromJson(table))['authors'];
 				that.storePreviousWholeTableComment(table, newTableComment, authors);
 				that.updateDisplayTableCommentToHtml(tableElements, newTableComment, authors);
-				// TODO deco that.reflectTableCommentConflictIfNeed(table, tableElements);
+				that.reflectTableCommentConflictIfNeed(table, tableElements);
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
@@ -1341,8 +1341,8 @@ Decomment.prototype = {
 	reflectTableCommentConflictIfNeed: function(table, tableElements) {
 		var tableName = this.getTableNameFromJson(table);
 		if (this.isTableCommentConflict(tableName)) {
-			Array.prototype.forEach(tableElements, function(element) {
-				element.querySelector('.commentcell').className += " commentcellerror"
+			Array.prototype.forEach.call(tableElements, function (element) {
+				element.className += " commentcellerror"
 			});
 		}
 	},
@@ -1427,7 +1427,6 @@ Decomment.prototype = {
 	 * @param {Object} commentElement - Comment element
 	 */
 	setupSaveTableClickEvent: function(tableName, commentElement) {
-		tableName = tableName.toLowerCase();
 		var tableMap = this.getTableMapInfoFromStore(tableName);
 		commentElement.onclick = this.createSaveDecommentFunction(tableName, null, tableMap, commentElement);
 	},
@@ -1447,7 +1446,7 @@ Decomment.prototype = {
 
 				var commentElement = column.querySelector('.commentcell');
 				var tableName = that.getTableNameFromElement(table);
-				var columnName = column.querySelector('.columnnamecell').innerText.toLowerCase();
+				var columnName = column.querySelector('.columnnamecell').innerText;
 				var columnMap = that.getColumnMapInfoFromStore(tableName, columnName);
 				commentElement.onclick = that.createSaveDecommentFunction(tableName, columnName, columnMap, commentElement);
 			});
@@ -1531,7 +1530,7 @@ Decomment.prototype = {
 	 * @returns {string} Table name lower cased
 	 */
 	getTableNameFromJson: function(table) {
-		return table['tableName'].toLowerCase();
+		return table['tableName'];
 	},
 
 	/**
@@ -1541,7 +1540,7 @@ Decomment.prototype = {
 	 */
 	getTableNameFromElement: function (table) {
 		var previousElement = table.previousElementSibling;
-		return previousElement.value.toLowerCase();
+		return previousElement.value;
 	},
 
 	/**
@@ -1550,7 +1549,7 @@ Decomment.prototype = {
 	 * @returns {string} Column name lower cased
 	 */
 	getColumnNameFromJson: function(column) {
-		return column['columnName'].toLowerCase();
+		return column['columnName'];
 	},
 
 	/**
