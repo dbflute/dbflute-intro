@@ -1448,6 +1448,7 @@ Decomment.prototype = {
 			var schemeName = this.getSchemeName();
 			this.fetchVirtualPickup(schemeName);
 			this.setupSaveDecomment(schemeName);
+			this.setupKeyDownEvent();
 		} else {
 			this.reflectEmbeddedPickup();
 		}
@@ -1919,6 +1920,19 @@ Decomment.prototype = {
 				};
 			});
 		});
+	},
+
+	/**
+	 * Setup key down event
+	 */
+	setupKeyDownEvent : function() {
+		document.onkeydown = function (e) {
+			// ESC
+			if(e.keyCode == 27){
+				var modalElement = document.getElementById("decomment-modal");
+				modalElement.style.display = "none";
+			}
+		}
 	},
 
 	/**
