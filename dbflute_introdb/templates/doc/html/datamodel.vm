@@ -1082,7 +1082,7 @@ Decomment.prototype = {
 				var authors = that.getTableMapInfoFromStore(that.getTableNameFromJson(table))['authors'];
 				that.storePreviousWholeTableComment(table, newTableComment, authors);
 				that.updateDisplayTableCommentToHtml(tableElements, newTableComment, authors);
-				// that.reflectCommentConflictIfNeed(table, null, tableElements);
+				// TODO deco that.reflectTableCommentConflictIfNeed(table, tableElements);
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
@@ -1333,6 +1333,21 @@ Decomment.prototype = {
 	},
 
 	/**
+	 * Add error class if table comment is conflict
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 * @param {Object} columnElement - Column element
+	 */
+	reflectTableCommentConflictIfNeed: function(table, tableElements) {
+		var tableName = this.getTableNameFromJson(table);
+		if (this.isTableCommentConflict(tableName)) {
+			Array.prototype.forEach(tableElements, function(element) {
+				element.querySelector('.commentcell').className += " commentcellerror"
+			});
+		}
+	},
+
+	/**
 	 * Add error class if comment is conflict
 	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
@@ -1353,7 +1368,7 @@ Decomment.prototype = {
 	 */
 	isTableCommentConflict: function(tableName) {
 		var tableMap = this.getTableMapInfoFromStore(tableName);
-		return this.isCommentConflict(columnMap);
+		return this.isCommentConflict(tableMap);
 	},
 
 	/**
