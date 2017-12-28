@@ -1354,24 +1354,15 @@ var searcher = new Incremental(document.getElementById('incremental-search-field
 searcher.init();
 </script>
 <script>
-/**
- * @author deco
- */
-function Decomment() {
-	// setup from dbflute if decomment pickup exists
-	this.embeddedPickup = {};
-	// store of comment info
-	// object structure
-	// {
-	//   tableName: {
-	//     propertyName: propertyValue,
-	//     columns: {
-	//       columnName: {
-	//         propetyName: propertyValue
-	//       }, { ... }
-	//     }
-	//   }, { ... }
-	// }
+  /**
+   * @author deco
+   * @author cabos
+   */
+  function Decomment() {
+    // setup from dbflute if decomment pickup exists
+    this.embeddedPickup = {
+      'tables': [
+              ]}
 	this.pickupStore = {
 		'CLS_TARGET_CONTAINER': {
 			'databaseComment': ''
@@ -1821,7 +1812,7 @@ Decomment.prototype = {
 	 * @param {Object} commentMap - Commnet objedt of table or column
 	 * @returns {Boolean} comment is conflict
 	 */
-	isCommentConflict: function(commentMap) { 
+	isCommentConflict: function(commentMap) {
 		if (commentMap === null) {
 			return false;
 		}
