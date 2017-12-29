@@ -22,13 +22,12 @@ ${table.aliasExpression}${table.tableDispName}
 &nbsp;<span class="bqpcount"><a href="${database.sharp}${table.tableIdForSchemaHtml}_sql">(outsideSql=${table.behaviorQueryPathList.size()})</a></span>
 #end
 </h2>
-#if ($table.hasComment())
-<p class="tablecomment">${table.commentForSchemaHtml}</p>
-#end
+<div class="tablecomment ${table.tableIdForSchemaHtml}_comment" data-name="${table.tableIdForSchemaHtml}"><pre>${table.commentForSchemaHtmlPre}</pre></div>
 #set ($isAliasDelimiterInDbCommentValid = $database.isAliasDelimiterInDbCommentValid())
 #set ($hasDefaultValue = $table.hasDefaultValueExceptAutoIncrement())
 #set ($hasColumnComment = $table.hasColumnComment())
 #set ($canBeColumnNullObject = $table.canBeColumnNullObject())
+<input type="hidden" value="${table.tableDbName}">
 <table class="tablecontent">
 	<thead>
 	<tr>
@@ -79,7 +78,7 @@ ${table.aliasExpression}${table.tableDispName}
 		<td class="relcell">${col.foreignTableNameCommaStringWithHtmlHref}&nbsp;</td>
 		<td class="relcell">${col.referrerTableCommaStringWithHtmlHref}&nbsp;</td>
 		<td class="relcell">#if ($col.hasClassification())<a href="${table.database.sharp}${col.classificationName}Cls">${col.classificationName}</a>#else &nbsp;#end</td>
-		<td class="commentcell"><pre>#if ($col.hasComment()) ${col.commentForSchemaHtml}#else &nbsp;#end</td>
+		<td class="commentcell"><pre>#if ($col.hasComment())${col.commentForSchemaHtmlPre}#else&nbsp;#end</pre></td>
 		<td class="subcell">${col.javaBeansRulePropertyName}</td>
 		<td class="subcell">${col.javaNativeRemovedPackage}</td>
 #if ($canBeColumnNullObject)

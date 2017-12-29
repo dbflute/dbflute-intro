@@ -1354,15 +1354,15 @@ var searcher = new Incremental(document.getElementById('incremental-search-field
 searcher.init();
 </script>
 <script>
-  /**
-   * @author deco
-   * @author cabos
-   */
-  function Decomment() {
-    // setup from dbflute if decomment pickup exists
-    this.embeddedPickup = {
-      'tables': [
-              ]}
+/**
+ * @author deco
+ * @author cabos
+ */
+function Decomment() {
+	// setup from dbflute if decomment pickup exists
+	this.embeddedPickup = {
+		'tables': [
+		]}
 	this.pickupStore = {
 		'CLS_TARGET_CONTAINER': {
 			'databaseComment': ''
@@ -1450,7 +1450,7 @@ Decomment.prototype = {
 	 * @returns {string} Scheme name
 	 */
 	getSchemeName: function () {
-    return "introdb";
+		return "introdb";
 	},
 
 	/**
@@ -1480,9 +1480,7 @@ Decomment.prototype = {
 	 * Reflect embedded pick
 	 */
 	reflectEmbeddedPickup: function () {
-		if (this.embeddedPickup) {
-			this.reflectPickup(this.embeddedPickup);
-		}
+		this.reflectPickup(this.embeddedPickup);
 	},
 
 	/**
@@ -1571,9 +1569,10 @@ Decomment.prototype = {
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1626,9 +1625,10 @@ Decomment.prototype = {
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1712,7 +1712,7 @@ Decomment.prototype = {
 	buildDisplayCommentFromServer: function(commentMap) {
 		var result = "";
 		if (commentMap['isDatabaseCommentConflict']) {
-			result = commentMap['databaseComment'].replace('<br>', '\n') + '\n(from database comment)\n\n======\n\n';
+			result = this.escapeInputText(commentMap['databaseComment']) + '\n(from database comment)\n\n======\n\n';
 		}
 		result += commentMap['decomments'].join('\n\n=======\n\n');
 		return result;
@@ -1894,7 +1894,7 @@ Decomment.prototype = {
 			var isConflict = that.isCommentConflict(commentMap);
 			var commentInfo;
 			if (columnName) {
-				var columnNameOfTable = columnName + " of " + tableName;
+				var columnNameOfTable = tableName + "." + columnName;
 				columnInfo = isConflict ? columnNameOfTable + " ... but now in CONFLICT!" : columnNameOfTable;
 			} else {
 				columnInfo = isConflict ? tableName + " ... but now in CONFLICT!" : tableName;
@@ -1983,10 +1983,9 @@ Decomment.prototype = {
 	 * @returns {string} Previous comment
 	 */
 	extractPreviousComment: function (columnCommentElemnet) {
-		var children = columnCommentElemnet.querySelector('pre').childNodes;
-		var child = children[0]
+		var child = columnCommentElemnet.querySelector('pre').childNodes[0];
 		if (child != null && child.nodeName === "#text") {
-			return child.nodeValue;
+			return child.nodeValue.trim();
 		}
 		return "";
 	},
@@ -2022,7 +2021,7 @@ Decomment.prototype = {
 	 * @return {Object} Request body
 	 */
 	buildCommentRequestParams: function (tableName, columnName, decomment) {
-		var commentMap = this.getCommentMapFromStore(tableName);
+		var commentMap = this.getCommentMapFromStore(tableName, columnName);
 		var databaseComment;
 		var targetType = columnName == null ? 'TABLE' : 'COLUMN';
 		if (commentMap !== null) {
@@ -2031,7 +2030,7 @@ Decomment.prototype = {
 			var commentVersion = commentMap['commentVersion'];
 			databaseComment = commentMap['databaseComment'];
 			if (databaseComment) {
-				databaseComment = databaseComment.replace('<br>', '\n');
+				databaseComment = this.escapeNewlineCharacter(databaseComment);
 			}
 		}
 
@@ -2059,8 +2058,23 @@ Decomment.prototype = {
 			return string;
 		}
 		return string.replace(/[&'`"<>]/g, function(match) {
-			return {'&': '&amp;', "'": '&#x27;', '`': '&#x60;', '"': '&quot;', '<': '&lt;', '>': '&gt;' }[match]
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
 		});
+	},
+
+	/**
+	 * Escape newline character of text
+	 * @param {String} string - text
+	 */
+	escapeNewlineCharacter: function (string) {
+		return string.split('<br>').join('\n')
 	},
 
 	/**
