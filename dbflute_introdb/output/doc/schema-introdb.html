@@ -282,12 +282,14 @@ dl.procedurelist dd.column pre {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 .decommentmodalcontent {
+	position: relative;
 	z-index: 10;
 	width: 50%;
 	margin: 0 auto;
 	border: 1px solid #999999;
 	padding: 15px;
 	background-color: #ffffff;
+	border-radius: 4px;
 }
 .decommentmodalcontent p {
 	font-size: 14px;
@@ -298,9 +300,30 @@ dl.procedurelist dd.column pre {
 	margin-top: 10px;
 	font-size: 12px;
 }
-.decommentmodalbtn {
+.decommentmodal-ok-btn {
 	margin: 10px 5px 0 0;
 	padding: 5px 10px;
+	border-radius: 4px;
+}
+.decommentmodal-close-btn {
+	position: absolute;
+	margin-left: 10px;
+	padding: 0;
+	right: 10px;
+	top: 5px;
+	cursor: pointer;
+	width: 28px;
+	height: 28px;
+	border: 0;
+	border-radius: 50%;
+	color: #657786;
+	font-size: 14px;
+	line-height: 24px;
+	text-align: center;
+	transition: box-shadow .15s ease-in-out;
+}
+.decommentmodal-close-btn:hover {
+	background-color: #eed;
 }
 	</style>
 </head>
@@ -997,10 +1020,10 @@ CLS_TARGET_LANGUAGE
 <!-- Only used by dbflute intro http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html -->
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
+		<button id="decomment-close" class="decommentmodal-close-btn"><span>x</span></button>
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
-		<textarea id="decomment-input" class="decommentinput" rows="5" tabindex="1"></textarea>
-		<button id="decomment-cancel" class="decommentmodalbtn" tabindex="3">Cancel</button>
-		<button id="decomment-ok" class="decommentmodalbtn" tabindex="2">OK</button>
+		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
+		<button id="decomment-ok" class="decommentmodal-ok-btn">OK</button>
 	</div>
 </div>
 <script>
@@ -1354,15 +1377,15 @@ var searcher = new Incremental(document.getElementById('incremental-search-field
 searcher.init();
 </script>
 <script>
-  /**
-   * @author deco
-   * @author cabos
-   */
-  function Decomment() {
-    // setup from dbflute if decomment pickup exists
-    this.embeddedPickup = {
-      'tables': [
-              ]}
+/**
+ * @author deco
+ * @author cabos
+ */
+function Decomment() {
+	// setup from dbflute if decomment pickup exists
+	this.embeddedPickup = {
+		'tables': [
+		]}
 	this.pickupStore = {
 		'CLS_TARGET_CONTAINER': {
 			'databaseComment': ''
@@ -1450,7 +1473,7 @@ Decomment.prototype = {
 	 * @returns {string} Scheme name
 	 */
 	getSchemeName: function () {
-    return "introdb";
+		return "introdb";
 	},
 
 	/**
@@ -1480,9 +1503,7 @@ Decomment.prototype = {
 	 * Reflect embedded pick
 	 */
 	reflectEmbeddedPickup: function () {
-		if (this.embeddedPickup) {
-			this.reflectPickup(this.embeddedPickup);
-		}
+		this.reflectPickup(this.embeddedPickup);
 	},
 
 	/**
@@ -1571,9 +1592,10 @@ Decomment.prototype = {
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1626,9 +1648,10 @@ Decomment.prototype = {
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1712,7 +1735,7 @@ Decomment.prototype = {
 	buildDisplayCommentFromServer: function(commentMap) {
 		var result = "";
 		if (commentMap['isDatabaseCommentConflict']) {
-			result = commentMap['databaseComment'].replace('<br>', '\n') + '\n(from database comment)\n\n======\n\n';
+			result = this.escapeInputText(commentMap['databaseComment']) + '\n(from database comment)\n\n======\n\n';
 		}
 		result += commentMap['decomments'].join('\n\n=======\n\n');
 		return result;
@@ -1905,7 +1928,7 @@ Decomment.prototype = {
 			inputElement.value = that.extractPreviousComment(commentElement);
 			inputElement.focus();
 
-			document.getElementById("decomment-cancel").onclick = function () {
+			document.getElementById("decomment-close").onclick = function () {
 				modalElement.style.display = "none";
 			};
 
@@ -1983,8 +2006,7 @@ Decomment.prototype = {
 	 * @returns {string} Previous comment
 	 */
 	extractPreviousComment: function (columnCommentElemnet) {
-		var children = columnCommentElemnet.querySelector('pre').childNodes;
-		var child = children[0]
+		var child = columnCommentElemnet.querySelector('pre').childNodes[0];
 		if (child != null && child.nodeName === "#text") {
 			return child.nodeValue;
 		}
@@ -2022,7 +2044,7 @@ Decomment.prototype = {
 	 * @return {Object} Request body
 	 */
 	buildCommentRequestParams: function (tableName, columnName, decomment) {
-		var commentMap = this.getCommentMapFromStore(tableName);
+		var commentMap = this.getCommentMapFromStore(tableName, columnName);
 		var databaseComment;
 		var targetType = columnName == null ? 'TABLE' : 'COLUMN';
 		if (commentMap !== null) {
@@ -2031,7 +2053,7 @@ Decomment.prototype = {
 			var commentVersion = commentMap['commentVersion'];
 			databaseComment = commentMap['databaseComment'];
 			if (databaseComment) {
-				databaseComment = databaseComment.replace('<br>', '\n');
+				databaseComment = this.escapeNewlineCharacter(databaseComment);
 			}
 		}
 
@@ -2059,8 +2081,23 @@ Decomment.prototype = {
 			return string;
 		}
 		return string.replace(/[&'`"<>]/g, function(match) {
-			return {'&': '&amp;', "'": '&#x27;', '`': '&#x60;', '"': '&quot;', '<': '&lt;', '>': '&gt;' }[match]
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
 		});
+	},
+
+	/**
+	 * Escape newline character of text
+	 * @param {String} string - text
+	 */
+	escapeNewlineCharacter: function (string) {
+		return string.split('<br>').join('\n')
 	},
 
 	/**
