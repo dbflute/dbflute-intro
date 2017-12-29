@@ -969,55 +969,55 @@ Incremental.prototype.util = {
 var searcher = new Incremental(document.getElementById('incremental-search-field'), document.getElementById('table-list-body'));
 searcher.init();
 </script>
-#macro(escape $str)$!str.replaceAll("'", "\\'")#end
+#macro(escape $str)$!str.replaceAll("'", "\\'").replaceAll("\n", "<br>")#end
 <script>
-  /**
-   * @author deco
-   * @author cabos
-   */
-  function Decomment() {
-    // setup from dbflute if decomment pickup exists
-    this.embeddedPickup = {
-      'tables': [
-        #foreach($table in $database.embeddedPickup.tableList)
-          #if ($velocityCount > 1),#end {
-          'tableName': '#escape($!{table.tableName})'
-          , 'properties': [
-            #foreach($property in $table.propertyList)
-              #if ($velocityCount > 1),#end {
-              'decomment': '#escape($!{property.decomment})'
-              , 'databaseComment': '#escape($!{property.databaseComment})'
-              , 'commentVersion': $!{property.commentVersion}
-              , 'authors': [#foreach($author in $property.authorList)#if ($velocityCount > 1),#end'#escape($!{author})'#end]
-              , 'pieceCode': '$!{property.pieceCode}'
-              , 'pieceDatatime': '$!{property.pieceDatetime}'
-              , 'previousPieces': [#foreach($pieceCode in $property.previousPieceList)#if ($velocityCount > 1),#end'$!{pieceCode}'#end]
-            }
-            #end
-          ]
-          , 'columns': [
-            #foreach($column in $table.columnList)
-              #if ($velocityCount > 1),#end {
-              'columnName': '#escape($!{column.columnName})'
-              , 'properties': [
-                #foreach($property in $column.propertyList)
-                  #if ($velocityCount > 1),#end {
-                  'decomment': '#escape($!{property.decomment})'
-                  , 'databaseComment': '#escape($!{property.databaseComment})'
-                  , 'commentVersion': $!{property.commentVersion}
-                  , 'authors': [#foreach($author in $property.authorList)#if ($velocityCount > 1),#end'#escape($!{author})'#end]
-                  , 'pieceCode': '$!{property.pieceCode}'
-                  , 'pieceDatatime': '$!{property.pieceDatetime}'
-                  , 'previousPieces': [#foreach($pieceCode in $property.previousPieceList)#if ($velocityCount > 1),#end'$!{pieceCode}'#end]
-                }
-                #end
-              ]
-            }
-            #end
-          ]
-        }
-        #end
-      ]}
+/**
+ * @author deco
+ * @author cabos
+ */
+function Decomment() {
+	// setup from dbflute if decomment pickup exists
+	this.embeddedPickup = {
+		'tables': [
+#foreach($table in $database.embeddedPickup.tableList)
+				#if ($velocityCount > 1),#end {
+				'tableName': '#escape($!{table.tableName})'
+				, 'properties': [
+#foreach($property in $table.propertyList)
+						#if ($velocityCount > 1),#end {
+						'decomment': '#escape($!{property.decomment})'
+						, 'databaseComment': '#escape($!{property.databaseComment})'
+						, 'commentVersion': $!{property.commentVersion}
+						, 'authors': [#foreach($author in $property.authorList)#if ($velocityCount > 1),#end'#escape($!{author})'#end]
+						, 'pieceCode': '$!{property.pieceCode}'
+						, 'pieceDatatime': '$!{property.pieceDatetime}'
+						, 'previousPieces': [#foreach($pieceCode in $property.previousPieceList)#if ($velocityCount > 1),#end'$!{pieceCode}'#end]
+					}
+#end
+				]
+				, 'columns': [
+#foreach($column in $table.columnList)
+						#if ($velocityCount > 1),#end {
+						'columnName': '#escape($!{column.columnName})'
+						, 'properties': [
+#foreach($property in $column.propertyList)
+								#if ($velocityCount > 1),#end {
+								'decomment': '#escape($!{property.decomment})'
+								, 'databaseComment': '#escape($!{property.databaseComment})'
+								, 'commentVersion': $!{property.commentVersion}
+								, 'authors': [#foreach($author in $property.authorList)#if ($velocityCount > 1),#end'#escape($!{author})'#end]
+								, 'pieceCode': '$!{property.pieceCode}'
+								, 'pieceDatatime': '$!{property.pieceDatetime}'
+								, 'previousPieces': [#foreach($pieceCode in $property.previousPieceList)#if ($velocityCount > 1),#end'$!{pieceCode}'#end]
+							}
+#end
+						]
+					}
+#end
+				]
+			}
+#end
+		]}
 	this.pickupStore = {
 #foreach ($table in $database.tableDisplaySortedList)
 ## decomment uses display name so fix later
@@ -1055,7 +1055,7 @@ Decomment.prototype = {
 	 * @returns {string} Scheme name
 	 */
 	getSchemeName: function () {
-    return "${database.projectName}";
+		return "${database.projectName}";
 	},
 
 	/**
@@ -1085,9 +1085,7 @@ Decomment.prototype = {
 	 * Reflect embedded pick
 	 */
 	reflectEmbeddedPickup: function () {
-		if (this.embeddedPickup) {
-			this.reflectPickup(this.embeddedPickup);
-		}
+		this.reflectPickup(this.embeddedPickup);
 	},
 
 	/**
@@ -1176,9 +1174,10 @@ Decomment.prototype = {
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != property['databaseComment'];
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1231,9 +1230,10 @@ Decomment.prototype = {
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = databaseComment.replace('<br>', '\n') != property['databaseComment'];
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != property['databaseComment'];
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1317,7 +1317,7 @@ Decomment.prototype = {
 	buildDisplayCommentFromServer: function(commentMap) {
 		var result = "";
 		if (commentMap['isDatabaseCommentConflict']) {
-			result = commentMap['databaseComment'].replace('<br>', '\n') + '\n(from database comment)\n\n======\n\n';
+			result = this.escapeInputText(commentMap['databaseComment']) + '\n(from database comment)\n\n======\n\n';
 		}
 		result += commentMap['decomments'].join('\n\n=======\n\n');
 		return result;
@@ -1588,8 +1588,7 @@ Decomment.prototype = {
 	 * @returns {string} Previous comment
 	 */
 	extractPreviousComment: function (columnCommentElemnet) {
-		var children = columnCommentElemnet.querySelector('pre').childNodes;
-		var child = children[0]
+		var child = columnCommentElemnet.querySelector('pre').childNodes[0];
 		if (child != null && child.nodeName === "#text") {
 			return child.nodeValue;
 		}
@@ -1627,7 +1626,7 @@ Decomment.prototype = {
 	 * @return {Object} Request body
 	 */
 	buildCommentRequestParams: function (tableName, columnName, decomment) {
-		var commentMap = this.getCommentMapFromStore(tableName);
+		var commentMap = this.getCommentMapFromStore(tableName, columnName);
 		var databaseComment;
 		var targetType = columnName == null ? 'TABLE' : 'COLUMN';
 		if (commentMap !== null) {
@@ -1636,7 +1635,7 @@ Decomment.prototype = {
 			var commentVersion = commentMap['commentVersion'];
 			databaseComment = commentMap['databaseComment'];
 			if (databaseComment) {
-				databaseComment = databaseComment.replace('<br>', '\n');
+				databaseComment = this.escapeNewlineCharacter(databaseComment);
 			}
 		}
 
@@ -1664,8 +1663,23 @@ Decomment.prototype = {
 			return string;
 		}
 		return string.replace(/[&'`"<>]/g, function(match) {
-			return {'&': '&amp;', "'": '&#x27;', '`': '&#x60;', '"': '&quot;', '<': '&lt;', '>': '&gt;' }[match]
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
 		});
+	},
+
+	/**
+	 * Escape newline character of text
+	 * @param {String} string - text
+	 */
+	escapeNewlineCharacter: function (string) {
+		return string.split('<br>').join('\n')
 	},
 
 	/**
