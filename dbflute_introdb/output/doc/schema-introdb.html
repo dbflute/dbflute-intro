@@ -369,7 +369,7 @@ dl.procedurelist dd.column pre {
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
-		<td class="commentcell cls_target_container_comment"><pre>&nbsp;</pre></td>
+		<td class="commentcell CLS_TARGET_CONTAINER_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetContainer</td>
 	</tr>
 	<tr>
@@ -379,7 +379,7 @@ dl.procedurelist dd.column pre {
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
-		<td class="commentcell cls_target_database_comment"><pre>&nbsp;</pre></td>
+		<td class="commentcell CLS_TARGET_DATABASE_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetDatabase</td>
 	</tr>
 	<tr>
@@ -389,7 +389,7 @@ dl.procedurelist dd.column pre {
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
-		<td class="commentcell cls_target_language_comment"><pre>&nbsp;</pre></td>
+		<td class="commentcell CLS_TARGET_LANGUAGE_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetLanguage</td>
 	</tr>
 	</tbody>
@@ -398,7 +398,7 @@ dl.procedurelist dd.column pre {
 <h2 id="cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">
 CLS_TARGET_CONTAINER
 </h2>
-<div class="tablecomment cls_target_container_comment" data-name="cls_target_container"><pre></pre></div>
+<div class="tablecomment CLS_TARGET_CONTAINER_comment" data-name="CLS_TARGET_CONTAINER"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_CONTAINER">
 <table class="tablecontent">
 	<thead>
@@ -480,7 +480,7 @@ CLS_TARGET_CONTAINER
 <h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
 CLS_TARGET_DATABASE
 </h2>
-<div class="tablecomment cls_target_database_comment" data-name="cls_target_database"><pre></pre></div>
+<div class="tablecomment CLS_TARGET_DATABASE_comment" data-name="CLS_TARGET_DATABASE"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_DATABASE">
 <table class="tablecontent">
 	<thead>
@@ -688,7 +688,7 @@ CLS_TARGET_DATABASE
 <h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
 CLS_TARGET_LANGUAGE
 </h2>
-<div class="tablecomment cls_target_language_comment" data-name="cls_target_language"><pre></pre></div>
+<div class="tablecomment CLS_TARGET_LANGUAGE_comment" data-name="CLS_TARGET_LANGUAGE"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_LANGUAGE">
 <table class="tablecontent">
 	<thead>
@@ -1549,7 +1549,6 @@ Decomment.prototype = {
 	 */
 	extractTableElements: function (table) {
 		var className = (table["tableName"] + "_" + "comment");
-		className = className.toLowerCase();
 		var tableElements = document.getElementsByClassName(className);
 		return tableElements;
 	},
