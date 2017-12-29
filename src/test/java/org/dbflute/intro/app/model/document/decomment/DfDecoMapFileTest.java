@@ -58,29 +58,16 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         assertNotNull(result);
         log(result);
         // assert all table and column
-        long columnCount = result.getTableList()
-                .stream()
-                .map(tablePart -> tablePart.getColumnList())
-                .flatMap(columnParts -> columnParts.stream())
-                .count();
+        long columnCount =
+            result.getTableList().stream().map(tablePart -> tablePart.getColumnList()).mapToLong(columnParts -> columnParts.size()).sum();
         assertEquals(3, columnCount);
     }
 
     private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, long commentVersion,
-            LocalDateTime decommentDateTime) {
-        DfDecoMapPiece piece = new DfDecoMapPiece();
-        piece.setFormatVersion("1.0");
-        piece.setTableName(tableName);
-        piece.setColumnName(columnName);
-        piece.setTargetType(DfDecoMapPieceTargetType.Column);
-        piece.setDecomment("decomment");
-        piece.setDatabaseComment("databasecomment");
-        piece.setCommentVersion(commentVersion);
-        piece.addAllAuthors(Collections.singletonList(author));
-        piece.setPieceCode("DE000000");
-        piece.setPieceDatetime(decommentDateTime);
-        piece.setPieceOwner(author);
-        piece.addAllPreviousPieces(Collections.emptyList());
+        LocalDateTime decommentDateTime) {
+        DfDecoMapPiece piece =
+            new DfDecoMapPiece("1.0", tableName, columnName, DfDecoMapPieceTargetType.Column, "decomment", "database comment",
+                commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author, Collections.emptyList());
         return piece;
     }
 
