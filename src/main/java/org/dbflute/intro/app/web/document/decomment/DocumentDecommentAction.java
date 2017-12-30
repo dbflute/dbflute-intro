@@ -115,9 +115,14 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {
-        // TODO done (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
-        String hashString = body.tableName + body.columnName + pieceDateTime.toString() + author;
-        return Integer.toHexString(hashString.hashCode());
+        // TODO done? (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
+        StringBuilder sb = new StringBuilder();
+        sb.append(body.tableName);
+        sb.append(":").append(body.columnName != null ? body.columnName : "");
+        sb.append(":").append(body.targetType);
+        sb.append(":").append(pieceDateTime);
+        sb.append(":").append(author);
+        return Integer.toHexString(sb.toString().hashCode());
     }
 
     // -----------------------------------------------------
