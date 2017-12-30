@@ -103,9 +103,10 @@ public class DocumentDecommentAction extends IntroBaseAction {
         List<String> authorList = new ArrayList<>(body.authors);
         authorList.add(author);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
-                body.decomment, body.databaseComment, body.commentVersion, authorList, buildPieceCode(body, pieceDatetime, author),
-                pieceDatetime, author, body.previousPieces);
+        DfDecoMapPiece piece =
+            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
+                body.databaseComment, body.commentVersion, authorList, buildPieceCode(body, pieceDatetime, author), pieceDatetime, author,
+                body.previousPieces);
         return piece;
     }
 
@@ -114,7 +115,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {
-        // done (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
+        // TODO done (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
         String hashString = body.tableName + body.columnName + pieceDateTime.toString() + author;
         return Integer.toHexString(hashString.hashCode());
     }
