@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -98,11 +99,12 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
-        List<String> authorList = body.authors;
+        List<String> authorList = new ArrayList<>(body.authors);
         authorList.add(author);
         DfDecoMapPiece piece =
-            new DfDecoMapPiece("1.0", body.tableName, body.columnName, body.targetType, body.decomment, body.databaseComment,
-                body.commentVersion, authorList, buildPieceCode(body), timeManager.currentDateTime(), author, body.previousPieces);
+            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
+                body.databaseComment, body.commentVersion, authorList, buildPieceCode(body), timeManager.currentDateTime(), author,
+                body.previousPieces);
         return piece;
     }
 
