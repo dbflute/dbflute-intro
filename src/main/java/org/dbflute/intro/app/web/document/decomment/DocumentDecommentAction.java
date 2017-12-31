@@ -41,6 +41,11 @@ import org.lastaflute.web.response.JsonResponse;
 public class DocumentDecommentAction extends IntroBaseAction {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static String STRING_OF_NULL = "null";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
@@ -69,7 +74,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> moreValidate(body, messages));
-        verifyOrClientError(buildDebugMessage(body), existsColumnNameIfTargetTypeColumn(body));
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
         decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
@@ -78,10 +83,13 @@ public class DocumentDecommentAction extends IntroBaseAction {
         if (DfDecoMapPieceTargetType.Column == body.targetType && StringUtils.isEmpty(body.columnName)) {
             messages.addConstraintsNotEmptyMessage("columnName");
         }
+        if (STRING_OF_NULL.equals(body.decomment)) {
+            messages.addErrorsStringOfNullNotAccepted("decomment");
+        }
     }
 
     // done cabos unneeded public here, change to private by jflute (2017/11/12)
-    private String buildDebugMessage(DecommentSaveBody body) {
+    private String buildDebugMessageColumnNameIsNull(DecommentSaveBody body) {
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
         sb.append("   targetType : ").append(body.targetType.code()).append("\n");

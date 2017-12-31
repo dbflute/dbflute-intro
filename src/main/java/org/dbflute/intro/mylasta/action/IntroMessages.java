@@ -171,6 +171,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: needs jar file: {0} */
     public static final String ERRORS_DATABASE_NEEDS_JAR = "{errors.database.needsJar}";
 
+    /** The key of the message: Sorry, string of "null" is not accepted */
+    public static final String ERRORS_STRING_OF_NULL_NOT_ACCEPTED = "{errors.string.of.null.not.accepted}";
+
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
      * <pre>
@@ -878,6 +881,20 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsDatabaseNeedsJar(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_DATABASE_NEEDS_JAR, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.string.of.null.not.accepted' with parameters.
+     * <pre>
+     * message: Sorry, string of "null" is not accepted
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsStringOfNullNotAccepted(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_STRING_OF_NULL_NOT_ACCEPTED));
         return this;
     }
 }
