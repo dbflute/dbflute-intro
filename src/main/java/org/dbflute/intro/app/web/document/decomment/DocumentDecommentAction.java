@@ -104,10 +104,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
         Set<String> authorSet = new LinkedHashSet<>(body.authors);
         authorSet.add(author);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece =
-            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
-                body.databaseComment, body.commentVersion, new ArrayList<>(authorSet), buildPieceCode(body, pieceDatetime, author),
-                pieceDatetime, author, body.previousPieces);
+        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
+                body.decomment, body.databaseComment, body.commentVersion, new ArrayList<>(authorSet),
+                buildPieceCode(body, pieceDatetime, author), pieceDatetime, author, body.previousPieces);
         return piece;
     }
 
@@ -116,7 +115,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {
-        // TODO done? (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
+        // done (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
         StringBuilder sb = new StringBuilder();
         sb.append(body.tableName);
         sb.append(":").append(body.columnName != null ? body.columnName : "");
