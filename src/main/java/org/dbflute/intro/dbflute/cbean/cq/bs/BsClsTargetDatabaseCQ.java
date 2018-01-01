@@ -94,7 +94,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _databaseCode; }
     protected ConditionValue xgetCValueDatabaseCode() { return xdfgetDatabaseCode(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * DATABASE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetDatabase}
      * @return this. (NotNull)
@@ -114,7 +114,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _databaseName; }
     protected ConditionValue xgetCValueDatabaseName() { return xdfgetDatabaseName(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * DATABASE_NAME: {NotNull, VARCHAR(100)}
      * @return this. (NotNull)
@@ -134,7 +134,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _jdbcDriverFqcn; }
     protected ConditionValue xgetCValueJdbcDriverFqcn() { return xdfgetJdbcDriverFqcn(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * JDBC_DRIVER_FQCN: {NotNull, VARCHAR(100)}
      * @return this. (NotNull)
@@ -154,7 +154,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _urlTemplate; }
     protected ConditionValue xgetCValueUrlTemplate() { return xdfgetUrlTemplate(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * URL_TEMPLATE: {NotNull, VARCHAR(100)}
      * @return this. (NotNull)
@@ -174,7 +174,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _defaultSchema; }
     protected ConditionValue xgetCValueDefaultSchema() { return xdfgetDefaultSchema(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * DEFAULT_SCHEMA: {VARCHAR(10)}
      * @return this. (NotNull)
@@ -194,7 +194,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _schemaRequiredFlg; }
     protected ConditionValue xgetCValueSchemaRequiredFlg() { return xdfgetSchemaRequiredFlg(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * SCHEMA_REQUIRED_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @return this. (NotNull)
@@ -214,7 +214,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _schemaUpperCaseFlg; }
     protected ConditionValue xgetCValueSchemaUpperCaseFlg() { return xdfgetSchemaUpperCaseFlg(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * SCHEMA_UPPER_CASE_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @return this. (NotNull)
@@ -234,7 +234,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _userInputAssistFlg; }
     protected ConditionValue xgetCValueUserInputAssistFlg() { return xdfgetUserInputAssistFlg(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * USER_INPUT_ASSIST_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @return this. (NotNull)
@@ -254,7 +254,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _embeddedJarFlg; }
     protected ConditionValue xgetCValueEmbeddedJarFlg() { return xdfgetEmbeddedJarFlg(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * EMBEDDED_JAR_FLG: {NotNull, INTEGER(10), classification=Flg}
      * @return this. (NotNull)
@@ -274,7 +274,7 @@ public class BsClsTargetDatabaseCQ extends AbstractBsClsTargetDatabaseCQ {
       return _displayOrder; }
     protected ConditionValue xgetCValueDisplayOrder() { return xdfgetDisplayOrder(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
      * @return this. (NotNull)
