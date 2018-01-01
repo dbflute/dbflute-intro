@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"> <!-- main language (to avoid HTML validator) -->
 <head>
 	<meta charset="UTF-8" />
 	<title>introdb schema</title>
@@ -282,12 +282,14 @@ dl.procedurelist dd.column pre {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 .decommentmodalcontent {
+	position: relative;
 	z-index: 10;
 	width: 50%;
 	margin: 0 auto;
 	border: 1px solid #999999;
 	padding: 15px;
 	background-color: #ffffff;
+	border-radius: 4px;
 }
 .decommentmodalcontent p {
 	font-size: 14px;
@@ -296,11 +298,32 @@ dl.procedurelist dd.column pre {
 	display: block;
 	width: 100%;
 	margin-top: 10px;
-  font-size: 12px;
+	font-size: 12px;
 }
-.decommentmodalbtn {
+.decommentmodal-ok-btn {
 	margin: 10px 5px 0 0;
 	padding: 5px 10px;
+	border-radius: 4px;
+}
+.decommentmodal-close-btn {
+	position: absolute;
+	margin-left: 10px;
+	padding: 0;
+	right: 10px;
+	top: 5px;
+	cursor: pointer;
+	width: 28px;
+	height: 28px;
+	border: 0;
+	border-radius: 50%;
+	color: #657786;
+	font-size: 14px;
+	line-height: 24px;
+	text-align: center;
+	transition: box-shadow .15s ease-in-out;
+}
+.decommentmodal-close-btn:hover {
+	background-color: #eed;
 }
 	</style>
 </head>
@@ -313,7 +336,6 @@ dl.procedurelist dd.column pre {
  <a href="#cdef">Classification Definition</a>
 | <a href="#procedure">Procedure List</a>
 </p>
-<p class="sisterlink"><a href="./history-introdb.html">to HistoryHTML</a></p>
 <p class="sistersublink">
 <a href="./properties-introdb.html">to PropertiesHTML</a>
 | <a href="./lastadoc-intro.html">to lastadoc-intro.html</a>
@@ -335,6 +357,7 @@ dl.procedurelist dd.column pre {
 		<th>Type</th>
 		<th>ForeignTable</th>
 		<th>ReferrerTable</th>
+		<th>TableComment</th>
 		<th>EntityName</th>
 	</tr>
 	</thead>
@@ -342,28 +365,31 @@ dl.procedurelist dd.column pre {
 	<tr>
 		<td class="rownumcell">1</td>
 		<td class="aliascell"></td>
-		<td><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
+		<td class="namecell"><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
+		<td class="commentcell CLS_TARGET_CONTAINER_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetContainer</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">2</td>
 		<td class="aliascell"></td>
-		<td><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
+		<td class="namecell"><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
+		<td class="commentcell CLS_TARGET_DATABASE_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetDatabase</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">3</td>
 		<td class="aliascell"></td>
-		<td><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
+		<td class="namecell"><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
+		<td class="commentcell CLS_TARGET_LANGUAGE_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetLanguage</td>
 	</tr>
 	</tbody>
@@ -372,6 +398,7 @@ dl.procedurelist dd.column pre {
 <h2 id="cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">
 CLS_TARGET_CONTAINER
 </h2>
+<div class="tablecomment CLS_TARGET_CONTAINER_comment" data-name="CLS_TARGET_CONTAINER"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_CONTAINER">
 <table class="tablecontent">
 	<thead>
@@ -453,6 +480,7 @@ CLS_TARGET_CONTAINER
 <h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
 CLS_TARGET_DATABASE
 </h2>
+<div class="tablecomment CLS_TARGET_DATABASE_comment" data-name="CLS_TARGET_DATABASE"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_DATABASE">
 <table class="tablecontent">
 	<thead>
@@ -660,6 +688,7 @@ CLS_TARGET_DATABASE
 <h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
 CLS_TARGET_LANGUAGE
 </h2>
+<div class="tablecomment CLS_TARGET_LANGUAGE_comment" data-name="CLS_TARGET_LANGUAGE"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_LANGUAGE">
 <table class="tablecontent">
 	<thead>
@@ -796,43 +825,43 @@ CLS_TARGET_LANGUAGE
 				<td>mysql</td>
 				<td>MySQL</td>
 				<td>MySQL</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>postgresql</td>
 				<td>PostgreSQL</td>
 				<td>PostgreSQL</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>oracle</td>
 				<td>Oracle</td>
 				<td>Oracle</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>db2</td>
 				<td>Db2</td>
 				<td>DB2</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>sqlserver</td>
 				<td>SQLServer</td>
 				<td>SQLServer</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>h2</td>
 				<td>H2Database</td>
 				<td>H2 Database</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>derby</td>
 				<td>ApacheDerby</td>
 				<td>Apache Derby</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			</table>
 		</td>
@@ -853,19 +882,19 @@ CLS_TARGET_LANGUAGE
 				<td>java</td>
 				<td>Java</td>
 				<td>Java</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>csharp</td>
 				<td>C</td>
 				<td>C#</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>scala</td>
 				<td>Scala</td>
 				<td>Scala</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			</table>
 		</td>
@@ -886,31 +915,31 @@ CLS_TARGET_LANGUAGE
 				<td>lasta_di</td>
 				<td>LastaDi</td>
 				<td>Lasta Di</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>spring</td>
 				<td>SpringFramework</td>
 				<td>Spring Framework</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>guice</td>
 				<td>GoogleGuice</td>
 				<td>Google Guice</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>seasar</td>
 				<td>SeasarS2Container</td>
 				<td>Seasar (S2Container)</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>cdi</td>
 				<td>Cdi</td>
 				<td>CDI</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 			</tr>
 			</table>
 		</td>
@@ -930,49 +959,49 @@ CLS_TARGET_LANGUAGE
 			<tr>
 				<td>jdbc</td>
 				<td>JDBC</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=jdbc</td>
 			</tr>
 			<tr>
 				<td>doc</td>
 				<td>Doc</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=doc</td>
 			</tr>
 			<tr>
 				<td>generate</td>
 				<td>Generate</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=generate</td>
 			</tr>
 			<tr>
 				<td>outside_sql_test</td>
 				<td>OutsideSqlTest</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=outside-sql-test</td>
 			</tr>
 			<tr>
 				<td>sql2entity</td>
 				<td>Sql2Entity</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=sql2entity</td>
 			</tr>
 			<tr>
 				<td>replace_schema</td>
 				<td>ReplaceSchema</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=replace-schema</td>
 			</tr>
 			<tr>
 				<td>load_data_reverse</td>
 				<td>LoadDataReverse</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=loadDataReverse</td>
 			</tr>
 			<tr>
 				<td>schema_sync_check</td>
 				<td>SchemaSyncCheck</td>
-				<td class="commentcell"> &nbsp;</td>
+				<td class="commentcell">&nbsp;</td>
 				<td>manageArg=schema-sync-check</td>
 			</tr>
 			</table>
@@ -991,10 +1020,10 @@ CLS_TARGET_LANGUAGE
 <!-- Only used by dbflute intro http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html -->
 <div id="decomment-modal" class="decommentmodal">
 	<div class="decommentmodalcontent">
+		<div id="decomment-close" class="decommentmodal-close-btn"><span>x</span></div>
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
 		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
-		<button id="decomment-cancel" class="decommentmodalbtn">Cancel</button>
-		<button id="decomment-ok" class="decommentmodalbtn">OK</button>
+		<button id="decomment-ok" class="decommentmodal-ok-btn">OK</button>
 	</div>
 </div>
 <script>
@@ -1350,82 +1379,79 @@ searcher.init();
 <script>
 /**
  * @author deco
+ * @author cabos
  */
 function Decomment() {
-	this.embeddedPickup = {}; // setup from dbflute if decomment pickup exists
-	this.pickupStore = {}; // store of comment info
-	// {
-	//   tableName: {
-	//     columnName: {
-	//       propetyName: propertyValue
-	//     }, { ... }
-	//   }, { ... }
-	// }
-	this.databaseCommentMap = {
-				$'{table.tableDbName}': {
+	// setup from dbflute if decomment pickup exists
+	this.embeddedPickup = {
+		'tables': [
+		]
+	}
+	this.pickupStore = {
+		'CLS_TARGET_CONTAINER': {
 			'databaseComment': ''
 			, 'columns': {
-					$'{col.name}': {
+				'CONTAINER_CODE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'CONTAINER_NAME': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DISPLAY_ORDER': {
 					'databaseComment': ''
 				}
-				}
+			}
 		}
-				, $'{table.tableDbName}': {
+		, 'CLS_TARGET_DATABASE': {
 			'databaseComment': ''
 			, 'columns': {
-					$'{col.name}': {
+				'DATABASE_CODE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DATABASE_NAME': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'JDBC_DRIVER_FQCN': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'URL_TEMPLATE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DEFAULT_SCHEMA': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'SCHEMA_REQUIRED_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'SCHEMA_UPPER_CASE_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'USER_INPUT_ASSIST_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'EMBEDDED_JAR_FLG': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DISPLAY_ORDER': {
 					'databaseComment': ''
 				}
-				}
+			}
 		}
-				, $'{table.tableDbName}': {
+		, 'CLS_TARGET_LANGUAGE': {
 			'databaseComment': ''
 			, 'columns': {
-					$'{col.name}': {
+				'LANGUAGE_CODE': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'LANGUAGE_NAME': {
 					'databaseComment': ''
 				}
-					, $'{col.name}': {
+				, 'DISPLAY_ORDER': {
 					'databaseComment': ''
 				}
-				}
+			}
 		}
-		}
+	}
 }
 Decomment.prototype = {
 
@@ -1437,6 +1463,7 @@ Decomment.prototype = {
 			var schemeName = this.getSchemeName();
 			this.fetchVirtualPickup(schemeName);
 			this.setupSaveDecomment(schemeName);
+			this.setupKeyDownEvent();
 		} else {
 			this.reflectEmbeddedPickup();
 		}
@@ -1447,8 +1474,7 @@ Decomment.prototype = {
 	 * @returns {string} Scheme name
 	 */
 	getSchemeName: function () {
-		var path = window.location.pathname;
-		return path.split('/')[3];
+		return "introdb";
 	},
 
 	/**
@@ -1497,16 +1523,35 @@ Decomment.prototype = {
 	reflectPickup: function (decomment) {
 		that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
+			var tableElements = that.extractTableElements(table);
+			if (that.storePickupTableProperties(table)) {
+				var newTableComment = that.buildDisplayTableCommentFromServer(table);
+				var authors = that.getTableMapInfoFromStore(that.getTableNameFromJson(table))['authors'];
+				that.storePreviousWholeTableComment(table, newTableComment, authors);
+				that.updateDisplayTableCommentToHtml(tableElements, newTableComment, authors);
+				that.reflectTableCommentConflictIfNeed(table, tableElements);
+			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
-				that.storePickupProperies(table, column);
-				var newComment = that.buildColumnCommentFromServer(table, column);
-				var authors = that.buildAuthorsFromServer(table, column);
-				that.storeNewComment(table, column, newComment);
-				that.updateComment(columnElement, newComment, authors);
-				that.checkCommentConflict(table, column, columnElement);
+				that.storePickupColumnProperties(table, column);
+				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
+				var authors = that.buildColumnCommentAuthoers(table, column);
+				that.storePreviousWholeColumnComment(table, column, newComment);
+				that.updateDisplayColumnCommentToHtml(columnElement, newComment, authors);
+				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
 		});
+	},
+
+	/**
+	 * Extract table element
+	 * @param {Object} table - Table object
+	 * @returns {Object} Column element
+	 */
+	extractTableElements: function (table) {
+		var className = (table["tableName"] + "_" + "comment");
+		var tableElements = document.getElementsByClassName(className);
+		return tableElements;
 	},
 
 	/**
@@ -1523,24 +1568,35 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Store comment properties
+	 * Store table comment properties
 	 * @param {Object} table - Table object
-	 * @param {Object} column - Column object
+	 * @retuns {Boolean} if properties saved
 	 */
-	storePickupProperies: function (table, column) {
-		var tableName = table['tableName'];
-		var columnName = column['columnName'];
+	storePickupTableProperties: function(table) {
+		var tableName = this.getTableNameFromJson(table);
 		if (this.pickupStore[tableName] === undefined) {
 			this.pickupStore[tableName] = {};
 		}
 
-		var properties = column['properties'];
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		var databaseComment = tableMap['databaseComment'];
+		var properties = table['properties'];
+		if (properties.length == 0) {
+			return false;
+		}
+
+		// properties to store
 		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
 		var decomments = [];
 		var previousPieces = [];
 		var authors = [];
 		var commentVersion = 0;
+		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
+			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
 				previousPieces.push(property['pieceCode']);
@@ -1554,38 +1610,139 @@ Decomment.prototype = {
 			return self.indexOf(x) === i;
 		});
 
-		this.pickupStore[tableName][columnName] = {
-			'isConflict': isConflict,
-			'decomments': decomments,
-			'previousPieces': previousPieces,
-			'authors': authors,
-			'commentVersion': commentVersion
-		}
+		tableMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		tableMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		tableMap['decomments'] = decomments;
+		tableMap['previousPieces'] = previousPieces;
+		tableMap['authors'] = authors;
+		tableMap['commentVersion'] = commentVersion;
+		return true;
 	},
 
 	/**
-	 * Store new comment properties
+	 * Store column comment properties
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 */
+	storePickupColumnProperties: function (table, column) {
+		var tableName = this.getTableNameFromJson(table);
+		var columnName = this.getColumnNameFromJson(column);
+		if (this.pickupStore[tableName] === undefined) {
+			this.pickupStore[tableName] = {};
+		}
+		if (this.pickupStore[tableName]['columns'] === undefined) {
+			this.pickupStore[tableName]['columns'] = {};
+		}
+		if (this.pickupStore[tableName]['columns'][columnName] === undefined) {
+			this.pickupStore[tableName]['columns'][columnName] = {};
+		}
+
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName)
+		var databaseComment = columnMap['databaseComment'];
+		var properties = column['properties'];
+
+		// properties to store
+		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
+		var decomments = [];
+		var previousPieces = [];
+		var authors = [];
+		var commentVersion = 0;
+		var that = this;
+		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
+			}
+			decomments.push(property["decomment"]);
+			if (property['pieceCode'] != null) {
+				previousPieces.push(property['pieceCode']);
+			}
+			authors = authors.concat(property['authors']);
+			if (commentVersion < property['commentVersion']) {
+				commentVersion = property['commentVersion'];
+			}
+		});
+		authors = authors.filter(function (x, i, self) {
+			return self.indexOf(x) === i;
+		});
+
+		columnMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		columnMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		columnMap['decomments'] = decomments;
+		columnMap['previousPieces'] = previousPieces;
+		columnMap['authors'] = authors;
+		columnMap['commentVersion'] = commentVersion;
+	},
+
+	/**
+	 * Store new column comment properties
 	 * @param {Object} table - Table object
 	 * @param {Object} column - Column object
 	 * @param {string} newComment - Comment from server
 	 */
-	storeNewComment: function (table, column, newComment) {
-		var tableName = table['tableName'];
-		var columnName = column['columnName'];
-		this.pickupStore[tableName][columnName]['previousWholeComment'] = newComment;
+	storePreviousWholeTableComment: function (table, newComment) {
+		var tableName = this.getTableNameFromJson(table);
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		if (tableMap !== null) {
+			tableMap['previousWholeComment'] = newComment;
+		}
 	},
 
 	/**
-	 * Build new scheme comment from server response
+	 * Store new column comment properties
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 * @param {string} newComment - Comment from server
+	 */
+	storePreviousWholeColumnComment: function (table, column, newComment) {
+		var tableName = this.getTableNameFromJson(table);
+		var columnName = this.getColumnNameFromJson(column);
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		if (columnMap !== null) {
+			columnMap['previousWholeComment'] = newComment;
+		}
+	},
+
+	/**
+	 * Build new table comment from server response
+	 * @param {Object} table - table object
+	 * @returns {string} New scheme comment
+	 */
+	buildDisplayTableCommentFromServer: function (table) {
+		var tableName = this.getTableNameFromJson(table);
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		return this.buildDisplayCommentFromServer(tableMap);
+	},
+
+	/**
+	 * Build new column comment from server response
 	 * @param {Object} table - table object
 	 * @param {Object} column - Column object
 	 * @returns {string} New scheme comment
 	 */
-	buildColumnCommentFromServer: function (table, column) {
-		var tableName = table['tableName'];
-		var columnName = column['columnName'];
-		var columnMap = this.pickupStore[tableName][columnName];
-		return columnMap['decomments'].join('\n\n=======\n\n');
+	buildDisplayColumnCommentFromServer: function (table, column) {
+		var tableName = this.getTableNameFromJson(table);
+		var columnName = this.getColumnNameFromJson(column);
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		return this.buildDisplayCommentFromServer(columnMap);
+	},
+
+	/**
+	 * Build display comment for html
+	 * @param {Object} commentMap - Comment object of table, column
+	 * @retuns {string} Display comment
+	 */
+	buildDisplayCommentFromServer: function(commentMap) {
+		var result = "";
+		if (commentMap['isDatabaseCommentConflict']) {
+			var databaseComment = commentMap['databaseComment'];
+			databaseComment = this.unescapeWhitespace(databaseComment);
+			databaseComment = this.escapeNewlineCharacter(databaseComment);
+			databaseComment = this.escapeInputText(databaseComment);
+			result = databaseComment + '\n(from database comment)\n\n=======\n\n';
+		}
+		result += commentMap['decomments'].join('\n\n=======\n\n');
+		return result;
 	},
 
 	/**
@@ -1594,23 +1751,52 @@ Decomment.prototype = {
 	 * @param {Object} column - Column object
 	 * @returns {string} New scheme comment
 	 */
-	buildAuthorsFromServer: function (table, column) {
-		var tableName = table['tableName'];
-		var columnName = column['columnName'];
-		var columnMap = this.pickupStore[tableName][columnName];
+	buildColumnCommentAuthoers: function (table, column) {
+		var tableName = this.getTableNameFromJson(table);
+		var columnName = this.getColumnNameFromJson(column);
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
 		return columnMap['authors'];
 	},
 
 	/**
-	 * Update comment
+	 * Update table comment of html
+	 * @param {Object} tableElements - Table elements
+	 * @param {string} newComment - New scheme comment
+	 * @param {Array} authors - Comment authoers
+	 */
+	updateDisplayTableCommentToHtml: function (tableElements, newComment, authors) {
+		var author = authors.join(',');
+		var comment = newComment + "\n<span>@author(" + author + ")</span>";
+		Array.prototype.forEach.call(tableElements, function (element) {
+			element.querySelector('pre').innerHTML = comment;
+		});
+	},
+
+	/**
+	 * Update column comment of html
 	 * @param {Object} columnElement - Column element
 	 * @param {string} newComment - New scheme comment
 	 * @param {Array} authors - Comment authoers
 	 */
-	updateComment: function (columnElement, newComment, authors) {
+	updateDisplayColumnCommentToHtml: function (columnElement, newComment, authors) {
 		var author = authors.join(',');
 		var comment = newComment + "\n<span>@author(" + author + ")</span>";
 		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = comment;
+	},
+
+	/**
+	 * Add error class if table comment is conflict
+	 * @param {Object} table - Table object
+	 * @param {Object} column - Column object
+	 * @param {Object} columnElement - Column element
+	 */
+	reflectTableCommentConflictIfNeed: function(table, tableElements) {
+		var tableName = this.getTableNameFromJson(table);
+		if (this.isTableCommentConflict(tableName)) {
+			Array.prototype.forEach.call(tableElements, function (element) {
+				element.className += " commentcellerror"
+			});
+		}
 	},
 
 	/**
@@ -1619,27 +1805,45 @@ Decomment.prototype = {
 	 * @param {Object} column - Column object
 	 * @param {Object} columnElement - Column element
 	 */
-	checkCommentConflict: function(table, column, columnElement) {
-		var tableName = table['tableName'];
-		var columnName = column['columnName'];
-		if (this.isCommentConflict(tableName, columnName)) {
+	reflectCommentConflictIfNeed: function(table, column, columnElement) {
+		var tableName = this.getTableNameFromJson(table);
+		var columnName = this.getColumnNameFromJson(column);
+		if (this.isColumnCommentConflict(tableName, columnName)) {
 			columnElement.querySelector('.commentcell').className += " commentcellerror"
 		}
 	},
 
 	/**
-	 * Check the comment is conflict
+	 * Check the table comment is conflict
+	 * @param {String} tableName - Table name
+	 * @returns {Boolean} comment is conflict
+	 */
+	isTableCommentConflict: function(tableName) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		return this.isCommentConflict(tableMap);
+	},
+
+	/**
+	 * Check the column comment is conflict
 	 * @param {String} tableName - Table name
 	 * @param {String} columnName - Column name
 	 * @returns {Boolean} comment is conflict
 	 */
-	isCommentConflict: function(tableName, columnName) {
-		var table = this.pickupStore[tableName];
-		if (table === undefined || table[columnName] === undefined) {
+	isColumnCommentConflict: function(tableName, columnName) {
+		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		return this.isCommentConflict(columnMap);
+	},
+
+	/**
+	 * Check the comment is conflict
+	 * @param {Object} commentMap - Commnet objedt of table or column
+	 * @returns {Boolean} comment is conflict
+	 */
+	isCommentConflict: function(commentMap) {
+		if (commentMap === null) {
 			return false;
 		}
-		var columnMap = table[columnName];
-		return columnMap['isConflict'] || false;
+		return commentMap['isConflict'] || false;
 	},
 
 	/**
@@ -1647,6 +1851,42 @@ Decomment.prototype = {
 	 * @param {string} table - Table name
 	 */
 	setupSaveDecomment: function(schemeName) {
+		this.setupSaveTableCommnt();
+		this.setupSaveColumnComment();
+	},
+
+	/**
+	 * Setup save table comment event
+	 */
+	setupSaveTableCommnt: function() {
+		var that = this;
+		var tableList = document.getElementById('table-list-body').querySelectorAll('tr');
+		Array.prototype.forEach.call(tableList, function (table) {
+			var tableName = table.querySelector('.namecell').querySelector('a').innerText;
+			var commentElement = table.querySelector('.commentcell');
+			that.setupSaveTableClickEvent(tableName, commentElement);
+		});
+		var commentTables = document.querySelectorAll('.tablecomment')
+		Array.prototype.forEach.call(commentTables, function (tableElement) {
+			var tableName = tableElement.getAttribute('data-name');
+			that.setupSaveTableClickEvent(tableName, tableElement);
+		});
+	},
+
+	/**
+	 * Setup save table comment click event to html
+	 * @param {string} tableName - Table name
+	 * @param {Object} commentElement - Comment element
+	 */
+	setupSaveTableClickEvent: function(tableName, commentElement) {
+		var tableMap = this.getTableMapInfoFromStore(tableName);
+		commentElement.onclick = this.createSaveDecommentFunction(tableName, null, tableMap, commentElement);
+	},
+
+	/**
+	 * Setup save column comment event
+	 */
+	setupSaveColumnComment: function () {
 		var tables = document.getElementsByClassName('tablecontent');
 		var that = this;
 		Array.prototype.forEach.call(tables, function (table) {
@@ -1656,44 +1896,76 @@ Decomment.prototype = {
 					return
 				}
 
-				var commentCellElement = column.querySelector('.commentcell')
-				var previousWholeComment = commentCellElement.querySelector('pre');
-				previousWholeComment.onclick = function () {
-					var modalElement = document.getElementById("decomment-modal");
-					modalElement.style.display = "block";
-
-					var tableName = that.getTableName(table);
-					var columnName = column.querySelector('.columnnamecell').innerText;
-					var isConflict = that.isCommentConflict(tableName, columnName);
-					var columnInfo = isConflict ? columnName + " ... but now in CONFLICT!" : columnName;
-					document.getElementById("decomment-modal-column-info").innerText = columnInfo;
-
-					var inputElement = document.getElementById("decomment-input");
-					inputElement.value = that.extractPreviousComment(previousWholeComment);
-
-					document.getElementById("decomment-cancel").onclick = function() {
-						modalElement.style.display = "none";
-					};
-
-					document.getElementById("decomment-ok").onclick = function() {
-						var decomment = inputElement.value;
-						if (!that.isCommentChanged(tableName, columnName, decomment)) {
-							modalElement.style.display = "none";
-							return;
-						}
-						var params = that.buildColumnCommentRequestParams(tableName, columnName, decomment, column);
-						that.requestSaveDecomment(schemeName, params);
-						modalElement.style.display = "none";
-					};
-
-					window.onclick = function(event) {
-						if (event.target == modalElement) {
-							modalElement.style.display = "none";
-						}
-					};
-				};
+				var commentElement = column.querySelector('.commentcell');
+				var tableName = that.getTableNameFromElement(table);
+				var columnName = column.querySelector('.columnnamecell').innerText;
+				var columnMap = that.getColumnMapInfoFromStore(tableName, columnName);
+				commentElement.onclick = that.createSaveDecommentFunction(tableName, columnName, columnMap, commentElement);
 			});
 		});
+	},
+
+	/**
+	 * Create save decomment function
+	 * param {string} tableName - Table name
+	 * param {string} columnName - Column name
+	 * returns {function} Save decomment function
+	 * returns {Object} Coment element of table or column
+	 */
+	createSaveDecommentFunction: function(tableName, columnName, commentMap, commentElement) {
+		var that = this;
+		return function () {
+			var modalElement = document.getElementById("decomment-modal");
+			modalElement.style.display = "block";
+
+			var isConflict = that.isCommentConflict(commentMap);
+			var commentInfo;
+			if (columnName) {
+				var columnNameOfTable = tableName + "." + columnName;
+				columnInfo = isConflict ? columnNameOfTable + " ... but now in CONFLICT!" : columnNameOfTable;
+			} else {
+				columnInfo = isConflict ? tableName + " ... but now in CONFLICT!" : tableName;
+			}
+			document.getElementById("decomment-modal-column-info").innerText = columnInfo;
+
+			var inputElement = document.getElementById("decomment-input");
+			inputElement.value = that.extractPreviousComment(commentElement);
+			inputElement.focus();
+
+			document.getElementById("decomment-close").onclick = function () {
+				modalElement.style.display = "none";
+			};
+
+			document.getElementById("decomment-ok").onclick = function () {
+				var decomment = inputElement.value;
+				if (!that.isCommentChanged(tableName, columnName, decomment)) {
+					modalElement.style.display = "none";
+					return;
+				}
+				var params = that.buildCommentRequestParams(tableName, columnName, decomment);
+				that.requestSaveDecomment(that.getSchemeName(), params);
+				modalElement.style.display = "none";
+			};
+
+			window.onclick = function (event) {
+				if (event.target == modalElement) {
+					modalElement.style.display = "none";
+				}
+			};
+		};
+	},
+
+	/**
+	 * Setup key down event
+	 */
+	setupKeyDownEvent : function() {
+		document.onkeydown = function (e) {
+			// ESC
+			if(e.keyCode == 27){
+				var modalElement = document.getElementById("decomment-modal");
+				modalElement.style.display = "none";
+			}
+		}
 	},
 
 	/**
@@ -1705,13 +1977,31 @@ Decomment.prototype = {
 	},
 
 	/**
+	 * Get table name from json
+	 * @param {Object} table - Table object
+	 * @returns {string} Table name lower cased
+	 */
+	getTableNameFromJson: function(table) {
+		return table['tableName'];
+	},
+
+	/**
 	 * Get table name
 	 * @param {Object} table - Table element
 	 * @returns {string} table name
 	 */
-	getTableName: function (table) {
+	getTableNameFromElement: function (table) {
 		var previousElement = table.previousElementSibling;
 		return previousElement.value;
+	},
+
+	/**
+	 * Get column name from json
+	 * @param {Object} column - Column object
+	 * @returns {string} Column name lower cased
+	 */
+	getColumnNameFromJson: function(column) {
+		return column['columnName'];
 	},
 
 	/**
@@ -1720,9 +2010,9 @@ Decomment.prototype = {
 	 * @returns {string} Previous comment
 	 */
 	extractPreviousComment: function (columnCommentElemnet) {
-		var child = columnCommentElemnet.childNodes[0];
-		if (child !== null && child.nodeName === "#text") {
-			return child.nodeValue;
+		var child = columnCommentElemnet.querySelector('pre').childNodes[0];
+		if (child != null && child.nodeName === "#text") {
+			return child.nodeValue.trim();
 		}
 		return "";
 	},
@@ -1735,26 +2025,40 @@ Decomment.prototype = {
 	 * @returns {Boolean} is changed
 	 */
 	isCommentChanged: function (tableName, columnName, decomment) {
-		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
-			var previousComment = this.pickupStore[tableName][columnName]['previousWholeComment'];
-			return previousComment.trim() !== decomment.trim();
+		var commentMap;
+		if (columnName) {
+			commentMap = this.getColumnMapInfoFromStore(tableName, columnName);
+		} else {
+			commentMap = this.getTableMapInfoFromStore(tableName);
+		}
+		if (commentMap !== null) {
+			var previousComment = commentMap['previousWholeComment'];
+			if (previousComment) {
+				return previousComment.trim() !== decomment.trim();
+			}
 		}
 		return decomment.trim().length != 0;
 	},
 
 	/**
-	 * Build column comment request body
+	 * Build comment request body
 	 * @param {string} tableName - Table name
-	 * @param {string} columnName - Column name
+	 * @param {string} columnName - Column name (null if save table comment)
 	 * @param {string} decomment - Inputed decomment
-	 * @param {string} previousCommentElement - Previous comment element
 	 * @return {Object} Request body
 	 */
-	buildColumnCommentRequestParams: function (tableName, columnName, decomment, previousCommentElement) {
-		if (this.pickupStore[tableName] !== undefined && this.pickupStore[tableName][columnName] !== undefined) {
-			var authors = this.pickupStore[tableName][columnName]['authors'];
-			var previousPieces = this.pickupStore[tableName][columnName]['previousPieces'];
-			var commentVersion = this.pickupStore[tableName][columnName]['commentVersion'];
+	buildCommentRequestParams: function (tableName, columnName, decomment) {
+		var commentMap = this.getCommentMapFromStore(tableName, columnName);
+		var databaseComment;
+		var targetType = columnName == null ? 'TABLE' : 'COLUMN';
+		if (commentMap !== null) {
+			var authors = commentMap['authors'];
+			var previousPieces = commentMap['previousPieces'];
+			var commentVersion = commentMap['commentVersion'];
+			databaseComment = commentMap['databaseComment'];
+			if (databaseComment) {
+				databaseComment = this.escapeNewlineCharacter(databaseComment);
+			}
 		}
 
 		decomment = this.escapeInputText(decomment);
@@ -1763,9 +2067,9 @@ Decomment.prototype = {
 		return {
 			'tableName': tableName,
 			'columnName': columnName,
-			'targetType': 'COLUMN',
+			'targetType': targetType,
 			'decomment': decomment,
-			'databaseComment': '', // TODO deco add database comment from json created by DBFlute
+			'databaseComment': databaseComment,
 			'commentVersion': commentVersion || 0,
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
@@ -1790,6 +2094,22 @@ Decomment.prototype = {
 				'>': '&gt;',
 			}[match]
 		});
+	},
+
+	/**
+	 * Escape newline character of text
+	 * @param {String} string - text
+	 */
+	escapeNewlineCharacter: function (string) {
+		return string.split('<br>').join('\n');
+	},
+
+	/**
+	 * Unescape whitespace character of text
+	 * @param {String} string - text
+	 */
+	unescapeWhitespace: function (string) {
+		return string.split('&nbsp;').join(' ');
 	},
 
 	/**
@@ -1832,8 +2152,53 @@ Decomment.prototype = {
 			}
 		};
 		http.send(JSON.stringify(params, null, "  "));
+	},
+
+	/**
+	 * Get comment map from store.
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - column name
+	 * @returns {Object} commentMap - Comment object of table or column
+	 */
+	getCommentMapFromStore: function(tableName, columnName) {
+		return columnName ? this.getColumnMapInfoFromStore(tableName, columnName) : this.getTableMapInfoFromStore(tableName);
+	},
+
+	/**
+	 * Get table object from pickup store.
+	 * @param {string} tableName - Table name
+	 * @return {Object} Column object
+	 */
+	getTableMapInfoFromStore: function (tableName) {
+		var tableMap = this.pickupStore[tableName];
+		if (tableMap === undefined) {
+			return null;
+		}
+		return tableMap;
+	},
+
+	/**
+	 * Get column object from pickup store.
+	 * @param {string} tableName - Table name
+	 * @param {string} columnName - Column name
+	 * @return {Object} Column object
+	 */
+	getColumnMapInfoFromStore: function (tableName, columnName) {
+		var tableMap = this.pickupStore[tableName];
+		if (tableMap === undefined) {
+			return null;
+		}
+		var columns = tableMap['columns'];
+		if (columns === undefined) {
+			return null;
+		}
+		var columnMap = columns[columnName];
+		if (columnMap === undefined) {
+			return null;
+		}
+		return columnMap;
 	}
-}
+};
 
 new Decomment().init();
 </script>

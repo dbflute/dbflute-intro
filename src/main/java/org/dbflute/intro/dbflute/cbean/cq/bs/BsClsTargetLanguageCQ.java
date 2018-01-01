@@ -94,7 +94,7 @@ public class BsClsTargetLanguageCQ extends AbstractBsClsTargetLanguageCQ {
       return _languageCode; }
     protected ConditionValue xgetCValueLanguageCode() { return xdfgetLanguageCode(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * LANGUAGE_CODE: {PK, NotNull, VARCHAR(10), classification=TargetLanguage}
      * @return this. (NotNull)
@@ -114,7 +114,7 @@ public class BsClsTargetLanguageCQ extends AbstractBsClsTargetLanguageCQ {
       return _languageName; }
     protected ConditionValue xgetCValueLanguageName() { return xdfgetLanguageName(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * LANGUAGE_NAME: {NotNull, VARCHAR(100)}
      * @return this. (NotNull)
@@ -134,7 +134,7 @@ public class BsClsTargetLanguageCQ extends AbstractBsClsTargetLanguageCQ {
       return _displayOrder; }
     protected ConditionValue xgetCValueDisplayOrder() { return xdfgetDisplayOrder(); }
 
-    /** 
+    /**
      * Add order-by as ascend. <br>
      * DISPLAY_ORDER: {NotNull, INTEGER(10)}
      * @return this. (NotNull)

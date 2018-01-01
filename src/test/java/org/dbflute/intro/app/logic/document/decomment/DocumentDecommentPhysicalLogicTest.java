@@ -93,20 +93,9 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
     }
 
     private DfDecoMapPiece createDfDecoMapPiece() {
-        DfDecoMapPiece decoMapPiece = new DfDecoMapPiece();
-        decoMapPiece.setFormatVersion("1.0");
-        decoMapPiece.setTableName("MEMBER");
-        decoMapPiece.setColumnName("MEMBER_NAME");
-        decoMapPiece.setTargetType(DfDecoMapPieceTargetType.Column);
-        decoMapPiece.setDecomment("piari");
-        decoMapPiece.setDatabaseComment("sea");
-        decoMapPiece.setCommentVersion(1L);
-        decoMapPiece.addAuthor("cabos");
-        decoMapPiece.setPieceCode("FE893L1");
-        decoMapPiece.setPieceDatetime(currentLocalDateTime());
-        decoMapPiece.setPieceOwner("cabos");
-        decoMapPiece.addAllPreviousPieces(Collections.singletonList("FE893L1"));
-        return decoMapPiece;
+        return new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, "MEMBER", "MEMBER_NAME", DfDecoMapPieceTargetType.Column, "piari",
+            "sea", 1L, Collections.singletonList("cabos"), "FE893L1", currentLocalDateTime(), "cabos",
+            Collections.singletonList("FE893L1"));
     }
 
     // ===================================================================================

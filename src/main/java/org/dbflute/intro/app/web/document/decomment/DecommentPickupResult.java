@@ -62,7 +62,6 @@ public class DecommentPickupResult {
 
         /** list of column part, contains saved comments */
         @Valid
-        @Required
         public List<ColumnPart> columns;
 
         public static class ColumnPart {

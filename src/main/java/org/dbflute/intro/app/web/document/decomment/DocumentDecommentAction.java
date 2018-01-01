@@ -15,6 +15,8 @@
  */
 package org.dbflute.intro.app.web.document.decomment;
 
+import java.time.LocalDateTime;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +39,11 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  */
 public class DocumentDecommentAction extends IntroBaseAction {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static String STRING_OF_NULL = "null";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -67,7 +74,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> moreValidate(body, messages));
-        verifyOrClientError(buildDebugMessage(body), existsColumnNameIfTargetTypeColumn(body));
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
         decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
@@ -76,10 +83,13 @@ public class DocumentDecommentAction extends IntroBaseAction {
         if (DfDecoMapPieceTargetType.Column == body.targetType && StringUtils.isEmpty(body.columnName)) {
             messages.addConstraintsNotEmptyMessage("columnName");
         }
+        if (STRING_OF_NULL.equals(body.decomment)) {
+            messages.addErrorsStringOfNullNotAccepted("decomment");
+        }
     }
 
     // done cabos unneeded public here, change to private by jflute (2017/11/12)
-    private String buildDebugMessage(DecommentSaveBody body) {
+    private String buildDebugMessageColumnNameIsNull(DecommentSaveBody body) {
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
         sb.append("   targetType : ").append(body.targetType.code()).append("\n");
@@ -96,19 +106,11 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
-        DfDecoMapPiece piece = new DfDecoMapPiece();
-        piece.setTableName(body.tableName);
-        piece.setColumnName(body.columnName);
-        piece.setTargetType(body.targetType);
-        piece.setDecomment(body.decomment);
-        piece.setDatabaseComment(body.databaseComment);
-        piece.setCommentVersion(body.commentVersion);
-        piece.addAllAuthors(body.authors);
-        piece.addAuthor(author);
-        piece.setPieceCode(buildPieceCode(body));
-        piece.setPieceDatetime(timeManager.currentDateTime());
-        piece.setPieceOwner(author);
-        piece.addAllPreviousPieces(body.previousPieces);
+        LocalDateTime pieceDatetime = timeManager.currentDateTime();
+        DfDecoMapPiece piece =
+            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
+                body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime, author,
+                body.previousPieces);
         return piece;
     }
 
@@ -116,9 +118,15 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return decommentPhysicalLogic.getAuthor();
     }
 
-    private String buildPieceCode(DecommentSaveBody body) {
-        // TODO deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
-        return Integer.toHexString(body.hashCode());
+    private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {
+        // done (by cabos) deco use tableName, columnName, date-time, owner by jflute (2017/11/11)
+        StringBuilder sb = new StringBuilder();
+        sb.append(body.tableName);
+        sb.append(":").append(body.columnName != null ? body.columnName : "");
+        sb.append(":").append(body.targetType);
+        sb.append(":").append(pieceDateTime);
+        sb.append(":").append(author);
+        return Integer.toHexString(sb.toString().hashCode());
     }
 
     // -----------------------------------------------------
