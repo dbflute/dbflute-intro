@@ -18,13 +18,11 @@ log/
 .settings/
 
 # IntelliJ
-/.idea/artifacts
-/.idea/libraries
-/.idea/modules
-/.idea/compiler.xml
-/.idea/modules.xml
-/.idea/vcs.xml
-/.idea/workspace.xml
+/.idea/*
+!/.idea/inspectionProfiles
+!/.idea/codeStyleSettings.xml
+!/.idea/misc.xml
+!/.idea/saveactions_settings.xml
 /*.iml
 /out
 
