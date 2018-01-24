@@ -80,7 +80,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private void moreValidate(DecommentSaveBody body, IntroMessages messages) {
-        if (DfDecoMapPieceTargetType.Column == body.targetType && StringUtils.isEmpty(body.columnName)) {
+        if (existsColumnNameIfTargetTypeColumn(body)) {
             messages.addConstraintsNotEmptyMessage("columnName");
         }
         if (STRING_OF_NULL.equals(body.decomment)) {
