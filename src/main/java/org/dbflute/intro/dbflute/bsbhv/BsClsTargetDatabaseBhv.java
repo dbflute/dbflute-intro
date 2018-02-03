@@ -123,7 +123,7 @@ public abstract class BsClsTargetDatabaseBhv extends AbstractBehaviorWritable<Cl
      *     <span style="color: #3F7E5E">// called if present, or exception</span>
      *     ... = <span style="color: #553000">clsTargetDatabase</span>.get...
      * });
-     * 
+     *
      * <span style="color: #3F7E5E">// if it might be no data, ...</span>
      * <span style="color: #0000C0">clsTargetDatabaseBhv</span>.<span style="color: #CC4747">selectEntity</span>(<span style="color: #553000">cb</span> <span style="color: #90226C; font-weight: bold"><span style="font-size: 120%">-</span>&gt;</span> {
      *     <span style="color: #553000">cb</span>.query().set...
@@ -812,8 +812,8 @@ public abstract class BsClsTargetDatabaseBhv extends AbstractBehaviorWritable<Cl
     /**
      * Prepare the all facade executor of outside-SQL to execute it.
      * <pre>
-     * <span style="color: #3F7E5E">// main style</span> 
-     * clsTargetDatabaseBhv.outideSql().selectEntity(pmb); <span style="color: #3F7E5E">// optional</span> 
+     * <span style="color: #3F7E5E">// main style</span>
+     * clsTargetDatabaseBhv.outideSql().selectEntity(pmb); <span style="color: #3F7E5E">// optional</span>
      * clsTargetDatabaseBhv.outideSql().selectList(pmb); <span style="color: #3F7E5E">// ListResultBean</span>
      * clsTargetDatabaseBhv.outideSql().selectPage(pmb); <span style="color: #3F7E5E">// PagingResultBean</span>
      * clsTargetDatabaseBhv.outideSql().selectPagedListOnly(pmb); <span style="color: #3F7E5E">// ListResultBean</span>
@@ -821,7 +821,7 @@ public abstract class BsClsTargetDatabaseBhv extends AbstractBehaviorWritable<Cl
      * clsTargetDatabaseBhv.outideSql().execute(pmb); <span style="color: #3F7E5E">// int (updated count)</span>
      * clsTargetDatabaseBhv.outideSql().call(pmb); <span style="color: #3F7E5E">// void (pmb has OUT parameters)</span>
      *
-     * <span style="color: #3F7E5E">// traditional style</span> 
+     * <span style="color: #3F7E5E">// traditional style</span>
      * clsTargetDatabaseBhv.outideSql().traditionalStyle().selectEntity(path, pmb, entityType);
      * clsTargetDatabaseBhv.outideSql().traditionalStyle().selectList(path, pmb, entityType);
      * clsTargetDatabaseBhv.outideSql().traditionalStyle().selectPage(path, pmb, entityType);
@@ -829,7 +829,7 @@ public abstract class BsClsTargetDatabaseBhv extends AbstractBehaviorWritable<Cl
      * clsTargetDatabaseBhv.outideSql().traditionalStyle().selectCursor(path, pmb, handler);
      * clsTargetDatabaseBhv.outideSql().traditionalStyle().execute(path, pmb);
      *
-     * <span style="color: #3F7E5E">// options</span> 
+     * <span style="color: #3F7E5E">// options</span>
      * clsTargetDatabaseBhv.outideSql().removeBlockComment().selectList()
      * clsTargetDatabaseBhv.outideSql().removeLineComment().selectList()
      * clsTargetDatabaseBhv.outideSql().formatSql().selectList()

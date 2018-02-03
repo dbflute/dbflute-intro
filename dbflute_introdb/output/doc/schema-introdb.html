@@ -336,6 +336,7 @@ dl.procedurelist dd.column pre {
  <a href="#cdef">Classification Definition</a>
 | <a href="#procedure">Procedure List</a>
 </p>
+<p class="sisterlink"><a href="./history-introdb.html">to HistoryHTML</a></p>
 <p class="sistersublink">
 <a href="./properties-introdb.html">to PropertiesHTML</a>
 | <a href="./lastadoc-intro.html">to lastadoc-intro.html</a>
@@ -1385,68 +1386,6 @@ function Decomment() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
-			{
-				'tableName': 'CLS_TARGET_CONTAINER'
-				, 'properties': [
-						{
-						'decomment': 'Test'
-						, 'databaseComment': ''
-						, 'commentVersion': 0
-						, 'authors': ['tominaga']
-						, 'pieceCode': '6759134f'
-						, 'pieceDatatime': '2017-12-30T09:59:40.221'
-						, 'previousPieces': []
-					}
-				]
-				, 'columns': [
-					 {
-						'columnName': 'CONTAINER_CODE'
-						, 'properties': [
-								 {
-								'decomment': 'コード'
-								, 'databaseComment': ''
-								, 'commentVersion': 0
-								, 'authors': ['tominaga']
-								, 'pieceCode': '583ccbb7'
-								, 'pieceDatatime': '2017-12-30T09:59:52.240'
-								, 'previousPieces': []
-							}
-						]
-					}
-				]
-			}
-			, {
-				'tableName': 'CLS_TARGET_LANGUAGE'
-				, 'properties': [
-						{
-						'decomment': 'Test'
-						, 'databaseComment': ''
-						, 'commentVersion': 0
-						, 'authors': ['tominaga']
-						, 'pieceCode': '4e69b699'
-						, 'pieceDatatime': '2017-12-30T09:59:45.279'
-						, 'previousPieces': []
-					}
-				]
-				, 'columns': [
-				]
-			}
-			, {
-				'tableName': 'CLS_TARGET_DATABASE'
-				, 'properties': [
-						{
-						'decomment': 'Test'
-						, 'databaseComment': ''
-						, 'commentVersion': 0
-						, 'authors': ['tominaga']
-						, 'pieceCode': '1b9cc8de'
-						, 'pieceDatatime': '2017-12-30T09:59:42.784'
-						, 'previousPieces': []
-					}
-				]
-				, 'columns': [
-				]
-			}
 		]
 	}
 	this.pickupStore = {
@@ -1797,7 +1736,11 @@ Decomment.prototype = {
 	buildDisplayCommentFromServer: function(commentMap) {
 		var result = "";
 		if (commentMap['isDatabaseCommentConflict']) {
-			result = this.escapeInputText(commentMap['databaseComment']) + '\n(from database comment)\n\n=======\n\n';
+			var databaseComment = commentMap['databaseComment'];
+			databaseComment = this.unescapeWhitespace(databaseComment);
+			databaseComment = this.escapeNewlineCharacter(databaseComment);
+			databaseComment = this.escapeInputText(databaseComment);
+			result = databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
 		result += commentMap['decomments'].join('\n\n=======\n\n');
 		return result;
@@ -2159,7 +2102,15 @@ Decomment.prototype = {
 	 * @param {String} string - text
 	 */
 	escapeNewlineCharacter: function (string) {
-		return string.split('<br>').join('\n')
+		return string.split('<br>').join('\n');
+	},
+
+	/**
+	 * Unescape whitespace character of text
+	 * @param {String} string - text
+	 */
+	unescapeWhitespace: function (string) {
+		return string.split('&nbsp;').join(' ');
 	},
 
 	/**

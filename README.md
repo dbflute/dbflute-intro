@@ -7,7 +7,7 @@ The GUI Application for DBFlute Management
 1. download jar file
 2. `$ java -jar dbflute-intro.jar`
 
-http://dbflute.seasar.org/ja/manual/function/helper/intro/index.html
+http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
 # For committers or contributers
 ## How to compile (for committer)
