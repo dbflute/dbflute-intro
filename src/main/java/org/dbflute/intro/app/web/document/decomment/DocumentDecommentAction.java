@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 
 import javax.annotation.Resource;
 
+import org.dbflute.infra.doc.decomment.DfDecoMapMapping;
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
@@ -42,7 +43,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    private static String STRING_OF_NULL = "null";
+    private static final String STRING_OF_NULL = "null";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -142,5 +143,49 @@ public class DocumentDecommentAction extends IntroBaseAction {
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {
         DfDecoMapPickup dfDecoMapPickup = decommentPhysicalLogic.readMergedPickup(projectName);
         return asJson(new DecommentPickupResult(dfDecoMapPickup.getTableList()));
+    }
+
+    // -----------------------------------------------------
+    //                                               Mapping
+    //                                               -------
+    /**
+     * save decomment mapping map
+     *
+     * @param projectName project name e.g. maihamadb (NotNull)
+     * @param body decomment mapping save body (NotNull)
+     * @return void (NotNull)
+     */
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<Void> mapping(String projectName, DecommentMappingSaveBody body) {
+        validate(body, messages -> moreValidate(body, messages));
+        decommentPhysicalLogic.saveDecommentMapping(projectName, mappingToDecoMapMapping(body));
+        return JsonResponse.asEmptyBody();
+    }
+
+    private void moreValidate(DecommentMappingSaveBody body, IntroMessages messages) {
+        if (DfDecoMapPieceTargetType.Column == body.targetType && (LaStringUtil.isEmpty(body.oldColumnName) || LaStringUtil.isEmpty(
+            body.newColumnName))) {
+            messages.addConstraintsNotEmptyMessage("columnName");
+        }
+    }
+
+    private DfDecoMapMapping mappingToDecoMapMapping(DecommentMappingSaveBody body) {
+        String author = getAuthor();
+        LocalDateTime mappingDateTime = timeManager.currentDateTime();
+        String mappingCode = buildMappingCode(body, mappingDateTime, author);
+        return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, body.oldTableName, body.oldColumnName, body.newTableName,
+            body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
+    }
+
+    private String buildMappingCode(DecommentMappingSaveBody body, LocalDateTime mappingDateTime, String author) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(body.oldTableName);
+        sb.append(":").append(body.oldColumnName != null ? body.oldTableName : "");
+        sb.append(body.newTableName);
+        sb.append(":").append(body.newColumnName != null ? body.newColumnName : "");
+        sb.append(":").append(body.targetType);
+        sb.append(":").append(mappingDateTime);
+        sb.append(":").append(author);
+        return Integer.toHexString(sb.toString().hashCode());
     }
 }

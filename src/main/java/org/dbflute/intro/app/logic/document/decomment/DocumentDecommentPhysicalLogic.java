@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapFile;
+import org.dbflute.infra.doc.decomment.DfDecoMapMapping;
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
@@ -62,7 +63,8 @@ public class DocumentDecommentPhysicalLogic {
     public DfDecoMapPickup readMergedPickup(String clientProject) {
         List<DfDecoMapPiece> pieces = readDecommentPiece(clientProject);
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickup(clientProject);
-        return _decoMapFile.merge(pickupOpt, pieces);
+        List<DfDecoMapMapping> mappings = readDecommentMapping(clientProject);
+        return _decoMapFile.merge(pickupOpt, pieces, mappings);
     }
 
     // done hakoba public on demand, so private now by jflute (2017/08/17)
@@ -71,9 +73,20 @@ public class DocumentDecommentPhysicalLogic {
         return _decoMapFile.readPieceList(buildClientPath(clientProject));
     }
 
+    private List<DfDecoMapMapping> readDecommentMapping(String clientProject) {
+        return _decoMapFile.readMappingList(buildClientPath(clientProject));
+    }
+
     private OptionalThing<DfDecoMapPickup> readDecommentPickup(String clientProject) {
         // done hakiba support no-existing directory or file by jflute (2017/09/28)
         return _decoMapFile.readPickup(buildClientPath(clientProject));
+    }
+
+    // ===================================================================================
+    //                                                                         Mapping Map
+    //                                                                         ===========
+    public void saveDecommentMapping(String projectName, DfDecoMapMapping mapping) {
+        _decoMapFile.writeMapping(projectName, mapping);
     }
 
     // ===================================================================================
