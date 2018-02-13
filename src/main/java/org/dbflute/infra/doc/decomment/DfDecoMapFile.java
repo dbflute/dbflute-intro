@@ -590,8 +590,9 @@ public class DfDecoMapFile {
      */
     public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> pickupOpt, List<DfDecoMapPiece> pieces, List<DfDecoMapMapping> mappings) {
         Set<String> pieceCodeSet = extractAllMergedPieceCode(pickupOpt, pieces);
+        List<DfDecoMapMapping> filteredMappings = filterMergedMappingCode(mappings);
         DfDecoMapPickup pickup = pickupOpt.orElse(new DfDecoMapPickup());
-        doMerge(pieces, pickup);
+        doMerge(pieces, pickup, filteredMappings);
         filterMergedProperties(pickup, pieceCodeSet);
         return pickup;
     }
@@ -612,6 +613,12 @@ public class DfDecoMapFile {
         return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
     }
 
+    private List<DfDecoMapMapping> filterMergedMappingCode(List<DfDecoMapMapping> mappings) {
+        Set<String> mappingCodeSet =
+            mappings.stream().flatMap(mapping -> mapping.getPreviousMappingList().stream()).collect(Collectors.toSet());
+        return mappings.stream().filter(mapping -> !mappingCodeSet.contains(mapping.getMappingCode())).collect(Collectors.toList());
+    }
+
     private void filterMergedProperties(DfDecoMapPickup pickup, Set<String> pieceCodeSet) {
         pickup.getTableList().forEach(table -> {
             filterTablePropertyList(table, pieceCodeSet);
@@ -629,7 +636,7 @@ public class DfDecoMapFile {
         pieceCodeSet.forEach(pieceCode -> column.removeProperty(pieceCode));
     }
 
-    protected void doMerge(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp) {
+    protected void doMerge(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp, List<DfDecoMapMapping> filteredMappings) {
         filteredPieces.forEach(piece -> {
             DfDecoMapPropertyPart property = mappingPieceToProperty(piece);
 
@@ -682,6 +689,8 @@ public class DfDecoMapFile {
             }
         });
         pickUp.setPickupDatetime(getCurrentLocalDateTime());
+        pickUp.getTableList().forEach(table -> mappingToTableIfNameChanged(table, filteredMappings));
+        // TODO yuto cabos merge duplicated table or column property  (2018/02/13)
     }
 
     private DfDecoMapPropertyPart mappingPieceToProperty(DfDecoMapPiece piece) {
@@ -689,6 +698,31 @@ public class DfDecoMapFile {
             new DfDecoMapPropertyPart(piece.getDecomment(), piece.getDatabaseComment(), piece.getPieceCode(), piece.getPieceDatetime(),
                 piece.getPieceOwner(), piece.getPreviousPieceList(), piece.getCommentVersion(), piece.getAuthorList());
         return property;
+    }
+
+    private DfDecoMapTablePart mappingToTableIfNameChanged(DfDecoMapTablePart table, List<DfDecoMapMapping> mappings) {
+        return mappings.stream().filter(mapping -> {
+            return mapping.getTargetType() == DfDecoMapPieceTargetType.Table && table.getTableName().equals(mapping.getOldTableName());
+        }).findFirst().map(mapping -> {
+            DfDecoMapTablePart newTable = new DfDecoMapTablePart(mapping.getNewTableName());
+            newTable.addPropertyAll(table.getPropertyList());
+            newTable.addColumnAll(table.getColumnList().stream().map(column -> {
+                return mappingToColumnIfNameChanged(table, column, mappings);
+            }).collect(Collectors.toList()));
+            return newTable;
+        }).orElse(table);
+    }
+
+    private DfDecoMapColumnPart mappingToColumnIfNameChanged(DfDecoMapTablePart table, DfDecoMapColumnPart column,
+        List<DfDecoMapMapping> mappings) {
+        return mappings.stream().filter(mapping -> {
+            return mapping.getTargetType() == DfDecoMapPieceTargetType.Column && table.getTableName().equals(mapping.getNewTableName())
+                && !column.getColumnName().equals(mapping.getOldColumnName());
+        }).findFirst().map(mapping -> {
+            DfDecoMapColumnPart newTable = new DfDecoMapColumnPart(mapping.getNewColumnName());
+            newTable.addPropertyAll(column.getPropertyList());
+            return newTable;
+        }).orElse(column);
     }
 
     // ===================================================================================

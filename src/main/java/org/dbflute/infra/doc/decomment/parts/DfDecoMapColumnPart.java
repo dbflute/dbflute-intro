@@ -16,6 +16,7 @@
 package org.dbflute.infra.doc.decomment.parts;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,6 +74,10 @@ public class DfDecoMapColumnPart {
 
     public void addProperty(DfDecoMapPropertyPart property) {
         this.propertyMap.put(property.getPieceCode(), property);
+    }
+
+    public void addPropertyAll(Collection<DfDecoMapPropertyPart> properties) {
+        properties.forEach(property -> this.addProperty(property));
     }
 
     public void removeProperty(String pieceCode) {

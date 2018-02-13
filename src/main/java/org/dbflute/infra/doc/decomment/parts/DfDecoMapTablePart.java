@@ -16,6 +16,7 @@
 package org.dbflute.infra.doc.decomment.parts;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -81,6 +82,10 @@ public class DfDecoMapTablePart {
         this.propertyMap.put(property.getPieceCode(), property);
     }
 
+    public void addPropertyAll(Collection<DfDecoMapPropertyPart> properties) {
+        properties.forEach(property -> this.addProperty(property));
+    }
+
     public void removeProperty(String pieceCode) {
         if (pieceCode == null) {
             throw new IllegalArgumentException("piece code is Null , piece code : " + pieceCode);
@@ -94,5 +99,9 @@ public class DfDecoMapTablePart {
 
     public void addColumn(DfDecoMapColumnPart column) {
         this.columnList.add(column);
+    }
+
+    public void addColumnAll(Collection<DfDecoMapColumnPart> columns) {
+        this.columnList.addAll(columns);
     }
 }
