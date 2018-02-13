@@ -52,7 +52,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         List<DfDecoMapPiece> pieceList = Arrays.asList(piece1, piece2, piece3);
 
         // ## Act ##
-        DfDecoMapPickup result = decoMapFile.merge(optPickup, pieceList);
+        DfDecoMapPickup result = decoMapFile.merge(optPickup, pieceList, Collections.emptyList());
 
         // ## Assert ##
         assertNotNull(result);

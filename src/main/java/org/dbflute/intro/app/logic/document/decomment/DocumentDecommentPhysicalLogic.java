@@ -86,7 +86,7 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                         Mapping Map
     //                                                                         ===========
     public void saveDecommentMapping(String projectName, DfDecoMapMapping mapping) {
-        _decoMapFile.writeMapping(projectName, mapping);
+        _decoMapFile.writeMapping(buildClientPath(projectName), mapping);
     }
 
     // ===================================================================================

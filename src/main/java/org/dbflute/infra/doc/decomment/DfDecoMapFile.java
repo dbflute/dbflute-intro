@@ -124,9 +124,13 @@ public class DfDecoMapFile {
             return Collections.emptyList();
         }
         try {
-            return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
-                return doReadPiece(path);
-            }).collect(Collectors.toList());
+            return Files.list(Paths.get(pieceDirPath))
+                .filter(path -> path.toString().endsWith(".dfmap"))
+                .filter(path -> path.toString().contains("-piece-"))
+                .map(path -> {
+                    return doReadPiece(path);
+                })
+                .collect(Collectors.toList());
         } catch (IOException e) {
             throwDecoMapReadFailureException(pieceDirPath, e);
             return Collections.emptyList(); // unreachable
@@ -290,9 +294,13 @@ public class DfDecoMapFile {
             return Collections.emptyList();
         }
         try {
-            return Files.list(Paths.get(pieceDirPath)).filter(path -> path.toString().endsWith(".dfmap")).map(path -> {
-                return doReadMapping(path);
-            }).collect(Collectors.toList());
+            return Files.list(Paths.get(pieceDirPath))
+                .filter(path -> path.toString().endsWith(".dfmap"))
+                .filter(path -> path.toString().contains("-mapping-"))
+                .map(path -> {
+                    return doReadMapping(path);
+                })
+                .collect(Collectors.toList());
         } catch (IOException e) {
             throwDecoMapReadFailureException(pieceDirPath, e);
             return Collections.emptyList(); // unreachable
@@ -592,9 +600,9 @@ public class DfDecoMapFile {
         Set<String> pieceCodeSet = extractAllMergedPieceCode(pickupOpt, pieces);
         List<DfDecoMapMapping> filteredMappings = filterMergedMappingCode(mappings);
         DfDecoMapPickup pickup = pickupOpt.orElse(new DfDecoMapPickup());
-        doMerge(pieces, pickup, filteredMappings);
-        filterMergedProperties(pickup, pieceCodeSet);
-        return pickup;
+        DfDecoMapPickup mergedPickup = doMerge(pieces, pickup, filteredMappings);
+        filterMergedProperties(mergedPickup, pieceCodeSet);
+        return mergedPickup;
     }
 
     private Set<String> extractAllMergedPieceCode(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> pieces) {
@@ -636,7 +644,8 @@ public class DfDecoMapFile {
         pieceCodeSet.forEach(pieceCode -> column.removeProperty(pieceCode));
     }
 
-    protected void doMerge(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp, List<DfDecoMapMapping> filteredMappings) {
+    protected DfDecoMapPickup doMerge(List<DfDecoMapPiece> filteredPieces, DfDecoMapPickup pickUp,
+        List<DfDecoMapMapping> filteredMappings) {
         filteredPieces.forEach(piece -> {
             DfDecoMapPropertyPart property = mappingPieceToProperty(piece);
 
@@ -688,8 +697,13 @@ public class DfDecoMapFile {
                 });
             }
         });
-        pickUp.setPickupDatetime(getCurrentLocalDateTime());
-        pickUp.getTableList().forEach(table -> mappingToTableIfNameChanged(table, filteredMappings));
+        DfDecoMapPickup newPickUp = new DfDecoMapPickup();
+        newPickUp.setPickupDatetime(getCurrentLocalDateTime());
+        List<DfDecoMapTablePart> tableList =
+            pickUp.getTableList().stream().map(table -> mappingToTableIfNameChanged(table, filteredMappings)).collect(Collectors.toList());
+        newPickUp.addAllTables(tableList);
+
+        return newPickUp;
         // TODO yuto cabos merge duplicated table or column property  (2018/02/13)
     }
 
