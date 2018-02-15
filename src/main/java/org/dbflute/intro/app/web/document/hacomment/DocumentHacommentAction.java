@@ -62,11 +62,11 @@ public class DocumentHacommentAction extends IntroBaseAction {
     private HacoMapPiece mappingToHacoMapPiece(HacommentSaveBody body) {
         String author = authorLogic.getAuthor();
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
-        String mappingCode = buildMappingCode(body, mappingDateTime, author);
-        return new HacoMapPiece(body.diffDate, body.haccoment, body.authors, mappingCode, author, mappingDateTime, body.previousPieces);
+        String mappingCode = buildPieceCode(body, mappingDateTime, author);
+        return new HacoMapPiece(body.diffDate, body.hacomment, body.authors, mappingCode, author, mappingDateTime, body.previousPieces);
     }
 
-    private String buildMappingCode(HacommentSaveBody body, LocalDateTime mappingDateTime, String author) {
+    private String buildPieceCode(HacommentSaveBody body, LocalDateTime mappingDateTime, String author) {
         StringBuilder sb = new StringBuilder();
         sb.append(body.diffDate);
         sb.append(":").append(mappingDateTime);

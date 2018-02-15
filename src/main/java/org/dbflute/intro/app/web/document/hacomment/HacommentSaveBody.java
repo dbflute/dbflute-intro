@@ -30,7 +30,7 @@ public class HacommentSaveBody {
     @Required(groups = ClientError.class)
     public String diffDate;
     @Required
-    public String haccoment;
+    public String hacomment;
     @NotNull
     public List<String> authors;
     @NotNull
