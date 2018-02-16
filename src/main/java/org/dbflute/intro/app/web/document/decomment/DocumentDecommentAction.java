@@ -80,9 +80,6 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private void moreValidate(DecommentSaveBody body, IntroMessages messages) {
-        if (existsColumnNameIfTargetTypeColumn(body)) {
-            messages.addConstraintsNotEmptyMessage("columnName");
-        }
         if (STRING_OF_NULL.equals(body.decomment)) {
             messages.addErrorsStringOfNullNotAccepted("decomment");
         }
@@ -99,7 +96,10 @@ public class DocumentDecommentAction extends IntroBaseAction {
 
     // done cabos change exist to exists for boolean expression by jflute (2017/11/12)
     private boolean existsColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
-        return !(DfDecoMapPieceTargetType.Column == body.targetType && LaStringUtil.isEmpty(body.columnName));
+        if (DfDecoMapPieceTargetType.Column == body.targetType) {
+            return LaStringUtil.isNotEmpty(body.columnName);
+        }
+        return true;
     }
 
     // done cabos use mappingTo... by jflute (2017/08/10)
