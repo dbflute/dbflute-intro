@@ -16,6 +16,7 @@
 package org.dbflute.infra.doc.decomment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,7 +65,10 @@ public class DfDecoMapPiece {
         this.decomment = decomment;
         this.databaseComment = databaseComment;
         this.commentVersion = commentVersion;
-        this.authorList = authorList;
+        this.authorList = new ArrayList<>(authorList);
+        if (!authorList.contains(pieceOwner)) {
+            this.authorList.add(pieceOwner);
+        }
         this.pieceCode = pieceCode;
         this.pieceDatetime = pieceDatetime;
         this.pieceOwner = pieceOwner;
