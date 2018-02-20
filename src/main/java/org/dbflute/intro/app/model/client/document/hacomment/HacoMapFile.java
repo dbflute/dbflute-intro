@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -108,9 +111,27 @@ public class HacoMapFile {
 
     // TODO hakiba refactor for better looks by hakiba (2018/02/15)
     public String buildPieceFileName(HacoMapPiece piece) {
+        String diffDateStr = generateDiffDateStrForFileName(piece);
         String filteredOwner = DfStringUtil.replaceBy(piece.getPieceOwner(), REPLACE_CHAR_MAP);
-        return "hacomment-piece-" + piece.getDiffDate() + "-" + piece.getPieceDatetime() + "-" + filteredOwner + "-" + piece.pieceCode
-            + ".dfmap";
+        // e.g. hacomment-piece-diffdate20180220161718-20171015-161718-199-jflute-HF7ELSE.dfmap
+        return "hacomment-piece-" + diffDateStr + "-" + getCurrentDateStr() + "-" + filteredOwner + "-" + piece.pieceCode + ".dfmap";
+    }
+
+    private String generateDiffDateStrForFileName(HacoMapPiece piece) {
+        // e.g. 2018/02/21 16:17:18 -> diffdate20180220161718
+        Map<String, String> replaceMap = new HashMap<>();
+        replaceMap.put(" ", "");
+        replaceMap.put("/", "");
+        replaceMap.put(":", "");
+        return "diffdate" + DfStringUtil.replaceBy(piece.getDiffDate(), replaceMap);
+    }
+
+    protected String getCurrentDateStr() {
+        return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(getCurrentLocalDateTime());
+    }
+
+    protected LocalDateTime getCurrentLocalDateTime() {
+        return LocalDateTime.now();
     }
 
     // ===================================================================================

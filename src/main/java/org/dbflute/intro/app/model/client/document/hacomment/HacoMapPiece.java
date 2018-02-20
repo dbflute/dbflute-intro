@@ -17,6 +17,7 @@
 package org.dbflute.intro.app.model.client.document.hacomment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,10 @@ public class HacoMapPiece {
         LocalDateTime pieceDatetime, List<String> previousPieceList) {
         this.diffDate = diffDate;
         this.hacomment = hacomment;
-        this.authorList = authorList;
+        this.authorList = new ArrayList<>(authorList);
+        if (!authorList.contains(pieceOwner)) {
+            this.authorList.add(pieceOwner);
+        }
         this.pieceCode = pieceCode;
         this.pieceOwner = pieceOwner;
         this.pieceDatetime = pieceDatetime;

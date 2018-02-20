@@ -47,6 +47,14 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     private static final String TEST_RESOURCE_PICKUP_PATH = "/src/test/resources/schema/decomment/piece";
     private static final String PICKUP_FILE_PATH = "/schema/decomment/pickup/decomment-pickup.dfmap";
     private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
+    // -----------------------------------------------------
+    //                                             Hacomment
+    //                                             ---------
+    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH =
+        "/src/test/resources/schema/hacomment/pickup/decomment-pickup.dfmap";
+    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = "/src/test/resources/schema/hacomment/piece";
+    private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/decomment-pickup.dfmap";
+    private static final String HACOMMENT_PIECE_DIR_PATH = "/schema/hacomment/piece";
 
     // ===================================================================================
     //                                                                            Settings
@@ -122,5 +130,12 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
 
     protected File getTestDecommentPieceDir() {
         return new File(getProjectDir(), TEST_CLIENT_PATH + PIECE_DIR_PATH);
+    }
+
+    // ===================================================================================
+    //                                                                      Test Hacomment
+    //                                                                      ==============
+    protected File getTestHacommentPieceDir() {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PIECE_DIR_PATH);
     }
 }
