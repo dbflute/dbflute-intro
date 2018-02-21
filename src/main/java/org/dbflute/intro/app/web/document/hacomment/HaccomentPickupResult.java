@@ -15,14 +15,65 @@
  */
 package org.dbflute.intro.app.web.document.hacomment;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
+import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author hakiba
  */
 public class HaccomentPickupResult {
 
-    public HaccomentPickupResult(HacoMapPickup pickup) {
+    @Valid
+    @NotNull
+    public List<HacoMap> hacoMaps;
 
+    public static class HacoMap {
+        @Required
+        public String diffDate;
+
+        @Required
+        public String hacomment;
+
+        @Valid
+        @Required
+        public List<String> authorList;
+
+        @Required
+        public String pieceCode;
+
+        @Required
+        public String pieceOwner;
+
+        @Required
+        public LocalDateTime pieceDatetime;
+
+        @Valid
+        @NotNull
+        public List<String> previousPieceList;
+
+        // ===================================================================================
+        //                                                                         Constructor
+        //                                                                         ===========
+        public HacoMap(HacoMapPiece piece) {
+            this.diffDate = piece.getDiffDate();
+            this.hacomment = piece.getHacomment();
+            this.authorList = piece.getAuthorList();
+            this.pieceCode = piece.getPieceCode();
+            this.pieceOwner = piece.getPieceOwner();
+            this.pieceDatetime = piece.getPieceDatetime();
+            this.previousPieceList = piece.getPreviousPieceList();
+        }
+    }
+
+    public HaccomentPickupResult(HacoMapPickup pickup) {
+        this.hacoMaps = pickup.getHacoMap().stream().map(piece -> new HacoMap(piece)).collect(Collectors.toList());
     }
 }

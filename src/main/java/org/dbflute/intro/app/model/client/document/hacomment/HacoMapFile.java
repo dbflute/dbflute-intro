@@ -21,17 +21,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
+import org.dbflute.util.DfTypeUtil;
 
 /**
  * @author hakiba
@@ -63,7 +71,82 @@ public class HacoMapFile {
 
     public List<HacoMapPiece> readPieceList(String clientDirPath) {
         assertClientDirPath(clientDirPath);
-        return null;
+        String pieceDirPath = buildPieceDirPath(clientDirPath);
+        if (Files.notExists(Paths.get(pieceDirPath))) {
+            return Collections.emptyList();
+        }
+        try {
+            return Files.list(Paths.get(pieceDirPath))
+                .filter(path -> path.toString().endsWith(".dfmap"))
+                .filter(path -> path.toString().contains("-piece-"))
+                .map(path -> doReadPiece(path))
+                .collect(Collectors.toList());
+        } catch (IOException e) {
+            // TODO hakiba resolve Exception by hakiba (2018/02/22)
+            return Collections.emptyList();
+        }
+    }
+
+    private HacoMapPiece doReadPiece(Path path) {
+        final MapListFile mapListFile = new MapListFile();
+        try {
+            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            return mappingToDecoMapPiece(map);
+        } catch (RuntimeException | IOException e) {
+            // TODO hakiba resolve Exception by hakiba (2018/02/22)
+            return null; // unreachable
+        }
+    }
+
+    // done hakiba cast check by hakiba (2017/07/29)
+    private HacoMapPiece mappingToDecoMapPiece(Map<String, Object> map) {
+        String diffdate = (String) map.get("diffDate");
+        String hacomment = (String) map.get("hacomment");
+        @SuppressWarnings("unchecked")
+        List<String> authorList = (List<String>) map.get("authorList");
+        String pieceCode = (String) map.get("pieceCode");
+        LocalDateTime pieceDatetime = new HandyDate((String) map.get("pieceDatetime")).getLocalDateTime();
+        String pieceOwner = (String) map.get("pieceOwner");
+        @SuppressWarnings("unchecked")
+        List<String> previousPieceList = (List<String>) map.get("previousPieceList");
+        return new HacoMapPiece(diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
+    }
+
+    public OptionalThing<HacoMapPickup> readPickup(String clientDirPath) {
+        assertClientDirPath(clientDirPath);
+        String filePath = buildPickupFilePath(clientDirPath);
+        if (Files.notExists(Paths.get(filePath)))
+            return OptionalThing.empty();
+        return OptionalThing.ofNullable(doReadPickup(Paths.get(filePath)), () -> {});
+    }
+
+    private HacoMapPickup doReadPickup(Path path) {
+        MapListFile mapListFile = new MapListFile();
+        try {
+            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            return mappingToDecoMapPickup(map);
+        } catch (RuntimeException | IOException e) {
+            // TODO hakiba resolve Exception by hakiba (2018/02/22)
+            return null; // unreachable
+        }
+    }
+
+    private HacoMapPickup mappingToDecoMapPickup(Map<String, Object> map) {
+        LocalDateTime pickupDatetime = DfTypeUtil.toLocalDateTime(map.get("pickupDatetime"));
+        String formatVersion = (String) map.get("formatVersion");
+        HacoMapPickup pickup = new HacoMapPickup(formatVersion);
+        pickup.setPickupDatetime(pickupDatetime);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> hacoMapList = (List<Map<String, Object>>) map.getOrDefault("hacoMap", new ArrayList<>());
+        if (hacoMapList.isEmpty()) {
+            return pickup;
+        }
+
+        List<HacoMapPiece> hacoMapPieceList = hacoMapList.stream().map(hacoMap -> new HacoMapPiece(hacoMap)).collect(Collectors.toList());
+
+        pickup.addAllHacoMaps(hacoMapPieceList);
+        return pickup;
     }
 
     // ===================================================================================
@@ -132,6 +215,35 @@ public class HacoMapFile {
 
     protected LocalDateTime getCurrentLocalDateTime() {
         return LocalDateTime.now();
+    }
+
+    // ===================================================================================
+    //                                                                               Merge
+    //                                                                               =====
+    public HacoMapPickup merge(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces) {
+        Set<String> pieceCodeSet = extractAllMergedPieceCode(pickupOpt, pieces);
+        HacoMapPickup mergedPickup = doMerge(pickupOpt, pieces, pieceCodeSet);
+        return mergedPickup;
+    }
+
+    private Set<String> extractAllMergedPieceCode(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces) {
+        Stream<String> pickupPieceCodeStream =
+            pickupOpt.map(pickup -> pickup.hacoMap.stream().flatMap(piece -> piece.previousPieceList.stream())).orElse(Stream.empty());
+        Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.previousPieceList.stream());
+        return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
+    }
+
+    private HacoMapPickup doMerge(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces, Set<String> mergedPieceCodeSet) {
+        Stream<HacoMapPiece> pickupStream =
+            pickupOpt.map(pickup -> pickup.hacoMap).map(pieceList -> pieceList.stream()).orElse(Stream.empty());
+        List<HacoMapPiece> filteredHacoMap = Stream.concat(pickupStream, pieces.stream())
+            .filter(piece -> !mergedPieceCodeSet.contains(piece.pieceCode))
+            .collect(Collectors.toList());
+        HacoMapPickup newPickup = new HacoMapPickup();
+        newPickup.addAllHacoMaps(filteredHacoMap);
+        newPickup.setPickupDatetime(getCurrentLocalDateTime());
+
+        return newPickup;
     }
 
     // ===================================================================================

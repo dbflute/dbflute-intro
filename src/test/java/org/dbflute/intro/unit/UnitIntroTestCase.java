@@ -51,9 +51,9 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     //                                             Hacomment
     //                                             ---------
     private static final String TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH =
-        "/src/test/resources/schema/hacomment/pickup/decomment-pickup.dfmap";
+        "/src/test/resources/schema/hacomment/pickup/hacomment-pickup.dfmap";
     private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = "/src/test/resources/schema/hacomment/piece";
-    private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/decomment-pickup.dfmap";
+    private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/hacomment-pickup.dfmap";
     private static final String HACOMMENT_PIECE_DIR_PATH = "/schema/hacomment/piece";
 
     // ===================================================================================
@@ -135,6 +135,19 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // ===================================================================================
     //                                                                      Test Hacomment
     //                                                                      ==============
+    protected void prepareTestHacommentFiles() throws IOException {
+        File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH);
+        File srcPieceDir = new File(getProjectDir(), TEST_RESOURCE_HACOMMENT_PICKUP_PATH);
+        File destPickupFile = getTestHacommentPickupFile();
+        File destPieceDir = getTestHacommentPieceDir();
+        FileUtils.copyFile(srcPickupFile, destPickupFile);
+        FileUtils.copyDirectory(srcPieceDir, destPieceDir, file -> file.isDirectory() || file.getName().endsWith(".dfmap"));
+    }
+
+    protected File getTestHacommentPickupFile() {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + PICKUP_FILE_PATH);
+    }
+
     protected File getTestHacommentPieceDir() {
         return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PIECE_DIR_PATH);
     }

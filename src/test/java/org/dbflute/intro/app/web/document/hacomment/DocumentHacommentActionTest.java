@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import org.dbflute.helper.mapstring.MapListFile;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
+import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author hakiba
@@ -87,6 +88,24 @@ public class DocumentHacommentActionTest extends UnitIntroTestCase {
         Pattern pattern = Pattern.compile("^hacomment-piece-diffdate\\d{14}-\\d{8}-\\d{6}-\\d{3}-.+\\.dfmap$");
         assertTrue(pattern.matcher(pieceFile.getName()).find());
         return pieceFile;
+    }
+
+    // ===================================================================================
+    //                                                                              Pickup
+    //                                                                              ======
+    public void test_pickup() throws Exception {
+        // ## Arrange ##
+        prepareTestHacommentFiles();
+        DocumentHacommentAction action = new DocumentHacommentAction();
+        inject(action);
+
+        // ## Act ##
+        JsonResponse<HaccomentPickupResult> response = action.pickup(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        showJson(response);
+        validateJsonData(response);
+        // TODO hakiba add Assertions by hakiba (2018/02/21)
     }
 
 }

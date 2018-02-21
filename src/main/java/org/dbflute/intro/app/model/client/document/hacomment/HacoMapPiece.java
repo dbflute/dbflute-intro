@@ -55,6 +55,17 @@ public class HacoMapPiece {
         this.previousPieceList = previousPieceList;
     }
 
+    @SuppressWarnings("unchecked")
+    public HacoMapPiece(Map<String, Object> map) {
+        this.diffDate = (String) map.get("diffDate");
+        this.hacomment = (String) map.get("hacomment");
+        this.authorList = (List<String>) map.get("authorList");
+        this.pieceCode = (String) map.get("pieceCode");
+        this.pieceOwner = (String) map.get("pieceOwner");
+        this.pieceDatetime = (LocalDateTime) map.get("pieceDatetime");
+        this.previousPieceList = (List<String>) map.get("previousPieceList");
+    }
+
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========

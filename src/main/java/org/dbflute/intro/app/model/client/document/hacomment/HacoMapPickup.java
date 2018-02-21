@@ -15,8 +15,50 @@
  */
 package org.dbflute.intro.app.model.client.document.hacomment;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author hakiba
  */
 public class HacoMapPickup {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DEFAULT_FORMAT_VERSION = "1.0";
+
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    protected final String formatVersion;
+    protected LocalDateTime pickupDatetime;
+    protected final List<HacoMapPiece> hacoMap;
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    public HacoMapPickup() {
+        this(DEFAULT_FORMAT_VERSION);
+    }
+    public HacoMapPickup(String formatVersion) {
+        this.formatVersion = formatVersion;
+        this.hacoMap = new ArrayList<>();
+    }
+
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
+    public void setPickupDatetime(LocalDateTime pickupDatetime) {
+        this.pickupDatetime = pickupDatetime;
+    }
+
+    public void addAllHacoMaps(List<HacoMapPiece> hacoMap) {
+        this.hacoMap.addAll(hacoMap);
+    }
+
+    public List<HacoMapPiece> getHacoMap() {
+        return this.hacoMap;
+    }
 }

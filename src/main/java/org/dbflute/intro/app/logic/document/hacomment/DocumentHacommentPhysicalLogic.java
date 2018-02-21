@@ -15,12 +15,15 @@
  */
 package org.dbflute.intro.app.logic.document.hacomment;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapFile;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author hakiba
@@ -46,7 +49,17 @@ public class DocumentHacommentPhysicalLogic {
     //                                                                          Pickup Map
     //                                                                          ==========
     public HacoMapPickup readMergedPickup(String clientProject) {
-        return null;
+        List<HacoMapPiece> pieces = readHacommentPiece(clientProject);
+        OptionalThing<HacoMapPickup> pickupOpt = readHacommentPickup(clientProject);
+        return _hacoMapFile.merge(pickupOpt, pieces);
+    }
+
+    private List<HacoMapPiece> readHacommentPiece(String clientProject) {
+        return _hacoMapFile.readPieceList(buildClientPath(clientProject));
+    }
+
+    private OptionalThing<HacoMapPickup> readHacommentPickup(String clientProject) {
+        return _hacoMapFile.readPickup(buildClientPath(clientProject));
     }
 
     private String buildClientPath(String clientProject) {
