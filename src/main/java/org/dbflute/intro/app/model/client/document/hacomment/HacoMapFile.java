@@ -77,10 +77,10 @@ public class HacoMapFile {
         }
         try {
             return Files.list(Paths.get(pieceDirPath))
-                .filter(path -> path.toString().endsWith(".dfmap"))
-                .filter(path -> path.toString().contains("-piece-"))
-                .map(path -> doReadPiece(path))
-                .collect(Collectors.toList());
+                    .filter(path -> path.toString().endsWith(".dfmap"))
+                    .filter(path -> path.toString().contains("-piece-"))
+                    .map(path -> doReadPiece(path))
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             // TODO hakiba resolve Exception by hakiba (2018/02/22)
             return Collections.emptyList();
@@ -214,6 +214,7 @@ public class HacoMapFile {
     }
 
     protected LocalDateTime getCurrentLocalDateTime() {
+        // TODO hakiba use callback by jflute (2018/02/22)
         return LocalDateTime.now();
     }
 
@@ -228,17 +229,17 @@ public class HacoMapFile {
 
     private Set<String> extractAllMergedPieceCode(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces) {
         Stream<String> pickupPieceCodeStream =
-            pickupOpt.map(pickup -> pickup.hacoMap.stream().flatMap(piece -> piece.previousPieceList.stream())).orElse(Stream.empty());
+                pickupOpt.map(pickup -> pickup.hacoMap.stream().flatMap(piece -> piece.previousPieceList.stream())).orElse(Stream.empty());
         Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.previousPieceList.stream());
         return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
     }
 
     private HacoMapPickup doMerge(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces, Set<String> mergedPieceCodeSet) {
         Stream<HacoMapPiece> pickupStream =
-            pickupOpt.map(pickup -> pickup.hacoMap).map(pieceList -> pieceList.stream()).orElse(Stream.empty());
-        List<HacoMapPiece> filteredHacoMap = Stream.concat(pickupStream, pieces.stream())
-            .filter(piece -> !mergedPieceCodeSet.contains(piece.pieceCode))
-            .collect(Collectors.toList());
+                pickupOpt.map(pickup -> pickup.hacoMap).map(pieceList -> pieceList.stream()).orElse(Stream.empty());
+        List<HacoMapPiece> filteredHacoMap =
+                Stream.concat(pickupStream, pieces.stream()).filter(piece -> !mergedPieceCodeSet.contains(piece.pieceCode)).collect(
+                        Collectors.toList());
         HacoMapPickup newPickup = new HacoMapPickup();
         newPickup.addAllHacoMaps(filteredHacoMap);
         newPickup.setPickupDatetime(getCurrentLocalDateTime());

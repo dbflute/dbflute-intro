@@ -107,10 +107,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece =
-            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
-                body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime, author,
-                body.previousPieces);
+        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
+                body.decomment, body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author),
+                pieceDatetime, author, body.previousPieces);
         return piece;
     }
 
@@ -163,8 +162,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private void moreValidate(DecommentMappingSaveBody body, IntroMessages messages) {
-        if (DfDecoMapPieceTargetType.Column == body.targetType && (LaStringUtil.isEmpty(body.oldColumnName) || LaStringUtil.isEmpty(
-            body.newColumnName))) {
+        // TODO cabos be client error by jflute (2018/02/22)
+        if (DfDecoMapPieceTargetType.Column == body.targetType
+                && (LaStringUtil.isEmpty(body.oldColumnName) || LaStringUtil.isEmpty(body.newColumnName))) {
             messages.addConstraintsNotEmptyMessage("columnName");
         }
     }
@@ -174,7 +174,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
         String mappingCode = buildMappingCode(body, mappingDateTime, author);
         return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, body.oldTableName, body.oldColumnName, body.newTableName,
-            body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
+                body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
     }
 
     private String buildMappingCode(DecommentMappingSaveBody body, LocalDateTime mappingDateTime, String author) {
