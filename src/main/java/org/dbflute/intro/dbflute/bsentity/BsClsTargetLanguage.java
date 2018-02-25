@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,25 +35,25 @@ import org.dbflute.intro.dbflute.exentity.*;
  *     LANGUAGE_CODE, LANGUAGE_NAME, DISPLAY_ORDER
  *
  * [sequence]
- *     
+ *
  *
  * [identity]
- *     
+ *
  *
  * [version-no]
- *     
+ *
  *
  * [foreign table]
- *     
+ *
  *
  * [referrer table]
- *     
+ *
  *
  * [foreign property]
- *     
+ *
  *
  * [referrer property]
- *     
+ *
  *
  * [get/set template]
  * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
