@@ -146,6 +146,12 @@ public class DecommentPickupResult {
         public String pieceOwner;
 
         /**
+         * Branch name of this decomment piece
+         * e.g. "develop"
+         */
+        public String pieceGitBranch;
+
+        /**
          * list of merged piece code
          * e.g. ["HF7ELSE"]
          */
@@ -164,6 +170,7 @@ public class DecommentPickupResult {
             this.pieceCode = property.getPieceCode();
             this.pieceDatetime = property.getPieceDatetime();
             this.pieceOwner = property.getPieceOwner();
+            this.pieceGitBranch = property.getPieceGitBranch();
             this.previousPieces = property.getPreviousPieceList();
         }
     }

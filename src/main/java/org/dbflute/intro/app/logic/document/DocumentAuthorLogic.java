@@ -57,7 +57,6 @@ public class DocumentAuthorLogic {
         }
 
         private void loadGitBranchName() {
-            // done cabos "memorable code" get from os user and filter it by jflute (2017/08/10)
             // get user name from git
             Runtime runtime = Runtime.getRuntime();
             Process p;
