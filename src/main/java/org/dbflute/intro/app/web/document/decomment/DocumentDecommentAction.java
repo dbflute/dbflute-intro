@@ -107,9 +107,10 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
-                body.decomment, body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author),
-                pieceDatetime, author, body.previousPieces);
+        DfDecoMapPiece piece =
+            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
+                body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime, author,
+                body.previousPieces);
         return piece;
     }
 
@@ -156,17 +157,20 @@ public class DocumentDecommentAction extends IntroBaseAction {
      */
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> mapping(String projectName, DecommentMappingSaveBody body) {
-        validate(body, messages -> moreValidate(body, messages));
+        validate(body, messages -> {});
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
         decommentPhysicalLogic.saveDecommentMapping(projectName, mappingToDecoMapMapping(body));
         return JsonResponse.asEmptyBody();
     }
 
-    private void moreValidate(DecommentMappingSaveBody body, IntroMessages messages) {
-        // TODO cabos be client error by jflute (2018/02/22)
-        if (DfDecoMapPieceTargetType.Column == body.targetType
-                && (LaStringUtil.isEmpty(body.oldColumnName) || LaStringUtil.isEmpty(body.newColumnName))) {
-            messages.addConstraintsNotEmptyMessage("columnName");
-        }
+    private String buildDebugMessageColumnNameIsNull(DecommentMappingSaveBody body) {
+        // TODO done cabos be client error by jflute (2018/02/22)
+        StringBuilder sb = new StringBuilder();
+        sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
+        sb.append("   targetType    : ").append(body.targetType.code()).append("\n");
+        sb.append("   oldColumnName : ").append(body.oldColumnName).append("\n");
+        sb.append("   newColumnName : ").append(body.newColumnName).append("\n");
+        return sb.toString();
     }
 
     private DfDecoMapMapping mappingToDecoMapMapping(DecommentMappingSaveBody body) {
@@ -174,7 +178,14 @@ public class DocumentDecommentAction extends IntroBaseAction {
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
         String mappingCode = buildMappingCode(body, mappingDateTime, author);
         return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, body.oldTableName, body.oldColumnName, body.newTableName,
-                body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
+            body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
+    }
+
+    private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody body) {
+        if (DfDecoMapPieceTargetType.Column == body.targetType) {
+            return LaStringUtil.isNotEmpty(body.oldColumnName) && LaStringUtil.isNotEmpty(body.newColumnName);
+        }
+        return true;
     }
 
     private String buildMappingCode(DecommentMappingSaveBody body, LocalDateTime mappingDateTime, String author) {
