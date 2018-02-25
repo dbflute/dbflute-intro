@@ -74,7 +74,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             log("  {} = {}", key, value);
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
-        assertEquals("1.0", actualMap.get("formatVersion"));
+        assertEquals("1.1", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
         assertEquals(body.decomment, actualMap.get("decomment"));
@@ -85,6 +85,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
+        assertEquals(documentAuthorLogic.getGitBranchName(), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
@@ -113,7 +114,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             log("  {} = {}", key, value);
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
-        assertEquals("1.0", actualMap.get("formatVersion"));
+        assertEquals("1.1", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
         assertEquals(body.decomment, actualMap.get("decomment"));
@@ -124,6 +125,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
+        assertEquals(documentAuthorLogic.getGitBranchName(), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 

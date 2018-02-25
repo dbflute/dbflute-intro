@@ -95,7 +95,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
     private DfDecoMapPiece createDfDecoMapPiece() {
         return new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, "MEMBER", "MEMBER_NAME", DfDecoMapPieceTargetType.Column, "piari",
             "sea", 1L, Collections.singletonList("cabos"), "FE893L1", currentLocalDateTime(), "cabos",
-            Collections.singletonList("FE893L1"));
+            "develop", Collections.singletonList("FE893L1"));
     }
 
     // ===================================================================================

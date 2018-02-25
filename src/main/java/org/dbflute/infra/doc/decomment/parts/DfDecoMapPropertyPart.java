@@ -32,38 +32,38 @@ public class DfDecoMapPropertyPart {
 
     protected final String decomment;
     protected final String databaseComment;
+    protected final Long commentVersion;
+    protected final List<String> authorList;
     protected final String pieceCode;
     protected final LocalDateTime pieceDatetime;
     protected final String pieceOwner;
     protected final String pieceGitBranch;
     protected final List<String> previousPieceList;
-    protected final Long commentVersion;
-    protected final List<String> authorList;
 
-    public DfDecoMapPropertyPart(String decomment, String databaseComment, String pieceCode, LocalDateTime pieceDatetime,
-        String pieceOwner, String pieceGitBranch, List<String> previousPieceList, long commentVersion, List<String> authorList) {
+    public DfDecoMapPropertyPart(String decomment, String databaseComment, long commentVersion, List<String> authorList,
+        String pieceCode, LocalDateTime pieceDatetime, String pieceOwner, String pieceGitBranch, List<String> previousPieceList) {
         this.decomment = decomment;
         this.databaseComment = databaseComment;
+        this.commentVersion = commentVersion;
+        this.authorList = authorList;
         this.pieceCode = pieceCode;
         this.pieceDatetime = pieceDatetime;
         this.pieceOwner = pieceOwner;
         this.pieceGitBranch = pieceGitBranch;
         this.previousPieceList = previousPieceList;
-        this.commentVersion = commentVersion;
-        this.authorList = authorList;
     }
 
     public DfDecoMapPropertyPart(Map<String, Object> propertyMap) {
         this.decomment = (String) propertyMap.get("decomment");
         this.databaseComment = (String) propertyMap.get("databaseComment");
+        this.commentVersion = Long.valueOf((String) propertyMap.get("commentVersion"));
+        this.authorList = ((List<?>) propertyMap.get("authorList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
         this.pieceCode = (String) propertyMap.get("pieceCode");
         this.pieceDatetime = new HandyDate((String) propertyMap.get("pieceDatetime")).getLocalDateTime();
         this.pieceOwner = (String) propertyMap.get("pieceOwner");
         this.pieceGitBranch = (String) propertyMap.get("pieceGitBranch");
         this.previousPieceList =
             ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
-        this.commentVersion = Long.valueOf((String) propertyMap.get("commentVersion"));
-        this.authorList = ((List<?>) propertyMap.get("authorList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
     }
 
     public String getDecomment() {
@@ -106,13 +106,13 @@ public class DfDecoMapPropertyPart {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("decomment", this.decomment);
         map.put("databaseComment", this.databaseComment);
+        map.put("commentVersion", this.commentVersion);
+        map.put("authorList", this.authorList);
         map.put("pieceCode", this.pieceCode);
         map.put("pieceOwner", this.pieceOwner);
         map.put("pieceGitBranch", this.pieceGitBranch);
         map.put("pieceDatetime", this.pieceDatetime);
         map.put("previousPieceList", this.previousPieceList);
-        map.put("commentVersion", this.commentVersion);
-        map.put("authorList", this.authorList);
         return map;
     }
 }

@@ -15,6 +15,11 @@
  */
 package org.dbflute.intro.app.logic.document;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.util.function.Supplier;
 
 /**
@@ -34,35 +39,48 @@ public class DocumentAuthorLogic {
             return this._author;
         }
 
-        //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        // memorable code : load author from git system
-        //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        //private void loadAuthor() {
-        //    // done cabos "memorable code" get from os user and filter it by jflute (2017/08/10)
-        //    // get user name from git
-        //    Runtime runtime = Runtime.getRuntime();
-        //    Process p;
-        //    try {
-        //        p = runtime.exec("git config user.name");
-        //    } catch (IOException e) {
-        //        throw new UncheckedIOException("fail to execute git command", e);
-        //    }
-        //
-        //    // read user name
-        //    try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
-        //        this._author = reader.readLine();
-        //    } catch (IOException e) {
-        //        throw new UncheckedIOException("fail to read execute command result", e);
-        //    }
-        //}
-        //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-
         private void loadAuthor() {
             this._author = System.getProperty("user.name");
         }
     };
 
+    private static final Supplier<String> _gitBranchSupplier = new Supplier<String>() {
+
+        private String _gitBranchName;
+
+        @Override
+        public String get() {
+            if (this._gitBranchName == null) {
+                this.loadGitBranchName();
+            }
+            return this._gitBranchName;
+        }
+
+        private void loadGitBranchName() {
+            // done cabos "memorable code" get from os user and filter it by jflute (2017/08/10)
+            // get user name from git
+            Runtime runtime = Runtime.getRuntime();
+            Process p;
+            try {
+                p = runtime.exec("git symbolic-ref --short HEAD");
+            } catch (IOException e) {
+                throw new UncheckedIOException("fail to execute git command", e);
+            }
+
+            // read user name
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
+                this._gitBranchName = reader.readLine();
+            } catch (IOException e) {
+                throw new UncheckedIOException("fail to read execute command result", e);
+            }
+        }
+    };
+
     public String getAuthor() {
         return _authorSupplier.get();
+    }
+
+    public String getGitBranchName() {
+        return _gitBranchSupplier.get();
     }
 }

@@ -106,16 +106,21 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
+        String gitBranchName = getGitBranchName();
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
         DfDecoMapPiece piece =
             new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
                 body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime, author,
-                body.previousPieces);
+                gitBranchName, body.previousPieces);
         return piece;
     }
 
     private String getAuthor() {
         return decommentPhysicalLogic.getAuthor();
+    }
+
+    private String getGitBranchName() {
+        return decommentPhysicalLogic.getGitBranchName();
     }
 
     private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {

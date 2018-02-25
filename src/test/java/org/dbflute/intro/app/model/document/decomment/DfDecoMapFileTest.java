@@ -46,9 +46,9 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         DfDecoMapFile decoMapFile = new DfDecoMapFile();
         OptionalThing<DfDecoMapPickup> optPickup = OptionalThing.empty(); // not exists pickup
         LocalDateTime now = currentLocalDateTime();
-        DfDecoMapPiece piece1 = preparePiece("MEMBER", "MEMBER_NAME", "hakiba", LATEST_COMMENT_VERSION, now);
-        DfDecoMapPiece piece2 = preparePiece("MEMBER", "MEMBER_STATUS", "cabos", LATEST_COMMENT_VERSION, now);
-        DfDecoMapPiece piece3 = preparePiece("PURCHASE", "PURCHASE_PRODUCT", "cabos", LATEST_COMMENT_VERSION, now);
+        DfDecoMapPiece piece1 = preparePiece("MEMBER", "MEMBER_NAME", "hakiba", "develop", LATEST_COMMENT_VERSION, now);
+        DfDecoMapPiece piece2 = preparePiece("MEMBER", "MEMBER_STATUS", "cabos", "develop", LATEST_COMMENT_VERSION, now);
+        DfDecoMapPiece piece3 = preparePiece("PURCHASE", "PURCHASE_PRODUCT", "cabos", "master", LATEST_COMMENT_VERSION, now);
         List<DfDecoMapPiece> pieceList = Arrays.asList(piece1, piece2, piece3);
 
         // ## Act ##
@@ -63,12 +63,12 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         assertEquals(3, columnCount);
     }
 
-    private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, long commentVersion,
+    private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, String gitBranchName, long commentVersion,
         LocalDateTime decommentDateTime) {
         DfDecoMapPiece piece =
             new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, tableName, columnName, DfDecoMapPieceTargetType.Column, "decomment",
                 "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author,
-                Collections.emptyList());
+                gitBranchName, Collections.emptyList());
         return piece;
     }
 

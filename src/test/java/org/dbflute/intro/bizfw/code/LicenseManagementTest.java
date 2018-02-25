@@ -35,7 +35,7 @@ import org.dbflute.utflute.core.PlainTestCase;
  */
 public class LicenseManagementTest extends PlainTestCase {
 
-    private static final String COPYRIGHT = "Copyright 2014-2017 the original author or authors.";
+    private static final String COPYRIGHT = "Copyright 2014-2018 the original author or authors.";
 
     // ===================================================================================
     //                                                                      License Header

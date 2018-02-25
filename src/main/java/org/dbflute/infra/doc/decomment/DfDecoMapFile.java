@@ -717,8 +717,8 @@ public class DfDecoMapFile {
 
     private DfDecoMapPropertyPart mappingPieceToProperty(DfDecoMapPiece piece) {
         DfDecoMapPropertyPart property =
-            new DfDecoMapPropertyPart(piece.getDecomment(), piece.getDatabaseComment(), piece.getPieceCode(), piece.getPieceDatetime(),
-                piece.getPieceOwner(), piece.getPieceGitBranch(), piece.getPreviousPieceList(), piece.getCommentVersion(), piece.getAuthorList());
+            new DfDecoMapPropertyPart(piece.getDecomment(), piece.getDatabaseComment(), piece.getCommentVersion(), piece.getAuthorList(),
+                piece.getPieceCode(), piece.getPieceDatetime(), piece.getPieceOwner(), piece.getPieceGitBranch(), piece.getPreviousPieceList());
         return property;
     }
 
