@@ -169,7 +169,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildDebugMessageColumnNameIsNull(DecommentMappingSaveBody body) {
-        // TODO done cabos be client error by jflute (2018/02/22)
+        // done cabos be client error by jflute (2018/02/22)
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
         sb.append("   targetType    : ").append(body.targetType.code()).append("\n");
