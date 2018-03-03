@@ -1092,7 +1092,7 @@ Decomment.prototype = {
 		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
 		http.open('GET', url, true);
 
-		that = this;
+		var that = this;
 		http.onreadystatechange = function () {
 			if (http.readyState === 4) {
 				if (http.status === 200) {
@@ -1126,7 +1126,7 @@ Decomment.prototype = {
 	 * @param {Object} decomment - Decomment object
 	 */
 	reflectPickup: function (decomment) {
-		that = this;
+		var that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			var tableElements = that.extractTableElements(table);
 			if (that.storePickupTableProperties(table)) {
