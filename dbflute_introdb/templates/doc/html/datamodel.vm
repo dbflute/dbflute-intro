@@ -1255,6 +1255,7 @@ Decomment.prototype = {
 				if (columnElement === null) {
 					console.log(table, column);
 					that.refrectUnmappedColumn(table, column);
+					that.showColumnSelector(table);
 					return;
 				}
 				that.storePickupColumnProperties(table, column);
@@ -1264,7 +1265,6 @@ Decomment.prototype = {
 				that.updateDisplayColumnCommentToHtml(columnElement, newComment, authors);
 				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
-			that.showColumnSelector(table);
 		});
 		this.showTableSelector();
 	},
