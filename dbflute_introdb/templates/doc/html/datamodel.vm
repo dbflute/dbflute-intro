@@ -414,6 +414,18 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 #end
 </div>
 
+<div style="display:none" id="unmapped-tables">
+	<h2>Unmapped Tables</h2>
+	<ul id="unmapped-table-list">
+	</ul>
+</div>
+
+<div style="display:none" id="unmapped-columns">
+	<h2>Unmapped Columns</h2>
+	<ul id="unmapped-column-list">
+	</ul>
+</div>
+
 #set ($hasAdditionalSchema = $database.hasAdditionalSchema())
 #set ($isAliasDelimiterInDbCommentValid = $database.isAliasDelimiterInDbCommentValid())
 <h2>Table List</h2>
@@ -1129,6 +1141,11 @@ Decomment.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			var tableElements = that.extractTableElements(table);
+			if (tableElements.length === 0) {
+				console.log(table);
+				that.refrectUnmappedTable(table);
+				return;
+			}
 			if (that.storePickupTableProperties(table)) {
 				var newTableComment = that.buildDisplayTableCommentFromServer(table);
 				var authors = that.getTableMapInfoFromStore(that.getTableNameFromJson(table))['authors'];
@@ -1138,6 +1155,11 @@ Decomment.prototype = {
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
+				if (columnElement === null) {
+					console.log(table, column);
+					that.refrectUnmappedColumn(table, column);
+					return;
+				}
 				that.storePickupColumnProperties(table, column);
 				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
 				var authors = that.buildColumnCommentAuthoers(table, column);
@@ -1169,7 +1191,40 @@ Decomment.prototype = {
 		var columnId = (table["tableName"] + "_" + column["columnName"]);
 		columnId = columnId.toLowerCase();
 		var columnElement = document.getElementById(columnId);
+		if (columnElement === null) {
+			return null;
+		}
 		return columnElement.parentElement
+	},
+
+	refrectUnmappedTable: function (table) {
+		this.activateUnmappedTableField();
+		var list = this.getUnmappedTableListElement();
+		list.innerHTML += '<li>' + table.tableName + '</li>';
+	},
+
+	activateUnmappedTableField: function () {
+		var unmappedElements = document.getElementById('unmapped-tables');
+		unmappedElements.style.display = 'inline';
+	},
+
+	getUnmappedTableListElement: function () {
+		return document.getElementById('unmapped-table-list');
+	},
+
+	refrectUnmappedColumn: function (table, column) {
+		this.activateUnmappedColumnField();
+		var list = this.getUnmappedColumnListElement();
+		list.innerHTML += '<li>' + table.tableName + '::' + column.columnName + '</li>';
+	},
+
+	activateUnmappedColumnField: function () {
+		var unmappedElements = document.getElementById('unmapped-columns');
+		unmappedElements.style.display = 'inline';
+	},
+
+	getUnmappedColumnListElement: function () {
+		return document.getElementById('unmapped-column-list');
 	},
 
 	/**
