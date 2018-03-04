@@ -416,14 +416,48 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 
 <div style="display:none" id="unmapped-tables">
 	<h2>Unmapped Tables</h2>
-	<ul id="unmapped-table-list">
-	</ul>
+	<table>
+		<thead>
+		<tr>
+			<th>No</th>
+			<th>Name</th>
+			<th>Mapping</th>
+		</tr>
+		</thead>
+		<tbody id="unmapped-table-body">
+		<!--tr>
+			<td class="rownumcell">1</td>
+			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="tableselectorcell">
+			</td>
+		</tr-->
+		</tbody>
+	</table>
 </div>
 
 <div style="display:none" id="unmapped-columns">
 	<h2>Unmapped Columns</h2>
 	<ul id="unmapped-column-list">
 	</ul>
+	<table>
+		<thead>
+		<tr>
+			<th>No</th>
+			<th>Table Name</th>
+			<th>Column Name</th>
+			<th>Mapping</th>
+		</tr>
+		</thead>
+		<tbody id="unmapped-column-body">
+		<!--tr>
+			<td class="rownumcell">1</td>
+			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="columnselectorcell">
+			</td>
+		</tr-->
+		</tbody>
+	</table>
 </div>
 
 #set ($hasAdditionalSchema = $database.hasAdditionalSchema())
@@ -1006,6 +1040,66 @@ searcher.init();
 </script>
 #macro(escape $str)$!str.replaceAll("'", "\\'").replaceAll("\n", "<br>")#end
 <script>
+
+/**
+ * @author cabos
+ */
+function UnmappedTableRow () {
+}
+UnmappedTableRow.prototype = {
+
+	/**
+	 * Initialize unmapped table row
+	 * @param {number} Row number
+	 * @param {string} Old table name
+	 */
+	init: function (rowNum, oldTableName) {
+		this.rowNum = rowNum;
+		this.oldTableName = oldTableName;
+	},
+
+	/**
+	 * Convert unmapped table row to string
+	 * @returns {string} Unmapped table row
+	 */
+	toString: function () {
+		return '<tr>'
+		+ '<td class="rownumcell">' + this.rowNum + '</td>'
+		+ '<td class="namecell">' + this.oldTableName + '</td>'
+		+ '<td class="tableselectorcell">' + '</td>'
+		+ '</tr>';
+	},
+}
+
+function UnmappedColumnRow () {
+}
+UnmappedColumnRow.prototype = {
+
+	/**
+	 * Initialize unmapped column row
+	 * @param {number} Row number
+	 * @param {string} Old table name
+	 */
+	init: function (rowNum, tableName, oldColumnName) {
+		this.rowNum = rowNum;
+		this.tableName = tableName;
+		this.oldColumnName = oldColumnName;
+	},
+
+	/**
+	 * Convert unmapped column row to string
+	 * @returns {string} Unmapped column row
+	 */
+	toString: function () {
+		return '<tr>'
+		+ '<td class="rownumcell">' + this.rowNum + '</td>'
+		+ '<td class="namecell">' + this.tableName + '</td>'
+		+ '<td class="namecell">' + this.oldColumnName + '</td>'
+		+ '<td id="columnselectorcell_' + this.tableName + '">' + '</td>'
+		+ '</tr>';
+	},
+}
+
 /**
  * @author deco
  * @author cabos
@@ -1069,6 +1163,9 @@ function Decomment() {
 		}
 #end
 	}
+
+	this.unmappedTableCount = 0;
+	this.unmappedColumnCount = 0;
 }
 Decomment.prototype = {
 
@@ -1167,7 +1264,9 @@ Decomment.prototype = {
 				that.updateDisplayColumnCommentToHtml(columnElement, newComment, authors);
 				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
+			that.showColumnSelector(table);
 		});
+		this.showTableSelector();
 	},
 
 	/**
@@ -1203,8 +1302,11 @@ Decomment.prototype = {
 	 */
 	refrectUnmappedTable: function (table) {
 		this.activateUnmappedTableField();
-		var list = this.getUnmappedTableListElement();
-		list.innerHTML += '<li>' + table.tableName + '</li>';
+		var tbody = this.getUnmappedTableBody();
+		this.unmappedTableCount += 1;
+		var row = new UnmappedTableRow();
+		row.init(this.unmappedTableCount, table.tableName);
+		tbody.innerHTML += row.toString();
 	},
 
 	/**
@@ -1218,8 +1320,8 @@ Decomment.prototype = {
 	/**
 	 * Get Unmapped table field
 	 */
-	getUnmappedTableListElement: function () {
-		return document.getElementById('unmapped-table-list');
+	getUnmappedTableBody: function () {
+		return document.getElementById('unmapped-table-body');
 	},
 
 	/**
@@ -1229,8 +1331,11 @@ Decomment.prototype = {
 	 */
 	refrectUnmappedColumn: function (table, column) {
 		this.activateUnmappedColumnField();
-		var list = this.getUnmappedColumnListElement();
-		list.innerHTML += '<li>' + table.tableName + '::' + column.columnName + '</li>';
+		var tbody = this.getUnmappedColumnBody();
+		this.unmappedColumnCount += 1;
+		var row = new UnmappedColumnRow();
+		row.init(this.unmappedColumnCount, table.tableName, column.columnName);
+		tbody.innerHTML += row.toString();
 	},
 
 	/**
@@ -1242,10 +1347,77 @@ Decomment.prototype = {
 	},
 
 	/**
+	 * Activate Unmapped table field
+	 */
+	showColumnSelector: function (table) {
+		var columnSelector = this.createColumnSelector(table);
+		var columnSelectorCell = document.getElementById('columnselectorcell_' + table.tableName);
+		columnSelectorCell.innerHTML = columnSelector;
+	},
+
+	/**
+	 * Create select list of column
+	 */
+	createColumnSelector: function (table) {
+		var columnNameList = this.getColumnNameList(table);
+		var options = Array.prototype.reduce.call(columnNameList, function (currentOptions, name) {
+			return currentOptions + '<option>' + name + '</option>';
+		}, '');
+		return '<select>' + options + '</select>'
+	},
+
+	/**
+	 * Get column name list
+	 */
+	getColumnNameList(table) {
+		var trs = document.getElementById(table.tableName.toLowerCase() + '-body').getElementsByTagName('tr');
+		var columnList = [];
+		for (var i = 0, max = trs.length; i < max; i++) {
+			// TODO check that column name column num is 6
+			columnList.push(trs[i].getElementsByTagName('td')[6].innerText.toLowerCase());
+		}
+		return columnList;
+	},
+
+	/**
 	 * Get Unmapped Column field
 	 */
-	getUnmappedColumnListElement: function () {
-		return document.getElementById('unmapped-column-list');
+	getUnmappedColumnBody: function () {
+		return document.getElementById('unmapped-column-body');
+	},
+
+	/**
+	 * Show table selector
+	 */
+	showTableSelector: function () {
+		var tableSelector = this.createTableSelector();
+		var tableSelectorCellList = document.getElementsByClassName('tableselectorcell');
+		Array.prototype.forEach.call(tableSelectorCellList, function (cell) {
+			cell.innerHTML = tableSelector;
+		});
+	},
+
+	/**
+	 * Create select list of table
+	 */
+	createTableSelector: function () {
+		var tableNameList = this.getTableNameList();
+		var options = Array.prototype.reduce.call(tableNameList, function (currentOptions, name) {
+			return currentOptions + '<option>' + name + '</option>';
+		}, '');
+		return '<select>' + options + '</select>'
+	},
+
+	/**
+	 * Get data list
+	 */
+	getTableNameList: function () {
+		var trs = document.getElementById('table-list-body').getElementsByTagName('tr');
+		var tableList = [];
+		for (var i = 0, max = trs.length; i < max; i++) {
+			tableList.push(trs[i].getElementsByTagName('td')[NAME_INDEX].innerText.toLowerCase());
+		}
+		return tableList;
 	},
 
 	/**
