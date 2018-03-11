@@ -75,7 +75,7 @@ public class DfDecoMapMapping {
     //                                                                           Converter
     //                                                                           =========
     public Map<String, Object> convertToMap() {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", this.formatVersion);
         map.put("oldTableName", this.oldTableName);
         map.put("oldColumnName", this.oldColumnName);
