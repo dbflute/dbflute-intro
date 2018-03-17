@@ -145,7 +145,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     protected File getTestHacommentPickupFile() {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + PICKUP_FILE_PATH);
+        return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PICKUP_FILE_PATH);
     }
 
     protected File getTestHacommentPieceDir() {

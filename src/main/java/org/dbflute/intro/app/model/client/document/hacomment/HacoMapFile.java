@@ -67,7 +67,7 @@ public class HacoMapFile {
     private static final Map<String, String> REPLACE_MAP_FOR_HACOMMENT_ID =
         Stream.of("/", " ", ":").collect(Collectors.toMap(ch -> ch, ch -> ""));
 
-    public static String generateHacommentId(String diffDate) {
+    public static String generateDiffCode(String diffDate) {
         return DfStringUtil.replaceBy(diffDate, REPLACE_MAP_FOR_HACOMMENT_ID);
     }
 
@@ -106,7 +106,7 @@ public class HacoMapFile {
 
     // done hakiba cast check by hakiba (2017/07/29)
     private HacoMapPiece mappingToDecoMapPiece(Map<String, Object> map) {
-        String hacommentId = (String) map.get("hacommentId");
+        String diffCode = (String) map.get("diffCode");
         String diffdate = (String) map.get("diffDate");
         String hacomment = (String) map.get("hacomment");
         @SuppressWarnings("unchecked")
@@ -116,7 +116,7 @@ public class HacoMapFile {
         String pieceOwner = (String) map.get("pieceOwner");
         @SuppressWarnings("unchecked")
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
-        return new HacoMapPiece(hacommentId, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
+        return new HacoMapPiece(diffCode, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
     }
 
     public OptionalThing<HacoMapPickup> readPickup(String clientDirPath) {
@@ -145,12 +145,15 @@ public class HacoMapFile {
         pickup.setPickupDatetime(pickupDatetime);
 
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> hacoMapList = (List<Map<String, Object>>) map.getOrDefault("hacoMap", new ArrayList<>());
-        if (hacoMapList.isEmpty()) {
+        Map<String, Object> hacoMap = (Map<String, Object>) map.getOrDefault("hacoMap", new ArrayList<>());
+        if (hacoMap.isEmpty()) {
             return pickup;
         }
 
-        List<HacoMapPiece> hacoMapPieceList = hacoMapList.stream().map(hacoMap -> new HacoMapPiece(hacoMap)).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> diffList = (List<Map<String, Object>>) hacoMap.getOrDefault("diffList", new ArrayList<>());
+
+        List<HacoMapPiece> hacoMapPieceList = diffList.stream().map(diffMap -> new HacoMapPiece(diffMap)).collect(Collectors.toList());
 
         pickup.addAllHacoMaps(hacoMapPieceList);
         return pickup;
@@ -209,7 +212,7 @@ public class HacoMapFile {
 
     private String generateDiffDateStrForFileName(HacoMapPiece piece) {
         // e.g. 2018/02/21 16:17:18 -> diffdate20180220161718
-        return "diffdate" + generateHacommentId(piece.getDiffDate());
+        return "diffdate" + generateDiffCode(piece.getDiffDate());
     }
 
     protected String getCurrentDateStr() {

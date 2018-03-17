@@ -64,8 +64,8 @@ public class DocumentHacommentAction extends IntroBaseAction {
         String author = authorLogic.getAuthor();
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
         String mappingCode = buildPieceCode(body, mappingDateTime, author);
-        String hacommentId = HacoMapFile.generateHacommentId(body.diffDate);
-        return new HacoMapPiece(hacommentId, body.diffDate, body.hacomment, body.authors, mappingCode, author, mappingDateTime,
+        String diffCode = HacoMapFile.generateDiffCode(body.diffDate);
+        return new HacoMapPiece(diffCode, body.diffDate, body.hacomment, body.authors, mappingCode, author, mappingDateTime,
             body.previousPieces);
     }
 

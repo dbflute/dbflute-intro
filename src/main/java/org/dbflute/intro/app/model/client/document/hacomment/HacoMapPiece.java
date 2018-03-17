@@ -30,7 +30,7 @@ public class HacoMapPiece {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String hacommentId;
+    protected final String diffCode;
     protected final String diffDate;
     protected final String hacomment;
     protected final List<String> authorList;
@@ -42,9 +42,9 @@ public class HacoMapPiece {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapPiece(String hacommentId, String diffDate, String hacomment, List<String> authorList, String pieceCode, String pieceOwner,
+    public HacoMapPiece(String diffCode, String diffDate, String hacomment, List<String> authorList, String pieceCode, String pieceOwner,
         LocalDateTime pieceDatetime, List<String> previousPieceList) {
-        this.hacommentId = hacommentId;
+        this.diffCode = diffCode;
         this.diffDate = diffDate;
         this.hacomment = hacomment;
         this.authorList = new ArrayList<>(authorList);
@@ -59,7 +59,7 @@ public class HacoMapPiece {
 
     @SuppressWarnings("unchecked")
     public HacoMapPiece(Map<String, Object> map) {
-        this.hacommentId = (String) map.get("hacommentId");
+        this.diffCode = (String) map.get("diffCode");
         this.diffDate = (String) map.get("diffDate");
         this.hacomment = (String) map.get("hacomment");
         this.authorList = (List<String>) map.get("authorList");
@@ -74,7 +74,7 @@ public class HacoMapPiece {
     //                                                                           =========
     public Map<String, Object> convertToMap() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("hacommentId", this.hacommentId);
+        map.put("diffCode", this.diffCode);
         map.put("diffDate", this.diffDate);
         map.put("hacomment", this.hacomment);
         map.put("authorList", this.authorList);
@@ -88,8 +88,8 @@ public class HacoMapPiece {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getHacommentId() {
-        return hacommentId;
+    public String getDiffCode() {
+        return diffCode;
     }
     public String getDiffDate() {
         return diffDate;
