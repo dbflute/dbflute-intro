@@ -1122,7 +1122,7 @@ UnmappedTableArea.prototype = {
 		var options = Array.prototype.reduce.call(tableNameList, function (currentOptions, name) {
 			return currentOptions + '<option>' + name + '</option>';
 		}, '');
-		return '<select>' + options + '</select>'
+		return '<select>' + '<option>-</option>' + options + '</select>'
 	},
 
 	/**
@@ -1279,7 +1279,7 @@ UnmappedColumnArea.prototype = {
 		var options = Array.prototype.reduce.call(columnNameList, function (currentOptions, name) {
 			return currentOptions + '<option>' + name + '</option>';
 		}, '');
-		return '<select>' + options + '</select>'
+		return '<select>' + '<option>-</option>' + options + '</select>'
 	},
 
 	/**
