@@ -1046,10 +1046,10 @@ searcher.init();
 /**
  * @author cabos
  */
-function UnmappedTableField() {
+function UnmappedTableArea() {
 	this.rows = [];
 }
-UnmappedTableField.prototype = {
+UnmappedTableArea.prototype = {
 
 	/**
 	 * Push unmapped table
@@ -1203,10 +1203,10 @@ UnmappedTableRow.prototype = {
 /**
  * @author cabos
  */
-function UnmappedColumnFiled() {
+function UnmappedColumnArea() {
 	this.rows = [];
 }
-UnmappedColumnFiled.prototype = {
+UnmappedColumnArea.prototype = {
 
 	/**
 	 * Push unmapped column
@@ -1426,8 +1426,8 @@ function Decomment() {
 #end
 	}
 
-	this.unmappedTableField = new UnmappedTableField();
-	this.unmappedColumnField = new UnmappedColumnFiled();
+	this.unmappedTableArea = new UnmappedTableArea();
+	this.unmappedColumnArea = new UnmappedColumnArea();
 }
 Decomment.prototype = {
 
@@ -1498,13 +1498,13 @@ Decomment.prototype = {
 	 */
 	reflectPickup: function (decomment) {
 		var that = this;
-		this.unmappedTableField.refresh();
-		this.unmappedColumnField.refresh();
+		this.unmappedTableArea.refresh();
+		this.unmappedColumnArea.refresh();
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			var tableElements = that.extractTableElements(table);
 			if (tableElements.length === 0) {
 				console.log(table);
-				that.unmappedTableField.push(table);
+				that.unmappedTableArea.push(table);
 				return;
 			}
 			if (that.storePickupTableProperties(table)) {
@@ -1518,7 +1518,7 @@ Decomment.prototype = {
 				var columnElement = that.extractColumnElement(table, column);
 				if (columnElement === null) {
 					console.log(table, column);
-					that.unmappedColumnField.push(table, column);
+					that.unmappedColumnArea.push(table, column);
 					return;
 				}
 				that.storePickupColumnProperties(table, column);
@@ -1529,8 +1529,8 @@ Decomment.prototype = {
 				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
 		});
-		this.unmappedTableField.refrect();
-		this.unmappedColumnField.refrect();
+		this.unmappedTableArea.refrect();
+		this.unmappedColumnArea.refrect();
 	},
 
 	/**
