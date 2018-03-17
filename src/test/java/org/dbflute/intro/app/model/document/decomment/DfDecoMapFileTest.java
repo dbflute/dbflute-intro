@@ -43,7 +43,7 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
     //                                                                               =====
     public void test_mergeAllColumnComment() throws Exception {
         // ## Arrange ##
-        DfDecoMapFile decoMapFile = new DfDecoMapFile();
+        DfDecoMapFile decoMapFile = new DfDecoMapFile(() -> currentLocalDateTime());
         OptionalThing<DfDecoMapPickup> optPickup = OptionalThing.empty(); // not exists pickup
         LocalDateTime now = currentLocalDateTime();
         DfDecoMapPiece piece1 = preparePiece("MEMBER", "MEMBER_NAME", "hakiba", "develop", LATEST_COMMENT_VERSION, now);
@@ -67,8 +67,8 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         LocalDateTime decommentDateTime) {
         DfDecoMapPiece piece =
             new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, tableName, columnName, DfDecoMapPieceTargetType.Column, "decomment",
-                "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author,
-                gitBranchName, Collections.emptyList());
+                "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author, gitBranchName,
+                Collections.emptyList());
         return piece;
     }
 
