@@ -37,6 +37,9 @@ public class HaccomentPickupResult {
 
     public static class HacoMap {
         @Required
+        public String hacommentId;
+
+        @Required
         public String diffDate;
 
         @Required
@@ -63,6 +66,7 @@ public class HaccomentPickupResult {
         //                                                                         Constructor
         //                                                                         ===========
         public HacoMap(HacoMapPiece piece) {
+            this.hacommentId = piece.getDiffDate();
             this.diffDate = piece.getDiffDate();
             this.hacomment = piece.getHacomment();
             this.authorList = piece.getAuthorList();

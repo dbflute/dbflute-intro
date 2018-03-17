@@ -28,7 +28,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,6 +64,13 @@ public class HacoMapFile {
         REPLACE_CHAR_MAP = notAvailableCharList.stream().collect(Collectors.toMap(ch -> ch, ch -> replaceChar));
     }
 
+    private static final Map<String, String> REPLACE_MAP_FOR_HACOMMENT_ID =
+        Stream.of("/", " ", ":").collect(Collectors.toMap(ch -> ch, ch -> ""));
+
+    public static String generateHacommentId(String diffDate) {
+        return DfStringUtil.replaceBy(diffDate, REPLACE_MAP_FOR_HACOMMENT_ID);
+    }
+
     // ===================================================================================
     //                                                                                Read
     //                                                                                ====
@@ -77,10 +83,10 @@ public class HacoMapFile {
         }
         try {
             return Files.list(Paths.get(pieceDirPath))
-                    .filter(path -> path.toString().endsWith(".dfmap"))
-                    .filter(path -> path.toString().contains("-piece-"))
-                    .map(path -> doReadPiece(path))
-                    .collect(Collectors.toList());
+                .filter(path -> path.toString().endsWith(".dfmap"))
+                .filter(path -> path.toString().contains("-piece-"))
+                .map(path -> doReadPiece(path))
+                .collect(Collectors.toList());
         } catch (IOException e) {
             // TODO hakiba resolve Exception by hakiba (2018/02/22)
             return Collections.emptyList();
@@ -100,6 +106,7 @@ public class HacoMapFile {
 
     // done hakiba cast check by hakiba (2017/07/29)
     private HacoMapPiece mappingToDecoMapPiece(Map<String, Object> map) {
+        String hacommentId = (String) map.get("hacommentId");
         String diffdate = (String) map.get("diffDate");
         String hacomment = (String) map.get("hacomment");
         @SuppressWarnings("unchecked")
@@ -109,7 +116,7 @@ public class HacoMapFile {
         String pieceOwner = (String) map.get("pieceOwner");
         @SuppressWarnings("unchecked")
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
-        return new HacoMapPiece(diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
+        return new HacoMapPiece(hacommentId, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
     }
 
     public OptionalThing<HacoMapPickup> readPickup(String clientDirPath) {
@@ -124,14 +131,14 @@ public class HacoMapFile {
         MapListFile mapListFile = new MapListFile();
         try {
             Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
-            return mappingToDecoMapPickup(map);
+            return mappingToHacoMapPickup(map);
         } catch (RuntimeException | IOException e) {
             // TODO hakiba resolve Exception by hakiba (2018/02/22)
             return null; // unreachable
         }
     }
 
-    private HacoMapPickup mappingToDecoMapPickup(Map<String, Object> map) {
+    private HacoMapPickup mappingToHacoMapPickup(Map<String, Object> map) {
         LocalDateTime pickupDatetime = DfTypeUtil.toLocalDateTime(map.get("pickupDatetime"));
         String formatVersion = (String) map.get("formatVersion");
         HacoMapPickup pickup = new HacoMapPickup(formatVersion);
@@ -202,11 +209,7 @@ public class HacoMapFile {
 
     private String generateDiffDateStrForFileName(HacoMapPiece piece) {
         // e.g. 2018/02/21 16:17:18 -> diffdate20180220161718
-        Map<String, String> replaceMap = new HashMap<>();
-        replaceMap.put(" ", "");
-        replaceMap.put("/", "");
-        replaceMap.put(":", "");
-        return "diffdate" + DfStringUtil.replaceBy(piece.getDiffDate(), replaceMap);
+        return "diffdate" + generateHacommentId(piece.getDiffDate());
     }
 
     protected String getCurrentDateStr() {
@@ -229,17 +232,17 @@ public class HacoMapFile {
 
     private Set<String> extractAllMergedPieceCode(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces) {
         Stream<String> pickupPieceCodeStream =
-                pickupOpt.map(pickup -> pickup.hacoMap.stream().flatMap(piece -> piece.previousPieceList.stream())).orElse(Stream.empty());
+            pickupOpt.map(pickup -> pickup.hacoMap.stream().flatMap(piece -> piece.previousPieceList.stream())).orElse(Stream.empty());
         Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.previousPieceList.stream());
         return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
     }
 
     private HacoMapPickup doMerge(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces, Set<String> mergedPieceCodeSet) {
         Stream<HacoMapPiece> pickupStream =
-                pickupOpt.map(pickup -> pickup.hacoMap).map(pieceList -> pieceList.stream()).orElse(Stream.empty());
-        List<HacoMapPiece> filteredHacoMap =
-                Stream.concat(pickupStream, pieces.stream()).filter(piece -> !mergedPieceCodeSet.contains(piece.pieceCode)).collect(
-                        Collectors.toList());
+            pickupOpt.map(pickup -> pickup.hacoMap).map(pieceList -> pieceList.stream()).orElse(Stream.empty());
+        List<HacoMapPiece> filteredHacoMap = Stream.concat(pickupStream, pieces.stream())
+            .filter(piece -> !mergedPieceCodeSet.contains(piece.pieceCode))
+            .collect(Collectors.toList());
         HacoMapPickup newPickup = new HacoMapPickup();
         newPickup.addAllHacoMaps(filteredHacoMap);
         newPickup.setPickupDatetime(getCurrentLocalDateTime());

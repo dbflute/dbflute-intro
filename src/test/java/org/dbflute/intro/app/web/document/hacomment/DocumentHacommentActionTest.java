@@ -59,6 +59,7 @@ public class DocumentHacommentActionTest extends UnitIntroTestCase {
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
         });
+        assertNotNull(actualMap.get("hacommentId"));
         assertEquals(body.diffDate, actualMap.get("diffDate"));
         assertEquals(body.hacomment, actualMap.get("hacomment"));
         ArrayList<String> expectedAuthorsList = newArrayList(body.authors);

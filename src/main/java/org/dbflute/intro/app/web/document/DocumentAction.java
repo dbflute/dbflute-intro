@@ -61,7 +61,8 @@ public class DocumentAction extends IntroBaseAction {
         if (!historyHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        return createHtmlStreamResponse(historyHtml);
+        String historyHtmlContent = documentUpdateLogic.markIntroOpeningFileTag(historyHtml);
+        return createStringSteamResponse(historyHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")
