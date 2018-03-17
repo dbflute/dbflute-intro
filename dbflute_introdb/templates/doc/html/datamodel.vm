@@ -415,7 +415,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 </div>
 
 <div style="display:none" id="unmapped-tables">
-	<h2>Unmapped Tables</h2>
+	<h2>Decomment Unmapped Tables</h2>
 	<table>
 		<thead>
 		<tr>
@@ -437,7 +437,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 </div>
 
 <div style="display:none" id="unmapped-columns">
-	<h2>Unmapped Columns</h2>
+	<h2>Decomment Unmapped Columns</h2>
 	<ul id="unmapped-column-list">
 	</ul>
 	<table>
