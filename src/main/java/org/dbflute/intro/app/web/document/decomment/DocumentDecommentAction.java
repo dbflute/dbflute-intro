@@ -16,6 +16,8 @@
 package org.dbflute.intro.app.web.document.decomment;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -172,34 +174,52 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos be client error by jflute (2018/02/22)
         StringBuilder sb = new StringBuilder();
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
-        sb.append("   targetType    : ").append(body.targetType.code()).append("\n");
-        sb.append("   oldColumnName : ").append(body.oldColumnName).append("\n");
-        sb.append("   newColumnName : ").append(body.newColumnName).append("\n");
+        body.mappings.forEach(mapping -> {
+            sb.append("\n");
+            if (!existsColumnNameIfTargetTypeColumn(mapping)) {
+                sb.append("   targetType(?) : ").append(mapping.targetType.code()).append("\n");
+            } else {
+                sb.append("   targetType    : ").append(mapping.targetType.code()).append("\n");
+            }
+            {
+                sb.append("   oldColumnName : ").append(mapping.oldColumnName).append("\n");
+                sb.append("   newColumnName : ").append(mapping.newColumnName).append("\n");
+            }
+        });
+        sb.append("\n");
         return sb.toString();
     }
 
-    private DfDecoMapMapping mappingToDecoMapMapping(DecommentMappingSaveBody body) {
+    private List<DfDecoMapMapping> mappingToDecoMapMapping(DecommentMappingSaveBody body) {
         String author = getAuthor();
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
-        String mappingCode = buildMappingCode(body, mappingDateTime, author);
-        return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, body.oldTableName, body.oldColumnName, body.newTableName,
-            body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
+
+        return body.mappings.stream().map(mapping -> {
+            String mappingCode = buildMappingCode(mapping, mappingDateTime, author);
+            return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.oldTableName, mapping.oldColumnName,
+                mapping.newTableName, mapping.newColumnName, mapping.targetType, mapping.authors, mappingCode, author, mappingDateTime,
+                mapping.previousMappings);
+        }).collect(Collectors.toList());
     }
 
     private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody body) {
-        if (DfDecoMapPieceTargetType.Column == body.targetType) {
-            return LaStringUtil.isNotEmpty(body.oldColumnName) && LaStringUtil.isNotEmpty(body.newColumnName);
+        return body.mappings.stream().allMatch(this::existsColumnNameIfTargetTypeColumn);
+    }
+
+    private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody.MappingPart mapping) {
+        if (DfDecoMapPieceTargetType.Column == mapping.targetType) {
+            return LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
         }
         return true;
     }
 
-    private String buildMappingCode(DecommentMappingSaveBody body, LocalDateTime mappingDateTime, String author) {
+    private String buildMappingCode(DecommentMappingSaveBody.MappingPart mapping, LocalDateTime mappingDateTime, String author) {
         StringBuilder sb = new StringBuilder();
-        sb.append(body.oldTableName);
-        sb.append(":").append(body.oldColumnName != null ? body.oldTableName : "");
-        sb.append(body.newTableName);
-        sb.append(":").append(body.newColumnName != null ? body.newColumnName : "");
-        sb.append(":").append(body.targetType);
+        sb.append(mapping.oldTableName);
+        sb.append(":").append(mapping.oldColumnName != null ? mapping.oldTableName : "");
+        sb.append(mapping.newTableName);
+        sb.append(":").append(mapping.newColumnName != null ? mapping.newColumnName : "");
+        sb.append(":").append(mapping.targetType);
         sb.append(":").append(mappingDateTime);
         sb.append(":").append(author);
         return Integer.toHexString(sb.toString().hashCode());

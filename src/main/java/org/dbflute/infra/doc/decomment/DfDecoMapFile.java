@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,6 +75,18 @@ public class DfDecoMapFile {
         List<String> notAvailableCharList = Arrays.asList("/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0", " ");
         String replaceChar = "_";
         REPLACE_CHAR_MAP = notAvailableCharList.stream().collect(Collectors.toMap(ch -> ch, ch -> replaceChar));
+    }
+
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    private final Supplier<LocalDateTime> currentDatetimeSupplier;
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    public DfDecoMapFile(Supplier<LocalDateTime> currentDatetimeSupplier) {
+        this.currentDatetimeSupplier = currentDatetimeSupplier;
     }
 
     // ===================================================================================
@@ -410,11 +423,6 @@ public class DfDecoMapFile {
         return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(getCurrentLocalDateTime());
     }
 
-    protected LocalDateTime getCurrentLocalDateTime() {
-        // TODO cabos use callback by jflute (2018/02/22)
-        return LocalDateTime.now();
-    }
-
     private void doWritePiece(String pieceFilePath, DfDecoMapPiece decoMapPiece) {
         File pieceMapFile = new File(pieceFilePath);
         if (pieceMapFile.exists()) { // no way, but just in case
@@ -718,7 +726,8 @@ public class DfDecoMapFile {
     private DfDecoMapPropertyPart mappingPieceToProperty(DfDecoMapPiece piece) {
         DfDecoMapPropertyPart property =
             new DfDecoMapPropertyPart(piece.getDecomment(), piece.getDatabaseComment(), piece.getCommentVersion(), piece.getAuthorList(),
-                piece.getPieceCode(), piece.getPieceDatetime(), piece.getPieceOwner(), piece.getPieceGitBranch(), piece.getPreviousPieceList());
+                piece.getPieceCode(), piece.getPieceDatetime(), piece.getPieceOwner(), piece.getPieceGitBranch(),
+                piece.getPreviousPieceList());
         return property;
     }
 
@@ -797,5 +806,13 @@ public class DfDecoMapFile {
             String msg = "The argument 'clientDirPath' should not be null or empty: " + clientDirPath;
             throw new IllegalArgumentException(msg);
         }
+    }
+
+    // ===================================================================================
+    //                                                                          Time Logic
+    //                                                                          ==========
+    protected LocalDateTime getCurrentLocalDateTime() {
+        // TODO done cabos use callback by jflute (2018/02/22)
+        return this.currentDatetimeSupplier.get();
     }
 }

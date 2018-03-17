@@ -26,6 +26,7 @@ import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.time.TimeManager;
 
 /**
  * @author cabos
@@ -40,6 +41,8 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
+    private TimeManager timeManager;
+    @Resource
     private IntroPhysicalLogic introPhysicalLogic;
     @Resource
     private DocumentAuthorLogic documentAuthorLogic;
@@ -47,7 +50,7 @@ public class DocumentDecommentPhysicalLogic {
     // done cabos why package scope? by jflute (2017/11/19)
     // done cabos add private modifier to _decoMapFile by jflute (2017/11/21)
     // done cabos instance variable should be under Attribute tag comment by jflute (2017/11/19)
-    private final DfDecoMapFile _decoMapFile = new DfDecoMapFile();
+    private final DfDecoMapFile _decoMapFile = new DfDecoMapFile(() -> timeManager.currentDateTime());
 
     // ===================================================================================
     //                                                                           Piece Map
@@ -85,8 +88,10 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                         Mapping Map
     //                                                                         ===========
-    public void saveDecommentMapping(String projectName, DfDecoMapMapping mapping) {
-        _decoMapFile.writeMapping(buildClientPath(projectName), mapping);
+    public void saveDecommentMapping(String projectName, List<DfDecoMapMapping> mappingList) {
+        mappingList.forEach(mapping -> {
+            _decoMapFile.writeMapping(buildClientPath(projectName), mapping);
+        });
     }
 
     // ===================================================================================
