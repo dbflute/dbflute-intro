@@ -77,5 +77,5 @@ public class DecommentMappingSaveBody {
      * e.g. ["FE893L1"]  (EmptyAllowed)
      */
     @NotNull
-    public List<String> previousMappingList;
+    public List<String> previousMappings;
 }

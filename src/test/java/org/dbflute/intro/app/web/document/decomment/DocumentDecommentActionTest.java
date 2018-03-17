@@ -289,7 +289,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("mappingDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
-        assertEquals(body.previousMappingList, actualMap.get("previousMappingList"));
+        assertEquals(body.previousMappings, actualMap.get("previousMappingList"));
     }
 
     // -----------------------------------------------------
@@ -327,7 +327,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("mappingDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
-        assertEquals(body.previousMappingList, actualMap.get("previousMappingList"));
+        assertEquals(body.previousMappings, actualMap.get("previousMappingList"));
     }
 
     // -----------------------------------------------------
@@ -341,7 +341,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         body.newColumnName = null;
         body.targetType = DfDecoMapPieceTargetType.Table;
         body.authors = Collections.emptyList();
-        body.previousMappingList = Collections.singletonList("LSFI83SF");
+        body.previousMappings = Collections.singletonList("LSFI83SF");
         return body;
     }
 
@@ -353,7 +353,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         body.newColumnName = "NEW_COLUMN";
         body.targetType = DfDecoMapPieceTargetType.Column;
         body.authors = Collections.emptyList();
-        body.previousMappingList = Collections.singletonList("LSFI83SF");
+        body.previousMappings = Collections.singletonList("LSFI83SF");
         return body;
     }
 

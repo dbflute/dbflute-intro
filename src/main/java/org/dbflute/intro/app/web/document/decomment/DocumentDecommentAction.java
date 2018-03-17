@@ -183,7 +183,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
         String mappingCode = buildMappingCode(body, mappingDateTime, author);
         return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, body.oldTableName, body.oldColumnName, body.newTableName,
-            body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappingList);
+            body.newColumnName, body.targetType, body.authors, mappingCode, author, mappingDateTime, body.previousMappings);
     }
 
     private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody body) {
