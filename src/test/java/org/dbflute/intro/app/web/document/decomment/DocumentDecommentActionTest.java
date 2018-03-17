@@ -280,16 +280,18 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
         assertEquals("1.0", actualMap.get("formatVersion"));
-        assertEquals(body.oldTableName, actualMap.get("oldTableName"));
-        assertEquals(body.oldColumnName, actualMap.get("oldColumnName"));
-        assertEquals(body.newTableName, actualMap.get("newTableName"));
-        assertEquals(body.newColumnName, actualMap.get("newColumnName"));
-        List<String> expectedAuthorList = newArrayList(body.authors);
-        expectedAuthorList.add(documentAuthorLogic.getAuthor());
-        assertEquals(expectedAuthorList, actualMap.get("authorList"));
-        assertNotNull(actualMap.get("mappingDatetime"));
-        assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
-        assertEquals(body.previousMappings, actualMap.get("previousMappingList"));
+        body.mappings.forEach(mapping -> {
+            assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
+            assertEquals(actualMap.get("oldColumnName"), null);
+            assertEquals(mapping.newTableName, actualMap.get("newTableName"));
+            assertEquals(actualMap.get("newColumnName"), null);
+            List<String> expectedAuthorList = newArrayList(mapping.authors);
+            expectedAuthorList.add(documentAuthorLogic.getAuthor());
+            assertEquals(expectedAuthorList, actualMap.get("authorList"));
+            assertNotNull(actualMap.get("mappingDatetime"));
+            assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
+            assertEquals(mapping.previousMappings, actualMap.get("previousMappingList"));
+        });
     }
 
     // -----------------------------------------------------
@@ -318,16 +320,18 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
         assertEquals("1.0", actualMap.get("formatVersion"));
-        assertEquals(body.oldTableName, actualMap.get("oldTableName"));
-        assertEquals(body.oldColumnName, actualMap.get("oldColumnName"));
-        assertEquals(body.newTableName, actualMap.get("newTableName"));
-        assertEquals(body.newColumnName, actualMap.get("newColumnName"));
-        List<String> expectedAuthorList = newArrayList(body.authors);
-        expectedAuthorList.add(documentAuthorLogic.getAuthor());
-        assertEquals(expectedAuthorList, actualMap.get("authorList"));
-        assertNotNull(actualMap.get("mappingDatetime"));
-        assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
-        assertEquals(body.previousMappings, actualMap.get("previousMappingList"));
+        body.mappings.forEach(mapping -> {
+            assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
+            assertEquals(mapping.oldColumnName, actualMap.get("oldColumnName"));
+            assertEquals(mapping.newTableName, actualMap.get("newTableName"));
+            assertEquals(mapping.newColumnName, actualMap.get("newColumnName"));
+            List<String> expectedAuthorList = newArrayList(mapping.authors);
+            expectedAuthorList.add(documentAuthorLogic.getAuthor());
+            assertEquals(expectedAuthorList, actualMap.get("authorList"));
+            assertNotNull(actualMap.get("mappingDatetime"));
+            assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
+            assertEquals(mapping.previousMappings, actualMap.get("previousMappingList"));
+        });
     }
 
     // -----------------------------------------------------
@@ -335,25 +339,29 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     //                                          ------------
     private DecommentMappingSaveBody createMappingSaveBodyOfTable() {
         DecommentMappingSaveBody body = new DecommentMappingSaveBody();
-        body.oldTableName = "OLD_MEMBER";
-        body.oldColumnName = null;
-        body.newTableName = "NEW_MEMBER";
-        body.newColumnName = null;
-        body.targetType = DfDecoMapPieceTargetType.Table;
-        body.authors = Collections.emptyList();
-        body.previousMappings = Collections.singletonList("LSFI83SF");
+        DecommentMappingSaveBody.MappingPart mapping = new DecommentMappingSaveBody.MappingPart();
+        mapping.oldTableName = "OLD_MEMBER";
+        mapping.oldColumnName = null;
+        mapping.newTableName = "NEW_MEMBER";
+        mapping.newColumnName = null;
+        mapping.targetType = DfDecoMapPieceTargetType.Table;
+        mapping.authors = Collections.emptyList();
+        mapping.previousMappings = Collections.singletonList("LSFI83SF");
+        body.mappings = Collections.singletonList(mapping);
         return body;
     }
 
     private DecommentMappingSaveBody createMappingSaveBodyOfColumn() {
         DecommentMappingSaveBody body = new DecommentMappingSaveBody();
-        body.oldTableName = "OLD_MEMBER";
-        body.oldColumnName = "OLD_COLUMN";
-        body.newTableName = "NEW_MEMBER";
-        body.newColumnName = "NEW_COLUMN";
-        body.targetType = DfDecoMapPieceTargetType.Column;
-        body.authors = Collections.emptyList();
-        body.previousMappings = Collections.singletonList("LSFI83SF");
+        DecommentMappingSaveBody.MappingPart mapping = new DecommentMappingSaveBody.MappingPart();
+        mapping.oldTableName = "OLD_MEMBER";
+        mapping.oldColumnName = "OLD_COLUMN";
+        mapping.newTableName = "NEW_MEMBER";
+        mapping.newColumnName = "NEW_COLUMN";
+        mapping.targetType = DfDecoMapPieceTargetType.Column;
+        mapping.authors = Collections.emptyList();
+        mapping.previousMappings = Collections.singletonList("LSFI83SF");
+        body.mappings = Collections.singletonList(mapping);
         return body;
     }
 
