@@ -1069,10 +1069,10 @@ UnmappedTableArea.prototype = {
 	},
 
 	/**
-	 * Refresh unmapped table field
+	 * Clear unmapped table field
 	 */
-	refresh: function () {
-		var tbody = this.getElement();
+	clear: function () {
+		var tbody = this.getTableBodyElement();
 		tbody.innerHTML = '';
 		this.rows = [];
 
@@ -1090,8 +1090,8 @@ UnmappedTableArea.prototype = {
 
 		this.activate();
 
-		var tbody = this.getElement();
-		tbody.innerHTML += this.toString();
+		var tbody = this.getTableBodyElement();
+		tbody.innerHTML += this.toDisplayHtmlString();
 		this.showTableSelector();
 	},
 
@@ -1139,10 +1139,10 @@ UnmappedTableArea.prototype = {
 	},
 
 	/**
-	 * Get Unmapped table field
-	 * @returns {object} Unmapped table element
+	 * Get Unmapped table body element
+	 * @returns {object} Unmapped table body element
 	 */
-	getElement: function () {
+	getTableBodyElement: function () {
 		return document.getElementById('unmapped-table-body');
 	},
 
@@ -1163,9 +1163,9 @@ UnmappedTableArea.prototype = {
 	 *  ....
 	 * @returns {string} Unmapped table rows
 	 */
-	toString: function () {
+	toDisplayHtmlString: function () {
 		return Array.prototype.reduce.call(this.rows, function (currentRows, row) {
-			return currentRows + row.toString();
+			return currentRows + row.toDisplayHtmlString();
 		}, '');
 	}
 }
@@ -1191,7 +1191,7 @@ UnmappedTableRow.prototype = {
 	 * Convert unmapped table row to string
 	 * @returns {string} Unmapped table row
 	 */
-	toString: function () {
+	toDisplayHtmlString: function () {
 		return '<tr>'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.oldTableName + '</td>'
@@ -1226,10 +1226,10 @@ UnmappedColumnArea.prototype = {
 	},
 
 	/**
-	 * Refresh unmapped column field
+	 * Clear unmapped column field
 	 */
-	refresh: function () {
-		var tbody = this.getElement();
+	clear: function () {
+		var tbody = this.getColumnBodyElement();
 		this.rows = [];
 		tbody.innerHTML = '';
 
@@ -1247,10 +1247,10 @@ UnmappedColumnArea.prototype = {
 
 		this.activate();
 
-		var tbody = this.getElement();
+		var tbody = this.getColumnBodyElement();
 		var that = this;
 		Array.prototype.forEach.call(this.rows, function (row) {
-			tbody.innerHTML = row.toString();
+			tbody.innerHTML = row.toDisplayHtmlString();
 			that.displayColumnSelector(row.tableName);
 		});
 	},
@@ -1297,10 +1297,10 @@ UnmappedColumnArea.prototype = {
 	},
 
 	/**
-	 * Get Unmapped column field
-	 * @returns {object} Unmapped column field
+	 * Get Unmapped column body element
+	 * @returns {object} Unmapped column body element
 	 */
-	getElement: function () {
+	getColumnBodyElement: function () {
 		return document.getElementById('unmapped-column-body');
 	},
 
@@ -1323,9 +1323,9 @@ UnmappedColumnArea.prototype = {
 	 *	....
 	 *	@returns {string} Unmapped column rows
 	 */
-	toString: function () {
+	toDisplayHtmlString: function () {
 		return Array.prototype.reduce.call(this.rows, function (currentRows, row) {
-			return currentRows + row.toString();
+			return currentRows + row.toDisplayHtmlString();
 		}, '');
 	}
 }
@@ -1352,7 +1352,7 @@ UnmappedColumnRow.prototype = {
 	 * Convert unmapped column row to string
 	 * @returns {string} Unmapped column row
 	 */
-	toString: function () {
+	toDisplayHtmlString: function () {
 		return '<tr>'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.tableName + '</td>'
@@ -1498,8 +1498,8 @@ Decomment.prototype = {
 	 */
 	reflectPickup: function (decomment) {
 		var that = this;
-		this.unmappedTableArea.refresh();
-		this.unmappedColumnArea.refresh();
+		this.unmappedTableArea.clear();
+		this.unmappedColumnArea.clear();
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			var tableElements = that.extractTableElements(table);
 			if (tableElements.length === 0) {
