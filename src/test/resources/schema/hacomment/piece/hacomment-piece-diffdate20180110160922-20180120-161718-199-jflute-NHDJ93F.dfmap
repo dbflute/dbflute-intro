@@ -6,5 +6,5 @@ map:{
     ; pieceCode = NHDJ93F
     ; pieceOwner = jflute
     ; pieceDatetime = 2018-01-20T16:17:18.199
-    ; previousPieceList = list:{}
+    ; previousPieceList = list:{HNDBSKA}
 }

@@ -22,8 +22,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.dbflute.intro.app.model.client.document.hacomment.HacoMapDiffPart;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
+import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPropertyPart;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -31,17 +32,39 @@ import org.lastaflute.web.validation.Required;
  */
 public class HaccomentPickupResult {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Valid
     @NotNull
-    public List<HacoMap> hacoMaps;
+    public List<DiffPart> diffs;
 
-    public static class HacoMap {
+    public static class DiffPart {
         @Required
         public String diffCode;
 
         @Required
         public String diffDate;
 
+        @Valid
+        @NotNull
+        public List<PropertyPart> properties;
+
+        // ===================================================================================
+        //                                                                         Constructor
+        //                                                                         ===========
+        public DiffPart(HacoMapDiffPart diffPart) {
+            this.diffCode = diffPart.getDiffCode();
+            this.diffDate = diffPart.getDiffDate();
+            this.properties = diffPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+        }
+    }
+
+    public static class PropertyPart {
+
+        // ===================================================================================
+        //                                                                           Attribute
+        //                                                                           =========
         @Required
         public String hacomment;
 
@@ -65,19 +88,20 @@ public class HaccomentPickupResult {
         // ===================================================================================
         //                                                                         Constructor
         //                                                                         ===========
-        public HacoMap(HacoMapPiece piece) {
-            this.diffCode = piece.getDiffCode();
-            this.diffDate = piece.getDiffDate();
-            this.hacomment = piece.getHacomment();
-            this.authorList = piece.getAuthorList();
-            this.pieceCode = piece.getPieceCode();
-            this.pieceOwner = piece.getPieceOwner();
-            this.pieceDatetime = piece.getPieceDatetime();
-            this.previousPieceList = piece.getPreviousPieceList();
+        public PropertyPart(HacoMapPropertyPart property) {
+            this.hacomment = property.getHacomment();
+            this.authorList = property.getAuthorList();
+            this.pieceCode = property.getPieceCode();
+            this.pieceOwner = property.getPieceOwner();
+            this.pieceDatetime = property.getPieceDatetime();
+            this.previousPieceList = property.getPreviousPieceList();
         }
     }
 
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
     public HaccomentPickupResult(HacoMapPickup pickup) {
-        this.hacoMaps = pickup.getHacoMap().stream().map(piece -> new HacoMap(piece)).collect(Collectors.toList());
+        this.diffs = pickup.getDiffList().stream().map(diffPart -> new DiffPart(diffPart)).collect(Collectors.toList());
     }
 }
