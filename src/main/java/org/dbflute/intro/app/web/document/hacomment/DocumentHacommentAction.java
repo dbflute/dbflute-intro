@@ -21,7 +21,6 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.document.hacomment.DocumentHacommentPhysicalLogic;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapFile;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
@@ -64,7 +63,7 @@ public class DocumentHacommentAction extends IntroBaseAction {
         String author = authorLogic.getAuthor();
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
         String mappingCode = buildPieceCode(body, mappingDateTime, author);
-        String diffCode = HacoMapFile.generateDiffCode(body.diffDate);
+        String diffCode = hacommentPhysicalLogic.generateDiffCode(body.diffDate);
         return new HacoMapPiece(diffCode, body.diffDate, body.hacomment, body.authors, mappingCode, author, mappingDateTime,
             body.previousPieces);
     }

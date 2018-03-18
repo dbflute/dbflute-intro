@@ -24,6 +24,7 @@ import org.dbflute.intro.app.model.client.document.hacomment.HacoMapFile;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
 import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.time.TimeManager;
 
 /**
  * @author hakiba
@@ -34,9 +35,11 @@ public class DocumentHacommentPhysicalLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
+    private TimeManager timeManager;
+    @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
-    private final HacoMapFile _hacoMapFile = new HacoMapFile();
+    private final HacoMapFile _hacoMapFile = new HacoMapFile(() -> timeManager.currentDateTime());
 
     // ===================================================================================
     //                                                                           Piece Map
@@ -64,5 +67,12 @@ public class DocumentHacommentPhysicalLogic {
 
     private String buildClientPath(String clientProject) {
         return introPhysicalLogic.buildClientPath(clientProject);
+    }
+
+    // ===================================================================================
+    //                                                                           Diff Code
+    //                                                                           =========
+    public String generateDiffCode(String diffDate) {
+        return _hacoMapFile.generateDiffCode(diffDate);
     }
 }
