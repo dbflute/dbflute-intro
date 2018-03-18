@@ -13,25 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 package org.dbflute.intro.app.model.client.document.hacomment;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.dbflute.helper.HandyDate;
 
 /**
  * @author hakiba
  */
-public class HacoMapPiece {
+public class HacoMapPropertyPart {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String diffCode;
-    protected final String diffDate;
     protected final String hacomment;
     protected final List<String> authorList;
     protected final String pieceCode;
@@ -42,73 +40,53 @@ public class HacoMapPiece {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapPiece(String diffCode, String diffDate, String hacomment, List<String> authorList, String pieceCode, String pieceOwner,
-        LocalDateTime pieceDatetime, List<String> previousPieceList) {
-        this.diffCode = diffCode;
-        this.diffDate = diffDate;
+    public HacoMapPropertyPart(String hacomment, List<String> authorList, String pieceCode, String pieceOwner, LocalDateTime pieceDatetime,
+        List<String> previousPieceList) {
         this.hacomment = hacomment;
-        this.authorList = new ArrayList<>(authorList);
-        if (!authorList.contains(pieceOwner)) {
-            this.authorList.add(pieceOwner);
-        }
+        this.authorList = authorList;
         this.pieceCode = pieceCode;
         this.pieceOwner = pieceOwner;
         this.pieceDatetime = pieceDatetime;
         this.previousPieceList = previousPieceList;
     }
 
-    @SuppressWarnings("unchecked")
-    public HacoMapPiece(Map<String, Object> map) {
-        this.diffCode = (String) map.get("diffCode");
-        this.diffDate = (String) map.get("diffDate");
-        this.hacomment = (String) map.get("hacomment");
-        this.authorList = (List<String>) map.get("authorList");
-        this.pieceCode = (String) map.get("pieceCode");
-        this.pieceOwner = (String) map.get("pieceOwner");
-        this.pieceDatetime = (LocalDateTime) map.get("pieceDatetime");
-        this.previousPieceList = (List<String>) map.get("previousPieceList");
-    }
+    public HacoMapPropertyPart(Map<String, Object> propertyMap) {
+        this.hacomment = (String) propertyMap.get("hacomment");
+        this.authorList = ((List<?>) propertyMap.get("authorList")).stream()
+            .filter(obj -> obj instanceof String)
+            .map(obj -> (String) obj)
+            .collect(Collectors.toList());
+        this.pieceCode = (String) propertyMap.get("pieceCode");
+        this.pieceOwner = (String) propertyMap.get("pieceOwner");
+        this.pieceDatetime = new HandyDate((String) propertyMap.get("pieceDatetime")).getLocalDateTime();
+        this.previousPieceList =
+            ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
 
-    // ===================================================================================
-    //                                                                           Converter
-    //                                                                           =========
-    public Map<String, Object> convertToMap() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("diffCode", this.diffCode);
-        map.put("diffDate", this.diffDate);
-        map.put("hacomment", this.hacomment);
-        map.put("authorList", this.authorList);
-        map.put("pieceCode", this.pieceCode);
-        map.put("pieceOwner", this.pieceOwner);
-        map.put("pieceDatetime", this.pieceDatetime);
-        map.put("previousPieceList", this.previousPieceList);
-        return map;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getDiffCode() {
-        return diffCode;
-    }
-    public String getDiffDate() {
-        return diffDate;
-    }
     public String getHacomment() {
         return hacomment;
     }
+
     public List<String> getAuthorList() {
         return authorList;
     }
+
     public String getPieceCode() {
         return pieceCode;
     }
+
     public String getPieceOwner() {
         return pieceOwner;
     }
+
     public LocalDateTime getPieceDatetime() {
         return pieceDatetime;
     }
+
     public List<String> getPreviousPieceList() {
         return previousPieceList;
     }

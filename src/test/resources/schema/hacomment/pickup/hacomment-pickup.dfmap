@@ -1,42 +1,64 @@
 map:{
     ; formatVersion = 1.0
     ; pickupDatetime = 2018-01-20T04:55:55.009
-    ; hacoMap = list:{
-        map:{
-            ; diffDate = 2018/01/10 16:09:22
-            ; hacomment = example comment! hey!
-            ; authorList = list:{}
-            ; pieceCode = HAJDJDD
-            ; pieceOwner = hakiba
-            ; pieceDatetime = 2018-01-16T05:05:29.009
-            ; previousPieceList = list:{}
-        }
-        map:{
-            ; diffDate = 2018/01/13 18:39:22
-            ; hacomment = example comment. yeah!
-            ; authorList = list:{}
-            ; pieceCode = XNFHDKFK
-            ; pieceOwner = jflute
-            ; pieceDatetime = 2018-01-17T03:05:29.009
-            ; previousPieceList = list:{}
-        }
-        map:{
-            ; diffDate = 2018/01/15 14:08:22
-            ; hacomment = example comment. foo!
-            ; authorList = list:{}
-            ; pieceCode = HDBAKAL
-            ; pieceOwner = deco
-            ; pieceDatetime = 2018-01-18T09:09:09.009
-            ; previousPieceList = list:{}
-        }
-        map:{
-            ; diffDate = 2018/01/16 14:34:45
-            ; hacomment = example comment! hi!
-            ; authorList = list:{}
-            ; pieceCode = HNDBSKA
-            ; pieceOwner = cabos
-            ; pieceDatetime = 2018-01-19T09:09:09.009
-            ; previousPieceList = list:{}
+    ; hacoMap = map:{
+        ; diffList = list:{
+            map:{
+                ; diffCode = 20180110160922
+                ; diffDate = 2018/01/10 16:09:22
+                ; propertyList = list:{
+                    ; map:{
+                        ; hacomment = example comment! hey!
+                        ; authorList = list:{hakiba}
+                        ; pieceCode = HAJDJDD
+                        ; pieceOwner = hakiba
+                        ; pieceDatetime = 2018-01-16T05:05:29.009
+                        ; previousPieceList = list:{}
+                    }
+                }
+            }
+            map:{
+                ; diffCode = 20180113183922
+                ; diffDate = 2018/01/13 18:39:22
+                ; propertyList = list:{
+                    ; map:{
+                        ; hacomment = example comment. yeah!
+                        ; authorList = list:{jflute}
+                        ; pieceCode = XNFHDKFK
+                        ; pieceOwner = jflute
+                        ; pieceDatetime = 2018-01-17T03:05:29.009
+                        ; previousPieceList = list:{}
+                    }
+                }
+            }
+            map:{
+                ; diffCode = 20180115140822
+                ; diffDate = 2018/01/15 14:08:22
+                ; propertyList = list:{
+                    ; map:{
+                        ; hacomment = example comment. foo!
+                        ; authorList = list:{deco}
+                        ; pieceCode = HDBAKAL
+                        ; pieceOwner = deco
+                        ; pieceDatetime = 2018-01-18T09:09:09.009
+                        ; previousPieceList = list:{}
+                    }
+                }
+            }
+            map:{
+                ; diffCode = 20180116143445
+                ; diffDate = 2018/01/16 14:34:45
+                ; propertyList = list:{
+                    ; map:{
+                        ; hacomment = example comment! hi!
+                        ; authorList = list:{cabos}
+                        ; pieceCode = HNDBSKA
+                        ; pieceOwner = cabos
+                        ; pieceDatetime = 2018-01-19T09:09:09.009
+                        ; previousPieceList = list:{}
+                    }
+                }
+            }
         }
     }
 }

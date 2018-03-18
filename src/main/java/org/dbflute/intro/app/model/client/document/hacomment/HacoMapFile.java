@@ -67,7 +67,7 @@ public class HacoMapFile {
     private static final Map<String, String> REPLACE_MAP_FOR_HACOMMENT_ID =
         Stream.of("/", " ", ":").collect(Collectors.toMap(ch -> ch, ch -> ""));
 
-    public static String generateHacommentId(String diffDate) {
+    public static String generateDiffCode(String diffDate) {
         return DfStringUtil.replaceBy(diffDate, REPLACE_MAP_FOR_HACOMMENT_ID);
     }
 
@@ -106,7 +106,7 @@ public class HacoMapFile {
 
     // done hakiba cast check by hakiba (2017/07/29)
     private HacoMapPiece mappingToDecoMapPiece(Map<String, Object> map) {
-        String hacommentId = (String) map.get("hacommentId");
+        String diffCode = (String) map.get("diffCode");
         String diffdate = (String) map.get("diffDate");
         String hacomment = (String) map.get("hacomment");
         @SuppressWarnings("unchecked")
@@ -116,7 +116,7 @@ public class HacoMapFile {
         String pieceOwner = (String) map.get("pieceOwner");
         @SuppressWarnings("unchecked")
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
-        return new HacoMapPiece(hacommentId, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
+        return new HacoMapPiece(diffCode, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
     }
 
     public OptionalThing<HacoMapPickup> readPickup(String clientDirPath) {
@@ -145,14 +145,18 @@ public class HacoMapFile {
         pickup.setPickupDatetime(pickupDatetime);
 
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> hacoMapList = (List<Map<String, Object>>) map.getOrDefault("hacoMap", new ArrayList<>());
-        if (hacoMapList.isEmpty()) {
+        Map<String, Object> hacoMap = (Map<String, Object>) map.getOrDefault("hacoMap", new ArrayList<>());
+        if (hacoMap.isEmpty()) {
             return pickup;
         }
 
-        List<HacoMapPiece> hacoMapPieceList = hacoMapList.stream().map(hacoMap -> new HacoMapPiece(hacoMap)).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> diffMapList = (List<Map<String, Object>>) hacoMap.getOrDefault("diffList", new ArrayList<>());
 
-        pickup.addAllHacoMaps(hacoMapPieceList);
+        List<HacoMapDiffPart> diffList = diffMapList.stream().map(diffMap -> new HacoMapDiffPart(diffMap)).collect(Collectors.toList());
+
+        pickup.addAllDiffList(diffList);
+
         return pickup;
     }
 
@@ -209,7 +213,7 @@ public class HacoMapFile {
 
     private String generateDiffDateStrForFileName(HacoMapPiece piece) {
         // e.g. 2018/02/21 16:17:18 -> diffdate20180220161718
-        return "diffdate" + generateHacommentId(piece.getDiffDate());
+        return "diffdate" + generateDiffCode(piece.getDiffDate());
     }
 
     protected String getCurrentDateStr() {
@@ -231,23 +235,50 @@ public class HacoMapFile {
     }
 
     private Set<String> extractAllMergedPieceCode(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces) {
-        Stream<String> pickupPieceCodeStream =
-            pickupOpt.map(pickup -> pickup.hacoMap.stream().flatMap(piece -> piece.previousPieceList.stream())).orElse(Stream.empty());
+        Stream<String> pickupPieceCodeStream = pickupOpt.map(pickup -> pickup.getDiffList().stream().flatMap(diffPart -> {
+            return diffPart.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+        })).orElse(Stream.empty());
         Stream<String> previousPieceCodeStream = pieces.stream().flatMap(piece -> piece.previousPieceList.stream());
         return Stream.concat(pickupPieceCodeStream, previousPieceCodeStream).collect(Collectors.toSet());
     }
 
     private HacoMapPickup doMerge(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces, Set<String> mergedPieceCodeSet) {
-        Stream<HacoMapPiece> pickupStream =
-            pickupOpt.map(pickup -> pickup.hacoMap).map(pieceList -> pieceList.stream()).orElse(Stream.empty());
-        List<HacoMapPiece> filteredHacoMap = Stream.concat(pickupStream, pieces.stream())
-            .filter(piece -> !mergedPieceCodeSet.contains(piece.pieceCode))
-            .collect(Collectors.toList());
+        // convert diffPart list
+        Stream<HacoMapDiffPart> piecesDiffPartStream = pieces.stream().map(piece -> mappingPieceToDiffPart(piece));
+        Stream<HacoMapDiffPart> pickupDiffPartStream = pickupOpt.map(pickup -> pickup.getDiffList().stream()).orElse(Stream.empty());
+
+        // grouping to diffPartMap (key: diffCode, value: diffPart list)
+        Map<String, List<HacoMapDiffPart>> diffPartMap =
+            Stream.concat(piecesDiffPartStream, pickupDiffPartStream).collect(Collectors.groupingBy(diffPart -> diffPart.diffCode));
+
+        // filter merged property by piece code
+        List<HacoMapDiffPart> filteredDiffPartList = diffPartMap.entrySet().stream().map(diffPartEntry -> {
+            String diffDate = diffPartEntry.getValue().stream().findFirst().map(diffPart -> diffPart.diffDate)
+                // TODO hakiba handling exception by hakiba (2018/03/17)
+                .orElseThrow(() -> new IllegalStateException("XXXXXXXXXXXXXXXXXXX"));
+
+            List<HacoMapPropertyPart> filteredPropertyPartList = diffPartEntry.getValue()
+                .stream()
+                .flatMap(hacoMapDiffPart -> hacoMapDiffPart.getPropertyList().stream())
+                .filter(propertyPart -> !mergedPieceCodeSet.contains(propertyPart.pieceCode))
+                .collect(Collectors.toList());
+
+            return new HacoMapDiffPart(diffPartEntry.getKey(), diffDate, filteredPropertyPartList);
+        }).collect(Collectors.toList());
+
+        // create new pickup
         HacoMapPickup newPickup = new HacoMapPickup();
-        newPickup.addAllHacoMaps(filteredHacoMap);
+        newPickup.addAllDiffList(filteredDiffPartList);
         newPickup.setPickupDatetime(getCurrentLocalDateTime());
 
         return newPickup;
+    }
+
+    private HacoMapDiffPart mappingPieceToDiffPart(HacoMapPiece piece) {
+        HacoMapPropertyPart propertyPart =
+            new HacoMapPropertyPart(piece.hacomment, piece.authorList, piece.pieceCode, piece.pieceOwner, piece.pieceDatetime,
+                piece.previousPieceList);
+        return new HacoMapDiffPart(piece.diffCode, piece.diffDate, propertyPart);
     }
 
     // ===================================================================================
