@@ -459,7 +459,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 		</tr-->
 		</tbody>
 	</table>
-	<button>Mapping</button>
+	<button id="column-mapping-submit-button">Mapping</button>
 </div>
 
 #set ($hasAdditionalSchema = $database.hasAdditionalSchema())
@@ -1058,10 +1058,6 @@ UnmappedTableArea.prototype = {
 		var row = new UnmappedTableRow();
 		row.init(this.rows.length + 1, table.tableName);
 		this.rows.push(row);
-		var that = this;
-		document.getElementById('table-mapping-submit-button').onclick = function() {
-			that.postMappingTable();
-		};
 	},
 
 	/**
@@ -1070,6 +1066,10 @@ UnmappedTableArea.prototype = {
 	activate: function () {
 		var unmappedElements = document.getElementById('unmapped-tables');
 		unmappedElements.style.display = 'inline';
+		var that = this;
+		document.getElementById('table-mapping-submit-button').onclick = function() {
+			that.postMappingTable();
+		};
 	},
 
 	/**
@@ -1285,6 +1285,10 @@ UnmappedColumnArea.prototype = {
 	activate: function () {
 		var unmappedElements = document.getElementById('unmapped-columns');
 		unmappedElements.style.display = 'inline';
+		var that = this;
+		document.getElementById('column-mapping-submit-button').onclick = function() {
+			that.postMappingColumn();
+		};
 	},
 
 	/**
@@ -1313,16 +1317,16 @@ UnmappedColumnArea.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(this.rows, function (row) {
 			tbody.innerHTML = row.toDisplayHtmlString();
-			that.displayColumnSelector(row.tableName);
+			that.displayColumnSelector(row.tableName, row.oldColumnName);
 		});
 	},
 
 	/**
 	 * Display column selector
 	 */
-	displayColumnSelector: function (tableName) {
+	displayColumnSelector: function (tableName, oldColumnName) {
 		var columnSelector = this.createColumnSelector(tableName);
-		var columnSelectorCell = document.getElementById('columnselectorcell_' + tableName);
+		var columnSelectorCell = document.getElementById('columnselectorcell-' + tableName + '-' + oldColumnName);
 		columnSelectorCell.innerHTML = columnSelector;
 	},
 
@@ -1353,7 +1357,7 @@ UnmappedColumnArea.prototype = {
 		var columnList = [];
 		for (var i = 0, max = trs.length; i < max; i++) {
 			// TODO check that column name column num is 6
-			columnList.push(trs[i].getElementsByTagName('td')[6].innerText.toLowerCase());
+			columnList.push(trs[i].getElementsByTagName('td')[6].innerText);
 		}
 		return columnList;
 	},
@@ -1389,7 +1393,71 @@ UnmappedColumnArea.prototype = {
 		return Array.prototype.reduce.call(this.rows, function (currentRows, row) {
 			return currentRows + row.toDisplayHtmlString();
 		}, '');
-	}
+	},
+
+	postMappingColumn: function() {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var schemeName = this.getSchemeName();
+		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
+		http.open('POST', url, true);
+
+		var mappings = Array.prototype.map.call(this.rows, function (row) {
+			var tableName = row.tableName;
+			var oldColumnName = row.oldColumnName;
+			var selector = '#columnselectorcell-' + tableName + '-' + oldColumnName + ' select';
+			console.log(selector);
+			var newColumnName = document.querySelector(selector).value;
+			return {
+				oldTableName: tableName,
+				oldColumnName: oldColumnName,
+				newTableName: tableName,
+				newColumnName: newColumnName,
+				targetType: 'COLUMN',
+				authors: [],
+				previousMappings : []
+			};
+		});
+
+		mappings = Array.prototype.filter.call(mappings, function(mapping) {
+			return mapping.newColumnName !== '-';
+		});
+
+		if (mappings.length === 0) {
+			return;
+		}
+
+		var that = this;
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					window.location.reload();
+				} else {
+					// request failed
+					alert('Error!! cannot save new table mapping.');
+				}
+			}
+		};
+		http.send(JSON.stringify({
+			mappings: mappings
+		}, null, "  "));
+	},
+
+	/**
+	 * Get host name
+	 * @returns {string} Host name
+	 */
+	getHostName: function () {
+		return  'http://' + window.location.host;
+	},
+
+	/**
+	 * Get scheme name from url
+	 * @returns {string} Scheme name
+	 */
+	getSchemeName: function () {
+		return "${database.projectName}";
+	},
 }
 
 /**
@@ -1415,11 +1483,11 @@ UnmappedColumnRow.prototype = {
 	 * @returns {string} Unmapped column row
 	 */
 	toDisplayHtmlString: function () {
-		return '<tr>'
+		return '<tr id="unmapped-column-row-' + this.oldColumnName + '">'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.tableName + '</td>'
 		+ '<td class="namecell">' + this.oldColumnName + '</td>'
-		+ '<td id="columnselectorcell_' + this.tableName + '">' + '</td>'
+		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
 		+ '</tr>';
 	},
 }
