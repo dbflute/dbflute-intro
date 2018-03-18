@@ -489,13 +489,13 @@ public class DfDecoMapFile {
         String newColumnName = decoMapMapping.getNewColumnName();
         String owner = decoMapMapping.getMappingOwner();
         String mappingCode = decoMapMapping.getMappingCode();
-        // TODO cabos fix comment by jflute (2018/02/22)
+        // TODO done cabos fix comment by jflute (2018/02/22)
         if (decoMapMapping.getTargetType() == DfDecoMapPieceTargetType.Table) {
-            // e.g. decomment-piece-MEMBER-20171015-161718-199-jflute-HF7ELSE.dfmap
+            // e.g. decomment-mapping-OLD_TABLE-NEW_TABLE-20180318-142935-095-cabos-890e4e07.dfmap
             return "decomment-mapping-" + oldTableName + "-" + newTableName + "-" + getCurrentDateStr() + "-" + filterOwner(owner) + "-"
                 + mappingCode + ".dfmap";
         } else if (decoMapMapping.getTargetType() == DfDecoMapPieceTargetType.Column) {
-            // e.g. decomment-piece-MEMBER-MEMBER_NAME-20171015-161718-199-jflute-HF7ELSE.dfmap
+            // e.g. decomment-mapping-OLD_TABLE-OLD_COLUMN-NEW_TABLE-NEW-20180318-143036-012-cabos-565d8dfa.dfmap
             return "decomment-mapping-" + oldTableName + "-" + oldColumnName + "-" + newTableName + "-" + newColumnName + "-"
                 + getCurrentDateStr() + "-" + filterOwner(owner) + "-" + mappingCode + ".dfmap";
         }
@@ -812,7 +812,7 @@ public class DfDecoMapFile {
     //                                                                          Time Logic
     //                                                                          ==========
     protected LocalDateTime getCurrentLocalDateTime() {
-        // TODO done cabos use callback by jflute (2018/02/22)
+        // TODO cabos use callback by jflute (2018/02/22)
         return this.currentDatetimeSupplier.get();
     }
 }
