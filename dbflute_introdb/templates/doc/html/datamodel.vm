@@ -1085,9 +1085,9 @@ UnmappedTableArea.prototype = {
 	},
 
 	/**
-	 * Refrect unmapped table body
+	 * Reflect unmapped table body
 	 */
-	refrect: function () {
+	reflect: function () {
 		if (this.rows.length === 0) {
 			return;
 		}
@@ -1304,9 +1304,9 @@ UnmappedColumnArea.prototype = {
 	},
 
 	/**
-	 * Refrect unmapped column field
+	 * Reflect unmapped column field
 	 */
-	refrect: function () {
+	reflect: function () {
 		if (this.rows.length === 0) {
 			return;
 		}
@@ -1659,8 +1659,8 @@ Decomment.prototype = {
 				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
 		});
-		this.unmappedTableArea.refrect();
-		this.unmappedColumnArea.refrect();
+		this.unmappedTableArea.reflect();
+		this.unmappedColumnArea.reflect();
 	},
 
 	/**
