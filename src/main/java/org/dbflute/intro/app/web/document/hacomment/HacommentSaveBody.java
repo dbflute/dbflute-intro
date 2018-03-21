@@ -29,10 +29,14 @@ public class HacommentSaveBody {
 
     @Required(groups = ClientError.class)
     public String diffDate;
+
     @Required
     public String hacomment;
+
+    public String diffComment;
     @NotNull
     public List<String> authors;
+
     @NotNull
     public List<String> previousPieces;
 }

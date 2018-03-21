@@ -125,6 +125,7 @@ public class HacoMapFile {
         String diffCode = (String) map.get("diffCode");
         String diffdate = (String) map.get("diffDate");
         String hacomment = (String) map.get("hacomment");
+        String diffComment = (String) map.get("diffComment");
         @SuppressWarnings("unchecked")
         List<String> authorList = (List<String>) map.get("authorList");
         String pieceCode = (String) map.get("pieceCode");
@@ -132,7 +133,8 @@ public class HacoMapFile {
         String pieceOwner = (String) map.get("pieceOwner");
         @SuppressWarnings("unchecked")
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
-        return new HacoMapPiece(diffCode, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
+        return new HacoMapPiece(diffCode, diffdate, hacomment, diffComment, authorList, pieceCode, pieceOwner, pieceDatetime,
+            previousPieceList);
     }
     // -----------------------------------------------------
     //                                                Pickup
@@ -329,8 +331,8 @@ public class HacoMapFile {
 
     private HacoMapDiffPart mappingPieceToDiffPart(HacoMapPiece piece) {
         HacoMapPropertyPart propertyPart =
-            new HacoMapPropertyPart(piece.hacomment, piece.authorList, piece.pieceCode, piece.pieceOwner, piece.pieceDatetime,
-                piece.previousPieceList);
+            new HacoMapPropertyPart(piece.hacomment, piece.diffComment, piece.authorList, piece.pieceCode, piece.pieceOwner,
+                piece.pieceDatetime, piece.previousPieceList);
         return new HacoMapDiffPart(piece.diffCode, piece.diffDate, propertyPart);
     }
 

@@ -33,6 +33,7 @@ public class HacoMapPiece {
     protected final String diffCode;
     protected final String diffDate;
     protected final String hacomment;
+    protected final String diffComment;
     protected final List<String> authorList;
     protected final String pieceCode;
     protected final String pieceOwner;
@@ -42,11 +43,12 @@ public class HacoMapPiece {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapPiece(String diffCode, String diffDate, String hacomment, List<String> authorList, String pieceCode, String pieceOwner,
-        LocalDateTime pieceDatetime, List<String> previousPieceList) {
+    public HacoMapPiece(String diffCode, String diffDate, String hacomment, String diffComment, List<String> authorList, String pieceCode,
+        String pieceOwner, LocalDateTime pieceDatetime, List<String> previousPieceList) {
         this.diffCode = diffCode;
         this.diffDate = diffDate;
         this.hacomment = hacomment;
+        this.diffComment = diffComment;
         this.authorList = new ArrayList<>(authorList);
         if (!authorList.contains(pieceOwner)) {
             this.authorList.add(pieceOwner);
@@ -62,6 +64,7 @@ public class HacoMapPiece {
         this.diffCode = (String) map.get("diffCode");
         this.diffDate = (String) map.get("diffDate");
         this.hacomment = (String) map.get("hacomment");
+        this.diffComment = (String) map.get("diffComment");
         this.authorList = (List<String>) map.get("authorList");
         this.pieceCode = (String) map.get("pieceCode");
         this.pieceOwner = (String) map.get("pieceOwner");
@@ -77,6 +80,7 @@ public class HacoMapPiece {
         map.put("diffCode", this.diffCode);
         map.put("diffDate", this.diffDate);
         map.put("hacomment", this.hacomment);
+        map.put("diffComment", this.diffComment);
         map.put("authorList", this.authorList);
         map.put("pieceCode", this.pieceCode);
         map.put("pieceOwner", this.pieceOwner);
@@ -96,6 +100,9 @@ public class HacoMapPiece {
     }
     public String getHacomment() {
         return hacomment;
+    }
+    public String getDiffComment() {
+        return diffComment;
     }
     public List<String> getAuthorList() {
         return authorList;
