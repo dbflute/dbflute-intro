@@ -9,6 +9,7 @@ map:{
                 ; propertyList = list:{
                     ; map:{
                         ; hacomment = example comment! hey!
+                        ; diffComment = null
                         ; authorList = list:{hakiba}
                         ; pieceCode = HAJDJDD
                         ; pieceOwner = hakiba
@@ -23,6 +24,7 @@ map:{
                 ; propertyList = list:{
                     ; map:{
                         ; hacomment = example comment. yeah!
+                        ; diffComment = null
                         ; authorList = list:{jflute}
                         ; pieceCode = XNFHDKFK
                         ; pieceOwner = jflute
@@ -37,6 +39,7 @@ map:{
                 ; propertyList = list:{
                     ; map:{
                         ; hacomment = example comment. foo!
+                        ; diffComment = null
                         ; authorList = list:{deco}
                         ; pieceCode = HDBAKAL
                         ; pieceOwner = deco
@@ -51,6 +54,7 @@ map:{
                 ; propertyList = list:{
                     ; map:{
                         ; hacomment = example comment! hi!
+                        ; diffComment = null
                         ; authorList = list:{cabos}
                         ; pieceCode = HNDBSKA
                         ; pieceOwner = cabos

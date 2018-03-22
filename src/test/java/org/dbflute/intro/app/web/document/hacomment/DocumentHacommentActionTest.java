@@ -101,7 +101,7 @@ public class DocumentHacommentActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<HaccomentPickupResult> response = action.pickup(TEST_CLIENT_PROJECT);
+        JsonResponse<HacommentPickupResult> response = action.pickup(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         showJson(response);

@@ -31,6 +31,7 @@ public class HacoMapPropertyPart {
     //                                                                           Attribute
     //                                                                           =========
     protected final String hacomment;
+    protected final String diffComment;
     protected final List<String> authorList;
     protected final String pieceCode;
     protected final String pieceOwner;
@@ -40,9 +41,10 @@ public class HacoMapPropertyPart {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapPropertyPart(String hacomment, List<String> authorList, String pieceCode, String pieceOwner, LocalDateTime pieceDatetime,
-        List<String> previousPieceList) {
+    public HacoMapPropertyPart(String hacomment, String diffComment, List<String> authorList, String pieceCode, String pieceOwner,
+        LocalDateTime pieceDatetime, List<String> previousPieceList) {
         this.hacomment = hacomment;
+        this.diffComment = diffComment;
         this.authorList = authorList;
         this.pieceCode = pieceCode;
         this.pieceOwner = pieceOwner;
@@ -52,6 +54,7 @@ public class HacoMapPropertyPart {
 
     public HacoMapPropertyPart(Map<String, Object> propertyMap) {
         this.hacomment = (String) propertyMap.get("hacomment");
+        this.diffComment = (String) propertyMap.get("diffComment");
         this.authorList = ((List<?>) propertyMap.get("authorList")).stream()
             .filter(obj -> obj instanceof String)
             .map(obj -> (String) obj)
@@ -69,6 +72,10 @@ public class HacoMapPropertyPart {
     //                                                                            ========
     public String getHacomment() {
         return hacomment;
+    }
+
+    public String getDiffComment() {
+        return diffComment;
     }
 
     public List<String> getAuthorList() {
