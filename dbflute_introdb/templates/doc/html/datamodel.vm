@@ -1176,8 +1176,8 @@ UnmappedTableArea.prototype = {
 	postMappingTable: function() {
 		var http = new XMLHttpRequest();
 		http.withCredentials = true;
-		var schemeName = this.getSchemeName();
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
+		var schemeName = DecommentUtil.getSchemaName();
+		var url = DecommentUtil.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
 		http.open('POST', url, true);
 
 		var mappings = Array.prototype.map.call(this.rows, function (row) {
@@ -1213,22 +1213,6 @@ UnmappedTableArea.prototype = {
 		http.send(JSON.stringify({
 			mappings: mappings
 		}, null, "  "));
-	},
-
-	/**
-	 * Get host name
-	 * @returns {string} Host name
-	 */
-	getHostName: function () {
-		return  'http://' + window.location.host;
-	},
-
-	/**
-	 * Get scheme name from url
-	 * @returns {string} Scheme name
-	 */
-	getSchemeName: function () {
-		return "${database.projectName}";
 	},
 }
 
@@ -1398,8 +1382,8 @@ UnmappedColumnArea.prototype = {
 	postMappingColumn: function() {
 		var http = new XMLHttpRequest();
 		http.withCredentials = true;
-		var schemeName = this.getSchemeName();
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
+		var schemeName = DecommentUtil.getSchemaName();
+		var url = DecommentUtil.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
 		http.open('POST', url, true);
 
 		var mappings = Array.prototype.map.call(this.rows, function (row) {
@@ -1444,18 +1428,10 @@ UnmappedColumnArea.prototype = {
 	},
 
 	/**
-	 * Get host name
-	 * @returns {string} Host name
-	 */
-	getHostName: function () {
-		return  'http://' + window.location.host;
-	},
-
-	/**
 	 * Get scheme name from url
 	 * @returns {string} Scheme name
 	 */
-	getSchemeName: function () {
+	getSchemaName: function () {
 		return "${database.projectName}";
 	},
 }
@@ -1490,6 +1466,141 @@ UnmappedColumnRow.prototype = {
 		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
 		+ '</tr>';
 	},
+}
+
+/**
+ * @author deco
+ */
+function ApiClient() {
+}
+
+ApiClient.prototype = {
+	/**
+	 * Fetch decomment viertual pickup.
+	 * @param {function} successCallback
+	 */
+	fetchDecomment: function(successCallback) {
+		var path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/pickup';
+		var method = 'GET';
+		var errorCallback = function() {
+			alert('Error!! cannot save decomment.');
+		}
+		this.request(path, method, null, successCallback, errorCallback);
+	},
+
+	/**
+	 * Request save decomment
+	 * @param {Object} params - Request parameters
+	 * @param {function} successCallback
+	 */
+	saveDecomment: function(params, successCallback) {
+		var path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/save';
+		var method = 'POST';
+		var that = this;
+		var errorCallback = function() {
+			alert('Error!! cannot save new column comment.');
+		}
+		this.request(path, method, params, successCallback, errorCallback);
+	},
+
+	/**
+	 * Request to intro server
+	 * @param {string} path
+	 * @param {string} method
+	 * @param {object} params
+	 * @param {function} successCallback
+	 * @param {function{ errorCallback
+	 */
+	request: function(path, method, params, successCallback, errorCallback) {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var url = DecommentUtil.getHostName() + path;
+		http.open(method, url, true);
+
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					successCallback(http.response)
+				} else {
+					errorCallback()
+				}
+			}
+		};
+		if (params != null) {
+			http.send(JSON.stringify(params, null, "  "));
+		} else {
+			http.send();
+		}
+	}
+}
+
+/**
+ * @author deco
+ */
+var DecommentUtil = new function(){
+	/**
+	 * Get host name
+	 * @returns {string} Host name
+	 */
+	this.getHostName = function() {
+		return 'http://' + window.location.host;
+	},
+	/**
+	 * Get scheme name from url
+	 * @returns {string} Scheme name
+	 */
+	this.getSchemaName = function () {
+		return "${database.projectName}";
+	},
+	/**
+	 * Escape inputed text
+	 * @param {String} string - text
+	 */
+	this.escapeInputText = function(string) {
+		if(typeof string !== 'string') {
+			return string;
+		}
+		return string.replace(/[&'`"<>]/g, function(match) {
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
+		});
+	},
+	/**
+	 * Escape newline character of text
+	 * @param {String} string - text
+	 */
+	this.escapeNewlineCharacter = function (string) {
+		return string.split('<br>').join('\n');
+	},
+	/**
+	 * Delete unnecessary whitespace
+	 * @param {String} string - text
+	 */
+	this.deleteUnnecessaryWhitespace = function(string) {
+		var commentArray = string.split("\n");
+		var result = "";
+		for(var i = 0; i < commentArray.length; i++) {
+			result += commentArray[i].replace(/\s+$/g,'');
+			if (!(i == commentArray.length - 1)) {
+				result += '\n';
+			}
+		}
+		return result.trim();
+	},
+
+	/**
+	 * Unescape whitespace character of text
+	 * @param {String} string - text
+	 */
+	this.unescapeWhitespace = function (string) {
+		return string.split('&nbsp;').join(' ');
+	}
 }
 
 /**
@@ -1566,9 +1677,8 @@ Decomment.prototype = {
 	 */
 	init: function () {
 		if (document.getElementById("intro_opening") !== null) {
-			var schemeName = this.getSchemeName();
-			this.fetchVirtualPickup(schemeName);
-			this.setupSaveDecomment(schemeName);
+			this.fetchVirtualPickup();
+			this.setupSaveDecomment();
 			this.setupKeyDownEvent();
 		} else {
 			this.reflectEmbeddedPickup();
@@ -1576,34 +1686,14 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Get scheme name from url
-	 * @returns {string} Scheme name
-	 */
-	getSchemeName: function () {
-		return "${database.projectName}";
-	},
-
-	/**
 	 * Fetch virtual pickup from server
-	 * @param {string} schemeName - Scheme name
 	 */
-	fetchVirtualPickup: function (schemeName) {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
-		http.open('GET', url, true);
-
+	fetchVirtualPickup: function () {
 		var that = this;
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					that.handlePickupResponse(http.response);
-				} else {
-					alert('Error!! cannot fetch decomment.');
-				}
-			}
-		};
-		http.send();
+		new ApiClient().fetchDecomment(function(response) {
+			var decomment = JSON.parse(response);
+			that.reflectPickup(decomment);
+		})
 	},
 
 	/**
@@ -1611,15 +1701,6 @@ Decomment.prototype = {
 	 */
 	reflectEmbeddedPickup: function () {
 		this.reflectPickup(this.embeddedPickup);
-	},
-
-	/**
-	 * Handle pickup response
-	 * @param {Object} response - Response from server
-	 */
-	handlePickupResponse: function (response) {
-		var decomment = JSON.parse(response);
-		this.reflectPickup(decomment);
 	},
 
 	/**
@@ -1718,7 +1799,7 @@ Decomment.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
+				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1774,7 +1855,7 @@ Decomment.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
+				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1859,9 +1940,9 @@ Decomment.prototype = {
 		var result = "";
 		if (commentMap['isDatabaseCommentConflict']) {
 			var databaseComment = commentMap['databaseComment'];
-			databaseComment = this.unescapeWhitespace(databaseComment);
-			databaseComment = this.escapeNewlineCharacter(databaseComment);
-			databaseComment = this.escapeInputText(databaseComment);
+			databaseComment = DecommentUtil.unescapeWhitespace(databaseComment);
+			databaseComment = DecommentUtil.escapeNewlineCharacter(databaseComment);
+			databaseComment = DecommentUtil.escapeInputText(databaseComment);
 			result = databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
 		result += commentMap['decomments'].join('\n\n=======\n\n');
@@ -1974,14 +2055,14 @@ Decomment.prototype = {
 	 * @param {string} table - Table name
 	 */
 	setupSaveDecomment: function(schemeName) {
-		this.setupSaveTableCommnt();
+		this.setupSaveTableComment();
 		this.setupSaveColumnComment();
 	},
 
 	/**
 	 * Setup save table comment event
 	 */
-	setupSaveTableCommnt: function() {
+	setupSaveTableComment: function() {
 		var that = this;
 		var tableList = document.getElementById('table-list-body').querySelectorAll('tr');
 		Array.prototype.forEach.call(tableList, function (table) {
@@ -2066,7 +2147,9 @@ Decomment.prototype = {
 					return;
 				}
 				var params = that.buildCommentRequestParams(tableName, columnName, decomment);
-				that.requestSaveDecomment(that.getSchemeName(), params);
+				new ApiClient().saveDecomment(params, function() {
+					that.fetchVirtualPickup()
+				});
 				modalElement.style.display = "none";
 			};
 
@@ -2089,14 +2172,6 @@ Decomment.prototype = {
 				modalElement.style.display = "none";
 			}
 		}
-	},
-
-	/**
-	 * Get host name
-	 * @returns {string} Host name
-	 */
-	getHostName: function () {
-		return 'http://' + window.location.host;
 	},
 
 	/**
@@ -2180,12 +2255,12 @@ Decomment.prototype = {
 			var commentVersion = commentMap['commentVersion'];
 			databaseComment = commentMap['databaseComment'];
 			if (databaseComment) {
-				databaseComment = this.escapeNewlineCharacter(databaseComment);
+				databaseComment = DecommentUtil.escapeNewlineCharacter(databaseComment);
 			}
 		}
 
-		decomment = this.escapeInputText(decomment);
-		decomment = this.deleteUnnecessaryWhitespace(decomment);
+		decomment = DecommentUtil.escapeInputText(decomment);
+		decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
 
 		return {
 			'tableName': tableName,
@@ -2197,84 +2272,6 @@ Decomment.prototype = {
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
 		};
-	},
-
-	/**
-	 * Escape inputed text
-	 * @param {String} string - text
-	 */
-	escapeInputText: function (string) {
-		if(typeof string !== 'string') {
-			return string;
-		}
-		return string.replace(/[&'`"<>]/g, function(match) {
-			return {
-				'&': '&amp;',
-				"'": '&#x27;',
-				'`': '&#x60;',
-				'"': '&quot;',
-				'<': '&lt;',
-				'>': '&gt;',
-			}[match]
-		});
-	},
-
-	/**
-	 * Escape newline character of text
-	 * @param {String} string - text
-	 */
-	escapeNewlineCharacter: function (string) {
-		return string.split('<br>').join('\n');
-	},
-
-	/**
-	 * Unescape whitespace character of text
-	 * @param {String} string - text
-	 */
-	unescapeWhitespace: function (string) {
-		return string.split('&nbsp;').join(' ');
-	},
-
-	/**
-	 * Delete unnecessary whitespace
-	 * @param {String} string - text
-	 */
-	deleteUnnecessaryWhitespace: function(string) {
-		var commentArray = string.split("\n");
-		var result = "";
-		for(var i = 0; i < commentArray.length; i++) {
-			result += commentArray[i].replace(/\s+$/g,'');
-			if (!(i == commentArray.length - 1)) {
-				result += '\n';
-			}
-		}
-		return result.trim();
-	},
-
-	/**
-	 * Request decomment
-	 * @param {string} schemeName - Scheme name
-	 * @param {Object} params - Request parameters
-	 */
-	requestSaveDecomment: function (schemeName, params) {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
-		http.open('POST', url, true);
-
-		var that = this;
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					// request success
-					that.fetchVirtualPickup(schemeName);
-				} else {
-					// request failed
-					alert('Error!! cannot save new column comment.');
-				}
-			}
-		};
-		http.send(JSON.stringify(params, null, "  "));
 	},
 
 	/**

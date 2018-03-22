@@ -414,6 +414,54 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 #end
 </div>
 
+<div style="display:none" id="unmapped-tables">
+	<h2>Decomment Unmapped Tables</h2>
+	<table>
+		<thead>
+		<tr>
+			<th>No</th>
+			<th>Name</th>
+			<th>Mapping</th>
+		</tr>
+		</thead>
+		<tbody id="unmapped-table-body">
+		<!--tr>
+			<td class="rownumcell">1</td>
+			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="tableselectorcell">
+			</td>
+		</tr-->
+		</tbody>
+	</table>
+	<button id="table-mapping-submit-button">Mapping</button>
+</div>
+
+<div style="display:none" id="unmapped-columns">
+	<h2>Decomment Unmapped Columns</h2>
+	<ul id="unmapped-column-list">
+	</ul>
+	<table>
+		<thead>
+		<tr>
+			<th>No</th>
+			<th>Table Name</th>
+			<th>Column Name</th>
+			<th>Mapping</th>
+		</tr>
+		</thead>
+		<tbody id="unmapped-column-body">
+		<!--tr>
+			<td class="rownumcell">1</td>
+			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="columnselectorcell">
+			</td>
+		</tr-->
+		</tbody>
+	</table>
+	<button id="column-mapping-submit-button">Mapping</button>
+</div>
+
 #set ($hasAdditionalSchema = $database.hasAdditionalSchema())
 #set ($isAliasDelimiterInDbCommentValid = $database.isAliasDelimiterInDbCommentValid())
 <h2>Table List</h2>
@@ -994,6 +1042,567 @@ searcher.init();
 </script>
 #macro(escape $str)$!str.replaceAll("'", "\\'").replaceAll("\n", "<br>")#end
 <script>
+
+/**
+ * @author cabos
+ */
+function UnmappedTableArea() {
+	this.rows = [];
+}
+UnmappedTableArea.prototype = {
+
+	/**
+	 * Push unmapped table
+	 */
+	push: function (table) {
+		var row = new UnmappedTableRow();
+		row.init(this.rows.length + 1, table.tableName);
+		this.rows.push(row);
+	},
+
+	/**
+	 * Activate unmapped table field
+	 */
+	activate: function () {
+		var unmappedElements = document.getElementById('unmapped-tables');
+		unmappedElements.style.display = 'inline';
+		var that = this;
+		document.getElementById('table-mapping-submit-button').onclick = function() {
+			that.postMappingTable();
+		};
+	},
+
+	/**
+	 * Clear unmapped table field
+	 */
+	clear: function () {
+		var tbody = this.getTableBodyElement();
+		tbody.innerHTML = '';
+		this.rows = [];
+
+		var unmappedElements = document.getElementById('unmapped-tables');
+		unmappedElements.style.display = 'none';
+	},
+
+	/**
+	 * Reflect unmapped table body
+	 */
+	reflect: function () {
+		if (this.rows.length === 0) {
+			return;
+		}
+
+		this.activate();
+
+		var tbody = this.getTableBodyElement();
+		tbody.innerHTML += this.toDisplayHtmlString();
+		this.showTableSelector();
+	},
+
+	/**
+	 * Show table selector
+	 *	<select>
+	 *		<option>TABLE_NAME1</option>
+	 *		<option>TABLE_NAME2</option>
+	 *		<option>TABLE_NAME3</option>
+	 *		...
+	 *	</select>
+	 * @returns {string} show table selector
+	 */
+	showTableSelector: function () {
+		var tableSelector = this.createTableSelector();
+		var tableSelectorCellList = document.getElementsByClassName('tableselectorcell');
+		Array.prototype.forEach.call(tableSelectorCellList, function (cell) {
+			cell.innerHTML = tableSelector;
+		});
+	},
+
+	/**
+	 * Create select list of table
+	 * @returns {string}
+	 */
+	createTableSelector: function () {
+		var tableNameList = this.getTableNameList();
+		var options = Array.prototype.reduce.call(tableNameList, function (currentOptions, name) {
+			return currentOptions + '<option>' + name + '</option>';
+		}, '');
+		return '<select>' + '<option>-</option>' + options + '</select>'
+	},
+
+	/**
+	 * Get data list
+	 * @returns {array} table name list
+	 */
+	getTableNameList: function () {
+		var trs = document.getElementById('table-list-body').getElementsByTagName('tr');
+		var tableList = [];
+		for (var i = 0, max = trs.length; i < max; i++) {
+			tableList.push(trs[i].getElementsByTagName('td')[NAME_INDEX].innerText);
+		}
+		return tableList;
+	},
+
+	/**
+	 * Get Unmapped table body element
+	 * @returns {object} Unmapped table body element
+	 */
+	getTableBodyElement: function () {
+		return document.getElementById('unmapped-table-body');
+	},
+
+	/**
+	 * Convert to string
+	 * 	<tr>
+	 *		<td class="rownumcell">1</td>
+	 *		<td class="namecell">OLD_TABLE_NAME1</td>
+	 *		<td class="columnselectorcell">
+	 *		</td>
+	 *	</tr>
+	 * 	<tr>
+	 *		<td class="rownumcell">1</td>
+	 *		<td class="namecell">OLD_TABLE_NAME2</td>
+	 *		<td class="columnselectorcell">
+	 *		</td>
+	 *	</tr>
+	 *  ....
+	 * @returns {string} Unmapped table rows
+	 */
+	toDisplayHtmlString: function () {
+		return Array.prototype.reduce.call(this.rows, function (currentRows, row) {
+			return currentRows + row.toDisplayHtmlString();
+		}, '');
+	},
+
+	postMappingTable: function() {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var schemeName = DecommentUtil.getSchemaName();
+		var url = DecommentUtil.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
+		http.open('POST', url, true);
+
+		var mappings = Array.prototype.map.call(this.rows, function (row) {
+			var newTableName = document.querySelector('#unmapped-table-row-' + this.tableName + ' td.tableselectorcell select').value;
+			return {
+				oldTableName: row.oldTableName,
+				newTableName: newTableName,
+				targetType: 'TABLE',
+				authors: [],
+				previousMappings : []
+			};
+		});
+
+		mappings = Array.prototype.filter.call(mappings, function(mapping) {
+			return mapping.newTableName !== '-';
+		});
+
+		if (mappings.length === 0) {
+			return;
+		}
+
+		var that = this;
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					window.location.reload();
+				} else {
+					// request failed
+					alert('Error!! cannot save new table mapping.');
+				}
+			}
+		};
+		http.send(JSON.stringify({
+			mappings: mappings
+		}, null, "  "));
+	},
+}
+
+/**
+ * @author cabos
+ */
+function UnmappedTableRow () {
+}
+UnmappedTableRow.prototype = {
+
+	/**
+	 * Initialize unmapped table row
+	 * @param {number} Row number
+	 * @param {string} Old table name
+	 */
+	init: function (rowNum, oldTableName) {
+		this.rowNum = rowNum;
+		this.oldTableName = oldTableName;
+	},
+
+	/**
+	 * Convert unmapped table row to string
+	 * @returns {string} Unmapped table row
+	 */
+	toDisplayHtmlString: function () {
+		return '<tr id="unmapped-table-row-' + this.tableName + '">'
+		+ '<td class="rownumcell">' + this.rowNum + '</td>'
+		+ '<td class="namecell">' + this.oldTableName + '</td>'
+		+ '<td class="tableselectorcell">' + '</td>'
+		+ '</tr>';
+	},
+}
+
+/**
+ * @author cabos
+ */
+function UnmappedColumnArea() {
+	this.rows = [];
+}
+UnmappedColumnArea.prototype = {
+
+	/**
+	 * Push unmapped column
+	 */
+	push: function (table, column) {
+		var row = new UnmappedColumnRow();
+		row.init(this.rows.length + 1, table.tableName, column.columnName);
+		this.rows.push(row);
+	},
+
+	/**
+	 * Activate unmapped column field
+	 */
+	activate: function () {
+		var unmappedElements = document.getElementById('unmapped-columns');
+		unmappedElements.style.display = 'inline';
+		var that = this;
+		document.getElementById('column-mapping-submit-button').onclick = function() {
+			that.postMappingColumn();
+		};
+	},
+
+	/**
+	 * Clear unmapped column field
+	 */
+	clear: function () {
+		var tbody = this.getColumnBodyElement();
+		this.rows = [];
+		tbody.innerHTML = '';
+
+		var unmappedElements = document.getElementById('unmapped-columns');
+		unmappedElements.style.display = 'none';
+	},
+
+	/**
+	 * Reflect unmapped column field
+	 */
+	reflect: function () {
+		if (this.rows.length === 0) {
+			return;
+		}
+
+		this.activate();
+
+		var tbody = this.getColumnBodyElement();
+		var that = this;
+		Array.prototype.forEach.call(this.rows, function (row) {
+			tbody.innerHTML = row.toDisplayHtmlString();
+			that.displayColumnSelector(row.tableName, row.oldColumnName);
+		});
+	},
+
+	/**
+	 * Display column selector
+	 */
+	displayColumnSelector: function (tableName, oldColumnName) {
+		var columnSelector = this.createColumnSelector(tableName);
+		var columnSelectorCell = document.getElementById('columnselectorcell-' + tableName + '-' + oldColumnName);
+		columnSelectorCell.innerHTML = columnSelector;
+	},
+
+	/**
+	 * Create select list of column
+	 *	<select>
+	 *		<option>COLUMN_NAME1</option>
+	 *		<option>COLUMN_NAME2</option>
+	 *		<option>COLUMN_NAME3</option>
+	 *		...
+	 *	</select>
+	 * @returns {string} Column selector
+	 */
+	createColumnSelector: function (tableName) {
+		var columnNameList = this.getColumnNameList(tableName);
+		var options = Array.prototype.reduce.call(columnNameList, function (currentOptions, name) {
+			return currentOptions + '<option>' + name + '</option>';
+		}, '');
+		return '<select>' + '<option>-</option>' + options + '</select>'
+	},
+
+	/**
+	 * Get column name list by table name
+	 * @returns {array} column name list
+	 */
+	getColumnNameList: function (tableName) {
+		var trs = document.getElementById(tableName.toLowerCase() + '-body').getElementsByTagName('tr');
+		var columnList = [];
+		for (var i = 0, max = trs.length; i < max; i++) {
+			// TODO check that column name column num is 6
+			columnList.push(trs[i].getElementsByTagName('td')[6].innerText);
+		}
+		return columnList;
+	},
+
+	/**
+	 * Get Unmapped column body element
+	 * @returns {object} Unmapped column body element
+	 */
+	getColumnBodyElement: function () {
+		return document.getElementById('unmapped-column-body');
+	},
+
+	/**
+	 * Convert to string
+	 * 	<tr>
+	 *		<td class="rownumcell">1</td>
+	 *		<td class="namecell">TABLE_NAME1</td>
+	 *		<td class="namecell">OLD_COLUMN_NAME1</td>
+	 *		<td class="columnselectorcell">
+	 *		</td>
+	 *	</tr>
+	 * 	<tr>
+	 *		<td class="rownumcell">1</td>
+	 *		<td class="namecell">TABLE_NAME2</td>
+	 *		<td class="namecell">OLD_COLUMN_NAME2</td>
+	 *		<td class="columnselectorcell">
+	 *		</td>
+	 *	</tr>
+	 *	....
+	 *	@returns {string} Unmapped column rows
+	 */
+	toDisplayHtmlString: function () {
+		return Array.prototype.reduce.call(this.rows, function (currentRows, row) {
+			return currentRows + row.toDisplayHtmlString();
+		}, '');
+	},
+
+	postMappingColumn: function() {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var schemeName = DecommentUtil.getSchemaName();
+		var url = DecommentUtil.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
+		http.open('POST', url, true);
+
+		var mappings = Array.prototype.map.call(this.rows, function (row) {
+			var tableName = row.tableName;
+			var oldColumnName = row.oldColumnName;
+			var selector = '#columnselectorcell-' + tableName + '-' + oldColumnName + ' select';
+			console.log(selector);
+			var newColumnName = document.querySelector(selector).value;
+			return {
+				oldTableName: tableName,
+				oldColumnName: oldColumnName,
+				newTableName: tableName,
+				newColumnName: newColumnName,
+				targetType: 'COLUMN',
+				authors: [],
+				previousMappings : []
+			};
+		});
+
+		mappings = Array.prototype.filter.call(mappings, function(mapping) {
+			return mapping.newColumnName !== '-';
+		});
+
+		if (mappings.length === 0) {
+			return;
+		}
+
+		var that = this;
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					window.location.reload();
+				} else {
+					// request failed
+					alert('Error!! cannot save new table mapping.');
+				}
+			}
+		};
+		http.send(JSON.stringify({
+			mappings: mappings
+		}, null, "  "));
+	},
+
+	/**
+	 * Get scheme name from url
+	 * @returns {string} Scheme name
+	 */
+	getSchemaName: function () {
+		return "${database.projectName}";
+	},
+}
+
+/**
+ * @author cabos
+ */
+function UnmappedColumnRow () {
+}
+UnmappedColumnRow.prototype = {
+
+	/**
+	 * Initialize unmapped column row
+	 * @param {number} Row number
+	 * @param {string} Old table name
+	 */
+	init: function (rowNum, tableName, oldColumnName) {
+		this.rowNum = rowNum;
+		this.tableName = tableName;
+		this.oldColumnName = oldColumnName;
+	},
+
+	/**
+	 * Convert unmapped column row to string
+	 * @returns {string} Unmapped column row
+	 */
+	toDisplayHtmlString: function () {
+		return '<tr id="unmapped-column-row-' + this.oldColumnName + '">'
+		+ '<td class="rownumcell">' + this.rowNum + '</td>'
+		+ '<td class="namecell">' + this.tableName + '</td>'
+		+ '<td class="namecell">' + this.oldColumnName + '</td>'
+		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
+		+ '</tr>';
+	},
+}
+
+/**
+ * @author deco
+ */
+function ApiClient() {
+}
+
+ApiClient.prototype = {
+	/**
+	 * Fetch decomment viertual pickup.
+	 * @param {function} successCallback
+	 */
+	fetchDecomment: function(successCallback) {
+		var path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/pickup';
+		var method = 'GET';
+		var errorCallback = function() {
+			alert('Error!! cannot save decomment.');
+		}
+		this.request(path, method, null, successCallback, errorCallback);
+	},
+
+	/**
+	 * Request save decomment
+	 * @param {Object} params - Request parameters
+	 * @param {function} successCallback
+	 */
+	saveDecomment: function(params, successCallback) {
+		var path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/save';
+		var method = 'POST';
+		var that = this;
+		var errorCallback = function() {
+			alert('Error!! cannot save new column comment.');
+		}
+		this.request(path, method, params, successCallback, errorCallback);
+	},
+
+	/**
+	 * Request to intro server
+	 * @param {string} path
+	 * @param {string} method
+	 * @param {object} params
+	 * @param {function} successCallback
+	 * @param {function{ errorCallback
+	 */
+	request: function(path, method, params, successCallback, errorCallback) {
+		var http = new XMLHttpRequest();
+		http.withCredentials = true;
+		var url = DecommentUtil.getHostName() + path;
+		http.open(method, url, true);
+
+		http.onreadystatechange = function () {
+			if (http.readyState === 4) {
+				if (http.status === 200) {
+					successCallback(http.response)
+				} else {
+					errorCallback()
+				}
+			}
+		};
+		if (params != null) {
+			http.send(JSON.stringify(params, null, "  "));
+		} else {
+			http.send();
+		}
+	}
+}
+
+/**
+ * @author deco
+ */
+var DecommentUtil = new function(){
+	/**
+	 * Get host name
+	 * @returns {string} Host name
+	 */
+	this.getHostName = function() {
+		return 'http://' + window.location.host;
+	},
+	/**
+	 * Get scheme name from url
+	 * @returns {string} Scheme name
+	 */
+	this.getSchemaName = function () {
+		return "${database.projectName}";
+	},
+	/**
+	 * Escape inputed text
+	 * @param {String} string - text
+	 */
+	this.escapeInputText = function(string) {
+		if(typeof string !== 'string') {
+			return string;
+		}
+		return string.replace(/[&'`"<>]/g, function(match) {
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
+		});
+	},
+	/**
+	 * Escape newline character of text
+	 * @param {String} string - text
+	 */
+	this.escapeNewlineCharacter = function (string) {
+		return string.split('<br>').join('\n');
+	},
+	/**
+	 * Delete unnecessary whitespace
+	 * @param {String} string - text
+	 */
+	this.deleteUnnecessaryWhitespace = function(string) {
+		var commentArray = string.split("\n");
+		var result = "";
+		for(var i = 0; i < commentArray.length; i++) {
+			result += commentArray[i].replace(/\s+$/g,'');
+			if (!(i == commentArray.length - 1)) {
+				result += '\n';
+			}
+		}
+		return result.trim();
+	},
+
+	/**
+	 * Unescape whitespace character of text
+	 * @param {String} string - text
+	 */
+	this.unescapeWhitespace = function (string) {
+		return string.split('&nbsp;').join(' ');
+	}
+}
+
 /**
  * @author deco
  * @author cabos
@@ -1057,6 +1666,9 @@ function Decomment() {
 		}
 #end
 	}
+
+	this.unmappedTableArea = new UnmappedTableArea();
+	this.unmappedColumnArea = new UnmappedColumnArea();
 }
 Decomment.prototype = {
 
@@ -1065,9 +1677,8 @@ Decomment.prototype = {
 	 */
 	init: function () {
 		if (document.getElementById("intro_opening") !== null) {
-			var schemeName = this.getSchemeName();
-			this.fetchVirtualPickup(schemeName);
-			this.setupSaveDecomment(schemeName);
+			this.fetchVirtualPickup();
+			this.setupSaveDecomment();
 			this.setupKeyDownEvent();
 		} else {
 			this.reflectEmbeddedPickup();
@@ -1075,34 +1686,14 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Get scheme name from url
-	 * @returns {string} Scheme name
-	 */
-	getSchemeName: function () {
-		return "${database.projectName}";
-	},
-
-	/**
 	 * Fetch virtual pickup from server
-	 * @param {string} schemeName - Scheme name
 	 */
-	fetchVirtualPickup: function (schemeName) {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/pickup';
-		http.open('GET', url, true);
-
-		that = this;
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					that.handlePickupResponse(http.response);
-				} else {
-					alert('Error!! cannot fetch decomment.');
-				}
-			}
-		};
-		http.send();
+	fetchVirtualPickup: function () {
+		var that = this;
+		new ApiClient().fetchDecomment(function(response) {
+			var decomment = JSON.parse(response);
+			that.reflectPickup(decomment);
+		})
 	},
 
 	/**
@@ -1113,22 +1704,20 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Handle pickup response
-	 * @param {Object} response - Response from server
-	 */
-	handlePickupResponse: function (response) {
-		var decomment = JSON.parse(response);
-		this.reflectPickup(decomment);
-	},
-
-	/**
 	 * Reflect pickup
 	 * @param {Object} decomment - Decomment object
 	 */
 	reflectPickup: function (decomment) {
-		that = this;
+		var that = this;
+		this.unmappedTableArea.clear();
+		this.unmappedColumnArea.clear();
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			var tableElements = that.extractTableElements(table);
+			if (tableElements.length === 0) {
+				console.log(table);
+				that.unmappedTableArea.push(table);
+				return;
+			}
 			if (that.storePickupTableProperties(table)) {
 				var newTableComment = that.buildDisplayTableCommentFromServer(table);
 				var authors = that.getTableMapInfoFromStore(that.getTableNameFromJson(table))['authors'];
@@ -1138,6 +1727,11 @@ Decomment.prototype = {
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
+				if (columnElement === null) {
+					console.log(table, column);
+					that.unmappedColumnArea.push(table, column);
+					return;
+				}
 				that.storePickupColumnProperties(table, column);
 				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
 				var authors = that.buildColumnCommentAuthoers(table, column);
@@ -1146,6 +1740,8 @@ Decomment.prototype = {
 				that.reflectCommentConflictIfNeed(table, column, columnElement);
 			});
 		});
+		this.unmappedTableArea.reflect();
+		this.unmappedColumnArea.reflect();
 	},
 
 	/**
@@ -1169,6 +1765,9 @@ Decomment.prototype = {
 		var columnId = (table["tableName"] + "_" + column["columnName"]);
 		columnId = columnId.toLowerCase();
 		var columnElement = document.getElementById(columnId);
+		if (columnElement === null) {
+			return null;
+		}
 		return columnElement.parentElement
 	},
 
@@ -1200,7 +1799,7 @@ Decomment.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
+				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1256,7 +1855,7 @@ Decomment.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(properties, function (property) {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = that.escapeNewlineCharacter(databaseComment) != that.escapeNewlineCharacter(property['databaseComment']);
+				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
 			}
 			decomments.push(property["decomment"]);
 			if (property['pieceCode'] != null) {
@@ -1341,9 +1940,9 @@ Decomment.prototype = {
 		var result = "";
 		if (commentMap['isDatabaseCommentConflict']) {
 			var databaseComment = commentMap['databaseComment'];
-			databaseComment = this.unescapeWhitespace(databaseComment);
-			databaseComment = this.escapeNewlineCharacter(databaseComment);
-			databaseComment = this.escapeInputText(databaseComment);
+			databaseComment = DecommentUtil.unescapeWhitespace(databaseComment);
+			databaseComment = DecommentUtil.escapeNewlineCharacter(databaseComment);
+			databaseComment = DecommentUtil.escapeInputText(databaseComment);
 			result = databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
 		result += commentMap['decomments'].join('\n\n=======\n\n');
@@ -1456,14 +2055,14 @@ Decomment.prototype = {
 	 * @param {string} table - Table name
 	 */
 	setupSaveDecomment: function(schemeName) {
-		this.setupSaveTableCommnt();
+		this.setupSaveTableComment();
 		this.setupSaveColumnComment();
 	},
 
 	/**
 	 * Setup save table comment event
 	 */
-	setupSaveTableCommnt: function() {
+	setupSaveTableComment: function() {
 		var that = this;
 		var tableList = document.getElementById('table-list-body').querySelectorAll('tr');
 		Array.prototype.forEach.call(tableList, function (table) {
@@ -1548,7 +2147,9 @@ Decomment.prototype = {
 					return;
 				}
 				var params = that.buildCommentRequestParams(tableName, columnName, decomment);
-				that.requestSaveDecomment(that.getSchemeName(), params);
+				new ApiClient().saveDecomment(params, function() {
+					that.fetchVirtualPickup()
+				});
 				modalElement.style.display = "none";
 			};
 
@@ -1571,14 +2172,6 @@ Decomment.prototype = {
 				modalElement.style.display = "none";
 			}
 		}
-	},
-
-	/**
-	 * Get host name
-	 * @returns {string} Host name
-	 */
-	getHostName: function () {
-		return 'http://' + window.location.host;
 	},
 
 	/**
@@ -1662,12 +2255,12 @@ Decomment.prototype = {
 			var commentVersion = commentMap['commentVersion'];
 			databaseComment = commentMap['databaseComment'];
 			if (databaseComment) {
-				databaseComment = this.escapeNewlineCharacter(databaseComment);
+				databaseComment = DecommentUtil.escapeNewlineCharacter(databaseComment);
 			}
 		}
 
-		decomment = this.escapeInputText(decomment);
-		decomment = this.deleteUnnecessaryWhitespace(decomment);
+		decomment = DecommentUtil.escapeInputText(decomment);
+		decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
 
 		return {
 			'tableName': tableName,
@@ -1679,84 +2272,6 @@ Decomment.prototype = {
 			'authors': authors || [],
 			'previousPieces': previousPieces || []
 		};
-	},
-
-	/**
-	 * Escape inputed text
-	 * @param {String} string - text
-	 */
-	escapeInputText: function (string) {
-		if(typeof string !== 'string') {
-			return string;
-		}
-		return string.replace(/[&'`"<>]/g, function(match) {
-			return {
-				'&': '&amp;',
-				"'": '&#x27;',
-				'`': '&#x60;',
-				'"': '&quot;',
-				'<': '&lt;',
-				'>': '&gt;',
-			}[match]
-		});
-	},
-
-	/**
-	 * Escape newline character of text
-	 * @param {String} string - text
-	 */
-	escapeNewlineCharacter: function (string) {
-		return string.split('<br>').join('\n');
-	},
-
-	/**
-	 * Unescape whitespace character of text
-	 * @param {String} string - text
-	 */
-	unescapeWhitespace: function (string) {
-		return string.split('&nbsp;').join(' ');
-	},
-
-	/**
-	 * Delete unnecessary whitespace
-	 * @param {String} string - text
-	 */
-	deleteUnnecessaryWhitespace: function(string) {
-		var commentArray = string.split("\n");
-		var result = "";
-		for(var i = 0; i < commentArray.length; i++) {
-			result += commentArray[i].replace(/\s+$/g,'');
-			if (!(i == commentArray.length - 1)) {
-				result += '\n';
-			}
-		}
-		return result.trim();
-	},
-
-	/**
-	 * Request decomment
-	 * @param {string} schemeName - Scheme name
-	 * @param {Object} params - Request parameters
-	 */
-	requestSaveDecomment: function (schemeName, params) {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var url = this.getHostName() + '/api/document/decomment/' + schemeName + '/save';
-		http.open('POST', url, true);
-
-		var that = this;
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					// request success
-					that.fetchVirtualPickup(schemeName);
-				} else {
-					// request failed
-					alert('Error!! cannot save new column comment.');
-				}
-			}
-		};
-		http.send(JSON.stringify(params, null, "  "));
 	},
 
 	/**
