@@ -31,11 +31,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.dbflute.helper.HandyDate;
 import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.helper.message.ExceptionMessageBuilder;
+import org.dbflute.intro.app.model.client.document.hacomment.exception.DfHacoMapFileReadFailureException;
+import org.dbflute.intro.app.model.client.document.hacomment.exception.DfHacoMapFileWriteFailureException;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
 import org.dbflute.util.DfTypeUtil;
@@ -67,14 +71,26 @@ public class HacoMapFile {
     private static final Map<String, String> REPLACE_MAP_FOR_HACOMMENT_ID =
         Stream.of("/", " ", ":").collect(Collectors.toMap(ch -> ch, ch -> ""));
 
-    public static String generateDiffCode(String diffDate) {
-        return DfStringUtil.replaceBy(diffDate, REPLACE_MAP_FOR_HACOMMENT_ID);
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    private final Supplier<LocalDateTime> currentDatetimeSupplier;
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    public HacoMapFile(Supplier<LocalDateTime> currentDatetimeSupplier) {
+        this.currentDatetimeSupplier = currentDatetimeSupplier;
     }
 
     // ===================================================================================
     //                                                                                Read
     //                                                                                ====
 
+    // -----------------------------------------------------
+    //                                                 Piece
+    //                                                 -----
+    // TODO hakiba write java doc with piece exanmple by hakiba (2018/03/19)
     public List<HacoMapPiece> readPieceList(String clientDirPath) {
         assertClientDirPath(clientDirPath);
         String pieceDirPath = buildPieceDirPath(clientDirPath);
@@ -88,7 +104,7 @@ public class HacoMapFile {
                 .map(path -> doReadPiece(path))
                 .collect(Collectors.toList());
         } catch (IOException e) {
-            // TODO hakiba resolve Exception by hakiba (2018/02/22)
+            throwHacomMapReadFailureException(pieceDirPath, e);
             return Collections.emptyList();
         }
     }
@@ -99,7 +115,7 @@ public class HacoMapFile {
             Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapPiece(map);
         } catch (RuntimeException | IOException e) {
-            // TODO hakiba resolve Exception by hakiba (2018/02/22)
+            throwHacomMapReadFailureException(path.toString(), e);
             return null; // unreachable
         }
     }
@@ -109,6 +125,7 @@ public class HacoMapFile {
         String diffCode = (String) map.get("diffCode");
         String diffdate = (String) map.get("diffDate");
         String hacomment = (String) map.get("hacomment");
+        String diffComment = (String) map.get("diffComment");
         @SuppressWarnings("unchecked")
         List<String> authorList = (List<String>) map.get("authorList");
         String pieceCode = (String) map.get("pieceCode");
@@ -116,9 +133,13 @@ public class HacoMapFile {
         String pieceOwner = (String) map.get("pieceOwner");
         @SuppressWarnings("unchecked")
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
-        return new HacoMapPiece(diffCode, diffdate, hacomment, authorList, pieceCode, pieceOwner, pieceDatetime, previousPieceList);
+        return new HacoMapPiece(diffCode, diffdate, hacomment, diffComment, authorList, pieceCode, pieceOwner, pieceDatetime,
+            previousPieceList);
     }
-
+    // -----------------------------------------------------
+    //                                                Pickup
+    //                                                ------
+    // TODO hakiba write java doc with pickup exanmple by hakiba (2018/03/19)
     public OptionalThing<HacoMapPickup> readPickup(String clientDirPath) {
         assertClientDirPath(clientDirPath);
         String filePath = buildPickupFilePath(clientDirPath);
@@ -133,7 +154,7 @@ public class HacoMapFile {
             Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
             return mappingToHacoMapPickup(map);
         } catch (RuntimeException | IOException e) {
-            // TODO hakiba resolve Exception by hakiba (2018/02/22)
+            throwHacomMapReadFailureException(path.toString(), e);
             return null; // unreachable
         }
     }
@@ -158,6 +179,18 @@ public class HacoMapFile {
         pickup.addAllDiffList(diffList);
 
         return pickup;
+    }
+
+    // -----------------------------------------------------
+    //                                             Exception
+    //                                             ---------
+    protected void throwHacomMapReadFailureException(String path, Exception cause) {
+        final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
+        br.addNotice("Failed to read the haco-map file or directory.");
+        br.addItem("path");
+        br.addElement(path);
+        final String msg = br.buildExceptionMessage();
+        throw new DfHacoMapFileReadFailureException(msg, cause);
     }
 
     // ===================================================================================
@@ -186,7 +219,7 @@ public class HacoMapFile {
             Files.createDirectories(Paths.get(pieceMapFile.getParentFile().getAbsolutePath()));
             Files.createFile(Paths.get(pieceMapFile.getAbsolutePath()));
         } catch (IOException e) {
-            // TODO hakiba implement HacoMapWriteFailureException by hakiba (2018/02/15)
+            throwHacoMapWriteFailureException(pieceMapFile.getPath(), e);
         }
     }
 
@@ -196,22 +229,23 @@ public class HacoMapFile {
             try {
                 mapListFile.writeMap(ous, hacoMap);
             } catch (IOException e) {
-                // TODO hakiba implements HacoMapWriteFailureException by hakiba (2018/02/15)
+                throwHacoMapWriteFailureException(mappingFilePath, e);
             }
         } catch (IOException e) {
-            // TODO hakiba implements HacoMapResourceReleaseFailureException by hakiba (2018/02/15)
+            throwHacoMapResourceReleaseFailureException(mappingFilePath, hacoMap, e);
         }
     }
 
+    // TODO hakiba write java doc by hakiba (2018/03/19)
     // TODO hakiba refactor for better looks by hakiba (2018/02/15)
     public String buildPieceFileName(HacoMapPiece piece) {
-        String diffDateStr = generateDiffDateStrForFileName(piece);
+        String diffDateStr = generatePieceFileName(piece);
         String filteredOwner = DfStringUtil.replaceBy(piece.getPieceOwner(), REPLACE_CHAR_MAP);
         // e.g. hacomment-piece-diffdate20180220161718-20171015-161718-199-jflute-HF7ELSE.dfmap
         return "hacomment-piece-" + diffDateStr + "-" + getCurrentDateStr() + "-" + filteredOwner + "-" + piece.pieceCode + ".dfmap";
     }
 
-    private String generateDiffDateStrForFileName(HacoMapPiece piece) {
+    private String generatePieceFileName(HacoMapPiece piece) {
         // e.g. 2018/02/21 16:17:18 -> diffdate20180220161718
         return "diffdate" + generateDiffCode(piece.getDiffDate());
     }
@@ -220,14 +254,33 @@ public class HacoMapFile {
         return DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS").format(getCurrentLocalDateTime());
     }
 
-    protected LocalDateTime getCurrentLocalDateTime() {
-        // TODO hakiba use callback by jflute (2018/02/22)
-        return LocalDateTime.now();
+    // -----------------------------------------------------
+    //                                             Exception
+    //                                             ---------
+    protected void throwHacoMapWriteFailureException(String path, Exception cause) {
+        final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
+        br.addNotice("Failed to create the haco-map file.");
+        br.addItem("Path");
+        br.addElement(path);
+        final String msg = br.buildExceptionMessage();
+        throw new DfHacoMapFileWriteFailureException(msg, cause);
+    }
+
+    protected void throwHacoMapResourceReleaseFailureException(String path, Map<String, Object> hacoMap, Exception cause) {
+        final ExceptionMessageBuilder br = new ExceptionMessageBuilder();
+        br.addNotice("Maybe... fail to execute \"outputStream.close()\".");
+        br.addItem("Path");
+        br.addElement(path);
+        br.addItem("HacoMap");
+        br.addElement(hacoMap);
+        final String msg = br.buildExceptionMessage();
+        throw new DfHacoMapFileWriteFailureException(msg, cause);
     }
 
     // ===================================================================================
     //                                                                               Merge
     //                                                                               =====
+    // TODO hakiba write java doc by hakiba (2018/03/19)
     public HacoMapPickup merge(OptionalThing<HacoMapPickup> pickupOpt, List<HacoMapPiece> pieces) {
         Set<String> pieceCodeSet = extractAllMergedPieceCode(pickupOpt, pieces);
         HacoMapPickup mergedPickup = doMerge(pickupOpt, pieces, pieceCodeSet);
@@ -253,9 +306,11 @@ public class HacoMapFile {
 
         // filter merged property by piece code
         List<HacoMapDiffPart> filteredDiffPartList = diffPartMap.entrySet().stream().map(diffPartEntry -> {
-            String diffDate = diffPartEntry.getValue().stream().findFirst().map(diffPart -> diffPart.diffDate)
-                // TODO hakiba handling exception by hakiba (2018/03/17)
-                .orElseThrow(() -> new IllegalStateException("XXXXXXXXXXXXXXXXXXX"));
+            String diffDate = diffPartEntry.getValue()
+                .stream()
+                .findFirst()
+                .map(diffPart -> diffPart.diffDate)
+                .orElseThrow(() -> new IllegalStateException("Diffdate is null. \n" + diffPartEntry));
 
             List<HacoMapPropertyPart> filteredPropertyPartList = diffPartEntry.getValue()
                 .stream()
@@ -276,9 +331,16 @@ public class HacoMapFile {
 
     private HacoMapDiffPart mappingPieceToDiffPart(HacoMapPiece piece) {
         HacoMapPropertyPart propertyPart =
-            new HacoMapPropertyPart(piece.hacomment, piece.authorList, piece.pieceCode, piece.pieceOwner, piece.pieceDatetime,
-                piece.previousPieceList);
+            new HacoMapPropertyPart(piece.hacomment, piece.diffComment, piece.authorList, piece.pieceCode, piece.pieceOwner,
+                piece.pieceDatetime, piece.previousPieceList);
         return new HacoMapDiffPart(piece.diffCode, piece.diffDate, propertyPart);
+    }
+
+    // ===================================================================================
+    //                                                                           Diff Code
+    //                                                                           =========
+    public String generateDiffCode(String diffDate) {
+        return DfStringUtil.replaceBy(diffDate, REPLACE_MAP_FOR_HACOMMENT_ID);
     }
 
     // ===================================================================================
@@ -300,5 +362,13 @@ public class HacoMapFile {
             String msg = "The argument 'clientDirPath' should not be null or empty: " + clientDirPath;
             throw new IllegalArgumentException(msg);
         }
+    }
+
+    // ===================================================================================
+    //                                                                          Time Logic
+    //                                                                          ==========
+    protected LocalDateTime getCurrentLocalDateTime() {
+        // TODO done hakiba use callback by jflute (2018/02/22)
+        return this.currentDatetimeSupplier.get();
     }
 }

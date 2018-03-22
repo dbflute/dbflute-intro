@@ -30,14 +30,14 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author hakiba
  */
-public class HaccomentPickupResult {
+public class HacommentPickupResult {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Valid
     @NotNull
-    public List<DiffPart> diffs;
+    public List<DiffPart> diffList;
 
     public static class DiffPart {
         @Required
@@ -68,6 +68,8 @@ public class HaccomentPickupResult {
         @Required
         public String hacomment;
 
+        public String diffComment;
+
         @Valid
         @Required
         public List<String> authorList;
@@ -90,6 +92,7 @@ public class HaccomentPickupResult {
         //                                                                         ===========
         public PropertyPart(HacoMapPropertyPart property) {
             this.hacomment = property.getHacomment();
+            this.diffComment = property.getDiffComment();
             this.authorList = property.getAuthorList();
             this.pieceCode = property.getPieceCode();
             this.pieceOwner = property.getPieceOwner();
@@ -101,7 +104,7 @@ public class HaccomentPickupResult {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HaccomentPickupResult(HacoMapPickup pickup) {
-        this.diffs = pickup.getDiffList().stream().map(diffPart -> new DiffPart(diffPart)).collect(Collectors.toList());
+    public HacommentPickupResult(HacoMapPickup pickup) {
+        this.diffList = pickup.getDiffList().stream().map(diffPart -> new DiffPart(diffPart)).collect(Collectors.toList());
     }
 }

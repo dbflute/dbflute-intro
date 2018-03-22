@@ -13,30 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.document.hacomment;
-
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.lastaflute.web.validation.ClientError;
-import org.lastaflute.web.validation.Required;
+package org.dbflute.intro.app.model.client.document.hacomment.exception;
 
 /**
- * @author hakiba
+ *@author hakiba
  */
-public class HacommentSaveBody {
+public class DfHacoMapFileWriteFailureException extends RuntimeException {
 
-    @Required(groups = ClientError.class)
-    public String diffDate;
+    private static final long serialVersionUID = 1L;
 
-    @Required
-    public String hacomment;
-
-    public String diffComment;
-    @NotNull
-    public List<String> authors;
-
-    @NotNull
-    public List<String> previousPieces;
+    public DfHacoMapFileWriteFailureException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }
