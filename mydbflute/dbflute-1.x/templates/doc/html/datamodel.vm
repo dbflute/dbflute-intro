@@ -1174,12 +1174,6 @@ UnmappedTableArea.prototype = {
 	},
 
 	postMappingTable: function() {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var schemeName = DecommentUtil.getSchemaName();
-		var url = DecommentUtil.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
-		http.open('POST', url, true);
-
 		var mappings = Array.prototype.map.call(this.rows, function (row) {
 			var newTableName = document.querySelector('#unmapped-table-row-' + this.tableName + ' td.tableselectorcell select').value;
 			return {
@@ -1199,20 +1193,11 @@ UnmappedTableArea.prototype = {
 			return;
 		}
 
-		var that = this;
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					window.location.reload();
-				} else {
-					// request failed
-					alert('Error!! cannot save new table mapping.');
-				}
-			}
+		var params = { mappings: mappings };
+		var successCallback = function() {
+			window.location.reload();
 		};
-		http.send(JSON.stringify({
-			mappings: mappings
-		}, null, "  "));
+		new ApiClient().postMapping(params, successCallback);
 	},
 }
 
@@ -1380,12 +1365,6 @@ UnmappedColumnArea.prototype = {
 	},
 
 	postMappingColumn: function() {
-		var http = new XMLHttpRequest();
-		http.withCredentials = true;
-		var schemeName = DecommentUtil.getSchemaName();
-		var url = DecommentUtil.getHostName() + '/api/document/decomment/' + schemeName + '/mapping';
-		http.open('POST', url, true);
-
 		var mappings = Array.prototype.map.call(this.rows, function (row) {
 			var tableName = row.tableName;
 			var oldColumnName = row.oldColumnName;
@@ -1411,29 +1390,12 @@ UnmappedColumnArea.prototype = {
 			return;
 		}
 
-		var that = this;
-		http.onreadystatechange = function () {
-			if (http.readyState === 4) {
-				if (http.status === 200) {
-					window.location.reload();
-				} else {
-					// request failed
-					alert('Error!! cannot save new table mapping.');
-				}
-			}
+		var params = { mappings: mappings };
+		var successCallback = function() {
+			window.location.reload();
 		};
-		http.send(JSON.stringify({
-			mappings: mappings
-		}, null, "  "));
-	},
-
-	/**
-	 * Get scheme name from url
-	 * @returns {string} Scheme name
-	 */
-	getSchemaName: function () {
-		return "${database.projectName}";
-	},
+		new ApiClient().postMapping(params, successCallback);
+	}
 }
 
 /**
@@ -1496,9 +1458,22 @@ ApiClient.prototype = {
 	saveDecomment: function(params, successCallback) {
 		var path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/save';
 		var method = 'POST';
-		var that = this;
 		var errorCallback = function() {
 			alert('Error!! cannot save new column comment.');
+		}
+		this.request(path, method, params, successCallback, errorCallback);
+	},
+
+	/**
+	 * Post mapping table.
+	 * @param {Object} params - Request parameters
+	 * @param {function} successCallback
+	 */
+	postMapping: function(params, successCallback) {
+		var path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/mapping';
+		var method = 'POST';
+		var errorCallback = function() {
+			alert('Error!! cannot save new table mapping.');
 		}
 		this.request(path, method, params, successCallback, errorCallback);
 	},
