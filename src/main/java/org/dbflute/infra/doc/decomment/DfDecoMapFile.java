@@ -728,16 +728,26 @@ public class DfDecoMapFile {
     }
 
     private DfDecoMapTablePart mappingToTableIfNameChanged(DfDecoMapTablePart table, List<DfDecoMapMapping> mappingList) {
-        return mappingList.stream().filter(mapping -> {
-            return mapping.isTargetTypeTable() && table.getTableName().equals(mapping.getOldTableName());
-        }).findFirst().map(mapping -> {
-            final String tableName = mapping.getNewTableName();
-            final List<DfDecoMapPropertyPart> propertyList = table.getPropertyList();
-            List<DfDecoMapColumnPart> columnList = table.getColumnList().stream().map(column -> {
-                return mappingToColumnIfNameChanged(table, column, mappingList);
-            }).collect(Collectors.toList());
-            return new DfDecoMapTablePart(tableName, propertyList, columnList);
-        }).orElse(table);
+        return mappingList.stream().flatMap(mapping -> {
+            if (mapping.isTargetTypeTable() && table.getTableName().equals(mapping.getOldTableName())) {
+                final String tableName = mapping.getNewTableName();
+                final List<DfDecoMapPropertyPart> propertyList = table.getPropertyList();
+                final List<DfDecoMapColumnPart> columnList = table.getColumnList().stream().map(column -> {
+                    return mappingToColumnIfNameChanged(table, column, mappingList);
+                }).collect(Collectors.toList());
+                return Stream.of(new DfDecoMapTablePart(tableName, propertyList, columnList));
+            } else if (mapping.isTargetTypeColumn() && table.getTableName().equals(mapping.getOldTableName())) {
+                final List<DfDecoMapColumnPart> columnList = table.getColumnList().stream().map(column -> {
+                    if (column.getColumnName().equals(mapping.getOldColumnName())) {
+                        return new DfDecoMapColumnPart(mapping.getNewColumnName(), column.getPropertyList());
+                    }
+                    return column;
+                }).collect(Collectors.toList());
+                return Stream.of(new DfDecoMapTablePart(mapping.getNewTableName(), table.getPropertyList(), columnList));
+            } else {
+                return Stream.empty();
+            }
+        }).findFirst().orElse(table);
     }
 
     private DfDecoMapColumnPart mappingToColumnIfNameChanged(DfDecoMapTablePart table, DfDecoMapColumnPart column,
