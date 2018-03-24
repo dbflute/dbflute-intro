@@ -59,7 +59,7 @@ public class DfDecoMapPiece {
     //                                                                         ===========
     public DfDecoMapPiece(String formatVersion, String tableName, String columnName, DfDecoMapPieceTargetType targetType, String decomment,
         String databaseComment, Long commentVersion, List<String> authorList, String pieceCode, LocalDateTime pieceDatetime,
-        String pieceOwner, String pieceGitBranch,  List<String> previousPieceList) {
+        String pieceOwner, String pieceGitBranch, List<String> previousPieceList) {
         this.formatVersion = formatVersion;
         this.tableName = tableName;
         this.columnName = columnName;
@@ -159,6 +159,14 @@ public class DfDecoMapPiece {
 
     public DfDecoMapPieceTargetType getTargetType() {
         return targetType;
+    }
+
+    public boolean isTargetTypeTable() {
+        return targetType == DfDecoMapPieceTargetType.Table;
+    }
+
+    public boolean isTargetTypeColumn() {
+        return targetType == DfDecoMapPieceTargetType.Column;
     }
 
     public String getDecomment() {

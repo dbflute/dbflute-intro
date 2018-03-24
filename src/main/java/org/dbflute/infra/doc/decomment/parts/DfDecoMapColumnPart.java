@@ -15,8 +15,6 @@
  */
 package org.dbflute.infra.doc.decomment.parts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,30 +31,29 @@ public class DfDecoMapColumnPart {
     //                                                                           Attribute
     //                                                                           =========
     protected final String columnName;
-    protected final Map<String, DfDecoMapPropertyPart> propertyMap = new LinkedHashMap<>();
+    protected final List<DfDecoMapPropertyPart> propertyList;
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    public DfDecoMapColumnPart(String columnName) {
+    public DfDecoMapColumnPart(String columnName, List<DfDecoMapPropertyPart> propertyList) {
         this.columnName = columnName;
+        this.propertyList = propertyList;
     }
 
     @SuppressWarnings("unchecked")
     public DfDecoMapColumnPart(Map<String, Object> columnPartMap) {
         this.columnName = (String) columnPartMap.get("columnName");
         final List<Map<String, Object>> propertyMapList = (List<Map<String, Object>>) columnPartMap.get("propertyList");
-        propertyMapList.stream().map(DfDecoMapPropertyPart::new).forEach(property -> {
-            propertyMap.put(property.getPieceCode(), property);
-        });
+        this.propertyList = propertyMapList.stream().map(DfDecoMapPropertyPart::new).collect(Collectors.toList());
     }
 
     // done cabos convertToMap()? by jflute (2017/11/11)
     public Map<String, Object> convertToMap() {
-        final List<Map<String, Object>> propertyMapList =
-            propertyMap.values().stream().map(DfDecoMapPropertyPart::convertToMap).collect(Collectors.toList());
         final Map<String, Object> map = new LinkedHashMap<>();
         map.put("columnName", columnName);
+        final List<Map<String, Object>> propertyMapList =
+            this.propertyList.stream().map(DfDecoMapPropertyPart::convertToMap).collect(Collectors.toList());
         map.put("propertyList", propertyMapList);
         return map;
     }
@@ -69,21 +66,6 @@ public class DfDecoMapColumnPart {
     }
 
     public List<DfDecoMapPropertyPart> getPropertyList() {
-        return Collections.unmodifiableList(new ArrayList<>(this.propertyMap.values()));
-    }
-
-    public void addProperty(DfDecoMapPropertyPart property) {
-        this.propertyMap.put(property.getPieceCode(), property);
-    }
-
-    public void addPropertyAll(Collection<DfDecoMapPropertyPart> properties) {
-        properties.forEach(property -> this.addProperty(property));
-    }
-
-    public void removeProperty(String pieceCode) {
-        if (pieceCode == null) {
-            throw new IllegalArgumentException("piece code is Null , piece code : " + pieceCode);
-        }
-        propertyMap.remove(pieceCode);
+        return Collections.unmodifiableList(this.propertyList);
     }
 }

@@ -125,6 +125,14 @@ public class DfDecoMapMapping {
         return targetType;
     }
 
+    public boolean isTargetTypeTable() {
+        return targetType == DfDecoMapPieceTargetType.Table;
+    }
+
+    public boolean isTargetTypeColumn() {
+        return targetType == DfDecoMapPieceTargetType.Column;
+    }
+
     public List<String> getAuthorList() {
         return Collections.unmodifiableList(authorList);
     }

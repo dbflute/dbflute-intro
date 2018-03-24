@@ -17,7 +17,6 @@ package org.dbflute.infra.doc.decomment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,27 +45,38 @@ public class DfDecoMapPickup {
     //                                                                           =========
     // done cabos add pickupDatetime by jflute (2017/11/11)
     protected final String formatVersion;
-    protected LocalDateTime pickupDatetime;
+    protected final LocalDateTime pickupDatetime;
     protected final Map<String, List<DfDecoMapTablePart>> decoMap;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DfDecoMapPickup() {
-        this(DEFAULT_FORMAT_VERSION);
+    public DfDecoMapPickup(List<DfDecoMapTablePart> tableList, String formatVersion, LocalDateTime pickupDatetime) {
+        this(formatVersion, pickupDatetime);
+        this.decoMap.put(DECO_MAP_KEY, tableList);
     }
 
-    public DfDecoMapPickup(String formatVersion) {
+    public DfDecoMapPickup(List<DfDecoMapTablePart> tableList, LocalDateTime pickupDatetime) {
+        this(pickupDatetime);
+        this.decoMap.put(DECO_MAP_KEY, tableList);
+    }
+
+    public DfDecoMapPickup(LocalDateTime pickupDatetime) {
+        this(DEFAULT_FORMAT_VERSION, pickupDatetime);
+    }
+
+    public DfDecoMapPickup(String formatVersion, LocalDateTime pickupDatetime) {
+        this.formatVersion = formatVersion;
+        this.pickupDatetime = pickupDatetime;
         this.decoMap = new LinkedHashMap<>();
         this.decoMap.put(DECO_MAP_KEY, new ArrayList<>()); // always exists decoMap table list
-        this.formatVersion = formatVersion;
     }
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
     // map:{
-    //     ; formatVersion = 1.0
+    //     ; formatVersion = 1.1
     //     ; pickupDatetime = 2017-11-09T09:09:09.009
     //     ; decoMap = map:{
     //         ; tableList = list:{
@@ -149,20 +159,8 @@ public class DfDecoMapPickup {
         return pickupDatetime;
     }
 
-    public void setPickupDatetime(LocalDateTime pickupDatetime) {
-        this.pickupDatetime = pickupDatetime;
-    }
-
     public List<DfDecoMapTablePart> getTableList() {
         return Collections.unmodifiableList(getDecoMapTablePartList());
-    }
-
-    public void addTable(DfDecoMapTablePart table) {
-        getDecoMapTablePartList().add(table);
-    }
-
-    public void addAllTables(Collection<DfDecoMapTablePart> tables) {
-        getDecoMapTablePartList().addAll(tables);
     }
 
     private List<DfDecoMapTablePart> getDecoMapTablePartList() {
