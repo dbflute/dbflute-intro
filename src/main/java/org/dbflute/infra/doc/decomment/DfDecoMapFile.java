@@ -812,7 +812,7 @@ public class DfDecoMapFile {
     //                                                                          Time Logic
     //                                                                          ==========
     protected LocalDateTime getCurrentLocalDateTime() {
-        // TODO cabos use callback by jflute (2018/02/22)
+        // TODO done cabos use callback by jflute (2018/02/22)
         return this.currentDatetimeSupplier.get();
     }
 }
