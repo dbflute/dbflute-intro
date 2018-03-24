@@ -653,7 +653,8 @@ public class DfDecoMapFile {
     private DfDecoMapTablePart convertPieceToTablePart(DfDecoMapPiece piece) {
         final DfDecoMapPropertyPart property = mappingPieceToProperty(piece);
         final String tableName = piece.getTableName();
-        final List<DfDecoMapPropertyPart> tablePropertyList = Collections.emptyList();
+        final List<DfDecoMapPropertyPart> tablePropertyList =
+            piece.isTargetTypeTable() ? Collections.singletonList(property) : Collections.emptyList();
         final List<DfDecoMapColumnPart> columnList =
             piece.isTargetTypeTable() ? Collections.emptyList() : Collections.singletonList(convertPieceToColumnPart(piece, property));
         return new DfDecoMapTablePart(tableName, tablePropertyList, columnList);
