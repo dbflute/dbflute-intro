@@ -1481,7 +1481,7 @@ ApiClient.prototype = {
 	 * @param {string} method
 	 * @param {object} params
 	 * @param {function} successCallback
-	 * @param {function{ errorCallback
+	 * @param {function} errorCallback
 	 */
 	request: function(path, method, params, successCallback, errorCallback) {
 		var http = new XMLHttpRequest();
