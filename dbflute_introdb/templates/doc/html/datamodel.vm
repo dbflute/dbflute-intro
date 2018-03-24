@@ -1043,6 +1043,9 @@ searcher.init();
 #macro(escape $str)$!str.replaceAll("'", "\\'").replaceAll("\n", "<br>")#end
 <script>
 
+// ===================================================================================
+//                                                            Decomment Unmapped Table
+//                                                            ========================
 /**
  * @author cabos
  */
@@ -1201,6 +1204,9 @@ UnmappedTableArea.prototype = {
 	},
 }
 
+// -----------------------------------------------------
+//                          Decomment Unmapped Table Row
+//                          ----------------------------
 /**
  * @author cabos
  */
@@ -1231,6 +1237,9 @@ UnmappedTableRow.prototype = {
 	},
 }
 
+// ===================================================================================
+//                                                           Decomment Unmapped Column
+//                                                           =========================
 /**
  * @author cabos
  */
@@ -1398,6 +1407,9 @@ UnmappedColumnArea.prototype = {
 	}
 }
 
+// -----------------------------------------------------
+//                         Decomment Unmapped Column Row
+//                         -----------------------------
 /**
  * @author cabos
  */
@@ -1430,6 +1442,9 @@ UnmappedColumnRow.prototype = {
 	},
 }
 
+// ===================================================================================
+//                                                                          Api Client
+//                                                                          ==========
 /**
  * @author deco
  */
@@ -1506,6 +1521,9 @@ ApiClient.prototype = {
 	}
 }
 
+// ===================================================================================
+//                                                                      Decomment Util
+//                                                                      ==============
 /**
  * @author deco
  */
@@ -1575,6 +1593,9 @@ var DecommentUtil = new function(){
 	}
 }
 
+// ===================================================================================
+//                                                                           Decomment
+//                                                                           =========
 /**
  * @author deco
  * @author cabos
