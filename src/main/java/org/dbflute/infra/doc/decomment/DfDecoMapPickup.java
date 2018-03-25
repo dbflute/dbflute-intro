@@ -194,4 +194,8 @@ public class DfDecoMapPickup {
     public List<DfDecoMapTablePart> getTableList() {
         return Collections.unmodifiableList(this.tableList);
     }
+
+    public List<DfDecoMapMappingPart> getMappingList() {
+        return mappingList;
+    }
 }

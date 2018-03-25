@@ -685,7 +685,8 @@ public class DfDecoMapFile {
                         final Set<String> authorSet = sameStateMappingList.stream().flatMap(m -> {
                             return Stream.concat(m.getAuthorList().stream(), Stream.of(m.getMappingOwner()));
                         }).collect(Collectors.toSet());
-                        final Set<String> mappingCodeSet =
+                        final Set<String> mappingCodeSet = sameStateMappingList.size() == 1 ?
+                            Collections.emptySet() :
                             sameStateMappingList.subList(1, sameStateMappingList.size() - 1).stream().flatMap(m -> {
                                 return Stream.concat(m.previousMappingList.stream(), Stream.of(m.mappingCode));
                             }).collect(Collectors.toSet());
@@ -717,10 +718,10 @@ public class DfDecoMapFile {
     }
 
     private List<DfDecoMapMapping> createNoConflictMappingList(List<DfDecoMapMappingPart> mappingPartList) {
-        return mappingPartList.stream().flatMap(mapping -> {
+        return mappingPartList.stream().filter(mapping -> mapping.getNewNameList().size() == 1).flatMap(mapping -> {
             return mapping.getNewNameList().stream().findFirst().map(newName -> {
                 return Stream.of(
-                    new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.getOldColumnName(), mapping.getOldColumnName(),
+                    new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.getOldTableName(), mapping.getOldColumnName(),
                         newName.getNewTableName(), newName.getNewColumnName(), mapping.getTargetType(), newName.getAuthorList(),
                         newName.getMappingCode(), newName.getMappingOwner(), newName.getMappingDatetime(),
                         newName.getPreviousMappingList()));
