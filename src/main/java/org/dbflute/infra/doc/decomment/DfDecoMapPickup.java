@@ -78,12 +78,12 @@ public class DfDecoMapPickup {
     //     ; formatVersion = 1.1
     //     ; pickupDatetime = 2017-11-09T09:09:09.009
     //     ; decoMap = map:{
-    //         ; mappingList = list:{
+    //         ; mappingList = list:{ # if mapping conflict was occurred, mapping list size was not equals 0
     //             ; map:{
     //                 ; oldTableName = OLD_TABLE_NAME
     //                 : oldColumnName = OLD_COLUMN_NAME
     //                 ; targetType = COLUMN
-    //                 ; newNameList = list:{ # if mapping conflict was occurred, newNameList size is greater than or equal to 1
+    //                 ; newNameList = list:{
     //                     ; map:{
     //                         ; newTableName = NEW_TABLE_NAME
     //                         ; newColumnName = NEW_COLUMN_NAME

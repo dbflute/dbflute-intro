@@ -274,18 +274,18 @@ public class DfDecoMapFile {
         Map<String, List<Map<String, Object>>> decoMap =
             (Map<String, List<Map<String, Object>>>) map.getOrDefault("decoMap", new LinkedHashMap<>());
         if (decoMap.isEmpty()) {
-            return new DfDecoMapPickup(formatVersion, Collections.emptyList(), pickupDatetime);
+            return new DfDecoMapPickup(formatVersion, Collections.emptyList(), Collections.emptyList(), pickupDatetime);
         }
 
         List<Map<String, Object>> tableMapList = decoMap.getOrDefault("tableList", new ArrayList<>());
         if (tableMapList.isEmpty()) {
-            return new DfDecoMapPickup(formatVersion, Collections.emptyList(), pickupDatetime);
+            return new DfDecoMapPickup(formatVersion, Collections.emptyList(), Collections.emptyList(), pickupDatetime);
         }
 
         List<DfDecoMapTablePart> tableList = tableMapList.stream().map(tablePartMap -> {
             return new DfDecoMapTablePart(tablePartMap);
         }).collect(Collectors.toList());
-        return new DfDecoMapPickup(formatVersion, tableList, pickupDatetime);
+        return new DfDecoMapPickup(formatVersion, tableList, Collections.emptyList(), pickupDatetime);
     }
 
     // -----------------------------------------------------
@@ -627,7 +627,7 @@ public class DfDecoMapFile {
         final List<DfDecoMapTablePart> tableList = filteredTableStream.collect(Collectors.toList());
 
         // =========================================================== create new pickup object
-        return new DfDecoMapPickup(tableList, getCurrentLocalDateTime());
+        return new DfDecoMapPickup(tableList, Collections.emptyList(), getCurrentLocalDateTime());
     }
 
     // -----------------------------------------------------
