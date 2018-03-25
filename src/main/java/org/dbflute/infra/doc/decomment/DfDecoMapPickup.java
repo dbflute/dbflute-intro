@@ -38,8 +38,13 @@ public class DfDecoMapPickup {
     //                                                                          Definition
     //                                                                          ==========
     public static final String DEFAULT_FORMAT_VERSION = "1.1";
-    private static final String DECO_MAP_KEY_TABLE_LIST = "tableList";
-    private static final String DECO_MAP_KEY_MAPPING_LIST = "mappingList";
+
+    // -----------------------------------------------------
+    //                                                   Key
+    //                                                   ---
+    public static final String DECO_MAP_KEY_DECOMAP = "decoMap";
+    public static final String DECO_MAP_KEY_TABLE_LIST = "tableList";
+    public static final String DECO_MAP_KEY_MAPPING_LIST = "mappingList";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -162,7 +167,7 @@ public class DfDecoMapPickup {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
         map.put("pickupDatetime", pickupDatetime);
-        map.put("decoMap", decoMap);
+        map.put(DECO_MAP_KEY_DECOMAP, decoMap);
         return map;
     }
 
