@@ -30,6 +30,9 @@ import org.dbflute.helper.HandyDate;
  */
 public class DfDecoMapPropertyPart {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     protected final String decomment;
     protected final String databaseComment;
     protected final Long commentVersion;
@@ -40,6 +43,9 @@ public class DfDecoMapPropertyPart {
     protected final String pieceGitBranch;
     protected final List<String> previousPieceList;
 
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
     public DfDecoMapPropertyPart(String decomment, String databaseComment, long commentVersion, List<String> authorList,
         String pieceCode, LocalDateTime pieceDatetime, String pieceOwner, String pieceGitBranch, List<String> previousPieceList) {
         this.decomment = decomment;
@@ -66,6 +72,9 @@ public class DfDecoMapPropertyPart {
             ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
     }
 
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
     public String getDecomment() {
         return decomment;
     }

@@ -610,7 +610,7 @@ public class DfDecoMapFile {
         final List<DfDecoMapTablePart> roughTableList = convertToRoughTableList(optPickup, roughPieceList);
 
         // ============================================================ prepare
-        // prepare filtering for already merged piece
+        // prepare filtering for already merged property
         final Set<String> pieceCodeSet = extractAllMergedPieceCode(roughTableList);
         // prepare mapping
         final List<DfDecoMapMapping> mappingList = filterMergedMappingCode(roughMappingList);
@@ -621,10 +621,10 @@ public class DfDecoMapFile {
         // define merging
         final Stream<DfDecoMapTablePart> mergedTableStream = defineMerging(correctNameTableStream);
         // define filter already merged property
-        final Stream<DfDecoMapTablePart> removedTableStream = defineRemovingMergedProperty(mergedTableStream, pieceCodeSet);
+        final Stream<DfDecoMapTablePart> filteredTableStream = defineFilteringMergedProperty(mergedTableStream, pieceCodeSet);
 
-        // =========================================================== do all defined process
-        final List<DfDecoMapTablePart> tableList = removedTableStream.collect(Collectors.toList());
+        // =========================================================== do all defined process for merge
+        final List<DfDecoMapTablePart> tableList = filteredTableStream.collect(Collectors.toList());
 
         // =========================================================== create new pickup object
         return new DfDecoMapPickup(tableList, getCurrentLocalDateTime());
@@ -762,7 +762,7 @@ public class DfDecoMapFile {
         }).orElse(column);
     }
 
-    private Stream<DfDecoMapTablePart> defineRemovingMergedProperty(Stream<DfDecoMapTablePart> tableStream, Set<String> pieceCodeSet) {
+    private Stream<DfDecoMapTablePart> defineFilteringMergedProperty(Stream<DfDecoMapTablePart> tableStream, Set<String> pieceCodeSet) {
         return tableStream.map(table -> {
             final String tableName = table.getTableName();
             final List<DfDecoMapPropertyPart> tablePropertyList = table.getPropertyList()
