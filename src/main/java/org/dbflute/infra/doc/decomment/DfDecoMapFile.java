@@ -606,31 +606,31 @@ public class DfDecoMapFile {
 
         // TODO cabos consider mapping conflict (2018/03/24)
 
-        // ============================================================ convert to rough list
-        final List<DfDecoMapTablePart> roughTableList = convertToRoughTableList(optPickup, roughPieceList);
+        // ============================================================ convert to rough part list
+        final List<DfDecoMapTablePart> roughTablePartList = convertToRoughTableList(optPickup, roughPieceList);
+        final List<DfDecoMapMappingPart> roughMappingPartList = convertToRoughMappingPartList(optPickup, roughMappingList);
 
         // ============================================================ prepare
         // prepare filtering for already merged property
-        final Set<String> pieceCodeSet = extractAllMergedPieceCode(roughTableList);
+        final Set<String> pieceCodeSet = extractAllMergedPieceCode(roughTablePartList);
         // prepare mapping
-        final List<DfDecoMapMapping> filteredMappingList = filterMergedMappingCode(roughMappingList);
-        final List<DfDecoMapMappingPart> mappingPartList = createMappingPartList(filteredMappingList);
-        final List<DfDecoMapMapping> noConflictMappingList = createNoConflictMappingList(mappingPartList);
-        final List<DfDecoMapMappingPart> conflictMappingPartList = createConflictMappingPartList(mappingPartList);
+        final List<DfDecoMapMappingPart> filteredMappingPartList = filterMergedMapping(roughMappingPartList);
+        final List<DfDecoMapMappingPart> conflictMappingPartList = createConflictMappingPartList(filteredMappingPartList);
+        final List<DfDecoMapMapping> noConflictMappingList = createNoConflictMappingList(filteredMappingPartList);
 
         // ============================================================ define
         // define mapping correct table or column name
         final Stream<DfDecoMapTablePart> correctNameTableStream =
-            defineMappingToCorrectName(roughTableList.stream(), noConflictMappingList);
+            defineMappingToCorrectName(roughTablePartList.stream(), noConflictMappingList);
         // define merging
         final Stream<DfDecoMapTablePart> mergedTableStream = defineMerging(correctNameTableStream);
         // define filter already merged property
         final Stream<DfDecoMapTablePart> filteredTableStream = defineFilteringMergedProperty(mergedTableStream, pieceCodeSet);
 
-        // =========================================================== do all defined process for merge
+        // ============================================================ do all defined process for merge
         final List<DfDecoMapTablePart> tableList = filteredTableStream.collect(Collectors.toList());
 
-        // =========================================================== create new pickup object
+        // ============================================================ create new pickup object
         return new DfDecoMapPickup(tableList, conflictMappingPartList, getCurrentLocalDateTime());
     }
 
@@ -670,8 +670,9 @@ public class DfDecoMapFile {
         return new DfDecoMapColumnPart(columnName, columnPropertyList);
     }
 
-    private List<DfDecoMapMappingPart> createMappingPartList(List<DfDecoMapMapping> roughMappingList) {
-        return roughMappingList.stream()
+    private List<DfDecoMapMappingPart> convertToRoughMappingPartList(OptionalThing<DfDecoMapPickup> optPickup,
+        List<DfDecoMapMapping> roughMappingList) {
+        List<DfDecoMapMappingPart> mappingPartList = roughMappingList.stream()
             .collect(Collectors.groupingBy(mapping -> convertToOldStateHash(mapping)))
             .values()
             .stream()
@@ -699,6 +700,12 @@ public class DfDecoMapFile {
                 return new DfDecoMapMappingPart(sameOldStatusMappingList);
             })
             .collect(Collectors.toList());
+
+        optPickup.ifPresent(pickup -> {
+            mappingPartList.addAll(pickup.getMappingList());
+        });
+
+        return mappingPartList;
     }
 
     private String convertToOldStateHash(DfDecoMapMapping mapping) {
@@ -748,10 +755,25 @@ public class DfDecoMapFile {
         }).collect(Collectors.toSet());
     }
 
-    private List<DfDecoMapMapping> filterMergedMappingCode(List<DfDecoMapMapping> mappings) {
-        Set<String> mappingCodeSet =
-            mappings.stream().flatMap(mapping -> mapping.getPreviousMappingList().stream()).collect(Collectors.toSet());
-        return mappings.stream().filter(mapping -> !mappingCodeSet.contains(mapping.getMappingCode())).collect(Collectors.toList());
+    private List<DfDecoMapMappingPart> filterMergedMapping(List<DfDecoMapMappingPart> mappingPartList) {
+        Set<String> mappingCodeSet = mappingPartList.stream()
+            .flatMap(mapping -> mapping.getNewNameList().stream())
+            .flatMap(mapping -> mapping.getPreviousMappingList().stream())
+            .collect(Collectors.toSet());
+        return mappingPartList.stream().flatMap(mappingPart -> {
+            final String oldTableName = mappingPart.getOldTableName();
+            final String oldColumnName = mappingPart.getOldColumnName();
+            final DfDecoMapPieceTargetType targetType = mappingPart.getTargetType();
+            final List<DfDecoMapMappingPart.NewName> newNameList = mappingPart.getNewNameList()
+                .stream()
+                .filter(newMapping -> !mappingCodeSet.contains(newMapping.getMappingCode()))
+                .collect(Collectors.toList());
+            if (newNameList.size() != 0) {
+                return Stream.of(new DfDecoMapMappingPart(oldTableName, oldColumnName, targetType, newNameList));
+            } else {
+                return Stream.empty();
+            }
+        }).collect(Collectors.toList());
     }
 
     // -----------------------------------------------------

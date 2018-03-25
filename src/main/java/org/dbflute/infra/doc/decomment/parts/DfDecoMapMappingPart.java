@@ -56,6 +56,13 @@ public class DfDecoMapMappingPart {
         this.newNameList = mappingList.stream().map(NewName::new).collect(Collectors.toList());
     }
 
+    public DfDecoMapMappingPart(String oldTableName, String oldColumnName, DfDecoMapPieceTargetType targetType, List<NewName> newNameList) {
+        this.oldTableName = oldTableName;
+        this.oldColumnName = oldColumnName;
+        this.targetType = targetType;
+        this.newNameList = newNameList;
+    }
+
     @SuppressWarnings("unchecked")
     public DfDecoMapMappingPart(Map<String, Object> mappingMap) {
         this.oldTableName = (String) mappingMap.get("oldTableName");
