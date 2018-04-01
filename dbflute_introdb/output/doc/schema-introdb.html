@@ -1578,85 +1578,411 @@ var DecommentUtil = new function(){
 	}
 }
 
-/**
- * @author deco
- * @author cabos
- */
-function Decomment() {
+function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
-		]
+							{
+				'tableName': 'CLS_TARGET_CONTAINER'
+				, 'properties': [
+											{
+						'decomment': 'テーブルコメント'
+						, 'databaseComment': ''
+						, 'commentVersion': 0
+						, 'authors': ['tominaga']
+						, 'pieceCode': '49524538'
+						, 'pieceDatatime': '2018-04-01T16:05:04.596'
+						, 'previousPieces': []
+					}
+									]
+				, 'columns': [
+											 {
+						'columnName': 'CONTAINER_CODE'
+						, 'properties': [
+															 {
+								'decomment': 'カラムコメント'
+								, 'databaseComment': ''
+								, 'commentVersion': 0
+								, 'authors': ['tominaga']
+								, 'pieceCode': 'aa6f6bbb'
+								, 'pieceDatatime': '2018-04-01T16:05:08.938'
+								, 'previousPieces': []
+							}
+													]
+					}
+									]
+			}
+					]
 	}
-	this.pickupStore = {
-		'CLS_TARGET_CONTAINER': {
-			'databaseComment': ''
-			, 'columns': {
-				'CONTAINER_CODE': {
-					'databaseComment': ''
-				}
-				, 'CONTAINER_NAME': {
-					'databaseComment': ''
-				}
-				, 'DISPLAY_ORDER': {
-					'databaseComment': ''
-				}
+		this.pickupStore = {
+				'CLS_TARGET_CONTAINER': {
+		'databaseComment': ''
+				, 'columns': {
+							'CONTAINER_CODE': {
+				'databaseComment': ''
 			}
-		}
-		, 'CLS_TARGET_DATABASE': {
-			'databaseComment': ''
-			, 'columns': {
-				'DATABASE_CODE': {
-					'databaseComment': ''
-				}
-				, 'DATABASE_NAME': {
-					'databaseComment': ''
-				}
-				, 'JDBC_DRIVER_FQCN': {
-					'databaseComment': ''
-				}
-				, 'URL_TEMPLATE': {
-					'databaseComment': ''
-				}
-				, 'DEFAULT_SCHEMA': {
-					'databaseComment': ''
-				}
-				, 'SCHEMA_REQUIRED_FLG': {
-					'databaseComment': ''
-				}
-				, 'SCHEMA_UPPER_CASE_FLG': {
-					'databaseComment': ''
-				}
-				, 'USER_INPUT_ASSIST_FLG': {
-					'databaseComment': ''
-				}
-				, 'EMBEDDED_JAR_FLG': {
-					'databaseComment': ''
-				}
-				, 'DISPLAY_ORDER': {
-					'databaseComment': ''
-				}
+							, 'CONTAINER_NAME': {
+				'databaseComment': ''
 			}
-		}
-		, 'CLS_TARGET_LANGUAGE': {
-			'databaseComment': ''
-			, 'columns': {
-				'LANGUAGE_CODE': {
-					'databaseComment': ''
-				}
-				, 'LANGUAGE_NAME': {
-					'databaseComment': ''
-				}
-				, 'DISPLAY_ORDER': {
-					'databaseComment': ''
-				}
+							, 'DISPLAY_ORDER': {
+				'databaseComment': ''
 			}
-		}
+					}
+	}
+				, 'CLS_TARGET_DATABASE': {
+		'databaseComment': ''
+				, 'columns': {
+							'DATABASE_CODE': {
+				'databaseComment': ''
+			}
+							, 'DATABASE_NAME': {
+				'databaseComment': ''
+			}
+							, 'JDBC_DRIVER_FQCN': {
+				'databaseComment': ''
+			}
+							, 'URL_TEMPLATE': {
+				'databaseComment': ''
+			}
+							, 'DEFAULT_SCHEMA': {
+				'databaseComment': ''
+			}
+							, 'SCHEMA_REQUIRED_FLG': {
+				'databaseComment': ''
+			}
+							, 'SCHEMA_UPPER_CASE_FLG': {
+				'databaseComment': ''
+			}
+							, 'USER_INPUT_ASSIST_FLG': {
+				'databaseComment': ''
+			}
+							, 'EMBEDDED_JAR_FLG': {
+				'databaseComment': ''
+			}
+							, 'DISPLAY_ORDER': {
+				'databaseComment': ''
+			}
+					}
+	}
+				, 'CLS_TARGET_LANGUAGE': {
+		'databaseComment': ''
+				, 'columns': {
+							'LANGUAGE_CODE': {
+				'databaseComment': ''
+			}
+							, 'LANGUAGE_NAME': {
+				'databaseComment': ''
+			}
+							, 'DISPLAY_ORDER': {
+				'databaseComment': ''
+			}
+					}
+	}
 	}
 
 	this.unmappedTableArea = new UnmappedTableArea();
 	this.unmappedColumnArea = new UnmappedColumnArea();
 }
+
+StoreClient.prototype = {
+	/**
+	 * Store pickup json to store
+	 * @param {Object} pickup - pickup response
+	 */
+	storePickup: function(pickup) {
+		var that = this;
+		Array.prototype.forEach.call(pickup["tables"], function (table) {
+			that.storePickupTable(table);
+			Array.prototype.forEach.call(table["columns"], function (column) {
+				that.storePickupColumn(table['tableName'], column);
+			});
+		});
+	},
+
+	/**
+	 * Store table
+	 * @param {Object} table - table object of pickup response
+	 */
+	storePickupTable: function(table) {
+		// init if not exists
+		var tableName = table['tableName'];
+		if (this.pickupStore[tableName] === undefined) {
+			this.pickupStore[tableName] = {};
+		}
+
+		// return if not have properties
+		var properties = table['properties'];
+		if (properties.length === 0) {
+			return;
+		}
+
+		// get database comment
+		var tableMap = this.pickupStore[tableName];
+		var databaseComment = tableMap['databaseComment'];
+
+		// setup properties to store
+		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
+		var decomments = [];
+		var previousPieces = [];
+		var authors = [];
+		var commentVersion = 0;
+		var that = this;
+		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
+			}
+			decomments.push(property["decomment"]);
+			if (property['pieceCode'] != null) {
+				previousPieces.push(property['pieceCode']);
+			}
+			authors = authors.concat(property['authors']);
+			if (commentVersion < property['commentVersion']) {
+				commentVersion = property['commentVersion'];
+			}
+		});
+		authors = authors.filter(function (x, i, self) {
+			return self.indexOf(x) === i;
+		});
+
+		tableMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		tableMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		tableMap['decomments'] = decomments;
+		tableMap['previousPieces'] = previousPieces;
+		tableMap['authors'] = authors;
+		tableMap['commentVersion'] = commentVersion;
+	},
+
+	/**
+	 * Store column
+	 * @param {string} tableDbName - table db name
+	 * @param {Object} column - column object of pickup response
+	 */
+	storePickupColumn: function(tableDbName, column) {
+		var columnName = column['columnName'];
+		// init if not exists
+		if (this.pickupStore[tableDbName]['columns'] === undefined) {
+			this.pickupStore[tableDbName]['columns'] = {};
+		}
+
+		if (this.pickupStore[tableDbName]['columns'][columnName] === undefined) {
+			this.pickupStore[tableDbName]['columns'][columnName] = {};
+		}
+
+		// return if not have properties
+		var properties = column['properties'];
+		if (properties.length == 0) {
+			return;
+		}
+
+		// get database comment
+		var columnMap = this.pickupStore[tableDbName]['columns'][columnName];
+		var databaseComment = columnMap['databaseComment'];
+
+		// setup properties to store
+		var isConflict = properties.length > 1;
+		var isDatabaseCommentConflict = false;
+		var decomments = [];
+		var previousPieces = [];
+		var authors = [];
+		var commentVersion = 0;
+		var that = this;
+		Array.prototype.forEach.call(properties, function (property) {
+			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
+				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
+			}
+			decomments.push(property["decomment"]);
+			if (property['pieceCode'] != null) {
+				previousPieces.push(property['pieceCode']);
+			}
+			authors = authors.concat(property['authors']);
+			if (commentVersion < property['commentVersion']) {
+				commentVersion = property['commentVersion'];
+			}
+		});
+		authors = authors.filter(function (x, i, self) {
+			return self.indexOf(x) === i;
+		});
+
+		columnMap['isConflict'] = isConflict || isDatabaseCommentConflict;
+		columnMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
+		columnMap['decomments'] = decomments;
+		columnMap['previousPieces'] = previousPieces;
+		columnMap['authors'] = authors;
+		columnMap['commentVersion'] = commentVersion;
+	},
+
+	/**
+	 * Get decomments
+	 * @returns {Object} pickup
+	 */
+	getDecomments: function() {
+		var pickup = this.pickupStore;
+		var result = [];
+		for (key in pickup) {
+			result.push(new PickupTableProperty(key, pickup[key]));
+		}
+		return result;
+	},
+}
+
+function PickupTableProperty(tableDbName, json) {
+	this.tableDbName = tableDbName;
+	this.databaseComment = json['databaseComment'] || "";
+	this.isDatabaseCommentConflict = json['isDatabaseCommentConflict'] || false;
+	this.decomments = json['decomments'] || [];
+	this.previousPieces = json['previousPieces'] || [];
+	this.authors = json['authors'] || [];
+	this.commentVersion = json['commentVersion'] || null;
+	this.columns = [];
+	var columns = json['columns'] || {};
+	for (var key in columns) {
+		this.columns.push(new PickupColumnProperty(tableDbName, key, columns[key]));
+	}
+}
+
+PickupTableProperty.prototype = {
+
+	/**
+	 * Reflect new comment to html
+	 */
+	reflectToHtml: function() {
+		if (this.notChangeDisplayComment()) {
+			return;
+		}
+		var author = this.authors.join(',');
+		var comment = this.buildDisplayComment() + "\n<span>@author(" + author + ")</span>";
+		for (var element in this.selectTargetHtmlElements()) {
+			element.innerHTML = comment;
+			if (this.isConflict()) {
+				element.className += " commentcellerror"
+			}
+		}
+	},
+
+	/**
+	 * Check change display comment;
+	 */
+	notChangeDisplayComment: function() {
+		return this.decomments.length == 0 && !this.isConflict();
+	},
+
+	/**
+	 * Build display comment to html
+	 * @return {string} comment
+	 */
+	buildDisplayComment: function() {
+		var displayComment = "";
+		if (this.isDatabaseCommentConflict) {
+			displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+			displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
+			displayComment = DecommentUtil.escapeInputText(displayComment);
+			displayComment = displayComment + '\n(from database comment)\n\n=======\n\n';
+		}
+		return displayComment + this.decomments.join('\n\n=======\n\n');
+	},
+
+	/**
+	 * Select target html element
+	 * @return {HTMLCollectionOf<Element>} html elements
+	 */
+	selectTargetHtmlElements: function() {
+		var className = this.tableDbName + "_" + "comment";
+		var tableElements = document.getElementsByClassName(className);
+		return tableElements;
+	},
+
+	/**
+	 * Check conflict
+	 * @return {boolean} true: conflict, false: not
+	 */
+	isConflict: function() {
+		return this.decomments.length > 1 || this.isDatabaseCommentConflict;
+	}
+};
+
+function PickupColumnProperty(tableDbName, columnName, json) {
+	this.tableDbName = tableDbName;
+	this.columnName = columnName;
+	this.databaseComment = json['databaseComment'] || "";
+	this.isDatabaseCommentConflict = json['isDatabaseCommentConflict'] || false;
+	this.decomments = json['decomments'] || [];
+	this.previousPieces = json['previousPieces'] || [];
+	this.authors = json['authors'] || [];
+	this.commentVersion = json['commentVersion'] || null;
+}
+
+PickupColumnProperty.prototype = {
+
+	/**
+	 * Reflect new comment to html
+	 */
+	reflectToHtml: function() {
+		if (this.notChangeDisplayComment()) {
+			return;
+		}
+		var author = this.authors.join(',');
+		var comment = this.buildDisplayComment() + "\n<span>@author(" + author + ")</span>";
+		var element = this.selectTargetHtmlElement();
+		element.innerHTML = comment;
+		if (this.isConflict()) {
+			element.className += " commentcellerror"
+		}
+	},
+
+	/**
+	 * Check change display comment;
+	 */
+	notChangeDisplayComment: function() {
+		return this.decomments.length == 0 && !this.isConflict();
+	},
+
+	/**
+	 * Build display comment to html
+	 * @return {string} comment
+	 */
+	buildDisplayComment: function() {
+		var previousWholeComment = "";
+		if (this.isDatabaseCommentConflict) {
+			previousWholeComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+			previousWholeComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
+			previousWholeComment = DecommentUtil.escapeInputText(this.databaseComment);
+			previousWholeComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
+		}
+		return previousWholeComment + this.decomments.join('\n\n=======\n\n');
+	},
+
+	/**
+	 * Select target html element
+	 * @return {Object} html element
+	 */
+	selectTargetHtmlElement: function() {
+		var columnId = this.tableDbName + "_" + this.columnName;
+		columnId = columnId.toLowerCase();
+		var columnElement = document.getElementById(columnId);
+		if (columnElement === null) {
+			return null;
+		}
+		return columnElement.parentElement.querySelector('.commentcell').querySelector('pre')
+	},
+
+	/**
+	 * Check conflict
+	 * @return {boolean} true: conflict, false: not
+	 */
+	isConflict: function() {
+		return this.decomments.length > 1 || this.isDatabaseCommentConflict;
+	}
+};
+
+/**
+ * @author deco
+ * @author cabos
+ */
+function Decomment() {
+	this.storeClient = new StoreClient()
+}
+
 Decomment.prototype = {
 
 	/**
@@ -1665,7 +1991,7 @@ Decomment.prototype = {
 	init: function () {
 		if (document.getElementById("intro_opening") !== null) {
 			this.fetchVirtualPickup();
-			this.setupSaveDecomment();
+			// this.setupSaveDecomment();
 			this.setupKeyDownEvent();
 		} else {
 			this.reflectEmbeddedPickup();
@@ -1696,39 +2022,18 @@ Decomment.prototype = {
 	 */
 	reflectPickup: function (decomment) {
 		var that = this;
-		this.unmappedTableArea.clear();
-		this.unmappedColumnArea.clear();
-		Array.prototype.forEach.call(decomment["tables"], function (table) {
-			var tableElements = that.extractTableElements(table);
-			if (tableElements.length === 0) {
-				console.log(table);
-				that.unmappedTableArea.push(table);
-				return;
-			}
-			if (that.storePickupTableProperties(table)) {
-				var newTableComment = that.buildDisplayTableCommentFromServer(table);
-				var authors = that.getTableMapInfoFromStore(that.getTableNameFromJson(table))['authors'];
-				that.storePreviousWholeTableComment(table, newTableComment, authors);
-				that.updateDisplayTableCommentToHtml(tableElements, newTableComment, authors);
-				that.reflectTableCommentConflictIfNeed(table, tableElements);
-			}
-			Array.prototype.forEach.call(table["columns"], function (column) {
-				var columnElement = that.extractColumnElement(table, column);
-				if (columnElement === null) {
-					console.log(table, column);
-					that.unmappedColumnArea.push(table, column);
-					return;
-				}
-				that.storePickupColumnProperties(table, column);
-				var newComment = that.buildDisplayColumnCommentFromServer(table, column);
-				var authors = that.buildColumnCommentAuthoers(table, column);
-				that.storePreviousWholeColumnComment(table, column, newComment);
-				that.updateDisplayColumnCommentToHtml(columnElement, newComment, authors);
-				that.reflectCommentConflictIfNeed(table, column, columnElement);
+		// this.unmappedTableArea.clear();
+		// this.unmappedColumnArea.clear();
+		this.storeClient.storePickup(decomment);
+		var pickup = this.storeClient.getDecomments()
+		Array.prototype.forEach.call(pickup, function(table) {
+			table.reflectToHtml();
+			Array.prototype.forEach.call(table.columns, function(column) {
+				column.reflectToHtml();
 			});
 		});
-		this.unmappedTableArea.reflect();
-		this.unmappedColumnArea.reflect();
+		// this.unmappedTableArea.reflect();
+		// this.unmappedColumnArea.reflect();
 	},
 
 	/**
