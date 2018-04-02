@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.dbflute.helper.mapstring.MapListString;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapMappingPart;
 
 /**
  * @author cabos
@@ -69,6 +70,23 @@ public class DfDecoMapMapping {
         this.mappingOwner = mappingOwner;
         this.mappingDatetime = mappingDatetime;
         this.previousMappingList = previousMappingList.stream().distinct().collect(Collectors.toList());
+    }
+
+    public DfDecoMapMapping(String oldTableName, String oldColumnName, DfDecoMapPieceTargetType type, DfDecoMapMappingPart mappingPart) {
+        this.formatVersion = DEFAULT_FORMAT_VERSION;
+        this.oldTableName = oldTableName;
+        this.oldColumnName = oldColumnName;
+        this.newTableName = mappingPart.getNewTableName();
+        this.newColumnName = mappingPart.getNewColumnName();
+        this.targetType = type;
+        this.mappingOwner = mappingPart.getMappingOwner();
+        this.authorList = mappingPart.getAuthorList().stream().distinct().collect(Collectors.toList());
+        if (!authorList.contains(mappingOwner)) {
+            this.authorList.add(mappingOwner);
+        }
+        this.mappingCode = mappingPart.getMappingCode();
+        this.mappingDatetime = mappingPart.getMappingDatetime();
+        this.previousMappingList = mappingPart.getPreviousMappingList().stream().distinct().collect(Collectors.toList());
     }
 
     // ===================================================================================

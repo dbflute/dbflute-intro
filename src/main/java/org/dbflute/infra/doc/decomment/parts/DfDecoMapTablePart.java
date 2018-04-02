@@ -31,14 +31,17 @@ public class DfDecoMapTablePart {
     //                                                                           Attribute
     //                                                                           =========
     protected final String tableName;
+    protected final List<DfDecoMapMappingPart> mappingList;
     protected final List<DfDecoMapPropertyPart> propertyList;
     protected final List<DfDecoMapColumnPart> columnList;
 
     // ===================================================================================
     //                                                           Constructor and Converter
     //                                                           =========================
-    public DfDecoMapTablePart(String tableName, List<DfDecoMapPropertyPart> propertyList, List<DfDecoMapColumnPart> columnList) {
+    public DfDecoMapTablePart(String tableName, List<DfDecoMapMappingPart> mappingList, List<DfDecoMapPropertyPart> propertyList,
+        List<DfDecoMapColumnPart> columnList) {
         this.tableName = tableName;
+        this.mappingList = mappingList;
         this.propertyList = propertyList;
         this.columnList = columnList;
     }
@@ -46,6 +49,8 @@ public class DfDecoMapTablePart {
     @SuppressWarnings("unchecked")
     public DfDecoMapTablePart(Map<String, Object> tablePartMap) {
         this.tableName = (String) tablePartMap.get("tableName");
+        final List<Map<String, Object>> mappingMapList = (List<Map<String, Object>>) tablePartMap.get("mappingList");
+        this.mappingList = mappingMapList.stream().map(DfDecoMapMappingPart::new).collect(Collectors.toList());
         final List<Map<String, Object>> propertyMapList = (List<Map<String, Object>>) tablePartMap.get("propertyList");
         this.propertyList = propertyMapList.stream().map(DfDecoMapPropertyPart::new).collect(Collectors.toList());
         final List<Map<String, Object>> columnMapList = (List<Map<String, Object>>) tablePartMap.get("columnList");
@@ -69,6 +74,10 @@ public class DfDecoMapTablePart {
     //                                                                            ========
     public String getTableName() {
         return tableName;
+    }
+
+    public List<DfDecoMapMappingPart> getMappingList() {
+        return mappingList;
     }
 
     public List<DfDecoMapPropertyPart> getPropertyList() {

@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.dbflute.helper.mapstring.MapListString;
-import org.dbflute.infra.doc.decomment.parts.DfDecoMapMappingPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 
 /**
@@ -44,7 +43,6 @@ public class DfDecoMapPickup {
     //                                                   ---
     public static final String DECO_MAP_KEY_DECOMAP = "decoMap";
     public static final String DECO_MAP_KEY_TABLE_LIST = "tableList";
-    public static final String DECO_MAP_KEY_MAPPING_LIST = "mappingList";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -56,59 +54,30 @@ public class DfDecoMapPickup {
     //                                               decoMap
     //                                               -------
     protected final List<DfDecoMapTablePart> tableList;
-    protected final List<DfDecoMapMappingPart> mappingList;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DfDecoMapPickup(String formatVersion, List<DfDecoMapTablePart> tableList, List<DfDecoMapMappingPart> mappingList,
-        LocalDateTime pickupDatetime) {
+    public DfDecoMapPickup(String formatVersion, List<DfDecoMapTablePart> tableList, LocalDateTime pickupDatetime) {
         this.formatVersion = formatVersion;
         this.pickupDatetime = pickupDatetime;
         this.tableList = tableList;
-        this.mappingList = mappingList;
     }
 
-    public DfDecoMapPickup(List<DfDecoMapTablePart> tableList, List<DfDecoMapMappingPart> mappingList, LocalDateTime pickupDatetime) {
+    public DfDecoMapPickup(List<DfDecoMapTablePart> tableList, LocalDateTime pickupDatetime) {
         this.pickupDatetime = pickupDatetime;
         this.formatVersion = getFormatVersion();
         this.tableList = tableList;
-        this.mappingList = mappingList;
     }
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
+    // TODO cabos consider mapping (2018/04/02)
     // map:{
     //     ; formatVersion = 1.1
     //     ; pickupDatetime = 2017-11-09T09:09:09.009
     //     ; decoMap = map:{
-    //         ; mappingList = list:{ # if mapping conflict was occurred, mapping list size was not equals 0
-    //             ; map:{
-    //                 ; oldTableName = OLD_TABLE_NAME
-    //                 : oldColumnName = OLD_COLUMN_NAME
-    //                 ; targetType = COLUMN
-    //                 ; newNameList = list:{
-    //                     ; map:{
-    //                         ; newTableName = NEW_TABLE_NAME
-    //                         ; newColumnName = NEW_COLUMN_NAME
-    //                         ; mappingCode = HAKI0000
-    //                         ; mappingDatetime = 2018-03-25T11:45:14.191
-    //                         ; mappingOwner = hakiba
-    //                         ; previousMappingList = list:{ CABOS000 }
-    //                     }
-    //                     ; map:{
-    //                         ; newTableName = NEW_OTHER_TABLE_NAME
-    //                         ; newColumnName = NEW_OTHER_COLUMN_NAME
-    //                         ; mappingCode = DECO0000
-    //                         ; mappingDatetime = 2018-03-25T11:45:14.191
-    //                         ; mappingOwner = deco
-    //                         ; previousMappingList = list:{ CABOS000 }
-    //                     }
-    //                     ; map:{ ...
-    //                 }
-    //             }
-    //         }
     //         ; tableList = list:{
     //             ; map:{
     //                 ; tableName = MEMBER
@@ -160,10 +129,6 @@ public class DfDecoMapPickup {
         final List<Map<String, Object>> convertedTableList =
             this.tableList.stream().map(DfDecoMapTablePart::convertPickupMap).collect(Collectors.toList());
         decoMap.put(DECO_MAP_KEY_TABLE_LIST, convertedTableList);
-        final List<Map<String, Object>> convertedMappingList =
-            this.mappingList.stream().map(DfDecoMapMappingPart::convertToMap).collect(Collectors.toList());
-        decoMap.put(DECO_MAP_KEY_MAPPING_LIST, convertedMappingList);
-
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
         map.put("pickupDatetime", pickupDatetime);
@@ -193,9 +158,5 @@ public class DfDecoMapPickup {
 
     public List<DfDecoMapTablePart> getTableList() {
         return Collections.unmodifiableList(this.tableList);
-    }
-
-    public List<DfDecoMapMappingPart> getMappingList() {
-        return mappingList;
     }
 }

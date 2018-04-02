@@ -149,7 +149,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DecommentPickupResult> pickup(String projectName) {
         DfDecoMapPickup pickup = decommentPhysicalLogic.readMergedPickup(projectName);
-        return asJson(new DecommentPickupResult(pickup.getTableList(), pickup.getMappingList()));
+        return asJson(new DecommentPickupResult(pickup.getTableList()));
     }
 
     // -----------------------------------------------------

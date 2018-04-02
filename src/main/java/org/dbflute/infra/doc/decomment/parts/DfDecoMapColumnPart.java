@@ -31,19 +31,23 @@ public class DfDecoMapColumnPart {
     //                                                                           Attribute
     //                                                                           =========
     protected final String columnName;
+    protected final List<DfDecoMapMappingPart> mappingList;
     protected final List<DfDecoMapPropertyPart> propertyList;
 
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    public DfDecoMapColumnPart(String columnName, List<DfDecoMapPropertyPart> propertyList) {
+    public DfDecoMapColumnPart(String columnName, List<DfDecoMapMappingPart> mappingList, List<DfDecoMapPropertyPart> propertyList) {
         this.columnName = columnName;
+        this.mappingList = mappingList;
         this.propertyList = propertyList;
     }
 
     @SuppressWarnings("unchecked")
     public DfDecoMapColumnPart(Map<String, Object> columnPartMap) {
         this.columnName = (String) columnPartMap.get("columnName");
+        final List<Map<String, Object>> mappingMapList = (List<Map<String, Object>>) columnPartMap.get("mappingList");
+        this.mappingList = mappingMapList.stream().map(DfDecoMapMappingPart::new).collect(Collectors.toList());
         final List<Map<String, Object>> propertyMapList = (List<Map<String, Object>>) columnPartMap.get("propertyList");
         this.propertyList = propertyMapList.stream().map(DfDecoMapPropertyPart::new).collect(Collectors.toList());
     }
@@ -63,6 +67,10 @@ public class DfDecoMapColumnPart {
     //                                                                            ========
     public String getColumnName() {
         return this.columnName;
+    }
+
+    public List<DfDecoMapMappingPart> getMappingList() {
+        return mappingList;
     }
 
     public List<DfDecoMapPropertyPart> getPropertyList() {
