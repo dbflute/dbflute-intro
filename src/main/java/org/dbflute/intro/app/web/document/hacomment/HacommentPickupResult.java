@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapDiffPart;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPropertyPart;
+import org.dbflute.infra.doc.hacomment.DfHacoMapDiffPart;
+import org.dbflute.infra.doc.hacomment.DfHacoMapPickup;
+import org.dbflute.infra.doc.hacomment.DfHacoMapPropertyPart;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -53,7 +53,7 @@ public class HacommentPickupResult {
         // ===================================================================================
         //                                                                         Constructor
         //                                                                         ===========
-        public DiffPart(HacoMapDiffPart diffPart) {
+        public DiffPart(DfHacoMapDiffPart diffPart) {
             this.diffCode = diffPart.getDiffCode();
             this.diffDate = diffPart.getDiffDate();
             this.properties = diffPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class HacommentPickupResult {
         // ===================================================================================
         //                                                                         Constructor
         //                                                                         ===========
-        public PropertyPart(HacoMapPropertyPart property) {
+        public PropertyPart(DfHacoMapPropertyPart property) {
             this.hacomment = property.getHacomment();
             this.diffComment = property.getDiffComment();
             this.authorList = property.getAuthorList();
@@ -104,7 +104,7 @@ public class HacommentPickupResult {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacommentPickupResult(HacoMapPickup pickup) {
+    public HacommentPickupResult(DfHacoMapPickup pickup) {
         this.diffList = pickup.getDiffList().stream().map(diffPart -> new DiffPart(diffPart)).collect(Collectors.toList());
     }
 }

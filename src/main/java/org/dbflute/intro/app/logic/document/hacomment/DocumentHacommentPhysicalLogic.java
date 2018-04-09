@@ -19,10 +19,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.dbflute.infra.doc.hacomment.DfHacoMapFile;
+import org.dbflute.infra.doc.hacomment.DfHacoMapPickup;
+import org.dbflute.infra.doc.hacomment.DfHacoMapPiece;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapFile;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 
@@ -39,29 +39,29 @@ public class DocumentHacommentPhysicalLogic {
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
-    private final HacoMapFile _hacoMapFile = new HacoMapFile(() -> timeManager.currentDateTime());
+    private final DfHacoMapFile _hacoMapFile = new DfHacoMapFile(() -> timeManager.currentDateTime());
 
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
-    public void savePiece(String clientProject, HacoMapPiece hacoMapPiece) {
+    public void savePiece(String clientProject, DfHacoMapPiece hacoMapPiece) {
         _hacoMapFile.writePiece(buildClientPath(clientProject), hacoMapPiece);
     }
 
     // ===================================================================================
     //                                                                          Pickup Map
     //                                                                          ==========
-    public HacoMapPickup readMergedPickup(String clientProject) {
-        List<HacoMapPiece> pieces = readHacommentPiece(clientProject);
-        OptionalThing<HacoMapPickup> pickupOpt = readHacommentPickup(clientProject);
+    public DfHacoMapPickup readMergedPickup(String clientProject) {
+        List<DfHacoMapPiece> pieces = readHacommentPiece(clientProject);
+        OptionalThing<DfHacoMapPickup> pickupOpt = readHacommentPickup(clientProject);
         return _hacoMapFile.merge(pickupOpt, pieces);
     }
 
-    private List<HacoMapPiece> readHacommentPiece(String clientProject) {
+    private List<DfHacoMapPiece> readHacommentPiece(String clientProject) {
         return _hacoMapFile.readPieceList(buildClientPath(clientProject));
     }
 
-    private OptionalThing<HacoMapPickup> readHacommentPickup(String clientProject) {
+    private OptionalThing<DfHacoMapPickup> readHacommentPickup(String clientProject) {
         return _hacoMapFile.readPickup(buildClientPath(clientProject));
     }
 

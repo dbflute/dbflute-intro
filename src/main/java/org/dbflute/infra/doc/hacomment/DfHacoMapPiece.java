@@ -14,7 +14,7 @@
  * governing permissions and limitations under the License.
  */
 
-package org.dbflute.intro.app.model.client.document.hacomment;
+package org.dbflute.infra.doc.hacomment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * @author hakiba
  */
-public class HacoMapPiece {
+public class DfHacoMapPiece {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -43,7 +43,7 @@ public class HacoMapPiece {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapPiece(String diffCode, String diffDate, String hacomment, String diffComment, List<String> authorList, String pieceCode,
+    public DfHacoMapPiece(String diffCode, String diffDate, String hacomment, String diffComment, List<String> authorList, String pieceCode,
         String pieceOwner, LocalDateTime pieceDatetime, List<String> previousPieceList) {
         this.diffCode = diffCode;
         this.diffDate = diffDate;
@@ -60,7 +60,7 @@ public class HacoMapPiece {
     }
 
     @SuppressWarnings("unchecked")
-    public HacoMapPiece(Map<String, Object> map) {
+    public DfHacoMapPiece(Map<String, Object> map) {
         this.diffCode = (String) map.get("diffCode");
         this.diffDate = (String) map.get("diffDate");
         this.hacomment = (String) map.get("hacomment");
