@@ -1,71 +1,62 @@
 <main>
   <navbar />
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-3">
-        <div>
-          <h2>DBFlute Client</h2>
-          <input type="button" class="btn btn-primary" value="Create" onclick="{ goToClientCreate }" />
-        </div>
-        <div class="container">
-          <table class="table">
-            <thead>
-              <tr>
-                <!-- <th>{ 'LABEL_projectName' | translate:translationData }</th>
-                                    <th>{ 'LABEL_databaseCode' | translate:translationData }</th>
-                                    <th>{ 'LABEL_languageCode' | translate:translationData }</th>
-                                    <th>{ 'LABEL_containerCode' | translate:translationData }</th> -->
-              </tr>
-            </thead>
-            <tbody class="list-group">
-              <tr each="{client in clientList}">
-                <td>
-                  <a href="" class="list-group-item" onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
-                </td>
-                <td>{ client.databaseCode }</td>
-                <td>{ client.languageCode }</td>
-                <td>{ client.containerCode }</td>
-                <td>
-                  <input type="button" class="btn btn-primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <h2>DBFlute Engine</h2>
-          <button type="button" class="btn btn-primary" onclick="{ downloadModal }">
-            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
-          </button>
-        </div>
-        <div class="container">
-          <table class="table">
-            <thead>
-              <tr>
-                <!-- <th>{ 'LABEL_engineVersion' | translate:translationData }</th> -->
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="list-group">
-              <tr each="{version in versions}">
-                <td>
-                  <span class="list-group-item">{ version }</span>
-                </td>
-                <td>
-                  <input type="button" class="btn btn-primary pull-right" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+  <div class="ui container">
+    <div>
+      <h2>DBFlute Client</h2>
+      <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
     </div>
+    <table class="ui table">
+      <!-- <thead>
+        <tr>
+          <th>{ 'LABEL_projectName' | translate:translationData }</th>
+          <th>{ 'LABEL_databaseCode' | translate:translationData }</th>
+          <th>{ 'LABEL_languageCode' | translate:translationData }</th>
+          <th>{ 'LABEL_containerCode' | translate:translationData }</th>
+        </tr>
+      </thead> -->
+      <tbody class="list-group">
+        <tr each="{client in clientList}">
+          <td>
+            <a href="" onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
+          </td>
+          <td>{ client.databaseCode }</td>
+          <td>{ client.languageCode }</td>
+          <td>{ client.containerCode }</td>
+          <td class="right aligned">
+            <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <h2>DBFlute Engine</h2>
+      <button type="button" class="ui button primary" onclick="{ downloadModal }">
+        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
+      </button>
+    </div>
+    <table class="ui table">
+      <!-- <thead>
+        <tr>
+          <th>{ 'LABEL_engineVersion' | translate:translationData }</th>
+          <th></th>
+        </tr>
+      </thead> -->
+      <tbody>
+        <tr each="{version in versions}">
+          <td>{ version }</td>
+          <td class="right aligned">
+            <input type="button" class="ui button primary" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <h3>
       <small class="text-info">System Info</small>
     </h3>
-    <div class="row">
-      <div class="col-sm-6 col-md-4" each="{ manifest }">
-        <small class="text-info">{ key } = { value }</small>
+    <div class="ui stackable four column grid">
+        <div class="column" each="{ manifest }">
+          <small>{ key } = { value }</small>
+        </div>
       </div>
     </div>
   </div>
