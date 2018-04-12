@@ -1,12 +1,10 @@
 <main>
-  <navbar />
-  <div class="ui container">
-    <div>
-      <h2>DBFlute Client</h2>
-      <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
-    </div>
-    <table class="ui table">
-      <!-- <thead>
+  <div>
+    <h2>DBFlute Client</h2>
+    <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
+  </div>
+  <table class="ui table">
+    <!-- <thead>
         <tr>
           <th>{ 'LABEL_projectName' | translate:translationData }</th>
           <th>{ 'LABEL_databaseCode' | translate:translationData }</th>
@@ -14,50 +12,48 @@
           <th>{ 'LABEL_containerCode' | translate:translationData }</th>
         </tr>
       </thead> -->
-      <tbody class="list-group">
-        <tr each="{client in clientList}">
-          <td>
-            <a href="" onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
-          </td>
-          <td>{ client.databaseCode }</td>
-          <td>{ client.languageCode }</td>
-          <td>{ client.containerCode }</td>
-          <td class="right aligned">
-            <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div>
-      <h2>DBFlute Engine</h2>
-      <button type="button" class="ui button primary" onclick="{ downloadModal }">
-        <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
-      </button>
-    </div>
-    <table class="ui table">
-      <!-- <thead>
+    <tbody class="list-group">
+      <tr each="{client in clientList}">
+        <td>
+          <a href="" onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
+        </td>
+        <td>{ client.databaseCode }</td>
+        <td>{ client.languageCode }</td>
+        <td>{ client.containerCode }</td>
+        <td class="right aligned">
+          <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <h2>DBFlute Engine</h2>
+    <button type="button" class="ui button primary" onclick="{ downloadModal }">
+      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
+    </button>
+  </div>
+  <table class="ui table">
+    <!-- <thead>
         <tr>
           <th>{ 'LABEL_engineVersion' | translate:translationData }</th>
           <th></th>
         </tr>
       </thead> -->
-      <tbody>
-        <tr each="{version in versions}">
-          <td>{ version }</td>
-          <td class="right aligned">
-            <input type="button" class="ui button primary" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h3>
-      <small class="text-info">System Info</small>
-    </h3>
-    <div class="ui stackable four column grid">
-        <div class="column" each="{ manifest }">
-          <small>{ key } = { value }</small>
-        </div>
-      </div>
+    <tbody>
+      <tr each="{version in versions}">
+        <td>{ version }</td>
+        <td class="right aligned">
+          <input type="button" class="ui button primary" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>
+    <small class="text-info">System Info</small>
+  </h3>
+  <div class="ui stackable four column grid">
+    <div class="column" each="{ manifest }">
+      <small>{ key } = { value }</small>
     </div>
   </div>
 
@@ -95,13 +91,6 @@
       })
     }
 
-    this.classifications = function () {
-      ApiFactory.classifications().then(function (json) {
-        self.classificationMap = json
-        self.update()
-      })
-    }
-
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
@@ -110,9 +99,9 @@
         // if (json.length > 0) 
         {
           self.clientList = json
+          self.update()
           // } else {
           //   $state.go('welcome') // if no client show welcome page
-          self.update()
         }
       })
     }
@@ -162,7 +151,6 @@
       this.manifest()
       this.engineVersions()
       this.configuration()
-      this.classifications()
       this.prepareClientList()
     })
   </script>
