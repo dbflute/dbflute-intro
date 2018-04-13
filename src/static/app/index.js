@@ -192,6 +192,7 @@ import route from 'riot-route'
 import 'semantic-ui-riot'
 
 import './main/main.tag'
+import './client/create.tag'
 
 route('', () => {
   riot.mount('content', 'main')

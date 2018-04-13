@@ -59,6 +59,8 @@
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
+    import route from 'riot-route'
+
     const ApiFactory = new _ApiFactory()
 
     const self = this
@@ -111,7 +113,7 @@
     }
 
     this.goToClientCreate = function () {
-      //   $state.go('create')
+      route('create')
     }
 
     this.goToSettings = function (client) {
