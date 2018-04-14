@@ -716,7 +716,7 @@ public class DfDecoMapFile {
     }
 
     private String convertToNewStateHash(DfDecoMapMapping mapping) {
-        return createToStateHash(mapping.getNewTableName(), mapping.getOldColumnName(), mapping.getTargetType());
+        return createToStateHash(mapping.getNewTableName(), mapping.getNewColumnName(), mapping.getTargetType());
     }
 
     private String convertToTableStateHash(DfDecoMapTablePart tablePart) {
