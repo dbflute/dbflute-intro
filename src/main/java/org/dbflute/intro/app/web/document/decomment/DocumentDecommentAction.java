@@ -216,11 +216,13 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildMappingCode(DecommentMappingSaveBody.MappingPart mapping, LocalDateTime mappingDateTime, String author) {
-        // TODO cabos write example comment by jflute (2018/04/12)
+        // TODO done cabos write example comment by jflute (2018/04/12)
+        // ex1. OLD_TABLE_NAME::NEW_TABLE_NAME::TABLE:2018/04/01T00:00:00:cabos
+        // ex2. OLD_TABLE_NAME:OLD_COLUMN_NAME:NEW_TABLE_NAME:NEW_COLUMN_NAME:COLUMN:2018/04/01T00:00:00:cabos
         StringBuilder sb = new StringBuilder();
         sb.append(mapping.oldTableName);
-        // TODO cabos change oldTableName to oldColumnName by jflute (2018/04/12)
-        sb.append(":").append(mapping.oldColumnName != null ? mapping.oldTableName : "");
+        // TODO done cabos change oldTableName to oldColumnName by jflute (2018/04/12)
+        sb.append(":").append(mapping.oldColumnName != null ? mapping.oldColumnName : "");
         sb.append(mapping.newTableName);
         sb.append(":").append(mapping.newColumnName != null ? mapping.newColumnName : "");
         sb.append(":").append(mapping.targetType);
