@@ -421,6 +421,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 		<tr>
 			<th>No</th>
 			<th>Name</th>
+			<th>Conflict Mapping Name</th>
 			<th>Mapping</th>
 		</tr>
 		</thead>
@@ -446,6 +447,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 			<th>No</th>
 			<th>Table Name</th>
 			<th>Column Name</th>
+			<th>Conflict Mapping Name</th>
 			<th>Mapping</th>
 		</tr>
 		</thead>
@@ -453,7 +455,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 		<!--tr>
 			<td class="rownumcell">1</td>
 			<td class="namecell">NEW_TABLE_NAME</td>
-			<td class="namecell">NEW_TABLE_NAME</td>
+			<td class="namecell">NEW_COLUMN_NAME</td>
 			<td class="columnselectorcell">
 			</td>
 		</tr-->
@@ -1308,7 +1310,6 @@ Decomment.prototype = {
 		Array.prototype.forEach.call(decomment["tables"], function (table) {
 			var tableElements = that.extractTableElements(table);
 			if (tableElements.length === 0) {
-				console.log(table);
 				that.unmappedTableArea.push(table);
 				return;
 			}
@@ -1322,7 +1323,6 @@ Decomment.prototype = {
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnElement = that.extractColumnElement(table, column);
 				if (columnElement === null) {
-					console.log(table, column);
 					that.unmappedColumnArea.push(table, column);
 					return;
 				}
@@ -1930,7 +1930,7 @@ UnmappedTableArea.prototype = {
 	 */
 	push: function (table) {
 		var row = new UnmappedTableRow();
-		row.init(this.rows.length + 1, table.tableName);
+		row.init(this.rows.length + 1, table);
 		this.rows.push(row);
 	},
 
@@ -2090,9 +2090,18 @@ UnmappedTableRow.prototype = {
 	 * @param {number} Row number
 	 * @param {string} Old table name
 	 */
-	init: function (rowNum, oldTableName) {
+	init: function (rowNum, oldTable) {
 		this.rowNum = rowNum;
-		this.oldTableName = oldTableName;
+		this.oldTableName = oldTable.oldTableName;
+		this.mappedTableNameList = Array.prototype.map.call(oldTable.mappings, function (mapping) {
+			return mapping.newTableName;
+		});
+		this.previousMappingList = Array.prototype.map.call(oldTable.mappings, function (mapping) {
+			return mapping.mappingCode;
+		});
+		this.authorList = Array.prototype.map.call(oldTable.mappings, function (mapping) {
+			return mapping.mappingOwner;
+		});
 	},
 
 	/**
@@ -2103,9 +2112,23 @@ UnmappedTableRow.prototype = {
 		return '<tr id="unmapped-table-row-' + this.tableName + '">'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.oldTableName + '</td>'
+		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
 		+ '<td class="tableselectorcell">' + '</td>'
 		+ '</tr>';
 	},
+
+	toConflictDisplayHtmlString: function() {
+		return Array.prototype.reduce.call(this.mappedTableNameList, function (currentStrs, name) {
+			if (currentStrs.length === 0) {
+				return name;
+			}
+			return currentStrs + "<br>" + name ;
+		}, '');
+	},
+
+	isTableNameConflict: function() {
+		return this.previousMappingList.length >= 2;
+	}
 }
 
 ## ===================================================================================
@@ -2124,7 +2147,7 @@ UnmappedColumnArea.prototype = {
 	 */
 	push: function (table, column) {
 		var row = new UnmappedColumnRow();
-		row.init(this.rows.length + 1, table.tableName, column.columnName);
+		row.init(this.rows.length + 1, table, column);
 		this.rows.push(row);
 	},
 
@@ -2190,6 +2213,7 @@ UnmappedColumnArea.prototype = {
 	 * @returns {string} Column selector
 	 */
 	createColumnSelector: function (tableName) {
+		console.log(tableName);
 		var columnNameList = this.getColumnNameList(tableName);
 		var options = Array.prototype.reduce.call(columnNameList, function (currentOptions, name) {
 			return currentOptions + '<option>' + name + '</option>';
@@ -2293,10 +2317,21 @@ UnmappedColumnRow.prototype = {
 	 * @param {number} Row number
 	 * @param {string} Old table name
 	 */
-	init: function (rowNum, tableName, oldColumnName) {
+	init: function (rowNum, table, column) {
 		this.rowNum = rowNum;
-		this.tableName = tableName;
-		this.oldColumnName = oldColumnName;
+		console.log(table);
+		this.tableName = table.tableName;
+		this.oldColumnName = column.columnName;
+
+		this.mappedColumnNameList = Array.prototype.map.call(column.mappings, function (mapping) {
+			return mapping.newTableName + '.' + mapping.newColumnName;
+		});
+		this.previousMappingList = Array.prototype.map.call(column.mappings, function (mapping) {
+			return mapping.mappingCode;
+		});
+		this.authorList = Array.prototype.map.call(column.mappings, function (mapping) {
+			return mapping.mappingOwner;
+		});
 	},
 
 	/**
@@ -2308,9 +2343,23 @@ UnmappedColumnRow.prototype = {
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.tableName + '</td>'
 		+ '<td class="namecell">' + this.oldColumnName + '</td>'
+		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
 		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
 		+ '</tr>';
 	},
+
+	toConflictDisplayHtmlString: function() {
+		return Array.prototype.reduce.call(this.mappedColumnNameList, function (currentStrs, name) {
+			if (currentStrs.length === 0) {
+				return name;
+			}
+			return currentStrs + "<br>" + name ;
+		}, '');
+	},
+
+	isTableNameConflict: function() {
+		return this.previousMappingList.length >= 2;
+	}
 }
 
 new Decomment().init();
