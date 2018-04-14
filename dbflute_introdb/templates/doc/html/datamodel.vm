@@ -1091,6 +1091,7 @@ ApiClient.prototype = {
 		var errorCallback = function() {
 			alert('Error!! cannot save new table mapping.');
 		}
+		console.log(params);
 		this.request(path, method, params, successCallback, errorCallback);
 	},
 	/**
@@ -2049,9 +2050,9 @@ UnmappedTableArea.prototype = {
 
 	postMappingTable: function() {
 		var mappings = Array.prototype.map.call(this.rows, function (row) {
-			var newTableName = document.querySelector('#unmapped-table-row-' + this.tableName + ' td.tableselectorcell select').value;
+			var newTableName = document.querySelector('#unmapped-table-row-' + row.tableName + ' td.tableselectorcell select').value;
 			return {
-				oldTableName: row.oldTableName,
+				oldTableName: row.tableName,
 				newTableName: newTableName,
 				targetType: 'TABLE',
 				authors: [],
@@ -2087,19 +2088,19 @@ UnmappedTableRow.prototype = {
 
 	/**
 	 * Initialize unmapped table row
-	 * @param {number} Row number
-	 * @param {string} Old table name
+	 * @param {number} row number
+	 * @param {object} table
 	 */
-	init: function (rowNum, oldTable) {
+	init: function (rowNum, table) {
 		this.rowNum = rowNum;
-		this.oldTableName = oldTable.oldTableName;
-		this.mappedTableNameList = Array.prototype.map.call(oldTable.mappings, function (mapping) {
+		this.tableName = table.tableName;
+		this.mappedTableNameList = Array.prototype.map.call(table.mappings, function (mapping) {
 			return mapping.newTableName;
 		});
-		this.previousMappingList = Array.prototype.map.call(oldTable.mappings, function (mapping) {
+		this.previousMappingList = Array.prototype.map.call(table.mappings, function (mapping) {
 			return mapping.mappingCode;
 		});
-		this.authorList = Array.prototype.map.call(oldTable.mappings, function (mapping) {
+		this.authorList = Array.prototype.map.call(table.mappings, function (mapping) {
 			return mapping.mappingOwner;
 		});
 	},
@@ -2111,7 +2112,7 @@ UnmappedTableRow.prototype = {
 	toDisplayHtmlString: function () {
 		return '<tr id="unmapped-table-row-' + this.tableName + '">'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
-		+ '<td class="namecell">' + this.oldTableName + '</td>'
+		+ '<td class="namecell">' + this.tableName + '</td>'
 		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
 		+ '<td class="tableselectorcell">' + '</td>'
 		+ '</tr>';
@@ -2213,7 +2214,6 @@ UnmappedColumnArea.prototype = {
 	 * @returns {string} Column selector
 	 */
 	createColumnSelector: function (tableName) {
-		console.log(tableName);
 		var columnNameList = this.getColumnNameList(tableName);
 		var options = Array.prototype.reduce.call(columnNameList, function (currentOptions, name) {
 			return currentOptions + '<option>' + name + '</option>';
@@ -2273,7 +2273,6 @@ UnmappedColumnArea.prototype = {
 			var tableName = row.tableName;
 			var oldColumnName = row.oldColumnName;
 			var selector = '#columnselectorcell-' + tableName + '-' + oldColumnName + ' select';
-			console.log(selector);
 			var newColumnName = document.querySelector(selector).value;
 			return {
 				oldTableName: tableName,
@@ -2319,7 +2318,6 @@ UnmappedColumnRow.prototype = {
 	 */
 	init: function (rowNum, table, column) {
 		this.rowNum = rowNum;
-		console.log(table);
 		this.tableName = table.tableName;
 		this.oldColumnName = column.columnName;
 
