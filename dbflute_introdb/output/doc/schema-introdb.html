@@ -1702,7 +1702,15 @@ StoreClient.prototype = {
 		var that = this;
 		Array.prototype.forEach.call(pickup["tables"], function (table) {
 			that.storePickupTable(table);
+			var tableProperty = that.getTablePickup(table['tableName'])
+			if (!tableProperty.selectTargetHtmlElements()) {
+				that.unmappedTableArea.push(table)
+			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
+				var columnProperty = that.getColumnPickup(table['tableName'], column['columnName'])
+				if (!columnProperty.selectTargetHtmlElement()) {
+					that.unmappedColumnArea.push(table)
+				}
 				that.storePickupColumn(table['tableName'], column);
 			});
 		});
