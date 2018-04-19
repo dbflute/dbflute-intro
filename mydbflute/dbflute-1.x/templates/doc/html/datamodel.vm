@@ -1195,8 +1195,8 @@ var DecommentUtil = new function(){
 }
 
 ## ===================================================================================
-##                                                                           Decomment
-##                                                                           =========
+##                                                                     Decomment Store
+##                                                                     ===============
 function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
@@ -1403,11 +1403,14 @@ StoreClient.prototype = {
 	},
 }
 
+## ===================================================================================
+##                                                                     Decomment Table
+##                                                                     ===============
 function PickupTableProperty(tableDbName, json) {
 	this.tableDbName = tableDbName;
 	this.databaseComment = json['databaseComment'];
 	this.isDatabaseCommentConflict = json['isDatabaseCommentConflict'];
-	this.decomments = json['decomments'];
+	this.decomments = json['decomments'] || [];
 	this.previousPieces = json['previousPieces'];
 	this.authors = json['authors'];
 	this.commentVersion = json['commentVersion'];
@@ -1424,6 +1427,9 @@ PickupTableProperty.prototype = {
 	 * Reflect new comment to html
 	 */
 	reflectToHtml: function() {
+		if (this.notChangeDisplayComment()) {
+			return;
+		}
 		var author = this.authors.join(',');
 		var comment = this.buildDisplayComment() + "\n<span>@author(" + author + ")</span>";
 		for (var element in this.selectTargetHtmlElements()) {
@@ -1432,6 +1438,13 @@ PickupTableProperty.prototype = {
 				element.className += " commentcellerror"
 			}
 		}
+	},
+
+	/**
+	 * Check change display comment;
+	 */
+	notChangeDisplayComment: function() {
+		return this.decomments.length == 0 && !this.isConflict();
 	},
 
 	/**
@@ -1468,12 +1481,15 @@ PickupTableProperty.prototype = {
 	}
 };
 
+## ===================================================================================
+##                                                                    Decomment Column
+##                                                                    ================
 function PickupColumnProperty(tableDbName, columnName, json) {
 	this.tableDbName = tableDbName;
 	this.columnName = columnName;
 	this.databaseComment = json['databaseComment'];
 	this.isDatabaseCommentConflict = json['isDatabaseCommentConflict'];
-	this.decomments = json['decomments'];
+	this.decomments = json['decomments'] || [];
 	this.previousPieces = json['previousPieces'];
 	this.authors = json['authors'];
 	this.commentVersion = json['commentVersion'];
@@ -1486,6 +1502,9 @@ PickupColumnProperty.prototype = {
 	 * Reflect new comment to html
 	 */
 	reflectToHtml: function() {
+		if (this.notChangeDisplayComment()) {
+			return;
+		}
 		var author = this.authors.join(',');
 		var comment = this.buildDisplayComment() + "\n<span>@author(" + author + ")</span>";
 		var element = this.selectTargetHtmlElement();
@@ -1493,6 +1512,13 @@ PickupColumnProperty.prototype = {
 		if (this.isConflict()) {
 			element.className += " commentcellerror"
 		}
+	},
+
+	/**
+	 * Check change display comment;
+	 */
+	notChangeDisplayComment: function() {
+		return this.decomments.length == 0 && !this.isConflict();
 	},
 
 	/**
@@ -1533,6 +1559,9 @@ PickupColumnProperty.prototype = {
 	}
 };
 
+## ===================================================================================
+##                                                                           Decomment
+##                                                                           =========
 /**
  * @author deco
  * @author cabos
@@ -1619,273 +1648,6 @@ Decomment.prototype = {
 			return null;
 		}
 		return columnElement.parentElement
-	},
-
-	/**
-	 * Store table comment properties
-	 * @param {Object} table - Table object
-	 * @retuns {Boolean} if properties saved
-	 */
-	storePickupTableProperties: function(table) {
-		var tableName = this.getTableNameFromJson(table);
-		if (this.pickupStore[tableName] === undefined) {
-			this.pickupStore[tableName] = {};
-		}
-
-		var tableMap = this.getTableMapInfoFromStore(tableName);
-		var databaseComment = tableMap['databaseComment'];
-		var properties = table['properties'];
-		if (properties.length == 0) {
-			return false;
-		}
-
-		// properties to store
-		var isConflict = properties.length > 1;
-		var isDatabaseCommentConflict = false;
-		var decomments = [];
-		var previousPieces = [];
-		var authors = [];
-		var commentVersion = 0;
-		var that = this;
-		Array.prototype.forEach.call(properties, function (property) {
-			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
-			}
-			decomments.push(property["decomment"]);
-			if (property['pieceCode'] != null) {
-				previousPieces.push(property['pieceCode']);
-			}
-			authors = authors.concat(property['authors']);
-			if (commentVersion < property['commentVersion']) {
-				commentVersion = property['commentVersion'];
-			}
-		});
-		authors = authors.filter(function (x, i, self) {
-			return self.indexOf(x) === i;
-		});
-
-		tableMap['isConflict'] = isConflict || isDatabaseCommentConflict;
-		tableMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
-		tableMap['decomments'] = decomments;
-		tableMap['previousPieces'] = previousPieces;
-		tableMap['authors'] = authors;
-		tableMap['commentVersion'] = commentVersion;
-		return true;
-	},
-
-	/**
-	 * Store column comment properties
-	 * @param {Object} table - Table object
-	 * @param {Object} column - Column object
-	 */
-	storePickupColumnProperties: function (table, column) {
-		var tableName = this.getTableNameFromJson(table);
-		var columnName = this.getColumnNameFromJson(column);
-		if (this.pickupStore[tableName] === undefined) {
-			this.pickupStore[tableName] = {};
-		}
-		if (this.pickupStore[tableName]['columns'] === undefined) {
-			this.pickupStore[tableName]['columns'] = {};
-		}
-		if (this.pickupStore[tableName]['columns'][columnName] === undefined) {
-			this.pickupStore[tableName]['columns'][columnName] = {};
-		}
-
-		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName)
-		var databaseComment = columnMap['databaseComment'];
-		var properties = column['properties'];
-
-		// properties to store
-		var isConflict = properties.length > 1;
-		var isDatabaseCommentConflict = false;
-		var decomments = [];
-		var previousPieces = [];
-		var authors = [];
-		var commentVersion = 0;
-		var that = this;
-		Array.prototype.forEach.call(properties, function (property) {
-			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
-				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
-			}
-			decomments.push(property["decomment"]);
-			if (property['pieceCode'] != null) {
-				previousPieces.push(property['pieceCode']);
-			}
-			authors = authors.concat(property['authors']);
-			if (commentVersion < property['commentVersion']) {
-				commentVersion = property['commentVersion'];
-			}
-		});
-		authors = authors.filter(function (x, i, self) {
-			return self.indexOf(x) === i;
-		});
-
-		columnMap['isConflict'] = isConflict || isDatabaseCommentConflict;
-		columnMap['isDatabaseCommentConflict'] = isDatabaseCommentConflict;
-		columnMap['decomments'] = decomments;
-		columnMap['previousPieces'] = previousPieces;
-		columnMap['authors'] = authors;
-		columnMap['commentVersion'] = commentVersion;
-	},
-
-	/**
-	 * Store new column comment properties
-	 * @param {Object} table - Table object
-	 * @param {Object} column - Column object
-	 * @param {string} newComment - Comment from server
-	 */
-	storePreviousWholeTableComment: function (table, newComment) {
-		var tableName = this.getTableNameFromJson(table);
-		var tableMap = this.getTableMapInfoFromStore(tableName);
-		if (tableMap !== null) {
-			tableMap['previousWholeComment'] = newComment;
-		}
-	},
-
-	/**
-	 * Store new column comment properties
-	 * @param {Object} table - Table object
-	 * @param {Object} column - Column object
-	 * @param {string} newComment - Comment from server
-	 */
-	storePreviousWholeColumnComment: function (table, column, newComment) {
-		var tableName = this.getTableNameFromJson(table);
-		var columnName = this.getColumnNameFromJson(column);
-		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
-		if (columnMap !== null) {
-			columnMap['previousWholeComment'] = newComment;
-		}
-	},
-
-	/**
-	 * Build new table comment from server response
-	 * @param {Object} table - table object
-	 * @returns {string} New scheme comment
-	 */
-	buildDisplayTableCommentFromServer: function (table) {
-		var tableName = this.getTableNameFromJson(table);
-		var tableMap = this.getTableMapInfoFromStore(tableName);
-		return this.buildDisplayCommentFromServer(tableMap);
-	},
-
-	/**
-	 * Build new column comment from server response
-	 * @param {Object} table - table object
-	 * @param {Object} column - Column object
-	 * @returns {string} New scheme comment
-	 */
-	buildDisplayColumnCommentFromServer: function (table, column) {
-		var tableName = this.getTableNameFromJson(table);
-		var columnName = this.getColumnNameFromJson(column);
-		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
-		return this.buildDisplayCommentFromServer(columnMap);
-	},
-
-	/**
-	 * Build display comment for html
-	 * @param {Object} commentMap - Comment object of table, column
-	 * @retuns {string} Display comment
-	 */
-	buildDisplayCommentFromServer: function(commentMap) {
-		var result = "";
-		if (commentMap['isDatabaseCommentConflict']) {
-			var databaseComment = commentMap['databaseComment'];
-			databaseComment = DecommentUtil.unescapeWhitespace(databaseComment);
-			databaseComment = DecommentUtil.escapeNewlineCharacter(databaseComment);
-			databaseComment = DecommentUtil.escapeInputText(databaseComment);
-			result = databaseComment + '\n(from database comment)\n\n=======\n\n';
-		}
-		result += commentMap['decomments'].join('\n\n=======\n\n');
-		return result;
-	},
-
-	/**
-	 * Build authoers from server response
-	 * @param {Object} table - table object
-	 * @param {Object} column - Column object
-	 * @returns {string} New scheme comment
-	 */
-	buildColumnCommentAuthoers: function (table, column) {
-		var tableName = this.getTableNameFromJson(table);
-		var columnName = this.getColumnNameFromJson(column);
-		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
-		return columnMap['authors'];
-	},
-
-	/**
-	 * Update table comment of html
-	 * @param {Object} tableElements - Table elements
-	 * @param {string} newComment - New scheme comment
-	 * @param {Array} authors - Comment authoers
-	 */
-	updateDisplayTableCommentToHtml: function (tableElements, newComment, authors) {
-		var author = authors.join(',');
-		var comment = newComment + "\n<span>@author(" + author + ")</span>";
-		Array.prototype.forEach.call(tableElements, function (element) {
-			element.querySelector('pre').innerHTML = comment;
-		});
-	},
-
-	/**
-	 * Update column comment of html
-	 * @param {Object} columnElement - Column element
-	 * @param {string} newComment - New scheme comment
-	 * @param {Array} authors - Comment authoers
-	 */
-	updateDisplayColumnCommentToHtml: function (columnElement, newComment, authors) {
-		var author = authors.join(',');
-		var comment = newComment + "\n<span>@author(" + author + ")</span>";
-		columnElement.querySelector('.commentcell').querySelector('pre').innerHTML = comment;
-	},
-
-	/**
-	 * Add error class if table comment is conflict
-	 * @param {Object} table - Table object
-	 * @param {Object} column - Column object
-	 * @param {Object} columnElement - Column element
-	 */
-	reflectTableCommentConflictIfNeed: function(table, tableElements) {
-		var tableName = this.getTableNameFromJson(table);
-		if (this.isTableCommentConflict(tableName)) {
-			Array.prototype.forEach.call(tableElements, function (element) {
-				element.className += " commentcellerror"
-			});
-		}
-	},
-
-	/**
-	 * Add error class if comment is conflict
-	 * @param {Object} table - Table object
-	 * @param {Object} column - Column object
-	 * @param {Object} columnElement - Column element
-	 */
-	reflectCommentConflictIfNeed: function(table, column, columnElement) {
-		var tableName = this.getTableNameFromJson(table);
-		var columnName = this.getColumnNameFromJson(column);
-		if (this.isColumnCommentConflict(tableName, columnName)) {
-			columnElement.querySelector('.commentcell').className += " commentcellerror"
-		}
-	},
-
-	/**
-	 * Check the table comment is conflict
-	 * @param {String} tableName - Table name
-	 * @returns {Boolean} comment is conflict
-	 */
-	isTableCommentConflict: function(tableName) {
-		var tableMap = this.getTableMapInfoFromStore(tableName);
-		return this.isCommentConflict(tableMap);
-	},
-
-	/**
-	 * Check the column comment is conflict
-	 * @param {String} tableName - Table name
-	 * @param {String} columnName - Column name
-	 * @returns {Boolean} comment is conflict
-	 */
-	isColumnCommentConflict: function(tableName, columnName) {
-		var columnMap = this.getColumnMapInfoFromStore(tableName, columnName);
-		return this.isCommentConflict(columnMap);
 	},
 
 	/**
