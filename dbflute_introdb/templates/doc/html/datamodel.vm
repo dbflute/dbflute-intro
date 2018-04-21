@@ -1998,6 +1998,10 @@ UnmappedTableArea.prototype = {
 	 * Activate unmapped table field
 	 */
 	activate: function () {
+		if (document.getElementById("intro_opening") === null) {
+			return;
+		}
+
 		var unmappedElements = document.getElementById('unmapped-tables');
 		unmappedElements.style.display = 'inline';
 		var that = this;
@@ -2221,6 +2225,10 @@ UnmappedColumnArea.prototype = {
 	 * Activate unmapped column field
 	 */
 	activate: function () {
+		if (document.getElementById("intro_opening") === null) {
+			return;
+		}
+
 		var unmappedElements = document.getElementById('unmapped-columns');
 		unmappedElements.style.display = 'inline';
 		var that = this;
