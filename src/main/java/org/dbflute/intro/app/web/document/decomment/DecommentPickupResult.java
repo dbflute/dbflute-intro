@@ -201,7 +201,7 @@ public class DecommentPickupResult {
         @Required
         public LocalDateTime mappingDatetime;
         @NotNull
-        public List<String> previousMappingList;
+        public List<String> previousMappings;
 
         public MappingPart(DfDecoMapMappingPart mappingPart) {
             this.newTableName = mappingPart.getNewTableName();
@@ -210,7 +210,7 @@ public class DecommentPickupResult {
             this.mappingCode = mappingPart.getMappingCode();
             this.mappingOwner = mappingPart.getMappingOwner();
             this.mappingDatetime = mappingPart.getMappingDatetime();
-            this.previousMappingList = mappingPart.getPreviousMappingList();
+            this.previousMappings = mappingPart.getPreviousMappingList();
         }
     }
 
