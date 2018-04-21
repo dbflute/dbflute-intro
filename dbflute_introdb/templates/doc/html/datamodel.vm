@@ -1211,6 +1211,19 @@ function Decomment() {
 #foreach($table in $database.embeddedPickup.tableList)
 			#if ($velocityCount > 1), #end{
 				'tableName': '#escape($!{table.tableName})'
+				, 'mappings' : [
+#foreach($mapping in $table.mappingList)
+						#if ($velocityCount > 1), #end{
+						'newTableName': '#escape($!{mapping.newTableName})'
+						, 'newColumnName': null
+						, 'authors': [#foreach($author in $mapping.authorList)#if ($velocityCount > 1),#end'#escape($!{author})'#end]
+						, 'mappingCode': '#escape($!{mapping.mappingCode})'
+						, 'mappingOwner': '#escape($!{mapping.mappingOwner})'
+						, 'mappingDatetime': '$!{mapping.mappingDatetime}'
+						, 'previousMappings':  [#foreach($mappingCode in mapping.previousMappingList)#if ($velocityCount > 1),#end'$!{mappingCode}'#end]
+					}
+#end
+				]
 				, 'properties': [
 #foreach($property in $table.propertyList)
 						#if ($velocityCount > 1), #end{
@@ -1228,6 +1241,19 @@ function Decomment() {
 #foreach($column in $table.columnList)
 					#if ($velocityCount > 1),#end {
 						'columnName': '#escape($!{column.columnName})'
+						, 'mappings' : [
+#foreach($mapping in $table.mappingList)
+								#if ($velocityCount > 1), #end{
+								'newTableName': '#escape($!{mapping.newTableName})'
+								, 'newColumnName': '#escape($!{mapping.newColumnName})'
+								, 'authors': [#foreach($author in $mapping.authorList)#if ($velocityCount > 1),#end'#escape($!{author})'#end]
+								, 'mappingCode': '#escape($!{mapping.mappingCode})'
+								, 'mappingOwner': '#escape($!{mapping.mappingOwner})'
+								, 'mappingDatetime': '$!{mapping.mappingDatetime}'
+								, 'previousMappings':  [#foreach($mappingCode in mapping.previousMappingList)#if ($velocityCount > 1),#end'$!{mappingCode}'#end]
+							}
+#end
+						]
 						, 'properties': [
 #foreach($property in $column.propertyList)
 								#if ($velocityCount > 1),#end {
