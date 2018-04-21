@@ -110,9 +110,10 @@ public class DocumentDecommentAction extends IntroBaseAction {
         String author = getAuthor();
         String gitBranchName = getGitBranchName();
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
-                body.decomment, body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author),
-                pieceDatetime, author, gitBranchName, body.previousPieces);
+        DfDecoMapPiece piece =
+                new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
+                        body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime,
+                        author, gitBranchName, body.previousPieces);
         return piece;
     }
 

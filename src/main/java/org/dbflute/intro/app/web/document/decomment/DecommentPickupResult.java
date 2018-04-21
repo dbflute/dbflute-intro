@@ -88,16 +88,16 @@ public class DecommentPickupResult {
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.mappings =
-                    columnPart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
+                        columnPart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
                 this.properties =
-                    columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 
         public TablePart(DfDecoMapTablePart tablePart) {
             this.tableName = tablePart.getTableName();
             this.mappings =
-                tablePart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
+                    tablePart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
             this.columns = tablePart.getColumnList().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
             this.properties = tablePart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
         }
@@ -193,7 +193,7 @@ public class DecommentPickupResult {
         public String newTableName;
         public String newColumnName;
         @NotNull
-        public List<String> authorList;
+        public List<String> authors;
         @Required
         public String mappingCode;
         @Required
@@ -201,16 +201,16 @@ public class DecommentPickupResult {
         @Required
         public LocalDateTime mappingDatetime;
         @NotNull
-        public List<String> previousMappingList;
+        public List<String> previousMappings;
 
         public MappingPart(DfDecoMapMappingPart mappingPart) {
             this.newTableName = mappingPart.getNewTableName();
             this.newColumnName = mappingPart.getNewColumnName();
-            this.authorList = mappingPart.getAuthorList();
+            this.authors = mappingPart.getAuthorList();
             this.mappingCode = mappingPart.getMappingCode();
             this.mappingOwner = mappingPart.getMappingOwner();
             this.mappingDatetime = mappingPart.getMappingDatetime();
-            this.previousMappingList = mappingPart.getPreviousMappingList();
+            this.previousMappings = mappingPart.getPreviousMappingList();
         }
     }
 
