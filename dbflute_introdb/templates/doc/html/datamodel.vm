@@ -1918,6 +1918,65 @@ Decomment.prototype = {
 ## ===================================================================================
 ##                                                            Decomment Unmapped Table
 ##                                                            ========================
+## -----------------------------------------------------
+##                          Decomment Unmapped Table Row
+##                          ----------------------------
+/**
+ * @author cabos
+ */
+function UnmappedTableRow () {
+}
+UnmappedTableRow.prototype = {
+
+	/**
+	 * Initialize unmapped table row
+	 * @param {number} row number
+	 * @param {object} table
+	 */
+	init: function (rowNum, table) {
+		this.rowNum = rowNum;
+		this.tableName = table.tableName;
+		this.mappedTableNameList = Array.prototype.map.call(table.mappings, function (mapping) {
+			return mapping.newTableName;
+		});
+		this.previousMappingList = Array.prototype.map.call(table.mappings, function (mapping) {
+			return mapping.mappingCode;
+		});
+		this.authorList = Array.prototype.map.call(table.mappings, function (mapping) {
+			return mapping.mappingOwner;
+		});
+	},
+
+	/**
+	 * Convert unmapped table row to string
+	 * @returns {string} Unmapped table row
+	 */
+	toDisplayHtmlString: function () {
+		return '<tr id="unmapped-table-row-' + this.tableName + '">'
+		+ '<td class="rownumcell">' + this.rowNum + '</td>'
+		+ '<td class="namecell">' + this.tableName + '</td>'
+		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
+		+ '<td class="tableselectorcell">' + '</td>'
+		+ '</tr>';
+	},
+
+	toConflictDisplayHtmlString: function() {
+		return Array.prototype.reduce.call(this.mappedTableNameList, function (currentStrs, name) {
+			if (currentStrs.length === 0) {
+				return name;
+			}
+			return currentStrs + "<br>" + name ;
+		}, '');
+	},
+
+	isTableNameConflict: function() {
+		return this.previousMappingList.length >= 2;
+	}
+}
+
+## -----------------------------------------------------
+##                         Decomment Unmapped Table Area
+##                         -----------------------------
 /**
  * @author cabos
  */
@@ -2076,50 +2135,56 @@ UnmappedTableArea.prototype = {
 	},
 }
 
+## ===================================================================================
+##                                                           Decomment Unmapped Column
+##                                                           =========================
 ## -----------------------------------------------------
-##                          Decomment Unmapped Table Row
-##                          ----------------------------
+##                         Decomment Unmapped Column Row
+##                         -----------------------------
 /**
  * @author cabos
  */
-function UnmappedTableRow () {
+function UnmappedColumnRow () {
 }
-UnmappedTableRow.prototype = {
+UnmappedColumnRow.prototype = {
 
 	/**
-	 * Initialize unmapped table row
-	 * @param {number} row number
-	 * @param {object} table
+	 * Initialize unmapped column row
+	 * @param {number} Row number
+	 * @param {string} Old table name
 	 */
-	init: function (rowNum, table) {
+	init: function (rowNum, table, column) {
 		this.rowNum = rowNum;
 		this.tableName = table.tableName;
-		this.mappedTableNameList = Array.prototype.map.call(table.mappings, function (mapping) {
-			return mapping.newTableName;
+		this.oldColumnName = column.columnName;
+
+		this.mappedColumnNameList = Array.prototype.map.call(column.mappings, function (mapping) {
+			return mapping.newTableName + '.' + mapping.newColumnName;
 		});
-		this.previousMappingList = Array.prototype.map.call(table.mappings, function (mapping) {
+		this.previousMappingList = Array.prototype.map.call(column.mappings, function (mapping) {
 			return mapping.mappingCode;
 		});
-		this.authorList = Array.prototype.map.call(table.mappings, function (mapping) {
+		this.authorList = Array.prototype.map.call(column.mappings, function (mapping) {
 			return mapping.mappingOwner;
 		});
 	},
 
 	/**
-	 * Convert unmapped table row to string
-	 * @returns {string} Unmapped table row
+	 * Convert unmapped column row to string
+	 * @returns {string} Unmapped column row
 	 */
 	toDisplayHtmlString: function () {
-		return '<tr id="unmapped-table-row-' + this.tableName + '">'
+		return '<tr id="unmapped-column-row-' + this.oldColumnName + '">'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.tableName + '</td>'
+		+ '<td class="namecell">' + this.oldColumnName + '</td>'
 		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
-		+ '<td class="tableselectorcell">' + '</td>'
+		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
 		+ '</tr>';
 	},
 
 	toConflictDisplayHtmlString: function() {
-		return Array.prototype.reduce.call(this.mappedTableNameList, function (currentStrs, name) {
+		return Array.prototype.reduce.call(this.mappedColumnNameList, function (currentStrs, name) {
 			if (currentStrs.length === 0) {
 				return name;
 			}
@@ -2132,9 +2197,9 @@ UnmappedTableRow.prototype = {
 	}
 }
 
-## ===================================================================================
-##                                                           Decomment Unmapped Column
-##                                                           =========================
+## -----------------------------------------------------
+##                        Decomment Unmapped Column Area
+##                        ------------------------------
 /**
  * @author cabos
  */
@@ -2300,66 +2365,6 @@ UnmappedColumnArea.prototype = {
 		new ApiClient().postMapping(params, successCallback);
 	}
 }
-
-## -----------------------------------------------------
-##                         Decomment Unmapped Column Row
-##                         -----------------------------
-/**
- * @author cabos
- */
-function UnmappedColumnRow () {
-}
-UnmappedColumnRow.prototype = {
-
-	/**
-	 * Initialize unmapped column row
-	 * @param {number} Row number
-	 * @param {string} Old table name
-	 */
-	init: function (rowNum, table, column) {
-		this.rowNum = rowNum;
-		this.tableName = table.tableName;
-		this.oldColumnName = column.columnName;
-
-		this.mappedColumnNameList = Array.prototype.map.call(column.mappings, function (mapping) {
-			return mapping.newTableName + '.' + mapping.newColumnName;
-		});
-		this.previousMappingList = Array.prototype.map.call(column.mappings, function (mapping) {
-			return mapping.mappingCode;
-		});
-		this.authorList = Array.prototype.map.call(column.mappings, function (mapping) {
-			return mapping.mappingOwner;
-		});
-	},
-
-	/**
-	 * Convert unmapped column row to string
-	 * @returns {string} Unmapped column row
-	 */
-	toDisplayHtmlString: function () {
-		return '<tr id="unmapped-column-row-' + this.oldColumnName + '">'
-		+ '<td class="rownumcell">' + this.rowNum + '</td>'
-		+ '<td class="namecell">' + this.tableName + '</td>'
-		+ '<td class="namecell">' + this.oldColumnName + '</td>'
-		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
-		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
-		+ '</tr>';
-	},
-
-	toConflictDisplayHtmlString: function() {
-		return Array.prototype.reduce.call(this.mappedColumnNameList, function (currentStrs, name) {
-			if (currentStrs.length === 0) {
-				return name;
-			}
-			return currentStrs + "<br>" + name ;
-		}, '');
-	},
-
-	isTableNameConflict: function() {
-		return this.previousMappingList.length >= 2;
-	}
-}
-
 new Decomment().init();
 </script>
 </body>
