@@ -2055,8 +2055,8 @@ UnmappedTableArea.prototype = {
 				oldTableName: row.tableName,
 				newTableName: newTableName,
 				targetType: 'TABLE',
-				authors: [],
-				previousMappings : []
+				authors: row.authorList,
+				previousMappings : row.previousMappingList
 			};
 		});
 
@@ -2280,8 +2280,8 @@ UnmappedColumnArea.prototype = {
 				newTableName: tableName,
 				newColumnName: newColumnName,
 				targetType: 'COLUMN',
-				authors: [],
-				previousMappings : []
+				authors: row.authorList,
+				previousMappings : row.previousMappingList
 			};
 		});
 
