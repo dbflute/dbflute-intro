@@ -505,16 +505,9 @@ public class DfDecoMapFile {
     //                                                                               Merge
     //                                                                               =====
     // done (by cabos) hakiba write unit test by jflute (2017/09/21)
-    // TODO cabos fix comment (2018/03/24)
     /**
-     * merge piece map and pickup map with previous piece code clue to go on.<br>
-     * <br>
-     * <b>Logic:</b>
-     * <ol>
-     *     <li>Add PropertyList each table or column</li>
-     *     <li>Filter already merged piece. <br>
-     *         (If piece was already merged, Either previousPieceList(previous piece code) contains it's piece code)</li>
-     * </ol>
+     * merge piece map and pickup map with previous piece code and mapping code clue to go on.
+     *
      * @param optPickup Decoment pickup map (NotNull: If pickup map file not exists, Empty allowed)
      * @param roughPieceList Rough Decoment piece map (NotNull: If piece map file not exists, Empty allowed)
      * @param roughMappingList Rough Decomment mapping map (NotNull: If mapping map file not exists, Empty allowed)
