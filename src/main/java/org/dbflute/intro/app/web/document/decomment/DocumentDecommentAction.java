@@ -76,7 +76,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> moreValidate(body, messages));
-        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
         decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
@@ -97,11 +97,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     // done cabos change exist to exists for boolean expression by jflute (2017/11/12)
-    private boolean existsColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
-        if (DfDecoMapPieceTargetType.Column == body.targetType) {
-            return LaStringUtil.isNotEmpty(body.columnName);
-        }
-        return true;
+    private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentSaveBody body) {
+        return DfDecoMapPieceTargetType.Column != body.targetType || LaStringUtil.isNotEmpty(body.columnName);
     }
 
     // done cabos use mappingTo... by jflute (2017/08/10)
@@ -161,7 +158,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> mapping(String projectName, DecommentMappingSaveBody body) {
         validate(body, messages -> {});
-        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
         decommentPhysicalLogic.saveDecommentMapping(projectName, mappingToDecoMapMapping(body));
         return JsonResponse.asEmptyBody();
     }
@@ -172,7 +169,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
         body.mappings.forEach(mapping -> {
             sb.append("\n");
-            if (!existsColumnNameIfTargetTypeColumn(mapping)) {
+            if (!hasColumnNameWhenTargetTypeIsColumn(mapping)) {
                 sb.append("   targetType(?) : ").append(mapping.targetType.code()).append("\n");
             } else {
                 sb.append("   targetType    : ").append(mapping.targetType.code()).append("\n");
@@ -186,16 +183,14 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
-    // TODO cabos consider non TargetTypeColumn by jflute (2018/04/12)
-    private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody body) {
-        return body.mappings.stream().allMatch(this::existsColumnNameIfTargetTypeColumn);
+    // TODO done cabos consider non TargetTypeColumn by jflute (2018/04/12)
+    private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentMappingSaveBody body) {
+        return body.mappings.stream().allMatch(this::hasColumnNameWhenTargetTypeIsColumn);
     }
 
-    private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody.MappingPart mapping) {
-        if (DfDecoMapPieceTargetType.Column == mapping.targetType) {
-            return LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
-        }
-        return true;
+    private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentMappingSaveBody.MappingPart mapping) {
+        return DfDecoMapPieceTargetType.Column != mapping.targetType
+                || LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
     }
 
     // TODO done cabos move under existsColumn...() by jflute (2018/04/12)
