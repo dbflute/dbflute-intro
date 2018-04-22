@@ -97,42 +97,13 @@ public class DfDecoMapFile {
     //                                                 Piece
     //                                                 -----
     // done yuto write e.g. (2017/11/11)
-    // map:{
-    //     ; formatVersion = 1.0
-    //     ; tableName = MEMBER
-    //     ; columnName = null
-    //     ; targetType = TABLE
-    //     ; decomment = loginable user, my name is deco
-    //     ; databaseComment = loginable user
-    //     ; commentVersion = 0
-    //     ; authorList = list:{ deco }
-    //     ; pieceCode = AL3OR1P
-    //     ; pieceDatetime = 2017-12-31T12:34:56.789
-    //     ; pieceOwner = deco
-    //     ; pieceGitBranch = develop
-    //     ; previousPieceList = list:{}
-    // }
-    // map:{
-    //     ; formatVersion = 1.0
-    //     ; tableName = MEMBER
-    //     ; columnName = MEMBER_NAME
-    //     ; targetType = COLUMN
-    //     ; decomment = sea mystic land oneman
-    //     ; databaseComment = sea mystic
-    //     ; commentVersion = 1
-    //     ; authorList = list:{ cabos ; hakiba ; deco ; jflute }
-    //     ; pieceCode = HF7ELSE
-    //     ; pieceDatetime = 2017-10-15T16:17:18.199
-    //     ; pieceOwner = jflute
-    //     ; pieceGitBranch = master
-    //     ; previousPieceList = list:{ FE893L1 }
-    // }
     // done cabos I just noticed that this should be readPieceList()... by jflute (2017/11/18)
     // done cabos write javadoc by jflute (2017/11/18)
     /**
      * Read all decomment piece map file in "clientDirPath/schema/decomment/piece/".
      * @param clientDirPath The path of DBFlute client directory (NotNull)
      * @return List of all decomment piece map (NotNull: If piece map file not exists, returns empty list)
+     * @see DfDecoMapPiece#convertToMap()
      */
     public List<DfDecoMapPiece> readPieceList(String clientDirPath) {
         assertClientDirPath(clientDirPath);
@@ -190,61 +161,12 @@ public class DfDecoMapFile {
     // -----------------------------------------------------
     //                                                Pickup
     //                                                ------
-    // map:{
-    //     ; formatVersion = 1.0
-    //     ; pickupDatetime = 2017-11-09T09:09:09.009
-    //     ; decoMap = map:{
-    //         ; tableList = list:{
-    //             ; map:{
-    //                 ; tableName = MEMBER
-    //                 ; propertyList = list:{
-    //                     ; map:{
-    //                         ; decomment = first decomment
-    //                         ; databaseComment = ...
-    //                         ; commentVersion = ...
-    //                         ; authorList = list:{ deco }
-    //                         ; pieceCode = DECO0000
-    //                         ; pieceDatetime = 2017-11-05T00:38:13.645
-    //                         ; pieceOwner = cabos
-    //                         ; pieceGitBranch = develop
-    //                         ; previousPieceList = list:{}
-    //                     }
-    //                     ; map:{ // propertyList size is more than 2 if decomment conflicts exists
-    //                         ; ...
-    //                     }
-    //                 }
-    //                 ; columnList = list:{
-    //                     ; map:{
-    //                         ; columnName = MEMBER_NAME
-    //                         ; propertyList = list:{
-    //                             ; map:{
-    //                                 ; decomment = sea mystic land oneman
-    //                                 ; databaseComment = sea mystic
-    //                                 ; commentVersion = 1
-    //                                 ; authorList = list:{ cabos, hakiba, deco, jflute }
-    //                                 ; pieceCode = HAKIBA00
-    //                                 ; pieceDatetime = 2017-11-05T00:38:13.645
-    //                                 ; pieceOwner = cabos
-    //                                 ; pieceGitBranch = master
-    //                                 ; previousPieceList = list:{ JFLUTE00, CABOS000 }
-    //                             }
-    //                         }
-    //                     }
-    //                     ; ... // more other columns
-    //                 }
-    //             }
-    //             ; map:{ // Of course, other table decomment info is exists that
-    //                 ; tableName = MEMBER_LOGIN
-    //                 ; ...
-    //             }
-    //         }
-    //     }
-    // }
     // done hakiba sub tag comment by jflute (2017/08/17)
     /**
      * Read decomment pickup map file at "clientDirPath/schema/decomment/pickup/decomment-pickup.dfmap".
      * @param clientDirPath The path of DBFlute client directory (NotNull)
      * @return pickup decomment map (NotNull: If pickup map file not exists, returns empty)
+     * @see DfDecoMapPickup#convertToMap()
      */
     public OptionalThing<DfDecoMapPickup> readPickup(String clientDirPath) {
         assertClientDirPath(clientDirPath);

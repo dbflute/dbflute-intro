@@ -73,7 +73,6 @@ public class DfDecoMapPickup {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    // TODO cabos consider mapping (2018/04/02)
     // map:{
     //     ; formatVersion = 1.1
     //     ; pickupDatetime = 2017-11-09T09:09:09.009
@@ -81,6 +80,7 @@ public class DfDecoMapPickup {
     //         ; tableList = list:{
     //             ; map:{
     //                 ; tableName = MEMBER
+    //                 ; mappingList = list:{}
     //                 ; propertyList = list:{
     //                     ; map:{
     //                         ; decomment = first decomment
@@ -100,6 +100,17 @@ public class DfDecoMapPickup {
     //                 ; columnList = list:{
     //                     ; map:{
     //                         ; columnName = MEMBER_NAME
+    //                         ; mappingList = list:{
+    //                             ; map:{
+    //                                 ; newTableName = NEW_TABLE_NAME
+    //                                 ; newColumnName = NEW_COLUMN_NAME
+    //                                 ; authorList = list: { cabos }
+    //                                 ; mappingCode = CABO0000
+    //                                 ; mappingDatetime = 2017-11-05T00:38:13.645
+    //                                 ; mappingOwner = cabos
+    //                                 ; previousMappingList = list:{ JFLUTEMP, CABOSMAP }
+    //                             }
+    //                         }
     //                         ; propertyList = list:{
     //                             ; map:{
     //                                 ; decomment = sea mystic land oneman
