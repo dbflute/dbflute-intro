@@ -57,7 +57,7 @@ public class DfDecoMapColumnPart {
         final Map<String, Object> map = new LinkedHashMap<>();
         map.put("columnName", columnName);
         final List<Map<String, Object>> propertyMapList =
-            this.propertyList.stream().map(DfDecoMapPropertyPart::convertToMap).collect(Collectors.toList());
+                this.propertyList.stream().map(DfDecoMapPropertyPart::convertToMap).collect(Collectors.toList());
         map.put("propertyList", propertyMapList);
         return map;
     }

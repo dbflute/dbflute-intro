@@ -52,9 +52,9 @@ public enum DfDecoMapPieceTargetType implements Classification {
     Table("TABLE", "Table", emptyStrings());
 
     private static final Map<String, org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType> _codeClsMap =
-        new HashMap<String, org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType>();
+            new HashMap<String, org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType>();
     private static final Map<String, org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType> _nameClsMap =
-        new HashMap<String, org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType>();
+            new HashMap<String, org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType>();
 
     static {
         for (org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType value : values()) {
@@ -238,7 +238,7 @@ public enum DfDecoMapPieceTargetType implements Classification {
             throw new IllegalArgumentException("The argument 'codeList' should not be null.");
         }
         List<org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType> clsList =
-            new ArrayList<org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType>(codeList.size());
+                new ArrayList<org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType>(codeList.size());
         for (String code : codeList) {
             clsList.add(of(code).get());
         }

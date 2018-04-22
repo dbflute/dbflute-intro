@@ -39,7 +39,7 @@ public class DfDecoMapTablePart {
     //                                                           Constructor and Converter
     //                                                           =========================
     public DfDecoMapTablePart(String tableName, List<DfDecoMapMappingPart> mappingList, List<DfDecoMapPropertyPart> propertyList,
-        List<DfDecoMapColumnPart> columnList) {
+            List<DfDecoMapColumnPart> columnList) {
         this.tableName = tableName;
         this.mappingList = mappingList;
         this.propertyList = propertyList;
@@ -59,9 +59,9 @@ public class DfDecoMapTablePart {
 
     public Map<String, Object> convertPickupMap() {
         final List<Map<String, Object>> columnMapList =
-            this.columnList.stream().map(DfDecoMapColumnPart::convertToMap).collect(Collectors.toList());
+                this.columnList.stream().map(DfDecoMapColumnPart::convertToMap).collect(Collectors.toList());
         final List<Map<String, Object>> propertyMapList =
-            this.propertyList.stream().map(DfDecoMapPropertyPart::convertToMap).collect(Collectors.toList());
+                this.propertyList.stream().map(DfDecoMapPropertyPart::convertToMap).collect(Collectors.toList());
         final Map<String, Object> map = new LinkedHashMap<>();
         map.put("tableName", tableName);
         map.put("propertyList", propertyMapList);

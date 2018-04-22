@@ -54,8 +54,8 @@ public class DfDecoMapMapping {
     //                                                                         Constructor
     //                                                                         ===========
     public DfDecoMapMapping(String formatVersion, String oldTableName, String oldColumnName, String newTableName, String newColumnName,
-        DfDecoMapPieceTargetType targetType, List<String> authorList, String mappingCode, String mappingOwner,
-        LocalDateTime mappingDatetime, List<String> previousMappingList) {
+            DfDecoMapPieceTargetType targetType, List<String> authorList, String mappingCode, String mappingOwner,
+            LocalDateTime mappingDatetime, List<String> previousMappingList) {
         this.formatVersion = formatVersion;
         this.oldTableName = oldTableName;
         this.oldColumnName = oldColumnName;

@@ -127,7 +127,7 @@ public class DfDecoMapPickup {
     public Map<String, Object> convertToMap() {
         final Map<String, List<Map<String, Object>>> decoMap = new LinkedHashMap<>();
         final List<Map<String, Object>> convertedTableList =
-            this.tableList.stream().map(DfDecoMapTablePart::convertPickupMap).collect(Collectors.toList());
+                this.tableList.stream().map(DfDecoMapTablePart::convertPickupMap).collect(Collectors.toList());
         decoMap.put(DECO_MAP_KEY_TABLE_LIST, convertedTableList);
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);

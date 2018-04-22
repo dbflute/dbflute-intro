@@ -55,7 +55,7 @@ public class DfDecoMapMappingPart {
         this.mappingOwner = (String) mappingMap.get("mappingOwner");
         this.mappingDatetime = new HandyDate((String) mappingMap.get("mappingDatetime")).getLocalDateTime();
         this.previousMappingList =
-            ((List<?>) mappingMap.get("previousMappingList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
+                ((List<?>) mappingMap.get("previousMappingList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
     }
 
     public Map<String, Object> convertToMap() {
