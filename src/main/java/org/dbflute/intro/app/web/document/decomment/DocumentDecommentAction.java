@@ -117,10 +117,6 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return piece;
     }
 
-    private String getAuthor() {
-        return decommentPhysicalLogic.getAuthor();
-    }
-
     private String getGitBranchName() {
         return decommentPhysicalLogic.getGitBranchName();
     }
@@ -190,20 +186,6 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
-    // TODO cabos move under existsColumn...() by jflute (2018/04/12)
-    private List<DfDecoMapMapping> mappingToDecoMapMapping(DecommentMappingSaveBody body) {
-        // TODO cabos move getAuthor() to class rear as Assist Logic tag comment by jflute (2018/04/12)
-        String author = getAuthor();
-        LocalDateTime mappingDateTime = timeManager.currentDateTime();
-
-        return body.mappings.stream().map(mapping -> {
-            String mappingCode = buildMappingCode(mapping, mappingDateTime, author);
-            return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.oldTableName, mapping.oldColumnName,
-                    mapping.newTableName, mapping.newColumnName, mapping.targetType, mapping.authors, mappingCode, author, mappingDateTime,
-                    mapping.previousMappings);
-        }).collect(Collectors.toList());
-    }
-
     // TODO cabos consider non TargetTypeColumn by jflute (2018/04/12)
     private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody body) {
         return body.mappings.stream().allMatch(this::existsColumnNameIfTargetTypeColumn);
@@ -214,6 +196,20 @@ public class DocumentDecommentAction extends IntroBaseAction {
             return LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
         }
         return true;
+    }
+
+    // TODO done cabos move under existsColumn...() by jflute (2018/04/12)
+    private List<DfDecoMapMapping> mappingToDecoMapMapping(DecommentMappingSaveBody body) {
+        // TODO done cabos move getAuthor() to class rear as Assist Logic tag comment by jflute (2018/04/12)
+        String author = getAuthor();
+        LocalDateTime mappingDateTime = timeManager.currentDateTime();
+
+        return body.mappings.stream().map(mapping -> {
+            String mappingCode = buildMappingCode(mapping, mappingDateTime, author);
+            return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.oldTableName, mapping.oldColumnName,
+                    mapping.newTableName, mapping.newColumnName, mapping.targetType, mapping.authors, mappingCode, author, mappingDateTime,
+                    mapping.previousMappings);
+        }).collect(Collectors.toList());
     }
 
     private String buildMappingCode(DecommentMappingSaveBody.MappingPart mapping, LocalDateTime mappingDateTime, String author) {
@@ -230,5 +226,12 @@ public class DocumentDecommentAction extends IntroBaseAction {
         sb.append(":").append(mappingDateTime);
         sb.append(":").append(author);
         return Integer.toHexString(sb.toString().hashCode());
+    }
+
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    private String getAuthor() {
+        return decommentPhysicalLogic.getAuthor();
     }
 }
