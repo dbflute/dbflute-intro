@@ -509,45 +509,48 @@ public class DfDecoMapFile {
      * merge piece map and pickup map with previous piece code and mapping code clue to go on.
      *
      * @param optPickup Decoment pickup map (NotNull: If pickup map file not exists, Empty allowed)
-     * @param roughPieceList Rough Decoment piece map (NotNull: If piece map file not exists, Empty allowed)
-     * @param roughMappingList Rough Decomment mapping map (NotNull: If mapping map file not exists, Empty allowed)
+     * @param outputPieceList Decoment piece maps in piece directory (NotNull: If piece map file not exists, Empty allowed)
+     * @param outputMappingList Decomment mapping maps in piece directory (NotNull: If mapping map file not exists, Empty allowed)
      * @return pickup decomment map (NotNull)
      */
-    public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> roughPieceList,
-            List<DfDecoMapMapping> roughMappingList) {
+    public DfDecoMapPickup merge(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> outputPieceList,
+            List<DfDecoMapMapping> outputMappingList) {
 
-        final List<DfDecoMapTablePart> roughTablePartList = convertToRoughTableList(optPickup, roughPieceList);
-
-        final List<DfDecoMapMapping> allMappingList = extractAllMappingList(optPickup, roughMappingList);
+        final List<DfDecoMapMapping> allMappingList = extractAllMappingList(optPickup, outputMappingList);
         final List<DfDecoMapMapping> filteredMappingPartList = filterMergedMapping(allMappingList);
-        final Map<String, List<DfDecoMapMappingPart>> mappingPartListMap = convertToMappingPartListMap(filteredMappingPartList);
+        final Map<String, List<DfDecoMapMappingPart>> mappingPartListMap =
+                groupingByOldStatusAndMergeSameNewStatus(filteredMappingPartList);
 
-        // ============================================================ prepare
-        // prepare filtering for already merged property
-        final Set<String> pieceCodeSet = extractAllMergedPieceCode(roughTablePartList);
-
-        // ============================================================ define
-        // define mapping correct table or column name
-        final Stream<DfDecoMapTablePart> correctNameTableStream =
-                defineMappingToCorrectName(roughTablePartList.stream(), mappingPartListMap);
-        // define merging
-        final Stream<DfDecoMapTablePart> mergedTableStream = defineMerging(correctNameTableStream);
-        // define filter already merged property
-        final Stream<DfDecoMapTablePart> filteredTableStream = defineFilteringMergedProperty(mergedTableStream, pieceCodeSet);
-
-        // ============================================================ do all defined process for merge
+        final List<DfDecoMapTablePart> allTablePartList = extractAllTableList(optPickup, outputPieceList);
+        final Stream<DfDecoMapTablePart> correctNameTableStream = defineMappingToCorrectName(allTablePartList.stream(), mappingPartListMap);
+        final Stream<DfDecoMapTablePart> mergedTableStream = defineSameNameMerging(correctNameTableStream);
+        final Stream<DfDecoMapTablePart> filteredTableStream = defineFilteringMergedProperty(mergedTableStream, allTablePartList);
         final List<DfDecoMapTablePart> tableList = filteredTableStream.collect(Collectors.toList());
 
-        // ============================================================ create new pickup object
         return new DfDecoMapPickup(tableList, getCurrentLocalDateTime());
     }
 
-    // -----------------------------------------------------
-    //                                 convert to rough list
-    //                                 ---------------------
+    /**
+     * extract mapping list from pickup and output mapping
+     * @param optPickup Decomment pickup map (NotNull: If pickup map file not exists, Empty allowed)
+     * @param outputMappingList Decomment mapping maps in piece directory (NotNull: If mapping map file not exists, Empty allowed)
+     * @return all mapping list in pickup and piece (Not Null)
+     */
     private List<DfDecoMapMapping> extractAllMappingList(OptionalThing<DfDecoMapPickup> optPickup,
-            List<DfDecoMapMapping> roughMappingList) {
-        Stream<DfDecoMapMapping> pickupMappingStream = optPickup.map(pickup -> {
+            List<DfDecoMapMapping> outputMappingList) {
+        Stream<DfDecoMapMapping> pickupMappingStream = defineExtractingMappingInPickup(optPickup);
+        Stream<DfDecoMapMapping> pieceMappingStream = outputMappingList.stream();
+        return Stream.concat(pickupMappingStream, pieceMappingStream).collect(Collectors.toList());
+    }
+
+    /**
+     * Define extracting mapping in pickup map
+     *
+     * @param optPickup Decomment pickup map (NotNull: If pickup map file not exists, Empty allowed)
+     * @return mapping stream (Not Null)
+     */
+    private Stream<DfDecoMapMapping> defineExtractingMappingInPickup(OptionalThing<DfDecoMapPickup> optPickup) {
+        return optPickup.map(pickup -> {
             Stream<DfDecoMapMapping> tableMappingStream = pickup.getTableList().stream().flatMap(table -> {
                 return table.getMappingList().stream().map(mapping -> {
                     return new DfDecoMapMapping(table.getTableName(), null, DfDecoMapPieceTargetType.Table, mapping);
@@ -562,13 +565,73 @@ public class DfDecoMapFile {
             });
             return Stream.concat(tableMappingStream, columnMappingStream);
         }).orElse(Stream.empty());
-        return Stream.concat(pickupMappingStream, roughMappingList.stream()).collect(Collectors.toList());
     }
 
-    private List<DfDecoMapTablePart> convertToRoughTableList(OptionalThing<DfDecoMapPickup> optPickup,
-            List<DfDecoMapPiece> roughPieceList) {
+    /**
+     * filter merged mappings
+     *
+     * @param allMappingList mapping list extracted mapping and pickup
+     * @return mapping list filtered by previous mapping
+     */
+    private List<DfDecoMapMapping> filterMergedMapping(List<DfDecoMapMapping> allMappingList) {
+        Set<String> mappingCodeSet =
+                allMappingList.stream().flatMap(mapping -> mapping.getPreviousMappingList().stream()).collect(Collectors.toSet());
+        return allMappingList.stream().filter(mapping -> {
+            return !mappingCodeSet.contains(mapping.getMappingCode());
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * grouping by old status and merge same new status mapping
+     *
+     * @param mappingList filtered mapping list (Not Null)
+     * @return mapping part list map for merge process (Not Null)
+     */
+    private Map<String, List<DfDecoMapMappingPart>> groupingByOldStatusAndMergeSameNewStatus(List<DfDecoMapMapping> mappingList) {
+        Map<String, List<DfDecoMapMappingPart>> map = new LinkedHashMap<>();
+        // TODO cabos remove foreach (2018/04/22)
+        mappingList.stream()
+                .collect(Collectors.groupingBy(mapping -> generateOldStateHash(mapping)))
+                .forEach((oldStateHash, sameOldStateMappingList) -> {
+                    final List<DfDecoMapMappingPart> newStateList = sameOldStateMappingList.stream()
+                            .collect(Collectors.toMap(mapping -> generateNewStateHash(mapping), mapping -> mapping, (m1, m2) -> {
+                                return mergeMapping(m1, m2);
+                            }))
+                            .values()
+                            .stream()
+                            .map(mapping -> new DfDecoMapMappingPart(mapping))
+                            .collect(Collectors.toList());
+                    map.put(oldStateHash, newStateList);
+                });
+        return map;
+    }
+
+    /**
+     * merge previous mapping and author
+     *
+     * @param m1 same status mapping 1
+     * @param m2 same status mapping 2
+     * @return merged mapping of m1, m2
+     */
+    private DfDecoMapMapping mergeMapping(DfDecoMapMapping m1, DfDecoMapMapping m2) {
+        final Set<String> authorSet = Stream.concat(m1.getAuthorList().stream(), m2.getAuthorList().stream()).collect(Collectors.toSet());
+        final Set<String> previousMappingSet =
+                Stream.concat(m1.getPreviousMappingList().stream(), m2.getPreviousMappingList().stream()).collect(Collectors.toSet());
+        previousMappingSet.add(m2.mappingCode);
+        return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, m1.getOldTableName(), m1.getOldColumnName(),
+                m1.getNewTableName(), m1.getNewColumnName(), m1.getTargetType(), new ArrayList<>(authorSet), m1.getMappingCode(),
+                m1.getMappingOwner(), m1.getMappingDatetime(), new ArrayList<>(previousMappingSet));
+    }
+
+    /**
+     * extract mapping list from pickup and output piece
+     * @param optPickup Decomment pickup map (NotNull: If pickup map file not exists, Empty allowed)
+     * @param outputPieceList Decoment piece maps in piece directory (NotNull: If piece map file not exists, Empty allowed)
+     * @return all table list in pickup and piece (Not Null)
+     */
+    private List<DfDecoMapTablePart> extractAllTableList(OptionalThing<DfDecoMapPickup> optPickup, List<DfDecoMapPiece> outputPieceList) {
         final Stream<DfDecoMapTablePart> pickupTableStream = defineConvertPickupToTable(optPickup);
-        final Stream<DfDecoMapTablePart> pieceTableStream = defineConvertPieceListToTable(roughPieceList);
+        final Stream<DfDecoMapTablePart> pieceTableStream = defineConvertPieceListToTable(outputPieceList);
         return Stream.concat(pickupTableStream, pieceTableStream).collect(Collectors.toList());
     }
 
@@ -592,90 +655,68 @@ public class DfDecoMapFile {
         return new DfDecoMapTablePart(tableName, Collections.emptyList(), tablePropertyList, columnList);
     }
 
+    private DfDecoMapPropertyPart convertToProperty(DfDecoMapPiece piece) {
+        DfDecoMapPropertyPart property =
+                new DfDecoMapPropertyPart(piece.getDecomment(), piece.getDatabaseComment(), piece.getCommentVersion(),
+                        piece.getAuthorList(), piece.getPieceCode(), piece.getPieceDatetime(), piece.getPieceOwner(),
+                        piece.getPieceGitBranch(), piece.getPreviousPieceList());
+        return property;
+    }
+
     private DfDecoMapColumnPart convertPieceToColumnPart(DfDecoMapPiece piece, DfDecoMapPropertyPart property) {
         final String columnName = piece.getColumnName();
         final List<DfDecoMapPropertyPart> columnPropertyList = Collections.singletonList(property);
         return new DfDecoMapColumnPart(columnName, Collections.emptyList(), columnPropertyList);
     }
 
-    private Map<String, List<DfDecoMapMappingPart>> convertToMappingPartListMap(List<DfDecoMapMapping> mappingList) {
-        Map<String, List<DfDecoMapMappingPart>> map = new LinkedHashMap<>();
-        mappingList.stream()
-                .collect(Collectors.groupingBy(mapping -> convertToOldStateHash(mapping)))
-                .forEach((oldStateHash, sameOldStateMappingList) -> {
-                    final List<DfDecoMapMappingPart> newStateList = sameOldStateMappingList.stream()
-                            .collect(Collectors.toMap(mapping -> convertToNewStateHash(mapping), mapping -> mapping, (m1, m2) -> {
-                                final Set<String> authorSet =
-                                        Stream.concat(m1.getAuthorList().stream(), m2.getAuthorList().stream()).collect(Collectors.toSet());
-                                final Set<String> previousMappingSet =
-                                        Stream.concat(m1.getPreviousMappingList().stream(), m2.getPreviousMappingList().stream())
-                                                .collect(Collectors.toSet());
-                                previousMappingSet.add(m2.mappingCode);
-                                return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, m1.getOldTableName(),
-                                        m1.getOldColumnName(), m1.getNewTableName(), m1.getNewColumnName(), m1.getTargetType(),
-                                        new ArrayList<>(authorSet), m1.getMappingCode(), m1.getMappingOwner(), m1.getMappingDatetime(),
-                                        new ArrayList<>(previousMappingSet));
-                            }))
-                            .values()
-                            .stream()
-                            .map(mapping -> new DfDecoMapMappingPart(mapping))
-                            .collect(Collectors.toList());
-                    map.put(oldStateHash, newStateList);
-                });
-        return map;
+    /**
+     * Define mapping to correct name
+     * @param tableStream table list stream
+     * @param mappingPartListMap mapping info store
+     * @return table stream defined mapping correct name
+     */
+    private Stream<DfDecoMapTablePart> defineMappingToCorrectName(Stream<DfDecoMapTablePart> tableStream,
+            Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
+        return tableStream.map(table -> {
+            return mappingToTableIfNameChanged(table, mappingPartListMap);
+        });
     }
 
-    private String convertToOldStateHash(DfDecoMapMapping mapping) {
-        return createToStateHash(mapping.getOldTableName(), mapping.getOldColumnName(), mapping.getTargetType());
-    }
-
-    private String convertToNewStateHash(DfDecoMapMapping mapping) {
-        return createToStateHash(mapping.getNewTableName(), mapping.getNewColumnName(), mapping.getTargetType());
-    }
-
-    private String convertToTableStateHash(DfDecoMapTablePart tablePart) {
-        return createToStateHash(tablePart.getTableName(), null, DfDecoMapPieceTargetType.Table);
-    }
-
-    private String convertToColumnStateHash(DfDecoMapTablePart tablePart, DfDecoMapColumnPart columnPart) {
-        return createToStateHash(tablePart.getTableName(), columnPart.getColumnName(), DfDecoMapPieceTargetType.Column);
-    }
-
-    private String createToStateHash(String tableName, String columnName, DfDecoMapPieceTargetType type) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(tableName);
-        sb.append(":").append(DfStringUtil.isEmpty(columnName) ? "" : columnName);
-        sb.append(":").append(type);
-        return Integer.toHexString(sb.toString().hashCode());
-    }
-
-    // -----------------------------------------------------
-    //                                               prepare
-    //                                               -------
-    private Set<String> extractAllMergedPieceCode(List<DfDecoMapTablePart> tableList) {
-        return tableList.stream().flatMap(table -> {
-            Stream<String> previousTablePieceStream =
-                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
-            Stream<String> previousColumnPieceStream = table.getColumnList()
-                    .stream()
-                    .flatMap(column -> column.getPropertyList().stream())
-                    .flatMap(property -> property.getPreviousPieceList().stream());
-            return Stream.concat(previousTablePieceStream, previousColumnPieceStream);
-        }).collect(Collectors.toSet());
-    }
-
-    private List<DfDecoMapMapping> filterMergedMapping(List<DfDecoMapMapping> mappingList) {
-        Set<String> mappingCodeSet =
-                mappingList.stream().flatMap(mapping -> mapping.getPreviousMappingList().stream()).collect(Collectors.toSet());
-        return mappingList.stream().filter(mapping -> {
-            return !mappingCodeSet.contains(mapping.getMappingCode());
+    private DfDecoMapTablePart mappingToTableIfNameChanged(DfDecoMapTablePart tablePart,
+            Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
+        final List<DfDecoMapColumnPart> columnPartList = tablePart.getColumnList().stream().map(columnPart -> {
+            return mappingToColumnIfNameChanged(tablePart, columnPart, mappingPartListMap);
         }).collect(Collectors.toList());
+        final List<DfDecoMapMappingPart> mappingPartList =
+                mappingPartListMap.getOrDefault(generateTableStateHash(tablePart), Collections.emptyList());
+        if (mappingPartList.size() == 1) {
+            final DfDecoMapMappingPart mappingPart = mappingPartList.get(0);
+            return new DfDecoMapTablePart(mappingPart.getNewTableName(), Collections.emptyList(), tablePart.getPropertyList(),
+                    columnPartList);
+        } else {
+            return new DfDecoMapTablePart(tablePart.getTableName(), mappingPartList, tablePart.getPropertyList(), columnPartList);
+        }
     }
 
-    // -----------------------------------------------------
-    //                                                Define
-    //                                                ------
-    protected Stream<DfDecoMapTablePart> defineMerging(Stream<DfDecoMapTablePart> tableStream) {
+    private DfDecoMapColumnPart mappingToColumnIfNameChanged(DfDecoMapTablePart tablePart, DfDecoMapColumnPart columnPart,
+            Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
+        final List<DfDecoMapMappingPart> mappingPartList =
+                mappingPartListMap.getOrDefault(generateColumnStateHash(tablePart, columnPart), Collections.emptyList());
+        if (mappingPartList.size() == 1) {
+            final DfDecoMapMappingPart mappingPart = mappingPartList.get(0);
+            return new DfDecoMapColumnPart(mappingPart.getNewColumnName(), Collections.emptyList(), columnPart.getPropertyList());
+        } else {
+            return new DfDecoMapColumnPart(columnPart.getColumnName(), mappingPartList, columnPart.getPropertyList());
+        }
+    }
+
+    /**
+     * Define merge same table name or column name
+     *
+     * @param tableStream correct table name stream
+     * @return table stream defined merging same name
+     */
+    private Stream<DfDecoMapTablePart> defineSameNameMerging(Stream<DfDecoMapTablePart> tableStream) {
         return tableStream.collect(Collectors.groupingBy(table -> table.getTableName())).entrySet().stream().map(tableEntry -> {
             final String tableName = tableEntry.getKey();
             final List<DfDecoMapTablePart> sameTableNameList = tableEntry.getValue();
@@ -705,50 +746,16 @@ public class DfDecoMapFile {
         });
     }
 
-    private DfDecoMapPropertyPart convertToProperty(DfDecoMapPiece piece) {
-        DfDecoMapPropertyPart property =
-                new DfDecoMapPropertyPart(piece.getDecomment(), piece.getDatabaseComment(), piece.getCommentVersion(),
-                        piece.getAuthorList(), piece.getPieceCode(), piece.getPieceDatetime(), piece.getPieceOwner(),
-                        piece.getPieceGitBranch(), piece.getPreviousPieceList());
-        return property;
-    }
-
-    private Stream<DfDecoMapTablePart> defineMappingToCorrectName(Stream<DfDecoMapTablePart> tableStream,
-            Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
-        return tableStream.map(table -> {
-            return mappingToTableIfNameChanged(table, mappingPartListMap);
-        });
-    }
-
-    private DfDecoMapTablePart mappingToTableIfNameChanged(DfDecoMapTablePart tablePart,
-            Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
-        final List<DfDecoMapColumnPart> columnPartList = tablePart.getColumnList().stream().map(columnPart -> {
-            return mappingToColumnIfNameChanged(tablePart, columnPart, mappingPartListMap);
-        }).collect(Collectors.toList());
-        final List<DfDecoMapMappingPart> mappingPartList =
-                mappingPartListMap.getOrDefault(convertToTableStateHash(tablePart), Collections.emptyList());
-        if (mappingPartList.size() == 1) {
-            final DfDecoMapMappingPart mappingPart = mappingPartList.get(0);
-            return new DfDecoMapTablePart(mappingPart.getNewTableName(), Collections.emptyList(), tablePart.getPropertyList(),
-                    columnPartList);
-        } else {
-            return new DfDecoMapTablePart(tablePart.getTableName(), mappingPartList, tablePart.getPropertyList(), columnPartList);
-        }
-    }
-
-    private DfDecoMapColumnPart mappingToColumnIfNameChanged(DfDecoMapTablePart tablePart, DfDecoMapColumnPart columnPart,
-            Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
-        final List<DfDecoMapMappingPart> mappingPartList =
-                mappingPartListMap.getOrDefault(convertToColumnStateHash(tablePart, columnPart), Collections.emptyList());
-        if (mappingPartList.size() == 1) {
-            final DfDecoMapMappingPart mappingPart = mappingPartList.get(0);
-            return new DfDecoMapColumnPart(mappingPart.getNewColumnName(), Collections.emptyList(), columnPart.getPropertyList());
-        } else {
-            return new DfDecoMapColumnPart(columnPart.getColumnName(), mappingPartList, columnPart.getPropertyList());
-        }
-    }
-
-    private Stream<DfDecoMapTablePart> defineFilteringMergedProperty(Stream<DfDecoMapTablePart> tableStream, Set<String> pieceCodeSet) {
+    /**
+     * Define filter already merged property
+     *
+     * @param tableStream correct table name stream
+     * @param allTablePartList all table part list
+     * @return table stream defined merging same name
+     */
+    private Stream<DfDecoMapTablePart> defineFilteringMergedProperty(Stream<DfDecoMapTablePart> tableStream,
+            List<DfDecoMapTablePart> allTablePartList) {
+        final Set<String> pieceCodeSet = extractAllMergedPieceCode(allTablePartList);
         return tableStream.map(table -> {
             final String tableName = table.getTableName();
             final List<DfDecoMapMappingPart> tableMappingPartList = table.getMappingList();
@@ -767,6 +774,45 @@ public class DfDecoMapFile {
             }).collect(Collectors.toList());
             return new DfDecoMapTablePart(tableName, tableMappingPartList, tablePropertyList, columnList);
         });
+    }
+
+    private Set<String> extractAllMergedPieceCode(List<DfDecoMapTablePart> tableList) {
+        return tableList.stream().flatMap(table -> {
+            Stream<String> previousTablePieceStream =
+                    table.getPropertyList().stream().flatMap(property -> property.getPreviousPieceList().stream());
+            Stream<String> previousColumnPieceStream = table.getColumnList()
+                    .stream()
+                    .flatMap(column -> column.getPropertyList().stream())
+                    .flatMap(property -> property.getPreviousPieceList().stream());
+            return Stream.concat(previousTablePieceStream, previousColumnPieceStream);
+        }).collect(Collectors.toSet());
+    }
+
+    // -----------------------------------------------------
+    //                                           Status Hash
+    //                                           -----------
+    private String generateOldStateHash(DfDecoMapMapping mapping) {
+        return generateStateHash(mapping.getOldTableName(), mapping.getOldColumnName(), mapping.getTargetType());
+    }
+
+    private String generateNewStateHash(DfDecoMapMapping mapping) {
+        return generateStateHash(mapping.getNewTableName(), mapping.getNewColumnName(), mapping.getTargetType());
+    }
+
+    private String generateTableStateHash(DfDecoMapTablePart tablePart) {
+        return generateStateHash(tablePart.getTableName(), null, DfDecoMapPieceTargetType.Table);
+    }
+
+    private String generateColumnStateHash(DfDecoMapTablePart tablePart, DfDecoMapColumnPart columnPart) {
+        return generateStateHash(tablePart.getTableName(), columnPart.getColumnName(), DfDecoMapPieceTargetType.Column);
+    }
+
+    private String generateStateHash(String tableName, String columnName, DfDecoMapPieceTargetType type) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(tableName);
+        sb.append(":").append(DfStringUtil.isEmpty(columnName) ? "" : columnName);
+        sb.append(":").append(type);
+        return Integer.toHexString(sb.toString().hashCode());
     }
 
     // ===================================================================================
