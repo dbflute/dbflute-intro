@@ -55,11 +55,16 @@ public class DecommentPickupResult {
         @Required
         public String tableName;
 
-        @Valid @NotNull // can be empty not conflict mapping
+        /**
+         *  list of conflicted mapping
+         *  this list could be empty when conflict mapping was not exists.
+         */
+        @Valid
+        @NotNull
         public List<MappingPart> mappings;
 
         // done cabos move it above columns by jflute (2017/11/11)
-        /** list of decomment properties associated table  */
+        /** list of decomment properties associated table */
         @Valid
         @NotNull
         public List<PropertyPart> properties;
@@ -188,18 +193,52 @@ public class DecommentPickupResult {
 
     public static class MappingPart {
 
-        // TODO cabos comment (2018/03/25)
+        /**
+         * new table name after mapped
+         * e.g. "NEW_TABLE_NAME"
+         */
         @Required
         public String newTableName;
+
+        /**
+         * new column name after mapped
+         * this could be null if target type was table.
+         * e.g. "NEW_COLUMN_NAME"
+         */
         public String newColumnName;
+
+        /**
+         * the list of ancestor authors
+         * e.g. ["cabos", "hakiba", "deco"]
+         */
         @NotNull
         public List<String> authors;
+
+        /**
+         * mapping code generated when decomment mapped
+         * e.g. "EF89371"
+         */
         @Required
         public String mappingCode;
+
+        /**
+         * author of this decomment mapping
+         * e.g. "deco"
+         */
         @Required
         public String mappingOwner;
+
+        /**
+         * time of decomment mapped
+         * e.g. "2018-04-22T17:35:22.235"
+         */
         @Required
         public LocalDateTime mappingDatetime;
+
+        /**
+         * list of merged mapping code
+         * e.g. ["HF7ELSE"]
+         */
         @NotNull
         public List<String> previousMappings;
 
