@@ -417,11 +417,11 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 <div style="display:none" id="unmapped-tables">
 	<h2>Decomment Unmapped Tables</h2>
 	<table>
-		<thead>
+		<thead id="unmapped-table-head">
 		<tr>
 			<th>No</th>
 			<th>Name</th>
-			<th>Conflict Mapping Name</th>
+			<th class="conflictcell">Conflict Mapping Name</th>
 			<th>Mapping</th>
 		</tr>
 		</thead>
@@ -442,12 +442,12 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 	<ul id="unmapped-column-list">
 	</ul>
 	<table>
-		<thead>
+		<thead id="unmapped-column-head">
 		<tr>
 			<th>No</th>
 			<th>Table Name</th>
 			<th>Column Name</th>
-			<th>Conflict Mapping Name</th>
+			<th class="conflictcell">Conflict Mapping Name</th>
 			<th>Mapping</th>
 		</tr>
 		</thead>
@@ -1220,7 +1220,7 @@ function Decomment() {
 						, 'mappingCode': '#escape($!{mapping.mappingCode})'
 						, 'mappingOwner': '#escape($!{mapping.mappingOwner})'
 						, 'mappingDatetime': '$!{mapping.mappingDatetime}'
-						, 'previousMappings':  [#foreach($mappingCode in mapping.previousMappingList)#if ($velocityCount > 1),#end'$!{mappingCode}'#end]
+						## , 'previousMappings':  [#foreach($mappingCode in mapping.previousMappingList)#if ($velocityCount > 1),#end'$!{mappingCode}'#end]
 					}
 #end
 				]
@@ -1250,7 +1250,7 @@ function Decomment() {
 								, 'mappingCode': '#escape($!{mapping.mappingCode})'
 								, 'mappingOwner': '#escape($!{mapping.mappingOwner})'
 								, 'mappingDatetime': '$!{mapping.mappingDatetime}'
-								, 'previousMappings':  [#foreach($mappingCode in mapping.previousMappingList)#if ($velocityCount > 1),#end'$!{mappingCode}'#end]
+								## , 'previousMappings':  [#foreach($mappingCode in mapping.previousMappingList)#if ($velocityCount > 1),#end'$!{mappingCode}'#end]
 							}
 #end
 						]
@@ -1981,7 +1981,7 @@ UnmappedTableRow.prototype = {
 		return '<tr id="unmapped-table-row-' + this.tableName + '">'
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.tableName + '</td>'
-		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
+		+ '<td class="namecell conflictcell">' + this.toConflictDisplayHtmlString() + '</td>'
 		+ '<td class="tableselectorcell">' + '</td>'
 		+ '</tr>';
 	},
@@ -2061,6 +2061,18 @@ UnmappedTableArea.prototype = {
 		var tbody = this.getTableBodyElement();
 		tbody.innerHTML += this.toDisplayHtmlString();
 		this.showTableSelector();
+
+		console.log(this.isTableNameConflict());
+		if (!this.isTableNameConflict()) {
+			document.querySelector('#unmapped-table-head th.conflictcell').style.display = 'none';
+			document.querySelector('#unmapped-table-body td.conflictcell').style.display = 'none';
+		}
+	},
+
+	isTableNameConflict: function () {
+		return Array.prototype.some.call(this.rows, function (row) {
+			return row.isTableNameConflict();
+		});
 	},
 
 	/**
@@ -2208,7 +2220,7 @@ UnmappedColumnRow.prototype = {
 		+ '<td class="rownumcell">' + this.rowNum + '</td>'
 		+ '<td class="namecell">' + this.tableName + '</td>'
 		+ '<td class="namecell">' + this.oldColumnName + '</td>'
-		+ '<td class="namecell">' + this.toConflictDisplayHtmlString() + '</td>'
+		+ '<td class="namecell conflictcell">' + this.toConflictDisplayHtmlString() + '</td>'
 		+ '<td id="columnselectorcell-' + this.tableName + '-' + this.oldColumnName + '">' + '</td>'
 		+ '</tr>';
 	},
@@ -2222,7 +2234,7 @@ UnmappedColumnRow.prototype = {
 		}, '');
 	},
 
-	isTableNameConflict: function() {
+	isColumnNameConflict: function() {
 		return this.previousMappingList.length >= 2;
 	}
 }
@@ -2290,6 +2302,17 @@ UnmappedColumnArea.prototype = {
 		Array.prototype.forEach.call(this.rows, function (row) {
 			tbody.innerHTML = row.toDisplayHtmlString();
 			that.displayColumnSelector(row.tableName, row.oldColumnName);
+		});
+
+		if (!this.isColumnNameConflict()) {
+			document.querySelector('#unmapped-column-head th.conflictcell').style.display = 'none';
+			document.querySelector('#unmapped-column-body td.conflictcell').style.display = 'none';
+		}
+	},
+
+	isColumnNameConflict: function () {
+		return Array.prototype.some.call(this.rows, function (row) {
+			return row.isColumnNameConflict();
 		});
 	},
 
