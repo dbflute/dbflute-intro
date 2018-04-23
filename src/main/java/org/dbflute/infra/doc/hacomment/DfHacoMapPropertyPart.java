@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model.client.document.hacomment;
+package org.dbflute.infra.doc.hacomment;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.dbflute.helper.HandyDate;
 /**
  * @author hakiba
  */
-public class HacoMapPropertyPart {
+public class DfHacoMapPropertyPart {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -41,7 +41,7 @@ public class HacoMapPropertyPart {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapPropertyPart(String hacomment, String diffComment, List<String> authorList, String pieceCode, String pieceOwner,
+    public DfHacoMapPropertyPart(String hacomment, String diffComment, List<String> authorList, String pieceCode, String pieceOwner,
         LocalDateTime pieceDatetime, List<String> previousPieceList) {
         this.hacomment = hacomment;
         this.diffComment = diffComment;
@@ -52,7 +52,7 @@ public class HacoMapPropertyPart {
         this.previousPieceList = previousPieceList;
     }
 
-    public HacoMapPropertyPart(Map<String, Object> propertyMap) {
+    public DfHacoMapPropertyPart(Map<String, Object> propertyMap) {
         this.hacomment = (String) propertyMap.get("hacomment");
         this.diffComment = (String) propertyMap.get("diffComment");
         this.authorList = ((List<?>) propertyMap.get("authorList")).stream()

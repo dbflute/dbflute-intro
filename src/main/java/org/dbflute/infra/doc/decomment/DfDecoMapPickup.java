@@ -38,6 +38,12 @@ public class DfDecoMapPickup {
     //                                                                          ==========
     public static final String DEFAULT_FORMAT_VERSION = "1.1";
 
+    // -----------------------------------------------------
+    //                                                   Key
+    //                                                   ---
+    public static final String DECO_MAP_KEY_DECOMAP = "decoMap";
+    public static final String DECO_MAP_KEY_TABLE_LIST = "tableList";
+
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
@@ -74,6 +80,7 @@ public class DfDecoMapPickup {
     //         ; tableList = list:{
     //             ; map:{
     //                 ; tableName = MEMBER
+    //                 ; mappingList = list:{}
     //                 ; propertyList = list:{
     //                     ; map:{
     //                         ; decomment = first decomment
@@ -93,6 +100,17 @@ public class DfDecoMapPickup {
     //                 ; columnList = list:{
     //                     ; map:{
     //                         ; columnName = MEMBER_NAME
+    //                         ; mappingList = list:{
+    //                             ; map:{
+    //                                 ; newTableName = NEW_TABLE_NAME
+    //                                 ; newColumnName = NEW_COLUMN_NAME
+    //                                 ; authorList = list: { cabos }
+    //                                 ; mappingCode = CABO0000
+    //                                 ; mappingDatetime = 2017-11-05T00:38:13.645
+    //                                 ; mappingOwner = cabos
+    //                                 ; previousMappingList = list:{ JFLUTEMP, CABOSMAP }
+    //                             }
+    //                         }
     //                         ; propertyList = list:{
     //                             ; map:{
     //                                 ; decomment = sea mystic land oneman
@@ -118,16 +136,14 @@ public class DfDecoMapPickup {
     //     }
     // }
     public Map<String, Object> convertToMap() {
+        final Map<String, List<Map<String, Object>>> decoMap = new LinkedHashMap<>();
         final List<Map<String, Object>> convertedTableList =
-            this.getTableList().stream().map(DfDecoMapTablePart::convertPickupMap).collect(Collectors.toList());
-
-        final Map<String, List<Map<String, Object>>> convertedDecoMap = new LinkedHashMap<>();
-        convertedDecoMap.put("tableList", convertedTableList);
-
+                this.tableList.stream().map(DfDecoMapTablePart::convertPickupMap).collect(Collectors.toList());
+        decoMap.put(DECO_MAP_KEY_TABLE_LIST, convertedTableList);
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);
         map.put("pickupDatetime", pickupDatetime);
-        map.put("decoMap", convertedDecoMap);
+        map.put(DECO_MAP_KEY_DECOMAP, decoMap);
         return map;
     }
 

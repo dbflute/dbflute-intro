@@ -13,8 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model.client.document.hacomment;
+package org.dbflute.infra.doc.hacomment;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -24,56 +25,52 @@ import java.util.Map;
 /**
  * @author hakiba
  */
-public class HacoMapDiffPart {
+public class DfHacoMapPickup {
 
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    protected final String diffCode;
-    protected final String diffDate;
-    protected final Map<String, HacoMapPropertyPart> propertyMap = new LinkedHashMap<>();
+    public static final String DEFAULT_FORMAT_VERSION = "1.0";
+    private static final String HACO_MAP_KEY = "diffList";
+
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    protected final String formatVersion;
+    protected LocalDateTime pickupDatetime;
+    protected final Map<String, List<DfHacoMapDiffPart>> hacoMap = new LinkedHashMap<>();
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public HacoMapDiffPart(String diffCode, String diffDate, HacoMapPropertyPart propertyPart) {
-        this.diffCode = diffCode;
-        this.diffDate = diffDate;
-        addProperty(propertyPart);
+    public DfHacoMapPickup() {
+        this(DEFAULT_FORMAT_VERSION);
     }
-
-    public HacoMapDiffPart(String diffCode, String diffDate, List<HacoMapPropertyPart> propertyPartList) {
-        this.diffCode = diffCode;
-        this.diffDate = diffDate;
-        propertyPartList.forEach(propertyPart -> addProperty(propertyPart));
-    }
-
-    @SuppressWarnings("unchecked")
-    public HacoMapDiffPart(Map<String, Object> historyPartMap) {
-        this.diffCode = (String) historyPartMap.get("diffCode");
-        this.diffDate = (String) historyPartMap.get("diffDate");
-        final List<Map<String, Object>> propertyMapList = (List<Map<String, Object>>) historyPartMap.get("propertyList");
-        propertyMapList.stream().map(propertyMap -> new HacoMapPropertyPart(propertyMap)).forEach(property -> {
-            propertyMap.put(property.getPieceCode(), property);
-        });
+    public DfHacoMapPickup(String formatVersion) {
+        this.hacoMap.put(HACO_MAP_KEY, new ArrayList<>());
+        this.formatVersion = formatVersion;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getDiffCode() {
-        return diffCode;
+    public void setPickupDatetime(LocalDateTime pickupDatetime) {
+        this.pickupDatetime = pickupDatetime;
     }
 
-    public String getDiffDate() {
-        return diffDate;
+    public void addAllDiffList(List<DfHacoMapDiffPart> diffPartList) {
+        getHacoMapDiffPartList().addAll(diffPartList);
     }
 
-    public List<HacoMapPropertyPart> getPropertyList() {
-        return Collections.unmodifiableList(new ArrayList<>(propertyMap.values()));
+    public List<DfHacoMapDiffPart> getDiffList() {
+        return Collections.unmodifiableList(getHacoMapDiffPartList());
     }
 
-    public void addProperty(HacoMapPropertyPart property) {
-        this.propertyMap.put(property.getPieceCode(), property);
+    private List<DfHacoMapDiffPart> getHacoMapDiffPartList() {
+        List<DfHacoMapDiffPart> hacoMapDiffPartList = hacoMap.get(HACO_MAP_KEY);
+        if (hacoMapDiffPartList == null) {
+            throw new IllegalStateException("hacoMap history list is not exists");
+        }
+        return hacoMapDiffPartList;
     }
 }

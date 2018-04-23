@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapColumnPart;
+import org.dbflute.infra.doc.decomment.parts.DfDecoMapMappingPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapPropertyPart;
 import org.dbflute.infra.doc.decomment.parts.DfDecoMapTablePart;
 import org.lastaflute.core.util.Lato;
@@ -54,8 +55,16 @@ public class DecommentPickupResult {
         @Required
         public String tableName;
 
+        /**
+         *  list of conflicted mapping
+         *  this list could be empty when conflict mapping was not exists.
+         */
+        @Valid
+        @NotNull
+        public List<MappingPart> mappings;
+
         // done cabos move it above columns by jflute (2017/11/11)
-        /** list of decomment properties associated table  */
+        /** list of decomment properties associated table */
         @Valid
         @NotNull
         public List<PropertyPart> properties;
@@ -73,6 +82,9 @@ public class DecommentPickupResult {
             @Required
             public String columnName;
 
+            @Valid @NotNull // can be empty not conflict mapping
+            public List<MappingPart> mappings;
+
             /** list of decomment properties associated column  */
             @Valid
             @Required
@@ -80,13 +92,17 @@ public class DecommentPickupResult {
 
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
+                this.mappings =
+                        columnPart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
                 this.properties =
-                    columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 
         public TablePart(DfDecoMapTablePart tablePart) {
             this.tableName = tablePart.getTableName();
+            this.mappings =
+                    tablePart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
             this.columns = tablePart.getColumnList().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
             this.properties = tablePart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
         }
@@ -172,6 +188,68 @@ public class DecommentPickupResult {
             this.pieceOwner = property.getPieceOwner();
             this.pieceGitBranch = property.getPieceGitBranch();
             this.previousPieces = property.getPreviousPieceList();
+        }
+    }
+
+    public static class MappingPart {
+
+        /**
+         * new table name after mapped
+         * e.g. "NEW_TABLE_NAME"
+         */
+        @Required
+        public String newTableName;
+
+        /**
+         * new column name after mapped
+         * this could be null if target type was table.
+         * e.g. "NEW_COLUMN_NAME"
+         */
+        public String newColumnName;
+
+        /**
+         * the list of ancestor authors
+         * e.g. ["cabos", "hakiba", "deco"]
+         */
+        @NotNull
+        public List<String> authors;
+
+        /**
+         * mapping code generated when decomment mapped
+         * e.g. "EF89371"
+         */
+        @Required
+        public String mappingCode;
+
+        /**
+         * author of this decomment mapping
+         * e.g. "deco"
+         */
+        @Required
+        public String mappingOwner;
+
+        /**
+         * time of decomment mapped
+         * e.g. "2018-04-22T17:35:22.235"
+         */
+        @Required
+        public LocalDateTime mappingDatetime;
+
+        /**
+         * list of merged mapping code
+         * e.g. ["HF7ELSE"]
+         */
+        @NotNull
+        public List<String> previousMappings;
+
+        public MappingPart(DfDecoMapMappingPart mappingPart) {
+            this.newTableName = mappingPart.getNewTableName();
+            this.newColumnName = mappingPart.getNewColumnName();
+            this.authors = mappingPart.getAuthorList();
+            this.mappingCode = mappingPart.getMappingCode();
+            this.mappingOwner = mappingPart.getMappingOwner();
+            this.mappingDatetime = mappingPart.getMappingDatetime();
+            this.previousMappings = mappingPart.getPreviousMappingList();
         }
     }
 

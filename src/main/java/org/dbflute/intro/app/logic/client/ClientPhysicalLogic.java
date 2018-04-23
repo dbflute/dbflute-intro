@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 
 /**
@@ -69,6 +70,11 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              extlib
     //                                                                              ======
+    public ExtlibFile createExtlibFile(String clientProject, String fileName, String jdbcDriverFileDataBase64) {
+        String filePath = buildExtlibDirPath(clientProject) + "/" + fileName;
+        return new ExtlibFile(filePath, jdbcDriverFileDataBase64);
+    }
+
     private String buildExtlibDirPath(String clientProject) {
         return introPhysicalLogic.buildClientPath(clientProject, "extlib");
     }

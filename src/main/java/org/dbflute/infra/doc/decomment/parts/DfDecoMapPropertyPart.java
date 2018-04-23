@@ -46,8 +46,8 @@ public class DfDecoMapPropertyPart {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DfDecoMapPropertyPart(String decomment, String databaseComment, long commentVersion, List<String> authorList,
-        String pieceCode, LocalDateTime pieceDatetime, String pieceOwner, String pieceGitBranch, List<String> previousPieceList) {
+    public DfDecoMapPropertyPart(String decomment, String databaseComment, long commentVersion, List<String> authorList, String pieceCode,
+            LocalDateTime pieceDatetime, String pieceOwner, String pieceGitBranch, List<String> previousPieceList) {
         this.decomment = decomment;
         this.databaseComment = databaseComment;
         this.commentVersion = commentVersion;
@@ -69,7 +69,7 @@ public class DfDecoMapPropertyPart {
         this.pieceOwner = (String) propertyMap.get("pieceOwner");
         this.pieceGitBranch = (String) propertyMap.get("pieceGitBranch");
         this.previousPieceList =
-            ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
+                ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
     }
 
     // ===================================================================================

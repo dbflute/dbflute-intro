@@ -41,10 +41,6 @@ public class ProjectInfra {
         this(clientProject, dbfluteVersion, null);
     }
 
-    public ProjectInfra(String clientProject, String dbfluteVersion, String jdbcDriverFileName, String jdbcDriverFileDataBase64) {
-        this(clientProject, dbfluteVersion, new ExtlibFile(jdbcDriverFileName, jdbcDriverFileDataBase64));
-    }
-
     public ProjectInfra(String clientProject, String dbfluteVersion, ExtlibFile jdbcDriverFile) {
         this.clientProject = clientProject;
         this.dbfluteVersion = dbfluteVersion;

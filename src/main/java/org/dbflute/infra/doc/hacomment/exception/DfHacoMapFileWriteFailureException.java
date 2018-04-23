@@ -13,16 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.model.client.document.hacomment.exception;
+package org.dbflute.infra.doc.hacomment.exception;
 
 /**
- * @author hakiba
+ *@author hakiba
  */
-public class DfHacoMapFileReadFailureException extends RuntimeException {
+public class DfHacoMapFileWriteFailureException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public DfHacoMapFileReadFailureException(String msg, Throwable cause) {
+    public DfHacoMapFileWriteFailureException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }

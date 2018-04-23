@@ -19,10 +19,10 @@ import java.time.LocalDateTime;
 
 import javax.annotation.Resource;
 
+import org.dbflute.infra.doc.hacomment.DfHacoMapPickup;
+import org.dbflute.infra.doc.hacomment.DfHacoMapPiece;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.document.hacomment.DocumentHacommentPhysicalLogic;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPickup;
-import org.dbflute.intro.app.model.client.document.hacomment.HacoMapPiece;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
@@ -59,12 +59,12 @@ public class DocumentHacommentAction extends IntroBaseAction {
         // TODO hakiba add validate logic by hakiba (2018/02/15)
     }
 
-    private HacoMapPiece mappingToHacoMapPiece(HacommentSaveBody body) {
+    private DfHacoMapPiece mappingToHacoMapPiece(HacommentSaveBody body) {
         String author = authorLogic.getAuthor();
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
         String mappingCode = buildPieceCode(body, mappingDateTime, author);
         String diffCode = hacommentPhysicalLogic.generateDiffCode(body.diffDate);
-        return new HacoMapPiece(diffCode, body.diffDate, body.hacomment, body.diffComment, body.authors, mappingCode, author,
+        return new DfHacoMapPiece(diffCode, body.diffDate, body.hacomment, body.diffComment, body.authors, mappingCode, author,
             mappingDateTime, body.previousPieces);
     }
 
@@ -78,7 +78,7 @@ public class DocumentHacommentAction extends IntroBaseAction {
 
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<HacommentPickupResult> pickup(String projectName) {
-        HacoMapPickup hacoMapPickup = hacommentPhysicalLogic.readMergedPickup(projectName);
+        DfHacoMapPickup hacoMapPickup = hacommentPhysicalLogic.readMergedPickup(projectName);
         return asJson(new HacommentPickupResult(hacoMapPickup));
     }
 }

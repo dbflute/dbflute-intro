@@ -15,8 +15,17 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -37,13 +46,6 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  * @author p1us2er0
  * @author deco
@@ -59,6 +61,8 @@ public class ClientAction extends IntroBaseAction {
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
     private ClientInfoLogic clientInfoLogic;
+    @Resource
+    private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private TestConnectionLogic testConnectionLogic;
     @Resource
@@ -245,7 +249,9 @@ public class ClientAction extends IntroBaseAction {
         if (Objects.isNull(clientBody.jdbcDriver)) {
             return new ProjectInfra(projectName, clientBody.dbfluteVersion);
         }
-        return new ProjectInfra(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+        ExtlibFile extlibFile =
+            clientPhysicalLogic.createExtlibFile(projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+        return new ProjectInfra(projectName, clientBody.dbfluteVersion, extlibFile);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
