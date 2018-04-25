@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author hakiba
@@ -56,6 +57,19 @@ public class DfHacoMapDiffPart {
         propertyMapList.stream().map(propertyMap -> new DfHacoMapPropertyPart(propertyMap)).forEach(property -> {
             propertyMap.put(property.getPieceCode(), property);
         });
+    }
+
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    public Map<String, Object> convertPickupMap() {
+        final List<Map<String, Object>> propertyMapList =
+            this.getPropertyList().stream().map(propertyPart -> propertyPart.convertToMap()).collect(Collectors.toList());
+        final Map<String, Object> map = new LinkedHashMap<>();
+        map.put("diffCode", diffCode);
+        map.put("diffDate", diffDate);
+        map.put("propertyList", propertyMapList);
+        return map;
     }
 
     // ===================================================================================

@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -196,6 +197,9 @@ public class DfHacoMapFile {
     // ===================================================================================
     //                                                                               Write
     //                                                                               =====
+    // -----------------------------------------------------
+    //                                                 Piece
+    //                                                 -----
     public void writePiece(String clientDirPath, DfHacoMapPiece piece) {
         assertClientDirPath(clientDirPath);
 
@@ -223,6 +227,37 @@ public class DfHacoMapFile {
         }
     }
 
+    // -----------------------------------------------------
+    //                                                Pickup
+    //                                                ------
+    public void writePickup(String clientDirPath, DfHacoMapPickup pickup) {
+        assertClientDirPath(clientDirPath);
+        doWritePickup(buildPickupFilePath(clientDirPath), pickup);
+    }
+
+    protected void doWritePickup(String pickupFilePath, DfHacoMapPickup pickup) {
+        File pickupMapFile = new File(pickupFilePath);
+        if (pickupMapFile.exists()) { // no way, but just in case
+            pickupMapFile.delete(); // simply delete old file
+        }
+        createPickupMapFile(pickupMapFile);
+
+        final Map<String, Object> hacoMap = pickup.convertToMap();
+        createMapListFile(pickupFilePath, pickupMapFile, hacoMap);
+    }
+
+    protected void createPickupMapFile(File pickupMapFile) {
+        try {
+            Files.createDirectories(Paths.get(pickupMapFile.getParentFile().getAbsolutePath()));
+            Files.createFile(Paths.get(pickupMapFile.getAbsolutePath()));
+        } catch (IOException e) {
+            throwHacoMapWriteFailureException(pickupMapFile.getPath(), e);
+        }
+    }
+
+    // -----------------------------------------------------
+    //                                                Common
+    //                                                ------
     private void createMapListFile(String mappingFilePath, File mappingMapFile, Map<String, Object> hacoMap) {
         MapListFile mapListFile = new MapListFile();
         try (OutputStream ous = new FileOutputStream(mappingMapFile)) {
@@ -334,6 +369,30 @@ public class DfHacoMapFile {
             new DfHacoMapPropertyPart(piece.hacomment, piece.diffComment, piece.authorList, piece.pieceCode, piece.pieceOwner,
                 piece.pieceDatetime, piece.previousPieceList);
         return new DfHacoMapDiffPart(piece.diffCode, piece.diffDate, propertyPart);
+    }
+
+    // ===================================================================================
+    //                                                                              Delete
+    //                                                                              ======
+    // -----------------------------------------------------
+    //                                                 Piece
+    //                                                 -----
+    public void deletePiece(String clientPath) {
+        String pieceDirPath = buildPieceDirPath(clientPath);
+        doDeletePiece(pieceDirPath);
+    }
+
+    private void doDeletePiece(String piecePath) {
+        File pieceDir = new File(piecePath);
+        if (pieceDir.isDirectory()) {
+            for (File pieceFile : Objects.requireNonNull(pieceDir.listFiles())) {
+                if (pieceFile.isFile()) {
+                    pieceFile.delete();
+                } else {
+                    doDeletePiece(pieceFile.getAbsolutePath());
+                }
+            }
+        }
     }
 
     // ===================================================================================

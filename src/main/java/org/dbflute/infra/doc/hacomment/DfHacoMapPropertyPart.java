@@ -16,6 +16,7 @@
 package org.dbflute.infra.doc.hacomment;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,7 +65,21 @@ public class DfHacoMapPropertyPart {
         this.pieceDatetime = new HandyDate((String) propertyMap.get("pieceDatetime")).getLocalDateTime();
         this.previousPieceList =
             ((List<?>) propertyMap.get("previousPieceList")).stream().map(obj -> (String) obj).collect(Collectors.toList());
+    }
 
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    public Map<String, Object> convertToMap() {
+        final Map<String, Object> map = new LinkedHashMap<>();
+        map.put("hacomment", this.hacomment);
+        map.put("diffComment", this.diffComment);
+        map.put("authorList", this.authorList);
+        map.put("pieceCode", this.pieceCode);
+        map.put("pieceOwner", this.pieceOwner);
+        map.put("pieceDatetime", this.pieceDatetime);
+        map.put("previousPieceList", this.previousPieceList);
+        return map;
     }
 
     // ===================================================================================

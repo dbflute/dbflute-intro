@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author hakiba
@@ -31,7 +32,8 @@ public class DfHacoMapPickup {
     //                                                                          Definition
     //                                                                          ==========
     public static final String DEFAULT_FORMAT_VERSION = "1.0";
-    private static final String HACO_MAP_KEY = "diffList";
+    private static final String HACO_MAP_KEY_HACOMAP = "hacoMap";
+    private static final String HACO_MAP_KEY_DIFF_LIST = "diffList";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -47,10 +49,24 @@ public class DfHacoMapPickup {
         this(DEFAULT_FORMAT_VERSION);
     }
     public DfHacoMapPickup(String formatVersion) {
-        this.hacoMap.put(HACO_MAP_KEY, new ArrayList<>());
+        this.hacoMap.put(HACO_MAP_KEY_DIFF_LIST, new ArrayList<>());
         this.formatVersion = formatVersion;
     }
-
+    // ===================================================================================
+    //                                                                           Converter
+    //                                                                           =========
+    // TODO hakiba write doc to display construct by hakiba (2018/04/25)
+    public Map<String, Object> convertToMap() {
+        final Map<Object, List<Map<String, Object>>> hacoMap = new LinkedHashMap<>();
+        final List<Map<String, Object>> convertedDiffList =
+            this.getDiffList().stream().map(diffPart -> diffPart.convertPickupMap()).collect(Collectors.toList());
+        hacoMap.put(HACO_MAP_KEY_DIFF_LIST, convertedDiffList);
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("formatVersion", formatVersion);
+        map.put("pickupDatetime", pickupDatetime);
+        map.put(HACO_MAP_KEY_HACOMAP, hacoMap);
+        return map;
+    }
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
@@ -67,7 +83,7 @@ public class DfHacoMapPickup {
     }
 
     private List<DfHacoMapDiffPart> getHacoMapDiffPartList() {
-        List<DfHacoMapDiffPart> hacoMapDiffPartList = hacoMap.get(HACO_MAP_KEY);
+        List<DfHacoMapDiffPart> hacoMapDiffPartList = hacoMap.get(HACO_MAP_KEY_DIFF_LIST);
         if (hacoMapDiffPartList == null) {
             throw new IllegalStateException("hacoMap history list is not exists");
         }
