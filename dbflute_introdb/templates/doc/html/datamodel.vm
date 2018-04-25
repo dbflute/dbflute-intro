@@ -1396,12 +1396,12 @@ ${database.schemaHtmlJavaScriptEmbedded}
             Array.prototype.forEach.call(pickup["tables"], function (table) {
                 that.storePickupTable(table);
                 var tableProperty = that.getTablePickup(table['tableName'])
-                if (!tableProperty.selectTargetHtmlElements()) {
+                if (tableProperty.selectTargetHtmlElements().length === 0) {
                     that.unmappedTableArea.push(table)
                 }
                 Array.prototype.forEach.call(table["columns"], function (column) {
                     var columnProperty = that.getColumnPickup(table['tableName'], column['columnName'])
-                    if (!columnProperty.selectTargetHtmlElement()) {
+                    if (!columnProperty.selectTargetHtmlElement().length === 0) {
                         that.unmappedColumnArea.push(table)
                     }
                     that.storePickupColumn(table['tableName'], column);
