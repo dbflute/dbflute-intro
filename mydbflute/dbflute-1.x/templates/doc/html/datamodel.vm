@@ -1540,7 +1540,14 @@ PickupTableProperty.prototype = {
 	selectTargetHtmlElements: function () {
 		var className = this.tableDbName + "_" + "comment";
 		var tableElements = document.getElementsByClassName(className);
-		return tableElements;
+		var result = [];
+		Array.prototype.forEach.call(tableElements, function (element) {
+			var target = element.querySelector('pre')
+			if (target) {
+				result.push(target);
+			}
+		});
+		return result;
 	},
 
 	/**

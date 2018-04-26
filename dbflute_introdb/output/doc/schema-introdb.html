@@ -1588,6 +1588,24 @@ function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
+			{
+				'tableName': 'CLS_TARGET_CONTAINER'
+				, 'mappings' : [
+				]
+				, 'properties': [
+						{
+						'decomment': 'hoge'
+						, 'databaseComment': ''
+						, 'commentVersion': 0
+						, 'authors': ['tominaga']
+						, 'pieceCode': 'e46f094f'
+						, 'pieceDatatime': '2018-04-26T09:04:26.889'
+						, 'previousPieces': []
+					}
+				]
+				, 'columns': [
+				]
+			}
 		]
 	}
 	this.pickupStore = {
@@ -1904,7 +1922,14 @@ PickupTableProperty.prototype = {
 	selectTargetHtmlElements: function () {
 		var className = this.tableDbName + "_" + "comment";
 		var tableElements = document.getElementsByClassName(className);
-		return tableElements;
+		var result = [];
+		Array.prototype.forEach.call(tableElements, function (element) {
+			var target = element.querySelector('pre')
+			if (target) {
+				result.push(target);
+			}
+		});
+		return result;
 	},
 
 	/**
