@@ -684,18 +684,24 @@ public class DfDecoMapFile {
 
     private DfDecoMapTablePart mappingToTableIfNameChanged(DfDecoMapTablePart tablePart,
             Map<String, List<DfDecoMapMappingPart>> mappingPartListMap) {
-        final List<DfDecoMapColumnPart> columnPartList = tablePart.getColumnList().stream().map(columnPart -> {
-            return mappingToColumnIfNameChanged(tablePart, columnPart, mappingPartListMap);
-        }).collect(Collectors.toList());
         final List<DfDecoMapMappingPart> mappingPartList =
                 mappingPartListMap.getOrDefault(generateTableStateHash(tablePart), Collections.emptyList());
+
+        DfDecoMapTablePart part;
         if (mappingPartList.size() == 1) {
             final DfDecoMapMappingPart mappingPart = mappingPartList.get(0);
-            return new DfDecoMapTablePart(mappingPart.getNewTableName(), Collections.emptyList(), tablePart.getPropertyList(),
-                    columnPartList);
+            part = new DfDecoMapTablePart(mappingPart.getNewTableName(), Collections.emptyList(), tablePart.getPropertyList(),
+                    tablePart.getColumnList());
         } else {
-            return new DfDecoMapTablePart(tablePart.getTableName(), mappingPartList, tablePart.getPropertyList(), columnPartList);
+            part = new DfDecoMapTablePart(tablePart.getTableName(), mappingPartList, tablePart.getPropertyList(),
+                    tablePart.getColumnList());
         }
+
+        final List<DfDecoMapColumnPart> columnPartList = part.getColumnList().stream().map(columnPart -> {
+            return mappingToColumnIfNameChanged(part, columnPart, mappingPartListMap);
+        }).collect(Collectors.toList());
+
+        return new DfDecoMapTablePart(part.getTableName(), part.getMappingList(), part.getPropertyList(), columnPartList);
     }
 
     private DfDecoMapColumnPart mappingToColumnIfNameChanged(DfDecoMapTablePart tablePart, DfDecoMapColumnPart columnPart,
