@@ -1303,7 +1303,7 @@ StoreClient.prototype = {
 		Array.prototype.forEach.call(pickup["tables"], function (table) {
 			that.storePickupTable(table);
 			var tableProperty = that.getTablePickup(table['tableName'])
-			if (tableProperty.selectTargetHtmlElements.length === 0) {
+			if (tableProperty.selectTargetHtmlElements().length === 0) {
 				that.unmappedTableArea.push(table)
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
@@ -1535,7 +1535,7 @@ PickupTableProperty.prototype = {
 
 	/**
 	 * Select target html element
-	 * @return {HTMLCollectionOf<Element>} html elements
+	 * @return {Array} html elements
 	 */
 	selectTargetHtmlElements: function () {
 		var className = this.tableDbName + "_" + "comment";

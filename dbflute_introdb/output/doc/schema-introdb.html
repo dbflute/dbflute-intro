@@ -1597,9 +1597,9 @@ function StoreClient() {
 						'decomment': 'hoge'
 						, 'databaseComment': ''
 						, 'commentVersion': 0
-						, 'authors': ['tominaga']
-						, 'pieceCode': 'e46f094f'
-						, 'pieceDatatime': '2018-04-26T09:04:26.889'
+						, 'authors': ['akifumi.tominaga']
+						, 'pieceCode': '5bfb1200'
+						, 'pieceDatatime': '2018-04-26T12:19:39.358'
 						, 'previousPieces': []
 					}
 				]
@@ -1688,7 +1688,7 @@ StoreClient.prototype = {
 		Array.prototype.forEach.call(pickup["tables"], function (table) {
 			that.storePickupTable(table);
 			var tableProperty = that.getTablePickup(table['tableName'])
-			if (tableProperty.selectTargetHtmlElements.length === 0) {
+			if (tableProperty.selectTargetHtmlElements().length === 0) {
 				that.unmappedTableArea.push(table)
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
@@ -1917,7 +1917,7 @@ PickupTableProperty.prototype = {
 
 	/**
 	 * Select target html element
-	 * @return {HTMLCollectionOf<Element>} html elements
+	 * @return {Array} html elements
 	 */
 	selectTargetHtmlElements: function () {
 		var className = this.tableDbName + "_" + "comment";
