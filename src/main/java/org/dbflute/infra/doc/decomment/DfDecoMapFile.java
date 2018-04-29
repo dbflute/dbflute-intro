@@ -27,7 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -588,22 +587,21 @@ public class DfDecoMapFile {
      * @return mapping part list map for merge process (Not Null)
      */
     private Map<String, List<DfDecoMapMappingPart>> groupingByOldStatusAndMergeSameNewStatus(List<DfDecoMapMapping> mappingList) {
-        Map<String, List<DfDecoMapMappingPart>> map = new LinkedHashMap<>();
-        // TODO cabos remove foreach (2018/04/22)
-        mappingList.stream()
-                .collect(Collectors.groupingBy(mapping -> generateOldStateHash(mapping)))
-                .forEach((oldStateHash, sameOldStateMappingList) -> {
-                    final List<DfDecoMapMappingPart> newStateList = sameOldStateMappingList.stream()
-                            .collect(Collectors.toMap(mapping -> generateNewStateHash(mapping), mapping -> mapping, (m1, m2) -> {
-                                return mergeMapping(m1, m2);
-                            }))
-                            .values()
-                            .stream()
-                            .map(mapping -> new DfDecoMapMappingPart(mapping))
-                            .collect(Collectors.toList());
-                    map.put(oldStateHash, newStateList);
-                });
-        return map;
+        Map<String, List<DfDecoMapMapping>> mappingListByOldStatusHash =
+                mappingList.stream().collect(Collectors.groupingBy(mapping -> generateOldStateHash(mapping)));
+        return mappingListByOldStatusHash.entrySet().stream().collect(Collectors.toMap(entry -> {
+            return entry.getKey();
+        }, entry -> {
+            return entry.getValue()
+                    .stream()
+                    .collect(Collectors.toMap(mapping -> generateNewStateHash(mapping), mapping -> mapping, (m1, m2) -> {
+                        return mergeMapping(m1, m2);
+                    }))
+                    .values()
+                    .stream()
+                    .map(mapping -> new DfDecoMapMappingPart(mapping))
+                    .collect(Collectors.toList());
+        }, (l1, l2) -> Stream.concat(l1.stream(), l2.stream()).collect(Collectors.toList())));
     }
 
     /**
