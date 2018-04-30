@@ -1304,12 +1304,14 @@ StoreClient.prototype = {
 			that.storePickupTable(table);
 			var tableProperty = that.getTablePickup(table['tableName'])
 			if (tableProperty.selectTargetHtmlElements().length === 0) {
-				that.unmappedTableArea.push(table)
+				that.unmappedTableArea.push(table);
+				return;
 			}
 			Array.prototype.forEach.call(table["columns"], function (column) {
 				var columnProperty = that.getColumnPickup(table['tableName'], column['columnName'])
 				if (!columnProperty.selectTargetHtmlElement()) {
-					that.unmappedColumnArea.push(table, column)
+					that.unmappedColumnArea.push(table, column);
+					return;
 				}
 				that.storePickupColumn(table['tableName'], column);
 			});
