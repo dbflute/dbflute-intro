@@ -40,8 +40,12 @@ public class DecommentPickupResult {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    /** list of table part */
-    @Valid @NotNull // can be empty first
+    /**
+     * list of table part
+     * enable empty first
+     */
+    @Valid
+    @NotNull
     public List<TablePart> tables;
 
     // done hakiba move it under tables by jflute (2017/08/17)
@@ -82,12 +86,17 @@ public class DecommentPickupResult {
             @Required
             public String columnName;
 
-            @Valid @NotNull // can be empty not conflict mapping
+            /** list of decomment properties associated column */
+            @Valid
+            @NotNull
             public List<MappingPart> mappings;
 
-            /** list of decomment properties associated column  */
+            /**
+             * list of decomment properties associated column
+             * enable empty if alter doc task branch and topic branch existed piece was not mapped were merged
+             */
             @Valid
-            @Required
+            @NotNull
             public List<PropertyPart> properties;
 
             public ColumnPart(DfDecoMapColumnPart columnPart) {
