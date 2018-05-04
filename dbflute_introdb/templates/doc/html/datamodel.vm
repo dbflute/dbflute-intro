@@ -1827,7 +1827,7 @@ Decomment.prototype = {
 
 			var inputElement = document.getElementById("decomment-input");
 			var previousWholeComment = commentProperty.buildDisplayComment()
-			inputElement.value = previousWholeComment;
+			inputElement.value = previousWholeComment.length > 0 ? previousWholeComment : commentProperty.databaseComment;
 			inputElement.focus();
 
 			document.getElementById("decomment-close").onclick = function () {
