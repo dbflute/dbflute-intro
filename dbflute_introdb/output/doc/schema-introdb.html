@@ -1593,22 +1593,22 @@ function StoreClient() {
 				]
 				, 'properties': [
 						{
-						'decomment': '2branch'
+						'decomment': '2'
 						, 'databaseComment': ''
 						, 'commentVersion': 0
 						, 'authors': ['tominaga']
-						, 'pieceCode': 'af9d97be'
-						, 'pieceDatatime': '2018-05-04T16:15:40.148'
+						, 'pieceCode': '70944770'
+						, 'pieceDatatime': '2018-05-04T16:50:35.345'
 						, 'previousPieces': []
 					}
 						, {
-						'decomment': '1branch'
+						'decomment': '1'
 						, 'databaseComment': ''
 						, 'commentVersion': 0
 						, 'authors': ['tominaga']
-						, 'pieceCode': '5a1892db'
-						, 'pieceDatatime': '2018-05-04T16:15:35.211'
-						, 'previousPieces': ['ecf30690']
+						, 'pieceCode': '5ccb3bd9'
+						, 'pieceDatatime': '2018-05-04T16:50:32.581'
+						, 'previousPieces': []
 					}
 				]
 				, 'columns': [
@@ -1933,12 +1933,17 @@ PickupTableProperty.prototype = {
 
 		var commentCount = this.decomments.length;
 		for (key in this.decomments) {
-			displayComment += this.decomments[key].body
-			if (this.isConflict()) {
-				displayComment += '\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;' + this.decomments[key].pieceGitBranch;
-			}
-			if (key < commentCount - 1) {
-				displayComment += '\n\n=======\n\n'; // show between comments
+			var decomment = this.decomments[key];
+			displayComment += decomment.body
+			if (this.isConflict() && decomment.pieceGitBranch) {
+				displayComment += '\n=======' + decomment.pieceGitBranch;
+				if (key < commentCount - 1) {
+					displayComment += '\n\n'; // show between comments
+				}
+			} else {
+				if (key < commentCount - 1) {
+					displayComment += '\n\n=======\n\n'; // show between comments
+				}
 			}
 		}
 		return displayComment;
@@ -2053,12 +2058,17 @@ PickupColumnProperty.prototype = {
 
 		var commentCount = this.decomments.length;
 		for (key in this.decomments) {
-			displayComment += this.decomments[key].body
-			if (this.isConflict()) {
-				displayComment += '\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;' + this.decomments[key].pieceGitBranch;
-			}
-			if (key < commentCount - 1) {
-				displayComment += '\n\n=======\n\n'; // show between comments
+			var decomment = this.decomments[key];
+			displayComment += decomment.body
+			if (this.isConflict() && decomment.pieceGitBranch) {
+				displayComment += '\n=======' + decomment.pieceGitBranch;
+				if (key < commentCount - 1) {
+					displayComment += '\n\n'; // show between comments
+				}
+			} else {
+				if (key < commentCount - 1) {
+					displayComment += '\n\n=======\n\n'; // show between comments
+				}
 			}
 		}
 		return displayComment;
