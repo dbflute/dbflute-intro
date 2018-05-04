@@ -1091,7 +1091,6 @@ ApiClient.prototype = {
 		var errorCallback = function() {
 			alert('Error!! cannot save new table mapping.');
 		}
-		console.log(params);
 		this.request(path, method, params, successCallback, errorCallback);
 	},
 	/**
@@ -1351,7 +1350,11 @@ StoreClient.prototype = {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
 				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
 			}
-			decomments.push(property["decomment"]);
+			var decomment = {
+				"body": property["decomment"],
+				"pieceGitBranch": property["pieceGitBranch"]
+			}
+			decomments.push(decomment);
 			if (property['pieceCode'] != null) {
 				previousPieces.push(property['pieceCode']);
 			}
@@ -1410,7 +1413,11 @@ StoreClient.prototype = {
 			if (property['databaseComment'] != null && databaseComment != null && !isDatabaseCommentConflict) {
 				isDatabaseCommentConflict = DecommentUtil.escapeNewlineCharacter(databaseComment) != DecommentUtil.escapeNewlineCharacter(property['databaseComment']);
 			}
-			decomments.push(property["decomment"]);
+			var decomment = {
+				"body": property["decomment"],
+				"pieceGitBranch": property["pieceGitBranch"]
+			}
+			decomments.push(decomment);
 			if (property['pieceCode'] != null) {
 				previousPieces.push(property['pieceCode']);
 			}
@@ -1532,7 +1539,18 @@ PickupTableProperty.prototype = {
 			displayComment = DecommentUtil.escapeInputText(displayComment);
 			displayComment = displayComment + '\n(from database comment)\n\n=======\n\n';
 		}
-		return displayComment + this.decomments.join('\n\n=======\n\n');
+
+		var commentCount = this.decomments.length;
+		for (key in this.decomments) {
+			displayComment += this.decomments[key].body
+			if (this.isConflict()) {
+				displayComment += '\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;' + this.decomments[key].pieceGitBranch;
+			}
+			if (key < commentCount - 1) {
+				displayComment += '\n\n=======\n\n'; // show between comments
+			}
+		}
+		return displayComment;
 	},
 
 	/**
@@ -1569,7 +1587,7 @@ PickupTableProperty.prototype = {
 			'tableName': this.tableDbName,
 			'columnName': null,
 			'targetType': 'TABLE',
-			'decomment': this.decomments[0],
+			'decomment': (this.decomments[0] || {}).body,
 			'databaseComment': DecommentUtil.escapeNewlineCharacter(this.databaseComment),
 			'commentVersion': this.commentVersion || 0,
 			'authors': this.authors || [],
@@ -1637,14 +1655,25 @@ PickupColumnProperty.prototype = {
 	 * @return {string} comment
 	 */
 	buildDisplayComment: function () {
-		var previousWholeComment = "";
+		var displayComment = "";
 		if (this.isDatabaseCommentConflict) {
-			previousWholeComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-			previousWholeComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
-			previousWholeComment = DecommentUtil.escapeInputText(this.databaseComment);
-			previousWholeComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
+			displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+			displayComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
+			displayComment = DecommentUtil.escapeInputText(this.databaseComment);
+			displayComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
-		return previousWholeComment + this.decomments.join('\n\n=======\n\n');
+
+		var commentCount = this.decomments.length;
+		for (key in this.decomments) {
+			displayComment += this.decomments[key].body
+			if (this.isConflict()) {
+				displayComment += '\n&gt;&gt;&gt;&gt;&gt;&gt;&gt;' + this.decomments[key].pieceGitBranch;
+			}
+			if (key < commentCount - 1) {
+				displayComment += '\n\n=======\n\n'; // show between comments
+			}
+		}
+		return displayComment;
 	},
 
 	/**
@@ -1678,7 +1707,7 @@ PickupColumnProperty.prototype = {
 			'tableName': this.tableDbName,
 			'columnName': this.columnName,
 			'targetType': 'COLUMN',
-			'decomment': this.decomments[0],
+			'decomment': (this.decomments[0] || {}).body,
 			'databaseComment': DecommentUtil.escapeNewlineCharacter(this.databaseComment),
 			'commentVersion': this.commentVersion || 0,
 			'authors': this.authors || [],
@@ -1842,7 +1871,7 @@ Decomment.prototype = {
 				}
 				decomment = DecommentUtil.escapeInputText(decomment);
 				decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
-				commentProperty.decomments = [decomment]
+				commentProperty.decomments = [{'body': decomment}]
 				var params = commentProperty.toRequestParams()
 				new ApiClient().saveDecomment(params, function () {
 					that.fetchVirtualPickup()
@@ -2018,7 +2047,6 @@ UnmappedTableArea.prototype = {
 		tbody.innerHTML += this.toDisplayHtmlString();
 		this.showTableSelector();
 
-		console.log(this.isTableNameConflict());
 		if (!this.isTableNameConflict()) {
 			document.querySelector('#unmapped-table-head th.conflictcell').style.display = 'none';
 			document.querySelector('#unmapped-table-body td.conflictcell').style.display = 'none';
