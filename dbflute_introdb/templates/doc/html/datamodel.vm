@@ -420,7 +420,7 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 		<thead id="unmapped-table-head">
 		<tr>
 			<th>No</th>
-			<th>Name</th>
+			<th>Table Name</th>
 			<th class="conflictcell">Conflict Mapping Name</th>
 			<th>Mapping</th>
 		</tr>
