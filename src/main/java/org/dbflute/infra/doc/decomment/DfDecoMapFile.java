@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.dbflute.helper.HandyDate;
-import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
 import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileReadFailureException;
 import org.dbflute.infra.doc.decomment.exception.DfDecoMapFileWriteFailureException;
@@ -126,9 +126,9 @@ public class DfDecoMapFile {
 
     // done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
     private DfDecoMapPiece doReadPiece(Path path) {
-        final MapListFile mapListFile = createMapListFile();
+        final DfMapFile mapFile = createDfMapFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            Map<String, Object> map = mapFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapPiece(map);
         } catch (RuntimeException | IOException e) {
             throwDecoMapReadFailureException(path.toString(), e);
@@ -178,9 +178,9 @@ public class DfDecoMapFile {
     }
 
     private DfDecoMapPickup doReadPickup(Path path) {
-        MapListFile mapListFile = createMapListFile();
+        final DfMapFile mapFile = createDfMapFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            Map<String, Object> map = mapFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapPickup(map);
         } catch (RuntimeException | IOException e) {
             throwDecoMapReadFailureException(path.toString(), e);
@@ -236,9 +236,9 @@ public class DfDecoMapFile {
 
     // done cabos DBFlute uses doRead...() style for internal process so please change it by jflute (2017/11/18)
     private DfDecoMapMapping doReadMapping(Path path) {
-        final MapListFile mapListFile = createMapListFile();
+        final DfMapFile mapFile = createDfMapFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            Map<String, Object> map = mapFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapMapping(map);
         } catch (RuntimeException | IOException e) {
             throwDecoMapReadFailureException(path.toString(), e);
@@ -336,8 +336,8 @@ public class DfDecoMapFile {
         createPieceMapFile(pieceMapFile);
 
         final Map<String, Object> decoMap = decoMapPiece.convertToMap();
-        final MapListFile mapListFile = createMapListFile();
-        createMapListFile(pieceFilePath, pieceMapFile, decoMap, mapListFile);
+        final DfMapFile mapFile = createDfMapFile();
+        createDfMapFile(pieceFilePath, pieceMapFile, decoMap, mapFile);
     }
 
     protected void createPieceMapFile(File pieceMapFile) {
@@ -365,8 +365,8 @@ public class DfDecoMapFile {
         createPickupMapFile(pickupMapFile);
 
         final Map<String, Object> decoMap = decoMapPickup.convertToMap();
-        final MapListFile mapListFile = createMapListFile();
-        createMapListFile(pickupFilePath, pickupMapFile, decoMap, mapListFile);
+        final DfMapFile mapFile = createDfMapFile();
+        createDfMapFile(pickupFilePath, pickupMapFile, decoMap, mapFile);
     }
 
     protected void createPickupMapFile(File pickupMapFile) {
@@ -416,8 +416,9 @@ public class DfDecoMapFile {
         createMappingMapFile(mappingMapFile);
 
         final Map<String, Object> decoMap = decoMapMapping.convertToMap();
-        final MapListFile mapListFile = createMapListFile();
-        createMapListFile(mappingFilePath, mappingMapFile, decoMap, mapListFile);
+        final DfMapFile mapFile = createDfMapFile();
+
+        createDfMapFile(mappingFilePath, mappingMapFile, decoMap, mapFile);
     }
 
     protected void createMappingMapFile(File mappingMapFile) {
@@ -432,10 +433,10 @@ public class DfDecoMapFile {
     // -----------------------------------------------------
     //                                                Common
     //                                                ------
-    private void createMapListFile(String mappingFilePath, File mappingMapFile, Map<String, Object> decoMap, MapListFile mapListFile) {
+    private void createDfMapFile(String mappingFilePath, File mappingMapFile, Map<String, Object> decoMap, DfMapFile mapFile) {
         try (OutputStream ous = new FileOutputStream(mappingMapFile)) {
             try {
-                mapListFile.writeMap(ous, decoMap);
+                mapFile.writeMap(ous, decoMap);
             } catch (IOException e) {
                 throwDecoMapWriteFailureException(mappingFilePath, decoMap, e);
             }
@@ -846,8 +847,8 @@ public class DfDecoMapFile {
     // ===================================================================================
     //                                                                        MapList File
     //                                                                        ============
-    protected MapListFile createMapListFile() {
-        return new MapListFile();
+    protected DfMapFile createDfMapFile() {
+        return new DfMapFile();
     }
 
     // ===================================================================================
