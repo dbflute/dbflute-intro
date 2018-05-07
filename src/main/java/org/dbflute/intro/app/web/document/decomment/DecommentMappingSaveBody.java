@@ -29,7 +29,7 @@ import org.lastaflute.web.validation.Required;
  */
 public class DecommentMappingSaveBody {
 
-    // TODO cabos also (groups = ClientError.class) to NotNull by jflute (2018/04/12)
+    // TODO done cabos also (groups = ClientError.class) to NotNull by jflute (2018/04/12)
     /**
      * mapping list
      */
@@ -79,7 +79,7 @@ public class DecommentMappingSaveBody {
          * Current mapping author is derived by server at first decomment so empty allowed.
          * e.g. ["hakiba"]
          */
-        @NotNull
+        @NotNull(groups = ClientError.class)
         public List<String> authors;
 
         /**
@@ -87,7 +87,7 @@ public class DecommentMappingSaveBody {
          * Current mapping code is derived by server at first decomment so empty allowed.
          * e.g. ["FE893L1"]  (EmptyAllowed)
          */
-        @NotNull
+        @NotNull(groups = ClientError.class)
         public List<String> previousMappings;
     }
 }
