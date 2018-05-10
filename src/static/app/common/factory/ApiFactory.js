@@ -191,7 +191,7 @@ export default class ApiFactory {
 const http = function (request) {
     return fetch(request.url, {
         method: request.method,
-        body: request.data,
+        body: toJson(request.data),
     }).then(response => {
         if (!response.ok) {
             return response.json().then(json => {
@@ -199,5 +199,14 @@ const http = function (request) {
             })
         }
         return response.json()
+    })
+}
+
+const toJson = function (value) {
+    return JSON.stringify(value, (k, v) => {
+        if (v === '') {
+            return null
+        }
+        return v
     })
 }
