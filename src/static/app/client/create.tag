@@ -40,7 +40,6 @@
           </div>
         </div>
         <div class="column">
-          <!-- <button onclick="{ openORMapperOptions }">O/R Mapper Options</button> -->
           <div class="required field" if="{ oRMapperOptionsFlg }">
             <label>Language
               <!--{{'LABEL_languageCode' | translate:translationData}}-->
@@ -107,6 +106,7 @@
     //                                                                           Attribute
     //                                                                           =========
     this.classificationMap = {} // e.g. targetDatabase
+    this.jdbcDriver = null
     this.needsJdbcDriver = false
     this.oRMapperOptionsFlg = true
     this.versions = []
@@ -148,32 +148,40 @@
     // ===================================================================================
     //                                                                        Event Method
     //                                                                        ============
-    this.openORMapperOptions = function () {
-      this.oRMapperOptionsFlg = !this.oRMapperOptionsFlg
-    }
     const changeDatabase = function (databaseCode) {
       let database = self.classificationMap['targetDatabaseMap'][databaseCode]
-      console.log(database)
       // switch showing JDBCDriver select form
       self.needsJdbcDriver = !database.embeddedJar
       // initialize JDBC Driver
-      // self.refs.jdbcDriver.value = null
+      self.jdbcDriver = null
       self.refs.jdbcDriverFqcn.value = database.driverName
       self.refs.url.value = database.urlTemplate
       self.refs.schema.value = database.defaultSchema
     }
     this.create = function () {
       const client = {
+        projectName: self.refs.projectName.value,
+        databaseCode: self.refs.databaseCode.value,
         create: true,
-        mainSchemaSettings: {},
+        mainSchemaSettings: {
+          user: self.refs.user.value,
+          url: self.refs.url.value,
+          schema: self.refs.schema.value
+        },
         schemaSyncCheckMap: {},
         dbfluteVersion: self.refs.dbfluteVersion.value,
-        jdbcDriver: null
+        packageBase: self.refs.packageBase.value,
+        containerCode: self.refs.containerCode.value,
+        languageCode: self.refs.languageCode.value,
+        jdbcDriverFqcn: self.refs.jdbcDriverFqcn.value,
+      }
+      if (self.jdbcDriver) {
+        client.jdbcDriver = self.jdbcDriver
       }
       const testConnection = self.refs.testConnection.checked
       ApiFactory.createClient(client, testConnection).then(function (response) {
         route('main')
-      })
+      }).catch(() => { })
     }
     this.changeFile = function (files) {
       let file = files[0]
@@ -182,9 +190,9 @@
         return function () {
           // encode base64
           let result = window.btoa(reader.result)
-          this.client.jdbcDriver = { fileName: null, data: null }
-          this.client.jdbcDriver.fileName = file.name
-          this.client.jdbcDriver.data = result
+          self.jdbcDriver = { fileName: null, data: null }
+          self.jdbcDriver.fileName = file.name
+          self.jdbcDriver.data = result
         }
       }(file))
       if (file) {
