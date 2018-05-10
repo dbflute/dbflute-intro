@@ -55,11 +55,33 @@ public class DfHacoMapPickup {
     // ===================================================================================
     //                                                                           Converter
     //                                                                           =========
-    // TODO hakiba write doc to display construct by hakiba (2018/04/25)
+    // map:{
+    //     ; formatVersion = 1.0
+    //     ; pickupDatetime = 2018-01-20T04:55:55.009
+    //     ; hacoMap = map:{
+    //         ; diffList = list:{
+    //             map:{
+    //                 ; diffCode = 20180110160922
+    //                 ; diffDate = 2018/01/10 16:09:22
+    //                 ; propertyList = list:{
+    //                     ; map:{
+    //                         ; hacomment = example comment! hey!
+    //                         ; diffComment = null
+    //                         ; authorList = list:{hakiba}
+    //                         ; pieceCode = HAJDJDD
+    //                         ; pieceOwner = hakiba
+    //                         ; pieceDatetime = 2018-01-16T05:05:29.009
+    //                         ; previousPieceList = list:{}
+    //                     }
+    //                 }
+    //             } ... // more other diffs
+    //         }
+    //     }
+    // }
     public Map<String, Object> convertToMap() {
         final Map<Object, List<Map<String, Object>>> hacoMap = new LinkedHashMap<>();
         final List<Map<String, Object>> convertedDiffList =
-            this.getDiffList().stream().map(diffPart -> diffPart.convertPickupMap()).collect(Collectors.toList());
+                this.getDiffList().stream().map(diffPart -> diffPart.convertPickupMap()).collect(Collectors.toList());
         hacoMap.put(HACO_MAP_KEY_DIFF_LIST, convertedDiffList);
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("formatVersion", formatVersion);

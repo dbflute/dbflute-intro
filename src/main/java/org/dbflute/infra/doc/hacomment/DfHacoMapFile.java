@@ -91,7 +91,12 @@ public class DfHacoMapFile {
     // -----------------------------------------------------
     //                                                 Piece
     //                                                 -----
-    // TODO hakiba write java doc with piece exanmple by hakiba (2018/03/19)
+    /**
+     * Read all hacomment piece map file in "clientDirPath/schema/hacomment/piece/".
+     * @param clientDirPath The path of DBFlute client directory (NotNull)
+     * @return List of all hacomment piece map (NotNull: If piece map file not exists, returns empty list)
+     * @see DfHacoMapPiece#convertToMap()
+     */
     public List<DfHacoMapPiece> readPieceList(String clientDirPath) {
         assertClientDirPath(clientDirPath);
         String pieceDirPath = buildPieceDirPath(clientDirPath);
@@ -140,7 +145,12 @@ public class DfHacoMapFile {
     // -----------------------------------------------------
     //                                                Pickup
     //                                                ------
-    // TODO hakiba write java doc with pickup exanmple by hakiba (2018/03/19)
+    /**
+     * Read hacomment pickup map file at "clientDirPath/schema/hacomment/pickup/hacomment-pickup.dfmap".
+     * @param clientDirPath The path of DBFlute client directory (NotNull)
+     * @return pickup hacomment map (NotNull: If pickup map file not exists, returns empty)
+     * @see DfHacoMapPickup#convertToMap()
+     */
     public OptionalThing<DfHacoMapPickup> readPickup(String clientDirPath) {
         assertClientDirPath(clientDirPath);
         String filePath = buildPickupFilePath(clientDirPath);
@@ -271,8 +281,12 @@ public class DfHacoMapFile {
         }
     }
 
-    // TODO hakiba write java doc by hakiba (2018/03/19)
-    // TODO hakiba refactor for better looks by hakiba (2018/02/15)
+    /**
+     * Build piece file name for piece map file<br>
+     * e.g.  hacomment-piece-diffdate20180220161718-20171015-161718-199-jflute-HF7ELSE.dfmap <br>
+     * @param piece Decoment piece map (NotNull)
+     * @return piece file name
+     */
     public String buildPieceFileName(DfHacoMapPiece piece) {
         String diffDateStr = generatePieceFileName(piece);
         String filteredOwner = DfStringUtil.replaceBy(piece.getPieceOwner(), REPLACE_CHAR_MAP);
@@ -315,10 +329,16 @@ public class DfHacoMapFile {
     // ===================================================================================
     //                                                                               Merge
     //                                                                               =====
-    // TODO hakiba write java doc by hakiba (2018/03/19)
-    public DfHacoMapPickup merge(OptionalThing<DfHacoMapPickup> pickupOpt, List<DfHacoMapPiece> pieces) {
-        Set<String> pieceCodeSet = extractAllMergedPieceCode(pickupOpt, pieces);
-        DfHacoMapPickup mergedPickup = doMerge(pickupOpt, pieces, pieceCodeSet);
+    /**
+     * merge piece map and pickup map with previous piece code.
+     *
+     * @param optPickup Hacoment pickup map (NotNull: If pickup map file not exists, Empty allowed)
+     * @param pieces hacoment piece maps in piece directory (NotNull: If piece map file not exists, Empty allowed)
+     * @return pickup hacomment map (NotNull)
+     */
+    public DfHacoMapPickup merge(OptionalThing<DfHacoMapPickup> optPickup, List<DfHacoMapPiece> pieces) {
+        Set<String> pieceCodeSet = extractAllMergedPieceCode(optPickup, pieces);
+        DfHacoMapPickup mergedPickup = doMerge(optPickup, pieces, pieceCodeSet);
         return mergedPickup;
     }
 
