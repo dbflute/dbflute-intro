@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.dbflute.helper.HandyDate;
-import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.helper.message.ExceptionMessageBuilder;
 import org.dbflute.infra.doc.hacomment.exception.DfHacoMapFileReadFailureException;
 import org.dbflute.infra.doc.hacomment.exception.DfHacoMapFileWriteFailureException;
@@ -70,7 +70,7 @@ public class DfHacoMapFile {
     }
 
     private static final Map<String, String> REPLACE_MAP_FOR_HACOMMENT_ID =
-        Stream.of("/", " ", ":").collect(Collectors.toMap(ch -> ch, ch -> ""));
+            Stream.of("/", " ", ":").collect(Collectors.toMap(ch -> ch, ch -> ""));
 
     // ===================================================================================
     //                                                                           Attribute
@@ -100,10 +100,10 @@ public class DfHacoMapFile {
         }
         try {
             return Files.list(Paths.get(pieceDirPath))
-                .filter(path -> path.toString().endsWith(".dfmap"))
-                .filter(path -> path.toString().contains("-piece-"))
-                .map(path -> doReadPiece(path))
-                .collect(Collectors.toList());
+                    .filter(path -> path.toString().endsWith(".dfmap"))
+                    .filter(path -> path.toString().contains("-piece-"))
+                    .map(path -> doReadPiece(path))
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throwHacomMapReadFailureException(pieceDirPath, e);
             return Collections.emptyList();
@@ -111,9 +111,9 @@ public class DfHacoMapFile {
     }
 
     private DfHacoMapPiece doReadPiece(Path path) {
-        final MapListFile mapListFile = new MapListFile();
+        final DfMapFile mapFile = new DfMapFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            Map<String, Object> map = mapFile.readMap(Files.newInputStream(path));
             return mappingToDecoMapPiece(map);
         } catch (RuntimeException | IOException e) {
             throwHacomMapReadFailureException(path.toString(), e);
@@ -135,7 +135,7 @@ public class DfHacoMapFile {
         @SuppressWarnings("unchecked")
         List<String> previousPieceList = (List<String>) map.get("previousPieceList");
         return new DfHacoMapPiece(diffCode, diffdate, hacomment, diffComment, authorList, pieceCode, pieceOwner, pieceDatetime,
-            previousPieceList);
+                previousPieceList);
     }
     // -----------------------------------------------------
     //                                                Pickup
@@ -150,9 +150,9 @@ public class DfHacoMapFile {
     }
 
     private DfHacoMapPickup doReadPickup(Path path) {
-        MapListFile mapListFile = new MapListFile();
+        DfMapFile mapFile = new DfMapFile();
         try {
-            Map<String, Object> map = mapListFile.readMap(Files.newInputStream(path));
+            Map<String, Object> map = mapFile.readMap(Files.newInputStream(path));
             return mappingToHacoMapPickup(map);
         } catch (RuntimeException | IOException e) {
             throwHacomMapReadFailureException(path.toString(), e);
@@ -215,7 +215,7 @@ public class DfHacoMapFile {
         createPieceMapFile(pieceMapFile);
 
         Map<String, Object> hacoMap = piece.convertToMap();
-        createMapListFile(pieceFilePath, pieceMapFile, hacoMap);
+        createMapFile(pieceFilePath, pieceMapFile, hacoMap);
     }
 
     protected void createPieceMapFile(File pieceMapFile) {
@@ -243,7 +243,7 @@ public class DfHacoMapFile {
         createPickupMapFile(pickupMapFile);
 
         final Map<String, Object> hacoMap = pickup.convertToMap();
-        createMapListFile(pickupFilePath, pickupMapFile, hacoMap);
+        createMapFile(pickupFilePath, pickupMapFile, hacoMap);
     }
 
     protected void createPickupMapFile(File pickupMapFile) {
@@ -258,11 +258,11 @@ public class DfHacoMapFile {
     // -----------------------------------------------------
     //                                                Common
     //                                                ------
-    private void createMapListFile(String mappingFilePath, File mappingMapFile, Map<String, Object> hacoMap) {
-        MapListFile mapListFile = new MapListFile();
+    private void createMapFile(String mappingFilePath, File mappingMapFile, Map<String, Object> hacoMap) {
+        DfMapFile mapFile = new DfMapFile();
         try (OutputStream ous = new FileOutputStream(mappingMapFile)) {
             try {
-                mapListFile.writeMap(ous, hacoMap);
+                mapFile.writeMap(ous, hacoMap);
             } catch (IOException e) {
                 throwHacoMapWriteFailureException(mappingFilePath, e);
             }
@@ -337,21 +337,21 @@ public class DfHacoMapFile {
 
         // grouping to diffPartMap (key: diffCode, value: diffPart list)
         Map<String, List<DfHacoMapDiffPart>> diffPartMap =
-            Stream.concat(piecesDiffPartStream, pickupDiffPartStream).collect(Collectors.groupingBy(diffPart -> diffPart.diffCode));
+                Stream.concat(piecesDiffPartStream, pickupDiffPartStream).collect(Collectors.groupingBy(diffPart -> diffPart.diffCode));
 
         // filter merged property by piece code
         List<DfHacoMapDiffPart> filteredDiffPartList = diffPartMap.entrySet().stream().map(diffPartEntry -> {
             String diffDate = diffPartEntry.getValue()
-                .stream()
-                .findFirst()
-                .map(diffPart -> diffPart.diffDate)
-                .orElseThrow(() -> new IllegalStateException("Diffdate is null. \n" + diffPartEntry));
+                    .stream()
+                    .findFirst()
+                    .map(diffPart -> diffPart.diffDate)
+                    .orElseThrow(() -> new IllegalStateException("Diffdate is null. \n" + diffPartEntry));
 
             List<DfHacoMapPropertyPart> filteredPropertyPartList = diffPartEntry.getValue()
-                .stream()
-                .flatMap(hacoMapDiffPart -> hacoMapDiffPart.getPropertyList().stream())
-                .filter(propertyPart -> !mergedPieceCodeSet.contains(propertyPart.pieceCode))
-                .collect(Collectors.toList());
+                    .stream()
+                    .flatMap(hacoMapDiffPart -> hacoMapDiffPart.getPropertyList().stream())
+                    .filter(propertyPart -> !mergedPieceCodeSet.contains(propertyPart.pieceCode))
+                    .collect(Collectors.toList());
 
             return new DfHacoMapDiffPart(diffPartEntry.getKey(), diffDate, filteredPropertyPartList);
         }).collect(Collectors.toList());
@@ -366,8 +366,8 @@ public class DfHacoMapFile {
 
     private DfHacoMapDiffPart mappingPieceToDiffPart(DfHacoMapPiece piece) {
         DfHacoMapPropertyPart propertyPart =
-            new DfHacoMapPropertyPart(piece.hacomment, piece.diffComment, piece.authorList, piece.pieceCode, piece.pieceOwner,
-                piece.pieceDatetime, piece.previousPieceList);
+                new DfHacoMapPropertyPart(piece.hacomment, piece.diffComment, piece.authorList, piece.pieceCode, piece.pieceOwner,
+                        piece.pieceDatetime, piece.previousPieceList);
         return new DfHacoMapDiffPart(piece.diffCode, piece.diffDate, propertyPart);
     }
 
