@@ -89,7 +89,8 @@ repositories {
 
 dependencies {
     // Main Framework
-    compile "org.dbflute:dbflute-runtime:${versions.dbflute}"
+    // TODO cabos remove version hard code
+    compile "org.dbflute:dbflute-runtime:1.1.8-RC2"
     runtime "com.h2database:h2:${versions.h2}"
     compile "org.lastaflute:lastaflute:${versions.lastaflute}"
 
