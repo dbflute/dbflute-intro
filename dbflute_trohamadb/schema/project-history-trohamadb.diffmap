@@ -1,6 +1,7 @@
 map:{
     ; 2018/05/11 14:47:22 = map:{
         ; diffDate = 2018/05/11 14:47:22
+        ; comment = revert mistake
         ; tableCount = map:{
             ; next = 116
             ; previous = 117
@@ -33,29 +34,9 @@ map:{
             }
         }
     }
-    ; 2018/05/04 14:08:53 = map:{
-        ; diffDate = 2018/05/04 14:08:53
-        ; tableDiff = map:{
-            ; member = map:{
-                ; tableName = member
-                ; diffType = CHANGE
-                ; columnDiff = map:{
-                    ; MEMBER_ID = map:{
-                        ; columnName = MEMBER_ID
-                        ; diffType = CHANGE
-                        ; columnCommentDiff = map:{
-                            ; next = "x会員ID: 会員を識別するID。連番として基本的に自動採番される。
-（会員IDだけに限らず）採番方法はDBMSによって変わる。"
-                            ; previous = "会員ID: 会員を識別するID。連番として基本的に自動採番される。
-（会員IDだけに限らず）採番方法はDBMSによって変わる。"
-                        }
-                    }
-                }
-            }
-        }
-    }
     ; 2018/05/04 11:47:50 = map:{
         ; diffDate = 2018/05/04 11:47:50
+        ; comment = miraco
         ; tableDiff = map:{
             ; next_schema_product = map:{
                 ; tableName = next_schema_product
@@ -87,6 +68,7 @@ map:{
     }
     ; 2018/05/04 11:40:23 = map:{
         ; diffDate = 2018/05/04 11:40:23
+        ; comment = for schema policy check
         ; tableDiff = map:{
             ; white_perrotta_over_member = map:{
                 ; tableName = white_perrotta_over_member
@@ -106,6 +88,7 @@ map:{
     }
     ; 2018/05/04 11:38:51 = map:{
         ; diffDate = 2018/05/04 11:38:51
+        ; comment = for schema policy check
         ; tableDiff = map:{
             ; white_all_in_one_cls_category = map:{
                 ; tableName = white_all_in_one_cls_category
@@ -177,6 +160,7 @@ map:{
     }
     ; 2018/05/04 11:33:56 = map:{
         ; diffDate = 2018/05/04 11:33:56
+        ; comment = for schema policy check
         ; tableDiff = map:{
             ; white_perrotta_over_member = map:{
                 ; tableName = white_perrotta_over_member
@@ -214,6 +198,8 @@ map:{
     }
     ; 2018/05/04 11:05:59 = map:{
         ; diffDate = 2018/05/04 11:05:59
+        ; comment = for schema policy check
+PRODUCT_ID should be Integer
         ; tableDiff = map:{
             ; next_schema_product = map:{
                 ; tableName = next_schema_product
