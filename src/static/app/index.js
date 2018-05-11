@@ -194,12 +194,14 @@ import 'semantic-ui-riot'
 
 import './main/main.tag'
 import './client/create.tag'
+import './common/result-view.tag'
 
 global.route = route;
 global.observable = riot.observable();
 global.ffetch = new FFetchWrapper();
 
 ffetch.errors.subscribe(response => {
+  let header = null;
   let messages = null;
   let reload = false;
   if (response.status === 0) {
@@ -208,6 +210,7 @@ ffetch.errors.subscribe(response => {
   }
   // TODO jflute intro: index.js extract to method
   if (response.status === 400) {
+    header = '400 Bad Request'
     // TODO jflute intro: index.js validation error handling
     if (response.data.messages) {
       var messageList = new Array();
@@ -246,16 +249,15 @@ ffetch.errors.subscribe(response => {
       messages = angular.isArray(response.data) ? response.data : [response.data];
     }
   } else if (response.status === 401) {
-    messages = ['401 Not Authorized'];
+    header = '401 Not Authorized';
     reload = true;
   } else if (response.status === 403) {
-    messages = ['403 Forbidden'];
+    header = '403 Forbidden';
   } else if (response.status >= 500) {
+    header = '500 Server Error';
     messages = angular.isArray(response.data) ? response.data : [response.data];
-    messages.unshift('500 Server Error');
   }
-  alert(messages)
-  // TODO dialog
+  observable.trigger('result', { header, messages })
 });
 
 route('', () => {
