@@ -1,0 +1,199 @@
+# /---------------------------------------------------------------------------
+# additionalForeignKeyMap: (NotRequired - Default 'map:{}')
+#
+# If foreign key does not exist in your database,
+# you can set up here as virtual foreign key for DBFlute.
+#
+# And it's one-to-one relation if you add one fixed condition to referrer table, 
+# you can set virtual foreign key with fixedCondition and fixedSuffix.
+# And you can use it to view objects too.
+#
+# If local column name is same as foreign column name,
+# you can omit the setting of localColumnName and foreignColumnName.
+# The names are treated as case insensitive.
+#
+# Example:
+# map:{
+#     ; FK_MEMBER_MEMBER_STATUS_CODE = map:{
+#         ; localTableName  = MEMBER             ; foreignTableName  = MEMBER_STATUS
+#         ; localColumnName = MEMBER_STATUS_CODE ; foreignColumnName = MEMBER_STATUS_CODE
+#     }
+#     ; FK_PURCHASE_MEMBER_ID = map:{
+#         ; localTableName  = PURCHASE  ; foreignTableName  = MEMBER
+#     }
+#     ; FK_MEMBER_MEMBER_ADDRESS_VALID = map:{
+#         ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_ADDRESS
+#         ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+#         ; fixedCondition = 
+#          $$foreignAlias$$.VALID_BEGIN_DATE <= /*targetDate(Date)*/null
+#      and $$foreignAlias$$.VALID_END_DATE >= /*targetDate(Date)*/null 
+#         ; fixedSuffix = AsValid
+#     }
+# }
+# 
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # ====================================================================================
+    #                                                               Suppress Join/SubQuery
+    #                                                               ======================
+    ; FK_WHITE_SUPPRESS_JOIN_SQ_MANY_BASIC_TEST = map:{
+        ; localTableName  = WHITE_SUPPRESS_JOIN_SQ_MANY ; foreignTableName  = WHITE_SUPPRESS_JOIN_SQ
+        ; localColumnName = SUPPRESS_JOIN_SQ_ID ; foreignColumnName = SUPPRESS_JOIN_SQ_ID
+        ; suppressJoin = true ; suppressSubQuery = true
+    }
+    ; FK_WHITE_SUPPRESS_JOIN_SQ_MANY_ONE_TEST = map:{
+        ; localTableName  = WHITE_SUPPRESS_JOIN_SQ_MANY ; foreignTableName  = WHITE_SUPPRESS_JOIN_SQ_MANY_ONE
+        ; localColumnName = MANY_ONE_ID ; foreignColumnName = MANY_ONE_ID
+        ; suppressJoin = true
+    }
+    ; FK_WHITE_SUPPRESS_JOIN_SQ_MANY_ONE_ONE_TEST = map:{
+        ; localTableName  = WHITE_SUPPRESS_JOIN_SQ_MANY_ONE ; foreignTableName  = WHITE_SUPPRESS_JOIN_SQ_MANY_ONE_ONE
+        ; localColumnName = MANY_ONE_ONE_ID ; foreignColumnName = MANY_ONE_ONE_ID
+        ; suppressSubQuery = true
+    }
+    ; FK_WHITE_SUPPRESS_JOIN_SQ_ONE_TEST = map:{
+        ; localTableName  = WHITE_SUPPRESS_JOIN_SQ_ONE ; foreignTableName  = WHITE_SUPPRESS_JOIN_SQ
+        ; localColumnName = SUPPRESS_JOIN_SQ_ID ; foreignColumnName = SUPPRESS_JOIN_SQ_ID
+        ; suppressJoin = true
+    }
+    ; FK_WHITE_SUPPRESS_JOIN_SQ_ONE_ADDI_TEST = map:{
+        ; localTableName  = WHITE_SUPPRESS_JOIN_SQ_ONE ; foreignTableName = WHITE_SUPPRESS_JOIN_SQ_ONE_ADDI
+        ; localColumnName = ONE_ADDI_ID ; foreignColumnName = ONE_ADDI_ID
+        ; suppressJoin = true ; suppressSubQuery = true
+    }
+
+    # ====================================================================================
+    #                                                               Implicit Conversion FK
+    #                                                               ======================
+    #
+    # for the test of implicit conversion foreign key
+    # (expect no compile error)
+    #
+    ; FK_WHITE_IMPLICIT_CONV_INTEGER_NUMERIC = map:{
+        ; localTableName  = WHITE_IMPLICIT_CONV_INTEGER ; foreignTableName  = WHITE_IMPLICIT_CONV_NUMERIC
+        ; localColumnName = IMPLICIT_CONV_NUMERIC_ID ; foreignColumnName = IMPLICIT_CONV_NUMERIC_ID
+    }
+    ; FK_WHITE_IMPLICIT_CONV_INTEGER_STRING = map:{
+        ; localTableName  = WHITE_IMPLICIT_CONV_INTEGER ; foreignTableName  = WHITE_IMPLICIT_CONV_STRING
+        ; localColumnName = IMPLICIT_CONV_STRING_ID ; foreignColumnName = IMPLICIT_CONV_STRING_ID
+    }
+    ; FK_WHITE_IMPLICIT_CONV_NUMERIC_INTEGER = map:{
+        ; localTableName  = WHITE_IMPLICIT_CONV_NUMERIC ; foreignTableName  = WHITE_IMPLICIT_CONV_INTEGER
+        ; localColumnName = IMPLICIT_CONV_INTEGER_ID ; foreignColumnName = IMPLICIT_CONV_INTEGER_ID
+    }
+    ; FK_WHITE_IMPLICIT_CONV_NUMERIC_STRING = map:{
+        ; localTableName  = WHITE_IMPLICIT_CONV_NUMERIC ; foreignTableName  = WHITE_IMPLICIT_CONV_STRING
+        ; localColumnName = IMPLICIT_CONV_STRING_ID ; foreignColumnName = IMPLICIT_CONV_STRING_ID
+    }
+    ; FK_WHITE_IMPLICIT_CONV_STRING_INTEGER = map:{
+        ; localTableName  = WHITE_IMPLICIT_CONV_STRING ; foreignTableName  = WHITE_IMPLICIT_CONV_INTEGER
+        ; localColumnName = IMPLICIT_CONV_INTEGER_ID ; foreignColumnName = IMPLICIT_CONV_INTEGER_ID
+    }
+    ; FK_WHITE_IMPLICIT_CONV_STRING_NUMERIC = map:{
+        ; localTableName  = WHITE_IMPLICIT_CONV_STRING ; foreignTableName  = WHITE_IMPLICIT_CONV_NUMERIC
+        ; localColumnName = IMPLICIT_CONV_NUMERIC_ID ; foreignColumnName = IMPLICIT_CONV_NUMERIC_ID
+    }
+
+    # ====================================================================================
+    #                                                                  Implicit Reverse FK
+    #                                                                  ===================
+    #
+    # for the test of implicit reverse foreign key
+    #
+    ; FK_WHITE_IMPLICIT_REVERSE_FK_REF_WITH = map:{
+        ; localTableName  = WHITE_IMPLICIT_REVERSE_FK ; foreignTableName  = WHITE_IMPLICIT_REVERSE_FK_REF
+        ; localColumnName = WHITE_IMPLICIT_REVERSE_FK_ID ; foreignColumnName = WHITE_IMPLICIT_REVERSE_FK_ID
+        ; fixedCondition =
+         $$foreignAlias$$.VALID_BEGIN_DATE <= /*targetDate(Date)*/null
+     and $$foreignAlias$$.VALID_END_DATE >= /*targetDate(Date)*/null
+        ; fixedSuffix = WithImplicitReverseFK
+    }
+    ; FK_WHITE_IMPLICIT_REVERSE_FK_REF_SUPPRESS = map:{
+        ; localTableName  = WHITE_IMPLICIT_REVERSE_FK ; foreignTableName  = WHITE_IMPLICIT_REVERSE_FK_SUPPRESS
+        ; localColumnName = WHITE_IMPLICIT_REVERSE_FK_ID ; foreignColumnName = WHITE_IMPLICIT_REVERSE_FK_ID
+        ; fixedCondition =
+         $$foreignAlias$$.VALID_BEGIN_DATE <= /*targetDate(Date)*/null
+     and $$foreignAlias$$.VALID_END_DATE >= /*targetDate(Date)*/null
+        ; fixedSuffix = SuppressImplicitReverseFK
+        ; isSuppressImplicitReverseFK = true
+    }
+    # with reverse one-to-one relation
+    ; FK_WHITE_SELF_REFERENCE_REF_ONE_DIRECT_PARENT = map:{
+        ; localTableName  = WHITE_SELF_REFERENCE_REF_ONE ; foreignTableName  = WHITE_SELF_REFERENCE
+        ; localColumnName = SELF_REFERENCE_ID ; foreignColumnName = PARENT_ID
+        ; fixedCondition = 1=1
+        ; fixedSuffix = AsDirectParent
+    }
+    ; FK_WHITE_SPLIT_MULTIPLE_FK = map:{
+        ; localTableName  = WHITE_SPLIT_MULTIPLE_FK_BASE ; foreignTableName  = WHITE_SPLIT_MULTIPLE_FK_REF
+        # both FIRST_ID and SECOND_CODE are keys for the relation
+        # but SECOND_CODE is not defined at local table
+        ; localColumnName = FIRST_ID ; foreignColumnName = FIRST_ID
+        ; fixedCondition = 
+$$over($localTable.whiteSplitMultipleFkNext)$$.SECOND_CODE = $$foreignAlias$$.SECOND_CODE
+        ; fixedSuffix = AsSplitMultipleFkTest
+    }
+
+    # ====================================================================================
+    #                                                                Formatted BizOneToOne
+    #                                                                =====================
+    # for the test of auto-formatted biz-one-to-one
+    ; FK_MEMBER_MEMBER_ADDRESS_FORMATTED_BASIC = map:{
+        ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_ADDRESS
+        ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+        ; fixedCondition = 
+               $$foreignAlias$$.VALID_BEGIN_DATE <= /*targetDate(Date)*/
+and $$foreignAlias$$.VALID_END_DATE >= /*targetDate(Date)*/
+    
+        ; fixedSuffix = AsFormattedBasic
+    }
+    ; FK_MEMBER_MEMBER_ADDRESS_FORMATTED_LONG = map:{
+        ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_ADDRESS
+        ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+        ; fixedCondition =$$foreignAlias$$.VALID_BEGIN_DATE <= /*targetDate(Date)*/null
+         and $$foreignAlias$$.VALID_END_DATE
+ >= /*targetDate(Date)*/null
+        ; fixedSuffix = AsFormattedLong
+    }
+    ; FK_MEMBER_MEMBER_LOGIN_FORMATTED_MANY = map:{
+        ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_LOGIN
+        ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+        ; fixedCondition = 
+         $$over($foreignTable.member.memberStatus)$$.DISPLAY_ORDER is not null
+and $$over($foreignTable.member.memberWithdrawalAsOne)$$.WITHDRAWAL_DATETIME is not null
+ and $$over($foreignTable.memberStatus, DISPLAY_ORDER)$$.STATUS_ORDER is not null
+  and $$over($foreignTable.member.memberWithdrawalAsOne.withdrawalReason, DISPLAY_ORDER)$$.REASON_ORDER is not null
+   and $$over($foreignTable.memberStatus)$$.MEMBER_STATUS_NAME is not null
+    and $$over($localTable.memberSecurityAsOne)$$.REMINDER_QUESTION is not null
+     and $$over($localTable.memberServiceAsOne)$$.SERVICE_POINT_COUNT is not null
+        ; fixedSuffix = AsFormattedMany
+    }
+
+    # ====================================================================================
+    #                                                       EmbeddedComment Classification
+    #                                                       ==============================
+    ; FK_MEMBER_MEMBER_LOGIN_EMBEDDED_COMMENT_CLASSIFICATION = map:{
+        ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_LOGIN
+        ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+        ; fixedCondition = $$foreignAlias$$.MOBILE_LOGIN_FLG = /*$cls(Flg.True)*/
+      or $$foreignAlias$$.LOGIN_MEMBER_STATUS_CODE in /*$cls(SubItemTable.serviceAvailable)*/
+      or $$foreignAlias$$.LOGIN_MEMBER_STATUS_CODE in /*$cls(SubItemTable.lastestStatus)*/
+        ; fixedSuffix = AsEmbeddedCommentClassificationTest
+    }
+
+    # ====================================================================================
+    #                                                                           Deprecated
+    #                                                                           ==========
+    ; FK_MEMBER_MEMBER_LOGIN_DEPRECATED_TEST = map:{
+        ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_LOGIN
+        ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+        ; fixedCondition = 
+$$over($localTable.memberStatus)$$.DISPLAY_ORDER = /*displayOrder(Integer)*/
+        ; fixedSuffix = AsLocalBindOverTest
+        ; deprecated = the test of dep
+    }
+}
+# ----------------/
+
+

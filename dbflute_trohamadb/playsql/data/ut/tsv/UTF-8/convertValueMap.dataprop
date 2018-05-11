@@ -1,0 +1,15 @@
+map:{
+    ; $$LINE$$ = map:{
+        ; \\"\tfoo = ""\tfoo
+    }
+    ; $$ALL$$ = map:{
+        ; contain:\\n = \n
+    }
+    ; STRING_CONVERTED = map:{
+        ; foo = bar
+        ; F = case sensitive
+        ; \N = $$empty$$
+        ; $$empty$$ = $$empty$$
+        ; NullValue = $$null$$
+    }
+}

@@ -1,0 +1,71 @@
+
+* * * * * * * * * *
+*                 *
+* Xls Data Result *
+*                 *
+* * * * * * * * * *
+data-directory: playsql/data/ut/xls
+
+[20-member.xls]
+  MEMBER (20)
+  MEMBER_ADDRESS (20)
+  MEMBER_FOLLOWING (111)
+  MEMBER_LOGIN (56)
+  MEMBER_SECURITY (20)
+  MEMBER_SERVICE (20)
+  MEMBER_WITHDRAWAL (4)
+
+[30-product.xls]
+  PRODUCT (20)
+  PURCHASE (70)
+  PURCHASE_PAYMENT (100)
+
+[90-vendor.xls]
+  venDor_Check (5)
+
+[92-whitebox-basic.xls]
+  WHITE_QUOTED (3)
+  WHITE_SELF_REFERENCE (3)
+  WHITE_ALL_IN_ONE_CLS_CATEGORY (4)
+  WHITE_ALL_IN_ONE_CLS_ELEMENT (13)
+  WHITE_CLS_NO_CAMELIZING (5)
+
+[92-whitebox-dataadjustment.xls]
+  WHITE_DATE_ADJUSTMENT (6)
+
+[92-whitebox-escaped-dfprop.xls]
+  WHITE_ESCAPED_DFPROP (3)
+  WHITE_ESCAPED_NUMBER_INITIAL (4)
+
+[92-whitebox-largetextfile.xls]
+  WHITE_LARGE_TEXT_FILE (6)
+
+[92-whitebox-loaddata1.xls]
+  WHITE_LOAD_DATA (3)
+
+[92-whitebox-loaddata2.xls]
+  WHITE_LOAD_DATA (2)
+
+[92-whitebox-loaddata3.xls]
+  WHITE_LOAD_DATA (1)
+
+[92-whitebox-loaddata4.xls]
+  WHITE_LOAD_DATA (1)
+
+[92-whitebox-loaddata5.xls]
+  WHITE_LOAD_DATA (1)
+
+[92-whitebox-loaddata6.xls]
+  WHITE_LOAD_DATA (1)
+
+[92-whitebox-loaddata7.xls]
+  WHITE_LOAD_DATA (1)
+
+[92-whitebox-loaddata8.xls]
+  WHITE_LOAD_DATA (1)
+
+[92-whitebox-loaddata9.xls]
+  WHITE_LOAD_DATA (2)
+
+[92-whitebox-xlsman.xls]
+  WHITE_XLS_MAN (15)

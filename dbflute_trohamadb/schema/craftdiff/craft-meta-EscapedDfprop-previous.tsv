@@ -1,0 +1,4 @@
+"ESCAPED_DFPROP_CODE"	"ESCAPED_DFPROP_NAME"
+";@\"	"ab=cd"
+"\};"	"}}{"
+"{=}"	";\\"

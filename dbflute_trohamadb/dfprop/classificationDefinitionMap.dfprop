@@ -1,0 +1,105 @@
+# /---------------------------------------------------------------------------
+# classificationDefinitionMap: (NotRequired - Default map:{})
+#
+# The definition of classification.
+#
+# Specification:
+# map: {
+#     [classification-name] = list:{
+#         ; map:{
+#             ; topComment=[comment]; codeType=[String(default) or Number or Boolean]
+#             ; undefinedHandlingType=[EXCEPTION or LOGGING(default) or ALLOWED]
+#             ; isUseDocumentOnly=[true or false(default)]
+#             ; isSuppressAutoDeploy=[true or false(default)]
+#             ; groupingMap = map:{
+#                 ; [group-name] = map:{
+#                     ; groupComment=[comment]
+#                     ; elementList=list:{[the list of classification element's name]}
+#                 }
+#             }
+#         }
+#         # classification elements for implicit classification
+#         ; map:{
+#             ; code=[code]; name=[name]; alias=[alias]; comment=[comment]
+#             ; sisterCode=[code or code-list]; subItemMap=map:{[free-map]}
+#         }
+#         # settings for table classification
+#         ; map:{
+#             ; table=[table-name]
+#             ; code=[column-name for code]; name=[column-name for name]
+#             ; alias=[column-name for alias]; comment=[column-name for comment]}
+#             ; where=[condition for select]; orderBy=[column-name for ordering]
+#             ; exceptCodeList=[the list of except code]
+#         }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    ; $$split$$ = map:{
+        ; land = dummy
+        ; sea = dummy
+    }
+
+    # the test of Classification Resource
+    # MemberStatus and Flg are defined
+    # at classificationResource.dfprop(ERD Export File)
+
+    # ====================================================================================
+    #                                                                               Member
+    #                                                                               ======
+    ; ServiceRank = list:{
+        ; map:{topComment=会員が受けられるサービスのランクを示す
+            ; codeType=String
+            ; deprecatedMap = map:{
+                ; Plastic = テーブル区分値の非推奨要素指定のテストのため
+            }
+        }
+        ; map:{
+            ; table=SERVICE_RANK
+            ; code=SERVICE_RANK_CODE; name=SERVICE_RANK_NAME
+            ; comment=DESCRIPTION; orderBy=DISPLAY_ORDER
+        }
+    }
+    ; Region = list:{
+        ; map:{topComment=mainly region of member address; codeType=Number}
+        ; map:{
+            ; table=REGION
+            ; code=REGION_ID; name=REGION_NAME
+            ; orderBy=REGION_ID
+        }
+    }
+    ; WithdrawalReason = list:{
+        ; map:{
+            ; topComment=reason for member withdrawal; codeType=String
+            ; isSuppressDBAccessClass=true
+        }
+        ; map:{
+            ; table=WITHDRAWAL_REASON
+            ; code=WITHDRAWAL_REASON_CODE; name=WITHDRAWAL_REASON_CODE
+            ; comment=WITHDRAWAL_REASON_TEXT; orderBy=DISPLAY_ORDER
+        }
+    }
+
+    # ====================================================================================
+    #                                                                              Product
+    #                                                                              =======
+    ; PaymentMethod = list:{
+        ; map:{
+            ; topComment=支払方法; codeType=String
+            ; isCheckImplicitSet=true
+            ; groupingMap = map:{
+                ; recommended = map:{
+                    ; groupComment = 最も推奨されている方法
+                    ; elementList = list:{ByHand}
+                }
+            }
+        }
+        ; map:{code=HAN; name=ByHand; alias=手渡し; comment=Face-to-Faceの手渡しで商品と交換}
+        ; map:{code=BAK; name=BankTransfer; alias=銀行振込; comment=銀行振込で確認してから商品発送}
+        ; map:{code=CRC; name=CreditCard; alias=クレジットカード; comment=クレジットカードの番号を教えてもらう}
+    }
+}
+# ----------------/
+
