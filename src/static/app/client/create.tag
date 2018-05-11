@@ -179,9 +179,9 @@
         client.jdbcDriver = self.jdbcDriver
       }
       const testConnection = self.refs.testConnection.checked
-      ApiFactory.createClient(client, testConnection).then(function (response) {
+      ApiFactory.createClient(client, testConnection).then(() => {
         route('main')
-      }).catch(() => { })
+      })
     }
     this.changeFile = function (files) {
       let file = files[0]

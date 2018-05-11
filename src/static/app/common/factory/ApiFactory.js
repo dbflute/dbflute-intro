@@ -3,22 +3,13 @@ export default class ApiFactory {
   //                                                                           Intro
   //                                                                           =====
   manifest() {
-    return http({
-      method: 'POST',
-      url: 'api/intro/manifest'
-    });
+    return ffetch.post('api/intro/manifest');
   }
   classifications() {
-    return http({
-      method: 'POST',
-      url: 'api/intro/classifications'
-    });
+    return ffetch.post('api/intro/classifications');
   }
   configuration() {
-    return http({
-      method: 'POST',
-      url: 'api/intro/configuration'
-    });
+    return ffetch.post('api/intro/configuration');
   }
 
   // ===============================================================================
@@ -26,153 +17,99 @@ export default class ApiFactory {
   //                                                                         =======
 
   createWelcomeClient(client, testConnection) {
-    return http({
-      method: 'POST',
-      url: 'api/welcome/create',
-      data: { client: client, testConnection: testConnection }
-    });
+    return ffetch.post('api/welcome/create',
+      { body: { client: client, testConnection: testConnection } });
   }
 
   // ===============================================================================
   //                                                                          Client
   //                                                                          ======
   clientList() {
-    return http({
-      method: 'POST',
-      url: 'api/client/list'
-    });
+    return ffetch.post('api/client/list');
   }
   clientOperation(projectName) {
-    return http({
-      method: 'POST',
-      url: 'api/client/operation/' + projectName
-    });
+    return ffetch.post('api/client/operation/' + projectName);
   }
   createClient(client, testConnection) {
-    return http({
-      method: 'POST',
-      url: 'api/client/create/' + client.projectName,
-      data: { client: client, testConnection: testConnection }
-    });
+    return ffetch.post(
+      `api/client/create/${client.projectName}`,
+      { body: { client, testConnection } }
+    )
   }
   updateClient(clientBody, testConnection) {
-    return http({
-      method: 'POST',
-      url: 'api/client/edit/' + clientBody.projectName,
-      data: { clientBody: clientBody, testConnection: testConnection }
-    });
+    return ffetch.post('api/client/edit/' + clientBody.projectName,
+      { body: { clientBody: clientBody, testConnection: testConnection } });
   }
   removeClient(clientBody) {
-    return http({
-      method: 'POST',
-      url: 'api/client/delete/' + clientBody.project
-    });
+    return ffetch.post('api/client/delete/' + clientBody.project);
   }
   settings(projectName) {
-    return http({
-      method: 'POST',
-      url: 'api/settings/' + projectName
-    })
+    return ffetch.post('api/settings/' + projectName)
   }
   updateSettings(clientBody) {
-    return http({
-      method: 'POST',
-      url: 'api/settings/edit/' + clientBody.projectName,
-      data: { client: clientBody }
-    });
+    return ffetch.post('api/settings/edit/' + clientBody.projectName,
+      { body: { client: clientBody } });
   }
   dfporpBeanList(clientBody) {
-    return http({
-      method: 'POST',
-      url: 'api/dfprop/' + clientBody.projectName + '/list'
-    });
+    return ffetch.post('api/dfprop/' + clientBody.projectName + '/list');
   }
   syncSchema(projectName) {
-    return http({
-      method: 'POST',
-      url: 'api/dfprop/' + projectName + '/syncschema'
-    });
+    return ffetch.post('api/dfprop/' + projectName + '/syncschema');
   }
   editSyncSchema(projectName, syncSchemaSettingData) {
-    return http({
-      method: 'POST',
-      url: 'api/dfprop/' + projectName + '/syncschema/edit',
-      data: {
-        url: syncSchemaSettingData.url,
-        schema: syncSchemaSettingData.schema,
-        user: syncSchemaSettingData.user,
-        password: syncSchemaSettingData.password,
-        isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
-      }
-    });
+    return ffetch.post('api/dfprop/' + projectName + '/syncschema/edit',
+      {
+        body: {
+          url: syncSchemaSettingData.url,
+          schema: syncSchemaSettingData.schema,
+          user: syncSchemaSettingData.user,
+          password: syncSchemaSettingData.password,
+          isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
+        }
+      });
   }
   document(projectName) {
-    return http({
-      method: 'POST',
-      url: 'api/dfprop/' + projectName + '/document'
-    });
+    return ffetch.post('api/dfprop/' + projectName + '/document');
   }
   editDocument(projectName, documentSetting) {
-    return http({
-      method: 'POST',
-      url: 'api/dfprop/' + projectName + '/document/edit',
-      data: {
-        upperCaseBasic: documentSetting.upperCaseBasic,
-        aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-        dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis
-      }
-    });
+    return ffetch.post('api/dfprop/' + projectName + '/document/edit',
+      {
+        body: {
+          upperCaseBasic: documentSetting.upperCaseBasic,
+          aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
+          dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis
+        }
+      });
   }
   playsqlBeanList(clientBody) {
-    return http({
-      method: 'POST',
-      url: 'api/playsql/' + clientBody.projectName + '/list'
-    });
+    return ffetch.post('api/playsql/' + clientBody.projectName + '/list');
   }
   logBeanList(clientBody) {
-    return http({
-      method: 'POST',
-      url: 'api/log/' + clientBody.projectName + '/list'
-    });
+    return ffetch.post('api/log/' + clientBody.projectName + '/list');
   }
 
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======
   engineLatest() {
-    return http({
-      method: 'POST',
-      url: 'api/engine/latest'
-    });
+    return ffetch.post('api/engine/latest');
   }
   engineVersions() {
-    return http({
-      method: 'POST',
-      url: 'api/engine/versions'
-    });
+    return ffetch.post('api/engine/versions');
   }
   // needs trailing slash if URL parameter contains dot
   downloadEngine(params) {
-    return http({
-      method: 'POST',
-      url: 'api/engine/download/' + params.version + '/'
-    });
+    return ffetch.post('api/engine/download/' + params.version + '/');
   }
   removeEngine(params) {
-    return http({
-      method: 'POST',
-      url: 'api/engine/remove/' + params.version + '/'
-    });
+    return ffetch.post('api/engine/remove/' + params.version + '/');
   }
 
   // ===============================================================================
   //                                                                            Task
   //                                                                            ====
   task(projectName, task) {
-    return http({
-      method: 'POST',
-      url: 'api/task/execute/' + projectName + '/' + task
-    });
+    return ffetch.post('api/task/execute/' + projectName + '/' + task);
   }
   // ===============================================================================
   //                                                                           Retry
@@ -186,27 +123,4 @@ export default class ApiFactory {
       data: data
     });
   }
-}
-
-const http = function (request) {
-  return fetch(request.url, {
-    method: request.method,
-    body: toJson(request.data),
-  }).then(response => {
-    if (!response.ok) {
-      return response.json().then(json => {
-        throw new ApiError(response.status, json)
-      })
-    }
-    return response.json()
-  })
-}
-
-const toJson = function (value) {
-  return JSON.stringify(value, (k, v) => {
-    if (v === '') {
-      return null
-    }
-    return v
-  })
 }

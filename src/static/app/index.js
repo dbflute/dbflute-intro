@@ -189,10 +189,74 @@
 
 import riot from 'riot'
 import route from 'riot-route'
+import FFetchWrapper from './common/FFetchWrapper'
 import 'semantic-ui-riot'
 
 import './main/main.tag'
 import './client/create.tag'
+
+global.route = route;
+global.observable = riot.observable();
+global.ffetch = new FFetchWrapper();
+
+ffetch.errors.subscribe(response => {
+  let messages = null;
+  let reload = false;
+  if (response.status === 0) {
+    messages = ['Cannot access the server, retry later'];
+    reload = true;
+  }
+  // TODO jflute intro: index.js extract to method
+  if (response.status === 400) {
+    // TODO jflute intro: index.js validation error handling
+    if (response.data.messages) {
+      var messageList = new Array();
+      for (var key in response.data.messages) {
+        for (var i in response.data.messages[key]) {
+          var message = response.data.messages[key][i];
+          if (key.match(/List/)) {
+            if (key.match(/[0-9]/)) {
+              var newKey = '';
+              var splitList = key.split(/[0-9]/);
+              for (var i in splitList) {
+                newKey += splitList[i].replace(/[0-9]/, '');
+              }
+              key = newKey;
+            } else {
+              key += '[]';
+            }
+          }
+          if (key.lastIndexOf('.')) {
+            key = key.substring(key.lastIndexOf('.') + 1);
+          }
+          if (key === '_global') { // don't use key if global
+            messageList.push(message + '\r\n');
+          } else {
+            // TODO translate
+            // var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
+            // var $translate = $injector.get('$translate');
+            // var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
+            // messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');
+            messageList.push(`${key} ${message}\r\n`);
+          }
+        }
+      }
+      messages = messageList;
+    } else {
+      messages = angular.isArray(response.data) ? response.data : [response.data];
+    }
+  } else if (response.status === 401) {
+    messages = ['401 Not Authorized'];
+    reload = true;
+  } else if (response.status === 403) {
+    messages = ['403 Forbidden'];
+  } else if (response.status >= 500) {
+    messages = angular.isArray(response.data) ? response.data : [response.data];
+    messages.unshift('500 Server Error');
+  }
+  alert(messages)
+  // TODO dialog
+});
 
 route('', () => {
   riot.mount('content', 'main')
