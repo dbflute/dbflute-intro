@@ -98,11 +98,10 @@
     //                                                                     ===============
     this.prepareClientList = function () {
       ApiFactory.clientList().then(function (json) {
-        // if (json.length > 0) 
-        {
+        if (json.length > 0) {
           self.clientList = json
           self.update()
-          // } else {
+        } else {
           //   $state.go('welcome') // if no client show welcome page
         }
       })

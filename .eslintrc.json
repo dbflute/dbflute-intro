@@ -39,6 +39,7 @@
   },
   "globals": {
     "opts": true,
+    "observable": true,
     "route": true
   }
 }

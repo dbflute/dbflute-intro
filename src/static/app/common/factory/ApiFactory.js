@@ -28,7 +28,7 @@ export default class ApiFactory {
     return ffetch.post('api/client/list');
   }
   clientOperation(projectName) {
-    return ffetch.post('api/client/operation/' + projectName);
+    return ffetch.post(`api/client/operation/${projectName}`);
   }
   createClient(client, testConnection) {
     return ffetch.post(
@@ -37,27 +37,27 @@ export default class ApiFactory {
     )
   }
   updateClient(clientBody, testConnection) {
-    return ffetch.post('api/client/edit/' + clientBody.projectName,
+    return ffetch.post(`api/client/edit/${clientBody.projectName}`,
       { body: { clientBody: clientBody, testConnection: testConnection } });
   }
   removeClient(clientBody) {
-    return ffetch.post('api/client/delete/' + clientBody.project);
+    return ffetch.post(`api/client/delete/${clientBody.project}`);
   }
   settings(projectName) {
-    return ffetch.post('api/settings/' + projectName)
+    return ffetch.post(`api/settings/${projectName}`)
   }
   updateSettings(clientBody) {
-    return ffetch.post('api/settings/edit/' + clientBody.projectName,
+    return ffetch.post(`api/settings/edit/${clientBody.projectName}`,
       { body: { client: clientBody } });
   }
   dfporpBeanList(clientBody) {
-    return ffetch.post('api/dfprop/' + clientBody.projectName + '/list');
+    return ffetch.post(`api/dfprop/${clientBody.projectName}/list`);
   }
   syncSchema(projectName) {
-    return ffetch.post('api/dfprop/' + projectName + '/syncschema');
+    return ffetch.post(`api/dfprop/${projectName}/syncschema`);
   }
   editSyncSchema(projectName, syncSchemaSettingData) {
-    return ffetch.post('api/dfprop/' + projectName + '/syncschema/edit',
+    return ffetch.post(`api/dfprop/${projectName}/syncschema/edit`,
       {
         body: {
           url: syncSchemaSettingData.url,
@@ -69,10 +69,10 @@ export default class ApiFactory {
       });
   }
   document(projectName) {
-    return ffetch.post('api/dfprop/' + projectName + '/document');
+    return ffetch.post(`api/dfprop/${projectName}/document`);
   }
   editDocument(projectName, documentSetting) {
-    return ffetch.post('api/dfprop/' + projectName + '/document/edit',
+    return ffetch.post(`api/dfprop/${projectName}/document/edit`,
       {
         body: {
           upperCaseBasic: documentSetting.upperCaseBasic,
@@ -82,10 +82,10 @@ export default class ApiFactory {
       });
   }
   playsqlBeanList(clientBody) {
-    return ffetch.post('api/playsql/' + clientBody.projectName + '/list');
+    return ffetch.post(`api/playsql/${clientBody.projectName}/list`);
   }
   logBeanList(clientBody) {
-    return ffetch.post('api/log/' + clientBody.projectName + '/list');
+    return ffetch.post(`api/log/${clientBody.projectName}/list`);
   }
 
   // ===============================================================================
@@ -99,17 +99,17 @@ export default class ApiFactory {
   }
   // needs trailing slash if URL parameter contains dot
   downloadEngine(params) {
-    return ffetch.post('api/engine/download/' + params.version + '/');
+    return ffetch.post(`api/engine/download/${params.version}/`);
   }
   removeEngine(params) {
-    return ffetch.post('api/engine/remove/' + params.version + '/');
+    return ffetch.post(`api/engine/remove/${params.version}/`);
   }
 
   // ===============================================================================
   //                                                                            Task
   //                                                                            ====
   task(projectName, task) {
-    return ffetch.post('api/task/execute/' + projectName + '/' + task);
+    return ffetch.post(`api/task/execute/${projectName}/${task}`);
   }
   // ===============================================================================
   //                                                                           Retry
