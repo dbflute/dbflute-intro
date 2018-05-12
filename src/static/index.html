@@ -1,24 +1,25 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>DBFlute Intro</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.css">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  </head>
-  <body>
-    <!--[if lt IE 10]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>DBFlute Intro</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.css">
+  <link rel="stylesheet" href="./app/index.css">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+</head>
+<body>
+  <!--[if lt IE 10]>
+      <div class="ui error message">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
 
-    <navbar />
-      <div class="ui container">
-      <content></content>
-    </div>
-    <result-view></result-view>
-    <network-error-view></network-error-view>
-    <script src="./main.js"></script>
-  </body>
+  <navbar></navbar>
+  <div class="ui main container">
+    <content></content>
+  </div>
+  <result-view></result-view>
+  <network-error-view></network-error-view>
+  <script src="./main.js"></script>
+</body>
 </html>

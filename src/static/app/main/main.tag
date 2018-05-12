@@ -4,14 +4,27 @@
     <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
   </div>
   <table class="ui table">
-    <!-- <thead>
-        <tr>
-          <th>{ 'LABEL_projectName' | translate:translationData }</th>
-          <th>{ 'LABEL_databaseCode' | translate:translationData }</th>
-          <th>{ 'LABEL_languageCode' | translate:translationData }</th>
-          <th>{ 'LABEL_containerCode' | translate:translationData }</th>
-        </tr>
-      </thead> -->
+    <thead>
+      <tr>
+        <th>
+          <!-- { 'LABEL_projectName' | translate:translationData } -->
+          project
+        </th>
+        <th>
+          <!-- { 'LABEL_databaseCode' | translate:translationData } -->
+          database
+        </th>
+        <th>
+          <!-- { 'LABEL_languageCode' | translate:translationData } -->
+          language
+        </th>
+        <th>
+          <!-- { 'LABEL_containerCode' | translate:translationData } -->
+          container
+        </th>
+        <th></th>
+      </tr>
+    </thead>
     <tbody class="list-group">
       <tr each="{client in clientList}">
         <td>
@@ -26,19 +39,22 @@
       </tr>
     </tbody>
   </table>
-  <div>
-    <h2>DBFlute Engine</h2>
-    <button type="button" class="ui button primary" onclick="{ downloadModal }">
-      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
-    </button>
-  </div>
+
+  <h2>DBFlute Engine</h2>
+  <button type="button" class="ui button primary" onclick="{ downloadModal }">
+    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
+  </button>
+
   <table class="ui table">
-    <!-- <thead>
-        <tr>
-          <th>{ 'LABEL_engineVersion' | translate:translationData }</th>
-          <th></th>
-        </tr>
-      </thead> -->
+    <thead>
+      <tr>
+        <th>
+          <!-- { 'LABEL_engineVersion' | translate:translationData } -->
+          engine version
+        </th>
+        <th></th>
+      </tr>
+    </thead>
     <tbody>
       <tr each="{version in versions}">
         <td>{ version }</td>
@@ -56,6 +72,13 @@
       <small>{ key } = { value }</small>
     </div>
   </div>
+
+  <style>
+    table+h2,
+    table+h3 {
+      margin-top: 3rem;
+    }
+  </style>
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'

@@ -87,6 +87,7 @@ import 'semantic-ui-riot'
 import './main/main.tag'
 import './client/create.tag'
 import './common/result-view.tag'
+import './common/navbar.tag'
 
 global.route = route;
 global.observable = riot.observable();
