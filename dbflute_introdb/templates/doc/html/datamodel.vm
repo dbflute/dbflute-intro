@@ -1562,9 +1562,7 @@ PickupTableProperty.prototype = {
 	 */
 	getEscapedDatabaseComment: function() {
 		var escapedComment = "";
-		escapedComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
 		escapedComment = DecommentUtil.escapeNewlineCharacter(escapedComment);
-		escapedComment = DecommentUtil.escapeInputText(escapedComment);
 		return escapedComment;
 	},
 
@@ -1583,6 +1581,18 @@ PickupTableProperty.prototype = {
 			}
 		});
 		return result;
+	},
+
+	/**
+	 * Get display html comment
+	 * @return {string} display html comment
+	 */
+	getDisplayHtmlComment: function() {
+		var child = this.selectTargetHtmlElements()[0].childNodes[0];
+		if (child != null && child.nodeName === "#text") {
+			return child.nodeValue.trim();
+		}
+		return ""
 	},
 
 	/**
@@ -1700,9 +1710,7 @@ PickupColumnProperty.prototype = {
 	 */
 	getEscapedDatabaseComment: function() {
 		var escapedComment = "";
-		escapedComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
 		escapedComment = DecommentUtil.escapeNewlineCharacter(escapedComment);
-		escapedComment = DecommentUtil.escapeInputText(escapedComment);
 		return escapedComment;
 	},
 
@@ -1718,6 +1726,18 @@ PickupColumnProperty.prototype = {
 			return null;
 		}
 		return columnElement.parentElement.querySelector('.commentcell').querySelector('pre')
+	},
+
+	/**
+	 * Get display html comment
+	 * @return {string} display html comment
+	 */
+	getDisplayHtmlComment: function() {
+		var child = this.selectTargetHtmlElement().childNodes[0];
+		if (child != null && child.nodeName === "#text") {
+			return child.nodeValue.trim();
+		}
+		return ""
 	},
 
 	/**
@@ -1844,7 +1864,7 @@ Decomment.prototype = {
 	 */
 	setupSaveTableClickEvent: function(tableName, commentElement) {
 		var tableProperty = this.storeClient.getTablePickup(tableName) || new PickupTableProperty(tableName, null)
-		commentElement.onclick = this.createSaveDecommentFunction(tableProperty, commentElement);
+		commentElement.onclick = this.createSaveDecommentFunction(tableProperty);
 	},
 
 	/**
@@ -1864,19 +1884,17 @@ Decomment.prototype = {
 				var tableName = that.getTableNameFromElement(table);
 				var columnName = column.querySelector('.columnnamecell').innerText;
 				var columnProperty = that.storeClient.getColumnPickup(tableName, columnName) || new PickupTableProperty(tableName, columnName)
-				commentElement.onclick = that.createSaveDecommentFunction(columnProperty, commentElement);
+				commentElement.onclick = that.createSaveDecommentFunction(columnProperty);
 			});
 		});
 	},
 
 	/**
  	 * Create save decomment function
-	 * param {string} tableName - Table name
-	 * param {string} columnName - Column name
+	 * param {object} commentProperty - Comment property
 	 * returns {function} Save decomment function
-	 * returns {Object} Coment element of table or column
 	 */
-	createSaveDecommentFunction: function (commentProperty, commentElement) {
+	createSaveDecommentFunction: function (commentProperty) {
 		var that = this;
  		return function () {
 	 		var modalElement = document.getElementById("decomment-modal");
@@ -1885,8 +1903,8 @@ Decomment.prototype = {
 			document.getElementById("decomment-modal-column-info").innerText = commentProperty.toDialogTitle();
 
 			var inputElement = document.getElementById("decomment-input");
-			var previousWholeComment = commentProperty.buildDisplayComment()
-			inputElement.value = previousWholeComment.length > 0 ? previousWholeComment : commentProperty.getEscapedDatabaseComment();
+			var previousWholeComment = commentProperty.getDisplayHtmlComment();
+			inputElement.value = previousWholeComment;
 			inputElement.focus();
 
 			document.getElementById("decomment-close").onclick = function () {
