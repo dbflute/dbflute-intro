@@ -92,8 +92,16 @@ public class DfHacoMapPickup {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
+    public String getFormatVersion() {
+        return formatVersion;
+    }
+
     public void setPickupDatetime(LocalDateTime pickupDatetime) {
         this.pickupDatetime = pickupDatetime;
+    }
+
+    public LocalDateTime getPickupDatetime() {
+        return pickupDatetime;
     }
 
     public void addAllDiffList(List<DfHacoMapDiffPart> diffPartList) {
