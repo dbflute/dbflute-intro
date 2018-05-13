@@ -1533,10 +1533,8 @@ PickupTableProperty.prototype = {
 	 */
 	buildDisplayComment: function () {
 		var displayComment = "";
-		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-		displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
-		displayComment = DecommentUtil.escapeInputText(displayComment);
 		if (this.isDatabaseCommentConflict) {
+            displayComment = this.getEscapedDatabaseComment();
 			displayComment = displayComment + '\n(from database comment)\n\n=======\n\n';
 		}
 
@@ -1556,6 +1554,18 @@ PickupTableProperty.prototype = {
 			}
 		}
 		return displayComment;
+	},
+
+	/**
+	 * Get escaped database comment
+	 * @return {string} escaped database comment
+	 */
+	getEscapedDatabaseComment: function() {
+		var escapedComment = "";
+		escapedComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+		escapedComment = DecommentUtil.escapeNewlineCharacter(escapedComment);
+		escapedComment = DecommentUtil.escapeInputText(escapedComment);
+		return escapedComment;
 	},
 
 	/**
@@ -1661,11 +1671,9 @@ PickupColumnProperty.prototype = {
 	 */
 	buildDisplayComment: function () {
 		var displayComment = "";
-		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-		displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
-		displayComment = DecommentUtil.escapeInputText(displayComment);
 		if (this.isDatabaseCommentConflict) {
-			displayComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
+			displayComment = this.getEscapedDatabaseComment();
+			displayComment = displayComment + '\n(from database comment)\n\n=======\n\n';
 		}
 
 		var commentCount = this.decomments.length;
@@ -1684,6 +1692,18 @@ PickupColumnProperty.prototype = {
 			}
 		}
 		return displayComment;
+	},
+
+	/**
+	 * Get escaped database comment
+	 * @return {string} escaped database comment
+	 */
+	getEscapedDatabaseComment: function() {
+		var escapedComment = "";
+		escapedComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+		escapedComment = DecommentUtil.escapeNewlineCharacter(escapedComment);
+		escapedComment = DecommentUtil.escapeInputText(escapedComment);
+		return escapedComment;
 	},
 
 	/**
@@ -1866,7 +1886,7 @@ Decomment.prototype = {
 
 			var inputElement = document.getElementById("decomment-input");
 			var previousWholeComment = commentProperty.buildDisplayComment()
-			inputElement.value = previousWholeComment.length > 0 ? previousWholeComment : commentProperty.databaseComment;
+			inputElement.value = previousWholeComment.length > 0 ? previousWholeComment : commentProperty.getEscapedDatabaseComment();
 			inputElement.focus();
 
 			document.getElementById("decomment-close").onclick = function () {
