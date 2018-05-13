@@ -55,6 +55,10 @@ public class DocumentPhysicalLogic {
         return toProjectNamedDocumentFile(clientProject, "history");
     }
 
+    public File findPropertiesHtml(String clientProject) {
+        return toProjectNamedDocumentFile(clientProject, "properties");
+    }
+
     public File findSyncCheckResultHtml(String clientProject) {
         return toFixedNamedDocumentFile(clientProject, "sync-check-result.html");
     }

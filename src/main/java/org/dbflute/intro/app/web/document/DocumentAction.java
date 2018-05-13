@@ -66,6 +66,16 @@ public class DocumentAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
+    public StreamResponse propertieshtml(String clientProject) {
+        File historyHtml = documentPhysicalLogic.findPropertiesHtml(clientProject);
+        if (!historyHtml.exists()) {
+            return StreamResponse.asEmptyBody();
+        }
+        String historyHtmlContent = documentUpdateLogic.modifyHtmlForIntroOpening(clientProject, historyHtml);
+        return createStringSteamResponse(historyHtmlContent);
+    }
+
+    @Execute(urlPattern = "{}/@word")
     public StreamResponse synccheckresulthtml(String clientProject) {
         File syncCheckResultHtml = documentPhysicalLogic.findSyncCheckResultHtml(clientProject);
         if (!syncCheckResultHtml.exists()) {

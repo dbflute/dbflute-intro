@@ -47,6 +47,9 @@ public class DocumentUpdateLogic {
                 if (line.contains("<a href=\"./schema-" + clientProject + ".html\">to SchemaHTML</a>")) {
                     line = "<a href=\"/api/document/" + clientProject + "/schemahtml\">to SchemaHTML</a>";
                 }
+                if (line.contains("<a href=\"./properties-" + clientProject + ".html\">to PropertiesHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientProject + "/propertieshtml\">to PropertiesHTML</a>";
+                }
                 sb.append(line).append("\n");
             }
             return sb.toString();
