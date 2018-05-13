@@ -559,6 +559,7 @@ ${selector.historyHtmlJavaScriptEmbedded}
     #foreach($schemaDiff in $selector.schemaDiffList)
       #if ($velocityCount > 1), #end'${schemaDiff.diffDateAsCode}' : {
       'diffDate' : '${schemaDiff.diffDate}',
+      'diffComment' : '#escape($!{schemaDiff.comment})'
     }
     #end
   }
