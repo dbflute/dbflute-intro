@@ -2384,7 +2384,11 @@ UnmappedColumnArea.prototype = {
 		var columnList = [];
 		for (var i = 0, max = trs.length; i < max; i++) {
 			// TODO check that column name column num is 6
+#if ($isAliasDelimiterInDbCommentValid)
+			columnList.push(trs[i].getElementsByTagName('td')[7].innerText);
+#else
 			columnList.push(trs[i].getElementsByTagName('td')[6].innerText);
+#end
 		}
 		return columnList;
 	},
