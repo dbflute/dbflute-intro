@@ -108,6 +108,10 @@
       p.tablecount {
         margin-left: 23em;
       }
+      .diffcomment {
+        font-size: 0.7em;
+        color: #3F7E5E;
+      }
       /** hacomment modal for dbflute intro */
       .hacommentmodal {
         display: none;
@@ -176,7 +180,7 @@
 
     <div class="section diffCode_20160802162953">
     <h2><span class="dt">Diff Date: </span>2016/08/02 16:29:53</h2>
-          <pre class="commentcell"></pre>         
+          <pre class="diffcomment"></pre>         
                     <h3>Change Table</h3>
       <div class="table-content">
                               <h4><a href="./schema-introdb.html#cls_target_database">CLS_TARGET_DATABASE</a></h4>
@@ -188,7 +192,7 @@
                                                         </div>
     <div class="section diffCode_20160802160922">
     <h2><span class="dt">Diff Date: </span>2016/08/02 16:09:22</h2>
-          <pre class="commentcell"></pre>               <p class="tablecount"><span class="dt">table count: </span>1&nbsp;-&gt;&nbsp;3</p>
+          <pre class="diffcomment"></pre>               <p class="tablecount"><span class="dt">table count: </span>1&nbsp;-&gt;&nbsp;3</p>
     
                 <h3>Add Table</h3>
       <ul class="table-content">
@@ -359,6 +363,19 @@
   function Hacomment() {
     this.embeddedPickup = {
       'diffList' : [
+                  {
+          'diffCode' : '20160802162953',
+          'diffDate' : '2016/08/02 16:29:53',
+          'properties' : [
+                          {
+              'hacomment' : 'コメント',
+              'authorList' : ['ryohei'],
+              'pieceCode' : 'ec966297',
+              'pieceDatetime' : '2018-05-14T08:36:45.614',
+              'previousPieces' : []
+            }
+                      ]
+        }
               ]
     };
     this.pickupStore = {
@@ -432,7 +449,7 @@
      */
     extractHacommentElement: function (diffCode) {
       var idClassQuerySelector =".diffCode_" + diffCode;
-      var commentClassQuerySelector = ".commentcell";
+      var commentClassQuerySelector = ".diffcomment";
       var hacommentQuerySelector = idClassQuerySelector + " " + commentClassQuerySelector;
 
       return document.querySelector(hacommentQuerySelector);
@@ -615,8 +632,7 @@
         // build diff info
         var isConflict = that.isCommentConflict(diffMap);
         var diffDate = diffMap['diffDate'];
-        var diffCodeInfo = "(diffCode: " + diffCode + ")";
-        var diffInfo = isConflict ? diffDate + diffCodeInfo + "... but now in CONFLICT!" : diffDate + diffCodeInfo;
+        var diffInfo = isConflict ? diffDate + "... but now in CONFLICT!" : diffDate;
         document.getElementById("hacomment-modal-column-info").innerText = diffInfo;
 
         // set diff comment

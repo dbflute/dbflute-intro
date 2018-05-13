@@ -130,6 +130,10 @@ ${selector.historyHtmlStyleSheetEmbedded}
       p.tablecount {
         margin-left: 23em;
       }
+      .diffcomment {
+        font-size: 0.7em;
+        color: #3F7E5E;
+      }
       /** hacomment modal for dbflute intro */
       .hacommentmodal {
         display: none;
@@ -212,9 +216,9 @@ ${selector.historyHtmlJavaScriptEmbedded}
   <div class="section diffCode_${schemaDiff.diffDateAsCode}">
     <h2><span class="dt">Diff Date: </span>${schemaDiff.diffDate}</h2>
     #if ($schemaDiff.hasComment())
-      <pre class="commentcell">${schemaDiff.comment}</pre>
+      <pre class="diffcomment">${schemaDiff.comment}</pre>
     #else
-      <pre class="commentcell"></pre> ## add empty comment element to reflect hacomment
+      <pre class="diffcomment"></pre> ## add empty comment element to reflect hacomment
     #end
     #if ($schemaDiff.tableCount.hasDiff())
       <p class="tablecount"><span class="dt">table count: </span>${schemaDiff.tableCount.displayForHtml}</p>
@@ -624,7 +628,7 @@ ${selector.historyHtmlJavaScriptEmbedded}
      */
     extractHacommentElement: function (diffCode) {
       var idClassQuerySelector =".diffCode_" + diffCode;
-      var commentClassQuerySelector = ".commentcell";
+      var commentClassQuerySelector = ".diffcomment";
       var hacommentQuerySelector = idClassQuerySelector + " " + commentClassQuerySelector;
 
       return document.querySelector(hacommentQuerySelector);
@@ -807,8 +811,7 @@ ${selector.historyHtmlJavaScriptEmbedded}
         // build diff info
         var isConflict = that.isCommentConflict(diffMap);
         var diffDate = diffMap['diffDate'];
-        var diffCodeInfo = "(diffCode: " + diffCode + ")";
-        var diffInfo = isConflict ? diffDate + diffCodeInfo + "... but now in CONFLICT!" : diffDate + diffCodeInfo;
+        var diffInfo = isConflict ? diffDate + "... but now in CONFLICT!" : diffDate;
         document.getElementById("hacomment-modal-column-info").innerText = diffInfo;
 
         // set diff comment
