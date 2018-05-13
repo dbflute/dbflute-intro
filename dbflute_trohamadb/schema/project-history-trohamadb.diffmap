@@ -1,4 +1,80 @@
 map:{
+    ; 2018/05/13 17:03:22 = map:{
+        ; diffDate = 2018/05/13 17:03:22
+        ; comment = diffmap上のcommentでも、デコメントでやってる特殊表現のテストやるよー
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} そのまま書いても大丈夫？ 
+o mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと 'シングルクォーテーション' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt\;HTMLエスケープ表現&gt\; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+        ; tableDiff = map:{
+            ; member = map:{
+                ; tableName = member
+                ; diffType = CHANGE
+                ; tableCommentDiff = map:{
+                    ; next = "会員: 会員のプロフィールやアカウントなどの基本情報を保持する。
+基本的に物理削除はなく、退会したらステータスが退会会員になる。
+ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} そのまま書いても大丈夫？ 
+o mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと 'シングルクォーテーション' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt\;HTMLエスケープ表現&gt\; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+
+※同じようなこと、カラムコメントの方でも試している。
+
+※それにしても MySQL さん、エスケープがバックスラッシュなので、
+create文の中では「バックスラッシュ+シングルクォーテーション」ってなるし、
+バックスラッシュ自体を使うなら「バックスラッシュ+バックスラッシュ」ってしないとね。
+"
+                    ; previous = "会員: 会員のプロフィールやアカウントなどの基本情報を保持する。
+基本的に物理削除はなく、退会したらステータスが退会会員になる。
+ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} そのまま書いても大丈夫？ 
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと 'シングルクォーテーション' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt\;HTMLエスケープ表現&gt\; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+※同じようなこと、カラムコメントの方でも試しています。
+"
+                }
+                ; columnDiff = map:{
+                    ; MEMBER_NAME = map:{
+                        ; columnName = MEMBER_NAME
+                        ; diffType = CHANGE
+                        ; columnCommentDiff = map:{
+                            ; next = "会員名称: mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} 記号をエスケープするぞー"
+                            ; previous = "会員名称: mapStyle, map:\{ sea \= mystic \; land \= oneman \} 記号をエスケープするぞー"
+                        }
+                    }
+                }
+            }
+            ; summary_withdrawal = map:{
+                ; tableName = summary_withdrawal
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; MEMBER_NAME = map:{
+                        ; columnName = MEMBER_NAME
+                        ; diffType = CHANGE
+                        ; columnCommentDiff = map:{
+                            ; next = "会員名称: mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} 記号をエスケープするぞー"
+                            ; previous = "会員名称: mapStyle, map:\{ sea \= mystic \; land \= oneman \} 記号をエスケープするぞー"
+                        }
+                    }
+                }
+            }
+        }
+    }
     ; 2018/05/11 14:47:22 = map:{
         ; diffDate = 2018/05/11 14:47:22
         ; comment = revert mistake
