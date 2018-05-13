@@ -1,13 +1,11 @@
 
 create table MEMBER(
-    MEMBER_ID INTEGER AUTO_INCREMENT NOT NULL COMMENT '会員ID: 会員を識別するID。連番として基本的に自動採番される。
-（会員IDだけに限らず）採番方法はDBMSによって変わる。',
-    MEMBER_NAME VARCHAR(180) NOT NULL COMMENT '会員名称: 会員のフルネームの名称。',
-    MEMBER_ACCOUNT VARCHAR(50) NOT NULL COMMENT '会員アカウント: 会員がログイン時に利用するアカウントNO。',
+    MEMBER_ID INTEGER AUTO_INCREMENT NOT NULL COMMENT '会員ID: mapStyle, map:{ sea = mystic ; land = oneman } そのまま書くぞー',
+    MEMBER_NAME VARCHAR(180) NOT NULL COMMENT '会員名称: mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} 記号をエスケープするぞー',
+    MEMBER_ACCOUNT VARCHAR(50) NOT NULL COMMENT '会員アカウント: ベタッと \'シングルクォーテーション\' で囲うぞー',
     MEMBER_STATUS_CODE CHAR(3) NOT NULL COMMENT '会員ステータスコード',
-    FORMALIZED_DATETIME DATETIME COMMENT '正式会員日時: 会員が正式に確定した日時。一度確定したら更新されない。
-仮会員のときはnull。',
-    BIRTHDATE DATE COMMENT '生年月日: 必須項目ではないので、このデータがない会員もいる。',
+    FORMALIZED_DATETIME DATETIME COMMENT '正式会員日時: ベタッと <span>HTMLタグ</span> で囲うぞー',
+    BIRTHDATE DATE COMMENT '生年月日: ベタッと &lt;HTMLエスケープ表現&gt; で囲うぞー (もともとSchemaHTML的にダメみたい!?)',
     REGISTER_DATETIME DATETIME NOT NULL COMMENT '登録日時: レコードが登録された日時。共通カラムの一つ。',
     REGISTER_USER VARCHAR(200) NOT NULL COMMENT '登録ユーザ: レコードを登録したユーザ。共通カラムの一つ。',
     UPDATE_DATETIME DATETIME NOT NULL COMMENT '更新日時: レコードが（最後に）更新された日時。共通カラムの一つ。',
@@ -18,7 +16,23 @@ create table MEMBER(
     UNIQUE (MEMBER_ACCOUNT)
 ) COMMENT='会員: 会員のプロフィールやアカウントなどの基本情報を保持する。
 基本的に物理削除はなく、退会したらステータスが退会会員になる。
-ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。';
+ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:{ sea = mystic ; land = oneman } そのまま書いても大丈夫？ 
+o mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと \'シングルクォーテーション\' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt;HTMLエスケープ表現&gt; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+
+※同じようなこと、カラムコメントの方でも試している。
+
+※それにしても MySQL さん、エスケープがバックスラッシュなので、
+create文の中では「バックスラッシュ+シングルクォーテーション」ってなるし、
+バックスラッシュ自体を使うなら「バックスラッシュ+バックスラッシュ」ってしないとね。
+';
 
 
 create table MEMBER_ADDRESS(
