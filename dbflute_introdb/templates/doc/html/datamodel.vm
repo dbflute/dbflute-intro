@@ -1533,10 +1533,10 @@ PickupTableProperty.prototype = {
 	 */
 	buildDisplayComment: function () {
 		var displayComment = "";
+		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+		displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
+		displayComment = DecommentUtil.escapeInputText(displayComment);
 		if (this.isDatabaseCommentConflict) {
-			displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-			displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
-			displayComment = DecommentUtil.escapeInputText(displayComment);
 			displayComment = displayComment + '\n(from database comment)\n\n=======\n\n';
 		}
 
@@ -1661,10 +1661,10 @@ PickupColumnProperty.prototype = {
 	 */
 	buildDisplayComment: function () {
 		var displayComment = "";
+		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+		displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
+		displayComment = DecommentUtil.escapeInputText(displayComment);
 		if (this.isDatabaseCommentConflict) {
-			displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-			displayComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
-			displayComment = DecommentUtil.escapeInputText(this.databaseComment);
 			displayComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
 

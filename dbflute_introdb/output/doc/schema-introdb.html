@@ -1587,6 +1587,42 @@ function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
+			{
+				'tableName': 'CLS_TARGET_CONTAINER'
+				, 'mappings' : [
+				]
+				, 'properties': [
+						{
+						'decomment': 'hoge'
+						, 'databaseComment': ''
+						, 'commentVersion': 0
+						, 'authors': ['tominaga']
+						, 'pieceCode': '3ded1b9'
+						, 'pieceDatatime': '2018-05-13T13:27:07.067'
+						, 'previousPieces': []
+					}
+				]
+				, 'columns': [
+				]
+			}
+			, {
+				'tableName': 'CLS_TARGET_DATABASE'
+				, 'mappings' : [
+				]
+				, 'properties': [
+						{
+						'decomment': 'hoge<br><br>hoge<br>ge'
+						, 'databaseComment': ''
+						, 'commentVersion': 0
+						, 'authors': ['tominaga']
+						, 'pieceCode': '1473512d'
+						, 'pieceDatatime': '2018-05-13T13:27:15.370'
+						, 'previousPieces': ['d5ffb7cd']
+					}
+				]
+				, 'columns': [
+				]
+			}
 		]
 	}
 	this.pickupStore = {
@@ -1897,10 +1933,10 @@ PickupTableProperty.prototype = {
 	 */
 	buildDisplayComment: function () {
 		var displayComment = "";
+		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+		displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
+		displayComment = DecommentUtil.escapeInputText(displayComment);
 		if (this.isDatabaseCommentConflict) {
-			displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-			displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
-			displayComment = DecommentUtil.escapeInputText(displayComment);
 			displayComment = displayComment + '\n(from database comment)\n\n=======\n\n';
 		}
 
@@ -2022,10 +2058,10 @@ PickupColumnProperty.prototype = {
 	 */
 	buildDisplayComment: function () {
 		var displayComment = "";
+		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
+		displayComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
+		displayComment = DecommentUtil.escapeInputText(this.databaseComment);
 		if (this.isDatabaseCommentConflict) {
-			displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-			displayComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
-			displayComment = DecommentUtil.escapeInputText(this.databaseComment);
 			displayComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
 
