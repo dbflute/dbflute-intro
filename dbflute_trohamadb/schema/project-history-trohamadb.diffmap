@@ -68,7 +68,7 @@ map:{
     }
     ; 2018/05/04 11:40:23 = map:{
         ; diffDate = 2018/05/04 11:40:23
-        ; comment = for schema policy check
+        ; comment = for schema policy check, quotation ''' """ yeah
         ; tableDiff = map:{
             ; white_perrotta_over_member = map:{
                 ; tableName = white_perrotta_over_member
@@ -88,7 +88,7 @@ map:{
     }
     ; 2018/05/04 11:38:51 = map:{
         ; diffDate = 2018/05/04 11:38:51
-        ; comment = for schema policy check
+        ; comment = for schema policy check, emoji 💕 yeah
         ; tableDiff = map:{
             ; white_all_in_one_cls_category = map:{
                 ; tableName = white_all_in_one_cls_category
