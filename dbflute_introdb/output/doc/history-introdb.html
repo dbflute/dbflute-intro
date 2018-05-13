@@ -303,7 +303,7 @@
        * @returns {string} Scheme name
        */
       this.getSchemaName = function () {
-        return "introdb"; // TODO replace mark
+        return "introdb";
       },
       /**
        * Escape inputed text
@@ -562,7 +562,7 @@
      * Setup save diff comment click event to html
      */
     setupSaveDiff: function() {
-      var diffCommentSections = document.getElementsByClassName('section');
+      var diffCommentSections = this.getHacommentElements();
       for (var i = 0; i < diffCommentSections.length; i++) {
         var sectionElement = diffCommentSections[i];
         // TODO hakiba change how to get diff code(e.g. create diff code list when generate hisotry html)
@@ -572,6 +572,31 @@
         var diffMap = this.getDiffMapFromStore(diffCode);
         sectionElement.onclick = this.createSaveHacommentFunction(diffCode, diffMap);
       }
+    },
+
+    /**
+     * Get Hacomment Elements
+     * @return {Array} html elements
+     */
+    getHacommentElements: function() {
+      return document.getElementsByClassName('section');
+    },
+
+    /**
+     * Get Hacomment Element by DiffCode
+     * @return {Object} html elements
+     */
+    getHacommentElement: function (targetDiffCode) {
+      var hacommentElements = this.getHacommentElements();
+      var result = null;
+      Array.prototype.forEach.call(hacommentElements, function (element) {
+        var diffCode = element.classList[1].split("diffCode_")[1];
+        if (targetDiffCode === diffCode) {
+          var target = element.querySelector('pre');
+          result = target;
+        }
+      });
+      return result;
     },
 
     /**
@@ -596,7 +621,7 @@
 
         // set diff comment
         var inputElement = document.getElementById("hacomment-input");
-        inputElement.value = diffMap['previousWholeComment'] || "";
+        inputElement.value = that.getDisplayHtmlComment(diffCode);
         inputElement.focus();
 
         // set ok event
@@ -670,6 +695,18 @@
         'authors': authors || [],
         'previousPieces': previousPieces || []
       };
+    },
+
+    /**
+     * Get display html comment
+     * @return {string} display html comment
+     */
+    getDisplayHtmlComment: function(diffCode) {
+      var child = this.getHacommentElement(diffCode).childNodes[0];
+      if (child != null && child.nodeName === "#text") {
+        return child.nodeValue.trim();
+      }
+      return ""
     },
 
     /**
