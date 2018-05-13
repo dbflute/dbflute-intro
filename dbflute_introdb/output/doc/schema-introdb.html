@@ -416,7 +416,7 @@ dl.procedurelist dd.column pre {
 	<tr>
 		<td class="rownumcell">1</td>
 		<td class="aliascell"></td>
-		<td class="namecell"><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
+		<td class="namecell" data-name="CLS_TARGET_CONTAINER"><a href="#cls_target_container" title="type=TABLE, primaryKey={CONTAINER_CODE}, nameLength=20, columnCount=3">CLS_TARGET_CONTAINER</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
@@ -426,7 +426,7 @@ dl.procedurelist dd.column pre {
 	<tr>
 		<td class="rownumcell">2</td>
 		<td class="aliascell"></td>
-		<td class="namecell"><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
+		<td class="namecell" data-name="CLS_TARGET_DATABASE"><a href="#cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">CLS_TARGET_DATABASE</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
@@ -436,7 +436,7 @@ dl.procedurelist dd.column pre {
 	<tr>
 		<td class="rownumcell">3</td>
 		<td class="aliascell"></td>
-		<td class="namecell"><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
+		<td class="namecell" data-name="CLS_TARGET_LANGUAGE"><a href="#cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">CLS_TARGET_LANGUAGE</a></td>
 		<td class="typecell">TABLE</td>
 		<td class="relcell">&nbsp;</td>
 		<td class="relcell">&nbsp;</td>
@@ -2059,8 +2059,8 @@ PickupColumnProperty.prototype = {
 	buildDisplayComment: function () {
 		var displayComment = "";
 		displayComment = DecommentUtil.unescapeWhitespace(this.databaseComment);
-		displayComment = DecommentUtil.escapeNewlineCharacter(this.databaseComment);
-		displayComment = DecommentUtil.escapeInputText(this.databaseComment);
+		displayComment = DecommentUtil.escapeNewlineCharacter(displayComment);
+		displayComment = DecommentUtil.escapeInputText(displayComment);
 		if (this.isDatabaseCommentConflict) {
 			displayComment = this.databaseComment + '\n(from database comment)\n\n=======\n\n';
 		}
@@ -2200,7 +2200,7 @@ Decomment.prototype = {
 		var that = this;
 		var tableList = document.getElementById('table-list-body').querySelectorAll('tr');
 		Array.prototype.forEach.call(tableList, function (table) {
-			var tableName = table.querySelector('.namecell').querySelector('a').innerText;
+			var tableName = table.querySelector('.namecell').getAttribute('data-name');
 			var commentElement = table.querySelector('.commentcell');
 			that.setupSaveTableClickEvent(tableName, commentElement);
 		});
