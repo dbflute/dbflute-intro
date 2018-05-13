@@ -51,7 +51,7 @@ public class DocumentAction extends IntroBaseAction {
         if (!schemaHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String schemaHtmlContent = documentUpdateLogic.markIntroOpeningFileTag(schemaHtml);
+        String schemaHtmlContent = documentUpdateLogic.modifyHtmlForIntroOpening(clientProject, schemaHtml);
         return createStringSteamResponse(schemaHtmlContent);
     }
 
@@ -61,7 +61,7 @@ public class DocumentAction extends IntroBaseAction {
         if (!historyHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String historyHtmlContent = documentUpdateLogic.markIntroOpeningFileTag(historyHtml);
+        String historyHtmlContent = documentUpdateLogic.modifyHtmlForIntroOpening(clientProject, historyHtml);
         return createStringSteamResponse(historyHtmlContent);
     }
 

@@ -28,7 +28,7 @@ import org.lastaflute.core.exception.LaSystemException;
  */
 public class DocumentUpdateLogic {
 
-    public String markIntroOpeningFileTag(File file) {
+    public String modifyHtmlForIntroOpening(String clientProject, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             boolean addIntroExecuteTag = false;
             final StringBuilder sb = new StringBuilder();
@@ -40,6 +40,12 @@ public class DocumentUpdateLogic {
                 if (!addIntroExecuteTag && line.contains("<script>")) {
                     line = "<input id=\"intro_opening\" type=\"hidden\" />" + line;
                     addIntroExecuteTag = true;
+                }
+                if (line.contains("<a href=\"./history-" + clientProject + ".html\">to HistoryHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientProject + "/historyhtml\">to HistoryHTML</a>";
+                }
+                if (line.contains("<a href=\"./schema-" + clientProject + ".html\">to SchemaHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientProject + "/schemahtml\">to SchemaHTML</a>";
                 }
                 sb.append(line).append("\n");
             }
