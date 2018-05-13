@@ -392,7 +392,7 @@ ${selector.historyHtmlJavaScriptEmbedded}
 <div id="hacomment-modal" class="hacommentmodal">
   <div class="hacommentmodalcontent">
     <div id="hacomment-close" class="hacommentmodal-close-btn"><span>x</span></div>
-    <p>Input the new column comment of <span id="hacomment-modal-column-info"></span></p>
+    <p>Input the new comment of diffdate: <span id="hacomment-modal-column-info"></span></p>
     <textarea id="hacomment-input" class="hacommentinput" rows="5"></textarea>
     <button id="hacomment-ok" class="hacommentmodal-ok-btn">OK</button>
   </div>
