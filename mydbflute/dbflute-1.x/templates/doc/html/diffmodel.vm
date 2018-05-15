@@ -134,6 +134,9 @@ ${selector.historyHtmlStyleSheetEmbedded}
         font-size: 0.7em;
         color: #3F7E5E;
       }
+      .commenterror {
+        color: red;
+      }
       /** hacomment modal for dbflute intro */
       .hacommentmodal {
         display: none;
@@ -615,8 +618,7 @@ ${selector.historyHtmlJavaScriptEmbedded}
           var newDiffComment = that.buildDisplayDiffCommentFromServer(that.getDiffMapFromStore(diffCode));
           var authors = that.getDiffMapFromStore(diffCode)['authors'];
           that.storePreviousWholeComment(diffCode, newDiffComment);
-          that.updateDisplayHacommentToHtml(hacommentElement, newDiffComment, authors);
-          // TODO: reflect conflict to UI
+          that.updateDisplayHacommentToHtml(diffCode, hacommentElement, newDiffComment, authors);
         }
       });
     },
@@ -719,14 +721,21 @@ ${selector.historyHtmlJavaScriptEmbedded}
 
     /**
      * Update diff comment of html
+     * @param {string} diffCode - Diff Code
      * @param {Object} diffCommentElement - Diff comment element
      * @param {string} newComment - New scheme comment
      * @param {Array} authors - Comment authoers
      */
-    updateDisplayHacommentToHtml: function(diffCommentElement, newComment, authors) {
+    updateDisplayHacommentToHtml: function(diffCode, diffCommentElement, newComment, authors) {
       var authroStrForHtml = authors.join(',');
       var comment = newComment + "\n<span>@author(" + authroStrForHtml + ")</span>";
       diffCommentElement.innerHTML = comment;
+
+      // reflect conflict
+      var storedDiff = this.pickupStore[diffCode];
+      if (storedDiff["isConflict"]) {
+        diffCommentElement.className += " commenterror"
+      }
     },
 
     /**
