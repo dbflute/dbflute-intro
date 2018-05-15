@@ -26,7 +26,7 @@ import org.lastaflute.core.exception.LaSystemException;
  * @author deco
  * @author jflute
  */
-public class DocumentUpdateLogic {
+public class DocumentDisplayLogic {
 
     public String modifyHtmlForIntroOpening(String clientProject, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
