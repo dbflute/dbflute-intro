@@ -24,6 +24,8 @@ import java.util.function.Supplier;
 
 /**
  * @author cabos
+ * @author deco
+ * @author jflute
  */
 public class DocumentAuthorLogic {
 
