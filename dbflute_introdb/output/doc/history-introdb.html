@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <title>introdb history</title>
       <style type="text/css">
+      /* -------------------------------------------------
+                                                   Core
+      ------------------------------------------------- */
       * {
         margin: 0;
         padding: 0;
@@ -15,14 +18,16 @@
         background-color: #ffffee;
       }
 
-      /* heading */
+      /* -------------------------------------------------
+                                              Structure
+      ------------------------------------------------- */
       h1 {
-        font-size: 1.5em;
+        font-size: 1.6em;
         border-bottom: 2px solid #af0000;
         border-top: 2px solid #af0000;
       }
       h2 {
-        margin-top: 2em;
+        margin: 30px 0 5px 0;
         border-bottom: 2px solid #af0000;
         border-left: 10px solid #af0000;
         text-indent: 1em;
@@ -33,7 +38,7 @@
         margin: 0.8em 0;
         padding-left: 1.8em;
         border-bottom: solid 1px #333;
-        color: #555;
+        color: #AA7777;
         font-size: 1.2em;
       }
       h4 {
@@ -44,13 +49,15 @@
       }
       h5 {
         width: 11em;
-        font-size: 80%;
+        font-size: 0.8em;
         border-bottom: solid 1px #333;
         text-indent: 0.3em;
-        color: #555;
+        color: #AA7777;
       }
 
-      /* total info */
+      /* -------------------------------------------------
+                                           Whole Header
+      ------------------------------------------------- */
       .updatedate {
         text-align: right;
       }
@@ -62,14 +69,42 @@
       }
       .sisterlink {
         margin-top: 0.6em;
-        font-size: 110%;
+        font-size: 1.2em;
       }
       .sistersublink {
         margin-top: 0.6em;
-        font-size: 80%;
+        font-size: 0.85em;
       }
 
-      /* history info */
+      /* -------------------------------------------------
+                                      Difference Header
+      ------------------------------------------------- */
+      .titlediffno {
+        font-size: 0.8em;
+        font-weight: normal;
+        font-style: italic;
+      }
+      .titlediffdatepart {
+        font-size: 1.1em;
+      }
+      .titledifftimepart {
+        font-size: 0.8em;
+      }
+      .diffcomment {
+        font-size: 1.0em;
+        color: #3F7E5E;
+        padding:0 0 0.2em 1em;
+      }
+      .commenterror {
+        color: red;
+      }
+      .tablecount {
+        margin: 0.5em 0 0.5em 1em;
+      }
+
+      /* -------------------------------------------------
+                                     Difference Content
+      ------------------------------------------------- */
       .table-content {
         margin: 0 6em;
       }
@@ -96,23 +131,12 @@
         border-right: dotted 2px #333;
         font-weight: bold;
         font-size: 80%;
-        color: #555;
+        color: #AA7777;
       }
 
-      span.dt {
-        font-size: 80%;
-      }
-      p.comment {
-        margin-left: 23em;
-      }
-      p.tablecount {
-        margin-left: 23em;
-      }
-      .diffcomment {
-        font-size: 0.7em;
-        color: #3F7E5E;
-      }
-      /** hacomment modal for dbflute intro */
+      /* -------------------------------------------------
+                                        Hacomment Modal
+      ------------------------------------------------- */
       .hacommentmodal {
         display: none;
         position: fixed;
@@ -178,8 +202,8 @@
         <p class="sistersublink"><a href="./properties-introdb.html">to PropertiesHTML</a></p>
   </div>
 
-    <div class="section diffCode_20160802162953">
-    <h2><span class="dt">Diff Date: </span>2016/08/02 16:29:53</h2>
+      <div class="section diffCode_20160802162953">
+    <h2><span class="titlediffno">diffNo. 2:</span> <span class="titlediffdatepart">2016/08/02</span> <span class="titledifftimepart">16:29:53</span></h2>
           <pre class="diffcomment"></pre>         
                     <h3>Change Table</h3>
       <div class="table-content">
@@ -191,8 +215,8 @@
               </div>
                                                         </div>
     <div class="section diffCode_20160802160922">
-    <h2><span class="dt">Diff Date: </span>2016/08/02 16:09:22</h2>
-          <pre class="diffcomment"></pre>               <p class="tablecount"><span class="dt">table count: </span>1&nbsp;-&gt;&nbsp;3</p>
+    <h2><span class="titlediffno">diffNo. 1:</span> <span class="titlediffdatepart">2016/08/02</span> <span class="titledifftimepart">16:09:22</span></h2>
+          <pre class="diffcomment"></pre>               <p class="tablecount">table count: 1&nbsp;-&gt;&nbsp;3</p>
     
                 <h3>Add Table</h3>
       <ul class="table-content">
@@ -363,29 +387,16 @@
   function Hacomment() {
     this.embeddedPickup = {
       'diffList' : [
-                  {
-          'diffCode' : '20160802162953',
-          'diffDate' : '2016/08/02 16:29:53',
-          'properties' : [
-                          {
-              'hacomment' : 'コメント',
-              'authorList' : ['ryohei'],
-              'pieceCode' : 'ec966297',
-              'pieceDatetime' : '2018-05-14T08:36:45.614',
-              'previousPieces' : []
-            }
-                      ]
-        }
               ]
     };
     this.pickupStore = {
           '20160802162953' : {
       'diffDate' : '2016/08/02 16:29:53',
-      'diffComment' : ''
+        'diffComment' : ''
     }
           , '20160802160922' : {
       'diffDate' : '2016/08/02 16:09:22',
-      'diffComment' : ''
+        'diffComment' : ''
     }
       }
   }
@@ -436,8 +447,7 @@
           var newDiffComment = that.buildDisplayDiffCommentFromServer(that.getDiffMapFromStore(diffCode));
           var authors = that.getDiffMapFromStore(diffCode)['authors'];
           that.storePreviousWholeComment(diffCode, newDiffComment);
-          that.updateDisplayHacommentToHtml(hacommentElement, newDiffComment, authors);
-          // TODO: reflect conflict to UI
+          that.updateDisplayHacommentToHtml(diffCode, hacommentElement, newDiffComment, authors);
         }
       });
     },
@@ -540,14 +550,21 @@
 
     /**
      * Update diff comment of html
+     * @param {string} diffCode - Diff Code
      * @param {Object} diffCommentElement - Diff comment element
      * @param {string} newComment - New scheme comment
      * @param {Array} authors - Comment authoers
      */
-    updateDisplayHacommentToHtml: function(diffCommentElement, newComment, authors) {
+    updateDisplayHacommentToHtml: function(diffCode, diffCommentElement, newComment, authors) {
       var authroStrForHtml = authors.join(',');
       var comment = newComment + "\n<span>@author(" + authroStrForHtml + ")</span>";
       diffCommentElement.innerHTML = comment;
+
+      // reflect conflict
+      var storedDiff = this.pickupStore[diffCode];
+      if (storedDiff["isConflict"]) {
+        diffCommentElement.className += " commenterror"
+      }
     },
 
     /**
