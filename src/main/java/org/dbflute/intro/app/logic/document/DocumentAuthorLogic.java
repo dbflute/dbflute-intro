@@ -36,7 +36,10 @@ public class DocumentAuthorLogic {
         @Override
         public String get() {
             if (this._author == null) {
-                this.loadAuthor();
+                try {
+                    this.loadAuthor();
+                } catch (UncheckedIOException ignored) {
+                }
             }
             return this._author;
         }
@@ -63,7 +66,9 @@ public class DocumentAuthorLogic {
             Runtime runtime = Runtime.getRuntime();
             Process p;
             try {
-                p = runtime.exec("git symbolic-ref --short HEAD");
+                synchronized (_gitBranchSupplier) {
+                    p = runtime.exec("git symbolic-ref --short HEAD");
+                }
             } catch (IOException e) {
                 throw new UncheckedIOException("fail to execute git command", e);
             }
