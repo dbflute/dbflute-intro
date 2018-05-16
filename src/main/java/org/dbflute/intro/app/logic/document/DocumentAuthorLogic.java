@@ -61,14 +61,12 @@ public class DocumentAuthorLogic {
             return this._gitBranchName;
         }
 
-        private void loadGitBranchName() {
+        private synchronized void loadGitBranchName() {
             // get user name from git
             Runtime runtime = Runtime.getRuntime();
             Process p;
             try {
-                synchronized (_gitBranchSupplier) {
-                    p = runtime.exec("git symbolic-ref --short HEAD");
-                }
+                p = runtime.exec("git symbolic-ref --short HEAD");
             } catch (IOException e) {
                 throw new UncheckedIOException("fail to execute git command", e);
             }
