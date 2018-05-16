@@ -36,7 +36,10 @@ public class DocumentAuthorLogic {
         @Override
         public String get() {
             if (this._author == null) {
-                this.loadAuthor();
+                try {
+                    this.loadAuthor();
+                } catch (UncheckedIOException ignored) {
+                }
             }
             return this._author;
         }
@@ -58,7 +61,7 @@ public class DocumentAuthorLogic {
             return this._gitBranchName;
         }
 
-        private void loadGitBranchName() {
+        private synchronized void loadGitBranchName() {
             // get user name from git
             Runtime runtime = Runtime.getRuntime();
             Process p;
