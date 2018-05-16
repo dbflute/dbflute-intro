@@ -703,7 +703,7 @@ ${selector.historyHtmlJavaScriptEmbedded}
         }
       });
       // delete duplicate authors
-      authors.filter(function (value, index, self) {
+      authors = authors.filter(function (value, index, self) {
         return self.indexOf(value) === index;
       });
 
@@ -750,8 +750,8 @@ ${selector.historyHtmlJavaScriptEmbedded}
      * @param {Array} authors - Comment authoers
      */
     updateDisplayHacommentToHtml: function(diffCode, diffCommentElement, newComment, authors) {
-      var authroStrForHtml = authors.join(',');
-      var comment = newComment + "\n<span>@author(" + authroStrForHtml + ")</span>";
+      var authorStrForHtml = authors.join(',');
+      var comment = newComment + "\n<span>@author(" + authorStrForHtml + ")</span>";
       diffCommentElement.innerHTML = comment;
 
       // reflect conflict
