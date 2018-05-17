@@ -18,9 +18,12 @@ package org.dbflute.intro.app.logic.document;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
+
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.intro.app.logic.exception.GitBranchGetFailureException;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author cabos
@@ -36,46 +39,48 @@ public class DocumentAuthorLogic {
         @Override
         public synchronized String get() {
             if (this._author == null) {
-                try {
-                    this.loadAuthor();
-                } catch (UncheckedIOException ignored) {
-                }
+                this.loadAuthor();
             }
             return this._author;
         }
 
         private void loadAuthor() {
-            this._author = System.getProperty("user.name");
+            String author = System.getProperty("user.name");
+            if (StringUtils.isEmpty(author)) {
+                throw new IllegalStateException("cannot load user name: " + author);
+            }
+            this._author = author;
         }
     };
 
     private static final Supplier<String> _gitBranchSupplier = new Supplier<String>() {
 
-        private String _gitBranchName;
+        private String _gitBranch;
 
         @Override
         public synchronized String get() {
-            if (this._gitBranchName == null) {
-                this.loadGitBranchName();
+            if (this._gitBranch == null) {
+                this.loadGitBranch();
             }
-            return this._gitBranchName;
+            return this._gitBranch;
         }
 
-        private void loadGitBranchName() {
+        private void loadGitBranch() {
             // get user name from git
             Runtime runtime = Runtime.getRuntime();
             Process p;
+            String command = "git symbolic-ref --short HEAD";
             try {
-                p = runtime.exec("git symbolic-ref --short HEAD");
+                p = runtime.exec(command);
             } catch (IOException e) {
-                throw new UncheckedIOException("fail to execute git command", e);
+                throw new GitBranchGetFailureException("cannot execute git command: " + command, e);
             }
 
             // read user name
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
-                this._gitBranchName = reader.readLine();
+                this._gitBranch = reader.readLine();
             } catch (IOException e) {
-                throw new UncheckedIOException("fail to read execute command result", e);
+                throw new GitBranchGetFailureException("fail to read execute command result: " + command, e);
             }
         }
     };
@@ -84,7 +89,11 @@ public class DocumentAuthorLogic {
         return _authorSupplier.get();
     }
 
-    public String getGitBranchName() {
-        return _gitBranchSupplier.get();
+    public OptionalThing<String> getGitBranch() {
+        try {
+            return OptionalThing.of(_gitBranchSupplier.get());
+        } catch (GitBranchGetFailureException e) {
+            return OptionalThing.ofNullable(null, () -> { throw e; });
+        }
     }
 }

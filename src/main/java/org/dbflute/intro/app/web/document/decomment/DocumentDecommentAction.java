@@ -28,6 +28,7 @@ import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.action.IntroMessages;
+import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.core.util.LaStringUtil;
 import org.lastaflute.web.Execute;
@@ -105,17 +106,17 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
         String author = getAuthor();
-        String gitBranchName = getGitBranchName();
+        String gitBranch = getGitBranch().orElse(null);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
         DfDecoMapPiece piece =
                 new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
                         body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime,
-                        author, gitBranchName, body.previousPieces);
+                        author, gitBranch, body.previousPieces);
         return piece;
     }
 
-    private String getGitBranchName() {
-        return decommentPhysicalLogic.getGitBranchName();
+    private OptionalThing<String> getGitBranch() {
+        return decommentPhysicalLogic.getGitBranch();
     }
 
     private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {

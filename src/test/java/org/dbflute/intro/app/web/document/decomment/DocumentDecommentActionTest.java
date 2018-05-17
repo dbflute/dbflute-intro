@@ -86,7 +86,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
-        assertEquals(documentAuthorLogic.getGitBranchName(), actualMap.get("pieceGitBranch"));
+        assertEquals(documentAuthorLogic.getGitBranch().orElse(null), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
@@ -126,7 +126,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
-        assertEquals(documentAuthorLogic.getGitBranchName(), actualMap.get("pieceGitBranch"));
+        assertEquals(documentAuthorLogic.getGitBranch(), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
