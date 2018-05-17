@@ -34,7 +34,7 @@ public class DocumentAuthorLogic {
         private String _author;
 
         @Override
-        public String get() {
+        public synchronized String get() {
             if (this._author == null) {
                 try {
                     this.loadAuthor();
@@ -54,14 +54,14 @@ public class DocumentAuthorLogic {
         private String _gitBranchName;
 
         @Override
-        public String get() {
+        public synchronized String get() {
             if (this._gitBranchName == null) {
                 this.loadGitBranchName();
             }
             return this._gitBranchName;
         }
 
-        private synchronized void loadGitBranchName() {
+        private void loadGitBranchName() {
             // get user name from git
             Runtime runtime = Runtime.getRuntime();
             Process p;
