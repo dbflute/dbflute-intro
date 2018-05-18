@@ -66,7 +66,7 @@ public class DocumentAuthorLogic {
         }
 
         private void loadGitBranch() {
-            // get user name from git
+            // get branch name from git
             Runtime runtime = Runtime.getRuntime();
             Process p;
             String command = "git symbolic-ref --short HEAD";
@@ -76,7 +76,7 @@ public class DocumentAuthorLogic {
                 throw new GitBranchGetFailureException("cannot execute git command: " + command, e);
             }
 
-            // read user name
+            // read branch name
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
                 this._gitBranch = reader.readLine();
             } catch (IOException e) {
