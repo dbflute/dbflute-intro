@@ -405,44 +405,18 @@ dl.column-content dd span {
     function Hacomment() {
         this.embeddedPickup = {
             'diffList' : [
-									{
-                    'diffCode' : '20160802160922',
-                    'diffDate' : '2016/08/02 16:09:22',
-                    'properties' : [
-													{
-                            'hacomment' : 'ほげほげおげほげ',
-                            'authorList' : ['ryohei'],
-                            'pieceCode' : '6c185bbf',
-                            'pieceDatetime' : '2018-05-19T12:57:23.705',
-                            'previousPieces' : ['2e2cbd60']
-                        }
-						                    ]
-                }
-									, {
-                    'diffCode' : '20160802162953',
-                    'diffDate' : '2016/08/02 16:29:53',
-                    'properties' : [
-													{
-                            'hacomment' : 'ほげ',
-                            'authorList' : ['ryohei'],
-                            'pieceCode' : 'ff069b10',
-                            'pieceDatetime' : '2018-05-19T12:57:10.591',
-                            'previousPieces' : []
-                        }
-						                    ]
-                }
-				            ]
+            ]
         };
-            this.pickupStore = {
-					'20160802162953' : {
-            'diffDate' : '2016/08/02 16:29:53',
-                    'diffComment' : ''
+        this.pickupStore = {
+            '20160802162953' : {
+                'diffDate' : '2016/08/02 16:29:53',
+                'diffComment' : ''
+            }
+            , '20160802160922' : {
+                'diffDate' : '2016/08/02 16:09:22',
+                'diffComment' : ''
+            }
         }
-					, '20160802160922' : {
-            'diffDate' : '2016/08/02 16:09:22',
-                    'diffComment' : ''
-        }
-		    }
     }
     Hacomment.prototype = {
 
@@ -708,6 +682,10 @@ dl.column-content dd span {
                 // set ok event
                 document.getElementById("hacomment-ok").onclick = function () {
                     var hacomment = inputElement.value;
+                    if (that.isStillConflicting(hacomment)) {
+                      alert('Still conflicting. please resolve.')
+                      return;
+                    }
                     if (!that.isCommentChanged(diffCode, hacomment)) {
                         modalElement.style.display = "none";
                         return;
