@@ -101,6 +101,18 @@
       .tablecount {
         margin: 0.5em 0 0.5em 1em;
       }
+      .titlediffauthor {
+        font-size: 0.7em;
+        font-weight: normal;
+        font-style: italic;
+        color: #888888;
+      }
+      .titlediffgitbranch {
+        font-size: 0.7em;
+        font-weight: normal;
+        font-style: italic;
+        color: #888888;
+      }
 
       /* -------------------------------------------------
                                      Difference Content
@@ -387,6 +399,26 @@
   function Hacomment() {
     this.embeddedPickup = {
       'diffList' : [
+                  {
+          'diffCode' : '20160802160922',
+          'diffDate' : '2016/08/02 16:09:22',
+          'properties' : [
+                          {
+              'hacomment' : 'hogehoge',
+              'authorList' : ['ryohei'],
+              'pieceCode' : 'ecba376c',
+              'pieceDatetime' : '2018-05-19T11:41:52.593',
+              'previousPieces' : []
+            }
+                          , {
+              'hacomment' : 'hoge',
+              'authorList' : ['ryohei'],
+              'pieceCode' : '5c2eb2c3',
+              'pieceDatetime' : '2018-05-19T11:41:46.641',
+              'previousPieces' : []
+            }
+                      ]
+        }
               ]
     };
     this.pickupStore = {
@@ -604,7 +636,10 @@
 
         // add click-event (open hacomment modal window, save function)
         var diffMap = this.getDiffMapFromStore(diffCode);
-        sectionElement.onclick = this.createSaveHacommentFunction(diffCode, diffMap);
+        // to Title Element
+        sectionElement.querySelector('h2').onclick = this.createSaveHacommentFunction(diffCode, diffMap);
+        // to Hacommet Element
+        sectionElement.querySelector('pre').onclick = this.createSaveHacommentFunction(diffCode, diffMap);
       }
     },
 

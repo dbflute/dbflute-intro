@@ -123,6 +123,18 @@ ${selector.historyHtmlStyleSheetEmbedded}
       .tablecount {
         margin: 0.5em 0 0.5em 1em;
       }
+      .titlediffauthor {
+        font-size: 0.7em;
+        font-weight: normal;
+        font-style: italic;
+        color: #888888;
+      }
+      .titlediffgitbranch {
+        font-size: 0.7em;
+        font-weight: normal;
+        font-style: italic;
+        color: #888888;
+      }
 
       /* -------------------------------------------------
                                      Difference Content
@@ -798,7 +810,10 @@ ${selector.historyHtmlJavaScriptEmbedded}
 
         // add click-event (open hacomment modal window, save function)
         var diffMap = this.getDiffMapFromStore(diffCode);
-        sectionElement.onclick = this.createSaveHacommentFunction(diffCode, diffMap);
+        // to Title Element
+        sectionElement.querySelector('h2').onclick = this.createSaveHacommentFunction(diffCode, diffMap);
+        // to Hacommet Element
+        sectionElement.querySelector('pre').onclick = this.createSaveHacommentFunction(diffCode, diffMap);
       }
     },
 
