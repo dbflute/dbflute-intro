@@ -35,7 +35,7 @@ ext {
             node : '8.7.0',
 
             // Main Framework
-            dbflute : '1.1.8-RC1',
+            dbflute : '1.1.8-RC4',
             h2 : '1.4.197',
             lastaflute : '1.0.8',
 
@@ -89,8 +89,7 @@ repositories {
 
 dependencies {
     // Main Framework
-    // TODO cabos remove version hard code
-    compile "org.dbflute:dbflute-runtime:1.1.8-RC2"
+    compile "org.dbflute:dbflute-runtime:${versions.dbflute}"
     runtime "com.h2database:h2:${versions.h2}"
     compile "org.lastaflute:lastaflute:${versions.lastaflute}"
 
