@@ -1,0 +1,1101 @@
+map:{
+    ; 2018/05/13 17:03:22 = map:{
+        ; diffDate = 2018/05/13 17:03:22
+        ; comment = diffmap上のcommentでも、デコメントでやってる特殊表現のテストやるよー
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} そのまま書いても大丈夫？ 
+o mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと 'シングルクォーテーション' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt\;HTMLエスケープ表現&gt\; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+        ; tableDiff = map:{
+            ; member = map:{
+                ; tableName = member
+                ; diffType = CHANGE
+                ; tableCommentDiff = map:{
+                    ; next = "会員: 会員のプロフィールやアカウントなどの基本情報を保持する。
+基本的に物理削除はなく、退会したらステータスが退会会員になる。
+ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} そのまま書いても大丈夫？ 
+o mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと 'シングルクォーテーション' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt\;HTMLエスケープ表現&gt\; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+
+※同じようなこと、カラムコメントの方でも試している。
+
+※それにしても MySQL さん、エスケープがバックスラッシュなので、
+create文の中では「バックスラッシュ+シングルクォーテーション」ってなるし、
+バックスラッシュ自体を使うなら「バックスラッシュ+バックスラッシュ」ってしないとね。
+"
+                    ; previous = "会員: 会員のプロフィールやアカウントなどの基本情報を保持する。
+基本的に物理削除はなく、退会したらステータスが退会会員になる。
+ライフサイクルやカテゴリの違う会員情報は、one-to-oneなどの関連テーブルにて。
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+それにしても、めっちゃデコメントのテストするよ
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} そのまま書いても大丈夫？ 
+o mapStyle, map:\{ sea \= mystic \; land \= oneman \} エスケープされてても大丈夫？ 
+o DBコメントで、ベタッと 'シングルクォーテーション' で囲うけど大丈夫？
+o DBコメントで、ベタッと <span>HTMLタグ</span> で囲うけど大丈夫？
+o DBコメントで、ベタッと &lt\;HTMLエスケープ表現&gt\; で囲うけど大丈夫？ (もともとSchemaHTML的にダメみたい!?)
+_/_/_/_/_/_/_/_/_/_/
+※同じようなこと、カラムコメントの方でも試しています。
+"
+                }
+                ; columnDiff = map:{
+                    ; MEMBER_NAME = map:{
+                        ; columnName = MEMBER_NAME
+                        ; diffType = CHANGE
+                        ; columnCommentDiff = map:{
+                            ; next = "会員名称: mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} 記号をエスケープするぞー"
+                            ; previous = "会員名称: mapStyle, map:\{ sea \= mystic \; land \= oneman \} 記号をエスケープするぞー"
+                        }
+                    }
+                }
+            }
+            ; summary_withdrawal = map:{
+                ; tableName = summary_withdrawal
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; MEMBER_NAME = map:{
+                        ; columnName = MEMBER_NAME
+                        ; diffType = CHANGE
+                        ; columnCommentDiff = map:{
+                            ; next = "会員名称: mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} 記号をエスケープするぞー"
+                            ; previous = "会員名称: mapStyle, map:\{ sea \= mystic \; land \= oneman \} 記号をエスケープするぞー"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/11 14:47:22 = map:{
+        ; diffDate = 2018/05/11 14:47:22
+        ; comment = revert mistake
+        ; tableCount = map:{
+            ; next = 116
+            ; previous = 117
+        }
+        ; tableDiff = map:{
+            ; next_schema_product = map:{
+                ; tableName = next_schema_product
+                ; diffType = DELETE
+            }
+        }
+    }
+    ; 2018/05/04 14:09:49 = map:{
+        ; diffDate = 2018/05/04 14:09:49
+        ; tableDiff = map:{
+            ; member = map:{
+                ; tableName = member
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; MEMBER_ID = map:{
+                        ; columnName = MEMBER_ID
+                        ; diffType = CHANGE
+                        ; columnCommentDiff = map:{
+                            ; next = "会員ID: 会員を識別するID。連番として基本的に自動採番される。
+（会員IDだけに限らず）採番方法はDBMSによって変わる。"
+                            ; previous = "x会員ID: 会員を識別するID。連番として基本的に自動採番される。
+（会員IDだけに限らず）採番方法はDBMSによって変わる。"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:47:50 = map:{
+        ; diffDate = 2018/05/04 11:47:50
+        ; comment = miraco
+        ; tableDiff = map:{
+            ; next_schema_product = map:{
+                ; tableName = next_schema_product
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_ID = map:{
+                        ; columnName = PRODUCT_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = BIGINT
+                            ; previous = INT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 19
+                            ; previous = 10
+                        }
+                    }
+                    ; PRODUCT_NAME = map:{
+                        ; columnName = PRODUCT_NAME
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 200
+                            ; previous = 50
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:40:23 = map:{
+        ; diffDate = 2018/05/04 11:40:23
+        ; comment = for schema policy check, quotation ''' """ yeah
+        ; tableDiff = map:{
+            ; white_perrotta_over_member = map:{
+                ; tableName = white_perrotta_over_member
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; MEMBER_NAME = map:{
+                        ; columnName = MEMBER_NAME
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 180
+                            ; previous = 200
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:38:51 = map:{
+        ; diffDate = 2018/05/04 11:38:51
+        ; comment = for schema policy check, emoji 💕 yeah
+        ; tableDiff = map:{
+            ; white_all_in_one_cls_category = map:{
+                ; tableName = white_all_in_one_cls_category
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; DESCRIPTION = map:{
+                        ; columnName = DESCRIPTION
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 200
+                            ; previous = 50
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:38:01 = map:{
+        ; diffDate = 2018/05/04 11:38:01
+        ; tableDiff = map:{
+            ; next_schema_product = map:{
+                ; tableName = next_schema_product
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_NAME = map:{
+                        ; columnName = PRODUCT_NAME
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 50
+                            ; previous = 200
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:35:18 = map:{
+        ; diffDate = 2018/05/04 11:35:18
+        ; tableDiff = map:{
+            ; white_perrotta_over_product = map:{
+                ; tableName = white_perrotta_over_product
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_NAME = map:{
+                        ; columnName = PRODUCT_NAME
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 50
+                            ; previous = 200
+                        }
+                    }
+                }
+            }
+            ; white_perrotta_over_product_nested = map:{
+                ; tableName = white_perrotta_over_product_nested
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_NESTED_NAME = map:{
+                        ; columnName = PRODUCT_NESTED_NAME
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 50
+                            ; previous = 200
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:33:56 = map:{
+        ; diffDate = 2018/05/04 11:33:56
+        ; comment = for schema policy check
+        ; tableDiff = map:{
+            ; white_perrotta_over_member = map:{
+                ; tableName = white_perrotta_over_member
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; MEMBER_ID = map:{
+                        ; columnName = MEMBER_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = INT
+                            ; previous = BIGINT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 10
+                            ; previous = 19
+                        }
+                    }
+                }
+            }
+            ; white_additional = map:{
+                ; tableName = white_additional
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; register_datetime = map:{
+                        ; columnName = register_datetime
+                        ; diffType = CHANGE
+                        ; columnSizeDiff = map:{
+                            ; next = 19
+                            ; previous = null
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:05:59 = map:{
+        ; diffDate = 2018/05/04 11:05:59
+        ; comment = for schema policy check
+PRODUCT_ID should be Integer
+        ; tableDiff = map:{
+            ; next_schema_product = map:{
+                ; tableName = next_schema_product
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_ID = map:{
+                        ; columnName = PRODUCT_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = INT
+                            ; previous = BIGINT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 10
+                            ; previous = 19
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2018/05/04 11:00:33 = map:{
+        ; diffDate = 2018/05/04 11:00:33
+        ; tableDiff = map:{
+            ; white_perrotta_over_member = map:{
+                ; tableName = white_perrotta_over_member
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_ID = map:{
+                        ; columnName = PRODUCT_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = INT
+                            ; previous = BIGINT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 10
+                            ; previous = 19
+                        }
+                    }
+                }
+            }
+            ; white_perrotta_over_product = map:{
+                ; tableName = white_perrotta_over_product
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PRODUCT_ID = map:{
+                        ; columnName = PRODUCT_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = INT
+                            ; previous = BIGINT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 10
+                            ; previous = 19
+                        }
+                    }
+                }
+            }
+            ; white_perrotta_over_trace = map:{
+                ; tableName = white_perrotta_over_trace
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; PREVIOUS_PRODUCT_ID = map:{
+                        ; columnName = PREVIOUS_PRODUCT_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = INT
+                            ; previous = BIGINT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 10
+                            ; previous = 19
+                        }
+                    }
+                    ; NEXT_PRODUCT_ID = map:{
+                        ; columnName = NEXT_PRODUCT_ID
+                        ; diffType = CHANGE
+                        ; dbTypeDiff = map:{
+                            ; next = INT
+                            ; previous = BIGINT
+                        }
+                        ; columnSizeDiff = map:{
+                            ; next = 10
+                            ; previous = 19
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ; 2017/08/02 22:10:41 = map:{
+        ; diffDate = 2017/08/02 22:10:41
+        ; tableDiff = map:{
+            ; vendor_check = map:{
+                ; tableName = vendor_check
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; TYPE_OF_DATETIME_3_MILLIS = map:{
+                        ; columnName = TYPE_OF_DATETIME_3_MILLIS
+                        ; diffType = ADD
+                    }
+                    ; TYPE_OF_DATETIME_6_MICROS = map:{
+                        ; columnName = TYPE_OF_DATETIME_6_MICROS
+                        ; diffType = ADD
+                    }
+                }
+            }
+        }
+    }
+    ; 2017/03/27 15:20:47 = map:{
+        ; diffDate = 2017/03/27 15:20:47
+        ; tableCount = map:{
+            ; next = 117
+            ; previous = 116
+        }
+        ; tableDiff = map:{
+            ; white_cls_no_camelizing = map:{
+                ; tableName = white_cls_no_camelizing
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2016/10/05 00:39:57 = map:{
+        ; diffDate = 2016/10/05 00:39:57
+        ; tableCount = map:{
+            ; next = 116
+            ; previous = 115
+        }
+        ; tableDiff = map:{
+            ; next_schema_product = map:{
+                ; tableName = next_schema_product
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2016/10/05 00:00:17 = map:{
+        ; diffDate = 2016/10/05 00:00:17
+        ; tableCount = map:{
+            ; next = 115
+            ; previous = 116
+        }
+        ; tableDiff = map:{
+            ; next_schema_product = map:{
+                ; tableName = next_schema_product
+                ; diffType = DELETE
+            }
+        }
+    }
+    ; 2016/08/18 13:37:32 = map:{
+        ; diffDate = 2016/08/18 13:37:32
+        ; tableCount = map:{
+            ; next = 116
+            ; previous = 9
+        }
+        ; tableDiff = map:{
+            ; member = map:{
+                ; tableName = member
+                ; diffType = ADD
+            }
+            ; product = map:{
+                ; tableName = product
+                ; diffType = ADD
+            }
+            ; product_category = map:{
+                ; tableName = product_category
+                ; diffType = ADD
+            }
+            ; product_status = map:{
+                ; tableName = product_status
+                ; diffType = ADD
+            }
+            ; purchase = map:{
+                ; tableName = purchase
+                ; diffType = ADD
+            }
+            ; purchase_payment = map:{
+                ; tableName = purchase_payment
+                ; diffType = ADD
+            }
+            ; region = map:{
+                ; tableName = region
+                ; diffType = ADD
+            }
+            ; service_rank = map:{
+                ; tableName = service_rank
+                ; diffType = ADD
+            }
+            ; summary_product = map:{
+                ; tableName = summary_product
+                ; diffType = ADD
+            }
+            ; summary_withdrawal = map:{
+                ; tableName = summary_withdrawal
+                ; diffType = ADD
+            }
+            ; vendor_$_dollar = map:{
+                ; tableName = vendor_$_dollar
+                ; diffType = ADD
+            }
+            ; vendor_check = map:{
+                ; tableName = vendor_check
+                ; diffType = ADD
+            }
+            ; vendor_constraint_name_auto_bar = map:{
+                ; tableName = vendor_constraint_name_auto_bar
+                ; diffType = ADD
+            }
+            ; vendor_constraint_name_auto_foo = map:{
+                ; tableName = vendor_constraint_name_auto_foo
+                ; diffType = ADD
+            }
+            ; vendor_constraint_name_auto_qux = map:{
+                ; tableName = vendor_constraint_name_auto_qux
+                ; diffType = ADD
+            }
+            ; vendor_constraint_name_auto_ref = map:{
+                ; tableName = vendor_constraint_name_auto_ref
+                ; diffType = ADD
+            }
+            ; vendor_large_data = map:{
+                ; tableName = vendor_large_data
+                ; diffType = ADD
+            }
+            ; vendor_large_data_ref = map:{
+                ; tableName = vendor_large_data_ref
+                ; diffType = ADD
+            }
+            ; vendor_the_long_and_winding_table_and_column = map:{
+                ; tableName = vendor_the_long_and_winding_table_and_column
+                ; diffType = ADD
+            }
+            ; vendor_the_long_and_winding_table_and_column_ref = map:{
+                ; tableName = vendor_the_long_and_winding_table_and_column_ref
+                ; diffType = ADD
+            }
+            ; white_all_in_one_cls_category = map:{
+                ; tableName = white_all_in_one_cls_category
+                ; diffType = ADD
+            }
+            ; white_all_in_one_cls_compound_pk_ref = map:{
+                ; tableName = white_all_in_one_cls_compound_pk_ref
+                ; diffType = ADD
+            }
+            ; white_all_in_one_cls_element = map:{
+                ; tableName = white_all_in_one_cls_element
+                ; diffType = ADD
+            }
+            ; white_all_in_one_cls_normal_col_ref = map:{
+                ; tableName = white_all_in_one_cls_normal_col_ref
+                ; diffType = ADD
+            }
+            ; white_binary = map:{
+                ; tableName = white_binary
+                ; diffType = ADD
+            }
+            ; white_column_except = map:{
+                ; tableName = white_column_except
+                ; diffType = ADD
+            }
+            ; white_column_except_gen_only = map:{
+                ; tableName = white_column_except_gen_only
+                ; diffType = ADD
+            }
+            ; white_compound_pk = map:{
+                ; tableName = white_compound_pk
+                ; diffType = ADD
+            }
+            ; white_compound_pk_ref = map:{
+                ; tableName = white_compound_pk_ref
+                ; diffType = ADD
+            }
+            ; white_compound_pk_ref_many = map:{
+                ; tableName = white_compound_pk_ref_many
+                ; diffType = ADD
+            }
+            ; white_compound_pk_ref_nest = map:{
+                ; tableName = white_compound_pk_ref_nest
+                ; diffType = ADD
+            }
+            ; white_compound_pk_wrong_order = map:{
+                ; tableName = white_compound_pk_wrong_order
+                ; diffType = ADD
+            }
+            ; white_compound_referred_normally = map:{
+                ; tableName = white_compound_referred_normally
+                ; diffType = ADD
+            }
+            ; white_compound_referred_primary = map:{
+                ; tableName = white_compound_referred_primary
+                ; diffType = ADD
+            }
+            ; white_date_adjustment = map:{
+                ; tableName = white_date_adjustment
+                ; diffType = ADD
+            }
+            ; white_db_comment = map:{
+                ; tableName = white_db_comment
+                ; diffType = ADD
+            }
+            ; white_delimiter = map:{
+                ; tableName = white_delimiter
+                ; diffType = ADD
+            }
+            ; white_deprecated_cls_element = map:{
+                ; tableName = white_deprecated_cls_element
+                ; diffType = ADD
+            }
+            ; white_escaped_dfprop = map:{
+                ; tableName = white_escaped_dfprop
+                ; diffType = ADD
+            }
+            ; white_escaped_java_doc = map:{
+                ; tableName = white_escaped_java_doc
+                ; diffType = ADD
+            }
+            ; white_escaped_number_initial = map:{
+                ; tableName = white_escaped_number_initial
+                ; diffType = ADD
+            }
+            ; white_geared_cipher = map:{
+                ; tableName = white_geared_cipher
+                ; diffType = ADD
+            }
+            ; white_grouping_reference = map:{
+                ; tableName = white_grouping_reference
+                ; diffType = ADD
+            }
+            ; white_implicit_conv_integer = map:{
+                ; tableName = white_implicit_conv_integer
+                ; diffType = ADD
+            }
+            ; white_implicit_conv_numeric = map:{
+                ; tableName = white_implicit_conv_numeric
+                ; diffType = ADD
+            }
+            ; white_implicit_conv_string = map:{
+                ; tableName = white_implicit_conv_string
+                ; diffType = ADD
+            }
+            ; white_implicit_reverse_fk = map:{
+                ; tableName = white_implicit_reverse_fk
+                ; diffType = ADD
+            }
+            ; white_implicit_reverse_fk_ref = map:{
+                ; tableName = white_implicit_reverse_fk_ref
+                ; diffType = ADD
+            }
+            ; white_implicit_reverse_fk_suppress = map:{
+                ; tableName = white_implicit_reverse_fk_suppress
+                ; diffType = ADD
+            }
+            ; white_include_query = map:{
+                ; tableName = white_include_query
+                ; diffType = ADD
+            }
+            ; white_large_text_file = map:{
+                ; tableName = white_large_text_file
+                ; diffType = ADD
+            }
+            ; white_line_sep_comment = map:{
+                ; tableName = white_line_sep_comment
+                ; diffType = ADD
+            }
+            ; white_load_data = map:{
+                ; tableName = white_load_data
+                ; diffType = ADD
+            }
+            ; white_myself = map:{
+                ; tableName = white_myself
+                ; diffType = ADD
+            }
+            ; white_myself_check = map:{
+                ; tableName = white_myself_check
+                ; diffType = ADD
+            }
+            ; white_no_pk = map:{
+                ; tableName = white_no_pk
+                ; diffType = ADD
+            }
+            ; white_no_pk_common_column = map:{
+                ; tableName = white_no_pk_common_column
+                ; diffType = ADD
+            }
+            ; white_no_pk_relation = map:{
+                ; tableName = white_no_pk_relation
+                ; diffType = ADD
+            }
+            ; white_only_one_to_one_from = map:{
+                ; tableName = white_only_one_to_one_from
+                ; diffType = ADD
+            }
+            ; white_only_one_to_one_to = map:{
+                ; tableName = white_only_one_to_one_to
+                ; diffType = ADD
+            }
+            ; white_perrotta_over_member = map:{
+                ; tableName = white_perrotta_over_member
+                ; diffType = ADD
+            }
+            ; white_perrotta_over_member_macho = map:{
+                ; tableName = white_perrotta_over_member_macho
+                ; diffType = ADD
+            }
+            ; white_perrotta_over_product = map:{
+                ; tableName = white_perrotta_over_product
+                ; diffType = ADD
+            }
+            ; white_perrotta_over_product_nested = map:{
+                ; tableName = white_perrotta_over_product_nested
+                ; diffType = ADD
+            }
+            ; white_perrotta_over_trace = map:{
+                ; tableName = white_perrotta_over_trace
+                ; diffType = ADD
+            }
+            ; white_pg_reserv = map:{
+                ; tableName = white_pg_reserv
+                ; diffType = ADD
+            }
+            ; white_pg_reserv_ref = map:{
+                ; tableName = white_pg_reserv_ref
+                ; diffType = ADD
+            }
+            ; white_point_type_mapping = map:{
+                ; tableName = white_point_type_mapping
+                ; diffType = ADD
+            }
+            ; white_purchase_referrer = map:{
+                ; tableName = white_purchase_referrer
+                ; diffType = ADD
+            }
+            ; white_quoted = map:{
+                ; tableName = white_quoted
+                ; diffType = ADD
+            }
+            ; white_quoted_ref = map:{
+                ; tableName = white_quoted_ref
+                ; diffType = ADD
+            }
+            ; white_self_reference = map:{
+                ; tableName = white_self_reference
+                ; diffType = ADD
+            }
+            ; white_self_reference_ref_one = map:{
+                ; tableName = white_self_reference_ref_one
+                ; diffType = ADD
+            }
+            ; white_split_multiple_fk_base = map:{
+                ; tableName = white_split_multiple_fk_base
+                ; diffType = ADD
+            }
+            ; white_split_multiple_fk_child = map:{
+                ; tableName = white_split_multiple_fk_child
+                ; diffType = ADD
+            }
+            ; white_split_multiple_fk_next = map:{
+                ; tableName = white_split_multiple_fk_next
+                ; diffType = ADD
+            }
+            ; white_split_multiple_fk_ref = map:{
+                ; tableName = white_split_multiple_fk_ref
+                ; diffType = ADD
+            }
+            ; white_stiletto_alias = map:{
+                ; tableName = white_stiletto_alias
+                ; diffType = ADD
+            }
+            ; white_stiletto_alias_ref = map:{
+                ; tableName = white_stiletto_alias_ref
+                ; diffType = ADD
+            }
+            ; white_suppress_def_check = map:{
+                ; tableName = white_suppress_def_check
+                ; diffType = ADD
+            }
+            ; white_suppress_join_sq = map:{
+                ; tableName = white_suppress_join_sq
+                ; diffType = ADD
+            }
+            ; white_suppress_join_sq_many = map:{
+                ; tableName = white_suppress_join_sq_many
+                ; diffType = ADD
+            }
+            ; white_suppress_join_sq_many_one = map:{
+                ; tableName = white_suppress_join_sq_many_one
+                ; diffType = ADD
+            }
+            ; white_suppress_join_sq_many_one_one = map:{
+                ; tableName = white_suppress_join_sq_many_one_one
+                ; diffType = ADD
+            }
+            ; white_suppress_join_sq_one = map:{
+                ; tableName = white_suppress_join_sq_one
+                ; diffType = ADD
+            }
+            ; white_suppress_join_sq_one_addi = map:{
+                ; tableName = white_suppress_join_sq_one_addi
+                ; diffType = ADD
+            }
+            ; white_table_except_gen_head = map:{
+                ; tableName = white_table_except_gen_head
+                ; diffType = ADD
+            }
+            ; white_table_except_gen_only = map:{
+                ; tableName = white_table_except_gen_only
+                ; diffType = ADD
+            }
+            ; white_table_except_gen_ref = map:{
+                ; tableName = white_table_except_gen_ref
+                ; diffType = ADD
+            }
+            ; white_uq_classification = map:{
+                ; tableName = white_uq_classification
+                ; diffType = ADD
+            }
+            ; white_uq_classification_flg = map:{
+                ; tableName = white_uq_classification_flg
+                ; diffType = ADD
+            }
+            ; white_uq_classification_flg_bit = map:{
+                ; tableName = white_uq_classification_flg_bit
+                ; diffType = ADD
+            }
+            ; white_uq_classification_flg_part = map:{
+                ; tableName = white_uq_classification_flg_part
+                ; diffType = ADD
+            }
+            ; white_uq_fk = map:{
+                ; tableName = white_uq_fk
+                ; diffType = ADD
+            }
+            ; white_uq_fk_ref = map:{
+                ; tableName = white_uq_fk_ref
+                ; diffType = ADD
+            }
+            ; white_uq_fk_ref_nest = map:{
+                ; tableName = white_uq_fk_ref_nest
+                ; diffType = ADD
+            }
+            ; white_uq_fk_without_pk = map:{
+                ; tableName = white_uq_fk_without_pk
+                ; diffType = ADD
+            }
+            ; white_uq_fk_without_pk_ref = map:{
+                ; tableName = white_uq_fk_without_pk_ref
+                ; diffType = ADD
+            }
+            ; white_variant_relation_local_pk_referrer = map:{
+                ; tableName = white_variant_relation_local_pk_referrer
+                ; diffType = ADD
+            }
+            ; white_variant_relation_master_bar = map:{
+                ; tableName = white_variant_relation_master_bar
+                ; diffType = ADD
+            }
+            ; white_variant_relation_master_corge = map:{
+                ; tableName = white_variant_relation_master_corge
+                ; diffType = ADD
+            }
+            ; white_variant_relation_master_foo = map:{
+                ; tableName = white_variant_relation_master_foo
+                ; diffType = ADD
+            }
+            ; white_variant_relation_master_qux = map:{
+                ; tableName = white_variant_relation_master_qux
+                ; diffType = ADD
+            }
+            ; white_variant_relation_referrer = map:{
+                ; tableName = white_variant_relation_referrer
+                ; diffType = ADD
+            }
+            ; white_variant_relation_referrer_ref = map:{
+                ; tableName = white_variant_relation_referrer_ref
+                ; diffType = ADD
+            }
+            ; white_xls_man = map:{
+                ; tableName = white_xls_man
+                ; diffType = ADD
+            }
+            ; withdrawal_reason = map:{
+                ; tableName = withdrawal_reason
+                ; diffType = ADD
+            }
+            ; member_address = map:{
+                ; tableName = member_address
+                ; diffType = CHANGE
+                ; foreignKeyDiff = map:{
+                    ; FK_MEMBER_ADDRESS_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_ADDRESS_MEMBER
+                        ; diffType = ADD
+                    }
+                    ; FK_MEMBER_ADDRESS_REGION = map:{
+                        ; constraintName = FK_MEMBER_ADDRESS_REGION
+                        ; diffType = ADD
+                    }
+                }
+            }
+            ; member_following = map:{
+                ; tableName = member_following
+                ; diffType = CHANGE
+                ; foreignKeyDiff = map:{
+                    ; FK_MEMBER_FOLLOWING_MY_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_FOLLOWING_MY_MEMBER
+                        ; diffType = ADD
+                    }
+                    ; FK_MEMBER_FOLLOWING_YOUR_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_FOLLOWING_YOUR_MEMBER
+                        ; diffType = ADD
+                    }
+                }
+            }
+            ; member_login = map:{
+                ; tableName = member_login
+                ; diffType = CHANGE
+                ; foreignKeyDiff = map:{
+                    ; FK_MEMBER_LOGIN_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_LOGIN_MEMBER
+                        ; diffType = ADD
+                    }
+                }
+            }
+            ; member_security = map:{
+                ; tableName = member_security
+                ; diffType = CHANGE
+                ; foreignKeyDiff = map:{
+                    ; FK_MEMBER_SECURITY_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_SECURITY_MEMBER
+                        ; diffType = ADD
+                    }
+                }
+            }
+            ; member_service = map:{
+                ; tableName = member_service
+                ; diffType = CHANGE
+                ; foreignKeyDiff = map:{
+                    ; FK_MEMBER_SERVICE_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_SERVICE_MEMBER
+                        ; diffType = ADD
+                    }
+                    ; FK_MEMBER_SERVICE_SERVICE_RANK_CODE = map:{
+                        ; constraintName = FK_MEMBER_SERVICE_SERVICE_RANK_CODE
+                        ; diffType = ADD
+                    }
+                }
+            }
+            ; member_withdrawal = map:{
+                ; tableName = member_withdrawal
+                ; diffType = CHANGE
+                ; foreignKeyDiff = map:{
+                    ; FK_MEMBER_WITHDRAWAL_MEMBER = map:{
+                        ; constraintName = FK_MEMBER_WITHDRAWAL_MEMBER
+                        ; diffType = ADD
+                    }
+                    ; FK_MEMBER_WITHDRAWAL_WITHDRAWAL_REASON = map:{
+                        ; constraintName = FK_MEMBER_WITHDRAWAL_WITHDRAWAL_REASON
+                        ; diffType = ADD
+                    }
+                }
+            }
+        }
+    }
+    ; 2015/11/30 23:32:53 = map:{
+        ; diffDate = 2015/11/30 23:32:53
+        ; tableCount = map:{
+            ; next = 116
+            ; previous = 115
+        }
+        ; tableDiff = map:{
+            ; white_no_pk_common_column = map:{
+                ; tableName = white_no_pk_common_column
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2015/08/11 18:13:38 = map:{
+        ; diffDate = 2015/08/11 18:13:38
+        ; tableCount = map:{
+            ; next = 115
+            ; previous = 114
+        }
+        ; tableDiff = map:{
+            ; white_uq_classification_flg_bit = map:{
+                ; tableName = white_uq_classification_flg_bit
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2015/08/11 11:35:07 = map:{
+        ; diffDate = 2015/08/11 11:35:07
+        ; tableDiff = map:{
+            ; white_uq_classification_flg_part = map:{
+                ; tableName = white_uq_classification_flg_part
+                ; diffType = ADD
+            }
+            ; white_uq_classification_part_flg = map:{
+                ; tableName = white_uq_classification_part_flg
+                ; diffType = DELETE
+            }
+        }
+    }
+    ; 2015/08/11 11:32:13 = map:{
+        ; diffDate = 2015/08/11 11:32:13
+        ; tableDiff = map:{
+            ; white_uq_classification_part_flg = map:{
+                ; tableName = white_uq_classification_part_flg
+                ; diffType = CHANGE
+                ; columnDiff = map:{
+                    ; UQ_CLS_NAME = map:{
+                        ; columnName = UQ_CLS_NAME
+                        ; diffType = ADD
+                    }
+                    ; UQ_CLS_CODE = map:{
+                        ; columnName = UQ_CLS_CODE
+                        ; diffType = DELETE
+                    }
+                }
+                ; uniqueKeyDiff = map:{
+                    ; UQ_CLS_NAME = map:{
+                        ; constraintName = UQ_CLS_NAME
+                        ; diffType = ADD
+                    }
+                    ; UQ_CLS_CODE = map:{
+                        ; constraintName = UQ_CLS_CODE
+                        ; diffType = DELETE
+                    }
+                }
+            }
+        }
+    }
+    ; 2015/08/11 11:30:28 = map:{
+        ; diffDate = 2015/08/11 11:30:28
+        ; tableCount = map:{
+            ; next = 114
+            ; previous = 113
+        }
+        ; tableDiff = map:{
+            ; white_uq_classification_part_flg = map:{
+                ; tableName = white_uq_classification_part_flg
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2015/08/11 11:27:09 = map:{
+        ; diffDate = 2015/08/11 11:27:09
+        ; tableCount = map:{
+            ; next = 113
+            ; previous = 112
+        }
+        ; tableDiff = map:{
+            ; white_uq_classification_flg = map:{
+                ; tableName = white_uq_classification_flg
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2015/04/02 12:00:50 = map:{
+        ; diffDate = 2015/04/02 12:00:50
+        ; tableCount = map:{
+            ; next = 112
+            ; previous = 111
+        }
+        ; tableDiff = map:{
+            ; vendor_$_dollar = map:{
+                ; tableName = vendor_$_dollar
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2015/02/26 23:10:55 = map:{
+        ; diffDate = 2015/02/26 23:10:55
+        ; tableCount = map:{
+            ; next = 111
+            ; previous = 110
+        }
+        ; tableDiff = map:{
+            ; white_large_text_file = map:{
+                ; tableName = white_large_text_file
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2015/02/01 20:56:21 = map:{
+        ; diffDate = 2015/02/01 20:56:21
+        ; tableCount = map:{
+            ; next = 110
+            ; previous = 111
+        }
+        ; tableDiff = map:{
+            ; white_xxxxx_fk = map:{
+                ; tableName = white_xxxxx_fk
+                ; diffType = DELETE
+            }
+        }
+    }
+    ; 2014/12/03 13:39:43 = map:{
+        ; diffDate = 2014/12/03 13:39:43
+        ; tableCount = map:{
+            ; next = 110
+            ; previous = 109
+        }
+        ; tableDiff = map:{
+            ; member_following = map:{
+                ; tableName = member_following
+                ; diffType = ADD
+            }
+        }
+    }
+    ; 2014/11/16 16:51:15 = map:{
+        ; diffDate = 2014/11/16 16:51:15
+        ; tableCount = map:{
+            ; next = 109
+            ; previous = 108
+        }
+        ; tableDiff = map:{
+            ; white_compound_pk_wrong_order = map:{
+                ; tableName = white_compound_pk_wrong_order
+                ; diffType = ADD
+            }
+        }
+    }
+}

@@ -1,0 +1,110 @@
+# /---------------------------------------------------------------------------
+# classificationDefinitionMap: (NotRequired - Default map:{})
+#
+# The definition of classification.
+#
+# Specification:
+# map: {
+#     [classification-name] = list:{
+#         ; map:{
+#             ; topComment=[comment]; codeType=[String(default) or Number or Boolean]}
+#             ; isCheckImplicitSet=[true or false(default)]
+#             ; isUseDocumentOnly=[true or false(default)]
+#             ; isSuppressAutoDeploy=[true or false(default)]
+#             ; groupingMap = map:{
+#                 ; [group-name] = map:{
+#                     ; groupComment=[comment]
+#                     ; elementList=list:{[the list of classification element's name]}
+#                 }
+#             }
+#         ; map:{code=[code]; name=[name]; alias=[alias]; comment=[comment]}
+#         ; map:{
+#             ; table=[table-name]
+#             ; code=[column-name for code]; name=[column-name for name]
+#             ; alias=[column-name for alias]; comment=[column-name for comment]}
+#             ; where=[condition for select]; orderBy=[column-name for ordering]
+#             ; exceptCodeList=[the list of except code]
+#         }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # the test of no camelizing classification
+    ; NamingDefaultCamelizingType = list:{
+        ; map:{
+            ; topComment=no camelizing classification
+            ; codeType=String
+        }
+        ; map:{
+            ; table=WHITE_CLS_NO_CAMELIZING
+            ; code=NO_CAMELIZING_CODE; name=NO_CAMELIZING_NAME
+        }
+    }
+    ; NamingNoCamelizingType = list:{
+        ; map:{
+            ; topComment=no camelizing classification
+            ; codeType=String
+            ; isSuppressNameCamelizing=true
+        }
+        ; map:{
+            ; table=WHITE_CLS_NO_CAMELIZING
+            ; code=NO_CAMELIZING_CODE; name=NO_CAMELIZING_NAME
+        }
+    }
+
+    # the test of deprecated element
+    ; DeprecatedTopBasicType = list:{
+        ; map:{
+            ; topComment=is deprecated classification
+            ; codeType=String; isCheckImplicitSet=true
+            ; isDeprecated = true
+        }
+        ; map:{code=FOO; name=FooName}
+        ; map:{code=BAR; name=BarName}
+        ; map:{code=QUX; name=QuxName}
+    }
+
+    # the test of deprecated element
+    ; DeprecatedMapBasicType = list:{
+        ; map:{
+            ; topComment=has deprecated element
+            ; codeType=String; isCheckImplicitSet=true
+            ; deprecatedMap = map:{ BarName = test of deprecated }
+        }
+        ; map:{code=FOO; name=FooName}
+        ; map:{code=BAR; name=BarName}
+        ; map:{code=QUX; name=QuxName}
+    }
+
+    # the test of deprecated element
+    ; DeprecatedMapCollaborationType = list:{
+        ; map:{
+            ; topComment=has deprecated element
+            ; codeType=String; isCheckImplicitSet=true
+            ; groupingMap = map:{
+                ; containsDeprecated = map:{
+                    ; groupComment = contains deprecated element here
+                    ; elementList = list:{ FooName ; BarName }
+                }
+            }
+            ; deprecatedMap = map:{ BarName = test of deprecated ; QuxName = no original comment }
+        }
+        ; map:{code=FOO; name=FooName}
+        ; map:{code=BAR; name=BarName; alias=BarBar; comment=here}
+        ; map:{code=QUX; name=QuxName; alias=QuxQux}
+    }
+
+    # the test of unique key as classification
+    ; UQClassificationType = list:{
+        ; map:{topComment=unique key as classification; codeType=String}
+        ; map:{
+            ; table=WHITE_UQ_CLASSIFICATION
+            ; code=UQ_CLS_CODE; name=UQ_CLS_CODE
+            ; orderBy=UQ_CLS_CODE
+        }
+    }
+}
+# ----------------/
+

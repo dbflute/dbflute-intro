@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,6 @@ public class ProjectInfra {
     //                                                                         ===========
     public ProjectInfra(String clientProject, String dbfluteVersion) {
         this(clientProject, dbfluteVersion, null);
-    }
-
-    public ProjectInfra(String clientProject, String dbfluteVersion, String jdbcDriverFileName, String jdbcDriverFileDataBase64) {
-        this(clientProject, dbfluteVersion, new ExtlibFile(jdbcDriverFileName, jdbcDriverFileDataBase64));
     }
 
     public ProjectInfra(String clientProject, String dbfluteVersion, ExtlibFile jdbcDriverFile) {

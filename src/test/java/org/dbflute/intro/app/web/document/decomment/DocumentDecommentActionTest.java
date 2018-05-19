@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.web.document.decomment.DecommentPickupResult.TablePart;
@@ -47,8 +48,8 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
     private DocumentAuthorLogic documentAuthorLogic;
 
     // ===================================================================================
-    //                                                                               Save
-    //                                                                              ======
+    //                                                                               Piece
+    //                                                                               =====
     // -----------------------------------------------------
     //                                                 Table
     //                                                 -----
@@ -74,7 +75,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             log("  {} = {}", key, value);
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
-        assertEquals("1.0", actualMap.get("formatVersion"));
+        assertEquals("1.1", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
         assertEquals(body.decomment, actualMap.get("decomment"));
@@ -85,6 +86,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
+        assertEquals(documentAuthorLogic.getGitBranch().orElse(null), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
@@ -113,7 +115,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             log("  {} = {}", key, value);
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
-        assertEquals("1.0", actualMap.get("formatVersion"));
+        assertEquals("1.1", actualMap.get("formatVersion"));
         assertEquals(body.tableName, actualMap.get("tableName"));
         assertEquals(body.columnName, actualMap.get("columnName"));
         assertEquals(body.decomment, actualMap.get("decomment"));
@@ -124,6 +126,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
+        assertEquals(documentAuthorLogic.getGitBranch(), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
@@ -247,5 +250,131 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
                 member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
         assertHasOnlyOneElement(columnList);
         return columnList.get(0);
+    }
+
+    // ===================================================================================
+    //                                                                             Mapping
+    //                                                                             =======
+    // -----------------------------------------------------
+    //                                                 Table
+    //                                                 -----
+    public void test_save_table_mapping() throws Exception {
+        // ## Arrange ##
+        DocumentDecommentAction action = new DocumentDecommentAction();
+        inject(action);
+        DecommentMappingSaveBody body = createMappingSaveBodyOfTable();
+        File pieceDir = getTestDecommentPieceDir();
+        assertFalse(pieceDir.exists());
+        assertFalse(pieceDir.isDirectory());
+
+        // ## Act ##
+        action.mapping(TEST_CLIENT_PROJECT, body);
+
+        // ## Assert ##
+        // Assert by visual confirmation
+        // done cabos file assert by testdb by jflute (2017/09/07)
+        File pieceFile = verifyMappingFile(pieceDir);
+        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        log("[Saved Piece]: {}", pieceFile.getName());
+        actualMap.forEach((key, value) -> {
+            log("  {} = {}", key, value);
+        });
+        // done cabos fail by formatVersion by jflute (2017/11/11)
+        assertEquals(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, actualMap.get("formatVersion"));
+        body.mappings.forEach(mapping -> {
+            assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
+            assertEquals(actualMap.get("oldColumnName"), null);
+            assertEquals(mapping.newTableName, actualMap.get("newTableName"));
+            assertEquals(actualMap.get("newColumnName"), null);
+            List<String> expectedAuthorList = newArrayList(mapping.authors);
+            expectedAuthorList.add(documentAuthorLogic.getAuthor());
+            assertEquals(expectedAuthorList, actualMap.get("authorList"));
+            assertNotNull(actualMap.get("mappingDatetime"));
+            assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
+            assertEquals(mapping.previousMappings, actualMap.get("previousMappingList"));
+        });
+    }
+
+    // -----------------------------------------------------
+    //                                                Column
+    //                                                ------
+    public void test_save_column_mapping() throws Exception {
+        // ## Arrange ##
+        DocumentDecommentAction action = new DocumentDecommentAction();
+        inject(action);
+        DecommentMappingSaveBody body = createMappingSaveBodyOfColumn();
+        File pieceDir = getTestDecommentPieceDir();
+        assertFalse(pieceDir.exists());
+        assertFalse(pieceDir.isDirectory());
+
+        // ## Act ##
+        action.mapping(TEST_CLIENT_PROJECT, body);
+
+        // ## Assert ##
+        // Assert by visual confirmation
+        // done cabos file assert by testdb by jflute (2017/09/07)
+        File pieceFile = verifyMappingFile(pieceDir);
+        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        log("[Saved Piece]: {}", pieceFile.getName());
+        actualMap.forEach((key, value) -> {
+            log("  {} = {}", key, value);
+        });
+        // done cabos fail by formatVersion by jflute (2017/11/11)
+        assertEquals(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, actualMap.get("formatVersion"));
+        body.mappings.forEach(mapping -> {
+            assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
+            assertEquals(mapping.oldColumnName, actualMap.get("oldColumnName"));
+            assertEquals(mapping.newTableName, actualMap.get("newTableName"));
+            assertEquals(mapping.newColumnName, actualMap.get("newColumnName"));
+            List<String> expectedAuthorList = newArrayList(mapping.authors);
+            expectedAuthorList.add(documentAuthorLogic.getAuthor());
+            assertEquals(expectedAuthorList, actualMap.get("authorList"));
+            assertNotNull(actualMap.get("mappingDatetime"));
+            assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("mappingOwner"));
+            assertEquals(mapping.previousMappings, actualMap.get("previousMappingList"));
+        });
+    }
+
+    // -----------------------------------------------------
+    //                                          Assist Logic
+    //                                          ------------
+    private DecommentMappingSaveBody createMappingSaveBodyOfTable() {
+        DecommentMappingSaveBody body = new DecommentMappingSaveBody();
+        DecommentMappingSaveBody.MappingPart mapping = new DecommentMappingSaveBody.MappingPart();
+        mapping.oldTableName = "OLD_MEMBER";
+        mapping.oldColumnName = null;
+        mapping.newTableName = "NEW_MEMBER";
+        mapping.newColumnName = null;
+        mapping.targetType = DfDecoMapPieceTargetType.Table;
+        mapping.authors = Collections.emptyList();
+        mapping.previousMappings = Collections.singletonList("LSFI83SF");
+        body.mappings = Collections.singletonList(mapping);
+        return body;
+    }
+
+    private DecommentMappingSaveBody createMappingSaveBodyOfColumn() {
+        DecommentMappingSaveBody body = new DecommentMappingSaveBody();
+        DecommentMappingSaveBody.MappingPart mapping = new DecommentMappingSaveBody.MappingPart();
+        mapping.oldTableName = "OLD_MEMBER";
+        mapping.oldColumnName = "OLD_COLUMN";
+        mapping.newTableName = "NEW_MEMBER";
+        mapping.newColumnName = "NEW_COLUMN";
+        mapping.targetType = DfDecoMapPieceTargetType.Column;
+        mapping.authors = Collections.emptyList();
+        mapping.previousMappings = Collections.singletonList("LSFI83SF");
+        body.mappings = Collections.singletonList(mapping);
+        return body;
+    }
+
+    private File verifyMappingFile(File pieceDir) {
+        assertTrue(pieceDir.exists());
+        assertTrue(pieceDir.isDirectory());
+        File[] mappingFiles = pieceDir.listFiles();
+        assertNotNull(mappingFiles);
+        assertEquals(1, mappingFiles.length);
+        File pieceFile = mappingFiles[0];
+        Pattern pattern = Pattern.compile("^decomment-mapping-.+-\\d{8}-\\d{6}-\\d{3}-.+\\.dfmap$");
+        assertTrue(pattern.matcher(pieceFile.getName()).find());
+        return pieceFile;
     }
 }

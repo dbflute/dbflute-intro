@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@ import org.lastaflute.core.exception.LaSystemException;
  * @author deco
  * @author jflute
  */
-public class DocumentUpdateLogic {
+public class DocumentDisplayLogic {
 
-    public String markIntroOpeningFileTag(File file) {
+    public String modifyHtmlForIntroOpening(String clientProject, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             boolean addIntroExecuteTag = false;
             final StringBuilder sb = new StringBuilder();
@@ -40,6 +40,15 @@ public class DocumentUpdateLogic {
                 if (!addIntroExecuteTag && line.contains("<script>")) {
                     line = "<input id=\"intro_opening\" type=\"hidden\" />" + line;
                     addIntroExecuteTag = true;
+                }
+                if (line.contains("<a href=\"./history-" + clientProject + ".html\">to HistoryHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientProject + "/historyhtml\">to HistoryHTML</a>";
+                }
+                if (line.contains("<a href=\"./schema-" + clientProject + ".html\">to SchemaHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientProject + "/schemahtml\">to SchemaHTML</a>";
+                }
+                if (line.contains("<a href=\"./properties-" + clientProject + ".html\">to PropertiesHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientProject + "/propertieshtml\">to PropertiesHTML</a>";
                 }
                 sb.append(line).append("\n");
             }

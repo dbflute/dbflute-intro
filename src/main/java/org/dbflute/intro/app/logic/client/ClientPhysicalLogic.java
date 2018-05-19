@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 
 /**
@@ -45,8 +46,8 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                               Basic
     //                                                                               =====
-    // *methods for client top directory are implemented on IntroPhysicalLogic 
-    
+    // *methods for client top directory are implemented on IntroPhysicalLogic
+
     // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
@@ -69,6 +70,11 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              extlib
     //                                                                              ======
+    public ExtlibFile createExtlibFile(String clientProject, String fileName, String jdbcDriverFileDataBase64) {
+        String filePath = buildExtlibDirPath(clientProject) + "/" + fileName;
+        return new ExtlibFile(filePath, jdbcDriverFileDataBase64);
+    }
+
     private String buildExtlibDirPath(String clientProject) {
         return introPhysicalLogic.buildClientPath(clientProject, "extlib");
     }

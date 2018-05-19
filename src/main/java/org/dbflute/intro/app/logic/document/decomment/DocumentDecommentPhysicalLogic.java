@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,13 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapFile;
+import org.dbflute.infra.doc.decomment.DfDecoMapMapping;
 import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.time.TimeManager;
 
 /**
  * @author cabos
@@ -39,6 +41,8 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
+    private TimeManager timeManager;
+    @Resource
     private IntroPhysicalLogic introPhysicalLogic;
     @Resource
     private DocumentAuthorLogic documentAuthorLogic;
@@ -46,7 +50,7 @@ public class DocumentDecommentPhysicalLogic {
     // done cabos why package scope? by jflute (2017/11/19)
     // done cabos add private modifier to _decoMapFile by jflute (2017/11/21)
     // done cabos instance variable should be under Attribute tag comment by jflute (2017/11/19)
-    private final DfDecoMapFile _decoMapFile = new DfDecoMapFile();
+    private final DfDecoMapFile _decoMapFile = new DfDecoMapFile(() -> timeManager.currentDateTime());
 
     // ===================================================================================
     //                                                                           Piece Map
@@ -62,7 +66,8 @@ public class DocumentDecommentPhysicalLogic {
     public DfDecoMapPickup readMergedPickup(String clientProject) {
         List<DfDecoMapPiece> pieces = readDecommentPiece(clientProject);
         OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickup(clientProject);
-        return _decoMapFile.merge(pickupOpt, pieces);
+        List<DfDecoMapMapping> mappings = readDecommentMapping(clientProject);
+        return _decoMapFile.merge(pickupOpt, pieces, mappings);
     }
 
     // done hakoba public on demand, so private now by jflute (2017/08/17)
@@ -71,9 +76,22 @@ public class DocumentDecommentPhysicalLogic {
         return _decoMapFile.readPieceList(buildClientPath(clientProject));
     }
 
+    private List<DfDecoMapMapping> readDecommentMapping(String clientProject) {
+        return _decoMapFile.readMappingList(buildClientPath(clientProject));
+    }
+
     private OptionalThing<DfDecoMapPickup> readDecommentPickup(String clientProject) {
         // done hakiba support no-existing directory or file by jflute (2017/09/28)
         return _decoMapFile.readPickup(buildClientPath(clientProject));
+    }
+
+    // ===================================================================================
+    //                                                                         Mapping Map
+    //                                                                         ===========
+    public void saveDecommentMapping(String projectName, List<DfDecoMapMapping> mappingList) {
+        mappingList.forEach(mapping -> {
+            _decoMapFile.writeMapping(buildClientPath(projectName), mapping);
+        });
     }
 
     // ===================================================================================
@@ -81,6 +99,10 @@ public class DocumentDecommentPhysicalLogic {
     //                                                                              ======
     public String getAuthor() {
         return documentAuthorLogic.getAuthor();
+    }
+
+    public OptionalThing<String> getGitBranch() {
+        return documentAuthorLogic.getGitBranch();
     }
 
     private String buildClientPath(String clientProject) {

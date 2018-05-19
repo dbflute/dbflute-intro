@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,20 @@
  */
 package org.dbflute.intro.app.logic.document;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.function.Supplier;
+
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.intro.app.logic.exception.GitBranchGetFailureException;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author cabos
+ * @author deco
+ * @author jflute
  */
 public class DocumentAuthorLogic {
 
@@ -27,42 +37,63 @@ public class DocumentAuthorLogic {
         private String _author;
 
         @Override
-        public String get() {
+        public synchronized String get() {
             if (this._author == null) {
                 this.loadAuthor();
             }
             return this._author;
         }
 
-        //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        // memorable code : load author from git system
-        //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-        //private void loadAuthor() {
-        //    // done cabos "memorable code" get from os user and filter it by jflute (2017/08/10)
-        //    // get user name from git
-        //    Runtime runtime = Runtime.getRuntime();
-        //    Process p;
-        //    try {
-        //        p = runtime.exec("git config user.name");
-        //    } catch (IOException e) {
-        //        throw new UncheckedIOException("fail to execute git command", e);
-        //    }
-        //
-        //    // read user name
-        //    try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
-        //        this._author = reader.readLine();
-        //    } catch (IOException e) {
-        //        throw new UncheckedIOException("fail to read execute command result", e);
-        //    }
-        //}
-        //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-
         private void loadAuthor() {
-            this._author = System.getProperty("user.name");
+            String author = System.getProperty("user.name");
+            if (StringUtils.isEmpty(author)) {
+                throw new IllegalStateException("cannot load user name: " + author);
+            }
+            this._author = author;
+        }
+    };
+
+    private static final Supplier<String> _gitBranchSupplier = new Supplier<String>() {
+
+        private String _gitBranch;
+
+        @Override
+        public synchronized String get() {
+            if (this._gitBranch == null) {
+                this.loadGitBranch();
+            }
+            return this._gitBranch;
+        }
+
+        private void loadGitBranch() {
+            // get branch name from git
+            Runtime runtime = Runtime.getRuntime();
+            Process p;
+            String command = "git symbolic-ref --short HEAD";
+            try {
+                p = runtime.exec(command);
+            } catch (IOException e) {
+                throw new GitBranchGetFailureException("cannot execute git command: " + command, e);
+            }
+
+            // read branch name
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream(), Charset.forName("UTF-8")))) {
+                this._gitBranch = reader.readLine();
+            } catch (IOException e) {
+                throw new GitBranchGetFailureException("fail to read execute command result: " + command, e);
+            }
         }
     };
 
     public String getAuthor() {
         return _authorSupplier.get();
+    }
+
+    public OptionalThing<String> getGitBranch() {
+        try {
+            return OptionalThing.of(_gitBranchSupplier.get());
+        } catch (GitBranchGetFailureException e) {
+            return OptionalThing.ofNullable(null, () -> { throw e; });
+        }
     }
 }

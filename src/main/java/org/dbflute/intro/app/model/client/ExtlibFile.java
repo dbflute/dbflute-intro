@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package org.dbflute.intro.app.model.client;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Base64;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * @author ryohei
@@ -36,9 +36,9 @@ public class ExtlibFile {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ExtlibFile(String fileName, String fileDataBase64) {
+    public ExtlibFile(String filePath, String fileDataBase64) {
         this.fileData = Base64.getDecoder().decode(fileDataBase64);
-        this.file = new File(fileName);
+        this.file = new File(filePath);
     }
 
     public ExtlibFile(File file) {

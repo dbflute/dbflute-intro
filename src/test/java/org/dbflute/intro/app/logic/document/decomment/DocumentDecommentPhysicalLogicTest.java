@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ public class DocumentDecommentPhysicalLogicTest extends UnitIntroTestCase {
     private DfDecoMapPiece createDfDecoMapPiece() {
         return new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, "MEMBER", "MEMBER_NAME", DfDecoMapPieceTargetType.Column, "piari",
             "sea", 1L, Collections.singletonList("cabos"), "FE893L1", currentLocalDateTime(), "cabos",
-            Collections.singletonList("FE893L1"));
+            "develop", Collections.singletonList("FE893L1"));
     }
 
     // ===================================================================================

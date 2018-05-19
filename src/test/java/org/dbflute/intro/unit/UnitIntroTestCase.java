@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,14 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     private static final String TEST_RESOURCE_PICKUP_PATH = "/src/test/resources/schema/decomment/piece";
     private static final String PICKUP_FILE_PATH = "/schema/decomment/pickup/decomment-pickup.dfmap";
     private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
+    // -----------------------------------------------------
+    //                                             Hacomment
+    //                                             ---------
+    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH =
+        "/src/test/resources/schema/hacomment/pickup/hacomment-pickup.dfmap";
+    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = "/src/test/resources/schema/hacomment/piece";
+    private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/hacomment-pickup.dfmap";
+    private static final String HACOMMENT_PIECE_DIR_PATH = "/schema/hacomment/piece";
 
     // ===================================================================================
     //                                                                            Settings
@@ -122,5 +130,25 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
 
     protected File getTestDecommentPieceDir() {
         return new File(getProjectDir(), TEST_CLIENT_PATH + PIECE_DIR_PATH);
+    }
+
+    // ===================================================================================
+    //                                                                      Test Hacomment
+    //                                                                      ==============
+    protected void prepareTestHacommentFiles() throws IOException {
+        File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH);
+        File srcPieceDir = new File(getProjectDir(), TEST_RESOURCE_HACOMMENT_PICKUP_PATH);
+        File destPickupFile = getTestHacommentPickupFile();
+        File destPieceDir = getTestHacommentPieceDir();
+        FileUtils.copyFile(srcPickupFile, destPickupFile);
+        FileUtils.copyDirectory(srcPieceDir, destPieceDir, file -> file.isDirectory() || file.getName().endsWith(".dfmap"));
+    }
+
+    protected File getTestHacommentPickupFile() {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PICKUP_FILE_PATH);
+    }
+
+    protected File getTestHacommentPieceDir() {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PIECE_DIR_PATH);
     }
 }

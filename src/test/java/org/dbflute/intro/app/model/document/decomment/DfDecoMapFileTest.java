@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,16 +43,16 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
     //                                                                               =====
     public void test_mergeAllColumnComment() throws Exception {
         // ## Arrange ##
-        DfDecoMapFile decoMapFile = new DfDecoMapFile();
+        DfDecoMapFile decoMapFile = new DfDecoMapFile(() -> currentLocalDateTime());
         OptionalThing<DfDecoMapPickup> optPickup = OptionalThing.empty(); // not exists pickup
         LocalDateTime now = currentLocalDateTime();
-        DfDecoMapPiece piece1 = preparePiece("MEMBER", "MEMBER_NAME", "hakiba", LATEST_COMMENT_VERSION, now);
-        DfDecoMapPiece piece2 = preparePiece("MEMBER", "MEMBER_STATUS", "cabos", LATEST_COMMENT_VERSION, now);
-        DfDecoMapPiece piece3 = preparePiece("PURCHASE", "PURCHASE_PRODUCT", "cabos", LATEST_COMMENT_VERSION, now);
+        DfDecoMapPiece piece1 = preparePiece("MEMBER", "MEMBER_NAME", "hakiba", "develop", LATEST_COMMENT_VERSION, now);
+        DfDecoMapPiece piece2 = preparePiece("MEMBER", "MEMBER_STATUS", "cabos", "develop", LATEST_COMMENT_VERSION, now);
+        DfDecoMapPiece piece3 = preparePiece("PURCHASE", "PURCHASE_PRODUCT", "cabos", "master", LATEST_COMMENT_VERSION, now);
         List<DfDecoMapPiece> pieceList = Arrays.asList(piece1, piece2, piece3);
 
         // ## Act ##
-        DfDecoMapPickup result = decoMapFile.merge(optPickup, pieceList);
+        DfDecoMapPickup result = decoMapFile.merge(optPickup, pieceList, Collections.emptyList());
 
         // ## Assert ##
         assertNotNull(result);
@@ -63,11 +63,11 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         assertEquals(3, columnCount);
     }
 
-    private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, long commentVersion,
+    private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, String gitBranch, long commentVersion,
         LocalDateTime decommentDateTime) {
         DfDecoMapPiece piece =
             new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, tableName, columnName, DfDecoMapPieceTargetType.Column, "decomment",
-                "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author,
+                "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author, gitBranch,
                 Collections.emptyList());
         return piece;
     }

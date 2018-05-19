@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.io.InputStream;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.document.DocumentDisplayLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
-import org.dbflute.intro.app.logic.document.DocumentUpdateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.StreamResponse;
@@ -40,7 +40,7 @@ public class DocumentAction extends IntroBaseAction {
     @Resource
     private DocumentPhysicalLogic documentPhysicalLogic;
     @Resource
-    private DocumentUpdateLogic documentUpdateLogic;
+    private DocumentDisplayLogic documentDisplayLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -51,7 +51,7 @@ public class DocumentAction extends IntroBaseAction {
         if (!schemaHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String schemaHtmlContent = documentUpdateLogic.markIntroOpeningFileTag(schemaHtml);
+        String schemaHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, schemaHtml);
         return createStringSteamResponse(schemaHtmlContent);
     }
 
@@ -61,7 +61,18 @@ public class DocumentAction extends IntroBaseAction {
         if (!historyHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        return createHtmlStreamResponse(historyHtml);
+        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, historyHtml);
+        return createStringSteamResponse(historyHtmlContent);
+    }
+
+    @Execute(urlPattern = "{}/@word")
+    public StreamResponse propertieshtml(String clientProject) {
+        File historyHtml = documentPhysicalLogic.findPropertiesHtml(clientProject);
+        if (!historyHtml.exists()) {
+            return StreamResponse.asEmptyBody();
+        }
+        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, historyHtml);
+        return createStringSteamResponse(historyHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")

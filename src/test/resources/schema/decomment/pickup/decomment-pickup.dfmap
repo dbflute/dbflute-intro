@@ -5,10 +5,12 @@ map:{
         ; tableList = list:{
             ; map:{
                 ; tableName = MEMBER
+                ; mappingList = list:{}
                 ; propertyList = list:{}
                 ; columnList = list:{
                     ; map:{
                         ; columnName = MEMBER_NAME
+                        ; mappingList = list:{}
                         ; propertyList = list:{
                             ; map:{
                                 ; decomment = this column's value is always null ...??  DO NOT BE SILLY!!!
@@ -26,6 +28,7 @@ map:{
             }
             ; map:{
                 ; tableName = MEMBER_LOGIN
+                ; mappingList = list:{}
                 ; propertyList = list:{
                     ; map:{
                         ; decomment = my name is cabos
@@ -41,6 +44,7 @@ map:{
                 ; columnList = list:{
                     ; map:{
                         ; columnName = LOGIN_DATETIME
+                        ; mappingList = list:{}
                         ; propertyList = list:{
                             ; map:{
                                 ; decomment = my name is hakiba
@@ -56,6 +60,7 @@ map:{
                     }
                     ; map:{
                         ; columnName = LOGIN_MEMBER_STATUS_CODE
+                        ; mappingList = list:{}
                         ; propertyList = list:{
                             ; map:{
                                 ; decomment = my name is deco

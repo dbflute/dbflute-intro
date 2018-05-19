@@ -1,0 +1,7 @@
+map:{
+	; driver		= com.mysql.jdbc.Driver
+	; url			= jdbc:mysql://localhost:43306/trohamadb_slave
+	; schema		= 
+	; user			= trohamadb_slave
+	; password		= trohamadb_slave
+}

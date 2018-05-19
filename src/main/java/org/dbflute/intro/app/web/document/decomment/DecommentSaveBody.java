@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class DecommentSaveBody {
      * decomment target type
      * e.g. COLUMN
      */
-    @Required
+    @Required(groups = ClientError.class)
     public DfDecoMapPieceTargetType targetType;
 
     /**
@@ -83,7 +83,7 @@ public class DecommentSaveBody {
      * Current piece author is derived by server at first decomment so empty allowed.
      * e.g. ["cabos", "hakiba", "deco"]  (EmptyAllowed)
      */
-    @NotNull
+    @NotNull(groups = ClientError.class)
     public List<String> authors;
 
     /**
@@ -91,6 +91,6 @@ public class DecommentSaveBody {
      * Current piece code is derived by server at first decomment so empty allowed.
      * e.g. ["FE893L1"]  (EmptyAllowed)
      */
-    @NotNull
+    @NotNull(groups = ClientError.class)
     public List<String> previousPieces;
 }

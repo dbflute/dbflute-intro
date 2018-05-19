@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,15 @@
  */
 package org.dbflute.intro.app.web.welcome;
 
+import java.util.LinkedHashMap;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
@@ -38,11 +45,6 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-import java.util.Objects;
-import java.util.Optional;
-
 /**
  * @author hakiba
  */
@@ -55,6 +57,8 @@ public class WelcomeAction extends IntroBaseAction {
     private ClientInfoLogic clientInfoLogic;
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
+    @Resource
+    private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private TestConnectionLogic testConnectionLogic;
     @Resource
@@ -87,6 +91,8 @@ public class WelcomeAction extends IntroBaseAction {
                 .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
                 .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
+
+        // check latest version of DBflute and download engine if need
         String latestVersion;
         try {
             latestVersion = publicPropertiesLogic.findProperties(welcomeCreateBody.useSystemProxies).getDBFluteLatestReleaseVersion();
@@ -96,11 +102,16 @@ public class WelcomeAction extends IntroBaseAction {
         } catch (EngineDownloadErrorException e) {
             throw new NetworkErrorException(e.getMessage());
         }
+
+        // create client (replace client file, copy jar file ...)
         ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
+        clientUpdateLogic.createClient(clientModel);
+
+        // connect test if need
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
-        clientUpdateLogic.createClient(clientModel);
+
         return JsonResponse.asEmptyBody();
     }
 
@@ -122,7 +133,9 @@ public class WelcomeAction extends IntroBaseAction {
         if (Objects.isNull(clientBody.jdbcDriver)) {
             return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion);
         }
-        return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+        ExtlibFile extlibFile =
+            clientPhysicalLogic.createExtlibFile(clientBody.projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+        return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion, extlibFile);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
