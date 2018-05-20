@@ -271,7 +271,7 @@ public class ClientInfoLogic {
                 @SuppressWarnings("unchecked")
                 final Map<String, Object> systemUserDatabaseMap = (Map<String, Object>) additionalUserMap.get("system");
                 if (systemUserDatabaseMap != null) {
-                    final String url = required(systemUserDatabaseMap, "url");
+                    final String url = (String) systemUserDatabaseMap.get("url");
                     final String schema = (String) systemUserDatabaseMap.get("schema");
                     final String user = required(systemUserDatabaseMap, "user");
                     final String password = (String) systemUserDatabaseMap.get("password");
