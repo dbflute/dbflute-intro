@@ -11,7 +11,7 @@ public class IntroSystemPropertyLogic {
     protected static final String DECOMMENT_SERVER_KEY = "intro.decomment.server";
     protected static final Map<String, String> SYSTEM_PROPERTY_MAP = new HashMap<>();
 
-    public boolean isDecommentServerKey() {
+    public boolean isDecommentServer() {
         if (SYSTEM_PROPERTY_MAP.containsKey(DECOMMENT_SERVER_KEY)) {
             return Boolean.valueOf(SYSTEM_PROPERTY_MAP.getOrDefault(DECOMMENT_SERVER_KEY, String.valueOf(Boolean.FALSE)));
         }

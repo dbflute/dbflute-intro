@@ -26,7 +26,7 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
 
         // ### Act ###
         // ### Assert ###
-        assertTrue(logic.isDecommentServerKey());
+        assertTrue(logic.isDecommentServer());
     }
 
     public void test_isNotDecommentServer() throws Exception {
@@ -38,6 +38,6 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
 
         // ### Act ###
         // ### Assert ###
-        assertFalse(logic.isDecommentServerKey());
+        assertFalse(logic.isDecommentServer());
     }
 }
