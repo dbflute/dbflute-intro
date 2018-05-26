@@ -22,16 +22,6 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  */
 public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        clearCache();
-    }
-
-    private void clearCache() {
-        IntroSystemPropertyLogic.SYSTEM_PROPERTY_MAP.remove(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY);
-    }
-
     public void test_isDecommentServer() throws Exception {
         // ### Arrange ###
         final IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
