@@ -22,6 +22,11 @@ public class IntroSystemPropertyLogic {
 
     protected static final String DECOMMENT_SERVER_KEY = "intro.decomment.server";
 
+    /**
+     * Whether dbflute-intro is booted as decomment server<br>
+     * e.g. java -jar -Dintro.decomment.server=true dbflute-intro.jar
+     * @return true if server was booted as decomment server.
+     */
     public boolean isDecommentServer() {
         String property = System.getProperty(DECOMMENT_SERVER_KEY, String.valueOf(Boolean.FALSE));
         return Boolean.valueOf(property);
