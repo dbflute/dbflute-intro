@@ -18,7 +18,7 @@ package org.dbflute.intro.app.logic.intro;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 
 /**
- * @author cabos
+ * @author cabos (at jjug2018 spring)
  */
 public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
 
@@ -36,8 +36,8 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
         // ### Arrange ###
         IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
         inject(logic);
-        System.clearProperty("intro.decomment.server");
-        System.setProperty("intro.decomment.server", "true");
+        System.clearProperty(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY);
+        System.setProperty(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY, "true");
 
         // ### Act ###
         // ### Assert ###
@@ -48,8 +48,8 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
         // ### Arrange ###
         IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
         inject(logic);
-        System.clearProperty("intro.decomment.server");
-        System.setProperty("intro.decomment.server", "false");
+        System.clearProperty(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY);
+        System.setProperty(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY, "false");
 
         // ### Act ###
         // ### Assert ###
