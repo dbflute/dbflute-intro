@@ -55,4 +55,16 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
         // ### Assert ###
         assertFalse(logic.isDecommentServer());
     }
+
+    public void test_isDecommentServer_illegalString() throws Exception {
+        // ### Arrange ###
+        IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
+        inject(logic);
+        System.clearProperty(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY);
+        System.setProperty(IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY, "jjug2018");
+
+        // ### Act ###
+        // ### Assert ###
+        assertFalse(logic.isDecommentServer());
+    }
 }
