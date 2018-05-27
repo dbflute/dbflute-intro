@@ -22,20 +22,39 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  */
 public class IntroSystemLogicTest extends UnitIntroTestCase {
 
+    private String decommentServerKey;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        this.decommentServerKey = System.getProperty(IntroSystemLogic.DECOMMENT_SERVER_KEY);
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        recoverSystemProperty(IntroSystemLogic.DECOMMENT_SERVER_KEY, decommentServerKey);
+        super.tearDown();
+    }
+
+    private void recoverSystemProperty(String key, String cachedProperty) {
+        if (cachedProperty != null) {
+            System.setProperty(key, cachedProperty);
+        } else {
+            System.clearProperty(key);
+        }
+    }
+
     public void test_isDecommentServer() throws Exception {
         // ### Arrange ###
         final IntroSystemLogic logic = new IntroSystemLogic();
         inject(logic);
 
         final String key = IntroSystemLogic.DECOMMENT_SERVER_KEY;
-        final String beforeProperty = System.getProperty(key);
         System.setProperty(key, "true");
 
         // ### Act ###
         // ### Assert ###
         assertTrue(logic.isDecommentServer());
-
-        recoverSystemProperty(key, beforeProperty);
     }
 
     public void test_isNotDecommentServer() throws Exception {
@@ -44,14 +63,11 @@ public class IntroSystemLogicTest extends UnitIntroTestCase {
         inject(logic);
 
         final String key = IntroSystemLogic.DECOMMENT_SERVER_KEY;
-        final String beforeProperty = System.getProperty(key);
         System.setProperty(key, "false");
 
         // ### Act ###
         // ### Assert ###
         assertFalse(logic.isDecommentServer());
-
-        recoverSystemProperty(key, beforeProperty);
     }
 
     public void test_isDecommentServer_illegalString() throws Exception {
@@ -60,21 +76,10 @@ public class IntroSystemLogicTest extends UnitIntroTestCase {
         inject(logic);
 
         final String key = IntroSystemLogic.DECOMMENT_SERVER_KEY;
-        final String beforeProperty = System.getProperty(key);
         System.setProperty(key, "jjug2018");
 
         // ### Act ###
         // ### Assert ###
         assertFalse(logic.isDecommentServer());
-
-        recoverSystemProperty(key, beforeProperty);
-    }
-
-    private void recoverSystemProperty(String key, String beforeProperty) {
-        if (beforeProperty != null) {
-            System.setProperty(key, beforeProperty);
-        } else {
-            System.clearProperty(key);
-        }
     }
 }
