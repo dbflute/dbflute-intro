@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,6 +173,9 @@ public class IntroMessages extends IntroLabels {
 
     /** The key of the message: Sorry, string of "null" is not accepted */
     public static final String ERRORS_STRING_OF_NULL_NOT_ACCEPTED = "{errors.string.of.null.not.accepted}";
+
+    /** The key of the message: this endpoint is not available */
+    public static final String ERRORS_NOT_AVAILABLE_ENDPOINT = "{errors.not.available.endpoint}";
 
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
@@ -895,6 +898,20 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsStringOfNullNotAccepted(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_STRING_OF_NULL_NOT_ACCEPTED));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.not.available.endpoint' with parameters.
+     * <pre>
+     * message: this endpoint is not available
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsNotAvailableEndpoint(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_NOT_AVAILABLE_ENDPOINT));
         return this;
     }
 }

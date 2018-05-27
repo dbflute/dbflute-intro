@@ -15,12 +15,17 @@
  */
 package org.dbflute.intro.app.web.base;
 
+import java.lang.annotation.Annotation;
+
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.context.AccessContextLogic;
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.optional.OptionalThing;
+import org.lastaflute.core.message.exception.MessagingApplicationException;
 import org.lastaflute.db.dbflute.accesscontext.AccessContextArranger;
 import org.lastaflute.web.TypicalAction;
 import org.lastaflute.web.login.LoginManager;
@@ -53,6 +58,8 @@ public abstract class IntroBaseAction extends TypicalAction // has several inter
     private IntroConfig config;
     @Resource
     private AccessContextLogic accessContextLogic;
+    @Resource
+    private IntroSystemLogic introSystemLogic;
 
     // ===================================================================================
     //                                                                               Hook
@@ -83,7 +90,24 @@ public abstract class IntroBaseAction extends TypicalAction // has several inter
         //        csrfManager.verifyToken();
         //    }
         //}
+        if (isNotAvailableEndpointIfDecommentServer(runtime) && introSystemLogic.isDecommentServer()) {
+            throw new MessagingApplicationException("Not available endpoint if decomment server",
+                    IntroMessages.createAsOneGlobal(IntroMessages.ERRORS_NOT_AVAILABLE_ENDPOINT));
+        }
         return super.hookBefore(runtime);
+    }
+
+    private boolean isNotAvailableEndpointIfDecommentServer(ActionRuntime runtime) {
+        Class<NotAvailableDecommentServer> annotation = NotAvailableDecommentServer.class;
+        return hasActionAnnotation(runtime, annotation) || hasMethodAnnotation(runtime, annotation);
+    }
+
+    private boolean hasActionAnnotation(ActionRuntime runtime, Class<? extends Annotation> annotation) {
+        return runtime.getActionType().getAnnotation(annotation) != null;
+    }
+
+    private boolean hasMethodAnnotation(ActionRuntime runtime, Class<? extends Annotation> annotation) {
+        return runtime.getExecuteMethod().getAnnotation(annotation) != null;
     }
 
     @Override
