@@ -18,7 +18,7 @@ package org.dbflute.intro.app.logic.intro;
 /**
  * @author cabos
  */
-public class IntroSystemPropertyLogic {
+public class IntroSystemLogic {
 
     protected static final String DECOMMENT_SERVER_KEY = "intro.decomment.server";
 

@@ -20,14 +20,14 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
 /**
  * @author cabos (at jjug2018 spring)
  */
-public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
+public class IntroSystemLogicTest extends UnitIntroTestCase {
 
     public void test_isDecommentServer() throws Exception {
         // ### Arrange ###
-        final IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
+        final IntroSystemLogic logic = new IntroSystemLogic();
         inject(logic);
 
-        final String key = IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY;
+        final String key = IntroSystemLogic.DECOMMENT_SERVER_KEY;
         final String beforeProperty = System.getProperty(key);
         System.setProperty(key, "true");
 
@@ -40,10 +40,10 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
 
     public void test_isNotDecommentServer() throws Exception {
         // ### Arrange ###
-        final IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
+        final IntroSystemLogic logic = new IntroSystemLogic();
         inject(logic);
 
-        final String key = IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY;
+        final String key = IntroSystemLogic.DECOMMENT_SERVER_KEY;
         final String beforeProperty = System.getProperty(key);
         System.setProperty(key, "false");
 
@@ -56,10 +56,10 @@ public class IntroSystemPropertyLogicTest extends UnitIntroTestCase {
 
     public void test_isDecommentServer_illegalString() throws Exception {
         // ### Arrange ###
-        final IntroSystemPropertyLogic logic = new IntroSystemPropertyLogic();
+        final IntroSystemLogic logic = new IntroSystemLogic();
         inject(logic);
 
-        final String key = IntroSystemPropertyLogic.DECOMMENT_SERVER_KEY;
+        final String key = IntroSystemLogic.DECOMMENT_SERVER_KEY;
         final String beforeProperty = System.getProperty(key);
         System.setProperty(key, "jjug2018");
 
