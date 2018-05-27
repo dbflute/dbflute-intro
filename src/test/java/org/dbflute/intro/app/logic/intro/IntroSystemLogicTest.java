@@ -22,8 +22,17 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  */
 public class IntroSystemLogicTest extends UnitIntroTestCase {
 
+    // ===================================================================================
+    //                                                             Pre and Post Processing
+    //                                                             =======================
+    // -----------------------------------------------------
+    //                                             Attribute
+    //                                             ---------
     private String decommentServerKey;
 
+    // -----------------------------------------------------
+    //                                            Processing
+    //                                            ----------
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -44,6 +53,9 @@ public class IntroSystemLogicTest extends UnitIntroTestCase {
         }
     }
 
+    // ===================================================================================
+    //                                                                                Test
+    //                                                                                ====
     public void test_isDecommentServer() throws Exception {
         // ### Arrange ###
         final IntroSystemLogic logic = new IntroSystemLogic();
