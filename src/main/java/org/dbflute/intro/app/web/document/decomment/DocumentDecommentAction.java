@@ -26,6 +26,7 @@ import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.optional.OptionalThing;
@@ -55,6 +56,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private TimeManager timeManager;
     @Resource
     private DocumentDecommentPhysicalLogic decommentPhysicalLogic;
+    @Resource
+    private IntroSystemLogic introSystemLogic;
 
     // done cabos use _taexec and use _tanest by jflute (2017/08/10)
     // ===================================================================================
@@ -86,6 +89,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
         if (STRING_OF_NULL.equals(body.decomment)) {
             messages.addErrorsStringOfNullNotAccepted("decomment");
         }
+        if (introSystemLogic.isDecommentServer() && LaStringUtil.isEmpty(body.author)) {
+            messages.addConstraintsNotEmptyMessage("author"); // TODO deco improve debug message for client.
+        }
     }
 
     // done cabos unneeded public here, change to private by jflute (2017/11/12)
@@ -105,7 +111,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
-        String author = getAuthor();
+        String author = introSystemLogic.isDecommentServer() ? body.author : getAuthor();
         String gitBranch = getGitBranch().orElse(null);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
         DfDecoMapPiece piece =
@@ -197,15 +203,23 @@ public class DocumentDecommentAction extends IntroBaseAction {
     // TODO done cabos move under existsColumn...() by jflute (2018/04/12)
     private List<DfDecoMapMapping> mappingToDecoMapMapping(DecommentMappingSaveBody body) {
         // TODO done cabos move getAuthor() to class rear as Assist Logic tag comment by jflute (2018/04/12)
-        String author = getAuthor();
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
 
         return body.mappings.stream().map(mapping -> {
+            String author = getMappingAuthor(mapping);
             String mappingCode = buildMappingCode(mapping, mappingDateTime, author);
             return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.oldTableName, mapping.oldColumnName,
                     mapping.newTableName, mapping.newColumnName, mapping.targetType, mapping.authors, mappingCode, author, mappingDateTime,
                     mapping.previousMappings);
         }).collect(Collectors.toList());
+    }
+
+    private String getMappingAuthor(DecommentMappingSaveBody.MappingPart mapping) {
+        if (introSystemLogic.isDecommentServer()) {
+            return mapping.author;
+        } else {
+            return getAuthor();
+        }
     }
 
     private String buildMappingCode(DecommentMappingSaveBody.MappingPart mapping, LocalDateTime mappingDateTime, String author) {
