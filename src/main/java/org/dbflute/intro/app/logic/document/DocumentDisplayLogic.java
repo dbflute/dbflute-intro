@@ -20,6 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
@@ -28,9 +31,14 @@ import org.lastaflute.core.exception.LaSystemException;
  */
 public class DocumentDisplayLogic {
 
+    @Resource
+    private IntroSystemLogic introSystemLogic;
+
     public String modifyHtmlForIntroOpening(String clientProject, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             boolean addIntroExecuteTag = false;
+            boolean addIntroServerTag = false;
+            boolean isDecommentServer = introSystemLogic.isDecommentServer();
             final StringBuilder sb = new StringBuilder();
             while (true) {
                 String line = br.readLine();
@@ -40,6 +48,10 @@ public class DocumentDisplayLogic {
                 if (!addIntroExecuteTag && line.contains("<script>")) {
                     line = "<input id=\"intro_opening\" type=\"hidden\" />" + line;
                     addIntroExecuteTag = true;
+                }
+                if (!addIntroServerTag && isDecommentServer && line.contains("<script>")) {
+                    line = "<input id=\"decomment_server\" type=\"hidden\" />" + line;
+                    addIntroServerTag = true;
                 }
                 if (line.contains("<a href=\"./history-" + clientProject + ".html\">to HistoryHTML</a>")) {
                     line = "<a href=\"/api/document/" + clientProject + "/historyhtml\">to HistoryHTML</a>";
