@@ -39,6 +39,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.welcome.WelcomeCreateBody.ClientPart;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
@@ -71,6 +72,7 @@ public class WelcomeAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(WelcomeCreateBody welcomeCreateBody) {
         validate(welcomeCreateBody, messages -> {
@@ -87,9 +89,9 @@ public class WelcomeAction extends IntroBaseAction {
             }
             // done hakiba add extension check by jflute (2017/04/06)
             Optional.ofNullable(client.jdbcDriver)
-                .map(driverPart -> driverPart.fileName)
-                .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
-                .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
+                    .map(driverPart -> driverPart.fileName)
+                    .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
+                    .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
 
         // check latest version of DBflute and download engine if need
@@ -134,7 +136,7 @@ public class WelcomeAction extends IntroBaseAction {
             return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion);
         }
         ExtlibFile extlibFile =
-            clientPhysicalLogic.createExtlibFile(clientBody.projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+                clientPhysicalLogic.createExtlibFile(clientBody.projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
         return new ProjectInfra(clientBody.projectName, clientBody.dbfluteVersion, extlibFile);
     }
 
@@ -145,7 +147,7 @@ public class WelcomeAction extends IntroBaseAction {
     private DatabaseInfoMap prepareDatabaseInfoMap(ClientPart clientBody) {
         return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
             DbConnectionBox connectionBox =
-                new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
+                    new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
             AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
             return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, connectionBox, additionalSchemaMap);
         }).orElseThrow(() -> {
