@@ -15,6 +15,11 @@
  */
 package org.dbflute.intro.app.web.settings;
 
+import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart;
+import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.DatabaseSettingsPart;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -27,15 +32,11 @@ import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-
-import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.*;
-import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.*;
 
 /**
  * @author hakiba
@@ -99,6 +100,7 @@ public class SettingsAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                  Edit
     //                                                  ----
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> edit(String projectName, SettingsUpdateBody settingsBody) {
         validate(settingsBody, messages -> {});

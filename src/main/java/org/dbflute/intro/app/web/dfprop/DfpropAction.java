@@ -15,6 +15,13 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
+import java.io.File;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
@@ -24,14 +31,9 @@ import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author deco
@@ -84,13 +86,15 @@ public class DfpropAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String project) {
         final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
-        final DfpropSchemaSyncCheckResult bean = schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElse(new DfpropSchemaSyncCheckResult());
+        final DfpropSchemaSyncCheckResult bean =
+                schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElse(new DfpropSchemaSyncCheckResult());
         return asJson(bean);
     }
 
     // -----------------------------------------------------
     //                                        EditSyncSchema
     //                                        --------------
+    @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word")
     public JsonResponse<Void> syncschemaEdit(String project, DfpropEditSyncSchemaBody body) {
         validate(body, messages -> {});
@@ -113,6 +117,7 @@ public class DfpropAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                          EditDocument
     //                                          ------------
+    @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word")
     public JsonResponse<Void> documentEdit(String project, DfpropDocumentEditBody body) {
         validate(body, messages -> {});
