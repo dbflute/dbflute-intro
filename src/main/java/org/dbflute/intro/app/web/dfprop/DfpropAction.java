@@ -87,7 +87,7 @@ public class DfpropAction extends IntroBaseAction {
     public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String project) {
         final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
         final DfpropSchemaSyncCheckResult bean =
-                schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElse(new DfpropSchemaSyncCheckResult());
+                schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElseGet(() -> new DfpropSchemaSyncCheckResult());
         return asJson(bean);
     }
 
