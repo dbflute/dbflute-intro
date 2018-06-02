@@ -41,6 +41,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author hakiba
  * @author jflute
+ * @author cabos
  */
 public class SettingsAction extends IntroBaseAction {
 

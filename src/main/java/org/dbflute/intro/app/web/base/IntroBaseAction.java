@@ -39,6 +39,7 @@ import org.lastaflute.web.validation.LaValidatableApi;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author cabos
  */
 public abstract class IntroBaseAction extends TypicalAction // has several interfaces for direct use
         implements LaValidatableApi<IntroMessages> {

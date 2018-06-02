@@ -48,6 +48,7 @@ import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class WelcomeAction extends IntroBaseAction {
 
