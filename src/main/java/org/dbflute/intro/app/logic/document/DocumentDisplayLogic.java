@@ -36,8 +36,8 @@ public class DocumentDisplayLogic {
 
     public String modifyHtmlForIntroOpening(String clientProject, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
-            boolean addIntroExecuteTag = false;
-            boolean addIntroServerTag = false;
+            boolean addedIntroExecuteTag = false;
+            boolean addedIntroServerTag = false;
             boolean isDecommentServer = introSystemLogic.isDecommentServer();
             final StringBuilder sb = new StringBuilder();
             while (true) {
@@ -45,13 +45,13 @@ public class DocumentDisplayLogic {
                 if (line == null) {
                     break;
                 }
-                if (!addIntroExecuteTag && line.contains("<script>")) {
+                if (!addedIntroExecuteTag && line.contains("<script>")) {
                     line = "<input id=\"intro_opening\" type=\"hidden\" />" + line;
-                    addIntroExecuteTag = true;
+                    addedIntroExecuteTag = true;
                 }
-                if (!addIntroServerTag && isDecommentServer && line.contains("<script>")) {
+                if (!addedIntroServerTag && isDecommentServer && line.contains("<script>")) {
                     line = "<input id=\"decomment_server\" type=\"hidden\" />" + line;
-                    addIntroServerTag = true;
+                    addedIntroServerTag = true;
                 }
                 if (line.contains("<a href=\"./history-" + clientProject + ".html\">to HistoryHTML</a>")) {
                     line = "<a href=\"/api/document/" + clientProject + "/historyhtml\">to HistoryHTML</a>";
