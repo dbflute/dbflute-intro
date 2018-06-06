@@ -5,8 +5,8 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label>Project Name
-              <!--{{'LABEL_projectName' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_projectName</i18n>
             </label>
             <input type="text" ref="projectName" placeholder="maihamadb" />
           </div>
@@ -15,46 +15,46 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label>DBFlute Version
-              <!--{{'LABEL_dbfluteVersion' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_dbfluteVersion</i18n>
             </label>
             <su-dropdown ref="dbfluteVersion" items="{ versions }"></su-dropdown>
           </div>
           <div class="required field">
-            <label>DBMS
-              <!--{{'LABEL_databaseCode' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_databaseCode</i18n>
             </label>
             <su-dropdown ref="databaseCode" items="{ targetDatabaseItems }"></su-dropdown>
           </div>
           <div class="required field">
-            <label>JDBC Driver
-              <!--{{'LABEL_jdbcDriverFqcn' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_jdbcDriverFqcn</i18n>
             </label>
             <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver" />
           </div>
           <div class="required field" if="{ needsJdbcDriver }">
-            <label>JDBC Driver Jar
-              <!--{{'LABEL_jdbcDriverFile' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_jdbcDriverFile</i18n>
             </label>
             <input type="file" file-input delegate-file-drop max-bytes="5242880" ng-model="update.file" ng-file-change="changeFile">
           </div>
         </div>
         <div class="column">
           <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label>Language
-              <!--{{'LABEL_languageCode' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_languageCode</i18n>
             </label>
             <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
           </div>
           <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label>DI Container
-              <!--{{'LABEL_containerCode' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_containerCode</i18n>
             </label>
             <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
           </div>
           <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label>Generation Package
-              <!--{{'LABEL_packageBase' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_packageBase</i18n>
             </label>
             <input type="text" ref="packageBase" value="org.docksidestage.dbflute" />
           </div>
@@ -63,26 +63,26 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label>URL
-              <!--{{'LABEL_url' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_url</i18n>
             </label>
             <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb" />
           </div>
           <div class="field">
-            <label>Schema
-              <!--{{'LABEL_schema' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_schema</i18n>
             </label>
             <input type="text" ref="schema" placeholder="MAIHAMADB" />
           </div>
           <div class="required field">
-            <label>User
-              <!--{{'LABEL_user' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_user</i18n>
             </label>
             <input type="text" ref="user" placeholder="maihamadb" />
           </div>
           <div class="field">
-            <label>Password
-              <!--{{'LABEL_password' | translate:translationData}}-->
+            <label>
+              <i18n>LABEL_password</i18n>
             </label>
             <input type="text" ref="password" />
           </div>

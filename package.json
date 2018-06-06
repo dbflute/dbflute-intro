@@ -17,6 +17,7 @@
     "ffetch": "^0.1.1",
     "q": "^1.5.1",
     "riot": "^3.9.1",
+    "riot-i18nlet": "^0.2.5",
     "riot-route": "^3.1.1",
     "riot-tag-loader": "^2.0.2",
     "rxjs": "^6.1.0",

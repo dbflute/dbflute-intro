@@ -84,10 +84,15 @@ import route from 'riot-route'
 import FFetchWrapper from './common/FFetchWrapper'
 import 'semantic-ui-riot'
 
+import riotI18nlet from 'riot-i18nlet'
+import i18n_ja from '../assets/i18n/locale-ja.json'
+import i18n_en from '../assets/i18n/locale-en.json'
+
 import './main/main.tag'
 import './client/create.tag'
 import './common/result-view.tag'
 import './common/navbar.tag'
+import './common/i18n.tag'
 
 global.route = route;
 global.observable = riot.observable();
@@ -164,3 +169,12 @@ route(collection => {
 route.start(true)
 
 riot.mount('*')
+
+// i18n
+riotI18nlet.init({
+  defaultLangage: 'ja'
+})
+riotI18nlet.loads({
+  "en": i18n_en,
+  "ja": i18n_ja
+})
