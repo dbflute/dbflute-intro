@@ -51,7 +51,7 @@ import route from 'riot-route'
 import FFetchWrapper from './common/FFetchWrapper'
 import 'semantic-ui-riot'
 
-import riotI18nlet from 'riot-i18nlet'
+import i18n from 'riot-i18nlet'
 import i18n_ja from '../assets/i18n/locale-ja.json'
 import i18n_en from '../assets/i18n/locale-en.json'
 
@@ -104,7 +104,7 @@ ffetch.errors.subscribe(response => {
           if (key === '_global') { // don't use key if global
             messageList.push(message + '\r\n');
           } else {
-            const label = riotI18nlet.i(`LABEL_${key}`);
+            const label = i18n.i(`LABEL_${key}`);
             const symbol = (label === '') ? '' : '：';
             messageList.push(`${label}${symbol}${message}\r\n`);
           }
@@ -153,10 +153,10 @@ route.start(true)
 /**
  * i18n
  */
-riotI18nlet.init({
+i18n.init({
   defaultLangage: 'ja'
 })
-riotI18nlet.loads({
+i18n.loads({
   "en": i18n_en,
   "ja": i18n_ja
 })
