@@ -33,21 +33,6 @@
 // });
 
 // /**
-//  * Module for URL mapping
-//  */
-// angular.module('dbflute-intro').config(function ($stateProvider, $urlRouterProvider) {
-//     $stateProvider
-//         .state('home', { url: '/', templateUrl: 'app/main/main.html', controller: 'MainCtrl'})
-//         .state('operate', { url: '/operate/:projectName', templateUrl: 'app/client/client.html', controller: 'ClientCtrl'})
-//         .state('create', { url: '/create', templateUrl: 'app/client/create.html', controller: 'ClientCreateCtrl'})
-//         .state('settings', { url: '/settings/:projectName', templateUrl: 'app/settings/settings.html', controller: 'SettingsCtrl'})
-//         .state('welcome', { url: '/welcome', templateUrl: 'app/welcome/welcome.html', controller: 'WelcomeCtrl'})
-//         ;
-
-//     $urlRouterProvider.otherwise('/');
-// });
-
-// /**
 //  * NetworkError Modal
 //  */
 // angular.module('dbflute-intro').controller('NetworkErrorController', function($scope, $uibModalInstance, ApiFactory, modalParam) {
@@ -78,8 +63,12 @@ import './common/i18n.tag'
 
 global.route = route;
 global.observable = riot.observable();
-global.ffetch = new FFetchWrapper();
+riot.mount('*')
 
+/**
+ * ffetch
+ */
+global.ffetch = new FFetchWrapper();
 ffetch.errors.subscribe(response => {
   let header = null;
   let messages = null;
@@ -137,19 +126,33 @@ ffetch.errors.subscribe(response => {
   observable.trigger('result', { header, messages })
 });
 
+
+/**
+ * URL mapping
+ */
+route(() => {
+  riot.mount('content', 'main')
+})
 route('', () => {
   riot.mount('content', 'main')
 })
-
-route(collection => {
-  riot.mount('content', collection)
+route('operate/*', projectName => {
+  riot.mount('content', 'create', { projectName })
 })
-
+route('create', () => {
+  riot.mount('content', 'create')
+})
+route('settings/*', projectName => {
+  riot.mount('content', 'settings', { projectName })
+})
+route('welcome', () => {
+  riot.mount('content', 'welcome')
+})
 route.start(true)
 
-riot.mount('*')
-
-// i18n
+/**
+ * i18n
+ */
 riotI18nlet.init({
   defaultLangage: 'ja'
 })
