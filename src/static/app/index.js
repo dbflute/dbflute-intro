@@ -48,24 +48,6 @@
 // });
 
 // /**
-//  * Module for i18n
-//  */
-// angular.module('dbflute-intro').config(function($translateProvider) {
-//     $translateProvider.useStaticFilesLoader({
-//         prefix: 'assets/i18n/locale-',
-//         suffix: '.json'
-//     });
-
-//     $translateProvider.useSanitizeValueStrategy(null);
-
-//     $translateProvider.preferredLanguage('ja');
-//     $translateProvider.fallbackLanguage('en');
-//     $translateProvider.useMissingTranslationHandlerLog();
-//     // TODO jflute intro: index.js what is this? (useLocalStorage())
-// //    $translateProvider.useLocalStorage();
-// });
-
-// /**
 //  * NetworkError Modal
 //  */
 // angular.module('dbflute-intro').controller('NetworkErrorController', function($scope, $uibModalInstance, ApiFactory, modalParam) {
@@ -133,12 +115,9 @@ ffetch.errors.subscribe(response => {
           if (key === '_global') { // don't use key if global
             messageList.push(message + '\r\n');
           } else {
-            // TODO translate
-            // var propertyName = "LABEL_" + key; // related to json property e.g. LABEL_databaseCode
-            // var $translate = $injector.get('$translate');
-            // var symbol = ($translate.instant(propertyName) === '') ? '' : '：';
-            // messageList.push($translate.instant(propertyName) + symbol + message + '\r\n');
-            messageList.push(`${key} ${message}\r\n`);
+            const label = riotI18nlet.i(`LABEL_${key}`);
+            const symbol = (label === '') ? '' : '：';
+            messageList.push(`${label}${symbol}${message}\r\n`);
           }
         }
       }
