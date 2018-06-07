@@ -6,22 +6,10 @@
   <table class="ui table">
     <thead>
       <tr>
-        <th>
-          <!-- { 'LABEL_projectName' | translate:translationData } -->
-          project
-        </th>
-        <th>
-          <!-- { 'LABEL_databaseCode' | translate:translationData } -->
-          database
-        </th>
-        <th>
-          <!-- { 'LABEL_languageCode' | translate:translationData } -->
-          language
-        </th>
-        <th>
-          <!-- { 'LABEL_containerCode' | translate:translationData } -->
-          container
-        </th>
+        <th data-is="i18n">LABEL_projectName</th>
+        <th data-is="i18n">LABEL_databaseCode</th>
+        <th data-is="i18n">LABEL_languageCode</th>
+        <th data-is="i18n">LABEL_containerCode</th>
         <th></th>
       </tr>
     </thead>
@@ -48,10 +36,7 @@
   <table class="ui table">
     <thead>
       <tr>
-        <th>
-          <!-- { 'LABEL_engineVersion' | translate:translationData } -->
-          engine version
-        </th>
+        <th data-is="i18n">LABEL_engineVersion</th>
         <th></th>
       </tr>
     </thead>

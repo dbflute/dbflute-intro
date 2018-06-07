@@ -5,9 +5,7 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label>
-              <i18n>LABEL_projectName</i18n>
-            </label>
+            <label data-is="i18n">LABEL_projectName</label>
             <input type="text" ref="projectName" placeholder="maihamadb" />
           </div>
         </div>
@@ -15,47 +13,33 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label>
-              <i18n>LABEL_dbfluteVersion</i18n>
-            </label>
+            <label data-is="i18n">LABEL_dbfluteVersion</label>
             <su-dropdown ref="dbfluteVersion" items="{ versions }"></su-dropdown>
           </div>
           <div class="required field">
-            <label>
-              <i18n>LABEL_databaseCode</i18n>
-            </label>
+            <label data-is="i18n">LABEL_databaseCode</label>
             <su-dropdown ref="databaseCode" items="{ targetDatabaseItems }"></su-dropdown>
           </div>
           <div class="required field">
-            <label>
-              <i18n>LABEL_jdbcDriverFqcn</i18n>
-            </label>
+            <label data-is="i18n">LABEL_jdbcDriverFqcn</label>
             <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver" />
           </div>
           <div class="required field" if="{ needsJdbcDriver }">
-            <label>
-              <i18n>LABEL_jdbcDriverFile</i18n>
-            </label>
+            <label data-is="i18n">LABEL_jdbcDriverFile</label>
             <input type="file" file-input delegate-file-drop max-bytes="5242880" ng-model="update.file" ng-file-change="changeFile">
           </div>
         </div>
         <div class="column">
           <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label>
-              <i18n>LABEL_languageCode</i18n>
-            </label>
+            <label data-is="i18n">LABEL_languageCode</label>
             <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
           </div>
           <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label>
-              <i18n>LABEL_containerCode</i18n>
-            </label>
+            <label data-is="i18n">LABEL_containerCode</label>
             <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
           </div>
           <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label>
-              <i18n>LABEL_packageBase</i18n>
-            </label>
+            <label data-is="i18n">LABEL_packageBase</label>
             <input type="text" ref="packageBase" value="org.docksidestage.dbflute" />
           </div>
         </div>
@@ -63,27 +47,19 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label>
-              <i18n>LABEL_url</i18n>
-            </label>
+            <label data-is="i18n">LABEL_url</label>
             <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb" />
           </div>
           <div class="field">
-            <label>
-              <i18n>LABEL_schema</i18n>
-            </label>
+            <label data-is="i18n">LABEL_schema</label>
             <input type="text" ref="schema" placeholder="MAIHAMADB" />
           </div>
           <div class="required field">
-            <label>
-              <i18n>LABEL_user</i18n>
-            </label>
+            <label data-is="i18n">LABEL_user</label>
             <input type="text" ref="user" placeholder="maihamadb" />
           </div>
           <div class="field">
-            <label>
-              <i18n>LABEL_password</i18n>
-            </label>
+            <label data-is="i18n">LABEL_password</label>
             <input type="text" ref="password" />
           </div>
           <div class="field">
