@@ -347,6 +347,10 @@ dl.procedurelist dd.column pre {
 .decommentmodal-close-btn:hover {
 	background-color: #eed;
 }
+.decomment-user-name {
+	display: none;
+	padding: 5px;
+}
 	</style>
 #end
 #if ($database.isSchemaHtmlJavaScriptEmbedded())
@@ -685,6 +689,7 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 		<div id="decomment-close" class="decommentmodal-close-btn"><span>x</span></div>
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
 		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
+		<input type="text" id="decomment-user-name" class="decomment-user-name" placeholder="User name"/>
 		<button id="decomment-ok" class="decommentmodal-ok-btn">OK</button>
 	</div>
 </div>
