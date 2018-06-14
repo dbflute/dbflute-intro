@@ -69,15 +69,15 @@ dbflute-intro
 ## Release Engineering
 
 ### Github release
-- Increment version at build.gradle
-- Add tag on release commit
-  - Old tag name : https://github.com/dbflute/dbflute-intro/releases
-- Edit tag and upload "intro.jar"
-- Publish tag to release
+1. Increment version at build.gradle
+2. Add tag on release commit
+  2.1 Old tag name : https://github.com/dbflute/dbflute-intro/releases
+3. Edit tag and upload "intro.jar"
+4. Publish tag to release
 
 ### 88 command release
-- Access at https://github.com/dbflute/dbflute.github.io/blob/master/meta/public.properties
-- Edit public.properties
+1. Access at https://github.com/dbflute/dbflute.github.io/blob/master/meta/public.properties
+2. Edit public.properties
 ```
 # latest version of DBFlute Intro, can be used as comparing version
 intro.latest.version = ????? # Edit this version
@@ -87,4 +87,4 @@ intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/
 ```
 
 ### Send release notification 
-Notify all around the world
+1. Notify all around the world
