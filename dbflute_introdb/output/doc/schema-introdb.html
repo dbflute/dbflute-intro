@@ -1598,6 +1598,24 @@ function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
+			{
+				'tableName': 'CLS_TARGET_CONTAINER'
+				, 'mappings' : [
+				]
+				, 'properties': [
+						{
+						'decomment': 'testfdfa'
+						, 'databaseComment': ''
+						, 'commentVersion': 0
+						, 'authors': ['decoch2']
+						, 'pieceCode': 'ba3251d'
+						, 'pieceDatatime': '2018-06-15T00:10:09.839'
+						, 'previousPieces': ['e6e7de70']
+					}
+				]
+				, 'columns': [
+				]
+			}
 		]
 	}
 	this.pickupStore = {
@@ -2158,7 +2176,7 @@ Decomment.prototype = {
 		if (document.getElementById("intro_opening") !== null) {
 			this.fetchVirtualPickup();
 			this.setupKeyDownEvent();
-			this.showUserNameInputIfDecommentServerMode()
+			this.showUserNameInputIfNeed();
 		} else {
 			this.reflectEmbeddedPickup();
 		}
@@ -2176,10 +2194,18 @@ Decomment.prototype = {
 		})
 	},
 
-	showUserNameInputIfDecommentServerMode : function() {
-		if (DecommentUtil.isDecommentServer()) {
+	/**
+	 * Show user name input when decomment server mode.
+	 */
+	showUserNameInputIfNeed: function() {
+	    console.log(this.isUserNameEmpty())
+		if (DecommentUtil.isDecommentServer() && this.isUserNameEmpty()) {
 			document.querySelector('#decomment-user-name').style.display = 'block';
 		}
+	},
+
+	hideUserNameInput: function() {
+		document.querySelector('#decomment-user-name').style.display = 'hidden';
 	},
 
 	/**
@@ -2294,7 +2320,7 @@ Decomment.prototype = {
 			document.getElementById("decomment-ok").onclick = function () {
 				var decomment = inputElement.value;
 				if (DecommentUtil.isDecommentServer() && that.isUserNameEmpty()) {
-					alert('Input your user name.')
+					alert('Input your user name.');
 					return;
 				}
 				if (that.isStillConflicting(decomment)) {
@@ -2308,7 +2334,7 @@ Decomment.prototype = {
 				decomment = DecommentUtil.escapeInputText(decomment);
 				decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
 				commentProperty.decomments = [{'body': decomment}]
-                commentProperty.author = that.getInputedUserName();
+				commentProperty.author = that.getUserName();
 				var params = commentProperty.toRequestParams()
 				new ApiClient().saveDecomment(params, function () {
 					that.fetchVirtualPickup()
@@ -2325,17 +2351,39 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Get inputed user name. saved when server mode.
+	 * Get user name. and save to cookie if not saved.
 	 */
-	getInputedUserName : function() {
-		return document.querySelector('#decomment-user-name').value;
+	getUserName : function() {
+		var savedUserName = this.getCookie('decomment-user-name');
+		if (savedUserName) {
+			return savedUserName;
+		}
+		var inputUserName = document.querySelector('#decomment-user-name').value;
+		if (inputUserName && inputUserName.length > 0) {
+			document.cookie = "decomment-user-name=" + inputUserName + ";expires=2147483647";
+		}
+		return inputUserName;
 	},
 
 	/**
 	 * Check user name is inputed.
 	 */
 	isUserNameEmpty : function() {
-		return this.getInputedUserName().length == 0;
+		return this.getCookie('decomment-user-name') === null && this.getUserName().length === 0;
+	},
+
+	/**
+	 * Get cookie from key
+	 */
+	getCookie: function (key){
+		var cookies = document.cookie.split('; ');
+		for (var i = 0; i < cookies.length; i++){
+			var c = cookies[i].split('=');
+			if(c[0] === key){
+				return c[1];
+			}
+		}
+		return null;
 	},
 
 	/**

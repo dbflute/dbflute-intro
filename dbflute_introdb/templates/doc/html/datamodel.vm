@@ -1800,7 +1800,7 @@ Decomment.prototype = {
 		if (document.getElementById("intro_opening") !== null) {
 			this.fetchVirtualPickup();
 			this.setupKeyDownEvent();
-			this.showUserNameInputIfDecommentServerMode();
+			this.showUserNameInputIfNeed();
 		} else {
 			this.reflectEmbeddedPickup();
 		}
@@ -1821,10 +1821,15 @@ Decomment.prototype = {
 	/**
 	 * Show user name input when decomment server mode.
 	 */
-	showUserNameInputIfDecommentServerMode : function() {
-		if (DecommentUtil.isDecommentServer()) {
+	showUserNameInputIfNeed: function() {
+	    console.log(this.isUserNameEmpty())
+		if (DecommentUtil.isDecommentServer() && this.isUserNameEmpty()) {
 			document.querySelector('#decomment-user-name').style.display = 'block';
 		}
+	},
+
+	hideUserNameInput: function() {
+		document.querySelector('#decomment-user-name').style.display = 'hidden';
 	},
 
 	/**
@@ -1953,7 +1958,7 @@ Decomment.prototype = {
 				decomment = DecommentUtil.escapeInputText(decomment);
 				decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
 				commentProperty.decomments = [{'body': decomment}]
-                commentProperty.author = that.getInputedUserName();
+				commentProperty.author = that.getUserName();
 				var params = commentProperty.toRequestParams()
 				new ApiClient().saveDecomment(params, function () {
 					that.fetchVirtualPickup()
@@ -1970,17 +1975,39 @@ Decomment.prototype = {
 	},
 
 	/**
-	 * Get inputed user name. saved when server mode.
+	 * Get user name. and save to cookie if not saved.
 	 */
-	getInputedUserName : function() {
-		return document.querySelector('#decomment-user-name').value;
+	getUserName : function() {
+		var savedUserName = this.getCookie('decomment-user-name');
+		if (savedUserName) {
+			return savedUserName;
+		}
+		var inputUserName = document.querySelector('#decomment-user-name').value;
+		if (inputUserName && inputUserName.length > 0) {
+			document.cookie = "decomment-user-name=" + inputUserName + ";expires=2147483647";
+		}
+		return inputUserName;
 	},
 
 	/**
 	 * Check user name is inputed.
 	 */
 	isUserNameEmpty : function() {
-		return this.getInputedUserName().length == 0;
+		return this.getCookie('decomment-user-name') === null && this.getUserName().length === 0;
+	},
+
+	/**
+	 * Get cookie from key
+	 */
+	getCookie: function (key){
+		var cookies = document.cookie.split('; ');
+		for (var i = 0; i < cookies.length; i++){
+			var c = cookies[i].split('=');
+			if(c[0] === key){
+				return c[1];
+			}
+		}
+		return null;
 	},
 
 	/**
