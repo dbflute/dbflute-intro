@@ -71,6 +71,7 @@ public class DfpropAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                update
     //                                                ------
+    @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
