@@ -86,5 +86,5 @@ intro.latest.version = ????? # Edit this version
 intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/dbflute-intro-$$version$$/dbflute-intro.jar
 ```
 
-### Send notification 
+### Send Release notification 
 Notify all around the world
