@@ -1198,6 +1198,12 @@ var DecommentUtil = new function(){
 	 */
 	this.unescapeWhitespace = function (string) {
 		return string.split('&nbsp;').join(' ');
+	},
+	/**
+	 * Check is opening with server mode.
+	 */
+	this.isDecommentServer = function() {
+		return document.getElementById("decomment_server") != null;
 	}
 }
 
@@ -1482,6 +1488,7 @@ StoreClient.prototype = {
 ##                                                                     ===============
 function PickupTableProperty(tableDbName, json) {
 	this.tableDbName = tableDbName;
+	this.author = null; // use when decomment server mode.
 	if (json) {
 		this.databaseComment = json.databaseComment;
 		this.isDatabaseCommentConflict = json.isDatabaseCommentConflict;
@@ -1620,6 +1627,7 @@ PickupTableProperty.prototype = {
 			'decomment': (this.decomments[0] || {}).body,
 			'databaseComment': DecommentUtil.escapeNewlineCharacter(this.databaseComment),
 			'commentVersion': this.commentVersion || 0,
+			'author': this.author,
 			'authors': this.authors || [],
 			'previousPieces': this.previousPieces || []
 		};
@@ -1632,6 +1640,7 @@ PickupTableProperty.prototype = {
 function PickupColumnProperty(tableDbName, columnName, json) {
 	this.tableDbName = tableDbName;
 	this.columnName = columnName;
+	this.author = null; // use when decomment server mode.
 	if (json) {
 		this.databaseComment = json['databaseComment'];
 		this.isDatabaseCommentConflict = json['isDatabaseCommentConflict'];
@@ -1765,6 +1774,7 @@ PickupColumnProperty.prototype = {
 			'decomment': (this.decomments[0] || {}).body,
 			'databaseComment': DecommentUtil.escapeNewlineCharacter(this.databaseComment),
 			'commentVersion': this.commentVersion || 0,
+			'author': this.author,
 			'authors': this.authors || [],
 			'previousPieces': this.previousPieces || []
 		};
@@ -1790,6 +1800,7 @@ Decomment.prototype = {
 		if (document.getElementById("intro_opening") !== null) {
 			this.fetchVirtualPickup();
 			this.setupKeyDownEvent();
+			this.showUserNameInputIfDecommentServerMode()
 		} else {
 			this.reflectEmbeddedPickup();
 		}
@@ -1805,6 +1816,12 @@ Decomment.prototype = {
 			that.reflectPickup(decomment);
 			that.setupSaveDecomment();
 		})
+	},
+
+	showUserNameInputIfDecommentServerMode : function() {
+		if (DecommentUtil.isDecommentServer()) {
+			document.querySelector('#decomment-user-name').style.display = 'block';
+		}
 	},
 
 	/**
@@ -1918,6 +1935,10 @@ Decomment.prototype = {
 
 			document.getElementById("decomment-ok").onclick = function () {
 				var decomment = inputElement.value;
+				if (DecommentUtil.isDecommentServer() && that.isUserNameEmpty()) {
+					alert('Input your user name.')
+					return;
+				}
 				if (that.isStillConflicting(decomment)) {
 					alert('Still conflicting. please resolve.')
 					return;
@@ -1929,6 +1950,7 @@ Decomment.prototype = {
 				decomment = DecommentUtil.escapeInputText(decomment);
 				decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
 				commentProperty.decomments = [{'body': decomment}]
+                commentProperty.author = that.getInputedUserName();
 				var params = commentProperty.toRequestParams()
 				new ApiClient().saveDecomment(params, function () {
 					that.fetchVirtualPickup()
@@ -1942,6 +1964,20 @@ Decomment.prototype = {
 				}
 			};
 		};
+	},
+
+	/**
+	 * Get inputed user name. saved when server mode.
+	 */
+	getInputedUserName : function() {
+		return document.querySelector('#decomment-user-name').value;
+	},
+
+	/**
+	 * Check user name is inputed.
+	 */
+	isUserNameEmpty : function() {
+		return this.getInputedUserName().length == 0;
 	},
 
 	/**
