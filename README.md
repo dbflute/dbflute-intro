@@ -65,3 +65,26 @@ dbflute-intro
  |     |-404.html
  |     +-index.html       // base HTML of all components
 ```
+
+## Release Engineering
+
+### Github release
+- Increment version at build.gradle
+- Add tag on release commit
+  - Old tag name : https://github.com/dbflute/dbflute-intro/releases
+- Edit tag and upload "intro.jar"
+- Publish tag to release
+
+### 88 command release
+- Access at https://github.com/dbflute/dbflute.github.io/blob/master/meta/public.properties
+- Edit public.properties
+```
+# latest version of DBFlute Intro, can be used as comparing version
+intro.latest.version = ????? # Edit this version
+
+# download URL of DBFlute Intro 
+intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/dbflute-intro-$$version$$/dbflute-intro.jar
+```
+
+### Send notification 
+Notify all around the world
