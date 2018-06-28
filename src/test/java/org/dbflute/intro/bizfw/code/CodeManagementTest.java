@@ -53,7 +53,7 @@ public class CodeManagementTest extends PlainTestCase {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
             for (Method method : clazz.getMethods()) {
                 final Execute execute = method.getAnnotation(Execute.class);
-                String methodName = method.getName();
+                final String methodName = method.getName();
                 if (execute != null) {
                     if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> methodName.toLowerCase().contains(name))) {
                         final NotAvailableDecommentServer methodAnnotation = method.getAnnotation(NotAvailableDecommentServer.class);
