@@ -1598,6 +1598,24 @@ function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
+			{
+				'tableName': 'CLS_TARGET_CONTAINER'
+				, 'mappings' : [
+				]
+				, 'properties': [
+						{
+						'decomment': 'test'
+						, 'databaseComment': ''
+						, 'commentVersion': 0
+						, 'authors': ['user name']
+						, 'pieceCode': 'e1fa7d4f'
+						, 'pieceDatatime': '2018-06-28T12:34:22.529'
+						, 'previousPieces': []
+					}
+				]
+				, 'columns': [
+				]
+			}
 		]
 	}
 	this.pickupStore = {
@@ -1852,7 +1870,7 @@ StoreClient.prototype = {
 
 function PickupTableProperty(tableDbName, json) {
 	this.tableDbName = tableDbName;
-	this.author = null; // use when decomment server mode.
+	this.inputAuthor = null; // use when decomment server mode.
 	if (json) {
 		this.databaseComment = json.databaseComment;
 		this.isDatabaseCommentConflict = json.isDatabaseCommentConflict;
@@ -1991,7 +2009,7 @@ PickupTableProperty.prototype = {
 			'decomment': (this.decomments[0] || {}).body,
 			'databaseComment': DecommentUtil.escapeNewlineCharacter(this.databaseComment),
 			'commentVersion': this.commentVersion || 0,
-			'author': this.author,
+			'inputAuthor': this.inputAuthor,
 			'authors': this.authors || [],
 			'previousPieces': this.previousPieces || []
 		};
@@ -2001,7 +2019,7 @@ PickupTableProperty.prototype = {
 function PickupColumnProperty(tableDbName, columnName, json) {
 	this.tableDbName = tableDbName;
 	this.columnName = columnName;
-	this.author = null; // use when decomment server mode.
+	this.inputAuthor = null; // use when decomment server mode.
 	if (json) {
 		this.databaseComment = json['databaseComment'];
 		this.isDatabaseCommentConflict = json['isDatabaseCommentConflict'];
@@ -2135,7 +2153,7 @@ PickupColumnProperty.prototype = {
 			'decomment': (this.decomments[0] || {}).body,
 			'databaseComment': DecommentUtil.escapeNewlineCharacter(this.databaseComment),
 			'commentVersion': this.commentVersion || 0,
-			'author': this.author,
+			'inputAuthor': this.inputAuthor,
 			'authors': this.authors || [],
 			'previousPieces': this.previousPieces || []
 		};
@@ -2315,7 +2333,7 @@ Decomment.prototype = {
 				decomment = DecommentUtil.escapeInputText(decomment);
 				decomment = DecommentUtil.deleteUnnecessaryWhitespace(decomment);
 				commentProperty.decomments = [{'body': decomment}]
-				commentProperty.author = that.getUserName();
+				commentProperty.inputAuthor = that.getUserName();
 				var params = commentProperty.toRequestParams()
 				new ApiClient().saveDecomment(params, function () {
 					that.fetchVirtualPickup();

@@ -81,6 +81,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> moreValidate(body, messages));
         verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
+        verifyOrClientError(buildDebugMessageInputAuthorIsNull(body), hasInputAuthorWhenIntroServer(body));
         decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
@@ -88,9 +89,6 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private void moreValidate(DecommentSaveBody body, IntroMessages messages) {
         if (STRING_OF_NULL.equals(body.decomment)) {
             messages.addErrorsStringOfNullNotAccepted("decomment");
-        }
-        if (introSystemLogic.isDecommentServer() && LaStringUtil.isEmpty(body.author)) {
-            messages.addConstraintsNotEmptyMessage("author"); // TODO deco improve debug message for client.
         }
     }
 
@@ -103,15 +101,26 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
+    private String buildDebugMessageInputAuthorIsNull(DecommentSaveBody body) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("If run with intro server mode, input author must exists.").append("\n");
+        sb.append("   inputAuthor : ").append(body.inputAuthor).append("\n");
+        return sb.toString();
+    }
+
     // done cabos change exist to exists for boolean expression by jflute (2017/11/12)
     private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentSaveBody body) {
         return DfDecoMapPieceTargetType.Column != body.targetType || LaStringUtil.isNotEmpty(body.columnName);
     }
 
+    private boolean hasInputAuthorWhenIntroServer(DecommentSaveBody body) {
+        return !introSystemLogic.isDecommentServer() || LaStringUtil.isNotEmpty(body.inputAuthor);
+    }
+
     // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
-        String author = introSystemLogic.isDecommentServer() ? body.author : getAuthor();
+        String author = introSystemLogic.isDecommentServer() ? body.inputAuthor : getAuthor();
         String gitBranch = getGitBranch().orElse(null);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
         DfDecoMapPiece piece =

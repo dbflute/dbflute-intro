@@ -80,11 +80,11 @@ public class DecommentSaveBody {
     public Long commentVersion;
 
     /**
-     * the current author
+     * the input author
      * Only used when run as decomment server {@link IntroSystemLogic#isDecommentServer()}
      * e.g. "cabos"
      */
-    public String author;
+    public String inputAuthor;
 
     /**
      * the list of ancestor authors
