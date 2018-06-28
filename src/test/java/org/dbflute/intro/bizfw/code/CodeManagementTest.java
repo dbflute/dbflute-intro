@@ -60,7 +60,7 @@ public class CodeManagementTest extends PlainTestCase {
                         final NotAvailableDecommentServer classAnnotation = clazz.getAnnotation(NotAvailableDecommentServer.class);
                         if (methodAnnotation == null && classAnnotation == null) {
                             String msg = clazz.getName() + "#" + methodName + " doesn't have NotAvailableDecommentServer annotation.\n"
-                                    + "This method is editable method";
+                                    + "This method is editable method.";
                             throw new IllegalStateException(msg);
                         }
                     }
