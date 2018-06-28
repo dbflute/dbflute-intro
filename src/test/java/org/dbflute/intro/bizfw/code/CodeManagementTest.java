@@ -52,10 +52,15 @@ public class CodeManagementTest extends PlainTestCase {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
             for (Method method : clazz.getMethods()) {
                 final Execute execute = method.getAnnotation(Execute.class);
+                String methodName = method.getName();
                 if (execute != null) {
-                    final NotAvailableDecommentServer server = method.getAnnotation(NotAvailableDecommentServer.class);
-                    if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> method.getName().toLowerCase().contains(name))) {
-                        assertNotNull(server);
+                    if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> methodName.toLowerCase().contains(name))) {
+                        final NotAvailableDecommentServer server = method.getAnnotation(NotAvailableDecommentServer.class);
+                        if (server == null) {
+                            String msg = clazz.getName() + "#" + methodName + " doesn't have NotAvailableDecommentServer annotation.\n"
+                                    + "This method is editable method";
+                            throw new IllegalStateException(msg);
+                        }
                     }
                 }
             }
