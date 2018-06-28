@@ -1822,14 +1822,13 @@ Decomment.prototype = {
 	 * Show user name input when decomment server mode.
 	 */
 	showUserNameInputIfNeed: function() {
-	    console.log(this.isUserNameEmpty())
 		if (DecommentUtil.isDecommentServer() && this.isUserNameEmpty()) {
 			document.querySelector('#decomment-user-name').style.display = 'block';
 		}
 	},
 
 	hideUserNameInput: function() {
-		document.querySelector('#decomment-user-name').style.display = 'hidden';
+		document.querySelector('#decomment-user-name').style.display = 'none';
 	},
 
 	/**
@@ -1961,7 +1960,8 @@ Decomment.prototype = {
 				commentProperty.author = that.getUserName();
 				var params = commentProperty.toRequestParams()
 				new ApiClient().saveDecomment(params, function () {
-					that.fetchVirtualPickup()
+					that.fetchVirtualPickup();
+					that.hideUserNameInput();
 				});
 				modalElement.style.display = "none";
 			};
