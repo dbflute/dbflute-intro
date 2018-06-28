@@ -15,34 +15,55 @@
  */
 package org.dbflute.intro.bizfw.code;
 
-import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.utflute.core.PlainTestCase;
-import org.dbflute.utflute.core.filesystem.FileLineHandler;
-import org.dbflute.utflute.core.policestory.javaclass.PoliceStoryJavaClassHandler;
 import org.dbflute.util.Srl;
+import org.lastaflute.web.Execute;
 
 /**
  * @author jflute
  */
 public class CodeManagementTest extends PlainTestCase {
 
-    public void test_decooment_decoMapFile_dependency() {
-        policeStoryOfJavaClassChase(new PoliceStoryJavaClassHandler() {
-            public void handle(File srcFile, Class<?> clazz) {
-                if (clazz.getName().startsWith("org.dbflute.infra")) { // e.g. DfDecoMapFile
-                    log("...Checking infra class: {}", clazz.getName());
-                    readLine(srcFile, "UTF-8", new FileLineHandler() {
-                        public void handle(String line) {
-                            if (line.startsWith("import ")) {
-                                String refName = Srl.rtrim(Srl.substringFirstRear(line, "import "), ";");
-                                if (refName.startsWith("org.dbflute.intro")) {
-                                    String msg = "Cannot refer to intro classes: " + clazz.getName() + ", " + refName;
-                                    throw new IllegalStateException(msg);
-                                }
-                            }
+    private static final List<String> EDITABLE_METHOD_NAME =
+            Arrays.asList("edit", "update", "create", "delete", "download", "remove", "execute");
+
+    public void test_decomment_decoMapFile_dependency() {
+        policeStoryOfJavaClassChase((srcFile, clazz) -> {
+            if (clazz.getName().startsWith("org.dbflute.infra")) { // e.g. DfDecoMapFile
+                log("...Checking infra class: {}", clazz.getName());
+                readLine(srcFile, "UTF-8", line -> {
+                    if (line.startsWith("import ")) {
+                        String refName = Srl.rtrim(Srl.substringFirstRear(line, "import "), ";");
+                        if (refName.startsWith("org.dbflute.intro")) {
+                            String msg = "Cannot refer to intro classes: " + clazz.getName() + ", " + refName;
+                            throw new IllegalStateException(msg);
                         }
-                    });
+                    }
+                });
+            }
+        });
+    }
+
+    public void test_decomment_annotation_check() {
+        policeStoryOfJavaClassChase((srcFile, clazz) -> {
+            for (Method method : clazz.getMethods()) {
+                final Execute execute = method.getAnnotation(Execute.class);
+                String methodName = method.getName();
+                if (execute != null) {
+                    if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> methodName.toLowerCase().contains(name))) {
+                        final NotAvailableDecommentServer methodAnnotation = method.getAnnotation(NotAvailableDecommentServer.class);
+                        final NotAvailableDecommentServer classAnnotation = clazz.getAnnotation(NotAvailableDecommentServer.class);
+                        if (methodAnnotation == null && classAnnotation == null) {
+                            String msg = clazz.getName() + "#" + methodName + " doesn't have NotAvailableDecommentServer annotation.\n"
+                                    + "This method is editable method";
+                            throw new IllegalStateException(msg);
+                        }
+                    }
                 }
             }
         });
