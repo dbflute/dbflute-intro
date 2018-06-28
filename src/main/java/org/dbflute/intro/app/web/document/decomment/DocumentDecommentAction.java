@@ -123,10 +123,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
         String author = introSystemLogic.isDecommentServer() ? body.inputAuthor : getAuthor();
         String gitBranch = getGitBranch().orElse(null);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece =
-                new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
-                        body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime,
-                        author, gitBranch, body.previousPieces);
+        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
+                body.decomment, body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author),
+                pieceDatetime, author, gitBranch, body.previousPieces);
         return piece;
     }
 
@@ -199,7 +198,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
-    // TODO done cabos consider non TargetTypeColumn by jflute (2018/04/12)
+    // done cabos consider non TargetTypeColumn by jflute (2018/04/12)
     private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentMappingSaveBody body) {
         return body.mappings.stream().allMatch(this::hasColumnNameWhenTargetTypeIsColumn);
     }
@@ -209,9 +208,9 @@ public class DocumentDecommentAction extends IntroBaseAction {
                 || LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
     }
 
-    // TODO done cabos move under existsColumn...() by jflute (2018/04/12)
+    // done cabos move under existsColumn...() by jflute (2018/04/12)
     private List<DfDecoMapMapping> mappingToDecoMapMapping(DecommentMappingSaveBody body) {
-        // TODO done cabos move getAuthor() to class rear as Assist Logic tag comment by jflute (2018/04/12)
+        // done cabos move getAuthor() to class rear as Assist Logic tag comment by jflute (2018/04/12)
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
 
         return body.mappings.stream().map(mapping -> {
@@ -232,12 +231,12 @@ public class DocumentDecommentAction extends IntroBaseAction {
     }
 
     private String buildMappingCode(DecommentMappingSaveBody.MappingPart mapping, LocalDateTime mappingDateTime, String author) {
-        // TODO done cabos write example comment by jflute (2018/04/12)
+        // done cabos write example comment by jflute (2018/04/12)
         // ex1. OLD_TABLE_NAME::NEW_TABLE_NAME::TABLE:2018/04/01T00:00:00:cabos
         // ex2. OLD_TABLE_NAME:OLD_COLUMN_NAME:NEW_TABLE_NAME:NEW_COLUMN_NAME:COLUMN:2018/04/01T00:00:00:cabos
         StringBuilder sb = new StringBuilder();
         sb.append(mapping.oldTableName);
-        // TODO done cabos change oldTableName to oldColumnName by jflute (2018/04/12)
+        // done cabos change oldTableName to oldColumnName by jflute (2018/04/12)
         sb.append(":").append(mapping.oldColumnName != null ? mapping.oldColumnName : "");
         sb.append(mapping.newTableName);
         sb.append(":").append(mapping.newColumnName != null ? mapping.newColumnName : "");

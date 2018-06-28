@@ -30,7 +30,7 @@ import org.lastaflute.web.validation.Required;
  */
 public class DecommentMappingSaveBody {
 
-    // TODO done cabos also (groups = ClientError.class) to NotNull by jflute (2018/04/12)
+    // done cabos also (groups = ClientError.class) to NotNull by jflute (2018/04/12)
     /**
      * mapping list
      */
