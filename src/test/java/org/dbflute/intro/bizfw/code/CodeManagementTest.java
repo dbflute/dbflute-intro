@@ -16,16 +16,23 @@
 package org.dbflute.intro.bizfw.code;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.utflute.core.PlainTestCase;
 import org.dbflute.utflute.core.filesystem.FileLineHandler;
 import org.dbflute.utflute.core.policestory.javaclass.PoliceStoryJavaClassHandler;
 import org.dbflute.util.Srl;
+import org.lastaflute.web.Execute;
 
 /**
  * @author jflute
  */
 public class CodeManagementTest extends PlainTestCase {
+
+    private static final List<String> EDITABLE_METHOD_NAME = Arrays.asList("edit", "update", "create", "delete");
 
     public void test_decooment_decoMapFile_dependency() {
         policeStoryOfJavaClassChase(new PoliceStoryJavaClassHandler() {
@@ -43,6 +50,20 @@ public class CodeManagementTest extends PlainTestCase {
                             }
                         }
                     });
+                }
+            }
+        });
+    }
+
+    public void test_decomment_annotation_check() {
+        policeStoryOfJavaClassChase((srcFile, clazz) -> {
+            for (Method method : clazz.getMethods()) {
+                final Execute execute = method.getAnnotation(Execute.class);
+                if (execute != null) {
+                    final NotAvailableDecommentServer server = method.getAnnotation(NotAvailableDecommentServer.class);
+                    if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> method.getName().toLowerCase().contains(name))) {
+                        assertNotNull(server);
+                    }
                 }
             }
         });
