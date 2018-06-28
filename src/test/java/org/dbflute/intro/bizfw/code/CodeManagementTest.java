@@ -29,7 +29,8 @@ import org.lastaflute.web.Execute;
  */
 public class CodeManagementTest extends PlainTestCase {
 
-    private static final List<String> EDITABLE_METHOD_NAME = Arrays.asList("edit", "update", "create", "delete");
+    private static final List<String> EDITABLE_METHOD_NAME =
+            Arrays.asList("edit", "update", "create", "delete", "download", "remove", "execute");
 
     public void test_decomment_decoMapFile_dependency() {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
@@ -55,8 +56,9 @@ public class CodeManagementTest extends PlainTestCase {
                 String methodName = method.getName();
                 if (execute != null) {
                     if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> methodName.toLowerCase().contains(name))) {
-                        final NotAvailableDecommentServer server = method.getAnnotation(NotAvailableDecommentServer.class);
-                        if (server == null) {
+                        final NotAvailableDecommentServer methodAnnotation = method.getAnnotation(NotAvailableDecommentServer.class);
+                        final NotAvailableDecommentServer classAnnotation = clazz.getAnnotation(NotAvailableDecommentServer.class);
+                        if (methodAnnotation == null && classAnnotation == null) {
                             String msg = clazz.getName() + "#" + methodName + " doesn't have NotAvailableDecommentServer annotation.\n"
                                     + "This method is editable method";
                             throw new IllegalStateException(msg);
