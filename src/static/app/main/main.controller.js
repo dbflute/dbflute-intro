@@ -6,67 +6,14 @@
 angular.module('dbflute-intro')
         .controller('MainCtrl', function ($scope, $window, $uibModal, $state, $stateParams, ApiFactory) {
 
-    $scope.manifest = {}; // intro manifest
-    $scope.versions = []; // engine versions
-    $scope.configuration = {}; // intro configuration
     $scope.classificationMap = {}; // e.g. targetDatabase
     $scope.client = null; // model of current client
-    $scope.clientList = []; // existing clients
     $scope.editFlg = false;
     $scope.option = {testConnection: true};
 
     // ===================================================================================
-    //                                                                          Basic Data
-    //                                                                          ==========
-    $scope.manifest = function() {
-        ApiFactory.manifest().then(function(response) {
-            $scope.manifest = response.data;
-        });
-    };
-
-    $scope.engineVersions = function(version) {
-        ApiFactory.engineVersions().then(function(response) {
-            $scope.versions = response.data;
-        });
-    };
-
-    $scope.configuration = function() {
-        ApiFactory.configuration().then(function(response) {
-            $scope.configuration = response.data;
-        });
-    };
-
-    $scope.classifications = function() {
-        ApiFactory.classifications().then(function(response) {
-            $scope.classificationMap = response.data;
-        });
-    };
-
-    // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    $scope.prepareClientList = function() {
-        ApiFactory.clientList().then(function(response) {
-            if (response.data.length > 0) {
-                $scope.clientList = response.data;
-            } else {
-                $state.go('welcome'); // if no client show welcome page
-            }
-        });
-     };
-
-    $scope.goToClient = function(client) {
-        $state.go('operate', { projectName: client.projectName });
-    };
-
-    $scope.goToClientCreate = function() {
-        $state.go('create');
-    };
-
-    $scope.goToSettings = function(client) {
-        $state.go('settings', { client: client, projectName: client.projectName });
-    };
-
     $scope.edit = function() {
         $scope.editFlg = true;
     };
@@ -170,41 +117,6 @@ angular.module('dbflute-intro')
     $scope.removeSchemaSyncCheckMap = function(name) {
         delete $scope.client.schemaSyncCheckMap[name];
     };
-
-    // ===================================================================================
-    //                                                                              Engine
-    //                                                                              ======
-    $scope.downloadModal = function() {
-        var downloadInstance = $uibModal.open({
-            templateUrl: 'app/main/download.html',
-            controller: 'DownloadInstanceController',
-            resolve: {
-                engineLatest: function() {
-                    return ApiFactory.engineLatest();
-                }
-            }
-        });
-
-        downloadInstance.result.then(function(versions) {
-            $scope.versions = versions;
-        });
-    };
-
-    $scope.removeEngine = function(version) {
-        var params = {version: version};
-        ApiFactory.removeEngine(params).then(function(response) {
-            $scope.engineVersions();
-        });
-    };
-
-    // ===================================================================================
-    //                                                                          Initialize
-    //                                                                          ==========
-    $scope.manifest();
-    $scope.engineVersions();
-    $scope.configuration();
-    $scope.classifications();
-    $scope.prepareClientList();
 });
 
 /**

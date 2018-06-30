@@ -18,15 +18,12 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 2. import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
 3. (install node, gulp, bower if non-existent in your computer)
    1. `$ brew install node`
-   2. `$ npm install -g gulp`
-   3. `$ npm install -g bower`
 4. install components of bower, npm for application (at dbflute-intro directory)
-   1. `$ bower install`
-   2. `$ npm install`
+   1. `$ npm install`
 
 ## How to boot (for committer)
 1. `$ ./gradlew run` => boot API Server (same as IntroBoot.main())
-2. `$ ./gradlew gulp_serve` => boot FrontEnd Application (AngularJS)
+2. `$ npm install` => boot FrontEnd Application (Riot)
 
 ## How to refresh application
 1. $ `./gradlew refresh`
@@ -42,7 +39,7 @@ https://github.com/lastaflute/lastaflute
 
 ## Front-side Framework
 
-using Angular:
+using Riot:
 ```
 dbflute-intro
  |-src
@@ -60,7 +57,6 @@ dbflute-intro
  |     |  |-welcome
  |     |  |  |-welcome.controller.js
  |     |  |  |-welcome.html
- |     |  |-bootstrap.css
  |     |  |-index.css     // core styles
  |     |  +-index.js      // core angular modules
  |     |
