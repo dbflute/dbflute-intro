@@ -4,6 +4,9 @@
 	<meta charset="UTF-8" />
 	<title>introdb schema</title>
 	<style type="text/css">
+/* -------------------------------------------------
+                                             Core
+------------------------------------------------- */
 * {
 	margin: 0;
 	padding: 0;
@@ -15,7 +18,9 @@ body {
 	background-color: #ffffe0;
 }
 
-/* heading */
+/* -------------------------------------------------
+                                        Structure
+------------------------------------------------- */
 h1 {
 	font-size: 1.5em;
 	border-bottom: 2px solid #af0000;
@@ -45,7 +50,9 @@ h4 {
 	color: #333333;
 }
 
-/* total info */
+/* -------------------------------------------------
+                                     Whole Header
+------------------------------------------------- */
 .updatedate {
 	text-align: right;
 }
@@ -71,7 +78,9 @@ h4 {
 	font-size: 100%;
 }
 
-/* keyword search */
+/* -------------------------------------------------
+                                   Keyword Search
+------------------------------------------------- */
 .keywordsearch {
 	padding: 0.7em 0 0.7em 0;
 }
@@ -91,7 +100,9 @@ h4 {
 	list-style-type: none;
 }
 
-/* table */
+/* -------------------------------------------------
+                                   Database Table
+------------------------------------------------- */
 table {
 	border-collapse:collapse;
 }
@@ -198,9 +209,18 @@ table.child, table.child td, table.child th {
 }
 
 /* table supplementary info */
-span.tableschema {
-	font-size: 0.6em;
+span.tableschematitle {
+	font-size: 0.5em;
+	color: #888888;
 }
+span.tablefirstdatetitle {
+	font-size: 0.5em;
+	color: #888888;
+}
+
+/* -------------------------------------------------
+                             Behavior Query Path
+------------------------------------------------- */
 span.bqpcount {
 	font-size: 0.5em;
 }
@@ -235,6 +255,10 @@ dl.bqplist dd.subinfo span.ctet {
 dl.bqplist dd.subinfo span.pmb {
 	color: green;
 }
+
+/* -------------------------------------------------
+                                 Stored Procedure
+------------------------------------------------- */
 dl.procedurelist {
 	padding-left: 2em;
 }
@@ -269,7 +293,9 @@ dl.procedurelist dd.column pre {
 	padding-left: 1em;
 }
 
-/** decomment modal for dbflute intro */
+/* -------------------------------------------------
+                                  Decomment Modal
+------------------------------------------------- */
 .decommentmodal {
 	display: none;
 	position: fixed;
@@ -414,6 +440,7 @@ dl.procedurelist dd.column pre {
 		<th>ReferrerTable</th>
 		<th>TableComment</th>
 		<th>EntityName</th>
+		<th>Since</th>
 	</tr>
 	</thead>
 	<tbody id="table-list-body">
@@ -426,6 +453,7 @@ dl.procedurelist dd.column pre {
 		<td class="relcell">&nbsp;</td>
 		<td class="commentcell CLS_TARGET_CONTAINER_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetContainer</td>
+		<td class="subcell"></td>
 	</tr>
 	<tr>
 		<td class="rownumcell">2</td>
@@ -436,6 +464,7 @@ dl.procedurelist dd.column pre {
 		<td class="relcell">&nbsp;</td>
 		<td class="commentcell CLS_TARGET_DATABASE_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetDatabase</td>
+		<td class="subcell">2016/08/02</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">3</td>
@@ -446,6 +475,7 @@ dl.procedurelist dd.column pre {
 		<td class="relcell">&nbsp;</td>
 		<td class="commentcell CLS_TARGET_LANGUAGE_comment"><pre>&nbsp;</pre></td>
 		<td class="subcell">ClsTargetLanguage</td>
+		<td class="subcell">2016/08/02</td>
 	</tr>
 	</tbody>
 </table>
@@ -536,6 +566,7 @@ CLS_TARGET_CONTAINER
 
 <h2 id="cls_target_database" title="type=TABLE, primaryKey={DATABASE_CODE}, nameLength=19, columnCount=10">
 CLS_TARGET_DATABASE
+&nbsp;<span class="tablefirstdatetitle">since 2016/08/02</span>
 </h2>
 <div class="tablecomment CLS_TARGET_DATABASE_comment" data-name="CLS_TARGET_DATABASE"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_DATABASE">
@@ -558,6 +589,7 @@ CLS_TARGET_DATABASE
 		<th>ColumnComment</th>
 		<th>PropertyName</th>
 		<th>JavaType</th>
+		<th>Since</th>
 	</tr>
 	</thead>
 	<tbody id="cls_target_database-body">
@@ -578,6 +610,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">databaseCode</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">2</td>
@@ -596,6 +629,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">databaseName</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">3</td>
@@ -614,6 +648,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">jdbcDriverFqcn</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">4</td>
@@ -632,6 +667,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">urlTemplate</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">5</td>
@@ -650,6 +686,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">defaultSchema</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">6</td>
@@ -668,6 +705,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">schemaRequiredFlg</td>
 		<td class="subcell">Integer</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">7</td>
@@ -686,6 +724,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">schemaUpperCaseFlg</td>
 		<td class="subcell">Integer</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">8</td>
@@ -704,6 +743,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">userInputAssistFlg</td>
 		<td class="subcell">Integer</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">9</td>
@@ -722,6 +762,7 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">embeddedJarFlg</td>
 		<td class="subcell">Integer</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">10</td>
@@ -740,12 +781,14 @@ CLS_TARGET_DATABASE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">displayOrder</td>
 		<td class="subcell">Integer</td>
+		<td class="subcell">first</td>
 	</tr>
 	</tbody>
 </table>
 
 <h2 id="cls_target_language" title="type=TABLE, primaryKey={LANGUAGE_CODE}, nameLength=19, columnCount=3">
 CLS_TARGET_LANGUAGE
+&nbsp;<span class="tablefirstdatetitle">since 2016/08/02</span>
 </h2>
 <div class="tablecomment CLS_TARGET_LANGUAGE_comment" data-name="CLS_TARGET_LANGUAGE"><pre></pre></div>
 <input type="hidden" value="CLS_TARGET_LANGUAGE">
@@ -768,6 +811,7 @@ CLS_TARGET_LANGUAGE
 		<th>ColumnComment</th>
 		<th>PropertyName</th>
 		<th>JavaType</th>
+		<th>Since</th>
 	</tr>
 	</thead>
 	<tbody id="cls_target_language-body">
@@ -788,6 +832,7 @@ CLS_TARGET_LANGUAGE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">languageCode</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">2</td>
@@ -806,6 +851,7 @@ CLS_TARGET_LANGUAGE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">languageName</td>
 		<td class="subcell">String</td>
+		<td class="subcell">first</td>
 	</tr>
 	<tr>
 		<td class="rownumcell">3</td>
@@ -824,6 +870,7 @@ CLS_TARGET_LANGUAGE
 		<td class="commentcell"><pre>&nbsp;</pre></td>
 		<td class="subcell">displayOrder</td>
 		<td class="subcell">Integer</td>
+		<td class="subcell">first</td>
 	</tr>
 	</tbody>
 </table>
@@ -1598,24 +1645,6 @@ function StoreClient() {
 	// setup from dbflute if decomment pickup exists
 	this.embeddedPickup = {
 		'tables': [
-			{
-				'tableName': 'CLS_TARGET_CONTAINER'
-				, 'mappings' : [
-				]
-				, 'properties': [
-						{
-						'decomment': 'test'
-						, 'databaseComment': ''
-						, 'commentVersion': 0
-						, 'authors': ['user name']
-						, 'pieceCode': 'e1fa7d4f'
-						, 'pieceDatatime': '2018-06-28T12:34:22.529'
-						, 'previousPieces': []
-					}
-				]
-				, 'columns': [
-				]
-			}
 		]
 	}
 	this.pickupStore = {
