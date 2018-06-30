@@ -13,16 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.infra.doc.hacomment.exception;
+package org.dbflute.intro.bizfw.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- *@author hakiba
+ * @author cabos
  */
-public class DfHacoMapFileWriteFailureException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
-
-    public DfHacoMapFileWriteFailureException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface NotAvailableDecommentServer {
 }

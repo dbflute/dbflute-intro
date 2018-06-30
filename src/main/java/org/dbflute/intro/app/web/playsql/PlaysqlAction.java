@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.playsql.PlaysqlPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -61,6 +62,7 @@ public class PlaysqlAction extends IntroBaseAction {
     //                                                update
     //                                                ------
     // #forgot jflute pri.C intro: needs adjustment? (2016/07/26)
+    @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/{}")
     public JsonResponse<Void> update(String project, String fileName, PlaysqlUpdateBody body) {
         validate(body, messages -> {});

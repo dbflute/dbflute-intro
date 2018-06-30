@@ -40,6 +40,7 @@ import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
 import org.dbflute.optional.OptionalThing;
@@ -51,6 +52,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  * @author jflute
  * @author hakiba
+ * @author cabos
  */
 public class ClientAction extends IntroBaseAction {
 
@@ -198,6 +200,7 @@ public class ClientAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                Update
     //                                                ------
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {
@@ -210,9 +213,9 @@ public class ClientAction extends IntroBaseAction {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
             }
             Optional.ofNullable(client.jdbcDriver)
-                .map(driverPart -> driverPart.fileName)
-                .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
-                .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
+                    .map(driverPart -> driverPart.fileName)
+                    .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
+                    .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
         ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
@@ -222,6 +225,7 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
@@ -250,7 +254,7 @@ public class ClientAction extends IntroBaseAction {
             return new ProjectInfra(projectName, clientBody.dbfluteVersion);
         }
         ExtlibFile extlibFile =
-            clientPhysicalLogic.createExtlibFile(projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+                clientPhysicalLogic.createExtlibFile(projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
         return new ProjectInfra(projectName, clientBody.dbfluteVersion, extlibFile);
     }
 
@@ -276,6 +280,7 @@ public class ClientAction extends IntroBaseAction {
         testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
     }
 
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> delete(String clientProject) {
         clientUpdateLogic.deleteClient(clientProject);

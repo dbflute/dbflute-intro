@@ -20,6 +20,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
@@ -77,6 +78,13 @@ public class DecommentSaveBody {
      */
     @Required(groups = ClientError.class)
     public Long commentVersion;
+
+    /**
+     * the input author
+     * Only used when run as decomment server {@link IntroSystemLogic#isDecommentServer()}
+     * e.g. "cabos"
+     */
+    public String inputAuthor;
 
     /**
      * the list of ancestor authors

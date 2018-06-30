@@ -15,21 +15,24 @@
  */
 package org.dbflute.intro.app.web.engine;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
 import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.util.List;
-
 /**
  * @author p1us2er0
+ * @author cabos
  */
 public class EngineAction extends IntroBaseAction {
 
@@ -67,6 +70,7 @@ public class EngineAction extends IntroBaseAction {
         return asJson(dbFluteVersionList);
     }
 
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> download(String dbfluteVersion, EngineDownloadBody engineDownloadBody) {
         try {
@@ -78,6 +82,7 @@ public class EngineAction extends IntroBaseAction {
 
     }
 
+    @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> remove(String version) {
         engineInstallLogic.remove(version);

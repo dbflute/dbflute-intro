@@ -13,16 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.infra.doc.hacomment.exception;
+package org.dbflute.intro.app.logic.intro;
 
 /**
- * @author hakiba
+ * @author cabos
  */
-public class DfHacoMapFileReadFailureException extends RuntimeException {
+public class IntroSystemLogic {
 
-    private static final long serialVersionUID = 1L;
+    protected static final String DECOMMENT_SERVER_KEY = "intro.decomment.server";
 
-    public DfHacoMapFileReadFailureException(String msg, Throwable cause) {
-        super(msg, cause);
+    /**
+     * Whether dbflute-intro is booted as decomment server<br>
+     * e.g. java -jar -Dintro.decomment.server=true dbflute-intro.jar
+     * @return true if server was booted as decomment server.
+     */
+    public boolean isDecommentServer() {
+        String property = System.getProperty(DECOMMENT_SERVER_KEY, String.valueOf(Boolean.FALSE));
+        return Boolean.valueOf(property);
     }
 }
