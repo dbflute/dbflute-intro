@@ -5,7 +5,9 @@ The GUI Application for DBFlute Management
 # For Intro users
 ## How to use Intro
 1. download jar file
-2. `$ java -jar dbflute-intro.jar`
+2. execute this command 
+ 1. `$ java -jar dbflute-intro.jar`
+ 2. `$ java -jar -Dintro.decomment.server=true dbflute-intro.jar  # if you use decomment server mode`
 
 http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
