@@ -26,9 +26,6 @@ ${database.schemaHtmlStyleSheetEmbedded}
 	${database.schemaHtmlStyleSheetLink}
 #else
 	<style type="text/css">
-/* -------------------------------------------------
-                                             Core
-------------------------------------------------- */
 * {
 	margin: 0;
 	padding: 0;
@@ -40,9 +37,7 @@ body {
 	background-color: #ffffe0;
 }
 
-/* -------------------------------------------------
-                                        Structure
-------------------------------------------------- */
+/* heading */
 h1 {
 	font-size: 1.5em;
 	border-bottom: 2px solid #af0000;
@@ -72,9 +67,7 @@ h4 {
 	color: #333333;
 }
 
-/* -------------------------------------------------
-                                     Whole Header
-------------------------------------------------- */
+/* total info */
 .updatedate {
 	text-align: right;
 }
@@ -100,9 +93,7 @@ h4 {
 	font-size: 100%;
 }
 
-/* -------------------------------------------------
-                                   Keyword Search
-------------------------------------------------- */
+/* keyword search */
 .keywordsearch {
 	padding: 0.7em 0 0.7em 0;
 }
@@ -122,9 +113,7 @@ h4 {
 	list-style-type: none;
 }
 
-/* -------------------------------------------------
-                                   Database Table
-------------------------------------------------- */
+/* table */
 table {
 	border-collapse:collapse;
 }
@@ -231,18 +220,9 @@ table.child, table.child td, table.child th {
 }
 
 /* table supplementary info */
-span.tableschematitle {
-	font-size: 0.5em;
-	color: #888888;
+span.tableschema {
+	font-size: 0.6em;
 }
-span.tablefirstdatetitle {
-	font-size: 0.5em;
-	color: #888888;
-}
-
-/* -------------------------------------------------
-                             Behavior Query Path
-------------------------------------------------- */
 span.bqpcount {
 	font-size: 0.5em;
 }
@@ -277,10 +257,6 @@ dl.bqplist dd.subinfo span.ctet {
 dl.bqplist dd.subinfo span.pmb {
 	color: green;
 }
-
-/* -------------------------------------------------
-                                 Stored Procedure
-------------------------------------------------- */
 dl.procedurelist {
 	padding-left: 2em;
 }
@@ -315,9 +291,7 @@ dl.procedurelist dd.column pre {
 	padding-left: 1em;
 }
 
-/* -------------------------------------------------
-                                  Decomment Modal
-------------------------------------------------- */
+/** decomment modal for dbflute intro */
 .decommentmodal {
 	display: none;
 	position: fixed;
@@ -518,9 +492,6 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 		<th>ReferrerTable</th>
 		<th>TableComment</th>
 		<th>EntityName</th>
-#if ($database.hasTableFirstDate())
-		<th>Since</th>
-#end
 	</tr>
 	</thead>
 	<tbody id="table-list-body">
@@ -540,9 +511,6 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 		<td class="relcell">${table.referrerTableNameCommaStringWithHtmlHref}</td>
 		<td class="commentcell ${table.tableDbName}_comment"><pre>#if($table.hasComment())${table.commentForSchemaHtmlPre}#else&nbsp;#end</pre></td>
 		<td class="subcell">${table.javaName}</td>
-#if ($database.hasTableFirstDate())
-		<td class="subcell">$table.firstDateSimpleExp</td>
-#end
 	</tr>
 #set ($rownum = $rownum + 1)
 #end
@@ -1867,7 +1835,7 @@ Decomment.prototype = {
 	 * Reflect embedded pick
 	 */
 	reflectEmbeddedPickup: function () {
-		this.reflectPickup(this.embeddedPickup);
+		this.reflectPickup(this.storeClient.embeddedPickup);
 	},
 
 	/**
