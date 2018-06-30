@@ -1,0 +1,20 @@
+DELIMITER_ID	NUMBER_NULLABLE	STRING_CONVERTED	STRING_NON_CONVERTED
+1001	1	foo	foo
+1002		"foo"	"foo"
+1003	3	"f""oo"	"f""oo"
+1004		"f	o
+o"	"f	o
+o"
+1005	5	"f""	o\no	"	"f""	o\no	"
+1006	6	NullValue	""
+1007	7		
+1008			
+1009	9	"foo"""	"foo"""
+1010	10	"\\foo\\"	"\\foo\\"
+1011	11	\\\\foo\\\\	\\\\foo\\\\
+1012	12	"foo\
+bar"	"foo\
+bar"
+1013	13	\N	\N
+1014	14	"\"	foo\""	"\"	foo\""
+1015	15	"\\"""	"\\"""

@@ -101,8 +101,8 @@ public class DocumentDecommentPhysicalLogic {
         return documentAuthorLogic.getAuthor();
     }
 
-    public String getGitBranchName() {
-        return documentAuthorLogic.getGitBranchName();
+    public OptionalThing<String> getGitBranch() {
+        return documentAuthorLogic.getGitBranch();
     }
 
     private String buildClientPath(String clientProject) {

@@ -20,6 +20,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
@@ -53,7 +54,7 @@ public class DecommentSaveBody {
      * decomment target type
      * e.g. COLUMN
      */
-    @Required
+    @Required(groups = ClientError.class)
     public DfDecoMapPieceTargetType targetType;
 
     /**
@@ -79,11 +80,18 @@ public class DecommentSaveBody {
     public Long commentVersion;
 
     /**
+     * the input author
+     * Only used when run as decomment server {@link IntroSystemLogic#isDecommentServer()}
+     * e.g. "cabos"
+     */
+    public String inputAuthor;
+
+    /**
      * the list of ancestor authors
      * Current piece author is derived by server at first decomment so empty allowed.
      * e.g. ["cabos", "hakiba", "deco"]  (EmptyAllowed)
      */
-    @NotNull
+    @NotNull(groups = ClientError.class)
     public List<String> authors;
 
     /**
@@ -91,6 +99,6 @@ public class DecommentSaveBody {
      * Current piece code is derived by server at first decomment so empty allowed.
      * e.g. ["FE893L1"]  (EmptyAllowed)
      */
-    @NotNull
+    @NotNull(groups = ClientError.class)
     public List<String> previousPieces;
 }

@@ -24,6 +24,7 @@ import org.dbflute.infra.doc.hacomment.DfHacoMapPiece;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.logic.document.hacomment.DocumentHacommentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -32,6 +33,11 @@ import org.lastaflute.web.response.JsonResponse;
  * @author hakiba
  */
 public class DocumentHacommentAction extends IntroBaseAction {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String STRING_OF_NULL = "null";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -48,15 +54,15 @@ public class DocumentHacommentAction extends IntroBaseAction {
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> save(String projectName, HacommentSaveBody body) {
-        validate(body, messages -> moreValidate(body));
-        // TODO hakiba add client error message by hakiba (2018/02/15)
-        // verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
+        validate(body, messages -> moreValidate(body, messages));
         hacommentPhysicalLogic.savePiece(projectName, mappingToHacoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
 
-    private void moreValidate(HacommentSaveBody body) {
-        // TODO hakiba add validate logic by hakiba (2018/02/15)
+    private void moreValidate(HacommentSaveBody body, IntroMessages messages) {
+        if (STRING_OF_NULL.equals(body.hacomment)) {
+            messages.addErrorsStringOfNullNotAccepted("hacomment");
+        }
     }
 
     private DfHacoMapPiece mappingToHacoMapPiece(HacommentSaveBody body) {
@@ -65,7 +71,7 @@ public class DocumentHacommentAction extends IntroBaseAction {
         String mappingCode = buildPieceCode(body, mappingDateTime, author);
         String diffCode = hacommentPhysicalLogic.generateDiffCode(body.diffDate);
         return new DfHacoMapPiece(diffCode, body.diffDate, body.hacomment, body.diffComment, body.authors, mappingCode, author,
-            mappingDateTime, body.previousPieces);
+                mappingDateTime, body.previousPieces);
     }
 
     private String buildPieceCode(HacommentSaveBody body, LocalDateTime mappingDateTime, String author) {

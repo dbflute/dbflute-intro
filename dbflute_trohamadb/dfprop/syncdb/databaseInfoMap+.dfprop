@@ -1,0 +1,5 @@
+map:{
+	; url			= jdbc:mysql://localhost:43306/maihamasyncdb?characterEncoding=UTF-8
+	; user			= maihamasyncdb
+	; password		= maihamasyncdb
+}

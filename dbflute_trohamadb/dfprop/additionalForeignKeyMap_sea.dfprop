@@ -1,0 +1,184 @@
+# /---------------------------------------------------------------------------
+# additionalForeignKeyMap: (NotRequired - Default 'map:{}')
+#
+# If foreign key does not exist in your database,
+# you can set up here as virtual foreign key for DBFlute.
+#
+# And it's one-to-one relation if you add one fixed condition to referrer table, 
+# you can set virtual foreign key with fixedCondition and fixedSuffix.
+# And you can use it to view objects too.
+#
+# If local column name is same as foreign column name,
+# you can omit the setting of localColumnName and foreignColumnName.
+# The names are treated as case insensitive.
+#
+# Example:
+# map:{
+#     ; FK_MEMBER_MEMBER_STATUS_CODE = map:{
+#         ; localTableName  = MEMBER             ; foreignTableName  = MEMBER_STATUS
+#         ; localColumnName = MEMBER_STATUS_CODE ; foreignColumnName = MEMBER_STATUS_CODE
+#     }
+#     ; FK_PURCHASE_MEMBER_ID = map:{
+#         ; localTableName  = PURCHASE  ; foreignTableName  = MEMBER
+#     }
+#     ; FK_MEMBER_MEMBER_ADDRESS_VALID = map:{
+#         ; localTableName  = MEMBER    ; foreignTableName  = MEMBER_ADDRESS
+#         ; localColumnName = MEMBER_ID ; foreignColumnName = MEMBER_ID
+#         ; fixedCondition = 
+#          $$foreignAlias$$.VALID_BEGIN_DATE <= /*targetDate(Date)*/null
+#      and $$foreignAlias$$.VALID_END_DATE >= /*targetDate(Date)*/null 
+#         ; fixedSuffix = AsValid
+#     }
+# }
+# 
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # ====================================================================================
+    #                                                                      Biz-Many-to-One
+    #                                                                      ===============
+    #
+    # for test of split multiple FK of biz-many-to-one
+    #
+    # unfortunately unsupported this pattern
+    # it has wrong mapping when selecting entities
+    #
+    ; FK_SUMMARY_PRODUCT_PRODUCT_STATUS = map:{
+        ; localTableName  = SUMMARY_PRODUCT     ; foreignTableName  = PRODUCT_STATUS
+        ; localColumnName = PRODUCT_STATUS_CODE ; foreignColumnName  = PRODUCT_STATUS_CODE
+    }
+
+    #
+    # for the test of variant relation of biz-many-to-one
+    #
+    ; FK_WHITE_VARIANT_RELATION_FOO = map:{
+        ; localTableName  = WHITE_VARIANT_RELATION_REFERRER ; foreignTableName = WHITE_VARIANT_RELATION_MASTER_FOO
+        ; localColumnName = VARIANT_MASTER_ID ; foreignColumnName = MASTER_FOO_ID
+        ; fixedCondition = $$localAlias$$.MASTER_TYPE_CODE = /*$cls(VariantRelationMasterType.FooCls)*/null
+        ; fixedSuffix = AsVariant
+        ; fixedReferrer = true
+    }
+    ; FK_WHITE_VARIANT_RELATION_BAR = map:{
+        ; localTableName  = WHITE_VARIANT_RELATION_REFERRER ; foreignTableName = WHITE_VARIANT_RELATION_MASTER_BAR
+        ; localColumnName = VARIANT_MASTER_ID ; foreignColumnName = MASTER_BAR_ID
+        ; fixedCondition = $$localAlias$$.MASTER_TYPE_CODE = /*$cls(VariantRelationMasterType.BarCls)*/null
+        ; fixedSuffix = AsVariant
+        ; fixedReferrer = true
+    }
+    # no-referrer pattern
+    ; FK_WHITE_VARIANT_RELATION_QUX = map:{
+        ; localTableName  = WHITE_VARIANT_RELATION_REFERRER ; foreignTableName = WHITE_VARIANT_RELATION_MASTER_QUX
+        ; localColumnName = VARIANT_MASTER_ID ; foreignColumnName = MASTER_QUX_ID
+        ; fixedCondition =
+         $$localAlias$$.MASTER_TYPE_CODE = /*$cls(VariantRelationMasterType.QuxCls)*/null
+     and $$foreignAlias$$.QUX_TYPE_CODE = /*$cls(VariantRelationQuxType.Que)*/null
+        ; fixedSuffix = AsVariantByQue
+    }
+    # no-referrer and in-line pattern
+    ; FK_WHITE_VARIANT_RELATION_CORGE = map:{
+        ; localTableName  = WHITE_VARIANT_RELATION_REFERRER ; foreignTableName = WHITE_VARIANT_RELATION_MASTER_CORGE
+        ; localColumnName = VARIANT_MASTER_ID ; foreignColumnName = MASTER_CORGE_ID
+        ; fixedCondition =
+         $$localAlias$$.MASTER_TYPE_CODE = /*$cls(VariantRelationMasterType.CorgeCls)*/null
+     and $$foreignAlias$$.CORGE_TYPE_CODE = /*quxType($$CDef$$.VariantRelationQuxType)*/null
+        ; fixedSuffix = AsVariantByQuxType
+        # fixedInline with localAlias is not available
+        #; fixedInline = true
+    }
+    # biz-one-to-one for biz-many-to-one
+    # (should be after corresponding biz-many-to-one)
+    ; FK_WHITE_VARIANT_RELATION_BIZ_ONE_TO_ONE_FOR_BIZ_MANY_TO_ONE = map:{
+        ; localTableName  = WHITE_VARIANT_RELATION_MASTER_FOO ; foreignTableName = WHITE_VARIANT_RELATION_REFERRER
+        ; localColumnName = MASTER_FOO_ID ; foreignColumnName = VARIANT_MASTER_ID
+        ; fixedCondition = $$foreignAlias$$.MASTER_TYPE_CODE = /*$cls(VariantRelationMasterType.FooCls)*/null
+        ; fixedSuffix = AsBizOneToOneForBizManyToOne
+    }
+    # biz-many-to-one-like biz-one-to-one: reverse-FK suppressed when local column is PK
+    ; FK_WHITE_VARIANT_RELATION_LOCAL_PK_REFERRER = map:{
+        ; localTableName  = WHITE_VARIANT_RELATION_LOCAL_PK_REFERRER ; foreignTableName = WHITE_VARIANT_RELATION_MASTER_FOO
+        ; localColumnName = REVERSEFK_SUPPRESSED_ID ; foreignColumnName = MASTER_FOO_ID
+        ; fixedCondition = $$localAlias$$.MASTER_TYPE_CODE = /*$cls(VariantRelationMasterType.FooCls)*/null
+        ; fixedSuffix = AsBizManyToOneLikeBizOneToOne
+        ; fixedReferrer = true
+    }
+
+    #
+    # for the test of all-in-one table classification (biz-many-to-one)
+    # (expect no compile error)
+    #
+    ; FK_WHITE_ALL_IN_ONE_CLS_COMPOUND_PK_REF_FOO_TEST = map:{
+        ; localTableName  = WHITE_ALL_IN_ONE_CLS_COMPOUND_PK_REF ; foreignTableName  = WHITE_ALL_IN_ONE_CLS_ELEMENT
+        ; localColumnName = FOO_CODE ; foreignColumnName = CLS_ELEMENT_CODE
+        ; fixedCondition = $$foreignAlias$$.CLS_CATEGORY_CODE = 'FOO'
+        ; fixedSuffix = AsFoo
+    }
+    ; FK_WHITE_ALL_IN_ONE_CLS_COMPOUND_PK_REF_BAR_TEST = map:{
+        ; localTableName  = WHITE_ALL_IN_ONE_CLS_COMPOUND_PK_REF ; foreignTableName  = WHITE_ALL_IN_ONE_CLS_ELEMENT
+        ; localColumnName = BAR_CODE ; foreignColumnName = CLS_ELEMENT_CODE
+        ; fixedCondition = $$foreignAlias$$.CLS_CATEGORY_CODE = 'BAR'
+        ; fixedSuffix = AsBar
+    }
+    ; FK_WHITE_ALL_IN_ONE_CLS_NORMAL_COL_REF_FOO_TEST = map:{
+        ; localTableName  = WHITE_ALL_IN_ONE_CLS_NORMAL_COL_REF ; foreignTableName  = WHITE_ALL_IN_ONE_CLS_ELEMENT
+        ; localColumnName = FOO_CODE ; foreignColumnName = CLS_ELEMENT_CODE
+        ; fixedCondition = $$foreignAlias$$.CLS_CATEGORY_CODE = 'FOO'
+        ; fixedSuffix = AsFoo
+    }
+    ; FK_WHITE_ALL_IN_ONE_CLS_NORMAL_COL_REF_BAR_TEST = map:{
+        ; localTableName  = WHITE_ALL_IN_ONE_CLS_NORMAL_COL_REF ; foreignTableName  = WHITE_ALL_IN_ONE_CLS_ELEMENT
+        ; localColumnName = BAR_CODE ; foreignColumnName = CLS_ELEMENT_CODE
+        ; fixedCondition = $$foreignAlias$$.CLS_CATEGORY_CODE = 'BAR'
+        ; fixedSuffix = AsBar
+    }
+
+    # ====================================================================================
+    #                                                          Compound FK Biz-Many-to-One
+    #                                                          ===========================
+    #
+    # for the test of compound PK (biz-many-to-one)
+    #
+    ; FK_WHITE_COMPOUND_PK_REFERRED_NORMALLY_TEST = map:{
+        ; localTableName  = WHITE_COMPOUND_PK ; foreignTableName  = WHITE_COMPOUND_REFERRED_NORMALLY
+        ; localColumnName = REFERRED_ID ; foreignColumnName = REFERRED_ID
+    }
+    ; FK_WHITE_COMPOUND_PK_REFERRED_PRIMARY_TEST = map:{
+        ; localTableName  = WHITE_COMPOUND_PK ; foreignTableName  = WHITE_COMPOUND_REFERRED_PRIMARY
+        ; localColumnName = PK_SECOND_ID ; foreignColumnName = REFERRED_ID
+    }
+    ; FK_WHITE_COMPOUND_PK_REF_MANY_TO_ONE_TEST = map:{
+        ; localTableName  = WHITE_COMPOUND_PK_REF_MANY ; foreignTableName  = WHITE_COMPOUND_PK
+        ; localColumnName = REF_MANY_FIRST_ID/REF_MANY_SECOND_ID ; foreignColumnName = PK_FIRST_ID/PK_SECOND_ID
+        ; fixedCondition = $$localAlias$$.REF_MANY_CODE = 'TPK'
+        ; fixedSuffix = ToPK
+        ; fixedReferrer = true
+    }
+    ; FK_WHITE_COMPOUND_PK_REF_MANY_DERIVED_ONE_MAX_TEST = map:{
+        ; localTableName  = WHITE_COMPOUND_PK ; foreignTableName  = WHITE_COMPOUND_PK_REF_MANY
+        ; localColumnName = PK_FIRST_ID/PK_SECOND_ID ; foreignColumnName = REF_MANY_FIRST_ID/REF_MANY_SECOND_ID
+        ; fixedCondition = 
+$$foreignAlias$$.REF_MANY_DATETIME = ($$sqbegin$$
+select max(many.REF_MANY_DATETIME)
+  from WHITE_COMPOUND_PK_REF_MANY many
+ where many.REF_MANY_FIRST_ID = $$foreignAlias$$.REF_MANY_FIRST_ID
+   and many.REF_MANY_SECOND_ID = $$foreignAlias$$.REF_MANY_SECOND_ID
+   and many.REF_MANY_CODE = 'TPK'
+)$$sqend$$
+        ; fixedSuffix = AsMax
+    }
+    ; FK_WHITE_COMPOUND_PK_REF_MANY_DERIVED_ONE_MIN_TEST = map:{
+        ; localTableName  = WHITE_COMPOUND_PK ; foreignTableName  = WHITE_COMPOUND_PK_REF_MANY
+        ; localColumnName = PK_FIRST_ID/PK_SECOND_ID ; foreignColumnName = REF_MANY_FIRST_ID/REF_MANY_SECOND_ID
+        ; fixedCondition = 
+$$foreignAlias$$.REF_MANY_DATETIME = ($$sqbegin$$
+select min(many.REF_MANY_DATETIME)
+  from WHITE_COMPOUND_PK_REF_MANY many
+ where many.REF_MANY_FIRST_ID = $$foreignAlias$$.REF_MANY_FIRST_ID
+   and many.REF_MANY_SECOND_ID = $$foreignAlias$$.REF_MANY_SECOND_ID
+   and many.REF_MANY_CODE = 'TPK'
+)$$sqend$$
+        ; fixedSuffix = AsMin
+    }
+}
+# ----------------/
+
+

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.app.web.document.decomment.DecommentPickupResult.TablePart;
@@ -85,7 +86,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
-        assertEquals(documentAuthorLogic.getGitBranchName(), actualMap.get("pieceGitBranch"));
+        assertEquals(documentAuthorLogic.getGitBranch().orElse(null), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
@@ -125,7 +126,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(expectedAuthorList, actualMap.get("authorList"));
         assertNotNull(actualMap.get("pieceDatetime"));
         assertEquals(documentAuthorLogic.getAuthor(), actualMap.get("pieceOwner"));
-        assertEquals(documentAuthorLogic.getGitBranchName(), actualMap.get("pieceGitBranch"));
+        assertEquals(documentAuthorLogic.getGitBranch().orElse(null), actualMap.get("pieceGitBranch"));
         assertEquals(body.previousPieces, actualMap.get("previousPieceList"));
     }
 
@@ -246,7 +247,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
 
     private ColumnPart extractPickupColumnAsOne(TablePart member, String columnName) {
         List<ColumnPart> columnList =
-            member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
+                member.columns.stream().filter(column -> column.columnName.equals(columnName)).collect(Collectors.toList());
         assertHasOnlyOneElement(columnList);
         return columnList.get(0);
     }
@@ -279,7 +280,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             log("  {} = {}", key, value);
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
-        assertEquals("1.0", actualMap.get("formatVersion"));
+        assertEquals(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, actualMap.get("formatVersion"));
         body.mappings.forEach(mapping -> {
             assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
             assertEquals(actualMap.get("oldColumnName"), null);
@@ -319,7 +320,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
             log("  {} = {}", key, value);
         });
         // done cabos fail by formatVersion by jflute (2017/11/11)
-        assertEquals("1.0", actualMap.get("formatVersion"));
+        assertEquals(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, actualMap.get("formatVersion"));
         body.mappings.forEach(mapping -> {
             assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
             assertEquals(mapping.oldColumnName, actualMap.get("oldColumnName"));

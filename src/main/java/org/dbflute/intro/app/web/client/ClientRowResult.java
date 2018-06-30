@@ -15,12 +15,13 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.lastaflute.web.validation.Required;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
+
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author p1us2er0
@@ -51,9 +52,9 @@ public class ClientRowResult {
     @Valid
     public DatabaseSettingsPart systemUserSettings;
 
+    // TODO hakiba implement another DatabaseSettingsPart with the main user and system user, but we do not seriously consider implementing AdditionalUserMap yet.
     public static class DatabaseSettingsPart {
-
-        @Required
+        // url property is mandatory for main user, but not for system user
         public String url;
         public String schema;
         @Required

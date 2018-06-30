@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
@@ -29,11 +30,12 @@ import org.lastaflute.web.validation.Required;
  */
 public class DecommentMappingSaveBody {
 
+    // done cabos also (groups = ClientError.class) to NotNull by jflute (2018/04/12)
     /**
      * mapping list
      */
     @Valid
-    @NotNull
+    @NotNull(groups = ClientError.class)
     public List<MappingPart> mappings;
 
     public static class MappingPart {
@@ -74,11 +76,18 @@ public class DecommentMappingSaveBody {
         public DfDecoMapPieceTargetType targetType;
 
         /**
+         * the current author
+         * Only used when run as decomment server {@link IntroSystemLogic#isDecommentServer()}
+         * e.g. "cabos"
+         */
+        public String author;
+
+        /**
          * the list of ancestor authors
          * Current mapping author is derived by server at first decomment so empty allowed.
          * e.g. ["hakiba"]
          */
-        @NotNull
+        @NotNull(groups = ClientError.class)
         public List<String> authors;
 
         /**
@@ -86,7 +95,7 @@ public class DecommentMappingSaveBody {
          * Current mapping code is derived by server at first decomment so empty allowed.
          * e.g. ["FE893L1"]  (EmptyAllowed)
          */
-        @NotNull
+        @NotNull(groups = ClientError.class)
         public List<String> previousMappings;
     }
 }

@@ -63,11 +63,11 @@ public class DfDecoMapFileTest extends UnitIntroTestCase {
         assertEquals(3, columnCount);
     }
 
-    private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, String gitBranchName, long commentVersion,
+    private DfDecoMapPiece preparePiece(String tableName, String columnName, String author, String gitBranch, long commentVersion,
         LocalDateTime decommentDateTime) {
         DfDecoMapPiece piece =
             new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, tableName, columnName, DfDecoMapPieceTargetType.Column, "decomment",
-                "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author, gitBranchName,
+                "database comment", commentVersion, Collections.singletonList(author), "DE000000", decommentDateTime, author, gitBranch,
                 Collections.emptyList());
         return piece;
     }

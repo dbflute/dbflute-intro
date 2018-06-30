@@ -1,0 +1,10 @@
+
+* * * * * * * * * *
+*                 *
+* Csv Data Result *
+*                 *
+* * * * * * * * * *
+data-directory: playsql/data/ut/csv/UTF-8
+
+96-WHITE_SELF_REFERENCE.csv (3)
+98-WHITE_BINARY.csv (3)

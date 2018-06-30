@@ -26,8 +26,10 @@ import org.dbflute.infra.doc.decomment.DfDecoMapPickup;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic;
+import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.action.IntroMessages;
+import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.core.util.LaStringUtil;
 import org.lastaflute.web.Execute;
@@ -54,6 +56,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
     private TimeManager timeManager;
     @Resource
     private DocumentDecommentPhysicalLogic decommentPhysicalLogic;
+    @Resource
+    private IntroSystemLogic introSystemLogic;
 
     // done cabos use _taexec and use _tanest by jflute (2017/08/10)
     // ===================================================================================
@@ -76,7 +80,8 @@ public class DocumentDecommentAction extends IntroBaseAction {
         // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> moreValidate(body, messages));
-        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
+        verifyOrClientError(buildDebugMessageInputAuthorIsNull(body), hasInputAuthorWhenIntroServer(body));
         decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
@@ -96,33 +101,36 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
+    private String buildDebugMessageInputAuthorIsNull(DecommentSaveBody body) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("If run with intro server mode, input author must exists.").append("\n");
+        sb.append("   inputAuthor : ").append(body.inputAuthor).append("\n");
+        return sb.toString();
+    }
+
     // done cabos change exist to exists for boolean expression by jflute (2017/11/12)
-    private boolean existsColumnNameIfTargetTypeColumn(DecommentSaveBody body) {
-        if (DfDecoMapPieceTargetType.Column == body.targetType) {
-            return LaStringUtil.isNotEmpty(body.columnName);
-        }
-        return true;
+    private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentSaveBody body) {
+        return DfDecoMapPieceTargetType.Column != body.targetType || LaStringUtil.isNotEmpty(body.columnName);
+    }
+
+    private boolean hasInputAuthorWhenIntroServer(DecommentSaveBody body) {
+        return !introSystemLogic.isDecommentServer() || LaStringUtil.isNotEmpty(body.inputAuthor);
     }
 
     // done cabos use mappingTo... by jflute (2017/08/10)
     private DfDecoMapPiece mappingToDecoMapPiece(DecommentSaveBody body) {
         // done cabos rename pieceMap to piece (can be simple here) by jflute (2017/11/11)
-        String author = getAuthor();
-        String gitBranchName = getGitBranchName();
+        String author = introSystemLogic.isDecommentServer() ? body.inputAuthor : getAuthor();
+        String gitBranch = getGitBranch().orElse(null);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece =
-            new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
-                body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime, author,
-                gitBranchName, body.previousPieces);
+        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
+                body.decomment, body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author),
+                pieceDatetime, author, gitBranch, body.previousPieces);
         return piece;
     }
 
-    private String getAuthor() {
-        return decommentPhysicalLogic.getAuthor();
-    }
-
-    private String getGitBranchName() {
-        return decommentPhysicalLogic.getGitBranchName();
+    private OptionalThing<String> getGitBranch() {
+        return decommentPhysicalLogic.getGitBranch();
     }
 
     private String buildPieceCode(DecommentSaveBody body, LocalDateTime pieceDateTime, String author) {
@@ -165,7 +173,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> mapping(String projectName, DecommentMappingSaveBody body) {
         validate(body, messages -> {});
-        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), existsColumnNameIfTargetTypeColumn(body));
+        verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
         decommentPhysicalLogic.saveDecommentMapping(projectName, mappingToDecoMapMapping(body));
         return JsonResponse.asEmptyBody();
     }
@@ -176,7 +184,7 @@ public class DocumentDecommentAction extends IntroBaseAction {
         sb.append("If targetType is COLUMN, columnName must exists.").append("\n");
         body.mappings.forEach(mapping -> {
             sb.append("\n");
-            if (!existsColumnNameIfTargetTypeColumn(mapping)) {
+            if (!hasColumnNameWhenTargetTypeIsColumn(mapping)) {
                 sb.append("   targetType(?) : ").append(mapping.targetType.code()).append("\n");
             } else {
                 sb.append("   targetType    : ").append(mapping.targetType.code()).append("\n");
@@ -190,38 +198,58 @@ public class DocumentDecommentAction extends IntroBaseAction {
         return sb.toString();
     }
 
+    // done cabos consider non TargetTypeColumn by jflute (2018/04/12)
+    private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentMappingSaveBody body) {
+        return body.mappings.stream().allMatch(this::hasColumnNameWhenTargetTypeIsColumn);
+    }
+
+    private boolean hasColumnNameWhenTargetTypeIsColumn(DecommentMappingSaveBody.MappingPart mapping) {
+        return DfDecoMapPieceTargetType.Column != mapping.targetType
+                || LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
+    }
+
+    // done cabos move under existsColumn...() by jflute (2018/04/12)
     private List<DfDecoMapMapping> mappingToDecoMapMapping(DecommentMappingSaveBody body) {
-        String author = getAuthor();
+        // done cabos move getAuthor() to class rear as Assist Logic tag comment by jflute (2018/04/12)
         LocalDateTime mappingDateTime = timeManager.currentDateTime();
 
         return body.mappings.stream().map(mapping -> {
+            String author = getMappingAuthor(mapping);
             String mappingCode = buildMappingCode(mapping, mappingDateTime, author);
             return new DfDecoMapMapping(DfDecoMapMapping.DEFAULT_FORMAT_VERSION, mapping.oldTableName, mapping.oldColumnName,
-                mapping.newTableName, mapping.newColumnName, mapping.targetType, mapping.authors, mappingCode, author, mappingDateTime,
-                mapping.previousMappings);
+                    mapping.newTableName, mapping.newColumnName, mapping.targetType, mapping.authors, mappingCode, author, mappingDateTime,
+                    mapping.previousMappings);
         }).collect(Collectors.toList());
     }
 
-    private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody body) {
-        return body.mappings.stream().allMatch(this::existsColumnNameIfTargetTypeColumn);
-    }
-
-    private boolean existsColumnNameIfTargetTypeColumn(DecommentMappingSaveBody.MappingPart mapping) {
-        if (DfDecoMapPieceTargetType.Column == mapping.targetType) {
-            return LaStringUtil.isNotEmpty(mapping.oldColumnName) && LaStringUtil.isNotEmpty(mapping.newColumnName);
+    private String getMappingAuthor(DecommentMappingSaveBody.MappingPart mapping) {
+        if (introSystemLogic.isDecommentServer()) {
+            return mapping.author;
+        } else {
+            return getAuthor();
         }
-        return true;
     }
 
     private String buildMappingCode(DecommentMappingSaveBody.MappingPart mapping, LocalDateTime mappingDateTime, String author) {
+        // done cabos write example comment by jflute (2018/04/12)
+        // ex1. OLD_TABLE_NAME::NEW_TABLE_NAME::TABLE:2018/04/01T00:00:00:cabos
+        // ex2. OLD_TABLE_NAME:OLD_COLUMN_NAME:NEW_TABLE_NAME:NEW_COLUMN_NAME:COLUMN:2018/04/01T00:00:00:cabos
         StringBuilder sb = new StringBuilder();
         sb.append(mapping.oldTableName);
-        sb.append(":").append(mapping.oldColumnName != null ? mapping.oldTableName : "");
+        // done cabos change oldTableName to oldColumnName by jflute (2018/04/12)
+        sb.append(":").append(mapping.oldColumnName != null ? mapping.oldColumnName : "");
         sb.append(mapping.newTableName);
         sb.append(":").append(mapping.newColumnName != null ? mapping.newColumnName : "");
         sb.append(":").append(mapping.targetType);
         sb.append(":").append(mappingDateTime);
         sb.append(":").append(author);
         return Integer.toHexString(sb.toString().hashCode());
+    }
+
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    private String getAuthor() {
+        return decommentPhysicalLogic.getAuthor();
     }
 }

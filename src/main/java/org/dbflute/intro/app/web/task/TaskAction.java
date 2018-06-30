@@ -15,11 +15,16 @@
  */
 package org.dbflute.intro.app.web.task;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaNotSynchronizedException;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.TaskErrorResultException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.TaskExecuteFailureException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
@@ -27,14 +32,13 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
-import javax.annotation.Resource;
-import java.util.List;
-
 /**
  * @author p1us2er0
  * @author deco
  * @author jflute
+ * @author cabos
  */
+@NotAvailableDecommentServer
 public class TaskAction extends IntroBaseAction {
 
     // ===================================================================================
@@ -58,7 +62,8 @@ public class TaskAction extends IntroBaseAction {
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
             String processLog = e.getProcessLog();
-            String debugMsg = "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
+            String debugMsg =
+                    "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
         }
         return asJson(new TaskExecutionResult(true));

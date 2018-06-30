@@ -40,8 +40,12 @@ public class DecommentPickupResult {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    /** list of table part */
-    @Valid @NotNull // can be empty first
+    /**
+     * list of table part
+     * enable empty first
+     */
+    @Valid
+    @NotNull
     public List<TablePart> tables;
 
     // done hakiba move it under tables by jflute (2017/08/17)
@@ -55,11 +59,16 @@ public class DecommentPickupResult {
         @Required
         public String tableName;
 
-        @Valid @NotNull // can be empty not conflict mapping
+        /**
+         *  list of conflicted mapping
+         *  this list could be empty when conflict mapping was not exists.
+         */
+        @Valid
+        @NotNull
         public List<MappingPart> mappings;
 
         // done cabos move it above columns by jflute (2017/11/11)
-        /** list of decomment properties associated table  */
+        /** list of decomment properties associated table */
         @Valid
         @NotNull
         public List<PropertyPart> properties;
@@ -77,27 +86,32 @@ public class DecommentPickupResult {
             @Required
             public String columnName;
 
-            @Valid @NotNull // can be empty not conflict mapping
+            /** list of decomment properties associated column */
+            @Valid
+            @NotNull
             public List<MappingPart> mappings;
 
-            /** list of decomment properties associated column  */
+            /**
+             * list of decomment properties associated column
+             * enable empty if alter doc task branch and topic branch existed piece was not mapped were merged
+             */
             @Valid
-            @Required
+            @NotNull
             public List<PropertyPart> properties;
 
             public ColumnPart(DfDecoMapColumnPart columnPart) {
                 this.columnName = columnPart.getColumnName();
                 this.mappings =
-                    columnPart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
+                        columnPart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
                 this.properties =
-                    columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
+                        columnPart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
             }
         }
 
         public TablePart(DfDecoMapTablePart tablePart) {
             this.tableName = tablePart.getTableName();
             this.mappings =
-                tablePart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
+                    tablePart.getMappingList().stream().map(mappingPart -> new MappingPart(mappingPart)).collect(Collectors.toList());
             this.columns = tablePart.getColumnList().stream().map(columnPart -> new ColumnPart(columnPart)).collect(Collectors.toList());
             this.properties = tablePart.getPropertyList().stream().map(property -> new PropertyPart(property)).collect(Collectors.toList());
         }
@@ -188,29 +202,63 @@ public class DecommentPickupResult {
 
     public static class MappingPart {
 
-        // TODO cabos comment (2018/03/25)
+        /**
+         * new table name after mapped
+         * e.g. "NEW_TABLE_NAME"
+         */
         @Required
         public String newTableName;
+
+        /**
+         * new column name after mapped
+         * this could be null if target type was table.
+         * e.g. "NEW_COLUMN_NAME"
+         */
         public String newColumnName;
+
+        /**
+         * the list of ancestor authors
+         * e.g. ["cabos", "hakiba", "deco"]
+         */
         @NotNull
-        public List<String> authorList;
+        public List<String> authors;
+
+        /**
+         * mapping code generated when decomment mapped
+         * e.g. "EF89371"
+         */
         @Required
         public String mappingCode;
+
+        /**
+         * author of this decomment mapping
+         * e.g. "deco"
+         */
         @Required
         public String mappingOwner;
+
+        /**
+         * time of decomment mapped
+         * e.g. "2018-04-22T17:35:22.235"
+         */
         @Required
         public LocalDateTime mappingDatetime;
+
+        /**
+         * list of merged mapping code
+         * e.g. ["HF7ELSE"]
+         */
         @NotNull
-        public List<String> previousMappingList;
+        public List<String> previousMappings;
 
         public MappingPart(DfDecoMapMappingPart mappingPart) {
             this.newTableName = mappingPart.getNewTableName();
             this.newColumnName = mappingPart.getNewColumnName();
-            this.authorList = mappingPart.getAuthorList();
+            this.authors = mappingPart.getAuthorList();
             this.mappingCode = mappingPart.getMappingCode();
             this.mappingOwner = mappingPart.getMappingOwner();
             this.mappingDatetime = mappingPart.getMappingDatetime();
-            this.previousMappingList = mappingPart.getPreviousMappingList();
+            this.previousMappings = mappingPart.getPreviousMappingList();
         }
     }
 
