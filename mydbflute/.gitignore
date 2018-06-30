@@ -1,4 +1,5 @@
 */etc/client-template
 */lib/extlib
 /dbflute-1.1.*
+!dbflute-1.1.8
 /dbflute-1.0.*
