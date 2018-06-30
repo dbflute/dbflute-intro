@@ -88,3 +88,11 @@ intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/
 
 ### Send release notification 
 1. Notify all around the world
+
+## Upgrade DBFlute
+
+1. `sh ./dbflute_introdb/manage.sh upgrade`
+2. set `DBFLUTE_HOME ../mydbflute/dbflute-1.x` in changed `_project.sh` and `_project.bat`
+3. mv downloaded dbflute to `./mydbflute/dbflute-1.x`
+4. copy template files to `./dbflute_introdb`
+5. `sh ./dbflute_introdb/manage.sh 1`
