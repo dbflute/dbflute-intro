@@ -57,6 +57,7 @@ import i18n_en from '../assets/i18n/locale-en.json'
 
 import './main/main.tag'
 import './client/create.tag'
+import './client/client.tag'
 import './common/result-view.tag'
 import './common/navbar.tag'
 import './common/i18n.tag'
@@ -137,7 +138,7 @@ route('', () => {
   riot.mount('content', 'main')
 })
 route('operate/*', projectName => {
-  riot.mount('content', 'create', { projectName })
+  riot.mount('content', 'client', { projectName })
 })
 route('create', () => {
   riot.mount('content', 'create')
