@@ -1,6 +1,6 @@
 <client>
 
-  <su-modal modal="{ modal }" class="large" ref="modal">
+  <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
       Generating...
     </div>
@@ -27,9 +27,10 @@
 
     let self = this
     this.client = {}
-    this.modal = {
+    this.generateModal = {
       closable: false
     }
+
 
     // ===================================================================================
     //                                                                          Initialize
@@ -46,9 +47,9 @@
     //                                                                               Task
     //                                                                              ======
     this.task = (task) => {
-      self.refs.modal.show()
+      self.refs.generateModal.show()
       ApiFactory.task(self.opts.projectName, task).then((success) => {
-        self.refs.modal.hide()
+        self.refs.generateModal.hide()
       })
     }
 
