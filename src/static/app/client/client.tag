@@ -6,6 +6,30 @@
     </div>
   </su-modal>
 
+  <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
+    <div class="description">
+      <form class="ui form">
+        <div class="field">
+          <label>Alias delimiter in DB commen</label>
+          <input type="text" name="first-name" placeholder="e.g. :">
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" class="hidden">
+            <label>Upper case basis</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" class="hidden">
+            <label>DB comment on alias basis</label>
+          </div>
+        </div>
+        <button class="ui primary button">OK</button>
+      </form>
+    </div>
+  </su-modal>
+
   <h2>DBFlute Client { opts.projectName }</h2>
   <span>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</span>
 
@@ -14,7 +38,7 @@
     <div class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
     <div class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
   </div>
-  <button class="ui positive button">Edit Document Settings</button>
+  <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
   <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
@@ -27,10 +51,21 @@
 
     let self = this
     this.client = {}
+
+    // ===================================================================================
+    //                                                                               Modal
+    //                                                                               =====
     this.generateModal = {
       closable: false
     }
+    this.documentSettingModal = {
+      header: 'Document Settings',
+      closable: true
+    }
 
+    this.showDocumentSettingModal = () => {
+      self.refs.documentSettingModal.show()
+    }
 
     // ===================================================================================
     //                                                                          Initialize
