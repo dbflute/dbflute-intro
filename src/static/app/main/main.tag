@@ -16,7 +16,7 @@
     <tbody class="list-group">
       <tr each="{client in clientList}">
         <td>
-          <a href="" onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
+          <a onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
         </td>
         <td>{ client.databaseCode }</td>
         <td>{ client.languageCode }</td>
@@ -116,7 +116,7 @@
     }
 
     this.goToClient = function (client) {
-      //   $state.go('operate', { projectName: client.projectName })
+      route('operate/' + client.projectName)
     }
 
     this.goToClientCreate = function () {
