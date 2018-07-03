@@ -22,6 +22,9 @@
 
     this.client = {}
 
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
     this.prepareCurrentProject = () => {
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
@@ -29,6 +32,9 @@
       })
     }
 
+    // ===================================================================================
+    //                                                                           Open HTML
+    //                                                                           =========
     this.openSchemaHTML = () => {
       window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
@@ -37,6 +43,9 @@
       window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
     }
 
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
     this.on('mount', () => {
       self.prepareCurrentProject(self.opts.projectName)
     })
