@@ -1,4 +1,11 @@
 <client>
+
+  <su-modal modal="{ modal }" class="large" ref="modal">
+    <div class="description">
+      Generating...
+    </div>
+  </su-modal>
+
   <h2>DBFlute Client { opts.projectName }</h2>
   <span>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</span>
 
@@ -8,7 +15,7 @@
     <div class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
   </div>
   <button class="ui positive button">Edit Document Settings</button>
-  <button class="ui primary button">Generate Documents (jdbc, doc)</button>
+  <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
   <button class="ui positive button">Edit Sync Check</button>
@@ -19,8 +26,10 @@
     const ApiFactory = new _ApiFactory()
 
     let self = this
-
     this.client = {}
+    this.modal = {
+      closable: false
+    }
 
     // ===================================================================================
     //                                                                          Initialize
@@ -29,6 +38,17 @@
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
         self.update()
+      })
+    }
+
+
+    // ===================================================================================
+    //                                                                               Task
+    //                                                                              ======
+    this.task = (task) => {
+      self.refs.modal.show()
+      ApiFactory.task(self.opts.projectName, task).then((success) => {
+        self.refs.modal.hide()
       })
     }
 
