@@ -7,27 +7,24 @@
   </su-modal>
 
   <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
-    <div class="description">
-      <form class="ui form">
-        <div class="field">
-          <label>Alias delimiter in DB commen</label>
-          <input type="text" name="first-name" placeholder="e.g. :">
+    <form class="ui form">
+      <div class="field">
+        <label>Alias delimiter in DB comment</label>
+        <input type="text" name="delimiter" placeholder="e.g. :">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" name="isUpperCaseBasis" class="hidden">
+          <label>Upper case basis</label>
         </div>
-        <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" class="hidden">
-            <label>Upper case basis</label>
-          </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" name="isDBCommentOnAliasBasis" class="hidden">
+          <label>DB comment on alias basis</label>
         </div>
-        <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" class="hidden">
-            <label>DB comment on alias basis</label>
-          </div>
-        </div>
-        <button class="ui primary button">OK</button>
-      </form>
-    </div>
+      </div>
+    </form>
   </su-modal>
 
   <h2>DBFlute Client { opts.projectName }</h2>
@@ -60,7 +57,13 @@
     }
     this.documentSettingModal = {
       header: 'Document Settings',
-      closable: true
+      closable: true,
+      buttons:  [
+        {
+          text: 'OK',
+          action: 'editDocumentSettings'
+        }
+      ]
     }
 
     this.showDocumentSettingModal = () => {
@@ -104,6 +107,15 @@
     //                                                                          ==========
     this.on('mount', () => {
       self.prepareCurrentProject(self.opts.projectName)
+
+      this.refs.documentSettingModal.on('editDocumentSettings', () => {
+        console.info(self.delimiter)
+        console.info(self.isUpperCaseBasis)
+        console.info(self.isDBCommentOnAliasBasis)
+        ApiFactory.editDocument(self.opts.projectName, {}).then((response) => {
+          self.refs.documentSettingModal.hide()
+        })
+      })
     })
   </script>
 </client>
