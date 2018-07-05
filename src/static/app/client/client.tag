@@ -1,4 +1,18 @@
 <client>
+  <h2>DBFlute Client { opts.projectName }</h2>
+  <span>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</span>
+
+  <h3>Documents</h3>
+  <div class="ui list">
+    <div class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
+    <div class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
+  </div>
+  <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
+  <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
+
+  <h3>Schema Sync Check</h3>
+  <button class="ui positive button">Edit Sync Check</button>
+  <button class="ui primary button">Check Schema (schema-sync-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
@@ -26,21 +40,6 @@
       </div>
     </form>
   </su-modal>
-
-  <h2>DBFlute Client { opts.projectName }</h2>
-  <span>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</span>
-
-  <h3>Documents</h3>
-  <div class="ui list">
-    <div class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
-    <div class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
-  </div>
-  <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
-  <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
-
-  <h3>Schema Sync Check</h3>
-  <button class="ui positive button">Edit Sync Check</button>
-  <button class="ui primary button">Check Schema (schema-sync-check)</button>
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
