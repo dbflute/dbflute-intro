@@ -124,7 +124,7 @@
     }
 
     this.goToSettings = function (client) {
-      //   $state.go('settings', { client: client, projectName: client.projectName })
+      route(`settings/${client.projectName}`)
     }
 
     // ===================================================================================

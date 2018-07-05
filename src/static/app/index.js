@@ -56,6 +56,7 @@ import i18n_ja from '../assets/i18n/locale-ja.json'
 import i18n_en from '../assets/i18n/locale-en.json'
 
 import './main/main.tag'
+import './settings/settings.tag'
 import './client/create.tag'
 import './client/client.tag'
 import './common/result-view.tag'
