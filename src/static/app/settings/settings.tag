@@ -1,54 +1,34 @@
 <settings>
   <h2>DBFlute Client { client.projectName }</h2>
-  <div class="col-sm-6">
-    <p class="text-right">
+
+  <h3 class="ui header">
       for { client.databaseCode }, { client.languageCode }, { client.containerCode }
-    </p>
-  </div>
-  <div class="col-sm-12" show={ !editFlg }>
-    <div>
-      <div heading="DB info">
-        <form class="col-sm-8 form-horizontal">
-          <div class="row">
-            <div class="form-group">
-              <label class="col-sm-2 control-label">URL</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" ref="url"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">スキーマ</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" ref="schema"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">ユーザー</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" ref="user"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">パスワード</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" ref="password"/>
-              </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="row">
-                <div class="col-sm-12">
-                  <input type="button" class="btn btn-primary" value="Edit" onclick="{ editClient.bind(this, client) }"/>
-                </div>
-                <div class="col-sm-12">
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
+  </h3>
+  <div class="ui form">
+    <div class="row">
+      <div class="column">
+        <div class="required field">
+          <label data-is="i18n">LABEL_url</label>
+          <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
+        </div>
+        <div class="field">
+          <label data-is="i18n">LABEL_schema</label>
+          <input type="text" ref="schema" placeholder="MAIHAMADB"/>
+        </div>
+        <div class="required field">
+          <label data-is="i18n">LABEL_user</label>
+          <input type="text" ref="user" placeholder="maihamadb"/>
+        </div>
+        <div class="field">
+          <label data-is="i18n">LABEL_password</label>
+          <input type="text" ref="password"/>
+        </div>
+        <div class="field">
+          <button class="ui button primary" onclick="{ editClient }">Edit</button>
+        </div>
       </div>
     </div>
   </div>
-
   <style>
   </style>
 
