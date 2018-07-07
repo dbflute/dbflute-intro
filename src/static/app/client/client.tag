@@ -24,17 +24,17 @@
     <form class="ui form">
       <div class="field">
         <label>Alias delimiter in DB comment</label>
-        <input type="text" name="delimiter" placeholder="e.g. :">
+        <input type="text" name="delimiter" placeholder="e.g. :" value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
       </div>
       <div class="field">
         <div class="ui checkbox">
-          <input type="checkbox" name="isUpperCaseBasis" class="hidden">
+          <input type="checkbox" name="isUpperCaseBasis" value="{ opts.modal.documentSetting.upperCaseBasic }" class="hidden">
           <label>Upper case basis</label>
         </div>
       </div>
       <div class="field">
         <div class="ui checkbox">
-          <input type="checkbox" name="isDBCommentOnAliasBasis" class="hidden">
+          <input type="checkbox" name="isDBCommentOnAliasBasis" value="{ opts.modal.documentSetting.dbCommentOnAliasBasis }" class="hidden">
           <label>DB comment on alias basis</label>
         </div>
       </div>
@@ -62,7 +62,8 @@
           text: 'OK',
           action: 'editDocumentSettings'
         }
-      ]
+      ],
+      documentSetting: {}
     }
 
     this.showDocumentSettingModal = () => {
@@ -75,6 +76,10 @@
     this.prepareCurrentProject = () => {
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
+        self.update()
+      })
+      ApiFactory.document(self.opts.projectName).then((response) => {
+        self.documentSettingModal.documentSetting = response
         self.update()
       })
     }
@@ -108,9 +113,6 @@
       self.prepareCurrentProject(self.opts.projectName)
 
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
-        console.info(self.delimiter)
-        console.info(self.isUpperCaseBasis)
-        console.info(self.isDBCommentOnAliasBasis)
         ApiFactory.editDocument(self.opts.projectName, {}).then((response) => {
           self.refs.documentSettingModal.hide()
         })
