@@ -13,31 +13,31 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">URL</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control"/>
+                <input type="text" class="form-control" ref="url"/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-2 control-label">スキーマ</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control"/>
+                <input type="text" class="form-control" ref="schema"/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-2 control-label">ユーザー</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control"/>
+                <input type="text" class="form-control" ref="user"/>
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-2 control-label">パスワード</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control"/>
+                <input type="text" class="form-control" ref="password"/>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="row">
                 <div class="col-sm-12">
-                  <input type="button" class="btn btn-primary" value="Edit"/>
+                  <input type="button" class="btn btn-primary" value="Edit" onclick="{ editClient.bind(this, client) }"/>
                 </div>
                 <div class="col-sm-12">
                 </div>
@@ -64,18 +64,31 @@
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    this.prepareCurrentProject = function (projectName) {
-      ApiFactory.settings(projectName).then(function (json) {
+    this.prepareCurrentProject = (projectName) => {
+      ApiFactory.settings(projectName).then(json => {
         self.client = json
+        self.refs.url.value = json.mainSchemaSettings.url
+        self.refs.schema.value = json.mainSchemaSettings.schema
+        self.refs.user.value = json.mainSchemaSettings.user
+        self.refs.password.value = json.mainSchemaSettings.password
         self.update()
       })
+    }
+
+    this.editClient = () => {
+      this.client.mainSchemaSettings = {
+        url: self.refs.url.value,
+        schema: self.refs.schema.value,
+        user: self.refs.user.value,
+        password: self.refs.password.value
+      }
+      ApiFactory.updateSettings(this.client)
     }
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      console.log(opts)
       this.prepareCurrentProject(opts.projectName)
     })
   </script>
