@@ -24,17 +24,17 @@
     <form class="ui form">
       <div class="field">
         <label>Alias delimiter in DB comment</label>
-        <input type="text" name="delimiter" placeholder="e.g. :" value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
+        <input type="text" ref="aliasDelimiterInDbComment" placeholder="e.g. :" value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
       </div>
       <div class="field">
         <div class="ui checkbox">
-          <input type="checkbox" name="isUpperCaseBasis" value="{ opts.modal.documentSetting.upperCaseBasic }" class="hidden">
+          <input type="checkbox" ref="upperCaseBasic" checked="{ opts.modal.documentSetting.upperCaseBasic }">
           <label>Upper case basis</label>
         </div>
       </div>
       <div class="field">
         <div class="ui checkbox">
-          <input type="checkbox" name="isDBCommentOnAliasBasis" value="{ opts.modal.documentSetting.dbCommentOnAliasBasis }" class="hidden">
+          <input type="checkbox" ref="dbCommentOnAliasBasis" checked="{ opts.modal.documentSetting.dbCommentOnAliasBasis }">
           <label>DB comment on alias basis</label>
         </div>
       </div>
@@ -113,7 +113,14 @@
       self.prepareCurrentProject(self.opts.projectName)
 
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
-        ApiFactory.editDocument(self.opts.projectName, {}).then((response) => {
+        let aliasDelimiterInDbComment = self.refs.documentSettingModal.refs.aliasDelimiterInDbComment.value
+        let upperCaseBasic = self.refs.documentSettingModal.refs.upperCaseBasic.checked
+        let dbCommentOnAliasBasis = self.refs.documentSettingModal.refs.dbCommentOnAliasBasis.checked
+        ApiFactory.editDocument(self.opts.projectName, {
+          aliasDelimiterInDbComment: aliasDelimiterInDbComment,
+          upperCaseBasic: upperCaseBasic,
+          dbCommentOnAliasBasis: dbCommentOnAliasBasis
+        }).then((response) => {
           self.refs.documentSettingModal.hide()
         })
       })
