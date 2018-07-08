@@ -4,14 +4,17 @@
 
   <h3>Documents</h3>
   <div class="ui list">
-    <div class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
-    <div class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
+    <div if="{ client.hasSchemaHtml }" class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
+    <div if="{ client.hasHistoryHtml }" class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
   <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
-  <p  if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
+  <div class="ui list">
+    <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SchemaHTML</a></div>
+  </div>
+  <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ checkTask }">Check Schema (schema-sync-check)</button>
 
@@ -75,6 +78,12 @@
     </form>
   </su-modal>
 
+  <su-modal modal="{ successModal }" class="large" ref="successModal">
+    <div class="description">
+      Success!!
+    </div>
+  </su-modal>
+
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
     const ApiFactory = new _ApiFactory()
@@ -114,6 +123,14 @@
       ],
       syncSetting: {}
     }
+    this.successModal = {
+      closable: true,
+      buttons: [
+        {
+          text: 'CLOSE'
+        }
+      ]
+    }
 
     this.showDocumentSettingModal = () => {
       self.refs.documentSettingModal.show()
@@ -121,6 +138,10 @@
 
     this.showSyncSettingModal = () => {
       self.refs.syncSettingModal.show()
+    }
+
+    this.showSuccessModal = () => {
+      self.refs.successModal.show()
     }
 
     // ===================================================================================
@@ -148,7 +169,9 @@
     //                                                                              ======
     this.task = (task, modal) => {
       modal.show()
-      ApiFactory.task(self.opts.projectName, task).finally(() => {
+      ApiFactory.task(self.opts.projectName, task).then((response) => {
+        self.showSuccessModal()
+      }).finally(() => {
         modal.hide()
       })
     }
@@ -170,6 +193,10 @@
 
     this.openHistoryHTML = () => {
       window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
+    }
+
+    this.openSyncCheckResultHTML = () => {
+      window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
     }
 
     this.canCheckSchemaSetting = () => {
