@@ -125,7 +125,9 @@ ffetch.errors.subscribe(response => {
     header = '500 Server Error';
     messages = angular.isArray(response.data) ? response.data : [response.data];
   }
-  observable.trigger('result', { header, messages })
+  if (header != null || messages != null) {
+    observable.trigger('result', { header, messages })
+  }
 });
 
 
