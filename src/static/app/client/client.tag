@@ -11,7 +11,7 @@
   <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
-  <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
+  <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }<span if="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
   <div class="ui list">
     <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SchemaHTML</a></div>
   </div>
