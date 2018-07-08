@@ -11,6 +11,7 @@
   <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
+  <span  if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</span>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button class="ui primary button">Check Schema (schema-sync-check)</button>
 
@@ -74,6 +75,7 @@
 
     let self = this
     this.client = {}
+    this.syncSetting = {}
 
     // ===================================================================================
     //                                                                               Modal
@@ -126,6 +128,7 @@
       })
       ApiFactory.syncSchema(self.opts.projectName).then((response) => {
         self.syncSettingModal.syncSetting = response
+        self.syncSetting = response
         self.update()
       })
     }
@@ -152,10 +155,14 @@
       window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
     }
 
-    // ===================================================================================
-    //                                                                          Initialize
-    //                                                                          ==========
-    this.on('mount', () => {
+    this.canCheckSchemaSetting = () => {
+      return self.syncSetting.url != null && self.syncSetting.user != null
+    }
+
+// ===================================================================================
+//                                                                          Initialize
+//                                                                          ==========
+this.on('mount', () => {
       self.prepareCurrentProject(self.opts.projectName)
 
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
