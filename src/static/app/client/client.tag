@@ -11,7 +11,7 @@
   <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
-  <button class="ui positive button">Edit Sync Check</button>
+  <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button class="ui primary button">Check Schema (schema-sync-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
@@ -41,6 +41,33 @@
     </form>
   </su-modal>
 
+  <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
+    <form class="ui form">
+      <div class="required field">
+        <label>URL</label>
+        <input type="url" ref="url" placeholder="jdbc:mysql://localhost:3306/examplesyncdb">
+      </div>
+      <div class="field">
+        <label>Schema</label>
+        <input type="text" ref="schema" placeholder="EXAMPLESYNCDB">
+      </div>
+      <div class="required field">
+        <label>User</label>
+        <input type="text" ref="user" placeholder="examplesyncdb">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" ref="password" placeholder="">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" ref="isSuppressCraftDiff">
+          <label>Suppress Craft Diff</label>
+        </div>
+      </div>
+    </form>
+  </su-modal>
+
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
     const ApiFactory = new _ApiFactory()
@@ -65,9 +92,23 @@
       ],
       documentSetting: {}
     }
+    this.syncSettingModal = {
+      header: 'Schema Sync Check Settings',
+      closable: true,
+      buttons:  [
+        {
+          text: 'OK',
+          action: 'editDocumentSettings'
+        }
+      ]
+    }
 
     this.showDocumentSettingModal = () => {
       self.refs.documentSettingModal.show()
+    }
+
+    this.showSyncSettingModal = () => {
+      self.refs.syncSettingModal.show()
     }
 
     // ===================================================================================
