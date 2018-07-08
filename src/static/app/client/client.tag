@@ -13,7 +13,7 @@
   <h3>Schema Sync Check</h3>
   <p  if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-  <button class="ui primary button" onclick="{ checkTask }">Check Schema (schema-sync-check)</button>
+  <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ checkTask }">Check Schema (schema-sync-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
