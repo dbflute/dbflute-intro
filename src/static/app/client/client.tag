@@ -11,10 +11,10 @@
   <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
+  <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
   <div class="ui list">
     <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SchemaHTML</a></div>
   </div>
-  <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ checkTask }">Check Schema (schema-sync-check)</button>
 
