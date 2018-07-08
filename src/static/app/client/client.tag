@@ -45,23 +45,23 @@
     <form class="ui form">
       <div class="required field">
         <label>URL</label>
-        <input type="url" ref="url" placeholder="jdbc:mysql://localhost:3306/examplesyncdb">
+        <input type="url" ref="url" placeholder="jdbc:mysql://localhost:3306/examplesyncdb" value="{ opts.modal.syncSetting.url }">
       </div>
       <div class="field">
         <label>Schema</label>
-        <input type="text" ref="schema" placeholder="EXAMPLESYNCDB">
+        <input type="text" ref="schema" placeholder="EXAMPLESYNCDB" value="{ opts.modal.syncSetting.schema }">
       </div>
       <div class="required field">
         <label>User</label>
-        <input type="text" ref="user" placeholder="examplesyncdb">
+        <input type="text" ref="user" placeholder="examplesyncdb" value="{ opts.modal.syncSetting.user }">
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" ref="password" placeholder="">
+        <input type="password" ref="password" placeholder="" value="{ opts.modal.syncSetting.password }">
       </div>
       <div class="field">
         <div class="ui checkbox">
-          <input type="checkbox" ref="isSuppressCraftDiff">
+          <input type="checkbox" ref="isSuppressCraftDiff" checked="{ opts.modal.syncSetting.isSuppressCraftDiff }">
           <label>Suppress Craft Diff</label>
         </div>
       </div>
@@ -100,7 +100,8 @@
           text: 'OK',
           action: 'editSyncSettings'
         }
-      ]
+      ],
+      syncSetting: {}
     }
 
     this.showDocumentSettingModal = () => {
@@ -121,6 +122,10 @@
       })
       ApiFactory.document(self.opts.projectName).then((response) => {
         self.documentSettingModal.documentSetting = response
+        self.update()
+      })
+      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
+        self.syncSettingModal.syncSetting = response
         self.update()
       })
     }
