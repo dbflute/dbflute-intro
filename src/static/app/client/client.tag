@@ -1,6 +1,6 @@
 <client>
   <h2>DBFlute Client { opts.projectName }</h2>
-  <span>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</span>
+  <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
 
   <h3>Documents</h3>
   <div class="ui list">
@@ -8,12 +8,12 @@
     <div class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
-  <button class="ui primary button" onclick="{ task.bind(this, 'doc') }">Generate Documents (jdbc, doc)</button>
+  <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
-  <span  if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</span>
+  <p  if="{ canCheckSchemaSetting() }">for { syncSetting.url }, { syncSetting.schema }, { syncSetting.user }</p>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-  <button class="ui primary button">Check Schema (schema-sync-check)</button>
+  <button class="ui primary button" onclick="{ checkTask }">Check Schema (schema-sync-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
@@ -40,6 +40,12 @@
         </div>
       </div>
     </form>
+  </su-modal>
+
+  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
+    <div class="description">
+      Checking...
+    </div>
   </su-modal>
 
   <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
@@ -94,6 +100,9 @@
       ],
       documentSetting: {}
     }
+    this.checkModal = {
+      closable: false
+    }
     this.syncSettingModal = {
       header: 'Schema Sync Check Settings',
       closable: true,
@@ -137,11 +146,19 @@
     // ===================================================================================
     //                                                                               Task
     //                                                                              ======
-    this.task = (task) => {
-      self.refs.generateModal.show()
-      ApiFactory.task(self.opts.projectName, task).then((success) => {
-        self.refs.generateModal.hide()
+    this.task = (task, modal) => {
+      modal.show()
+      ApiFactory.task(self.opts.projectName, task).finally(() => {
+        modal.hide()
       })
+    }
+
+    this.generateTask = () => {
+      this.task('doc', self.refs.generateModal)
+    }
+
+    this.checkTask = () => {
+      this.task('schemaSyncCheck', self.refs.checkModal)
     }
 
     // ===================================================================================
@@ -159,10 +176,10 @@
       return self.syncSetting.url != null && self.syncSetting.user != null
     }
 
-// ===================================================================================
-//                                                                          Initialize
-//                                                                          ==========
-this.on('mount', () => {
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
+    this.on('mount', () => {
       self.prepareCurrentProject(self.opts.projectName)
 
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
