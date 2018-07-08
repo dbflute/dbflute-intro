@@ -98,7 +98,7 @@
       buttons:  [
         {
           text: 'OK',
-          action: 'editDocumentSettings'
+          action: 'editSyncSettings'
         }
       ]
     }
@@ -161,6 +161,18 @@
           dbCommentOnAliasBasis: documentStringModalRefs.dbCommentOnAliasBasis.checked
         }
         ApiFactory.editDocument(self.opts.projectName, documentSetting)
+      })
+
+      this.refs.syncSettingModal.on('editSyncSettings', () => {
+        let syncSettingModalRefs = self.refs.syncSettingModal.refs
+        let syncSetting = {
+          url: syncSettingModalRefs.url.value,
+          schema: syncSettingModalRefs.schema.value,
+          user: syncSettingModalRefs.user.value,
+          password: syncSettingModalRefs.password.value,
+          isSuppressCraftDiff: syncSettingModalRefs.isSuppressCraftDiff.checked
+        }
+        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting)
       })
     })
   </script>
