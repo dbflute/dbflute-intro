@@ -113,16 +113,13 @@
       self.prepareCurrentProject(self.opts.projectName)
 
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
-        let aliasDelimiterInDbComment = self.refs.documentSettingModal.refs.aliasDelimiterInDbComment.value
-        let upperCaseBasic = self.refs.documentSettingModal.refs.upperCaseBasic.checked
-        let dbCommentOnAliasBasis = self.refs.documentSettingModal.refs.dbCommentOnAliasBasis.checked
-        ApiFactory.editDocument(self.opts.projectName, {
-          aliasDelimiterInDbComment: aliasDelimiterInDbComment,
-          upperCaseBasic: upperCaseBasic,
-          dbCommentOnAliasBasis: dbCommentOnAliasBasis
-        }).then((response) => {
-          self.refs.documentSettingModal.hide()
-        })
+        let documentStringModalRefs = self.refs.documentSettingModal.refs
+        let documentSetting = {
+          aliasDelimiterInDbComment: documentStringModalRefs.aliasDelimiterInDbComment.value,
+          upperCaseBasic:  documentStringModalRefs.upperCaseBasic.checked,
+          dbCommentOnAliasBasis: documentStringModalRefs.dbCommentOnAliasBasis.checked
+        }
+        ApiFactory.editDocument(self.opts.projectName, documentSetting)
       })
     })
   </script>
