@@ -16,7 +16,7 @@
     <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SchemaHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-  <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ checkTask }">Check Schema (schema-sync-check)</button>
+  <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
@@ -180,7 +180,7 @@
       this.task('doc', self.refs.generateModal)
     }
 
-    this.checkTask = () => {
+    this.schemaSyncCheckTask = () => {
       this.task('schemaSyncCheck', self.refs.checkModal)
     }
 
