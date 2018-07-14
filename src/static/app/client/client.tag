@@ -4,19 +4,19 @@
 
   <h3>Documents</h3>
   <div class="ui list">
-    <div if="{ client.hasSchemaHtml }" class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
-    <div if="{ client.hasHistoryHtml }" class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
+    <div show="{ client.hasSchemaHtml }" class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
+    <div show="{ client.hasHistoryHtml }" class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
   <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
-  <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }<span if="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+  <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span if="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
   <div class="ui list">
-    <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SyncCheckResultHTML</a></div>
+    <div show="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SyncCheckResultHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-  <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
+  <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
@@ -171,6 +171,11 @@
       modal.show()
       ApiFactory.task(self.opts.projectName, task).then((response) => {
         self.showSuccessModal()
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.update({
+            client: response
+          })
+        })
       }).finally(() => {
         modal.hide()
       })
