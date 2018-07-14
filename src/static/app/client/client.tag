@@ -11,7 +11,7 @@
   <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <h3>Schema Sync Check</h3>
-  <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span if="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+  <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
   <div class="ui list">
     <div show="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SyncCheckResultHTML</a></div>
   </div>
@@ -158,13 +158,17 @@
         self.documentSettingModal.documentSetting = response
         self.update()
       })
-      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
-        self.syncSettingModal.syncSetting = response
-        self.syncSetting = response
-        self.update()
-      })
+      self.initSyncSchemaSetting()
     }
 
+    this.initSyncSchemaSetting = () => {
+      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
+        self.syncSettingModal.syncSetting = response
+        self.update({
+          syncSetting: response
+        })
+      })
+    }
 
     // ===================================================================================
     //                                                                               Task
@@ -236,7 +240,9 @@
           password: syncSettingModalRefs.password.value,
           isSuppressCraftDiff: syncSettingModalRefs.isSuppressCraftDiff.checked
         }
-        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting)
+        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).finally((response) => {
+          self.initSyncSchemaSetting()
+        })
       })
     })
   </script>
