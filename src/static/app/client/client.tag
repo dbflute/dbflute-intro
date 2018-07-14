@@ -78,9 +78,9 @@
     </form>
   </su-modal>
 
-  <su-modal modal="{ successModal }" class="large" ref="successModal">
+  <su-modal modal="{ resultModal }" class="large" ref="resultModal">
     <div class="description">
-      Success!!
+      { opts.modal.message }
     </div>
   </su-modal>
 
@@ -123,13 +123,14 @@
       ],
       syncSetting: {}
     }
-    this.successModal = {
+    this.resultModal = {
       closable: true,
       buttons: [
         {
           text: 'CLOSE'
         }
-      ]
+      ],
+      message: ''
     }
 
     this.showDocumentSettingModal = () => {
@@ -140,8 +141,9 @@
       self.refs.syncSettingModal.show()
     }
 
-    this.showSuccessModal = () => {
-      self.refs.successModal.show()
+    this.showResultModal = (message) => {
+      self.resultModal.message = message
+      self.refs.resultModal.show()
     }
 
     // ===================================================================================
@@ -170,7 +172,8 @@
     this.task = (task, modal) => {
       modal.show()
       ApiFactory.task(self.opts.projectName, task).then((response) => {
-        self.showSuccessModal()
+        let message = response.success ? 'success' : 'failure'
+        self.showResultModal(message)
         ApiFactory.clientOperation(self.opts.projectName).then((response) => {
           self.update({
             client: response
