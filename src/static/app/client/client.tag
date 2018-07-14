@@ -13,7 +13,7 @@
   <h3>Schema Sync Check</h3>
   <p if="{ canCheckSchemaSetting() }">for { syncSetting.url }<span if="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
   <div class="ui list">
-    <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SchemaHTML</a></div>
+    <div if="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SyncCheckResultHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
