@@ -118,7 +118,8 @@
       buttons:  [
         {
           text: 'OK',
-          action: 'editSyncSettings'
+          action: 'editSyncSettings',
+          closable: false
         }
       ],
       syncSetting: {}
@@ -241,7 +242,8 @@
           password: syncSettingModalRefs.password.value,
           isSuppressCraftDiff: syncSettingModalRefs.isSuppressCraftDiff.checked
         }
-        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).finally((response) => {
+        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).then((response) => {
+          self.refs.syncSettingModal.hide()
           self.initSyncSchemaSetting()
         })
       })
