@@ -70,6 +70,12 @@
     </div>
   </su-modal>
 
+  <su-modal modal="{ processModal }" ref="processModal">
+    <div class="description">
+      Downloading...
+    </div>
+  </su-modal>
+
   <style>
     table+h2,
     table+h3 {
@@ -100,6 +106,10 @@
         }
       ],
       latestVersion: {}
+    }
+
+    this.processModal = {
+      closable: false
     }
 
     // ===================================================================================
@@ -184,9 +194,11 @@
       this.prepareClientList()
 
       this.refs.downloadModal.on('downloadEngine', () => {
+        self.refs.processModal.show()
         let downloadModal = self.refs.downloadModal
         let version = downloadModal.refs.version.value
         ApiFactory.downloadEngine({version}).finally(() => {
+          self.refs.processModal.hide()
           self.engineVersions()
         })
       })
