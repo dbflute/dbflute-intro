@@ -127,7 +127,8 @@
       closable: true,
       buttons: [
         {
-          text: 'CLOSE'
+          text: 'CLOSE',
+          default: true
         }
       ],
       message: ''
