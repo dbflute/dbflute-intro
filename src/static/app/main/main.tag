@@ -44,7 +44,7 @@
       <tr each="{version in versions}">
         <td>{ version }</td>
         <td class="right aligned">
-          <input type="button" class="ui button primary" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
+          <input type="button" class="ui negative button" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
         </td>
       </tr>
     </tbody>
