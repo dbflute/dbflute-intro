@@ -29,7 +29,7 @@
   </table>
 
   <h2>DBFlute Engine</h2>
-  <button type="button" class="ui button primary" onclick="{ downloadModal }">
+  <button type="button" class="ui button primary" onclick="{ showDownloadModal }">
     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
   </button>
 
@@ -58,6 +58,18 @@
     </div>
   </div>
 
+  <su-modal modal="{ downloadModal }" ref="downloadModal">
+    <div class="description">
+      The latest version is { opts.modal.latestVersion.latestReleaseVersion } now.
+      <form class="ui form">
+        <div class="required field">
+          <label>Version</label>
+          <input type="text" ref="version" value="{ opts.modal.latestVersion.latestReleaseVersion }">
+        </div>
+      </form>
+    </div>
+  </su-modal>
+
   <style>
     table+h2,
     table+h3 {
@@ -76,6 +88,19 @@
     this.versions = [] // engine versions
     this.configuration = {} // intro configuration
     this.clientList = [] // existing clients
+    this.latestVersion = {} // latest engin verion
+
+    this.downloadModal = {
+      header: 'DBFlute Engine Download',
+      closable: true,
+      buttons:  [
+        {
+          text: 'Download',
+          action: 'downloadEngine'
+        }
+      ],
+      latestVersion: {}
+    }
 
     // ===================================================================================
     //                                                                          Basic Data
@@ -90,6 +115,13 @@
     this.engineVersions = function () {
       ApiFactory.engineVersions().then(function (json) {
         self.versions = json
+        self.update()
+      })
+    }
+
+    this.latestVersion = () => {
+      ApiFactory.engineLatest().then((json) => {
+        self.downloadModal.latestVersion = json
         self.update()
       })
     }
@@ -130,25 +162,13 @@
     // ===================================================================================
     //                                                                              Engine
     //                                                                              ======
-    this.downloadModal = function () {
-      //   let downloadInstance = $uibModal.open({
-      //     templateUrl: 'app/main/download.html',
-      //     controller: 'DownloadInstanceController',
-      //     resolve: {
-      //       engineLatest: function () {
-      //         return ApiFactory.engineLatest()
-      //       }
-      //     }
-      //   })
-
-      //   downloadInstance.result.then(function (versions) {
-      //     this.versions = versions
-      //   })
+    this.showDownloadModal = function () {
+      self.refs.downloadModal.show()
     }
 
     this.removeEngine = function (version) {
       let params = { version: version }
-      ApiFactory.removeEngine(params).then(function () {
+      ApiFactory.removeEngine(params).finally(() => {
         this.engineVersions()
       })
     }
@@ -159,8 +179,17 @@
     this.on('mount', () => {
       this.manifest()
       this.engineVersions()
+      this.latestVersion()
       this.configuration()
       this.prepareClientList()
+
+      this.refs.downloadModal.on('downloadEngine', () => {
+        let downloadModal = self.refs.downloadModal
+        let version = downloadModal.refs.version.value
+        ApiFactory.downloadEngine({version}).finally(() => {
+          self.engineVersions()
+        })
+      })
     })
   </script>
 </main>
