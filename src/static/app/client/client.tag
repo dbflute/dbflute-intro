@@ -168,7 +168,7 @@
     this.task = (task, modal) => {
       modal.show()
       ApiFactory.task(self.opts.projectName, task).then((response) => {
-        let message = response.success ? 'success' : 'failure'
+        const message = response.success ? 'success' : 'failure'
         self.showResultModal(message)
         ApiFactory.clientOperation(self.opts.projectName).then((response) => {
           self.update({
@@ -206,8 +206,8 @@
       self.prepareCurrentProject(self.opts.projectName)
 
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
-        let documentStringModalRefs = self.refs.documentSettingModal.refs
-        let documentSetting = {
+        const documentStringModalRefs = self.refs.documentSettingModal.refs
+        const documentSetting = {
           aliasDelimiterInDbComment: documentStringModalRefs.aliasDelimiterInDbComment.value,
           upperCaseBasic:  documentStringModalRefs.upperCaseBasic.checked,
           dbCommentOnAliasBasis: documentStringModalRefs.dbCommentOnAliasBasis.checked
@@ -216,8 +216,8 @@
       })
 
       this.refs.syncSettingModal.on('editSyncSettings', () => {
-        let syncSettingModalRefs = self.refs.syncSettingModal.refs
-        let syncSetting = {
+        const syncSettingModalRefs = self.refs.syncSettingModal.refs
+        const syncSetting = {
           url: syncSettingModalRefs.url.value,
           schema: syncSettingModalRefs.schema.value,
           user: syncSettingModalRefs.user.value,
