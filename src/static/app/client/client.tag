@@ -95,6 +95,9 @@
     // ===================================================================================
     //                                                                               Modal
     //                                                                               =====
+    // -----------------------------------------------------
+    //                                            Definition
+    //                                            ----------
     this.generateModal = {
       closable: false
     }
@@ -135,6 +138,9 @@
       message: ''
     }
 
+    // -----------------------------------------------------
+    //                                                  Show
+    //                                                  ----
     this.showDocumentSettingModal = () => {
       self.refs.documentSettingModal.show()
     }
@@ -149,32 +155,16 @@
     }
 
     // ===================================================================================
-    //                                                                          Initialize
-    //                                                                          ==========
-    this.prepareCurrentProject = () => {
-      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-        self.client = response
-        self.update()
-      })
-      ApiFactory.document(self.opts.projectName).then((response) => {
-        self.documentSettingModal.documentSetting = response
-        self.update()
-      })
-      self.initSyncSchemaSetting()
+    //                                                                        Execute Task
+    //                                                                        ============
+    this.generateTask = () => {
+      this.task('doc', self.refs.generateModal)
     }
 
-    this.initSyncSchemaSetting = () => {
-      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
-        self.syncSettingModal.syncSetting = response
-        self.update({
-          syncSetting: response
-        })
-      })
+    this.schemaSyncCheckTask = () => {
+      this.task('schemaSyncCheck', self.refs.checkModal)
     }
 
-    // ===================================================================================
-    //                                                                               Task
-    //                                                                              ======
     this.task = (task, modal) => {
       modal.show()
       ApiFactory.task(self.opts.projectName, task).then((response) => {
@@ -190,17 +180,9 @@
       })
     }
 
-    this.generateTask = () => {
-      this.task('doc', self.refs.generateModal)
-    }
-
-    this.schemaSyncCheckTask = () => {
-      this.task('schemaSyncCheck', self.refs.checkModal)
-    }
-
     // ===================================================================================
-    //                                                                           Open HTML
-    //                                                                           =========
+    //                                                                       Open Document
+    //                                                                       =============
     this.openSchemaHTML = () => {
       window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
@@ -248,5 +230,26 @@
         })
       })
     })
+
+    this.prepareCurrentProject = () => {
+      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+        self.client = response
+        self.update()
+      })
+      ApiFactory.document(self.opts.projectName).then((response) => {
+        self.documentSettingModal.documentSetting = response
+        self.update()
+      })
+      self.initSyncSchemaSetting()
+    }
+
+    this.initSyncSchemaSetting = () => {
+      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
+        self.syncSettingModal.syncSetting = response
+        self.update({
+          syncSetting: response
+        })
+      })
+    }
   </script>
 </client>
