@@ -14,3 +14,7 @@ h2 {
 body {
   background: transparent url(../image/parts/background.png);
 }
+
+a:hover {
+  cursor : pointer;
+}
