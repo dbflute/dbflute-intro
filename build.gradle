@@ -37,7 +37,7 @@ ext {
             // Main Framework
             dbflute : '1.1.8',
             h2 : '1.4.197',
-            lastaflute : '1.0.8',
+            lastaflute : '1.0.9-RC3',
 
             // Partner Library
             slf4j : '1.7.25',
