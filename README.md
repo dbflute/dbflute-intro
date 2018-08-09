@@ -23,7 +23,7 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
 ## How to boot (for committer)
 1. `$ ./gradlew run` => boot API Server (same as IntroBoot.main())
-2. `$ npm install` => boot FrontEnd Application (Riot)
+2. `$ npm start` => boot FrontEnd Application (Riot)
 
 ## How to refresh application
 1. $ `./gradlew refresh`
