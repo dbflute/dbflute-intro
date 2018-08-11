@@ -42,6 +42,24 @@
           <label>DB comment on alias basis</label>
         </div>
       </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" ref="checkColumnDefOrderDiff" checked="{ opts.modal.documentSetting.checkColumnDefOrderDiff }">
+          <label>Check Column Definition Order Difference</label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" ref="checkDbCommentDiff" checked="{ opts.modal.documentSetting.checkDbCommentDiff }">
+          <label>Check DB Comment Difference</label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" ref="checkProcedureDiff" checked="{ opts.modal.documentSetting.checkProcedureDiff }">
+          <label>Check Procedure Difference</label>
+        </div>
+      </div>
     </form>
   </su-modal>
 
@@ -210,7 +228,10 @@
         const documentSetting = {
           aliasDelimiterInDbComment: documentStringModalRefs.aliasDelimiterInDbComment.value,
           upperCaseBasic:  documentStringModalRefs.upperCaseBasic.checked,
-          dbCommentOnAliasBasis: documentStringModalRefs.dbCommentOnAliasBasis.checked
+          dbCommentOnAliasBasis: documentStringModalRefs.dbCommentOnAliasBasis.checked,
+          checkColumnDefOrderDiff: documentStringModalRefs.checkColumnDefOrderDiff.checked,
+          checkDbCommentDiff: documentStringModalRefs.checkDbCommentDiff.checked,
+          checkProcedureDiff: documentStringModalRefs.checkProcedureDiff.checked
         }
         ApiFactory.editDocument(self.opts.projectName, documentSetting)
       })

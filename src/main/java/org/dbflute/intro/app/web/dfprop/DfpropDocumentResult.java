@@ -26,6 +26,9 @@ public class DfpropDocumentResult {
     public final Boolean upperCaseBasic;
     public final String aliasDelimiterInDbComment;
     public final Boolean dbCommentOnAliasBasis;
+    public final Boolean checkColumnDefOrderDiff;
+    public final Boolean checkDbCommentDiff;
+    public final Boolean checkProcedureDiff;
 
     public DfpropDocumentResult(LittleAdjustmentMap tableNameUpperInfo, DocumentMap documentMap) {
         upperCaseBasic =
@@ -34,5 +37,8 @@ public class DfpropDocumentResult {
             tableNameUpperInfo.isColumnSqlNameUpperCase;
         aliasDelimiterInDbComment = documentMap.getAliasDelimiterInDbComment().orElse(null);
         dbCommentOnAliasBasis = documentMap.isDbCommentOnAliasBasis();
+        checkColumnDefOrderDiff = documentMap.isCheckColumnDefOrderDiff();
+        checkDbCommentDiff = documentMap.isCheckDbCommentDiff();
+        checkProcedureDiff = documentMap.isCheckProcedureDiff();
     }
 }

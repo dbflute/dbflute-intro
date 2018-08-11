@@ -83,6 +83,15 @@ public class DfpropUpdateLogic {
             if (line.contains("; isDbCommentOnAliasBasis") && line.contains("=")) {
                 return "    ; isDbCommentOnAliasBasis = " + String.valueOf(documentMap.isDbCommentOnAliasBasis());
             }
+            if (line.contains("; isCheckColumnDefOrderDiff") && line.contains("=")) {
+                return "    ; isCheckColumnDefOrderDiff = " + String.valueOf(documentMap.isCheckColumnDefOrderDiff());
+            }
+            if (line.contains("; isCheckDbCommentDiff") && line.contains("=")) {
+                return "    ; isCheckDbCommentDiff = " + String.valueOf(documentMap.isCheckDbCommentDiff());
+            }
+            if (line.contains("; isCheckProcedureDiff") && line.contains("=")) {
+                return "    ; isCheckProcedureDiff = " + String.valueOf(documentMap.isCheckProcedureDiff());
+            }
             return line;
         };
         final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");

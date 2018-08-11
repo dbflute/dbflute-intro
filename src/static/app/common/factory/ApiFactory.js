@@ -77,7 +77,10 @@ export default class ApiFactory {
         body: {
           upperCaseBasic: documentSetting.upperCaseBasic,
           aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-          dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis
+          dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
+          checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
+          checkDbCommentDiff: documentSetting.checkDbCommentDiff,
+          checkProcedureDiff: documentSetting.checkProcedureDiff
         }
       });
   }

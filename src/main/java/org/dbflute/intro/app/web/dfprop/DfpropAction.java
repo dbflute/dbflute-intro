@@ -128,6 +128,9 @@ public class DfpropAction extends IntroBaseAction {
         final DocumentMap documentMap = new DocumentMap();
         documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
         documentMap.setDbCommentOnAliasBasis(body.dbCommentOnAliasBasis);
+        documentMap.setCheckColumnDefOrderDiff(body.checkColumnDefOrderDiff);
+        documentMap.setCheckDbCommentDiff(body.checkDbCommentDiff);
+        documentMap.setCheckProcedureDiff(body.checkProcedureDiff);
         dfpropUpdateLogic.replaceDocumentMap(project, documentMap);
         return JsonResponse.asEmptyBody();
     }
