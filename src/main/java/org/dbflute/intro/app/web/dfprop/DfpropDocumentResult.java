@@ -20,6 +20,7 @@ import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 
 /**
  * @author deco
+ * @author subaru
  */
 public class DfpropDocumentResult {
 

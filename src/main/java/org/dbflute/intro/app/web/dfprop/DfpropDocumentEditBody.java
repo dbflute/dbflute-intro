@@ -19,6 +19,7 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
+ * @author subaru
  */
 public class DfpropDocumentEditBody {
 

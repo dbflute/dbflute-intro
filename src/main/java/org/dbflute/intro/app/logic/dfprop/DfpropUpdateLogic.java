@@ -31,6 +31,7 @@ import java.util.function.Function;
 
 /**
  * @author deco
+ * @author subaru
  */
 public class DfpropUpdateLogic {
 

@@ -38,6 +38,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author deco
  * @author cabos
+ * @author subaru
  */
 public class DfpropAction extends IntroBaseAction {
 
