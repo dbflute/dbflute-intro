@@ -31,7 +31,7 @@ public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
     protected static final String API_URL_PREFIX = "/api"; // to be separated from angular request
     protected static final ResponseReflectingOption responseReflectingOption =
-            new ResponseReflectingOption().treatJsonEmptyBodyAsEmptyObject();
+            new ResponseReflectingOption().treatJsonEmptyBodyAsEmptyObject(); // Empty body is not treated valid JSON by FFetchWrapper.js
 
     private final IntroConfig config;
 
