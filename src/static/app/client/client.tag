@@ -27,37 +27,37 @@
   <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
     <form class="ui form">
       <div class="field">
-        <label>Alias delimiter in DB comment</label>
+        <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>
         <input type="text" ref="aliasDelimiterInDbComment" placeholder="e.g. :" value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input type="checkbox" ref="upperCaseBasic" checked="{ opts.modal.documentSetting.upperCaseBasic }">
-          <label>Upper case basis</label>
+          <label>Upper case basis <span class="frm">(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase)</span></label>
         </div>
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input type="checkbox" ref="dbCommentOnAliasBasis" checked="{ opts.modal.documentSetting.dbCommentOnAliasBasis }">
-          <label>DB comment on alias basis</label>
+          <label>DB comment on alias basis <span class="frm">(isDbCommentOnAliasBasis)</span></label>
         </div>
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input type="checkbox" ref="checkColumnDefOrderDiff" checked="{ opts.modal.documentSetting.checkColumnDefOrderDiff }">
-          <label>Check Column Definition Order Difference</label>
+          <label>Check Column Definition Order Difference <span class="frm">(isCheckColumnDefOrderDiff)</span></label>
         </div>
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input type="checkbox" ref="checkDbCommentDiff" checked="{ opts.modal.documentSetting.checkDbCommentDiff }">
-          <label>Check DB Comment Difference</label>
+          <label>Check DB Comment Difference <span class="frm">(isCheckDbCommentDiff)</span></label>
         </div>
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input type="checkbox" ref="checkProcedureDiff" checked="{ opts.modal.documentSetting.checkProcedureDiff }">
-          <label>Check Procedure Difference</label>
+          <label>Check Procedure Difference <span class="frm">(isCheckProcedureDiff)</span></label>
         </div>
       </div>
     </form>
@@ -120,7 +120,7 @@
       closable: false
     }
     this.documentSettingModal = {
-      header: 'Document Settings',
+      header: 'Document Settings (documentMap.dfprop, littleAdjustmentMap.dfprop)',
       closable: true,
       buttons:  [
         {
