@@ -222,7 +222,31 @@
     //                                                                          ==========
     this.on('mount', () => {
       self.prepareCurrentProject(self.opts.projectName)
+      self.registerModalEvent()
+    })
 
+    this.prepareCurrentProject = () => {
+      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+        self.client = response
+        self.update()
+      })
+      ApiFactory.document(self.opts.projectName).then((response) => {
+        self.documentSettingModal.documentSetting = response
+        self.update()
+      })
+      self.initSyncSchemaSetting()
+    }
+
+    this.initSyncSchemaSetting = () => {
+      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
+        self.syncSettingModal.syncSetting = response
+        self.update({
+          syncSetting: response
+        })
+      })
+    }
+
+    this.registerModalEvent = () => {
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
         const documentStringModalRefs = self.refs.documentSettingModal.refs
         const documentSetting = {
@@ -248,27 +272,6 @@
         ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).then((response) => {
           self.refs.syncSettingModal.hide()
           self.initSyncSchemaSetting()
-        })
-      })
-    })
-
-    this.prepareCurrentProject = () => {
-      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-        self.client = response
-        self.update()
-      })
-      ApiFactory.document(self.opts.projectName).then((response) => {
-        self.documentSettingModal.documentSetting = response
-        self.update()
-      })
-      self.initSyncSchemaSetting()
-    }
-
-    this.initSyncSchemaSetting = () => {
-      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
-        self.syncSettingModal.syncSetting = response
-        self.update({
-          syncSetting: response
         })
       })
     }
