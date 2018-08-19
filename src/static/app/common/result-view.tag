@@ -1,6 +1,6 @@
 <result-view>
   <su-modal class="large" ref="modal" modal="{ option }">
-    <p each="{ message in messages }">{ message }</p>
+    <pre each="{ message in messages }">{ message }</pre>
   </su-modal>
 
   <script>
