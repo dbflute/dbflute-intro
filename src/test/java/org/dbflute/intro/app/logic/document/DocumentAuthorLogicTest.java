@@ -13,7 +13,7 @@ public class DocumentAuthorLogicTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                             Attribute
     //                                             ---------
-    private String userName;
+    private String originalUserName;
 
     // -----------------------------------------------------
     //                                            Processing
@@ -21,12 +21,12 @@ public class DocumentAuthorLogicTest extends UnitIntroTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        this.userName = System.getProperty(DocumentAuthorLogic.USER_NAME_KEY);
+        this.originalUserName = System.getProperty(DocumentAuthorLogic.USER_NAME_KEY);
     }
 
     @Override
     public void tearDown() throws Exception {
-        recoverSystemProperty(DocumentAuthorLogic.USER_NAME_KEY, userName);
+        recoverSystemProperty(DocumentAuthorLogic.USER_NAME_KEY, originalUserName);
         super.tearDown();
     }
 
