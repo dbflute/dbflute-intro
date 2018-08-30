@@ -26,7 +26,7 @@
           </div>
           <div class="required field" if="{ needsJdbcDriver }">
             <label data-is="i18n">LABEL_jdbcDriverFile</label>
-            <input type="file" file-input delegate-file-drop max-bytes="5242880" ng-model="update.file" ng-file-change="changeFile">
+            <input type="file" onchange="{ changeFile }"/>
           </div>
         </div>
         <div class="column">
@@ -159,8 +159,8 @@
         route('main')
       })
     }
-    this.changeFile = function (files) {
-      let file = files[0]
+    this.changeFile = function (event) {
+      let file = event.target.files[0]
       let reader = new FileReader()
       reader.onload = (function () {
         return function () {
@@ -171,6 +171,7 @@
           self.jdbcDriver.data = result
         }
       }(file))
+
       if (file) {
         reader.readAsBinaryString(file)
       }
