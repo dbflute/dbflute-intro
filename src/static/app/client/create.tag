@@ -108,17 +108,9 @@
         UiAssist.setBlankItem(self.targetLanguageItems)
         UiAssist.setBlankItem(self.targetContainerItems)
 
-        // self.setUnselectItem(self.targetDatabaseItems)
-        // self.setUnselectItem(self.targetLanguageItems)
-        // self.setUnselectItem(self.targetContainerItems)
-
         self.classificationMap = json
         self.update()
       })
-
-    }
-    this.setUnselectItem = function(itemList) {
-      itemList.unshift({ value: null, label: '' })
     }
     this.engineVersions = function () {
       ApiFactory.engineVersions().then(function (json) {
