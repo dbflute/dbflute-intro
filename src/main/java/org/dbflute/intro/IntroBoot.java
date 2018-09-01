@@ -54,23 +54,20 @@ public class IntroBoot {
         boot.bootAwait();
     }
 
+    private static void automaticallySetupProduction() {
+        if (hasManifest() && isDevelopment()) { // booting by war without lasta.env
+            System.setProperty(LASTA_ENV_KEY, "production"); // automatically set to simple booting
+        }
+    }
+
     private static JettyBoot createJettyBoot() {
         return new JettyBoot(getPort(), CONTEXT) { // no context path
             @Override
             protected String getServerHost() {
                 String introHost = System.getProperty(INTRO_HOST_KEY);
-                if (introHost != null) {
-                    return introHost;
-                }
-                return super.getServerHost();
+                return introHost != null ? introHost : super.getServerHost();
             }
         };
-    }
-
-    private static void automaticallySetupProduction() {
-        if (hasManifest() && isDevelopment()) { // booting by war without lasta.env
-            System.setProperty(LASTA_ENV_KEY, "production"); // automatically set to simple booting
-        }
     }
 
     public static int getPort() {
