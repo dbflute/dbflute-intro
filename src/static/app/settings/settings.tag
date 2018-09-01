@@ -10,19 +10,19 @@
         <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
                    log="{ logDropDownItems }" ref="client">
           <su-tab title="Database info" settings="{ opts.settings }" ref="settings">
-            <div class="required field">
+            <div class="required field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_url</label>
               <input type="text" value="{ opts.settings.url }" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
             </div>
-            <div class="field">
+            <div class="field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_schema</label>
               <input type="text" value="{ opts.settings.schema }" ref="schema" placeholder="MAIHAMADB"/>
             </div>
-            <div class="required field">
+            <div class="required field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_user</label>
               <input type="text" value="{ opts.settings.user }" ref="user" placeholder="maihamadb"/>
             </div>
-            <div class="field">
+            <div class="field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_password</label>
               <input type="text" value="{ opts.settings.password }" ref="password"/>
             </div>
