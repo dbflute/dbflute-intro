@@ -35,6 +35,7 @@ public class IntroBoot {
 
     private static final String LASTA_ENV_KEY = "lasta.env";
     private static final String INTRO_HOST_KEY = "intro.host";
+    private static final String INTRO_PORT_KEY = "intro.port";
     private static final int DEVELOPMENT_PORT = 8925; // related to proxy.js
     private static final int PRODUCTION_PORT = 8926; // contains DBFlute birthdate
     public static final String CONTEXT = "/";
@@ -74,7 +75,7 @@ public class IntroBoot {
 
     public static int getPort() {
         final int defaultPort = isDevelopment() ? DEVELOPMENT_PORT : PRODUCTION_PORT;
-        return Integer.parseInt(System.getProperty("port", String.valueOf(defaultPort)));
+        return Integer.parseInt(System.getProperty(INTRO_PORT_KEY, String.valueOf(defaultPort)));
     }
 
     private static boolean isDevelopment() {
