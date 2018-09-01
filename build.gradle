@@ -130,7 +130,7 @@ war {
         }
     }
     rootSpec.exclude(embeddedArtifactList.collect {"**/${it}-*.jar"})
-    from fileTree(dir: sourceSets.main.output.classesDir, includes: ["${mainClassName.replace('.', '/')}.class"])
+    from fileTree(dir: sourceSets.main.output.classesDir, includes: ["${mainClassName.replace('.', '/')}*.class"])
     from fileTree(dir: file('dist'), include: '**/**')
 
     includeEmptyDirs = false
