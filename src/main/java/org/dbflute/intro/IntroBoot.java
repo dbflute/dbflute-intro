@@ -34,13 +34,24 @@ import org.dbflute.jetty.JettyBoot;
 public class IntroBoot {
 
     private static final String LASTA_ENV_KEY = "lasta.env";
+    private static final String INTRO_HOST_KEY = "intro.host";
     private static final int DEVELOPMENT_PORT = 8925; // related to proxy.js
     private static final int PRODUCTION_PORT = 8926; // contains DBFlute birthdate
     public static final String CONTEXT = "/";
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        JettyBoot boot = new JettyBoot(getPort(), CONTEXT); // no context path
+        JettyBoot boot = new JettyBoot(getPort(), CONTEXT) { // no context path
+
+            @Override
+            protected String getServerHost() { // you can override
+                String introHost = System.getProperty(INTRO_HOST_KEY);
+                if (introHost != null) {
+                    return introHost;
+                }
+                return super.getServerHost();
+            }
+        };
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
