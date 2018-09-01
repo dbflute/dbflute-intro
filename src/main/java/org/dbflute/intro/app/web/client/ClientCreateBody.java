@@ -37,6 +37,8 @@ public class ClientCreateBody {
     public static class ClientPart {
 
         @Required
+        public String projectName;
+        @Required
         public CDef.TargetDatabase databaseCode;
         @Required
         public CDef.TargetLanguage languageCode;

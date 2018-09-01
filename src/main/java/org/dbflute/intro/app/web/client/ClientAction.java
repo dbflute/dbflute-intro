@@ -202,7 +202,8 @@ public class ClientAction extends IntroBaseAction {
     //                                                ------
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
+        String projectName = clientCreateBody.client.projectName;
         validate(clientCreateBody, messages -> {
             ClientPart client = clientCreateBody.client;
             if (clientInfoLogic.getProjectList().contains(projectName)) {

@@ -32,7 +32,7 @@ export default class ApiFactory {
   }
   createClient(client, testConnection) {
     return ffetch.post(
-      `api/client/create/${client.projectName}`,
+      `api/client/create`,
       { body: { client, testConnection } }
     )
   }
