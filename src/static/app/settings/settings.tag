@@ -7,64 +7,110 @@
   <div class="ui form">
     <div class="row">
       <div class="column">
-        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" ref="client">
-          <su-tab title="SchemaSettings" settings="{ opts.settings }">
-            <div class="required field">
+        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
+                   log="{ logDropDownItems }" ref="client">
+          <su-tab title="Database info" settings="{ opts.settings }" ref="settings">
+            <div class="required field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_url</label>
-              <input type="text" value="{ opts.settings.url }" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
+              <input type="text" value="{ opts.settings.url }" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
             </div>
-            <div class="field">
+            <div class="field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_schema</label>
-              <input type="text" value="{ opts.settings.schema }" placeholder="MAIHAMADB"/>
+              <input type="text" value="{ opts.settings.schema }" ref="schema" placeholder="MAIHAMADB"/>
             </div>
-            <div class="required field">
+            <div class="required field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_user</label>
-              <input type="text" value="{ opts.settings.user }" placeholder="maihamadb"/>
+              <input type="text" value="{ opts.settings.user }" ref="user" placeholder="maihamadb"/>
             </div>
-            <div class="field">
+            <div class="field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_password</label>
-              <input type="text" value="{ opts.settings.password }"/>
+              <input type="text" value="{ opts.settings.password }" ref="password"/>
             </div>
             <div class="field">
-              <button class="ui button primary" onclick="{ editClient }">Edit</button>
+              <button class="ui button primary" onclick="{ parent.parent.editClient.bind(this, url) }">Edit</button>
             </div>
           </su-tab>
-          <su-tab title="Messages">Messages content</su-tab>
-          <su-tab title="Friends">Friends content</su-tab>
+          <su-tab title="PlaySQL" playsql="{ opts.playsql }">
+            <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
+            <div class="ui message message-area">
+              <pre>{ refs.dropdown.value }</pre>
+            </div>
+          </su-tab>
+          <su-tab title="Log" log="{ opts.log }">
+            <su-dropdown items="{ opts.log }" ref="dropdown"></su-dropdown>
+            <div class="ui message message-area">
+              <pre>{ refs.dropdown.value }</pre>
+            </div>
+          </su-tab>
         </su-tabset>
       </div>
     </div>
   </div>
+
   <style>
+    .message-area {
+      overflow: scroll;
+    }
+
+    .message-area pre {
+      font-family: Monaco, "Courier New", serif;
+    }
   </style>
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
-    import route from 'riot-route'
 
     const ApiFactory = new _ApiFactory()
 
     const self = this
     this.client = {} // existing clients
+    this.playsqlDropDownItems = {}
+    this.logDropDownItems = {}
+    const defaultItem = [{label: '-', value: null}]
 
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
     this.prepareCurrentProject = (projectName) => {
+      self.prepareSettings(projectName)
+      self.preparePlaysql(projectName)
+      self.prepareLogs(projectName)
+    }
+
+    this.prepareSettings = (projectName) => {
       ApiFactory.settings(projectName).then(json => {
         self.client = json
         self.update()
       })
     }
 
+    this.preparePlaysql = (projectName) => {
+      ApiFactory.playsqlBeanList(projectName).then(json => {
+        const playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
+        self.update()
+      })
+    }
+
+    this.prepareLogs = (projectName) => {
+      ApiFactory.logBeanList(projectName).then(json => {
+        const logDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        self.logDropDownItems = defaultItem.concat(logDropDownItems)
+        self.update()
+      })
+    }
+
     this.editClient = () => {
-      this.client.mainSchemaSettings = {
-        url: self.refs.url.value,
-        schema: self.refs.schema.value,
-        user: self.refs.user.value,
-        password: self.refs.password.value
-      }
-      ApiFactory.updateSettings(this.client)
+      const settings = self.refs.client.refs.settings
+      const url = settings.refs.url.value
+      const schema = settings.refs.schema.value
+      const user = settings.refs.user.value
+      const password = settings.refs.password.value
+      this.client.mainSchemaSettings = {url, schema, user, password}
+
+      ApiFactory.updateSettings(this.client).finally(() => {
+        self.prepareSettings(self.client.projectName)
+      })
     }
 
     // ===================================================================================

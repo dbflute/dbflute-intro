@@ -84,11 +84,11 @@ export default class ApiFactory {
         }
       });
   }
-  playsqlBeanList(clientBody) {
-    return ffetch.post(`api/playsql/${clientBody.projectName}/list`);
+  playsqlBeanList(projectName) {
+    return ffetch.post(`api/playsql/${projectName}/list`);
   }
-  logBeanList(clientBody) {
-    return ffetch.post(`api/log/${clientBody.projectName}/list`);
+  logBeanList(projectName) {
+    return ffetch.post(`api/log/${projectName}/list`);
   }
 
   // ===============================================================================
