@@ -7,8 +7,8 @@
   <div class="ui form">
     <div class="row">
       <div class="column">
-        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" ref="client">
-          <su-tab title="SchemaSettings" settings="{ opts.settings }">
+        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropdownItems }" log="{ logDropdownItems }">
+          <su-tab title="Database info" settings="{ opts.settings }">
             <div class="required field">
               <label data-is="i18n">LABEL_url</label>
               <input type="text" value="{ opts.settings.url }" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
@@ -29,13 +29,30 @@
               <button class="ui button primary" onclick="{ editClient }">Edit</button>
             </div>
           </su-tab>
-          <su-tab title="Messages">Messages content</su-tab>
-          <su-tab title="Friends">Friends content</su-tab>
+          <su-tab title="PlaySQL" playsql="{ opts.playsql }">
+            <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
+            <div class="ui message message-area">
+              <pre>{ refs.dropdown.value }</pre>
+            </div>
+          </su-tab>
+          <su-tab title="Log" log="{ opts.log }">
+            <su-dropdown items="{ opts.log }" ref="dropdown"></su-dropdown>
+            <div class="ui message message-area">
+              <pre>{ refs.dropdown.value }</pre>
+            </div>
+          </su-tab>
         </su-tabset>
       </div>
     </div>
   </div>
   <style>
+    .message-area {
+      overflow: scroll;
+    }
+
+    .message-area pre {
+      font-family: Monaco, "Courier New", serif;
+    }
   </style>
 
   <script>
@@ -46,6 +63,8 @@
 
     const self = this
     this.client = {} // existing clients
+    this.playsqlDropdownItems = {}
+    this.logDropdownItems = {}
 
     // ===================================================================================
     //                                                                     Client Handling
@@ -53,6 +72,14 @@
     this.prepareCurrentProject = (projectName) => {
       ApiFactory.settings(projectName).then(json => {
         self.client = json
+        self.update()
+      })
+      ApiFactory.playsqlBeanList(projectName).then(json => {
+        self.playsqlDropdownItems = json.map(obj => ({ label: obj.fileName, value: obj.content }))
+        self.update()
+      })
+      ApiFactory.logBeanList(projectName).then(json => {
+        self.logDropdownItems = json.map(obj => ({ label: obj.fileName, value: obj.content }))
         self.update()
       })
     }
