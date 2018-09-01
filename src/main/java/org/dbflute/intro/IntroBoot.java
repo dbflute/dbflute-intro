@@ -41,17 +41,7 @@ public class IntroBoot {
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        JettyBoot boot = new JettyBoot(getPort(), CONTEXT) { // no context path
-
-            @Override
-            protected String getServerHost() { // you can override
-                String introHost = System.getProperty(INTRO_HOST_KEY);
-                if (introHost != null) {
-                    return introHost;
-                }
-                return super.getServerHost();
-            }
-        };
+        JettyBoot boot = createJettyBoot();
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
@@ -61,6 +51,19 @@ public class IntroBoot {
             return jarName.contains("swagger-ui");
         });
         boot.bootAwait();
+    }
+
+    private static JettyBoot createJettyBoot() {
+        return new JettyBoot(getPort(), CONTEXT) { // no context path
+            @Override
+            protected String getServerHost() {
+                String introHost = System.getProperty(INTRO_HOST_KEY);
+                if (introHost != null) {
+                    return introHost;
+                }
+                return super.getServerHost();
+            }
+        };
     }
 
     private static void automaticallySetupProduction() {
