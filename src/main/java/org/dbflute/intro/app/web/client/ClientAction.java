@@ -53,6 +53,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author jflute
  * @author hakiba
  * @author cabos
+ * @author subaru
  */
 public class ClientAction extends IntroBaseAction {
 

@@ -27,6 +27,7 @@ import java.util.Map;
  * @author p1us2er0
  * @author jflute
  * @author hakiba
+ * @author subaru
  */
 public class ClientCreateBody {
 
