@@ -76,7 +76,9 @@
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
+    import _UiAssist from '../common/UiAssist'
     const ApiFactory = new _ApiFactory()
+    const UiAssist = new _UiAssist()
 
     // ===================================================================================
     //                                                                           Attribute
@@ -102,9 +104,13 @@
         self.targetContainerItems = Object.keys(json.targetContainerMap).map(key => {
           return { value: key, label: json.targetContainerMap[key] }
         })
-        self.setUnselectItem(self.targetDatabaseItems)
-        self.setUnselectItem(self.targetLanguageItems)
-        self.setUnselectItem(self.targetContainerItems)
+        UiAssist.setBlankItem(self.targetDatabaseItems)
+        UiAssist.setBlankItem(self.targetLanguageItems)
+        UiAssist.setBlankItem(self.targetContainerItems)
+
+        // self.setUnselectItem(self.targetDatabaseItems)
+        // self.setUnselectItem(self.targetLanguageItems)
+        // self.setUnselectItem(self.targetContainerItems)
 
         self.classificationMap = json
         self.update()
