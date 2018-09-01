@@ -102,9 +102,17 @@
         self.targetContainerItems = Object.keys(json.targetContainerMap).map(key => {
           return { value: key, label: json.targetContainerMap[key] }
         })
+        self.setUnselectItem(self.targetDatabaseItems)
+        self.setUnselectItem(self.targetLanguageItems)
+        self.setUnselectItem(self.targetContainerItems)
+
         self.classificationMap = json
         self.update()
       })
+
+    }
+    this.setUnselectItem = function(itemList) {
+      itemList.unshift({ value: null, label: '' })
     }
     this.engineVersions = function () {
       ApiFactory.engineVersions().then(function (json) {

@@ -209,7 +209,7 @@ public class ClientAction extends IntroBaseAction {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
             }
             TargetDatabase databaseCd = client.databaseCode;
-            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
+            if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
             }
             Optional.ofNullable(client.jdbcDriver)
