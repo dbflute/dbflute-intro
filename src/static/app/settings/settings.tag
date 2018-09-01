@@ -7,8 +7,9 @@
   <div class="ui form">
     <div class="row">
       <div class="column">
-        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropdownItems }" log="{ logDropdownItems }">
-          <su-tab title="Database info" settings="{ opts.settings }">
+        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
+                   log="{ logDropDownItems }">
+          <su-tab title="Database info" settings="{ opts.settings }" ref="settings">
             <div class="required field">
               <label data-is="i18n">LABEL_url</label>
               <input type="text" value="{ opts.settings.url }" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
@@ -63,8 +64,8 @@
 
     const self = this
     this.client = {} // existing clients
-    this.playsqlDropdownItems = {}
-    this.logDropdownItems = {}
+    this.playsqlDropDownItems = {}
+    this.logDropDownItems = {}
 
     // ===================================================================================
     //                                                                     Client Handling
@@ -75,11 +76,11 @@
         self.update()
       })
       ApiFactory.playsqlBeanList(projectName).then(json => {
-        self.playsqlDropdownItems = json.map(obj => ({ label: obj.fileName, value: obj.content }))
+        self.playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
         self.update()
       })
       ApiFactory.logBeanList(projectName).then(json => {
-        self.logDropdownItems = json.map(obj => ({ label: obj.fileName, value: obj.content }))
+        self.logDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
         self.update()
       })
     }
