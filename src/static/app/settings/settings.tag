@@ -66,6 +66,7 @@
     this.client = {} // existing clients
     this.playsqlDropDownItems = {}
     this.logDropDownItems = {}
+    const defaultItem = [{label: '-', value: null}]
 
     // ===================================================================================
     //                                                                     Client Handling
@@ -85,14 +86,16 @@
 
     this.preparePlaysql = (projectName) => {
       ApiFactory.playsqlBeanList(projectName).then(json => {
-        self.playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        const playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
         self.update()
       })
     }
 
     this.prepareLogs = (projectName) => {
       ApiFactory.logBeanList(projectName).then(json => {
-        self.logDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        const logDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        self.logDropDownItems = defaultItem.concat(logDropDownItems)
         self.update()
       })
     }
