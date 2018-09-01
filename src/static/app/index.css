@@ -2,7 +2,7 @@
   common.
 =======================================================*/
 body {
-  background: transparent url(../image/parts/background.png);
+  background: transparent url(../image/parts/background.png) no-repeat;
 }
 
 h2 {
