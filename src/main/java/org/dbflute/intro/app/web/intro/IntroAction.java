@@ -24,7 +24,6 @@ import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.dbflute.intro.bizfw.server.BootingInternetDomain;
-import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -32,6 +31,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author p1us2er0
  * @author jflute
  * @author deco
+ * @author subaru
  */
 public class IntroAction extends IntroBaseAction {
 
@@ -42,8 +42,6 @@ public class IntroAction extends IntroBaseAction {
     private IntroInfoLogic introInfoLogic;
     @Resource
     private IntroClsAssist introClsAssist;
-    @Resource
-    private IntroConfig config;
 
     // ===================================================================================
     //                                                                             Execute
@@ -62,7 +60,7 @@ public class IntroAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Map<String, Object>> configuration() {
         Map<String, Object> map = new LinkedHashMap<>();
-        BootingInternetDomain domain = new BootingInternetDomain(config);
+        BootingInternetDomain domain = new BootingInternetDomain();
         String serverUrl = domain.toCompleteDomain();
         String apiServerUrl = domain.toCompleteApiDomain();
         map.put("serverUrl", serverUrl);
