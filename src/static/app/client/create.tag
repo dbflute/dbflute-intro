@@ -71,7 +71,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <script>
@@ -163,6 +162,7 @@
       const testConnection = self.refs.testConnection.checked
       ApiFactory.createClient(client, testConnection).then(() => {
         route('main')
+        this.showToast(client.projectName)
       })
     }
     this.changeFile = function (event) {
@@ -181,6 +181,13 @@
       if (file) {
         reader.readAsBinaryString(file)
       }
+    }
+    this.showToast = (projectName) => {
+      this.suToast({
+        title: 'Create task completed',
+        message: 'Client for project \'' + projectName + '\', was successfully created!!',
+        class: 'pink positive'
+      })
     }
 
     // ===================================================================================
