@@ -202,15 +202,15 @@
     //                                                                       Open Document
     //                                                                       =============
     this.openSchemaHTML = () => {
-      window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
 
     this.openHistoryHTML = () => {
-      window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
     }
 
     this.openSyncCheckResultHTML = () => {
-      window.open(ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
     }
 
     this.canCheckSchemaSetting = () => {
@@ -269,7 +269,7 @@
           password: syncSettingModalRefs.password.value,
           isSuppressCraftDiff: syncSettingModalRefs.isSuppressCraftDiff.checked
         }
-        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).then((response) => {
+        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).then(() => {
           self.refs.syncSettingModal.hide()
           self.initSyncSchemaSetting()
         })
