@@ -4,8 +4,8 @@
 
   <h3>Documents</h3>
   <div class="ui list">
-    <div show="{ client.hasSchemaHtml }" class="item" onclick="{ openSchemaHTML }"><a>SchemaHTML</a></div>
-    <div show="{ client.hasHistoryHtml }" class="item" onclick="{ openHistoryHTML }"><a>HistoryHTML</a></div>
+    <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+    <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
   <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
@@ -13,7 +13,7 @@
   <h3>Schema Sync Check</h3>
   <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
   <div class="ui list">
-    <div show="{ client.hasSyncCheckResultHtml }" class="item" onclick="{ openSyncCheckResultHTML }"><a>SyncCheckResultHTML</a></div>
+    <div show="{ client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
   </div>
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
