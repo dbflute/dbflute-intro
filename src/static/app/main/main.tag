@@ -53,8 +53,8 @@
     <small class="text-info">System Info</small>
   </h3>
   <div class="ui stackable four column grid">
-    <div class="column" each="{ manifest }">
-      <small>{ key } = { value }</small>
+    <div class="column" each="{ key, value in manifest }">
+      <small>{ value } = { key }</small>
     </div>
   </div>
 
@@ -115,7 +115,7 @@
     // ===================================================================================
     //                                                                          Basic Data
     //                                                                          ==========
-    this.manifest = function () {
+    this.introManifest = function () {
       ApiFactory.manifest().then(function (json) {
         self.manifest = json
         self.update()
@@ -187,7 +187,7 @@
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      this.manifest()
+      this.introManifest()
       this.engineVersions()
       this.latestVersion()
       this.configuration()
