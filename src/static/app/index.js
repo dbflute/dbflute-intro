@@ -62,6 +62,7 @@ import './client/client.tag'
 import './common/result-view.tag'
 import './common/navbar.tag'
 import './common/i18n.tag'
+import './error/404.tag'
 
 global.route = route;
 global.observable = riot.observable();
@@ -151,6 +152,9 @@ route('settings/*', projectName => {
 })
 route('welcome', () => {
   riot.mount('content', 'welcome')
+})
+route('/*', () => {
+  riot.mount('content', 'error404')
 })
 route.start(true)
 
