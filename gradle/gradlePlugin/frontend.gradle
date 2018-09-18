@@ -37,7 +37,7 @@ task manifest(dependsOn: npm_run_build) << {
     file('dist/manifest.json').text = json.toString()
 }
 
-task cacheKey(dependsOn: npm_run_build) {
+task cacheKey(dependsOn: npm_run_build) << {
     def scmRevision = 'unknown'
 
     try {
