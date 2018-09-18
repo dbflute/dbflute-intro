@@ -185,7 +185,7 @@ license {
 //                                                                                 Refresh
 //                                                                                 =======
 task refresh(dependsOn: ['refreshResource', 'refreshResourceAfter', 'eclipse'])
-tasks['refreshResourceAfter'].dependsOn(['refreshResource'])
+tasks['refreshResourceAfter'].dependsOn('refreshResource')
 if (tasks.findByName('eclipseClasspath')) {
-    tasks['eclipseClasspath'].dependsOn(['refreshResource'])
+    tasks['eclipseClasspath'].dependsOn('refreshResource')
 }
