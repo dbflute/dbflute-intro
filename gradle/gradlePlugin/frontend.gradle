@@ -3,27 +3,12 @@ node {
     download = true
 }
 
-task bowerInstall(type: NodeTask) {
-    script = project.file('node_modules/bower/bin/bower')
-    args = ['install']
-}
-
 task upgradePackageDependencies(type: NodeTask) {
     script = project.file('node_modules/npm-check-updates/bin/npm-check-updates')
     args = ['-u', '--packageFile', file('package.json')]
 }
 
-task upgradeBowerDependencies(type: NodeTask) {
-    script = project.file('node_modules/bower-check-updates/bin/bower-check-updates')
-    args = ['-u']
-}
-
-task upgradeDependencies {
-}
-tasks['upgradeBowerDependencies'].dependsOn(['upgradePackageDependencies'])
-tasks['upgradeDependencies'].dependsOn(['upgradePackageDependencies', 'upgradeBowerDependencies'])
-
-task manifest(dependsOn: gulp_build) << {
+task manifest(dependsOn: npm_run_build) << {
     def scmBranch = 'unknown'
     def scmRevision = 'unknown'
 
@@ -48,7 +33,7 @@ task manifest(dependsOn: gulp_build) << {
     file('dist/manifest.json').text = json.toString()
 }
 
-task cacheKey(dependsOn: gulp_build) << {
+task cacheKey(dependsOn: npm_run_build) << {
     def scmRevision = 'unknown'
 
     try {
@@ -66,7 +51,7 @@ task cacheKey(dependsOn: gulp_build) << {
     file('dist/cacheKey.json').text = json.toString()
 }
 
-['classes' : ['gulp_build', 'manifest', 'cacheKey'], 'clean' : 'gulp_clean'].each {
+['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean'].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
 
@@ -76,13 +61,4 @@ task cacheKey(dependsOn: gulp_build) << {
     tasks[it.key].dependsOn(it.value)
 }
 
-tasks['bowerInstall'].dependsOn(['npmInstall'])
-tasks['refreshResource'].dependsOn(['npmInstall', 'bowerInstall'])
-
-npmInstall << {
-    // gradle経由でbower-check-updatesした場合、process.stdin.isTTYの結果が正しくなくなるため、処理変更
-    def boweCheckUpdatesJsFile = file("node_modules/bower-check-updates/lib/bower-check-updates.js");
-    if (boweCheckUpdatesJsFile.exists()) {
-        boweCheckUpdatesJsFile.text = boweCheckUpdatesJsFile.text.replace('!process.stdin.isTTY', 'false')
-    }
-}
+tasks['refreshResource'].dependsOn('npmInstall')
