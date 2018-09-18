@@ -59,7 +59,12 @@ task cleanDist() {
     project.delete file('./dist/').listFiles()
 }
 
-['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : 'cleanDist'].each {
+task copyStaticResource(type: Copy) {
+  from fileTree(dir: file('src/static'), includes: ["index.html", "favicon.ico", "**/index.css", "assets/**", "image/**"])
+  into 'dist/'
+}
+
+['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
           // If task not exists, define empty task.
