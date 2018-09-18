@@ -51,6 +51,12 @@ task cacheKey(dependsOn: npm_run_build) << {
     file('dist/cacheKey.json').text = json.toString()
 }
 
+task cleanDist() << {
+    project.delete file('./dist/').listFiles()
+}
+
+tasks['npm_run_build'].dependsOn('cleanDist')
+
 ['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean'].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
