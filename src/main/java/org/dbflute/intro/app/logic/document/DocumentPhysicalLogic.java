@@ -15,10 +15,11 @@
  */
 package org.dbflute.intro.app.logic.document;
 
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import java.io.File;
 
 import javax.annotation.Resource;
-import java.io.File;
+
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
  * @author deco
@@ -63,9 +64,18 @@ public class DocumentPhysicalLogic {
         return toFixedNamedDocumentFile(clientProject, "sync-check-result.html");
     }
 
+    public File findLastaDocHtml(String clientProject, String moduleName) {
+        return toProjectNamedDocumentFile(clientProject, moduleName, "lastadoc");
+    }
+
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
+    private File toProjectNamedDocumentFile(String clientProject, String module, String type) {
+        String pureName = type + "-" + module + ".html";
+        return toFixedNamedDocumentFile(clientProject, pureName);
+    }
+
     private File toProjectNamedDocumentFile(String clientProject, String type) { // e.g. SchemaHtml
         final String pureName = type + "-" + clientProject + ".html";
         return toFixedNamedDocumentFile(clientProject, pureName);

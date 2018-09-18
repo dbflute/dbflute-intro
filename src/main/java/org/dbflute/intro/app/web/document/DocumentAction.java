@@ -84,6 +84,15 @@ public class DocumentAction extends IntroBaseAction {
         return createHtmlStreamResponse(syncCheckResultHtml);
     }
 
+    @Execute(urlPattern = "{}/@word/{}")
+    public StreamResponse lastadochtml(String clientProject, String moduleName) {
+        File lastaDocHtml = documentPhysicalLogic.findLastaDocHtml(clientProject, moduleName);
+        if (!lastaDocHtml.exists()) {
+            return null;
+        }
+        return createHtmlStreamResponse(lastaDocHtml);
+    }
+
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
