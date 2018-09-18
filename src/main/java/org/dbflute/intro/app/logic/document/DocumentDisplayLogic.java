@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -30,6 +32,8 @@ import org.lastaflute.core.exception.LaSystemException;
  * @author jflute
  */
 public class DocumentDisplayLogic {
+
+    private static Pattern LASTADOC_URL_PATH = Pattern.compile("lastadoc-(.*)\\.html\"");
 
     @Resource
     private IntroSystemLogic introSystemLogic;
@@ -61,6 +65,13 @@ public class DocumentDisplayLogic {
                 }
                 if (line.contains("<a href=\"./properties-" + clientProject + ".html\">to PropertiesHTML</a>")) {
                     line = "<a href=\"/api/document/" + clientProject + "/propertieshtml\">to PropertiesHTML</a>";
+                }
+                Matcher lastadocUrlMatcher = LASTADOC_URL_PATH.matcher(line);
+                if (lastadocUrlMatcher.find()) {
+                    String moduleName = lastadocUrlMatcher.group(1);
+                    String prefix = line.contains("|") ? "| " : "";
+                    line = prefix + "<a href=\"/api/document/" + clientProject + "/lastadochtml/" + moduleName + "\">to " + moduleName
+                            + "</a>";
                 }
                 sb.append(line).append("\n");
             }

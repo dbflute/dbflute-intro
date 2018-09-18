@@ -90,7 +90,8 @@ public class DocumentAction extends IntroBaseAction {
         if (!lastaDocHtml.exists()) {
             return null;
         }
-        return createHtmlStreamResponse(lastaDocHtml);
+        String lastaDocHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, lastaDocHtml);
+        return createStringSteamResponse(lastaDocHtmlContent);
     }
 
     // ===================================================================================
