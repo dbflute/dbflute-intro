@@ -1,3 +1,7 @@
+import groovy.json.JsonBuilder
+
+import java.text.SimpleDateFormat
+
 node {
     version = versions.node
     download = true
@@ -18,14 +22,14 @@ task manifest(dependsOn: npm_run_build) << {
     } catch (Exception ignored) {
     }
 
-    def json = new groovy.json.JsonBuilder()
+    def json = new JsonBuilder()
     json (
         [
             'Implementation-Title': applicationName,
             'Implementation-Version': project.version,
             'SCM-Branch': scmBranch,
             'SCM-Revision': scmRevision,
-            'Build-Timestamp': new java.text.SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date()),
+            'Build-Timestamp': new SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date()),
             'Jenkins-Build-Number': System.getenv()['BUILD_NUMBER'] ?: ''
         ]
     )
@@ -33,15 +37,15 @@ task manifest(dependsOn: npm_run_build) << {
     file('dist/manifest.json').text = json.toString()
 }
 
-task cacheKey(dependsOn: npm_run_build) << {
+task cacheKey(dependsOn: npm_run_build) {
     def scmRevision = 'unknown'
 
     try {
         scmRevision = 'git rev-parse HEAD'.execute().text.trim()
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
 
-    def json = new groovy.json.JsonBuilder()
+    def json = new JsonBuilder()
     json (
         [
             'cacheKey': scmRevision
@@ -51,19 +55,16 @@ task cacheKey(dependsOn: npm_run_build) << {
     file('dist/cacheKey.json').text = json.toString()
 }
 
-task cleanDist() << {
+task cleanDist() {
     project.delete file('./dist/').listFiles()
 }
 
-tasks['npm_run_build'].dependsOn('cleanDist')
-
-['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean'].each {
+['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : 'cleanDist'].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
-
+          // If task not exists, define empty task.
         }
     }
-
     tasks[it.key].dependsOn(it.value)
 }
 
