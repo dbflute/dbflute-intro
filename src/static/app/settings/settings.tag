@@ -33,7 +33,9 @@
           <su-tab title="PlaySQL" playsql="{ opts.playsql }">
             <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
             <div class="ui message message-area">
-              <pre>{ refs.dropdown.value }</pre>
+              <pre>
+                <code class="language-sql">{ refs.dropdown.value }</code>
+              </pre>
             </div>
           </su-tab>
           <su-tab title="Log" log="{ opts.log }">
@@ -59,6 +61,7 @@
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
+    import Prism from 'prismjs'
 
     const ApiFactory = new _ApiFactory()
 
@@ -120,6 +123,10 @@
         class: 'positive'
       })
     }
+
+    this.on('mount', () => {
+      Prism.highlightAll()
+    })
 
     // ===================================================================================
     //                                                                          Initialize
