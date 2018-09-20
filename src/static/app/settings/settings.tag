@@ -110,6 +110,14 @@
 
       ApiFactory.updateSettings(this.client).finally(() => {
         self.prepareSettings(self.client.projectName)
+        self.showToast()
+      })
+    }
+
+    this.showToast = () => {
+      this.suToast({
+        title: 'Setting updated',
+        class: 'positive'
       })
     }
 
