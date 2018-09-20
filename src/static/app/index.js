@@ -80,10 +80,10 @@ ffetch.errors.subscribe(response => {
     messages = ['Cannot access the server, retry later'];
     reload = true;
   }
-  // TODO jflute intro: index.js extract to method
+  // #hope refactor: extract to method
   if (response.status === 400) {
     header = '400 Bad Request'
-    // TODO jflute intro: index.js validation error handling
+    // #hope function: formal validation error handling
     if (response.data.messages) {
       var messageList = new Array();
       for (var key in response.data.messages) {
