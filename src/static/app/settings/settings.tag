@@ -45,6 +45,9 @@
             </div>
           </su-tab>
         </su-tabset>
+        <pre>
+          <code class="language-js">alert('error')</code>
+        </pre>
       </div>
     </div>
   </div>
