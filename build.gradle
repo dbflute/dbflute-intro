@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.moowork.gulp' version '0.11'                // ./gradlew npm_xxx
+    id 'com.moowork.node' version '1.2.0'               // ./gradlew npm_xxx
     id 'com.github.hierynomus.license' version '0.13.1' // ./gradlew licenseMain
 }
 
