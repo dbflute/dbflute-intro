@@ -16,9 +16,9 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
 1. git clone https://github.com/dbflute/dbflute-intro.git
 2. import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
-3. (install node, gulp, bower if non-existent in your computer)
+3. (install node if non-existent in your computer)
    1. `$ brew install node`
-4. install components of bower, npm for application (at dbflute-intro directory)
+4. install components of npm for application (at dbflute-intro directory)
    1. `$ npm install`
 
 ## How to boot (for committer)
@@ -42,26 +42,34 @@ https://github.com/lastaflute/lastaflute
 using Riot:
 ```
 dbflute-intro
- |-src
- |  |-main
- |  |-static
- |     |-app
- |     |  |-client
- |     |  |  |-client.controller.js
- |     |  |  |-client.html
- |     |  |-common
- |     |  |  |-ApiFactory.js
- |     |  |-main
- |     |  |  |-main.controller.js
- |     |  |  |-main.html
- |     |  |-welcome
- |     |  |  |-welcome.controller.js
- |     |  |  |-welcome.html
- |     |  |-index.css     // core styles
- |     |  +-index.js      // core angular modules
- |     |
- |     |-404.html
- |     +-index.html       // base HTML of all components
+└--src
+   ├--main
+   └--static
+      └-- app
+
+          ├-- common
+          │   ├-- FFetchWrapper.js
+          │   ├-- UiAssist.js
+          │   ├-- directive
+          │   │   └-- FileDirective.js
+          │   ├-- factory
+          │   │   └-- ApiFactory.js
+          │   ├-- i18n.tag
+          │   ├-- navbar.tag
+          │   └-- result-view.tag
+          ├-- error
+          │   └-- 404.tag
+          ├-- main
+          │   └-- main.tag
+          ├-- client
+          │   ├-- client.tag
+          │   └-- create.tag
+          ├-- settings
+          │   └-- settings.tag
+          ├-- welcome
+          │   └-- welocome.tag
+          ├-- index.css
+          └-- index.js
 ```
 
 ## Release Engineering
