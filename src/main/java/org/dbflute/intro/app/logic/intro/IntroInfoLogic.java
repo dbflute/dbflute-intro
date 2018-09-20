@@ -15,9 +15,9 @@
  */
 package org.dbflute.intro.app.logic.intro;
 
-import org.dbflute.intro.IntroBoot;
-
 import java.util.Map;
+
+import org.dbflute.intro.IntroBoot;
 
 /**
  * @author p1us2er0
@@ -43,9 +43,4 @@ public class IntroInfoLogic {
     public void setProxy(boolean useSystemProxies) {
         System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
     }
-
-    // TODO jflute intro: unused? (2016/07/05)
-    //public String getVersion() {
-    //    return String.valueOf(getManifestMap().get("Implementation-Version"));
-    //}
 }

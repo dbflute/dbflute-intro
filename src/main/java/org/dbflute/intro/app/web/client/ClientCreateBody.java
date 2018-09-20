@@ -15,13 +15,14 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.lastaflute.web.validation.ClientError;
-import org.lastaflute.web.validation.Required;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
+
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.ClientError;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author p1us2er0
@@ -78,13 +79,13 @@ public class ClientCreateBody {
         public static class JdbcDriverPart {
 
             // if fileName or data is null, it's client problem.
-            @Required(groups=ClientError.class)
+            @Required(groups = ClientError.class)
             public String fileName;
-            @Required(groups=ClientError.class)
+            @Required(groups = ClientError.class)
             public String data;
         }
 
-        // TODO jflute intro: option body validation after client implementation (2016/08/13)
+        // #pending option body validation after client implementation (2016/08/13)
         //@Required
         //@Valid
         public OptionBody optionBody;
