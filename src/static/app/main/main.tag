@@ -152,7 +152,7 @@
           self.clientList = json
           self.update()
         } else {
-          //   $state.go('welcome') // if no client show welcome page
+          self.goToWelcome()
         }
       })
     }
@@ -163,6 +163,10 @@
 
     this.goToClientCreate = function () {
       route('create')
+    }
+
+    this.goToWelcome = function () {
+      route('welcome')
     }
 
     this.goToSettings = function (client) {
