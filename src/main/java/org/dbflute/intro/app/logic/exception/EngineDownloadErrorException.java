@@ -17,6 +17,7 @@ package org.dbflute.intro.app.logic.exception;
 
 /**
  * @author deco
+ * @author jflute
  */
 public class EngineDownloadErrorException extends Exception {
 
@@ -24,5 +25,9 @@ public class EngineDownloadErrorException extends Exception {
 
     public EngineDownloadErrorException(String msg) {
         super(msg);
+    }
+
+    public EngineDownloadErrorException(String msg, Throwable cause) {
+        super(msg, cause);
     }
 }
