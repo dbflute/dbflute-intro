@@ -59,6 +59,7 @@ import './main/main.tag'
 import './settings/settings.tag'
 import './client/create.tag'
 import './client/client.tag'
+import './welcome/welcome.tag'
 import './common/result-view.tag'
 import './common/navbar.tag'
 import './common/i18n.tag'
@@ -115,7 +116,7 @@ ffetch.errors.subscribe(response => {
       }
       messages = messageList;
     } else {
-      messages = angular.isArray(response.data) ? response.data : [response.data];
+      messages = Array.isArray(response.data) ? response.data : [response.data];
     }
   } else if (response.status === 401) {
     header = '401 Not Authorized';
@@ -124,7 +125,7 @@ ffetch.errors.subscribe(response => {
     header = '403 Forbidden';
   } else if (response.status >= 500) {
     header = '500 Server Error';
-    messages = angular.isArray(response.data) ? response.data : [response.data];
+    messages = Array.isArray(response.data) ? response.data : [response.data];
   }
   if (header != null || messages != null) {
     observable.trigger('result', { header, messages })
