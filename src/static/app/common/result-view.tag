@@ -1,7 +1,6 @@
 <result-view>
   <su-modal class="{ sizeStyle }" ref="modal" modal="{ option }">
     <div class="message-area">
-    { sizestyle }
       <pre each="{ message in messages }">{ message }</pre>
     </div>
   </su-modal>
