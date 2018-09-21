@@ -70,22 +70,32 @@ global.observable = riot.observable();
 riot.mount('*')
 
 /**
- * ffetch
+ * ffetch for API access
  */
 global.ffetch = new FFetchWrapper();
+
+/**
+ * Error Handling
+ * (see IntroApiFailureHook.java for failure response)
+ */
 ffetch.errors.subscribe(response => {
   let header = null;
   let messages = null;
   let reload = false;
+  let validationError = false;
   if (response.status === 0) {
     messages = ['Cannot access the server, retry later'];
     reload = true;
   }
   // #hope refactor: extract to method
   if (response.status === 400) {
-    header = '400 Bad Request'
-    // #hope function: formal validation error handling
-    if (response.data.messages) {
+    header = '400 Bad Request';
+    // #hope improvement: formal validation error handling
+    if (response.data.failureType) { // basically here (unified JSON if 400)
+      header = header + ': ' + response.data.failureType;  
+      validationError = response.data.failureType === 'VALIDATION_ERROR';
+    }
+    if (response.data.messages) { // basically here (unified JSON if 400)
       var messageList = new Array();
       for (var key in response.data.messages) {
         for (var i in response.data.messages[key]) {
@@ -128,10 +138,10 @@ ffetch.errors.subscribe(response => {
     messages = Array.isArray(response.data) ? response.data : [response.data];
   }
   if (header != null || messages != null) {
-    observable.trigger('result', { header, messages })
+	const modalSize = validationError ? 'small' : 'large';
+    observable.trigger('result', { header, messages, modalSize })
   }
 });
-
 
 /**
  * URL mapping
