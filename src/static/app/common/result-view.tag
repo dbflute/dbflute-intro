@@ -40,7 +40,7 @@
       }]
     }
     observable.on('result', content => {
-      this.sizeStyle = ''
+      this.sizeStyle = content.modalSize
       this.option.header = content.header
       this.refs.modal.messages = content.messages
       this.refs.modal.show()
