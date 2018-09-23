@@ -85,7 +85,7 @@ public class WelcomeAction extends IntroBaseAction {
             // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
             // done hakiba needs to check jar existence by jflute (2017/04/06)
             TargetDatabase databaseCd = client.databaseCode;
-            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
+            if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
             }
             // done hakiba add extension check by jflute (2017/04/06)
