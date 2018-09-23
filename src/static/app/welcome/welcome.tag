@@ -153,9 +153,12 @@
         client.jdbcDriver = self.jdbcDriver
       }
       const testConnection = self.refs.testConnection.checked
+      observable.trigger('loading', true)
       ApiFactory.createWelcomeClient(client, testConnection).then(() => {
         route('')
         this.showToast(client.projectName)
+      }).finally(() => {
+        observable.trigger('loading', false)
       })
     }
     this.changeFile = (event) => {
