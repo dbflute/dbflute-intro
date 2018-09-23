@@ -115,15 +115,15 @@
     // ===================================================================================
     //                                                                          Basic Data
     //                                                                          ==========
-    this.introManifest = function () {
-      ApiFactory.manifest().then(function (json) {
+    this.introManifest = () => {
+      ApiFactory.manifest().then((json) => {
         self.manifest = json
         self.update()
       })
     }
 
-    this.engineVersions = function () {
-      ApiFactory.engineVersions().then(function (json) {
+    this.engineVersions = () => {
+      ApiFactory.engineVersions().then((json) => {
         self.versions = json
         self.update()
       })
@@ -136,8 +136,8 @@
       })
     }
 
-    this.configuration = function () {
-      ApiFactory.configuration().then(function (json) {
+    this.configuration = () => {
+      ApiFactory.configuration().then((json) => {
         self.configuration = json
         self.update()
       })
@@ -146,8 +146,8 @@
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    this.prepareClientList = function () {
-      ApiFactory.clientList().then(function (json) {
+    this.prepareClientList = () => {
+      ApiFactory.clientList().then((json) => {
         if (json.length > 0) {
           self.clientList = json
           self.update()
@@ -157,30 +157,30 @@
       })
     }
 
-    this.goToClient = function (client) {
+    this.goToClient = (client) => {
       route('operate/' + client.projectName)
     }
 
-    this.goToClientCreate = function () {
+    this.goToClientCreate = () => {
       route('create')
     }
 
-    this.goToWelcome = function () {
+    this.goToWelcome = () => {
       route('welcome')
     }
 
-    this.goToSettings = function (client) {
+    this.goToSettings = (client) => {
       route(`settings/${client.projectName}`)
     }
 
     // ===================================================================================
     //                                                                              Engine
     //                                                                              ======
-    this.showDownloadModal = function () {
+    this.showDownloadModal = () => {
       self.refs.downloadModal.show()
     }
 
-    this.removeEngine = function (version) {
+    this.removeEngine = (version) => {
       let params = { version: version }
       ApiFactory.removeEngine(params).finally(() => {
         this.engineVersions()

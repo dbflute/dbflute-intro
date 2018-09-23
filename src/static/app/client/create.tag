@@ -92,8 +92,8 @@
     // ===================================================================================
     //                                                                      Initial Method
     //                                                                      ==============
-    this.findClassifications = function () {
-      ApiFactory.classifications().then(function (json) {
+    this.findClassifications = () => {
+      ApiFactory.classifications().then((json) => {
         self.targetDatabaseItems = Object.keys(json.targetDatabaseMap).map(key => {
           return { value: key, label: json.targetDatabaseMap[key].databaseName }
         })
@@ -111,16 +111,16 @@
         self.update()
       })
     }
-    this.engineVersions = function () {
-      ApiFactory.engineVersions().then(function (json) {
+    this.engineVersions = () => {
+      ApiFactory.engineVersions().then((json) => {
         self.versions = json.map(element => {
           return { label: element, value: element }
         })
         self.update()
       })
     }
-    this.setLatestEngineVerison = function () {
-      ApiFactory.engineLatest().then(function (json) {
+    this.setLatestEngineVerison = () => {
+      ApiFactory.engineLatest().then((json) => {
         self.refs.dbfluteVersion.value = json.latestReleaseVersion
         self.update()
       })
@@ -129,7 +129,7 @@
     // ===================================================================================
     //                                                                        Event Method
     //                                                                        ============
-    const changeDatabase = function (databaseCode) {
+    const changeDatabase = (databaseCode) => {
       let database = self.classificationMap['targetDatabaseMap'][databaseCode]
       // switch showing JDBCDriver select form
       self.needsJdbcDriver = !database.embeddedJar
@@ -139,7 +139,7 @@
       self.refs.url.value = database.urlTemplate
       self.refs.schema.value = database.defaultSchema
     }
-    this.create = function () {
+    this.create = () => {
       const client = {
         projectName: self.refs.projectName.value,
         databaseCode: self.refs.databaseCode.value,
@@ -165,11 +165,11 @@
         this.showToast(client.projectName)
       })
     }
-    this.changeFile = function (event) {
+    this.changeFile = (event) => {
       let file = event.target.files[0]
       let reader = new FileReader()
       reader.onload = (function () {
-        return function () {
+        return () => {
           // encode base64
           let result = window.btoa(reader.result)
           self.jdbcDriver = { fileName: null, data: null }
