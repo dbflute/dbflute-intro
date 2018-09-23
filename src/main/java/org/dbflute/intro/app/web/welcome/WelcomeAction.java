@@ -106,14 +106,14 @@ public class WelcomeAction extends IntroBaseAction {
             throw new NetworkErrorException(e.getMessage());
         }
 
-        // create client (replace client file, copy jar file ...)
-        ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
-        clientUpdateLogic.createClient(clientModel);
-
         // connect test if need
+        ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
+
+        // create client (replace client file, copy jar file ...)
+        clientUpdateLogic.createClient(clientModel);
 
         return JsonResponse.asEmptyBody();
     }
