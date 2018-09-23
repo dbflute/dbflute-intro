@@ -119,7 +119,7 @@
         self.update()
       })
     }
-    this.setLatestEngineVerison = () => {
+    this.setLatestEngineVersion = () => {
       ApiFactory.engineLatest().then((json) => {
         self.refs.dbfluteVersion.value = json.latestReleaseVersion
         self.update()
@@ -196,7 +196,7 @@
     this.on('mount', () => {
       this.findClassifications()
       this.engineVersions()
-      this.setLatestEngineVerison()
+      this.setLatestEngineVersion()
 
       this.refs.databaseCode.on('change', target => {
         changeDatabase(target.value)
