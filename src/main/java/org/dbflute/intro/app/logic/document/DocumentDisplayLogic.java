@@ -33,7 +33,7 @@ import org.lastaflute.core.exception.LaSystemException;
  */
 public class DocumentDisplayLogic {
 
-    private static Pattern LASTADOC_URL_PATH = Pattern.compile("lastadoc-(.*)\\.html\"");
+    private static final Pattern LASTADOC_FILENAME_PATTERN = Pattern.compile("lastadoc-(.*)\\.html\"");
 
     @Resource
     private IntroSystemLogic introSystemLogic;
@@ -66,7 +66,7 @@ public class DocumentDisplayLogic {
                 if (line.contains("<a href=\"./properties-" + clientProject + ".html\">to PropertiesHTML</a>")) {
                     line = "<a href=\"/api/document/" + clientProject + "/propertieshtml\">to PropertiesHTML</a>";
                 }
-                Matcher lastadocUrlMatcher = LASTADOC_URL_PATH.matcher(line);
+                Matcher lastadocUrlMatcher = LASTADOC_FILENAME_PATTERN.matcher(line);
                 if (lastadocUrlMatcher.find()) {
                     String moduleName = lastadocUrlMatcher.group(1);
                     String prefix = line.contains("|") ? "| " : "";
