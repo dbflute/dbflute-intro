@@ -108,7 +108,7 @@
       const password = settings.refs.password.value
       this.client.mainSchemaSettings = {url, schema, user, password}
 
-      ApiFactory.updateSettings(this.client).finally(() => {
+      ApiFactory.updateSettings(this.client).then(() => {
         self.prepareSettings(self.client.projectName)
         self.showToast()
       })
