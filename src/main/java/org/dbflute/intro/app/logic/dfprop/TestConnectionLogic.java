@@ -32,7 +32,6 @@ import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.bizfw.tellfailure.DatabaseConnectionException;
@@ -52,8 +51,6 @@ public class TestConnectionLogic {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Resource
-    private IntroPhysicalLogic introPhysicalLogic;
     @Resource
     private EnginePhysicalLogic enginePhysicalLogic;
 
@@ -86,7 +83,8 @@ public class TestConnectionLogic {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException ignored) {}
+                } catch (SQLException ignored) {
+                }
             }
         }
     }
