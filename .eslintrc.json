@@ -27,7 +27,7 @@
       "never"
     ],
     "no-var": 2,
-    "prefer-arrow-callback": 2
+    "prefer-arrow-callback": "error"
   },
   "plugins": [
     "html"
