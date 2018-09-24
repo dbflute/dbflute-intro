@@ -33,7 +33,12 @@
           <su-tab title="PlaySQL" playsql="{ opts.playsql }">
             <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
             <div class="ui message message-area">
-              <pre>{ refs.dropdown.value }</pre>
+              <pre>
+                <code class="language-sql">
+                  <raw content="{ refs.dropdown.value }"></raw>
+                </code>
+              </pre>
+
             </div>
           </su-tab>
           <su-tab title="Log" log="{ opts.log }">
@@ -59,6 +64,9 @@
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
+    import Prism from 'prismjs'
+    import 'prismjs/components/prism-sql.min'
+    import 'prismjs/themes/prism.css'
 
     const ApiFactory = new _ApiFactory()
 
@@ -86,7 +94,7 @@
 
     this.preparePlaysql = (projectName) => {
       ApiFactory.playsqlBeanList(projectName).then(json => {
-        const playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: obj.content}))
+        const playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: Prism.highlight(obj.content, Prism.languages.sql, 'sql')}))
         self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
         self.update()
       })

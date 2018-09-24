@@ -56,7 +56,10 @@ task cacheKey(dependsOn: npm_run_build) << {
 }
 
 task cleanDist() {
-    project.delete file('./dist/').listFiles()
+    def fileList = file('./dist/').listFiles()
+    if (fileList != null) {
+      project.delete file('./dist/').listFiles()
+    }
 }
 
 task copyStaticResource(type: Copy) {
