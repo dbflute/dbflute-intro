@@ -38,7 +38,6 @@
                   <raw content="{ refs.dropdown.value }"></raw>
                 </code>
               </pre>
-
             </div>
           </su-tab>
           <su-tab title="Log" log="{ opts.log }">
@@ -94,7 +93,10 @@
 
     this.preparePlaysql = (projectName) => {
       ApiFactory.playsqlBeanList(projectName).then(json => {
-        const playsqlDropDownItems = json.map(obj => ({label: obj.fileName, value: Prism.highlight(obj.content, Prism.languages.sql, 'sql')}))
+        const playsqlDropDownItems = json.map(obj => ({
+          label: obj.fileName,
+          value: `<span style="display: none;">${obj.fileName}</span>`+ Prism.highlight(obj.content, Prism.languages.sql, 'sql')
+        }))
         self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
         self.update()
       })

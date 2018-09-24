@@ -55,7 +55,6 @@ trial_config.ignored
 
 # node
 node_modules/
-bower_components/
 .sass-cache/
 .tmp/
 dist/
