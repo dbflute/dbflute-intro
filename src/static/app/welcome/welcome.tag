@@ -20,6 +20,27 @@
             <label data-is="i18n">LABEL_jdbcDriverFile</label>
             <input type="file" onchange="{ changeFile }"/>
           </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <button class="ui button mini" onclick="{ toggleOrmSetting }">O/R Mapper settings</button>
+          </div>
+          <div class="required field" show="{ oRMapperOptionsFlg }">
+            <label data-is="i18n">LABEL_languageCode</label>
+            <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
+          </div>
+          <div class="required field" show="{ oRMapperOptionsFlg }">
+            <label data-is="i18n">LABEL_containerCode</label>
+            <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
+          </div>
+          <div class="required field" show="{ oRMapperOptionsFlg }">
+            <label data-is="i18n">LABEL_packageBase</label>
+            <input type="text" ref="packageBase" value="org.docksidestage.dbflute" />
+          </div>
+        </div>
+      </div>        
+      <div class="row">
+        <div class="column">
           <div class="required field">
             <label data-is="i18n">LABEL_url</label>
             <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb" />
@@ -38,30 +59,11 @@
           </div>
         </div>
         <div class="column bottom aligned">
-          <div class="row">
-            <div class="field">
-              <button class="ui button mini" onclick="{ toggleOrmSetting }">O/R Mapper settings</button>
-            </div>
-            <div class="required field" show="{ oRMapperOptionsFlg }">
-              <label data-is="i18n">LABEL_languageCode</label>
-              <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
-            </div>
-            <div class="required field" show="{ oRMapperOptionsFlg }">
-              <label data-is="i18n">LABEL_containerCode</label>
-              <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
-            </div>
-            <div class="required field" show="{ oRMapperOptionsFlg }">
-              <label data-is="i18n">LABEL_packageBase</label>
-              <input type="text" ref="packageBase" value="org.docksidestage.dbflute" />
-            </div>
+          <div class="field">
+            <su-checkbox ref="testConnection">Connect as test</su-checkbox>
           </div>
-          <div class="row">
-            <div class="field">
-              <su-checkbox ref="testConnection">Connect as test</su-checkbox>
-            </div>
-            <div class="field">
-              <button class="ui button primary" onclick="{ create }">Create</button>
-            </div>
+          <div class="field">
+            <button class="ui button primary" onclick="{ create }">Create</button>
           </div>
         </div>
       </div>
