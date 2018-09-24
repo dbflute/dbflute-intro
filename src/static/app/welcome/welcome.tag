@@ -141,7 +141,8 @@
         mainSchemaSettings: {
           user: self.refs.user.value,
           url: self.refs.url.value,
-          schema: self.refs.schema.value
+          schema: self.refs.schema.value,
+          password: self.refs.password.value
         },
         schemaSyncCheckMap: {},
         dbfluteVersion: self.latestVersion,
