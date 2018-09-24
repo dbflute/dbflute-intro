@@ -1,51 +1,5 @@
 'use strict';
 
-// /**
-//  * onError
-//  */
-// window.onerror = function (message, url, lineNumber) {
-//     alert("Sorry...script error");
-//     return false;
-// };
-
-// /**
-//  * Module for ???
-//  */
-// angular.module('dbflute-intro', [
-//         'ngAnimate',
-//         'ngCookies',
-//         'ngTouch',
-//         'ngSanitize',
-//         'ui.router',
-//         'ui.bootstrap',
-//         'ngStorage',
-//         'pascalprecht.translate',
-//         'ngFlash']);
-
-// /**
-//  * Module for exceptionHandler
-//  */
-// angular.module('dbflute-intro').factory("$exceptionHandler", function ($log) {
-//     return function (exception, cause) {
-//         $log.error(exception);
-//         alert("Sorry...script error");
-//     };
-// });
-
-// /**
-//  * NetworkError Modal
-//  */
-// angular.module('dbflute-intro').controller('NetworkErrorController', function($scope, $uibModalInstance, ApiFactory, modalParam) {
-//   'use strict';
-//   $scope.config = modalParam;
-//   $scope.useSystemProxies = false;
-
-//   $scope.retry = function() {
-//     ApiFactory.retry(this.config.method, this.config.url, this.config.data, this.useSystemProxies);
-//     $uibModalInstance.close();
-//   };
-// });
-
 import riot from 'riot'
 import route from 'riot-route'
 import FFetchWrapper from './common/FFetchWrapper'
