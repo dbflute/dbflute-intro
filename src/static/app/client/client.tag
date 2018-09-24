@@ -85,7 +85,7 @@
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" ref="password" placeholder="" value="{ opts.modal.syncSetting.password }">
+        <input type="text" ref="password" placeholder="" value="{ opts.modal.syncSetting.password }">
       </div>
       <div class="field">
         <div class="ui checkbox">
