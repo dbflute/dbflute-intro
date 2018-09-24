@@ -82,11 +82,11 @@ global.ffetch = new FFetchWrapper();
 ffetch.errors.subscribe(response => {
   let header = null;
   let messages = null;
-  let reload = false;
+  // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
+  //let reload = false;
   let validationError = false;
   if (response.status === 0) {
     messages = ['Cannot access the server, retry later'];
-    reload = true;
   }
   // #hope refactor: extract to method
   if (response.status === 400) {
@@ -131,7 +131,6 @@ ffetch.errors.subscribe(response => {
     }
   } else if (response.status === 401) {
     header = '401 Not Authorized';
-    reload = true;
   } else if (response.status === 403) {
     header = '403 Forbidden';
   } else if (response.status >= 500) {
