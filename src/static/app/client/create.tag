@@ -161,7 +161,7 @@
       }
       const testConnection = self.refs.testConnection.checked
       ApiFactory.createClient(client, testConnection).then(() => {
-        route('main')
+        route('')
         this.showToast(client.projectName)
       })
     }
