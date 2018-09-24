@@ -1,6 +1,6 @@
 {
   "name": "dbflute-intro",
-  "version": "0.0.3-SNAPSHOT",
+  "version": "0.3.0",
   "dependencies": {},
   "scripts": {
     "start": "webpack-dev-server --mode development --inline --watch --hot --content-base ./src/static --port 3000 --open",
@@ -23,9 +23,9 @@
     "rxjs": "^6.1.0",
     "semantic-ui-riot": "^0.13.1",
     "vinyl-source-stream": "^2.0.0",
-    "webpack": "^4.2.0",
+    "webpack": "^4.19.1",
     "webpack-cli": "^2.0.12",
-    "webpack-dev-server": "^3.1.0"
+    "webpack-dev-server": "^3.1.8"
   },
   "engines": {
     "node": ">=6.7.0"
