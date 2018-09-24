@@ -26,15 +26,18 @@
           </div>
         </div>
         <div class="column">
-          <div class="required field" if="{ oRMapperOptionsFlg }">
+          <div class="field">
+            <button class="ui button mini" onclick="{ toggleOrmSetting }">O/R Mapper settings</button>
+          </div>
+          <div class="required field" show="{ oRMapperOptionsFlg }">
             <label data-is="i18n">LABEL_languageCode</label>
             <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
           </div>
-          <div class="required field" if="{ oRMapperOptionsFlg }">
+          <div class="required field" show="{ oRMapperOptionsFlg }">
             <label data-is="i18n">LABEL_containerCode</label>
             <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
           </div>
-          <div class="required field" if="{ oRMapperOptionsFlg }">
+          <div class="required field" show="{ oRMapperOptionsFlg }">
             <label data-is="i18n">LABEL_packageBase</label>
             <input type="text" ref="packageBase" value="org.docksidestage.dbflute" />
           </div>
@@ -81,7 +84,7 @@
     this.classificationMap = {} // e.g. targetDatabase
     this.jdbcDriver = null
     this.needsJdbcDriver = false
-    this.oRMapperOptionsFlg = true
+    this.oRMapperOptionsFlg = false
     this.latestVersion = null
     const self = this
 
@@ -184,6 +187,10 @@
         message: 'Client for project \'' + projectName + '\', was successfully created!!',
         class: 'pink positive'
       })
+    }
+
+    this.toggleOrmSetting = () => {
+      this.oRMapperOptionsFlg = !this.oRMapperOptionsFlg
     }
 
     // ===================================================================================
