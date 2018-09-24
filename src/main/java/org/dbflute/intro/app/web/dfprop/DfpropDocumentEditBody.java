@@ -19,6 +19,7 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
+ * @author subaru
  */
 public class DfpropDocumentEditBody {
 
@@ -27,4 +28,10 @@ public class DfpropDocumentEditBody {
     public String aliasDelimiterInDbComment;
     @Required
     public Boolean dbCommentOnAliasBasis;
+    @Required
+    public Boolean checkColumnDefOrderDiff;
+    @Required
+    public Boolean checkDbCommentDiff;
+    @Required
+    public Boolean checkProcedureDiff;
 }

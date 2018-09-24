@@ -85,7 +85,7 @@ public class WelcomeAction extends IntroBaseAction {
             // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
             // done hakiba needs to check jar existence by jflute (2017/04/06)
             TargetDatabase databaseCd = client.databaseCode;
-            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
+            if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
             }
             // done hakiba add extension check by jflute (2017/04/06)
@@ -106,14 +106,14 @@ public class WelcomeAction extends IntroBaseAction {
             throw new NetworkErrorException(e.getMessage());
         }
 
-        // create client (replace client file, copy jar file ...)
-        ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
-        clientUpdateLogic.createClient(clientModel);
-
         // connect test if need
+        ClientModel clientModel = mappingToClientModel(welcomeCreateBody.client);
         if (welcomeCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
+
+        // create client (replace client file, copy jar file ...)
+        clientUpdateLogic.createClient(clientModel);
 
         return JsonResponse.asEmptyBody();
     }

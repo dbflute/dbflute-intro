@@ -53,6 +53,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author jflute
  * @author hakiba
  * @author cabos
+ * @author subaru
  */
 public class ClientAction extends IntroBaseAction {
 
@@ -202,14 +203,15 @@ public class ClientAction extends IntroBaseAction {
     //                                                ------
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> create(String projectName, ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
+        String projectName = clientCreateBody.client.projectName;
         validate(clientCreateBody, messages -> {
             ClientPart client = clientCreateBody.client;
             if (clientInfoLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
             }
             TargetDatabase databaseCd = client.databaseCode;
-            if (!databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
+            if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
             }
             Optional.ofNullable(client.jdbcDriver)

@@ -1,0 +1,79 @@
+import groovy.json.JsonBuilder
+
+import java.text.SimpleDateFormat
+
+node {
+    version = versions.node
+    download = true
+}
+
+task upgradePackageDependencies(type: NodeTask) {
+    script = project.file('node_modules/npm-check-updates/bin/npm-check-updates')
+    args = ['-u', '--packageFile', file('package.json')]
+}
+
+task manifest(dependsOn: npm_run_build) << {
+    def scmBranch = 'unknown'
+    def scmRevision = 'unknown'
+
+    try {
+        scmBranch = 'git branch --contains'.execute().text.trim() - '* '
+        scmRevision = 'git rev-parse HEAD'.execute().text.trim()
+    } catch (Exception ignored) {
+    }
+
+    def json = new JsonBuilder()
+    json (
+        [
+            'Implementation-Title': applicationName,
+            'Implementation-Version': project.version,
+            'SCM-Branch': scmBranch,
+            'SCM-Revision': scmRevision,
+            'Build-Timestamp': new SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date()),
+            'Jenkins-Build-Number': System.getenv()['BUILD_NUMBER'] ?: ''
+        ]
+    )
+
+    file('dist/manifest.json').text = json.toString()
+}
+
+task cacheKey(dependsOn: npm_run_build) << {
+    def scmRevision = 'unknown'
+
+    try {
+        scmRevision = 'git rev-parse HEAD'.execute().text.trim()
+    } catch (Exception ignored) {
+    }
+
+    def json = new JsonBuilder()
+    json (
+        [
+            'cacheKey': scmRevision
+        ]
+    )
+
+    file('dist/cacheKey.json').text = json.toString()
+}
+
+task cleanDist() {
+    def fileList = file('./dist/').listFiles()
+    if (fileList != null) {
+      project.delete file('./dist/').listFiles()
+    }
+}
+
+task copyStaticResource(type: Copy) {
+  from fileTree(dir: file('src/static'), includes: ["index.html", "favicon.ico", "**/index.css", "assets/**", "image/**"])
+  into 'dist/'
+}
+
+['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
+    if (!tasks.findByName(it.key)) {
+        task(it.key) {
+          // If task not exists, define empty task.
+        }
+    }
+    tasks[it.key].dependsOn(it.value)
+}
+
+tasks['refreshResource'].dependsOn('npmInstall')

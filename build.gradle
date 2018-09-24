@@ -9,13 +9,13 @@ buildscript {
 }
 
 plugins {
-    id 'com.moowork.gulp' version '0.11'
-    id 'com.github.hierynomus.license' version '0.13.1'
+    id 'com.moowork.node' version '1.2.0'               // ./gradlew npm_xxx
+    id 'com.github.hierynomus.license' version '0.13.1' // ./gradlew licenseMain
 }
 
-apply plugin: 'application'
-apply plugin: 'war'
-apply plugin: 'project-report'
+apply plugin: 'application'    // ./gradlew run: can execute main() of the 'mainClassName' variable
+apply plugin: 'war'            // ./gradlew build: you know
+apply plugin: 'project-report' // ./gradlew dependencyReport: can make dependencies.txt
 
 
 // =======================================================================================
@@ -37,7 +37,7 @@ ext {
             // Main Framework
             dbflute : '1.1.8',
             h2 : '1.4.197',
-            lastaflute : '1.0.8',
+            lastaflute : '1.0.9',
 
             // Partner Library
             slf4j : '1.7.25',
@@ -52,7 +52,7 @@ ext {
 
             // Testing
             junit : '4.12',
-            utflute : '0.8.5'
+            utflute : '0.8.8'
         ]
 }
 
@@ -60,7 +60,11 @@ ext {
 // =======================================================================================
 //                                                                                 Plug-in
 //                                                                                 =======
-// TODO jflute intro: what is refreshResource? (Eclipse Synchronizer?)
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// original hook points, related to 'refresh' task
+// these should be defined before including gradlePlugin
+// because they can add their own process to the tasks
+// _/_/_/_/_/_/_/_/_/_/
 task refreshResource {
 }
 
@@ -185,7 +189,7 @@ license {
 //                                                                                 Refresh
 //                                                                                 =======
 task refresh(dependsOn: ['refreshResource', 'refreshResourceAfter', 'eclipse'])
-tasks['refreshResourceAfter'].dependsOn(['refreshResource'])
+tasks['refreshResourceAfter'].dependsOn('refreshResource')
 if (tasks.findByName('eclipseClasspath')) {
-    tasks['eclipseClasspath'].dependsOn(['refreshResource'])
+    tasks['eclipseClasspath'].dependsOn('refreshResource')
 }

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.web.path.ActionAdjustmentProvider;
+import org.lastaflute.web.path.ResponseReflectingOption;
 
 /**
  * @author p1us2er0
@@ -29,6 +30,8 @@ import org.lastaflute.web.path.ActionAdjustmentProvider;
 public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
 
     protected static final String API_URL_PREFIX = "/api"; // to be separated from angular request
+    protected static final ResponseReflectingOption responseReflectingOption =
+            new ResponseReflectingOption().treatJsonEmptyBodyAsEmptyObject(); // Empty body is not treated valid JSON by FFetchWrapper.js
 
     private final IntroConfig config;
 
@@ -55,6 +58,11 @@ public class IntroActionAdjustmentProvider implements ActionAdjustmentProvider {
             return DfStringUtil.substringFirstRear(requestPath, API_URL_PREFIX);
         }
         return requestPath;
+    }
+
+    @Override
+    public ResponseReflectingOption adjustResponseReflecting() {
+        return responseReflectingOption;
     }
 
     private boolean isSwaggerRequest(String requestPath) {

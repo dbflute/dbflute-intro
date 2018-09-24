@@ -91,21 +91,6 @@ public class ClientInfoLogic {
     }
 
     // ===================================================================================
-    //                                                                    Environment List
-    //                                                                    ================
-    // TODO jflute intro: unused? (2016/08/02)
-    public List<String> getEnvList(String clientProject) {
-        final List<String> envList = new ArrayList<String>();
-        final File dfpropDir = new File(introPhysicalLogic.buildClientPath(clientProject, "dfprop"));
-        for (File file : dfpropDir.listFiles()) {
-            if (file.isDirectory() && file.getName().startsWith("schemaSyncCheck_")) {
-                envList.add(file.getName().substring("schemaSyncCheck_".length()));
-            }
-        }
-        return envList;
-    }
-
-    // ===================================================================================
     //                                                                       ReplaceSchema
     //                                                                       =============
     public boolean existsReplaceSchema(String clientProject) {
@@ -282,36 +267,6 @@ public class ClientInfoLogic {
         }
         return null;
     }
-
-    // TODO jflute intro: schema sync check handling (2016/08/12)
-    //private Map<String, DatabaseInfoMap> prepareSchemaSyncCheckMap(String project) {
-    //    final Map<String, DatabaseInfoMap> databaseParamMap = new LinkedHashMap<String, DatabaseInfoMap>();
-    //    final File dfpropDir = new File(introPhysicalLogic.toDfpropDirPath(project));
-    //    Stream.of(dfpropDir.listFiles()).forEach(file -> {
-    //        if (!file.isDirectory() || !file.getName().startsWith("schemaSyncCheck_")) {
-    //            return;
-    //        }
-    //
-    //        File documentMapFile = new File(file, "documentMap+.dfprop");
-    //        if (!documentMapFile.exists() || !documentMapFile.isFile()) {
-    //            documentMapFile = new File(file, "documentDefinitionMap+.dfprop");
-    //            return;
-    //        }
-    //
-    //        final DfPropFile dfpropFile = new DfPropFile();
-    //        final Map<String, Object> readMap = dfpropFile.readMap(documentMapFile.getAbsolutePath(), null);
-    //        @SuppressWarnings("all")
-    //        final Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
-    //
-    //        DatabaseInfoMap databaseModel = new DatabaseInfoMap();
-    //        databaseModel.setUrl((String) schemaSyncCheckMap.get("url"));
-    //        databaseModel.setSchema((String) schemaSyncCheckMap.get("schema"));
-    //        databaseModel.setUser((String) schemaSyncCheckMap.get("user"));
-    //        databaseModel.setPassword((String) schemaSyncCheckMap.get("password"));
-    //        databaseParamMap.put(file.getName().replace("schemaSyncCheck_", ""), databaseModel);
-    //    });
-    //    return databaseParamMap;
-    //}
 
     // ===================================================================================
     //                                                                        Assist Logic

@@ -15,15 +15,16 @@
  */
 package org.dbflute.intro.app.logic.core;
 
+import javax.annotation.Resource;
+
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 
-import javax.annotation.Resource;
-
 /**
  * @author p1us2er0
  * @author jflute
+ * @author deco
  */
 public class PublicPropertiesLogic {
 
@@ -42,12 +43,13 @@ public class PublicPropertiesLogic {
                 if (publicProperties != null) {
                     return publicProperties;
                 }
-                publicProperties = new DfPublicProperties();
-                publicProperties.load();
+                DfPublicProperties prop = new DfPublicProperties();
+                prop.load();
+                publicProperties = prop; // should be set after loading for thread-safe
                 return publicProperties;
             }
-        } catch (Exception e) {
-            throw new EngineDownloadErrorException("Cannot download dbflute engine");
+        } catch (RuntimeException e) {
+            throw new EngineDownloadErrorException("Cannot download dbflute engine", e);
         }
     }
 }

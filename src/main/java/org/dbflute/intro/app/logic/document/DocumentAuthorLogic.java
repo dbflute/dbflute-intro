@@ -32,6 +32,8 @@ import org.dbflute.optional.OptionalThing;
  */
 public class DocumentAuthorLogic {
 
+    protected static final String USER_NAME_KEY = "user.name";
+
     private static final Supplier<String> _authorSupplier = new Supplier<String>() {
 
         private String _author;
@@ -45,7 +47,7 @@ public class DocumentAuthorLogic {
         }
 
         private void loadAuthor() {
-            String author = System.getProperty("user.name");
+            String author = System.getProperty(USER_NAME_KEY);
             if (StringUtils.isEmpty(author)) {
                 throw new IllegalStateException("cannot load user name: " + author);
             }

@@ -13,21 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.exception;
+package org.dbflute.intro.app.logic.document;
+
+import org.dbflute.intro.unit.UnitIntroTestCase;
 
 /**
- * @author deco
- * @author jflute
+ * @author cabos (at sumida jazz festival)
  */
-public class EngineDownloadErrorException extends Exception {
+public class DocumentAuthorLogicTest extends UnitIntroTestCase {
 
-    private static final long serialVersionUID = 1L;
+    public void test_getAuthor() throws Exception {
+        // ## Arrange ##
+        final DocumentAuthorLogic logic = new DocumentAuthorLogic();
+        inject(logic);
+        final String userName = System.getProperty(DocumentAuthorLogic.USER_NAME_KEY);
 
-    public EngineDownloadErrorException(String msg) {
-        super(msg);
-    }
+        // ## Act ##
+        final String author = logic.getAuthor();
 
-    public EngineDownloadErrorException(String msg, Throwable cause) {
-        super(msg, cause);
+        // ## Assert ##
+        assertEquals(userName, author);
     }
 }

@@ -1,195 +1,129 @@
-'use strict';
-angular.module('dbflute-intro').factory('ApiFactory',
-        function ($rootScope, $http) {
-    'use strict';
+export default class ApiFactory {
+  // ===============================================================================
+  //                                                                           Intro
+  //                                                                           =====
+  manifest() {
+    return ffetch.post('api/intro/manifest');
+  }
+  classifications() {
+    return ffetch.post('api/intro/classifications');
+  }
+  configuration() {
+    return ffetch.post('api/intro/configuration');
+  }
 
-    return {
-        // ===============================================================================
-        //                                                                           Intro
-        //                                                                           =====
-        manifest: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/intro/manifest'
-            });
-        },
-        classifications: function() {
-        	return $http({
-        		method : 'POST',
-        		url : 'api/intro/classifications'
-        	});
-        },
-        configuration: function () {
-            return $http({
-                method: 'POST',
-                url: 'api/intro/configuration'
-            });
-        },
+  // ===============================================================================
+  //                                                                         Welcome
+  //                                                                         =======
 
-        // ===============================================================================
-        //                                                                         Welcome
-        //                                                                         =======
+  createWelcomeClient(client, testConnection) {
+    return ffetch.post('api/welcome/create',
+      { body: { client: client, testConnection: testConnection } });
+  }
 
-        createWelcomeClient: function(client, testConnection) {
-          return $http({
-            method : 'POST',
-            url : 'api/welcome/create',
-            data : {client: client, testConnection: testConnection}
-          });
-        },
-
-        // ===============================================================================
-        //                                                                          Client
-        //                                                                          ======
-        clientList: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/client/list'
-            });
-        },
-        clientOperation: function(projectName) {
-            return $http({
-                method : 'POST',
-                url : 'api/client/operation/' + projectName
-            });
-        },
-        createClient: function(client, testConnection) {
-            return $http({
-                method : 'POST',
-                url : 'api/client/create/' + client.projectName,
-                data : {client: client, testConnection: testConnection}
-            });
-        },
-        updateClient: function(clientBody, testConnection) {
-            return $http({
-                method : 'POST',
-                url : 'api/client/edit/' + clientBody.projectName,
-                data : {clientBody: clientBody, testConnection: testConnection}
-            });
-        },
-        removeClient: function(clientBody) {
-            return $http({
-                method : 'POST',
-                url : 'api/client/delete/' + clientBody.project
-            });
-        },
-        settings: function (projectName) {
-          return $http({
-            method : 'POST',
-            url : 'api/settings/' + projectName
-          })
-        },
-        updateSettings: function(clientBody) {
-          return $http({
-            method : 'POST',
-            url : 'api/settings/edit/' + clientBody.projectName,
-            data : {client: clientBody}
-          });
-        },
-        dfporpBeanList: function(clientBody) {
-            return $http({
-                method : 'POST',
-                url : 'api/dfprop/' + clientBody.projectName + '/list'
-            });
-        },
-        syncSchema: function(projectName) {
-            return $http({
-                method: 'POST',
-                url : 'api/dfprop/' + projectName + '/syncschema'
-            });
-        },
-        editSyncSchema: function(projectName, syncSchemaSettingData) {
-            return $http({
-                method: 'POST',
-                url: 'api/dfprop/' + projectName + '/syncschema/edit',
-                data: {
-                    url: syncSchemaSettingData.url,
-                    schema: syncSchemaSettingData.schema,
-                    user: syncSchemaSettingData.user,
-                    password: syncSchemaSettingData.password,
-                    isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
-                }
-            });
-        },
-        document: function(projectName) {
-            return $http({
-                method: 'POST',
-                url : 'api/dfprop/' + projectName + '/document'
-            });
-        },
-        editDocument: function(projectName, documentSetting) {
-            return $http({
-                method: 'POST',
-                url: 'api/dfprop/' + projectName + '/document/edit',
-              data: {
-                upperCaseBasic: documentSetting.upperCaseBasic,
-                aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-                dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis
-              }
-            });
-        },
-        playsqlBeanList: function(clientBody) {
-            return $http({
-                method : 'POST',
-                url : 'api/playsql/' + clientBody.projectName + '/list'
-            });
-        },
-        logBeanList: function(clientBody) {
-            return $http({
-                method : 'POST',
-                url : 'api/log/' + clientBody.projectName + '/list'
-            });
-        },
-
-        // ===============================================================================
-        //                                                                          Engine
-        //                                                                          ======
-        engineLatest: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/latest'
-            });
-        },
-        engineVersions: function() {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/versions'
-            });
-        },
-        // needs trailing slash if URL parameter contains dot
-        downloadEngine: function(params) {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/download/' + params.version + '/'
-            });
-        },
-        removeEngine: function(params) {
-            return $http({
-                method : 'POST',
-                url : 'api/engine/remove/' + params.version + '/'
-            });
-        },
-
-        // ===============================================================================
-        //                                                                            Task
-        //                                                                            ====
-        task: function(projectName, task) {
-            return $http({
-                method: 'POST',
-                url: 'api/task/execute/' + projectName + '/' + task
-            });
-        },
-        // ===============================================================================
-        //                                                                           Retry
-        //                                                                           =====
-        retry: function(method, url, data, useSystemProxies) {
-            data = data || {};
-            data['useSystemProxies'] = useSystemProxies;
-            return $http({
-                method : method,
-                url : url,
-                data : data
-            });
+  // ===============================================================================
+  //                                                                          Client
+  //                                                                          ======
+  clientList() {
+    return ffetch.post('api/client/list');
+  }
+  clientOperation(projectName) {
+    return ffetch.post(`api/client/operation/${projectName}`);
+  }
+  createClient(client, testConnection) {
+    return ffetch.post(
+      `api/client/create`,
+      { body: { client, testConnection } }
+    )
+  }
+  updateClient(clientBody, testConnection) {
+    return ffetch.post(`api/client/edit/${clientBody.projectName}`,
+      { body: { clientBody: clientBody, testConnection: testConnection } });
+  }
+  removeClient(clientBody) {
+    return ffetch.post(`api/client/delete/${clientBody.project}`);
+  }
+  settings(projectName) {
+    return ffetch.post(`api/settings/${projectName}`)
+  }
+  updateSettings(clientBody) {
+    return ffetch.post(`api/settings/edit/${clientBody.projectName}`,
+      { body: { client: clientBody } });
+  }
+  dfporpBeanList(clientBody) {
+    return ffetch.post(`api/dfprop/${clientBody.projectName}/list`);
+  }
+  syncSchema(projectName) {
+    return ffetch.post(`api/dfprop/${projectName}/syncschema`);
+  }
+  editSyncSchema(projectName, syncSchemaSettingData) {
+    return ffetch.post(`api/dfprop/${projectName}/syncschema/edit`,
+      {
+        body: {
+          url: syncSchemaSettingData.url,
+          schema: syncSchemaSettingData.schema,
+          user: syncSchemaSettingData.user,
+          password: syncSchemaSettingData.password,
+          isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
         }
-    };
-});
+      });
+  }
+  document(projectName) {
+    return ffetch.post(`api/dfprop/${projectName}/document`);
+  }
+  editDocument(projectName, documentSetting) {
+    return ffetch.post(`api/dfprop/${projectName}/document/edit`,
+      {
+        body: {
+          upperCaseBasic: documentSetting.upperCaseBasic,
+          aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
+          dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
+          checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
+          checkDbCommentDiff: documentSetting.checkDbCommentDiff,
+          checkProcedureDiff: documentSetting.checkProcedureDiff
+        }
+      });
+  }
+  playsqlBeanList(projectName) {
+    return ffetch.post(`api/playsql/${projectName}/list`);
+  }
+  logBeanList(projectName) {
+    return ffetch.post(`api/log/${projectName}/list`);
+  }
+
+  // ===============================================================================
+  //                                                                          Engine
+  //                                                                          ======
+  engineLatest() {
+    return ffetch.post('api/engine/latest');
+  }
+  engineVersions() {
+    return ffetch.post('api/engine/versions');
+  }
+  // needs trailing slash if URL parameter contains dot
+  downloadEngine(params) {
+    return ffetch.post(`api/engine/download/${params.version}/`);
+  }
+  removeEngine(params) {
+    return ffetch.post(`api/engine/remove/${params.version}/`);
+  }
+
+  // ===============================================================================
+  //                                                                            Task
+  //                                                                            ====
+  task(projectName, task) {
+    return ffetch.post(`api/task/execute/${projectName}/${task}`);
+  }
+  // ===============================================================================
+  //                                                                           Retry
+  //                                                                           =====
+  retry(method, url, data, useSystemProxies) {
+    data = data || {};
+    data['useSystemProxies'] = useSystemProxies;
+    return http({
+      method: method,
+      url: url,
+      data: data
+    });
+  }
+}
