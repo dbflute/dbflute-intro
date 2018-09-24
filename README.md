@@ -16,8 +16,10 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
 1. git clone https://github.com/dbflute/dbflute-intro.git
 2. import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
-3. (install node if non-existent in your computer)
-   1. `$ brew install node`
+3. install node v8.x.x (if non-existent in your computer)
+   1. `$ brew install node@8`  
+   
+   or, it might be better to use nodebrew.
 4. install components of npm for application (at dbflute-intro directory)
    1. `$ npm install`
 
