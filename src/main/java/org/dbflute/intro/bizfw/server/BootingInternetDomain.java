@@ -16,18 +16,18 @@
 package org.dbflute.intro.bizfw.server;
 
 import org.dbflute.intro.IntroBoot;
-import org.dbflute.intro.mylasta.direction.IntroConfig;
 
 /**
  * @author jflute at showbase
+ * @author subaru
  */
 public class BootingInternetDomain {
 
     private final String serverDomain;
     private final int port;
 
-    public BootingInternetDomain(IntroConfig config) {
-        this.serverDomain = config.getServerDomain();
+    public BootingInternetDomain() {
+        this.serverDomain = IntroBoot.getServerHost();
         this.port = IntroBoot.getPort();
     }
 

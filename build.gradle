@@ -22,7 +22,7 @@ apply plugin: 'project-report' // ./gradlew dependencyReport: can make dependenc
 //                                                                              Basic Info
 //                                                                              ==========
 group = 'org.dbflute'
-version = '0.2.3'
+version = '0.3.0'
 
 ext {
     encoding = 'UTF-8'

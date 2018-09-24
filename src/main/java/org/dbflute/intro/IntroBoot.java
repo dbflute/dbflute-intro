@@ -30,6 +30,7 @@ import org.dbflute.jetty.JettyBoot;
  * @author p1us2er0
  * @author jflute
  * @author cabos
+ * @author subaru
  */
 public class IntroBoot {
 
@@ -64,10 +65,13 @@ public class IntroBoot {
         return new JettyBoot(getPort(), CONTEXT) { // no context path
             @Override
             protected String getServerHost() {
-                String introHost = System.getProperty(INTRO_HOST_KEY);
-                return introHost != null ? introHost : super.getServerHost();
+                return IntroBoot.getServerHost();
             }
         };
+    }
+
+    public static String getServerHost() {
+        return System.getProperty(INTRO_HOST_KEY, "localhost");
     }
 
     public static int getPort() {
