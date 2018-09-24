@@ -64,6 +64,7 @@ import './common/result-view.tag'
 import './common/navbar.tag'
 import './common/i18n.tag'
 import './common/loading.tag'
+import './common/raw.tag'
 import './error/404.tag'
 
 global.route = route;
