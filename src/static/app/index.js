@@ -93,7 +93,7 @@ ffetch.errors.subscribe(response => {
     header = '400 Bad Request';
     // #hope improvement: formal validation error handling
     if (response.data.failureType) { // basically here (unified JSON if 400)
-      header = header + ': ' + response.data.failureType;  
+      header = header + ': ' + response.data.failureType;
       validationError = response.data.failureType === 'VALIDATION_ERROR';
     }
     if (response.data.messages) { // basically here (unified JSON if 400)
@@ -139,7 +139,7 @@ ffetch.errors.subscribe(response => {
     messages = Array.isArray(response.data) ? response.data : [response.data];
   }
   if (header != null || messages != null) {
-	const modalSize = validationError ? 'small' : 'large';
+  const modalSize = validationError ? 'small' : 'large';
     observable.trigger('result', { header, messages, modalSize })
   }
 });
