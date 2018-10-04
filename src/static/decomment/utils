@@ -1,0 +1,78 @@
+/**
+ * @author deco
+ */
+/**
+ * Get host name
+ * @returns {string} Host name
+ */
+export function getHostName() {
+  return 'http://' + window.location.host;
+}
+
+/**
+ * Get scheme name from url
+ * @returns {string} Scheme name
+ */
+export function getSchemaName() {
+  return "${database.projectName}";
+}
+
+/**
+ * Escape inputed text
+ * @param {String} string - text
+ */
+export function escapeInputText(string) {
+  if (typeof string !== 'string') {
+    return string;
+  }
+  return string.replace(/[&'`"<>]/g, function (match) {
+    return {
+      '&': '&amp;',
+      "'": '&#x27;',
+      '`': '&#x60;',
+      '"': '&quot;',
+      '<': '&lt;',
+      '>': '&gt;',
+    }[match]
+  });
+}
+
+/**
+ * Escape newline character of text
+ * @param {String} string - text
+ */
+export function escapeNewlineCharacter(string) {
+  return string.split('<br>').join('\n');
+}
+
+/**
+ * Delete unnecessary whitespace
+ * @param {String} string - text
+ */
+export function deleteUnnecessaryWhitespace(string) {
+  const commentArray = string.split("\n");
+  let result = "";
+  for (var i = 0; i < commentArray.length; i++) {
+    result += commentArray[i].replace(/\s+$/g, '');
+    if (!(i === commentArray.length - 1)) {
+      result += '\n';
+    }
+  }
+  return result.trim();
+}
+
+/**
+ * Unescape whitespace character of text
+ * @param {String} string - text
+ */
+export function unescapeWhitespace(string) {
+  return string.split('&nbsp;').join(' ');
+}
+
+/**
+ * Check is opening with server mode.
+ */
+export function isDecommentServer() {
+  return document.getElementById("decomment_server") != null;
+}
+
