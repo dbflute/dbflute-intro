@@ -62,9 +62,6 @@ public interface IntroEnv {
     /** The key of the configuration. e.g. 10 */
     String JDBC_CONNECTION_POOLING_SIZE = "jdbc.connection.pooling.size";
 
-    /** The key of the configuration. e.g. localhost */
-    String SERVER_DOMAIN = "server.domain";
-
     /** The key of the configuration. e.g. true */
     String SWAGGER_ENABLED = "swagger.enabled";
 
@@ -223,14 +220,6 @@ public interface IntroEnv {
     Integer getJdbcConnectionPoolingSizeAsInteger();
 
     /**
-     * Get the value for the key 'server.domain'. <br>
-     * The value is, e.g. localhost <br>
-     * comment: domain to access this application from internet without port number
-     * @return The value of found property. (NotNull: if not found, exception but basically no way)
-     */
-    String getServerDomain();
-
-    /**
      * Get the value for the key 'swagger.enabled'. <br>
      * The value is, e.g. true <br>
      * comment: is it use swagger in this environment?
@@ -321,10 +310,6 @@ public interface IntroEnv {
 
         public Integer getJdbcConnectionPoolingSizeAsInteger() {
             return getAsInteger(IntroEnv.JDBC_CONNECTION_POOLING_SIZE);
-        }
-
-        public String getServerDomain() {
-            return get(IntroEnv.SERVER_DOMAIN);
         }
 
         public String getSwaggerEnabled() {

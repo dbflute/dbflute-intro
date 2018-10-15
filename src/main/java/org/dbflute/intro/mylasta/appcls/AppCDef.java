@@ -46,6 +46,9 @@ public interface AppCDef extends Classification {
         ,
         /** ReplaceSchema: ReplaceSchema task */
         ReplaceSchema("replaceSchema", "ReplaceSchema", emptyStrings())
+        ,
+        /** AlterCheck: AlterCheck task */
+        AlterCheck("alterCheck", "AlterCheck", emptyStrings())
         ;
         private static final Map<String, TaskInstruction> _codeClsMap = new HashMap<String, TaskInstruction>();
         private static final Map<String, TaskInstruction> _nameClsMap = new HashMap<String, TaskInstruction>();
@@ -76,6 +79,11 @@ public interface AppCDef extends Classification {
                 Map<String, Object> subItemMap = new HashMap<String, Object>();
                 subItemMap.put("relatedTasks", "replace_schema");
                 _subItemMapMap.put(ReplaceSchema.code(), Collections.unmodifiableMap(subItemMap));
+            }
+            {
+                Map<String, Object> subItemMap = new HashMap<String, Object>();
+                subItemMap.put("relatedTasks", "alter_check");
+                _subItemMapMap.put(AlterCheck.code(), Collections.unmodifiableMap(subItemMap));
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;

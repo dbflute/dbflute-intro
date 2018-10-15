@@ -573,6 +573,9 @@ public interface CDef extends Classification {
         ,
         /** SchemaSyncCheck */
         SchemaSyncCheck("schema_sync_check", "SchemaSyncCheck", emptyStrings())
+        ,
+        /** AlterCheck */
+        AlterCheck("alter_check", "AlterCheck", emptyStrings())
         ;
         private static final Map<String, TaskType> _codeClsMap = new HashMap<String, TaskType>();
         private static final Map<String, TaskType> _nameClsMap = new HashMap<String, TaskType>();
@@ -624,6 +627,11 @@ public interface CDef extends Classification {
                 Map<String, Object> subItemMap = new HashMap<String, Object>();
                 subItemMap.put("manageArg", "schema-sync-check");
                 _subItemMapMap.put(SchemaSyncCheck.code(), Collections.unmodifiableMap(subItemMap));
+            }
+            {
+                Map<String, Object> subItemMap = new HashMap<String, Object>();
+                subItemMap.put("manageArg", "alter-check");
+                _subItemMapMap.put(AlterCheck.code(), Collections.unmodifiableMap(subItemMap));
             }
         }
         private String _code; private String _alias; private Set<String> _sisterSet;

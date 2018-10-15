@@ -21,9 +21,18 @@
   <h3>Replace Schema</h3>
   <button class="ui primary button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
 
+  <h3>Alter Check</h3>
+  <button class="ui primary button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
       Generating...
+    </div>
+  </su-modal>
+
+  <su-modal modal="{ executeModal }" class="large" ref="executeModal">
+    <div class="description">
+      Executing...
     </div>
   </su-modal>
 
@@ -178,16 +187,20 @@
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
-    this.replaceSchemaTask = () => {
-      this.task('replaceSchema', self.refs.generateModal)
-    }
-
     this.generateTask = () => {
       this.task('doc', self.refs.generateModal)
     }
 
     this.schemaSyncCheckTask = () => {
       this.task('schemaSyncCheck', self.refs.checkModal)
+    }
+
+    this.replaceSchemaTask = () => {
+      this.task('replaceSchema', self.refs.executeModal)
+    }
+
+    this.alterCheckTask = () => {
+      this.task('alterCheck', self.refs.executeModal)
     }
 
     this.task = (task, modal) => {

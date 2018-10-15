@@ -94,6 +94,7 @@ map:{
         ; map:{code=replace_schema; name=ReplaceSchema; subItemMap = map:{manageArg=replace-schema}}
         ; map:{code=load_data_reverse; name=LoadDataReverse; subItemMap = map:{manageArg=loadDataReverse}}
         ; map:{code=schema_sync_check; name=SchemaSyncCheck; subItemMap = map:{manageArg=schema-sync-check}}
+        ; map:{code=alter_check; name=AlterCheck; subItemMap = map:{manageArg=alter-check}}
     }
 }
 # ----------------/
