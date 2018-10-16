@@ -7,8 +7,8 @@
   <div class="ui form">
     <div class="row">
       <div class="column">
-        <su-tabset class="three column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
-                   log="{ logDropDownItems }" ref="client">
+        <su-tabset class="four column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
+                   log="{ logDropDownItems }" schemapolicy="{ schemaPolicy }" ref="client">
           <su-tab title="Database info" settings="{ opts.settings }" ref="settings">
             <div class="required field" if="{ opts.settings }">
               <label data-is="i18n">LABEL_url</label>
@@ -46,6 +46,29 @@
               <pre>{ refs.dropdown.value }</pre>
             </div>
           </su-tab>
+          <su-tab title="SchemaPolicy" schemapolicy="{ opts.schemapolicy }" >
+            <div class="">
+              <h3 class="">Whole Schema Policy</h3>
+              <div class="ui divided items">
+                <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
+                  <div class="ui left floated">
+                    <su-checkbox class="toggle middle aligned" checked="{ theme.isOn }"></su-checkbox>
+                  </div>
+                  <div class="content">
+                  <a class="header">{ theme.name }</a>
+                  <div class="description">
+                    {theme.description}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <h3 >Table Schema Policy</h3>
+            </div>
+            <div class="">
+              <h3>Column Schema Policy</h3>
+            </div>
+          </su-tab>
         </su-tabset>
       </div>
     </div>
@@ -75,6 +98,54 @@
     this.logDropDownItems = {}
     const defaultItem = [{label: '-', value: null}]
 
+    this.schemaPolicy = {}
+
+    this.prepareSchemaPolicy = (projectName) => {
+      // TODO: request API
+      self.schemaPolicy = {
+        wholeMap : {
+          themeList : [
+            {
+              name: 'UniqueTableAlias',
+              description: 'The alias of the table is unique.',
+              typeCode: 'uniqueTableAlias',
+              isOn: true,
+            },
+            {
+              name: 'SameColumnAliasIfSameColumnName',
+              description: 'If the column names are the same, the column aliases are the same.',
+              typeCode: 'sameColumnAliasIfSameColumnName',
+              isOn: true,
+            },
+            {
+              name: 'SameColumnDbTypeIfSameColumnName',
+              description: 'If the column names are the same, the data type of the column is the same.',
+              typeCode: 'sameColumnDbTypeIfSameColumnName',
+              isOn: true,
+            },
+            {
+              name: 'SameColumnSizeIfSameColumnName',
+              description: 'If the column names are the same, the size of the column is the same.',
+              typeCode: 'sameColumnSizeIfSameColumnName',
+              isOn: true,
+            },
+            {
+              name: 'SameColumnNameIfSameColumnAlias',
+              description: 'If column aliases are the same, column names are the same.',
+              typeCode: 'sameColumnNameIfSameColumnAlias',
+              isOn: false,
+            }
+          ]
+        },
+        tableMap : {
+          themeList : ['hasPK', 'upperCaseBasis', 'lowerCaseBasis', 'identityIfPureIDPK', 'sequenceIfPureIDPK', 'hasCommonColumn', 'hasAlias', 'hasComment']
+        },
+        columnMap : {
+          themeList : ['upperCaseBasis', 'lowerCaseBasis', 'hasAlias', 'hasComment']
+        }
+      }
+    }
+
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
@@ -82,6 +153,7 @@
       self.prepareSettings(projectName)
       self.preparePlaysql(projectName)
       self.prepareLogs(projectName)
+      self.prepareSchemaPolicy(projectName)
     }
 
     this.prepareSettings = (projectName) => {
