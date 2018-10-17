@@ -15,11 +15,10 @@
  */
 package org.dbflute.intro.app.web.settings;
 
-import org.dbflute.intro.app.model.client.ExtlibFile;
+import javax.validation.Valid;
+
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
-
-import javax.validation.Valid;
 
 /**
  * @author hakiba
@@ -60,7 +59,5 @@ public class SettingsUpdateBody {
         // #for_now hakiba not use these items, may use at future (2017/01/19)
         @Required
         public String dbfluteVersion;
-
-        public ExtlibFile jdbcDriverJarFile;
     }
 }
