@@ -37,14 +37,14 @@ ext {
             // Main Framework
             dbflute : '1.1.8',
             h2 : '1.4.197',
-            lastaflute : '1.0.9',
+            lastaflute : '1.1.0',
 
             // Partner Library
             slf4j : '1.7.25',
             logback : '1.2.3',
             jettyboot : '0.4.9',
-            lastadoc : '0.3.2',
-            swaggerui : '2.2.10',
+            lastadoc : '0.3.4',
+            swaggerui : '3.19.0',
 
             // GoodNeighbor Library
             commonslang : '3.7',
@@ -52,7 +52,7 @@ ext {
 
             // Testing
             junit : '4.12',
-            utflute : '0.8.8'
+            utflute : '0.8.9'
         ]
 }
 
