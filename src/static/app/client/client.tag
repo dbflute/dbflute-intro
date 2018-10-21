@@ -196,11 +196,15 @@
     }
 
     this.replaceSchemaTask = () => {
-      this.task('replaceSchema', self.refs.executeModal)
+      if (confirm('Are you sure to execute Replace Schema task?')) {
+        this.task('replaceSchema', self.refs.executeModal)
+      }
     }
 
     this.alterCheckTask = () => {
-      this.task('alterCheck', self.refs.executeModal)
+      if (confirm('Are you sure to execute Alter Check task?')) {
+        this.task('alterCheck', self.refs.executeModal)
+      }
     }
 
     this.task = (task, modal) => {
