@@ -123,7 +123,7 @@ public class SettingsAction extends IntroBaseAction {
     }
 
     private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
-        return new ProjectInfra(projectName, clientBody.dbfluteVersion, clientBody.jdbcDriverJarFile);
+        return new ProjectInfra(projectName, clientBody.dbfluteVersion, null);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
