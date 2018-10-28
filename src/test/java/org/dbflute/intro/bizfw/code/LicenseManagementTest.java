@@ -17,7 +17,6 @@ package org.dbflute.intro.bizfw.code;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,7 +49,7 @@ public class LicenseManagementTest extends PlainTestCase {
         // ## Arrange ##
         File srcDir = new File(getProjectPath() + srcPathMark);
         assertTrue(srcDir.exists());
-        List<File> unlicensedList = new ArrayList<File>();
+        List<File> unlicensedList = new ArrayList<>();
 
         // ## Act ##
         checkUnlicensed(srcDir, unlicensedList);
@@ -78,11 +77,7 @@ public class LicenseManagementTest extends PlainTestCase {
     //                                                                             =======
     protected void checkUnlicensed(File currentFile, List<File> unlicensedList) {
         if (isPackageDir(currentFile)) {
-            File[] subFiles = currentFile.listFiles(new FileFilter() {
-                public boolean accept(File file) {
-                    return isPackageDir(file) || isSourceFile(file);
-                }
-            });
+            File[] subFiles = currentFile.listFiles(file -> isPackageDir(file) || isSourceFile(file));
             if (subFiles == null || subFiles.length == 0) {
                 return;
             }
@@ -113,10 +108,8 @@ public class LicenseManagementTest extends PlainTestCase {
             String msg = "The argument 'targetFile' should be file: " + srcFile;
             throw new IllegalArgumentException(msg);
         }
-        BufferedReader br = null;
         boolean contains = false;
-        try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile), "UTF-8"));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile), "UTF-8"))) {
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
@@ -130,13 +123,6 @@ public class LicenseManagementTest extends PlainTestCase {
         } catch (IOException e) {
             String msg = "Failed to read the file: " + srcFile;
             throw new IllegalStateException(msg, e);
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ignored) {
-                }
-            }
         }
         if (!contains) {
             unlicensedList.add(srcFile);
