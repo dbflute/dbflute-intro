@@ -1,7 +1,10 @@
+import {UnmappedTableArea} from 'mapping/unmapped-table'
+import {UnmappedColumnArea} from 'mapping/unmapped-column'
+
 /**
  * @author deco
  */
-class StoreClient {
+export class StoreClient {
   constructor() {
     // setup from dbflute if decomment pickup exists
     this.embeddedPickup = {}

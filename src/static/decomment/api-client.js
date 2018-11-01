@@ -7,7 +7,7 @@ class ApiClient {
    * @param {function} successCallback
    */
   fetchDecomment(successCallback) {
-    const path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/pickup';
+    const path = '/document/decomment/' + DecommentUtil.getSchemaName() + '/pickup';
     const method = 'GET';
     const errorCallback = function () {
       alert('Error!! cannot save decomment.');
@@ -21,7 +21,7 @@ class ApiClient {
    * @param {function} successCallback
    */
   saveDecomment(params, successCallback) {
-    const path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/save';
+    const path = '/document/decomment/' + DecommentUtil.getSchemaName() + '/save';
     const method = 'POST';
     const errorCallback = function () {
       alert('Error!! cannot save new column comment.');
@@ -35,7 +35,7 @@ class ApiClient {
    * @param {function} successCallback
    */
   postMapping(params, successCallback) {
-    const path = '/api/document/decomment/' + DecommentUtil.getSchemaName() + '/mapping';
+    const path = '/document/decomment/' + DecommentUtil.getSchemaName() + '/mapping';
     const method = 'POST';
     const errorCallback = function () {
       alert('Error!! cannot save new table mapping.');
@@ -54,7 +54,7 @@ class ApiClient {
   request(path, method, params, successCallback, errorCallback) {
     const http = new XMLHttpRequest();
     http.withCredentials = true;
-    const url = DecommentUtil.getHostName() + path;
+    const url = DecommentUtil.getHostName() + "/api" + path;
     http.open(method, url, true);
 
     http.onreadystatechange = function () {

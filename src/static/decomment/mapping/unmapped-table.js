@@ -1,79 +1,24 @@
 /**
  * @author cabos
  */
-function UnmappedTableRow() {
-}
-
-UnmappedTableRow.prototype = {
-
-  /**
-   * Initialize unmapped table row
-   * @param {number} row number
-   * @param {object} table
-   */
-  init: function (rowNum, table) {
-    this.rowNum = rowNum;
-    this.tableName = table.tableName;
-    this.mappedTableNameList = Array.prototype.map.call(table.mappings, function (mapping) {
-      return mapping.newTableName;
-    });
-    this.previousMappingList = Array.prototype.map.call(table.mappings, function (mapping) {
-      return mapping.mappingCode;
-    });
-    this.authorList = Array.prototype.map.call(table.mappings, function (mapping) {
-      return mapping.mappingOwner;
-    });
-  },
-
-  /**
-   * Convert unmapped table row to string
-   * @returns {string} Unmapped table row
-   */
-  toDisplayHtmlString: function () {
-    return '<tr id="unmapped-table-row-' + this.tableName + '">'
-      + '<td class="rownumcell">' + this.rowNum + '</td>'
-      + '<td class="namecell">' + this.tableName + '</td>'
-      + '<td class="namecell tableconflictcell">' + this.toConflictDisplayHtmlString() + '</td>'
-      + '<td class="tableselectorcell">' + '</td>'
-      + '</tr>';
-  },
-
-  toConflictDisplayHtmlString: function () {
-    return Array.prototype.reduce.call(this.mappedTableNameList, function (currentStrs, name) {
-      if (currentStrs.length === 0) {
-        return name;
-      }
-      return currentStrs + "<br>" + name;
-    }, '');
-  },
-
-  isTableNameConflict: function () {
-    return this.previousMappingList.length >= 2;
+export class UnmappedTableArea {
+  constructor() {
+    this.rows = [];
   }
-}
-
-/**
- * @author cabos
- */
-function UnmappedTableArea() {
-  this.rows = [];
-}
-
-UnmappedTableArea.prototype = {
 
   /**
    * Push unmapped table
    */
-  push: function (table) {
+  push(table) {
     var row = new UnmappedTableRow();
     row.init(this.rows.length + 1, table);
     this.rows.push(row);
-  },
+  }
 
   /**
    * Activate unmapped table field
    */
-  activate: function () {
+  activate() {
     if (document.getElementById("intro_opening") === null) {
       return;
     }
@@ -84,24 +29,24 @@ UnmappedTableArea.prototype = {
     document.getElementById('table-mapping-submit-button').onclick = function () {
       that.postMappingTable();
     };
-  },
+  }
 
   /**
    * Clear unmapped table field
    */
-  clear: function () {
+  clear() {
     var tbody = this.getTableBodyElement();
     tbody.innerHTML = '';
     this.rows = [];
 
     var unmappedElements = document.getElementById('unmapped-tables');
     unmappedElements.style.display = 'none';
-  },
+  }
 
   /**
    * Reflect unmapped table body
    */
-  reflect: function () {
+  reflect() {
     if (this.rows.length === 0) {
       return;
     }
@@ -118,13 +63,13 @@ UnmappedTableArea.prototype = {
         cell.style.display = 'none'
       });
     }
-  },
+  }
 
-  isTableNameConflict: function () {
+  isTableNameConflict() {
     return Array.prototype.some.call(this.rows, function (row) {
       return row.isTableNameConflict();
     });
-  },
+  }
 
   /**
    * Show table selector
@@ -136,46 +81,46 @@ UnmappedTableArea.prototype = {
    *  </select>
    * @returns {string} show table selector
    */
-  showTableSelector: function () {
+  showTableSelector() {
     var tableSelector = this.createTableSelector();
     var tableSelectorCellList = document.getElementsByClassName('tableselectorcell');
     Array.prototype.forEach.call(tableSelectorCellList, function (cell) {
       cell.innerHTML = tableSelector;
     });
-  },
+  }
 
   /**
    * Create select list of table
    * @returns {string}
    */
-  createTableSelector: function () {
+  createTableSelector() {
     var tableNameList = this.getTableNameList();
     var options = Array.prototype.reduce.call(tableNameList, function (currentOptions, name) {
       return currentOptions + '<option>' + name + '</option>';
     }, '');
     return '<select>' + '<option>-</option>' + options + '</select>'
-  },
+  }
 
   /**
    * Get data list
    * @returns {array} table name list
    */
-  getTableNameList: function () {
+  getTableNameList() {
     var trs = document.getElementById('table-list-body').getElementsByTagName('tr');
     var tableList = [];
     for (var i = 0, max = trs.length; i < max; i++) {
       tableList.push(trs[i].getElementsByTagName('td')[NAME_INDEX].innerText);
     }
     return tableList;
-  },
+  }
 
   /**
    * Get Unmapped table body element
    * @returns {object} Unmapped table body element
    */
-  getTableBodyElement: function () {
+  getTableBodyElement() {
     return document.getElementById('unmapped-table-body');
-  },
+  }
 
   /**
    * Convert to string
@@ -194,13 +139,13 @@ UnmappedTableArea.prototype = {
    *  ....
    * @returns {string} Unmapped table rows
    */
-  toDisplayHtmlString: function () {
+  toDisplayHtmlString() {
     return Array.prototype.reduce.call(this.rows, function (currentRows, row) {
       return currentRows + row.toDisplayHtmlString();
     }, '');
-  },
+  }
 
-  postMappingTable: function () {
+  postMappingTable() {
     var mappings = Array.prototype.map.call(this.rows, function (row) {
       var newTableName = document.getElementById('unmapped-table-row-' + row.tableName).children[3].children[0].value;
       return {
@@ -225,5 +170,53 @@ UnmappedTableArea.prototype = {
       window.location.reload();
     };
     new ApiClient().postMapping(params, successCallback);
-  },
+  }
+}
+
+class UnmappedTableRow {
+
+  /**
+   * Initialize unmapped table row
+   * @param {number} row number
+   * @param {object} table
+   */
+  init(rowNum, table) {
+    this.rowNum = rowNum;
+    this.tableName = table.tableName;
+    this.mappedTableNameList = Array.prototype.map.call(table.mappings, function (mapping) {
+      return mapping.newTableName;
+    });
+    this.previousMappingList = Array.prototype.map.call(table.mappings, function (mapping) {
+      return mapping.mappingCode;
+    });
+    this.authorList = Array.prototype.map.call(table.mappings, function (mapping) {
+      return mapping.mappingOwner;
+    });
+  }
+
+  /**
+   * Convert unmapped table row to string
+   * @returns {string} Unmapped table row
+   */
+  toDisplayHtmlString() {
+    return '<tr id="unmapped-table-row-' + this.tableName + '">'
+      + '<td class="rownumcell">' + this.rowNum + '</td>'
+      + '<td class="namecell">' + this.tableName + '</td>'
+      + '<td class="namecell tableconflictcell">' + this.toConflictDisplayHtmlString() + '</td>'
+      + '<td class="tableselectorcell">' + '</td>'
+      + '</tr>';
+  }
+
+  toConflictDisplayHtmlString() {
+    return Array.prototype.reduce.call(this.mappedTableNameList, function (currentStrs, name) {
+      if (currentStrs.length === 0) {
+        return name;
+      }
+      return currentStrs + "<br>" + name;
+    }, '');
+  }
+
+  isTableNameConflict() {
+    return this.previousMappingList.length >= 2;
+  }
 }

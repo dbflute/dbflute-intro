@@ -2,7 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-  entry: './src/static/app/index.js',
+  entry: {
+    'index.js': './src/static/app/index.js',
+    'decomment.js': './src/static/decomment/index.js',
+  },
   output: {
     path: __dirname + '/dist/'
   },

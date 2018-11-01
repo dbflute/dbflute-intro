@@ -1,7 +1,4 @@
 /**
- * @author deco
- */
-/**
  * Get host name
  * @returns {string} Host name
  */
