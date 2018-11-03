@@ -22,6 +22,9 @@
   <button class="ui primary button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
 
   <h3>Alter Check</h3>
+  <div class="ui list">
+    <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+  </div>
   <button class="ui primary button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
@@ -235,6 +238,10 @@
 
     this.openSyncCheckResultHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
+    }
+
+    this.openAlterCheckResultHTML = () => {
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/altercheckresulthtml/')
     }
 
     this.canCheckSchemaSetting = () => {

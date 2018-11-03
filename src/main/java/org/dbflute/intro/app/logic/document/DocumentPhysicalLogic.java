@@ -49,6 +49,10 @@ public class DocumentPhysicalLogic {
         return findSyncCheckResultHtml(clientProject).exists();
     }
 
+    public Boolean existsAlterCheckResultHtml(String clientProject) {
+        return findAlterCheckResultHtml(clientProject).exists();
+    }
+
     public File findSchemaHtml(String clientProject) {
         return toProjectNamedDocumentFile(clientProject, "schema");
     }
@@ -63,6 +67,10 @@ public class DocumentPhysicalLogic {
 
     public File findSyncCheckResultHtml(String clientProject) {
         return toFixedNamedDocumentFile(clientProject, "sync-check-result.html");
+    }
+
+    public File findAlterCheckResultHtml(String clientProject) {
+        return toProjectNamedMigrationFile(clientProject, "schema");
     }
 
     public File findLastaDocHtml(String clientProject, String moduleName) {
@@ -86,7 +94,28 @@ public class DocumentPhysicalLogic {
         return new File(buildDocumentPath(clientProject, pureName));
     }
 
+    private File toProjectNamedMigrationFile(String clientProject, String type) { // e.g. ReplaceSchema
+        final String pureName;
+
+        switch (type) {
+        case "schema":
+            pureName = "alter-check-result.html";
+            break;
+        default:
+            return null;
+        }
+        return toFixedNamedMigrationFile(clientProject, type, pureName);
+    }
+
+    private File toFixedNamedMigrationFile(String clientProject, String type, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildMigrationPath(clientProject, type, pureName));
+    }
+
     private String buildDocumentPath(String clientProject, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "output", "doc", pureName);
+    }
+
+    private String buildMigrationPath(String clientProject, String type, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
     }
 }

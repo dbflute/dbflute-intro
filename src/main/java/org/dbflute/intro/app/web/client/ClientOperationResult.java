@@ -44,4 +44,6 @@ public class ClientOperationResult {
     public Boolean hasHistoryHtml;
     @Required
     public Boolean hasSyncCheckResultHtml;
+    @Required
+    public Boolean hasAlterCheckResultHtml;
 }
