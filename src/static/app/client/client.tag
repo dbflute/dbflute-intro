@@ -196,16 +196,16 @@
     }
 
     this.replaceSchemaTask = () => {
-      if (confirm('Are you sure to execute Replace Schema task?')) {
+      this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
         this.task('replaceSchema', self.refs.executeModal)
-      }
-    }
+      })
+}
 
     this.alterCheckTask = () => {
-      if (confirm('Are you sure to execute Alter Check task?')) {
+      this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
         this.task('alterCheck', self.refs.executeModal)
-      }
-    }
+      })
+}
 
     this.task = (task, modal) => {
       modal.show()
