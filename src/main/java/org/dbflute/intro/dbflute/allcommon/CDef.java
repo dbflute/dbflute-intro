@@ -741,6 +741,131 @@ public interface CDef extends Classification {
         @Override public String toString() { return code(); }
     }
 
+    /**
+     * Alter Check NG-mark
+     */
+    public enum NgMark implements CDef {
+        /** PreviousNG: has problems on previous ddl */
+        PreviousNG("previous-NG", "PreviousNG", emptyStrings())
+        ,
+        /** AlterNG: has problems on alter ddl */
+        AlterNG("alter-NG", "AlterNG", emptyStrings())
+        ,
+        /** NextNG: has problems on next ddl */
+        NextNG("next-NG", "NextNG", emptyStrings())
+        ;
+        private static final Map<String, NgMark> _codeClsMap = new HashMap<String, NgMark>();
+        private static final Map<String, NgMark> _nameClsMap = new HashMap<String, NgMark>();
+        static {
+            for (NgMark value : values()) {
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+                _nameClsMap.put(value.name().toLowerCase(), value);
+            }
+        }
+        private String _code; private String _alias; private Set<String> _sisterSet;
+        private NgMark(String code, String alias, String[] sisters)
+        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        public String code() { return _code; } public String alias() { return _alias; }
+        public Set<String> sisterSet() { return _sisterSet; }
+        public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
+        public ClassificationMeta meta() { return CDef.DefMeta.NgMark; }
+
+        public boolean inGroup(String groupName) {
+            return false;
+        }
+
+        /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<NgMark> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof NgMark) { return OptionalThing.of((NgMark)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<NgMark> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
+         * Get the classification by the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
+         * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
+         */
+        public static NgMark codeOf(Object code) {
+            if (code == null) { return null; }
+            if (code instanceof NgMark) { return (NgMark)code; }
+            return _codeClsMap.get(code.toString().toLowerCase());
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
+         * Get the classification by the name (also called 'value' in ENUM world).
+         * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
+         * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         */
+        public static NgMark nameOf(String name) {
+            if (name == null) { return null; }
+            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
+        }
+
+        /**
+         * Get the list of all classification elements. (returns new copied list)
+         * @return The snapshot list of all classification elements. (NotNull)
+         */
+        public static List<NgMark> listAll() {
+            return new ArrayList<NgMark>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<NgMark> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: NgMark." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<NgMark> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<NgMark> clsList = new ArrayList<NgMark>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         */
+        public static List<NgMark> groupOf(String groupName) {
+            return new ArrayList<NgMark>(4);
+        }
+
+        @Override public String toString() { return code(); }
+    }
+
     public enum DefMeta implements ClassificationMeta {
         /** general boolean classification for every flg-column */
         Flg
@@ -756,6 +881,9 @@ public interface CDef extends Classification {
         ,
         /** DBFlute tasks e.g. jdbc, doc */
         TaskType
+        ,
+        /** Alter Check NG-mark */
+        NgMark
         ;
         public String classificationName() {
             return name(); // same as definition name
@@ -767,6 +895,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.of(code); }
             if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.of(code); }
             if (TaskType.name().equals(name())) { return CDef.TaskType.of(code); }
+            if (NgMark.name().equals(name())) { return CDef.NgMark.of(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -776,6 +905,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.byName(name); }
             if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.byName(name); }
             if (TaskType.name().equals(name())) { return CDef.TaskType.byName(name); }
+            if (NgMark.name().equals(name())) { return CDef.NgMark.byName(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -785,6 +915,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.codeOf(code); }
             if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.codeOf(code); }
             if (TaskType.name().equals(name())) { return CDef.TaskType.codeOf(code); }
+            if (NgMark.name().equals(name())) { return CDef.NgMark.codeOf(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -794,6 +925,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.valueOf(name); }
             if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.valueOf(name); }
             if (TaskType.name().equals(name())) { return CDef.TaskType.valueOf(name); }
+            if (NgMark.name().equals(name())) { return CDef.NgMark.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -803,6 +935,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listAll()); }
             if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listAll()); }
             if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listAll()); }
+            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -812,6 +945,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listByGroup(groupName)); }
             if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listByGroup(groupName)); }
             if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listByGroup(groupName)); }
+            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.listByGroup(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -821,6 +955,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listOf(codeList)); }
             if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listOf(codeList)); }
             if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listOf(codeList)); }
+            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.listOf(codeList)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -830,6 +965,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.groupOf(groupName)); }
             if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.groupOf(groupName)); }
             if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.groupOf(groupName)); }
+            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -844,6 +980,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return ClassificationCodeType.String; }
             if (TargetContainer.name().equals(name())) { return ClassificationCodeType.String; }
             if (TaskType.name().equals(name())) { return ClassificationCodeType.String; }
+            if (NgMark.name().equals(name())) { return ClassificationCodeType.String; }
             return ClassificationCodeType.String; // as default
         }
 
@@ -853,6 +990,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
             if (TargetContainer.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
             if (TaskType.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
+            if (NgMark.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 
@@ -863,6 +1001,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetLanguage); }
             if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetContainer); }
             if (TaskType.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TaskType); }
+            if (NgMark.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.NgMark); }
             return OptionalThing.ofNullable(null, () -> {
                 throw new ClassificationNotFoundException("Unknown classification: " + classificationName);
             });
@@ -875,6 +1014,7 @@ public interface CDef extends Classification {
             if (TargetLanguage.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetLanguage; }
             if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetContainer; }
             if (TaskType.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TaskType; }
+            if (NgMark.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.NgMark; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
         }
 

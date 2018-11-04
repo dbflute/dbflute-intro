@@ -46,4 +46,9 @@ public class ClientOperationResult {
     public Boolean hasSyncCheckResultHtml;
     @Required
     public Boolean hasAlterCheckResultHtml;
+
+    // ===================================================================================
+    //                                                                         Alter Check
+    //                                                                         ===========
+    public CDef.NgMark ngMark;
 }

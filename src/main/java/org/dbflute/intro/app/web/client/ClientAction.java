@@ -187,6 +187,7 @@ public class ClientAction extends IntroBaseAction {
         operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
         operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
+        operation.ngMark = documentLogic.findAlterCheckNgMark(clientProject);
         return operation;
     }
 

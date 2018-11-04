@@ -20,6 +20,7 @@ import java.io.File;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.dbflute.allcommon.CDef;
 
 /**
  * @author deco
@@ -49,7 +50,7 @@ public class DocumentPhysicalLogic {
         return findSyncCheckResultHtml(clientProject).exists();
     }
 
-    public Boolean existsAlterCheckResultHtml(String clientProject) {
+    public boolean existsAlterCheckResultHtml(String clientProject) {
         return findAlterCheckResultHtml(clientProject).exists();
     }
 
@@ -75,6 +76,15 @@ public class DocumentPhysicalLogic {
 
     public File findLastaDocHtml(String clientProject, String moduleName) {
         return toProjectNamedDocumentFile(clientProject, moduleName, "lastadoc");
+    }
+
+    public CDef.NgMark findAlterCheckNgMark(String clientProject) {
+        for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
+            if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
+                return ngMark;
+            }
+        }
+        return null;
     }
 
     // ===================================================================================
@@ -113,6 +123,10 @@ public class DocumentPhysicalLogic {
 
     private String buildDocumentPath(String clientProject, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "output", "doc", pureName);
+    }
+
+    private String buildMigrationPath(String clientProject, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", pureName);
     }
 
     private String buildMigrationPath(String clientProject, String type, String pureName) {

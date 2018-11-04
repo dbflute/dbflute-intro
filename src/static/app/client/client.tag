@@ -25,6 +25,20 @@
   <div class="ui list">
     <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
   </div>
+  <div class="ui list">
+    <div show="{ client.ngMark === 'previous-NG' }" class="ngmark">
+      Found problems on <b>Previous DDL.</b><br/>
+      Retry save previous.
+    </div>
+    <div show="{ client.ngMark === 'alter-NG' }" class="ngmark">
+      Found problems on <b>Alter DDL.</b><br/>
+      Complete your alter DDL, referring to AlterCheckResultHTML.
+    </div>
+    <div show="{ client.ngMark === 'next-NG' }" class="ngmark">
+      Found problems on <b>Next DDL.</b><br/>
+      Fix your DDL and data grammatically.
+    </div>
+  </div>
   <button class="ui primary button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
