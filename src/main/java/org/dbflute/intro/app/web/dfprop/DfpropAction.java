@@ -108,6 +108,14 @@ public class DfpropAction extends IntroBaseAction {
     }
 
     // -----------------------------------------------------
+    //                                       GetSchemaPolicy
+    //                                       ---------------
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<DfpropSchemaSyncCheckResult> schemapolicy(String project) {
+        return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
     //                                           GetDocument
     //                                           -----------
     @Execute(urlPattern = "{}/@word")

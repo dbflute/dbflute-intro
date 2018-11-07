@@ -15,21 +15,26 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.infra.dfprop.DfPropFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author jflute
@@ -114,6 +119,26 @@ public class DfpropInfoLogic {
                 final Boolean isSuppressCraftDiff = Boolean.valueOf(convertSettingToString(schemaSyncCheckMap.get("isSuppressCraftDiff")));
                 return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
             });
+    }
+    // -----------------------------------------------------
+    //                                          SchemaPolicy
+    //                                          ------------
+    public SchemaPolicyMap findSchemaPolicyMap(String projectName) {
+        File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "schemaPolicyMap.dfprop");
+        Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
+
+        // wholeMap
+        @SuppressWarnings("unchecked")
+        Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
+        @SuppressWarnings("unchecked")
+        List<String> originalThemeList = (List<String>) originalWholeMap.get("themeList");
+        List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
+            boolean isOn = originalThemeList.contains(themeType.code);
+            return new SchemaPolicyWholeMap.Theme(themeType, isOn);
+        }).collect(Collectors.toList());
+        SchemaPolicyWholeMap wholeMap = new SchemaPolicyWholeMap(themeList);
+
+        return new SchemaPolicyMap(wholeMap);
     }
 
     // -----------------------------------------------------
