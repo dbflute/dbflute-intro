@@ -102,48 +102,10 @@
 
     this.prepareSchemaPolicy = (projectName) => {
       // TODO: request API
-      self.schemaPolicy = {
-        wholeMap : {
-          themeList : [
-            {
-              name: 'UniqueTableAlias',
-              description: 'The alias of the table is unique.',
-              typeCode: 'uniqueTableAlias',
-              isOn: true,
-            },
-            {
-              name: 'SameColumnAliasIfSameColumnName',
-              description: 'If the column names are the same, the column aliases are the same.',
-              typeCode: 'sameColumnAliasIfSameColumnName',
-              isOn: true,
-            },
-            {
-              name: 'SameColumnDbTypeIfSameColumnName',
-              description: 'If the column names are the same, the data type of the column is the same.',
-              typeCode: 'sameColumnDbTypeIfSameColumnName',
-              isOn: true,
-            },
-            {
-              name: 'SameColumnSizeIfSameColumnName',
-              description: 'If the column names are the same, the size of the column is the same.',
-              typeCode: 'sameColumnSizeIfSameColumnName',
-              isOn: true,
-            },
-            {
-              name: 'SameColumnNameIfSameColumnAlias',
-              description: 'If column aliases are the same, column names are the same.',
-              typeCode: 'sameColumnNameIfSameColumnAlias',
-              isOn: false,
-            }
-          ]
-        },
-        tableMap : {
-          themeList : ['hasPK', 'upperCaseBasis', 'lowerCaseBasis', 'identityIfPureIDPK', 'sequenceIfPureIDPK', 'hasCommonColumn', 'hasAlias', 'hasComment']
-        },
-        columnMap : {
-          themeList : ['upperCaseBasis', 'lowerCaseBasis', 'hasAlias', 'hasComment']
-        }
-      }
+      ApiFactory.schemaPolicy(projectName).then(json => {
+        self.schemaPolicy = json
+        self.update()
+      })
     }
 
     // ===================================================================================

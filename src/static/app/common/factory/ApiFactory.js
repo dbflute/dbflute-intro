@@ -56,6 +56,9 @@ export default class ApiFactory {
   syncSchema(projectName) {
     return ffetch.post(`api/dfprop/${projectName}/syncschema`);
   }
+  schemaPolicy(projectName) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy`);
+  }
   editSyncSchema(projectName, syncSchemaSettingData) {
     return ffetch.post(`api/dfprop/${projectName}/syncschema/edit`,
       {

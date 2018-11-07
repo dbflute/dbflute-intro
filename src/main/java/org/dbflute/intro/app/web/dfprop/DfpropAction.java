@@ -29,6 +29,7 @@ import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
@@ -111,8 +112,9 @@ public class DfpropAction extends IntroBaseAction {
     //                                       GetSchemaPolicy
     //                                       ---------------
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DfpropSchemaSyncCheckResult> schemapolicy(String project) {
-        return JsonResponse.asEmptyBody();
+    public JsonResponse<DfpropSchemaPolicyResult> schemapolicy(String project) {
+        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(project);
+        return asJson(new DfpropSchemaPolicyResult(schemaPolicyMap));
     }
 
     // -----------------------------------------------------

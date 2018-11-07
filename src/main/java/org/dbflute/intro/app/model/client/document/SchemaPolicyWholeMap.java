@@ -26,7 +26,7 @@ public class SchemaPolicyWholeMap {
         //@formatter:off
         UniqueTableAlias("uniqueTableAlias"),
         SameColumnAliasIfSameColumnName("sameColumnAliasIfSameColumnName"),
-        SameColumnDbTypeIfSameColumnName("sameColumnDbTypeIfSameColumnNam"),
+        SameColumnDbTypeIfSameColumnName("sameColumnDbTypeIfSameColumnName"),
         SameColumnSizeIfSameColumnName("sameColumnSizeIfSameColumnName"),
         SameColumnNameIfSameColumnAlias("sameColumnNameIfSameColumnAlias");
         //@formatter:off

@@ -100,25 +100,21 @@ public class DfpropInfoLogic {
         if (dfpropFiles == null) {
             return Optional.empty();
         }
-        return Arrays.stream(dfpropFiles)
-            .filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop"))
-            .findAny()
-            .map(file -> {
-                final DfPropFile dfpropFile = new DfPropFile();
-                Map<String, Object> readMap = readMap(file, dfpropFile);
-                @SuppressWarnings("unchecked")
-                Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
-                return schemaSyncCheckMap;
-            })
-            .map(schemaSyncCheckMap -> {
-                final String url = convertSettingToString(schemaSyncCheckMap.get("url"));
-                final String schema = convertSettingToString(schemaSyncCheckMap.get("schema"));
-                final String user = convertSettingToString(schemaSyncCheckMap.get("user"));
-                final String password = convertSettingToString(schemaSyncCheckMap.get("password"));
-                final DbConnectionBox dbConnectionBox = new DbConnectionBox(url, schema, user, password);
-                final Boolean isSuppressCraftDiff = Boolean.valueOf(convertSettingToString(schemaSyncCheckMap.get("isSuppressCraftDiff")));
-                return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
-            });
+        return Arrays.stream(dfpropFiles).filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop")).findAny().map(file -> {
+            final DfPropFile dfpropFile = new DfPropFile();
+            Map<String, Object> readMap = readMap(file, dfpropFile);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+            return schemaSyncCheckMap;
+        }).map(schemaSyncCheckMap -> {
+            final String url = convertSettingToString(schemaSyncCheckMap.get("url"));
+            final String schema = convertSettingToString(schemaSyncCheckMap.get("schema"));
+            final String user = convertSettingToString(schemaSyncCheckMap.get("user"));
+            final String password = convertSettingToString(schemaSyncCheckMap.get("password"));
+            final DbConnectionBox dbConnectionBox = new DbConnectionBox(url, schema, user, password);
+            final Boolean isSuppressCraftDiff = Boolean.valueOf(convertSettingToString(schemaSyncCheckMap.get("isSuppressCraftDiff")));
+            return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
+        });
     }
     // -----------------------------------------------------
     //                                          SchemaPolicy

@@ -1,0 +1,57 @@
+/*
+ * Copyright 2014-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+package org.dbflute.intro.app.web.dfprop;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+
+/**
+ * @author hakiba
+ */
+public class DfpropSchemaPolicyResult {
+
+    public static class WholeMap {
+        List<Theme> themeList;
+
+        public WholeMap(SchemaPolicyWholeMap wholeMap) {
+            this.themeList = wholeMap.themeList.stream().map(theme -> new Theme(theme)).collect(Collectors.toList());
+        }
+    }
+
+    public static class Theme {
+        String name;
+        String description;
+        String typeCode;
+        Boolean isOn;
+
+        public Theme(SchemaPolicyWholeMap.Theme theme) {
+            this.name = theme.type.name();
+            // TODO confirm that need description property by ryohei (2018/11/07)
+            this.description = "Sample Description";
+            this.typeCode = theme.type.code;
+            this.isOn = theme.isOn;
+        }
+    }
+
+    public WholeMap wholeMap;
+
+    public DfpropSchemaPolicyResult(SchemaPolicyMap schemaPolicyMap) {
+        this.wholeMap = new WholeMap(schemaPolicyMap.wholeMap);
+    }
+}
