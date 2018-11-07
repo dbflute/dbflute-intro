@@ -18,6 +18,10 @@
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
+  <h3>Schema Policy Check</h3>
+  <button class="ui positive button" onclick="{ goToSettings }">Edit Policy Check</button>
+  <button class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Policy (schema-policy-check)</button>
+
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
       Generating...
@@ -170,6 +174,13 @@
     this.showResultModal = (message) => {
       self.resultModal.message = message
       self.refs.resultModal.show()
+    }
+
+    // -----------------------------------------------------
+    //                                                  GoTo
+    //                                                  ----
+    this.goToSettings = () => {
+      route(`settings/${self.opts.projectName}`)
     }
 
     // ===================================================================================
