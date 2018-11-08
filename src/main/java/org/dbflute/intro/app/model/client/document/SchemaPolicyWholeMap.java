@@ -24,27 +24,29 @@ public class SchemaPolicyWholeMap {
 
     public enum ThemeType {
         //@formatter:off
-        UniqueTableAlias("uniqueTableAlias"),
-        SameColumnAliasIfSameColumnName("sameColumnAliasIfSameColumnName"),
-        SameColumnDbTypeIfSameColumnName("sameColumnDbTypeIfSameColumnName"),
-        SameColumnSizeIfSameColumnName("sameColumnSizeIfSameColumnName"),
-        SameColumnNameIfSameColumnAlias("sameColumnNameIfSameColumnAlias");
+        UniqueTableAlias("uniqueTableAlias", "The alias of the table is unique."),
+        SameColumnAliasIfSameColumnName("sameColumnAliasIfSameColumnName", "If the column names are the same, the column aliases are the same."),
+        SameColumnDbTypeIfSameColumnName("sameColumnDbTypeIfSameColumnName", "If the column names are the same, the data type of the column is the same."),
+        SameColumnSizeIfSameColumnName("sameColumnSizeIfSameColumnName", "If the column names are the same, the size of the column is the same."),
+        SameColumnNameIfSameColumnAlias("sameColumnNameIfSameColumnAlias", "If column aliases are the same, column names are the same.");
         //@formatter:off
 
-        ThemeType(String code) {
+        ThemeType(String code, String description) {
             this.code = code;
+            this.description = description;
         }
 
         public String code;
+        public String description;
     }
 
     public static class Theme {
         public ThemeType type;
-        public boolean isOn;
+        public boolean isActive;
 
-        public Theme(ThemeType type, boolean isOn) {
+        public Theme(ThemeType type, boolean isActive) {
             this.type = type;
-            this.isOn = isOn;
+            this.isActive = isActive;
         }
     }
 

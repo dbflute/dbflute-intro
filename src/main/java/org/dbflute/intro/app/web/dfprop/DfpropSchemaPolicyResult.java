@@ -38,14 +38,13 @@ public class DfpropSchemaPolicyResult {
         String name;
         String description;
         String typeCode;
-        Boolean isOn;
+        Boolean isActive;
 
         public Theme(SchemaPolicyWholeMap.Theme theme) {
             this.name = theme.type.name();
-            // TODO confirm that need description property by ryohei (2018/11/07)
-            this.description = "Sample Description";
+            this.description = theme.type.description;
             this.typeCode = theme.type.code;
-            this.isOn = theme.isOn;
+            this.isActive = theme.isActive;
         }
     }
 

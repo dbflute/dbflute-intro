@@ -52,7 +52,7 @@
               <div class="ui divided items">
                 <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
                   <div class="ui left floated">
-                    <su-checkbox class="toggle middle aligned" checked="{ theme.isOn }"></su-checkbox>
+                    <su-checkbox class="toggle middle aligned read-only" checked="{ theme.isActive }" ></su-checkbox>
                   </div>
                   <div class="content">
                   <a class="header">{ theme.name }</a>

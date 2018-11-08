@@ -69,9 +69,9 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         List<String> themeListFromDfProp = (List<String>) wholeMapFromDfProp.get("themeList");
         wholeMapThemeList.forEach(theme -> {
             if (themeListFromDfProp.contains(theme.type.code)) {
-                assertTrue(theme.isOn);
+                assertTrue(theme.isActive);
             } else {
-                assertFalse(theme.isOn);
+                assertFalse(theme.isActive);
             }
         });
     }
