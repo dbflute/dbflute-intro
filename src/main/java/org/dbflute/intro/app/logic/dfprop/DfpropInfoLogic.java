@@ -137,6 +137,10 @@ public class DfpropInfoLogic {
         return new SchemaPolicyMap(wholeMap);
     }
 
+    public void editSchemePolicyTheme(String clientProject, SchemaPolicyWholeMap.ThemeType themeType, boolean isActive) {
+
+    }
+
     // -----------------------------------------------------
     //                                      LittleAdjustment
     //                                      ----------------
