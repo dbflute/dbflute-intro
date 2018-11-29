@@ -221,6 +221,12 @@
     this.alterCheckTask = () => {
       this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
         this.task('alterCheck', self.refs.executeModal)
+      }).finally(() => {
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.update({
+            client: response
+          })
+        })
       })
 }
 
