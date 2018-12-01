@@ -104,7 +104,7 @@ public class DocumentPhysicalLogic {
         return new File(buildDocumentPath(clientProject, pureName));
     }
 
-    private File toProjectNamedMigrationFile(String clientProject, String type) { // e.g. ReplaceSchema
+    private File toProjectNamedMigrationFile(String clientProject, String type) { // e.g. AlterCheck
         final String pureName;
 
         switch (type) {
