@@ -31,6 +31,7 @@ import org.lastaflute.web.response.StreamResponse;
 /**
  * @author deco
  * @author jflute
+ * @author subaru
  */
 public class DocumentAction extends IntroBaseAction {
 

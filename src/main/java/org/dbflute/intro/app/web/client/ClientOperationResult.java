@@ -20,6 +20,7 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco at rinshi-no-mori
+ * @author subaru
  */
 public class ClientOperationResult {
 

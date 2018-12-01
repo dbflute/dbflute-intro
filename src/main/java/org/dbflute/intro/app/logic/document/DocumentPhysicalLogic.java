@@ -26,6 +26,7 @@ import org.dbflute.intro.dbflute.allcommon.CDef;
  * @author deco
  * @author jflute
  * @author cabos
+ * @author subaru
  */
 public class DocumentPhysicalLogic {
 
