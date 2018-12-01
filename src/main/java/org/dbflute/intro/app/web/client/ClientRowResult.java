@@ -82,8 +82,7 @@ public class ClientRowResult {
         public Boolean checkDbCommentDiff;
         @Required
         public Boolean checkProcedureDiff;
-        @Required
-        public Boolean generateProcedureParameterBean;
+        public Boolean generateProcedureParameterBean; // If outsideSqlMap.dfprop does not exist, this property is null.
         public String procedureSynonymHandlingType;
     }
 
