@@ -18,9 +18,38 @@
   <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
   <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
+  <h3>Replace Schema</h3>
+  <button class="ui primary button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+
+  <h3>Alter Check</h3>
+  <div class="ui list">
+    <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+  </div>
+  <div class="ui list">
+    <div show="{ client.ngMark === 'previous-NG' }" class="ngmark">
+      Found problems on <b>Previous DDL.</b><br/>
+      Retry save previous.
+    </div>
+    <div show="{ client.ngMark === 'alter-NG' }" class="ngmark">
+      Found problems on <b>Alter DDL.</b><br/>
+      Complete your alter DDL, referring to AlterCheckResultHTML.
+    </div>
+    <div show="{ client.ngMark === 'next-NG' }" class="ngmark">
+      Found problems on <b>Next DDL.</b><br/>
+      Fix your DDL and data grammatically.
+    </div>
+  </div>
+  <button class="ui primary button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
       Generating...
+    </div>
+  </su-modal>
+
+  <su-modal modal="{ executeModal }" class="large" ref="executeModal">
+    <div class="description">
+      Executing...
     </div>
   </su-modal>
 
@@ -183,6 +212,24 @@
       this.task('schemaSyncCheck', self.refs.checkModal)
     }
 
+    this.replaceSchemaTask = () => {
+      this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
+        this.task('replaceSchema', self.refs.executeModal)
+      })
+}
+
+    this.alterCheckTask = () => {
+      this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
+        this.task('alterCheck', self.refs.executeModal)
+      }).finally(() => {
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.update({
+            client: response
+          })
+        })
+      })
+}
+
     this.task = (task, modal) => {
       modal.show()
       ApiFactory.task(self.opts.projectName, task).then((response) => {
@@ -211,6 +258,10 @@
 
     this.openSyncCheckResultHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
+    }
+
+    this.openAlterCheckResultHTML = () => {
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/altercheckresulthtml/')
     }
 
     this.canCheckSchemaSetting = () => {

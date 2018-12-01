@@ -17,17 +17,14 @@ package org.dbflute.intro.bizfw.code;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.dbflute.utflute.core.PlainTestCase;
+import org.lastaflute.di.exception.IORuntimeException;
 
 /**
  * @author hakiba
@@ -41,20 +38,18 @@ public class LicenseManagementTest extends PlainTestCase {
     //                                                                      License Header
     //                                                                      ==============
     public void test_license_header_main() {
-        doTest_license_header("src/main/java");
+        doTest_license_header("/src/main/java");
     }
 
     public void test_license_header_test() {
-        doTest_license_header("src/test/java");
+        doTest_license_header("/src/test/java");
     }
 
     private void doTest_license_header(String srcPathMark) {
         // ## Arrange ##
-        File buildDir = getBuildDir(getClass());
-        String buildPath = getCanonicalPath(buildDir);
-        File srcDir = new File(buildPath + "/../../../" + srcPathMark);
+        File srcDir = new File(getProjectPath() + srcPathMark);
         assertTrue(srcDir.exists());
-        List<File> unlicensedList = new ArrayList<File>();
+        List<File> unlicensedList = new ArrayList<>();
 
         // ## Act ##
         checkUnlicensed(srcDir, unlicensedList);
@@ -82,11 +77,7 @@ public class LicenseManagementTest extends PlainTestCase {
     //                                                                             =======
     protected void checkUnlicensed(File currentFile, List<File> unlicensedList) {
         if (isPackageDir(currentFile)) {
-            File[] subFiles = currentFile.listFiles(new FileFilter() {
-                public boolean accept(File file) {
-                    return isPackageDir(file) || isSourceFile(file);
-                }
-            });
+            File[] subFiles = currentFile.listFiles(file -> isPackageDir(file) || isSourceFile(file));
             if (subFiles == null || subFiles.length == 0) {
                 return;
             }
@@ -117,10 +108,8 @@ public class LicenseManagementTest extends PlainTestCase {
             String msg = "The argument 'targetFile' should be file: " + srcFile;
             throw new IllegalArgumentException(msg);
         }
-        BufferedReader br = null;
         boolean contains = false;
-        try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile), "UTF-8"));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile), "UTF-8"))) {
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
@@ -134,12 +123,6 @@ public class LicenseManagementTest extends PlainTestCase {
         } catch (IOException e) {
             String msg = "Failed to read the file: " + srcFile;
             throw new IllegalStateException(msg, e);
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ignored) {}
-            }
         }
         if (!contains) {
             unlicensedList.add(srcFile);
@@ -149,92 +132,11 @@ public class LicenseManagementTest extends PlainTestCase {
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============
-    protected String getResourcePath(String path, String extension) { // from DBFlute DfResourceUtil
-        if (extension == null) {
-            return path;
-        }
-        extension = "." + extension;
-        if (path.endsWith(extension)) {
-            return path;
-        }
-        return path.replace('.', '/') + extension;
-    }
-
-    protected String getResourcePath(Class<?> clazz) {
-        return clazz.getName().replace('.', '/') + ".class";
-    }
-
-    protected File getBuildDir(Class<?> clazz) {
-        return getBuildDir(getResourcePath(clazz));
-    }
-
-    protected File getBuildDir(String path) {
-        File dir = null;
-        URL url = getResourceUrl(path);
-        if ("file".equals(url.getProtocol())) {
-            int num = path.split("/").length;
-            dir = new File(getFileName(url));
-            for (int i = 0; i < num;) {
-                i++;
-                dir = dir.getParentFile();
-            }
-        } else {
-            dir = new File(toJarFilePath(url));
-        }
-        return dir;
-    }
-
-    protected URL getResourceUrl(String path) {
-        return getResourceUrl(path, null);
-    }
-
-    protected URL getResourceUrl(String path, String extension) {
-        return getResourceUrl(path, extension, Thread.currentThread().getContextClassLoader());
-    }
-
-    protected URL getResourceUrl(String path, String extension, ClassLoader loader) {
-        if (path == null || loader == null) {
-            return null;
-        }
-        path = getResourcePath(path, extension);
-        return loader.getResource(path);
-    }
-
-    protected String getFileName(URL url) {
-        String s = url.getFile();
-        return decodeURL(s, "UTF8");
-    }
-
-    protected String decodeURL(String s, String enc) {
+    private String getProjectPath() {
         try {
-            return URLDecoder.decode(s, enc);
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    protected String toJarFilePath(URL jarUrl) {
-        URL nestedUrl = createURL(jarUrl.getPath());
-        String nestedUrlPath = nestedUrl.getPath();
-        int pos = nestedUrlPath.lastIndexOf('!');
-        String jarFilePath = nestedUrlPath.substring(0, pos);
-        File jarFile = new File(decodeURL(jarFilePath, "UTF8"));
-        return getCanonicalPath(jarFile);
-    }
-
-    protected URL createURL(String spec) {
-        try {
-            return new URL(spec);
+            return getProjectDir().getCanonicalPath();
         } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    protected String getCanonicalPath(File file) {
-        try {
-            return file.getCanonicalPath();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IORuntimeException(e);
         }
     }
 }
