@@ -31,6 +31,7 @@ import org.lastaflute.web.response.StreamResponse;
 /**
  * @author deco
  * @author jflute
+ * @author subaru
  */
 public class DocumentAction extends IntroBaseAction {
 
@@ -82,6 +83,15 @@ public class DocumentAction extends IntroBaseAction {
             return null;
         }
         return createHtmlStreamResponse(syncCheckResultHtml);
+    }
+
+    @Execute(urlPattern = "{}/@word")
+    public StreamResponse altercheckresulthtml(String clientProject) {
+        File AlterCheckResultHtml = documentPhysicalLogic.findAlterCheckResultHtml(clientProject);
+        if (!AlterCheckResultHtml.exists()) {
+            return null;
+        }
+        return createHtmlStreamResponse(AlterCheckResultHtml);
     }
 
     @Execute(urlPattern = "{}/@word/{}")

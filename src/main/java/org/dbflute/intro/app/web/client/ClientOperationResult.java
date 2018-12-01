@@ -20,6 +20,7 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco at rinshi-no-mori
+ * @author subaru
  */
 public class ClientOperationResult {
 
@@ -44,4 +45,11 @@ public class ClientOperationResult {
     public Boolean hasHistoryHtml;
     @Required
     public Boolean hasSyncCheckResultHtml;
+    @Required
+    public Boolean hasAlterCheckResultHtml;
+
+    // ===================================================================================
+    //                                                                         Alter Check
+    //                                                                         ===========
+    public CDef.NgMark ngMark;
 }

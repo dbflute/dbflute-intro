@@ -20,10 +20,13 @@ import java.io.File;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.dbflute.allcommon.CDef;
 
 /**
  * @author deco
  * @author jflute
+ * @author cabos
+ * @author subaru
  */
 public class DocumentPhysicalLogic {
 
@@ -48,6 +51,10 @@ public class DocumentPhysicalLogic {
         return findSyncCheckResultHtml(clientProject).exists();
     }
 
+    public boolean existsAlterCheckResultHtml(String clientProject) {
+        return findAlterCheckResultHtml(clientProject).exists();
+    }
+
     public File findSchemaHtml(String clientProject) {
         return toProjectNamedDocumentFile(clientProject, "schema");
     }
@@ -64,8 +71,21 @@ public class DocumentPhysicalLogic {
         return toFixedNamedDocumentFile(clientProject, "sync-check-result.html");
     }
 
+    public File findAlterCheckResultHtml(String clientProject) {
+        return toProjectNamedMigrationFile(clientProject, "schema");
+    }
+
     public File findLastaDocHtml(String clientProject, String moduleName) {
         return toProjectNamedDocumentFile(clientProject, moduleName, "lastadoc");
+    }
+
+    public CDef.NgMark findAlterCheckNgMark(String clientProject) {
+        for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
+            if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
+                return ngMark;
+            }
+        }
+        return null;
     }
 
     // ===================================================================================
@@ -85,7 +105,32 @@ public class DocumentPhysicalLogic {
         return new File(buildDocumentPath(clientProject, pureName));
     }
 
+    private File toProjectNamedMigrationFile(String clientProject, String type) { // e.g. AlterCheck
+        final String pureName;
+
+        switch (type) {
+        case "schema":
+            pureName = "alter-check-result.html";
+            break;
+        default:
+            return null;
+        }
+        return toFixedNamedMigrationFile(clientProject, type, pureName);
+    }
+
+    private File toFixedNamedMigrationFile(String clientProject, String type, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildMigrationPath(clientProject, type, pureName));
+    }
+
     private String buildDocumentPath(String clientProject, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "output", "doc", pureName);
+    }
+
+    private String buildMigrationPath(String clientProject, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", pureName);
+    }
+
+    private String buildMigrationPath(String clientProject, String type, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
     }
 }
