@@ -19,9 +19,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMapMeta;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.lastaflute.core.exception.LaSystemException;
@@ -41,6 +43,8 @@ public class DfpropUpdateLogic {
 
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
+    @Resource
+    private DfpropInfoLogic dfpropInfoLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
 
@@ -151,19 +155,18 @@ public class DfpropUpdateLogic {
 
     }
 
-    protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyWholeMap.ThemeType themeType, final Boolean isActive) {
+    protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyWholeMap.ThemeType themeType,
+            final Boolean isActive) {
         final StringBuilder sb = new StringBuilder();
         final String targetMapAlias = "wholeMap";
         final String themeListAlias = "themeList";
 
         boolean inWholeMap = false;
         boolean inThemeList = false;
-        boolean writtenByOneLine = false;
         int innerListElementCount = 1;
         int closeListElementCount = 0;
 
         try (BufferedReader br = Files.newBufferedReader(schemaPolicyMapFile.toPath())) {
-            List<String> originalThemeCodeList = new ArrayList<>();
             while (true) {
                 String line = br.readLine();
                 if (line == null) {
@@ -177,12 +180,11 @@ public class DfpropUpdateLogic {
                 }
                 if (inWholeMap && isNotComment && StringUtils.contains(line, themeListAlias)) {
                     inThemeList = true;
-                    writtenByOneLine = StringUtils.contains(line, "}");
                 }
 
                 // Change Property
                 // one line
-                if (inThemeList && writtenByOneLine) {
+                if (inThemeList && meta.wholeMapMeta.themeListMeta.writtenByOneLine) {
                     // change to Active
                     if (isActive && !line.contains(themeType.code)) {
                         line = line.replace(" }", String.format(" ; %s }", themeType.code));
@@ -194,18 +196,12 @@ public class DfpropUpdateLogic {
                     }
                 }
                 // multiple line
-                if (inThemeList && !writtenByOneLine) {
+                if (inThemeList && !meta.wholeMapMeta.themeListMeta.writtenByOneLine) {
                     // change to Active
                     if (isActive) {
-                        // temporary save element
-                        String trimmedCode = line.replace(";", "").trim();
-                        if (!trimmedCode.isEmpty()) {
-                            originalThemeCodeList.add(trimmedCode);
-                        }
-
                         // append new element
                         boolean closeThemeList = StringUtils.contains(line, "}");
-                        if (closeThemeList && !originalThemeCodeList.contains(themeType.code)) {
+                        if (closeThemeList && !meta.wholeMapMeta.themeListMeta.originalThemeCodeList.contains(themeType.code)) {
                             line = String.format("            ; %s", themeType.code) + "\n" + line;
                         }
                     }
@@ -229,5 +225,40 @@ public class DfpropUpdateLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    protected SchemaPolicyMapMeta extractSchemaPolicyMeta(String project, File file) throws IOException {
+        SchemaPolicyMapMeta schemaPolicyMeta = new SchemaPolicyMapMeta();
+
+        boolean inWholeMap = false;
+
+        // check written by one line.
+        try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
+            while (true) {
+                String line = br.readLine();
+                if (line == null) {
+                    break;
+                }
+
+                boolean isNotComment = !StringUtils.startsWith(line.trim(), "#");
+
+                // check in
+                if (isNotComment && StringUtils.contains(line, "wholeMap")) {
+                    inWholeMap = true;
+                }
+                if (inWholeMap && isNotComment && StringUtils.contains(line, "themeList")) {
+                    schemaPolicyMeta.wholeMapMeta.themeListMeta.writtenByOneLine = StringUtils.contains(line, "}");
+                    inWholeMap = false;
+                }
+            }
+        }
+
+        // save original value
+        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(project);
+        List<String> originalCodeList =
+                schemaPolicyMap.wholeMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList());
+        schemaPolicyMeta.wholeMapMeta.themeListMeta.originalThemeCodeList.addAll(originalCodeList);
+
+        return schemaPolicyMeta;
     }
 }
