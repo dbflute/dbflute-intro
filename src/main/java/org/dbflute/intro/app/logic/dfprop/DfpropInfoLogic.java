@@ -121,11 +121,15 @@ public class DfpropInfoLogic {
     //                                          ------------
     public SchemaPolicyMap findSchemaPolicyMap(String projectName) {
         File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "schemaPolicyMap.dfprop");
+        return parseSchemePolicyMap(schemaPolicyMapFile);
+    }
+    protected SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) {
         Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
 
         // wholeMap
         @SuppressWarnings("unchecked")
         Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
+        System.out.println(schemaPolicyMap);
         @SuppressWarnings("unchecked")
         List<String> originalThemeList = (List<String>) originalWholeMap.get("themeList");
         List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
@@ -135,10 +139,6 @@ public class DfpropInfoLogic {
         SchemaPolicyWholeMap wholeMap = new SchemaPolicyWholeMap(themeList);
 
         return new SchemaPolicyMap(wholeMap);
-    }
-
-    public void editSchemePolicyTheme(String clientProject, SchemaPolicyWholeMap.ThemeType themeType, boolean isActive) {
-
     }
 
     // -----------------------------------------------------

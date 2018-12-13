@@ -75,28 +75,4 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
             }
         });
     }
-
-    @Test
-    public void test_editSchemaPolicy() throws Exception {
-        // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
-        inject(logic);
-
-        SchemaPolicyWholeMap.ThemeType testTargetThemeType = SchemaPolicyWholeMap.ThemeType.SameColumnAliasIfSameColumnName;
-        boolean isActive = logic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList.stream()
-                .filter(theme -> testTargetThemeType == theme.type)
-                .findAny()
-                .map(theme -> theme.isActive)
-                .orElseThrow(() -> new IllegalStateException());
-        boolean toggledActive = !isActive;
-
-        // ## Act ##
-        logic.editSchemePolicyTheme(TEST_CLIENT_PROJECT, testTargetThemeType, toggledActive);
-
-        // ## Assert ##
-        SchemaPolicyMap schemaPolicyMap = logic.findSchemaPolicyMap(TEST_CLIENT_PROJECT);
-        schemaPolicyMap.wholeMap.themeList.stream()
-                .filter(theme -> testTargetThemeType == theme.type)
-                .forEach(theme -> assertEquals(theme.isActive, toggledActive));
-    }
 }

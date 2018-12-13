@@ -15,19 +15,23 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
-import org.apache.commons.lang3.StringUtils;
-import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.model.client.document.DocumentMap;
-import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
-import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
-import org.lastaflute.core.exception.LaSystemException;
-
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author deco
@@ -141,6 +145,84 @@ public class DfpropUpdateLogic {
             return sb.toString();
         } catch (IOException e) {
             throw new LaSystemException("Cannot replace dfprop", e);
+        }
+    }
+    public void replaceWholeMap(String project, SchemaPolicyWholeMap wholeMap) {
+
+    }
+
+    protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyWholeMap.ThemeType themeType, final Boolean isActive) {
+        final StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = Files.newBufferedReader(schemaPolicyMapFile.toPath())) {
+            boolean inWholeMap = false;
+            boolean inThemeList = false;
+            boolean writtenByOneLine = false;
+            int innerListElementCount = 1;
+            int closeListElementCount = 0;
+            List<String> originalThemeCodeList = new ArrayList<>();
+            while (true) {
+                String line = br.readLine();
+                if (line == null) {
+                    break;
+                }
+
+                // Check in
+                if (StringUtils.contains(line, "; wholeMap = map:{")) {
+                    inWholeMap = true;
+                }
+                if (inWholeMap && StringUtils.startsWith(line, "        ; themeList =")) {
+                    inThemeList = true;
+                    writtenByOneLine = StringUtils.contains(line, "}");
+                }
+
+                // Change Property
+                // one line
+                if (inThemeList && writtenByOneLine) {
+                    // change to Active
+                    if (isActive && !line.contains(themeType.code)) {
+                        line = line.replace(" }", String.format(" ; %s }", themeType.code));
+                    }
+                    // change to NotActive
+                    if (!isActive && line.contains(themeType.code)) {
+                        line = line.replace(String.format("%s ;", themeType.code), "");
+                        line = line.replace(String.format("%s }", themeType.code), "}");
+                    }
+                }
+                // multiple line
+                if (inThemeList && !writtenByOneLine) {
+                    // change to Active
+                    if (isActive) {
+                        // temporary save element
+                        String trimmedCode = line.replace(";", "").trim();
+                        if (!trimmedCode.isEmpty()) {
+                            originalThemeCodeList.add(trimmedCode);
+                        }
+
+                        // append new element
+                        boolean closeThemeList = StringUtils.contains(line, "}");
+                        if (closeThemeList && !originalThemeCodeList.contains(themeType.code)) {
+                            line = String.format("            ; %s", themeType.code) + "\n" + line;
+                        }
+                    }
+                    // change to NotActive
+                    if (!isActive && line.contains(themeType.code)) {
+                        line = "";
+                    }
+                }
+
+                // Check out
+                if (inThemeList && StringUtils.contains(line, "}")) {
+                    inThemeList = false;
+                    closeListElementCount++;
+                }
+                if (inWholeMap && innerListElementCount == closeListElementCount) {
+                    inWholeMap = false;
+                }
+                sb.append(line).append("\n");
+            }
+            flutyFileLogic.writeFile(schemaPolicyMapFile, sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
