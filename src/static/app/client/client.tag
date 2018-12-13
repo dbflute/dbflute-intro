@@ -19,7 +19,7 @@
   <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
   <h3>Replace Schema</h3>
-  <button class="ui primary button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+  <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
 
   <h3>Alter Check</h3>
   <div class="ui list">
@@ -39,7 +39,7 @@
       Fix your DDL and data grammatically.
     </div>
   </div>
-  <button class="ui primary button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+  <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
