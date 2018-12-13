@@ -153,12 +153,16 @@ public class DfpropUpdateLogic {
 
     protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyWholeMap.ThemeType themeType, final Boolean isActive) {
         final StringBuilder sb = new StringBuilder();
+        final String targetMapAlias = "wholeMap";
+        final String themeListAlias = "themeList";
+
+        boolean inWholeMap = false;
+        boolean inThemeList = false;
+        boolean writtenByOneLine = false;
+        int innerListElementCount = 1;
+        int closeListElementCount = 0;
+
         try (BufferedReader br = Files.newBufferedReader(schemaPolicyMapFile.toPath())) {
-            boolean inWholeMap = false;
-            boolean inThemeList = false;
-            boolean writtenByOneLine = false;
-            int innerListElementCount = 1;
-            int closeListElementCount = 0;
             List<String> originalThemeCodeList = new ArrayList<>();
             while (true) {
                 String line = br.readLine();
@@ -167,10 +171,11 @@ public class DfpropUpdateLogic {
                 }
 
                 // Check in
-                if (StringUtils.contains(line, "; wholeMap = map:{")) {
+                boolean isNotComment = !StringUtils.startsWith(line.trim(), "#");
+                if (isNotComment && StringUtils.contains(line, targetMapAlias)) {
                     inWholeMap = true;
                 }
-                if (inWholeMap && StringUtils.startsWith(line, "        ; themeList =")) {
+                if (inWholeMap && isNotComment && StringUtils.contains(line, themeListAlias)) {
                     inThemeList = true;
                     writtenByOneLine = StringUtils.contains(line, "}");
                 }
