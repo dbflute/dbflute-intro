@@ -19,9 +19,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -157,12 +159,22 @@ public class DfpropUpdateLogic {
 
     protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyWholeMap.ThemeType themeType,
             final Boolean isActive) {
+        replaceWholeMapTheme(schemaPolicyMapFile, meta, Collections.singletonList(themeType), isActive);
+    }
+
+    protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta,
+            List<SchemaPolicyWholeMap.ThemeType> themeTypeList, final Boolean isActive) {
+
         final StringBuilder sb = new StringBuilder();
         final String targetMapAlias = "wholeMap";
         final String themeListAlias = "themeList";
+        final List<String> themeTypeCodeList = themeTypeList.stream().map(themeType -> themeType.code).collect(Collectors.toList());
 
-        boolean inWholeMap = false;
-        boolean inThemeList = false;
+        final boolean writtenByOneLine = meta.wholeMapMeta.themeListMeta.writtenByOneLine;
+        final List<String> originalThemeCodeList = meta.wholeMapMeta.themeListMeta.originalThemeCodeList;
+
+        boolean inTargetMap = false;
+        boolean inTargetMapThemeList = false;
         int innerListElementCount = 1;
         int closeListElementCount = 0;
 
@@ -173,51 +185,65 @@ public class DfpropUpdateLogic {
                     break;
                 }
 
-                // Check in
                 boolean isNotComment = !StringUtils.startsWith(line.trim(), "#");
+
+                // Check in
                 if (isNotComment && StringUtils.contains(line, targetMapAlias)) {
-                    inWholeMap = true;
+                    inTargetMap = true;
                 }
-                if (inWholeMap && isNotComment && StringUtils.contains(line, themeListAlias)) {
-                    inThemeList = true;
+                if (inTargetMap && isNotComment && StringUtils.contains(line, themeListAlias)) {
+                    inTargetMapThemeList = true;
                 }
 
                 // Change Property
                 // one line
-                if (inThemeList && meta.wholeMapMeta.themeListMeta.writtenByOneLine) {
+                if (inTargetMapThemeList && writtenByOneLine) {
                     // change to Active
-                    if (isActive && !line.contains(themeType.code)) {
-                        line = line.replace(" }", String.format(" ; %s }", themeType.code));
+                    if (isActive) {
+                        line = Stream.concat(originalThemeCodeList.stream(), themeTypeCodeList.stream())
+                                .distinct()
+                                .reduce((v1, v2) -> v1 + " ; " + v2)
+                                .map(codeList -> String.format("        ; themeList = list:{ %s }", codeList))
+                                .orElse("        ; themeList = list:{ }");
                     }
                     // change to NotActive
-                    if (!isActive && line.contains(themeType.code)) {
-                        line = line.replace(String.format("%s ;", themeType.code), "");
-                        line = line.replace(String.format("%s }", themeType.code), "}");
+                    if (!isActive) {
+                        line = originalThemeCodeList.stream()
+                                .filter(themeTypeCode -> !themeTypeCodeList.contains(themeTypeCode))
+                                .reduce((v1, v2) -> v1 + " ; " + v2)
+                                .map(codeList -> String.format("        ; themeList = list:{ %s }", codeList))
+                                .orElse("        ; themeList = list:{ }");
                     }
                 }
                 // multiple line
-                if (inThemeList && !meta.wholeMapMeta.themeListMeta.writtenByOneLine) {
+                if (inTargetMapThemeList && !writtenByOneLine) {
                     // change to Active
                     if (isActive) {
                         // append new element
                         boolean closeThemeList = StringUtils.contains(line, "}");
-                        if (closeThemeList && !meta.wholeMapMeta.themeListMeta.originalThemeCodeList.contains(themeType.code)) {
-                            line = String.format("            ; %s", themeType.code) + "\n" + line;
+                        if (closeThemeList) {
+                            line = themeTypeCodeList.stream()
+                                    .filter(themeTypeCode -> !originalThemeCodeList.contains(themeTypeCode))
+                                    .map(themeTypeCode -> String.format("            ; %s", themeTypeCode))
+                                    .reduce((v1, v2) -> v1 + "\n" + v2)
+                                    .map(appendTheme -> appendTheme + "\n" + "        }")
+                                    .orElse(line);
                         }
                     }
                     // change to NotActive
-                    if (!isActive && line.contains(themeType.code)) {
+                    boolean containsAnyThemeType = StringUtils.containsAny(line, themeTypeCodeList.toArray(new String[0]));
+                    if (!isActive && containsAnyThemeType) {
                         line = "";
                     }
                 }
 
                 // Check out
-                if (inThemeList && StringUtils.contains(line, "}")) {
-                    inThemeList = false;
+                if (inTargetMapThemeList && StringUtils.contains(line, "}")) {
+                    inTargetMapThemeList = false;
                     closeListElementCount++;
                 }
-                if (inWholeMap && innerListElementCount == closeListElementCount) {
-                    inWholeMap = false;
+                if (inTargetMap && innerListElementCount == closeListElementCount) {
+                    inTargetMap = false;
                 }
                 sb.append(line).append("\n");
             }
@@ -254,9 +280,9 @@ public class DfpropUpdateLogic {
         }
 
         // save original value
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(project);
-        List<String> originalCodeList =
-                schemaPolicyMap.wholeMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList());
+        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(file);
+        List<String> originalCodeList = schemaPolicyMap.wholeMap.themeList.stream().
+                filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
         schemaPolicyMeta.wholeMapMeta.themeListMeta.originalThemeCodeList.addAll(originalCodeList);
 
         return schemaPolicyMeta;
