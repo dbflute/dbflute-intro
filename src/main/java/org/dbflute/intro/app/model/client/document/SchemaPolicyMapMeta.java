@@ -12,7 +12,6 @@ public class SchemaPolicyMapMeta {
     }
 
     public static class ThemeListMeta {
-        public boolean writtenByOneLine = false;
         public List<String> originalThemeCodeList = new ArrayList<>();
     }
 
