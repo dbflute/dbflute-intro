@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMapMeta;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
@@ -185,6 +186,19 @@ public class DfpropUpdateLogic {
         final List<String> originalThemeCodeList = meta.tableMapMeta.themeListMeta.originalThemeCodeList;
 
         replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, "tableMap", "themeList", themeTypeCodeList, originalThemeCodeList);
+    }
+
+    protected void replaceColumnMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyColumnMap.ThemeType themeType,
+            final Boolean isActive) {
+        replaceColumnMapTheme(schemaPolicyMapFile, meta, Collections.singletonList(themeType), isActive);
+    }
+
+    protected void replaceColumnMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta,
+            List<SchemaPolicyColumnMap.ThemeType> themeTypeList, final Boolean isActive) {
+        final List<String> themeTypeCodeList = themeTypeList.stream().map(themeType -> themeType.code).collect(Collectors.toList());
+        final List<String> originalThemeCodeList = meta.columnMapMeta.themeListMeta.originalThemeCodeList;
+
+        replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, "columnMap", "themeList", themeTypeCodeList, originalThemeCodeList);
     }
 
     private void replaceSchemaPolicyInnerMap(File schemaPolicyMapFile, Boolean isActive, String targetMapAlias, String themeListAlias,
