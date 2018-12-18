@@ -36,7 +36,22 @@ import org.junit.Test;
 public class DfpropInfoLogicTest extends UnitIntroTestCase {
 
     @Test
-    public void test_findSchemaPolicyMap() throws Exception {
+    public void test_findSchemaPolicyMap_WholeMap_containsAllThemeType() throws Exception {
+        // ## Arrange ##
+        DfpropInfoLogic logic = new DfpropInfoLogic();
+        inject(logic);
+
+        // ## Act ##
+        SchemaPolicyWholeMap wholeMap = logic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap;
+        Set<SchemaPolicyWholeMap.ThemeType> resultThemeTypeList =
+                wholeMap.themeList.stream().map(theme -> theme.type).collect(Collectors.toSet());
+
+        // ## Assert ##
+        assertTrue(resultThemeTypeList.containsAll(Arrays.asList(SchemaPolicyWholeMap.ThemeType.values())));
+    }
+
+    @Test
+    public void test_findSchemaPolicyMap_WholeMap_correctThemeStatus() throws Exception {
         // ## Arrange ##
         DfpropInfoLogic logic = new DfpropInfoLogic();
         inject(logic);
@@ -45,25 +60,12 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         SchemaPolicyMap schemaPolicyMap = logic.findSchemaPolicyMap(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        SchemaPolicyWholeMap wholeMap = schemaPolicyMap.wholeMap;
-        List<SchemaPolicyWholeMap.Theme> wholeMapThemeList = wholeMap.themeList;
+        List<SchemaPolicyWholeMap.Theme> result = schemaPolicyMap.wholeMap.themeList;
 
-        // assert wholeMap theme not null
-        assertNotNull(wholeMapThemeList);
-        wholeMapThemeList.forEach(theme -> {
-            assertNotNull(theme.type);
-        });
-
-        // assert contain all wholeMap Theme
-        Set<SchemaPolicyWholeMap.ThemeType> actualWholeMapTypeList =
-                wholeMapThemeList.stream().map(theme -> theme.type).collect(Collectors.toSet());
-        boolean containAllWholeMapThemeType = actualWholeMapTypeList.containsAll(Arrays.asList(SchemaPolicyWholeMap.ThemeType.values()));
-        assertTrue(containAllWholeMapThemeType);
-
-        // assert fetched wholeMap theme status is correct
         List<String> actualThemeList = extractThemeList(fetchSchemaPolicyWholeMap());
-        wholeMapThemeList.forEach(theme -> {
-            if (actualThemeList.contains(theme.type.code)) {
+        result.forEach(theme -> {
+            boolean containsActualThemeList = actualThemeList.contains(theme.type.code);
+            if (containsActualThemeList) {
                 assertTrue(theme.isActive);
             } else {
                 assertFalse(theme.isActive);
@@ -99,10 +101,10 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         List<String> actualThemeList = extractThemeList(fetchSchemaPolicyTableMap());
         result.forEach(theme -> {
             boolean containsActualThemeList = actualThemeList.contains(theme.type.code);
-            if (theme.isActive) {
-                assertTrue(containsActualThemeList);
+            if (containsActualThemeList) {
+                assertTrue(theme.isActive);
             } else {
-                assertFalse(containsActualThemeList);
+                assertFalse(theme.isActive);
             }
         });
     }
@@ -135,10 +137,10 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         List<String> actualThemeList = extractThemeList(fetchSchemaPolicyColumnMap());
         result.forEach(theme -> {
             boolean containsActualThemeList = actualThemeList.contains(theme.type.code);
-            if (theme.isActive) {
-                assertTrue(containsActualThemeList);
+            if (containsActualThemeList) {
+                assertTrue(theme.isActive);
             } else {
-                assertFalse(containsActualThemeList);
+                assertFalse(theme.isActive);
             }
         });
     }
