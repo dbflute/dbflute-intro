@@ -23,8 +23,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.dbflute.infra.dfprop.DfPropFile;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
@@ -60,19 +60,77 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         assertTrue(containAllWholeMapThemeType);
 
         // assert fetched wholeMap theme status is correct
-        final File dfpropFile =
-                new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + TEST_CLIENT_PROJECT + "/dfprop/schemaPolicyMap.dfprop");
-        Map<String, Object> schemaPolicyMapFromDfProp = new DfPropFile().readMap(dfpropFile.getAbsolutePath(), null);
-        @SuppressWarnings("unchecked")
-        Map<String, Object> wholeMapFromDfProp = (Map<String, Object>) schemaPolicyMapFromDfProp.get("wholeMap");
-        @SuppressWarnings("unchecked")
-        List<String> themeListFromDfProp = (List<String>) wholeMapFromDfProp.get("themeList");
+        List<String> actualThemeList = extractThemeList(fetchSchemaPolicyWholeMap());
         wholeMapThemeList.forEach(theme -> {
-            if (themeListFromDfProp.contains(theme.type.code)) {
+            if (actualThemeList.contains(theme.type.code)) {
                 assertTrue(theme.isActive);
             } else {
                 assertFalse(theme.isActive);
             }
         });
+    }
+
+    @Test
+    public void test_findSchemaPolicyMap_TableMap_containsAllThemeType() throws Exception {
+        // ## Arrange ##
+        DfpropInfoLogic logic = new DfpropInfoLogic();
+        inject(logic);
+
+        // ## Act ##
+        SchemaPolicyTableMap tableMap = logic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap;
+        Set<SchemaPolicyTableMap.ThemeType> resultThemeTypeList =
+                tableMap.themeList.stream().map(theme -> theme.type).collect(Collectors.toSet());
+
+        // ## Assert ##
+        assertTrue(resultThemeTypeList.containsAll(Arrays.asList(SchemaPolicyTableMap.ThemeType.values())));
+    }
+
+    @Test
+    public void test_findSchemaPolicyMap_TableMap_correctThemeStatus() throws Exception {
+        // ## Arrange ##
+        DfpropInfoLogic logic = new DfpropInfoLogic();
+        inject(logic);
+
+        // ## Act ##
+        List<SchemaPolicyTableMap.Theme> result = logic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap.themeList;
+
+        // ## Assert ##
+        List<String> actualThemeList = extractThemeList(fetchSchemaPolicyTableMap());
+        result.forEach(theme -> {
+            boolean containsActualThemeList = actualThemeList.contains(theme.type.code);
+            if (theme.isActive) {
+                assertTrue(containsActualThemeList);
+            } else {
+                assertFalse(containsActualThemeList);
+            }
+        });
+    }
+
+    private Map<String, Object> fetchSchemaPolicyWholeMap() {
+        Map<String, Object> schemaPolicyMapFromDfProp = fetchSchemaPolicyMap();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> wholeMap = (Map<String, Object>) schemaPolicyMapFromDfProp.get("wholeMap");
+
+        return wholeMap;
+    }
+
+    private Map<String, Object> fetchSchemaPolicyTableMap() {
+        Map<String, Object> schemaPolicyMapFromDfProp = fetchSchemaPolicyMap();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> wholeMap = (Map<String, Object>) schemaPolicyMapFromDfProp.get("tableMap");
+
+        return wholeMap;
+    }
+
+    private List<String> extractThemeList(Map<String, Object> actualWholeMap) {
+        @SuppressWarnings("unchecked")
+        List<String> themeList = (List<String>) actualWholeMap.get("themeList");
+
+        return themeList;
+    }
+
+    private Map<String, Object> fetchSchemaPolicyMap() {
+        final File dfpropFile = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/schemaPolicyMap.dfprop");
+        return new DfPropFile().readMap(dfpropFile.getAbsolutePath(), null);
     }
 }

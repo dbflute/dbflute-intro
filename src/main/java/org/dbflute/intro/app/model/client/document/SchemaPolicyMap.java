@@ -20,8 +20,10 @@ package org.dbflute.intro.app.model.client.document;
  */
 public class SchemaPolicyMap {
     public SchemaPolicyWholeMap wholeMap;
+    public SchemaPolicyTableMap tableMap;
 
-    public SchemaPolicyMap(SchemaPolicyWholeMap wholeMap) {
+    public SchemaPolicyMap(SchemaPolicyWholeMap wholeMap, SchemaPolicyTableMap tableMap) {
         this.wholeMap = wholeMap;
+        this.tableMap = tableMap;
     }
 }

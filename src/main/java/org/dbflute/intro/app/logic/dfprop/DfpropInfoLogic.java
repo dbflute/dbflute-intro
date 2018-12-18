@@ -33,6 +33,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 
@@ -123,22 +124,40 @@ public class DfpropInfoLogic {
         File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "schemaPolicyMap.dfprop");
         return parseSchemePolicyMap(schemaPolicyMapFile);
     }
+
     protected SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) {
         Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
 
-        // wholeMap
+        SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
+        SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
+
+        return new SchemaPolicyMap(wholeMap, tableMap);
+    }
+
+    private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
         @SuppressWarnings("unchecked")
         Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
-        System.out.println(schemaPolicyMap);
         @SuppressWarnings("unchecked")
         List<String> originalThemeList = (List<String>) originalWholeMap.get("themeList");
         List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
             boolean isOn = originalThemeList.contains(themeType.code);
             return new SchemaPolicyWholeMap.Theme(themeType, isOn);
         }).collect(Collectors.toList());
-        SchemaPolicyWholeMap wholeMap = new SchemaPolicyWholeMap(themeList);
 
-        return new SchemaPolicyMap(wholeMap);
+        return new SchemaPolicyWholeMap(themeList);
+    }
+
+    private SchemaPolicyTableMap parseTableMap(Map<String, Object> schemaPolicyMap) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> originalTableMap = (Map<String, Object>) schemaPolicyMap.get("tableMap");
+        @SuppressWarnings("unchecked")
+        List<String> originalThemeList = (List<String>) originalTableMap.get("themeList");
+        List<SchemaPolicyTableMap.Theme> themeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values()).map(themeType -> {
+            boolean isOn = originalThemeList.contains(themeType.code);
+            return new SchemaPolicyTableMap.Theme(themeType, isOn);
+        }).collect(Collectors.toList());
+
+        return new SchemaPolicyTableMap(themeList);
     }
 
     // -----------------------------------------------------
