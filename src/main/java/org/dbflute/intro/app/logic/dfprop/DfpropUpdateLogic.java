@@ -33,6 +33,7 @@ import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMapMeta;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.lastaflute.core.exception.LaSystemException;
@@ -173,6 +174,19 @@ public class DfpropUpdateLogic {
                 originalThemeCodeList);
     }
 
+    protected void replaceTableMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyTableMap.ThemeType themeType,
+            final Boolean isActive) {
+        replaceTableMapTheme(schemaPolicyMapFile, meta, Collections.singletonList(themeType), isActive);
+    }
+
+    protected void replaceTableMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta,
+            List<SchemaPolicyTableMap.ThemeType> themeTypeList, final Boolean isActive) {
+        final List<String> themeTypeCodeList = themeTypeList.stream().map(themeType -> themeType.code).collect(Collectors.toList());
+        final List<String> originalThemeCodeList = meta.tableMapMeta.themeListMeta.originalThemeCodeList;
+
+        replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, "tableMap", "themeList", themeTypeCodeList, originalThemeCodeList);
+    }
+
     private void replaceSchemaPolicyInnerMap(File schemaPolicyMapFile, Boolean isActive, String targetMapAlias, String themeListAlias,
             List<String> themeTypeCodeList, List<String> originalThemeCodeList) {
         boolean inTargetMap = false;
@@ -247,35 +261,18 @@ public class DfpropUpdateLogic {
     }
 
     protected SchemaPolicyMapMeta extractSchemaPolicyMeta(String project, File file) throws IOException {
+        final SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(file);
+
         SchemaPolicyMapMeta schemaPolicyMeta = new SchemaPolicyMapMeta();
-
-        boolean inWholeMap = false;
-
-        // check written by one line.
-        try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
-            while (true) {
-                String line = br.readLine();
-                if (line == null) {
-                    break;
-                }
-
-                boolean isNotComment = !StringUtils.startsWith(line.trim(), "#");
-
-                // check in
-                if (isNotComment && StringUtils.contains(line, "wholeMap")) {
-                    inWholeMap = true;
-                }
-                if (inWholeMap && isNotComment && StringUtils.contains(line, "themeList")) {
-                    inWholeMap = false;
-                }
-            }
-        }
-
-        // save original value
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(file);
+        // wholeMap
         List<String> originalCodeList = schemaPolicyMap.wholeMap.themeList.stream().
                 filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
         schemaPolicyMeta.wholeMapMeta.themeListMeta.originalThemeCodeList.addAll(originalCodeList);
+
+        // tableMap
+        List<String> originalTableMapThemeTypeCodeList = schemaPolicyMap.tableMap.themeList.stream().
+                filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
+        schemaPolicyMeta.tableMapMeta.themeListMeta.originalThemeCodeList.addAll(originalTableMapThemeTypeCodeList);
 
         return schemaPolicyMeta;
     }

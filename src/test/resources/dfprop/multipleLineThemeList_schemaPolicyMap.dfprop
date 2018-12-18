@@ -50,7 +50,11 @@ map:{
         }
     }
     ; tableMap = map:{
-        ; themeList = list:{ hasPK ; upperCaseBasis ; identityIfPureIDPK }
+        ; themeList = list:{
+            ; hasPK
+            ; upperCaseBasis
+            ; identityIfPureIDPK
+        }
         ; statementList = list:{
             ; if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$
         }

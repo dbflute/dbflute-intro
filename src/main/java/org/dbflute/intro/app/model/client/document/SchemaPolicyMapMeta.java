@@ -11,9 +11,14 @@ public class SchemaPolicyMapMeta {
         public ThemeListMeta themeListMeta = new ThemeListMeta();
     }
 
+    public static class TableMapMeta {
+        public ThemeListMeta themeListMeta = new ThemeListMeta();
+    }
+
     public static class ThemeListMeta {
         public List<String> originalThemeCodeList = new ArrayList<>();
     }
 
     public WholeMapMeta wholeMapMeta = new WholeMapMeta();
+    public TableMapMeta tableMapMeta = new TableMapMeta();
 }
