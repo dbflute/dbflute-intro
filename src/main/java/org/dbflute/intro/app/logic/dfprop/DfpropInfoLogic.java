@@ -32,6 +32,7 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
@@ -130,8 +131,9 @@ public class DfpropInfoLogic {
 
         SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
         SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
+        SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
 
-        return new SchemaPolicyMap(wholeMap, tableMap);
+        return new SchemaPolicyMap(wholeMap, tableMap, columnMap);
     }
 
     private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
@@ -158,6 +160,19 @@ public class DfpropInfoLogic {
         }).collect(Collectors.toList());
 
         return new SchemaPolicyTableMap(themeList);
+    }
+
+    private SchemaPolicyColumnMap parseColumnMap(Map<String, Object> schemaPolicyMap) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> originalColumnMap = (Map<String, Object>) schemaPolicyMap.get("columnMap");
+        @SuppressWarnings("unchecked")
+        List<String> originalThemeList = (List<String>) originalColumnMap.get("themeList");
+        List<SchemaPolicyColumnMap.Theme> themeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values()).map(themeType -> {
+            boolean isOn = originalThemeList.contains(themeType.code);
+            return new SchemaPolicyColumnMap.Theme(themeType, isOn);
+        }).collect(Collectors.toList());
+
+        return new SchemaPolicyColumnMap(themeList);
     }
 
     // -----------------------------------------------------
