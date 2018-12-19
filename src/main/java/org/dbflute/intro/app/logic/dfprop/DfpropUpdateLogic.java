@@ -155,8 +155,27 @@ public class DfpropUpdateLogic {
             throw new LaSystemException("Cannot replace dfprop", e);
         }
     }
-    public void replaceWholeMap(String project, SchemaPolicyWholeMap wholeMap) {
 
+    public void replaceSchemaPolicyMap(String project, SchemaPolicyMap schemaPolicyMap) {
+        try {
+            final File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(project, "schemaPolicyMap.dfprop");
+            final SchemaPolicyMapMeta meta = extractSchemaPolicyMeta(project, schemaPolicyMapFile);
+
+            // wholeMap
+            schemaPolicyMap.wholeMap.themeList.forEach(theme -> {
+                replaceWholeMapTheme(schemaPolicyMapFile, meta, theme.type, theme.isActive);
+            });
+            // tableMap
+            schemaPolicyMap.tableMap.themeList.forEach(theme -> {
+                replaceTableMapTheme(schemaPolicyMapFile, meta, theme.type, theme.isActive);
+            });
+            // columnMap
+            schemaPolicyMap.columnMap.themeList.forEach(theme -> {
+                replaceColumnMapTheme(schemaPolicyMapFile, meta, theme.type, theme.isActive);
+            });
+        } catch (IOException e) {
+            throw new IllegalStateException("failed replace SchemaPolicyMap. schemaPolicyMap: " + schemaPolicyMap);
+        }
     }
 
     protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyWholeMap.ThemeType themeType,

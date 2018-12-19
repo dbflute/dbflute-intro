@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.model.client.document;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class SchemaPolicyWholeMap {
         SameColumnDbTypeIfSameColumnName("sameColumnDbTypeIfSameColumnName", "If the column names are the same, the data type of the column is the same."),
         SameColumnSizeIfSameColumnName("sameColumnSizeIfSameColumnName", "If the column names are the same, the size of the column is the same."),
         SameColumnNameIfSameColumnAlias("sameColumnNameIfSameColumnAlias", "If column aliases are the same, column names are the same.");
-        //@formatter:off
+        //@formatter:on
 
         ThemeType(String code, String description) {
             this.code = code;
@@ -38,6 +39,13 @@ public class SchemaPolicyWholeMap {
 
         public String code;
         public String description;
+
+        public static ThemeType valueByCode(String code) {
+            return Arrays.stream(ThemeType.values())
+                    .filter(themeType -> themeType.code.equals(code))
+                    .findAny()
+                    .orElseThrow(() -> new IllegalArgumentException("Illegal code : " + code));
+        }
     }
 
     public static class Theme {

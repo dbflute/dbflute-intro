@@ -1,5 +1,6 @@
 package org.dbflute.intro.app.model.client.document;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,8 +14,7 @@ public class SchemaPolicyColumnMap {
         LowerCaseBasis("lowerCaseBasis", "Table name is lowercase (determined by name on SQL)."),
         HasAlias("hasAlias", "There is an alias (premise assuming that part of DB comment is recognized as an alias)."),
         HasComment("hasComment", "There is a comment (except for the alias part).");
-
-        //@formatter:off
+        //@formatter:on
 
         ThemeType(String code, String description) {
             this.code = code;
@@ -23,6 +23,13 @@ public class SchemaPolicyColumnMap {
 
         public String code;
         public String description;
+
+        public static ThemeType valueByCode(String code) {
+            return Arrays.stream(ThemeType.values())
+                    .filter(themeType -> themeType.code.equals(code))
+                    .findAny()
+                    .orElseThrow(() -> new IllegalArgumentException("Illegal code : " + code));
+        }
     }
 
     public static class Theme {
