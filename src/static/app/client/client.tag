@@ -32,7 +32,9 @@
     </div>
     <div show="{ client.ngMark === 'alter-NG' }" class="ngmark">
       Found problems on <b>Alter DDL.</b><br/>
-      Complete your alter DDL, referring to AlterCheckResultHTML.
+      Complete your alter DDL, referring to AlterCheckResultHTML.<br/>
+      <br/>
+      <a onclick="{ openAlterDir }">open alter check dir</a>
     </div>
     <div show="{ client.ngMark === 'next-NG' }" class="ngmark">
       Found problems on <b>Next DDL.</b><br/>
@@ -266,6 +268,10 @@
 
     this.canCheckSchemaSetting = () => {
       return self.syncSetting.url != null && self.syncSetting.user != null
+    }
+
+    this.openAlterDir = () => {
+      ApiFactory.openAlterDir(self.opts.projectName)
     }
 
     // ===================================================================================

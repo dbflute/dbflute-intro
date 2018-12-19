@@ -15,17 +15,44 @@
  */
 package org.dbflute.intro.app.web.playsql.migration;
 
+import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+
+import javax.annotation.Resource;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 /**
  * @author cabos
  */
 public class PlaysqlMigrationAction extends IntroBaseAction {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    @Resource
+    private DocumentPhysicalLogic documentPhysicalLogic;
+
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> alter(String client) {
-        return JsonResponse.asEmptyBody();
+    public JsonResponse<Void> alter(String clientProject) {
+        OptionalThing<File> optAlterDir = documentPhysicalLogic.findAlterDir(clientProject);
+        if (optAlterDir.isPresent()) {
+            File file = optAlterDir.get();
+            try {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(file);
+            } catch (IOException e) {
+                throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
+            }
+            return JsonResponse.asEmptyBody();
+        } else {
+            throwVerifiedClientError(clientProject + " has not alter directory");
+            return  null; // not reached
+        }
     }
 }

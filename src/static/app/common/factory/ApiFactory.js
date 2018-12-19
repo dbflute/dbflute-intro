@@ -84,6 +84,9 @@ export default class ApiFactory {
         }
       });
   }
+  openAlterDir(projectName) {
+    return ffetch.get(`api/playsql/migration/${projectName}/alter/`)
+  }
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/${projectName}/list`);
   }
