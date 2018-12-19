@@ -288,6 +288,11 @@ public class DfpropUpdateLogic {
                 filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
         schemaPolicyMeta.tableMapMeta.themeListMeta.originalThemeCodeList.addAll(originalTableMapThemeTypeCodeList);
 
+        // columnMap
+        List<String> originalColumnMapThemeTypeCodeList = schemaPolicyMap.columnMap.themeList.stream().
+                filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
+        schemaPolicyMeta.columnMapMeta.themeListMeta.originalThemeCodeList.addAll(originalColumnMapThemeTypeCodeList);
+
         return schemaPolicyMeta;
     }
 }

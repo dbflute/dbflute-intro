@@ -51,7 +51,6 @@ map:{
     }
     ; tableMap = map:{
         ; themeList = list:{
-            ; hasPK
             ; upperCaseBasis
             ; identityIfPureIDPK
         }
@@ -60,7 +59,9 @@ map:{
         }
     }
     ; columnMap = map:{
-        ; themeList = list:{ upperCaseBasis }
+        ; themeList = list:{
+            ; hasAlias
+        }
         ; statementList = list:{
             ; if columnName is suffix:_FLAG then bad => should be _FLG
             ; if columnName is suffix:_FLG then notNull
