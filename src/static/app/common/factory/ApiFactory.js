@@ -56,9 +56,6 @@ export default class ApiFactory {
   syncSchema(projectName) {
     return ffetch.post(`api/dfprop/${projectName}/syncschema`);
   }
-  schemaPolicy(projectName) {
-    return ffetch.post(`api/dfprop/${projectName}/schemapolicy`);
-  }
   editSyncSchema(projectName, syncSchemaSettingData) {
     return ffetch.post(`api/dfprop/${projectName}/syncschema/edit`,
       {
@@ -68,6 +65,19 @@ export default class ApiFactory {
           user: syncSchemaSettingData.user,
           password: syncSchemaSettingData.password,
           isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false // need not null
+        }
+      });
+  }
+  schemaPolicy(projectName) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy`);
+  }
+  editSchemaPolicy(projectName, schemaPolicyData) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy/edit`,
+      {
+        body: {
+          wholeMap: schemaPolicyData.wholeMap,
+          tableMap: schemaPolicyData.tableMap,
+          columnMap: schemaPolicyData.columnMap
         }
       });
   }
