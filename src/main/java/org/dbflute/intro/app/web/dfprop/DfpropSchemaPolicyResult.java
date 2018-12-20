@@ -18,7 +18,9 @@ package org.dbflute.intro.app.web.dfprop;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 
 /**
@@ -34,6 +36,22 @@ public class DfpropSchemaPolicyResult {
         }
     }
 
+    public static class TableMap {
+        List<Theme> themeList;
+
+        public TableMap(SchemaPolicyTableMap tableMap) {
+            this.themeList = tableMap.themeList.stream().map(theme -> new Theme(theme)).collect(Collectors.toList());
+        }
+    }
+
+    public static class ColumnMap {
+        List<Theme> themeList;
+
+        public ColumnMap(SchemaPolicyColumnMap columnMap) {
+            this.themeList = columnMap.themeList.stream().map(theme -> new Theme(theme)).collect(Collectors.toList());
+        }
+    }
+
     public static class Theme {
         String name;
         String description;
@@ -46,11 +64,29 @@ public class DfpropSchemaPolicyResult {
             this.typeCode = theme.type.code;
             this.isActive = theme.isActive;
         }
+
+        public Theme(SchemaPolicyTableMap.Theme theme) {
+            this.name = theme.type.name();
+            this.description = theme.type.description;
+            this.typeCode = theme.type.code;
+            this.isActive = theme.isActive;
+        }
+
+        public Theme(SchemaPolicyColumnMap.Theme theme) {
+            this.name = theme.type.name();
+            this.description = theme.type.description;
+            this.typeCode = theme.type.code;
+            this.isActive = theme.isActive;
+        }
     }
 
     public WholeMap wholeMap;
+    public TableMap tableMap;
+    public ColumnMap columnMap;
 
     public DfpropSchemaPolicyResult(SchemaPolicyMap schemaPolicyMap) {
         this.wholeMap = new WholeMap(schemaPolicyMap.wholeMap);
+        this.tableMap = new TableMap(schemaPolicyMap.tableMap);
+        this.columnMap = new ColumnMap(schemaPolicyMap.columnMap);
     }
 }
