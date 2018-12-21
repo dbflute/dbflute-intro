@@ -20,7 +20,11 @@
 
   <h3>Schema Policy Check</h3>
   <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
-  <button class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Policy (schema-policy-check)</button>
+  <button class="ui primary button" onclick="{ generateTask }">Check Policy (schema-policy-check)</button>
+  <div class="ui info message">
+    <div class="header">What is "Check Policy"?</div>
+    <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
+  </div>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
