@@ -19,7 +19,7 @@
   <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
   <h3>Schema Policy Check</h3>
-  <button class="ui positive button" onclick="{ goToSettings }">Edit Policy Check</button>
+  <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
   <button class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Policy (schema-policy-check)</button>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
@@ -179,8 +179,8 @@
     // -----------------------------------------------------
     //                                                  GoTo
     //                                                  ----
-    this.goToSettings = () => {
-      route(`settings/${self.opts.projectName}`)
+    this.goToSchemaPolicySetting = () => {
+      route(`settings/${self.opts.projectName}?activeTab=SchemaPolicy`)
     }
 
     // ===================================================================================
