@@ -148,6 +148,9 @@
     // -----------------------------------------------------
     //                                            Definition
     //                                            ----------
+    this.executeModal = {
+      closable: false
+    }
     this.generateModal = {
       closable: false
     }
