@@ -54,12 +54,12 @@ public class LogAction extends IntroBaseAction {
     //                                                 index
     //                                                 -----
     @Execute
-    public JsonResponse<LogBean> index(LogForm logForm) {
-        validate(logForm, (moreValidator) -> {});
-        return logPhysicalLogic.findLogFile(logForm.project, logForm.fileName).map((file) -> {
+    public JsonResponse<LogBean> index(LogBody logBody) {
+        validate(logBody, (moreValidator) -> {});
+        return logPhysicalLogic.findLogFile(logBody.project, logBody.fileName).map((file) -> {
             return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
         }).orElseGet(() -> {
-            String debugMsg = "file not found fileName : " + logForm.fileName;
+            String debugMsg = "file not found fileName : " + logBody.fileName;
             throw new Forced404NotFoundException(debugMsg, UserMessages.empty());
         });
     }

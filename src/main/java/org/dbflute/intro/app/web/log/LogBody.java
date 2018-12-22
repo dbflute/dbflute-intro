@@ -5,7 +5,7 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author cabos
  */
-public class LogForm {
+public class LogBody {
 
     @Required
     public String project;
