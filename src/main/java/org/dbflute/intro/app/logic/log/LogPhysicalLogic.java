@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.logic.log;
 
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 import javax.annotation.Resource;
@@ -39,6 +40,8 @@ public class LogPhysicalLogic {
     //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private FlutyFileLogic fileLogic;
 
     // ===================================================================================
     //                                                                                Path
@@ -57,6 +60,14 @@ public class LogPhysicalLogic {
             return Collections.unmodifiableList(new ArrayList<>());
         }
         return Collections.unmodifiableList(Arrays.asList(logFiles));
+    }
+
+    // ===================================================================================
+    //                                                                               Write
+    //                                                                               =====
+    public void logging(String project, String fileName, String log) {
+        File file = new File(buildLogPath(project) + "/" + fileName);
+        fileLogic.writeFile(file, log);
     }
 
 }
