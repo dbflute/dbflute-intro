@@ -24,12 +24,16 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.lastaflute.core.message.UserMessages;
 import org.lastaflute.web.Execute;
+import org.lastaflute.web.exception.Forced404NotFoundException;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
  * @author jflute
+ * @author cabos
  */
 public class LogAction extends IntroBaseAction {
 
@@ -50,6 +54,17 @@ public class LogAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                 index
     //                                                 -----
+    @Execute
+    public JsonResponse<LogBean> index(LogForm logForm) {
+        validate(logForm, (moreValidator) -> {});
+        return logPhysicalLogic.findLogFile(logForm.project, logForm.fileName).map((file) -> {
+            return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
+        }).orElseGet(() -> {
+            String debugMsg = "file not found fileName : " + logForm.fileName;
+            throw new Forced404NotFoundException(debugMsg, UserMessages.empty());
+        });
+    }
+
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<LogBean>> list(String project) {
         List<File> logFileList = logPhysicalLogic.findLogFileAllList(project);

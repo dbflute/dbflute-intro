@@ -17,6 +17,7 @@ package org.dbflute.intro.app.logic.log;
 
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.optional.OptionalThing;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -60,6 +61,15 @@ public class LogPhysicalLogic {
             return Collections.unmodifiableList(new ArrayList<>());
         }
         return Collections.unmodifiableList(Arrays.asList(logFiles));
+    }
+
+    public OptionalThing<File> findLogFile(String project, String fileName) {
+        final File logDir = new File(buildLogPath(project));
+        final File[] logFiles = logDir.listFiles((dir, name) -> name.equals(fileName));
+        if (logFiles == null || logFiles.length == 0) {
+            return OptionalThing.empty();
+        }
+        return OptionalThing.of(logFiles[0]);
     }
 
     // ===================================================================================
