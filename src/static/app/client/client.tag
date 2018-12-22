@@ -24,22 +24,21 @@
   <h3>Alter Check</h3>
   <div class="ui list">
     <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
-    <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter dir</a></div>
+    <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
     <div show="{ client.ngMark != undefined }" class="item"><a onclick="{ showAlterFailureLog }">Check last execute log</a></div>
   </div>
   <div class="ui list">
-    <div show="{ client.ngMark === 'previous-NG' }" class="ngmark">
-      Found problems on <b>Previous DDL.</b><br/>
-      Retry save previous.
+    <div show="{ client.ngMark === 'previous-NG' }" class="ui negative message">
+      <p>Found problems on <b>Previous DDL.</b><br/>
+        Retry save previous.</p>
     </div>
-    <div show="{ client.ngMark === 'alter-NG' }" class="ngmark">
-      Found problems on <b>Alter DDL.</b><br/>
-      Complete your alter DDL, referring to AlterCheckResultHTML.<br/>
-      <br/>
+    <div show="{ client.ngMark === 'alter-NG' }" class="ui negative message">
+      <p>Found problems on <b>Alter DDL.</b><br/>
+        Complete your alter DDL, referring to AlterCheckResultHTML.</p>
     </div>
-    <div show="{ client.ngMark === 'next-NG' }" class="ngmark">
-      Found problems on <b>Next DDL.</b><br/>
-      Fix your DDL and data grammatically.
+    <div show="{ client.ngMark === 'next-NG' }" class="ui negative message">
+      <p>Found problems on <b>Next DDL.</b><br/>
+        Fix your DDL and data grammatically.</p>
     </div>
   </div>
   <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
