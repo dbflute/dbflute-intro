@@ -207,7 +207,7 @@
     }
 
     this.showAlterFailureLog = () => {
-      let fileName = 'intro-last-execute-alterCheck.log'
+      let fileName = 'intro-last-execute-failure-alterCheck.log'
       ApiFactory.getLog(self.opts.projectName, fileName).then((res) => {
         observable.trigger('result', { header: fileName, messages: [res.content], modalSize: 'large' })
       }).catch(() => {
