@@ -24,6 +24,8 @@
   <h3>Alter Check</h3>
   <div class="ui list">
     <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+    <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter dir</a></div>
+    <div show="{ client.ngMark != undefined }" class="item"><a onclick="{ showAlterFailureLog }">Check last execute log</a></div>
   </div>
   <div class="ui list">
     <div show="{ client.ngMark === 'previous-NG' }" class="ngmark">
@@ -34,7 +36,6 @@
       Found problems on <b>Alter DDL.</b><br/>
       Complete your alter DDL, referring to AlterCheckResultHTML.<br/>
       <br/>
-      <a onclick="{ openAlterDir }">Open alter dir</a>
     </div>
     <div show="{ client.ngMark === 'next-NG' }" class="ngmark">
       Found problems on <b>Next DDL.</b><br/>
@@ -201,6 +202,17 @@
     this.showResultModal = (message) => {
       self.resultModal.message = message
       self.refs.resultModal.show()
+    }
+
+    this.showAlterFailureLog = () => {
+      let fileName = 'intro-last-execute-alterCheck.log'
+      ApiFactory.getLog(self.opts.projectName, fileName).then((res) => {
+        observable.trigger('result', { header: fileName, messages: [res.content], modalSize: 'large' })
+      }).catch(() => {
+        self.resultModal.message = 'log file not found'
+        self.refs.resultModal.show()
+      })
+
     }
 
     // ===================================================================================

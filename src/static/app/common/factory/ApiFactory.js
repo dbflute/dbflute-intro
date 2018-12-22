@@ -94,6 +94,10 @@ export default class ApiFactory {
     return ffetch.post(`api/log/${projectName}/list`);
   }
 
+  getLog(projectName, fileName) {
+    return ffetch.get(`api/log/?project=${projectName}&fileName=${fileName}`);
+  }
+
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======
