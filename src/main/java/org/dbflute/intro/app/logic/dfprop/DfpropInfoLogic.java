@@ -129,14 +129,20 @@ public class DfpropInfoLogic {
     protected SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) {
         Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
 
-        SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
-        SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
-        SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
+        SchemaPolicyWholeMap wholeMap =
+                Optional.ofNullable(parseWholeMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyWholeMap.noSettingInstance());
+        SchemaPolicyTableMap tableMap =
+                Optional.ofNullable(parseTableMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyTableMap.noSettingInstance());
+        SchemaPolicyColumnMap columnMap =
+                Optional.ofNullable(parseColumnMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyColumnMap.noSettingInstance());
 
         return new SchemaPolicyMap(wholeMap, tableMap, columnMap);
     }
 
     private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.get("wholeMap") == null) {
+            return null;
+        }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
         @SuppressWarnings("unchecked")
@@ -150,6 +156,9 @@ public class DfpropInfoLogic {
     }
 
     private SchemaPolicyTableMap parseTableMap(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.get("tableMap") == null) {
+            return null;
+        }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalTableMap = (Map<String, Object>) schemaPolicyMap.get("tableMap");
         @SuppressWarnings("unchecked")
@@ -163,6 +172,9 @@ public class DfpropInfoLogic {
     }
 
     private SchemaPolicyColumnMap parseColumnMap(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.get("columnMap") == null) {
+            return null;
+        }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalColumnMap = (Map<String, Object>) schemaPolicyMap.get("columnMap");
         @SuppressWarnings("unchecked")

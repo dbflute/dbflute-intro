@@ -17,6 +17,7 @@ package org.dbflute.intro.app.model.client.document;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author hakiba
@@ -59,6 +60,11 @@ public class SchemaPolicyWholeMap {
     }
 
     public List<Theme> themeList;
+
+    public static SchemaPolicyWholeMap noSettingInstance() {
+        final List<Theme> themeList = Arrays.stream(ThemeType.values()).map(type -> new Theme(type, false)).collect(Collectors.toList());
+        return new SchemaPolicyWholeMap(themeList);
+    }
 
     public SchemaPolicyWholeMap(List<Theme> themeList) {
         this.themeList = themeList;
