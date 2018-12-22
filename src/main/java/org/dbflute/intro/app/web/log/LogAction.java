@@ -28,7 +28,6 @@ import org.lastaflute.core.message.UserMessages;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.exception.Forced404NotFoundException;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
