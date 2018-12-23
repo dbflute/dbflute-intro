@@ -152,7 +152,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         inject(logic);
 
         // ## Act ##
-        File schemaPolicyMapFile = prepareFileForTestClient("/dfprop/initial_schemaPolicyMap.dfprop");
+        File schemaPolicyMapFile = prepareFileForTestClient("/dfprop/noSetting_schemaPolicyMap.dfprop");
         SchemaPolicyMap schemaPolicyMap = logic.parseSchemePolicyMap(schemaPolicyMapFile);
 
         // ## Assert ##
