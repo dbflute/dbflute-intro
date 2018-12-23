@@ -268,6 +268,33 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         assertWholeMapNotChangeOtherThemeType(infoLogic, targetThemeTypeList, beforeThemeList);
     }
 
+    @Test
+    public void test_replaceWholeMapThemeList_ChangeToActiveAllType_In_NoSettingFile() throws Exception {
+        // ## Arrange ##
+        DfpropUpdateLogic logic = new DfpropUpdateLogic();
+        inject(logic);
+        DfpropPhysicalLogic physicalLogic = new DfpropPhysicalLogic();
+        inject(physicalLogic);
+        DfpropInfoLogic infoLogic = new DfpropInfoLogic();
+        inject(infoLogic);
+
+        copyNoSettingSchemaPolicyMap();
+
+        for (SchemaPolicyWholeMap.ThemeType themeType : SchemaPolicyWholeMap.ThemeType.values()) {
+            final File schemaPolicyMapFile = prepareFileForTestClient("/dfprop/noSetting_schemaPolicyMap.dfprop");
+            final SchemaPolicyMapMeta meta = logic.extractSchemaPolicyMeta(TEST_CLIENT_PROJECT, schemaPolicyMapFile);
+            final List<SchemaPolicyWholeMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
+
+            // ## Act ##
+            logic.replaceWholeMapTheme(schemaPolicyMapFile, meta, themeType, true);
+
+            // ## Assert ##
+            SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapTheme(schemaPolicyMapFile, themeType, infoLogic);
+            assertTrue(afterTheme.type.code, afterTheme.isActive);
+            assertWholeMapNotChangeOtherThemeType(infoLogic, themeType, beforeThemeList);
+        }
+    }
+
     // ===================================================================================
     //                                                                           Table Map
     //                                                                           =========
@@ -629,6 +656,10 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
 
     private void copyMultipleLineThemeListSchemaPolicyMap() throws IOException {
         copyFile("multipleLineThemeList_schemaPolicyMap.dfprop");
+    }
+
+    private void copyNoSettingSchemaPolicyMap() throws IOException {
+        copyFile("noSetting_schemaPolicyMap.dfprop");
     }
 
     private void copyFile(String fileName) throws IOException {
