@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -215,7 +214,7 @@ public class DfpropUpdateLogic {
         return sb.toString();
     }
 
-    protected String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting) {
+    private String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting) {
         StringBuilder sb = new StringBuilder();
         // tableExceptList
         sb.append("    ; tableExceptList = list:{\n");
@@ -223,52 +222,68 @@ public class DfpropUpdateLogic {
             sb.append(String.format("        ; %s\n", element));
         });
         sb.append("    }\n");
-
         // tableTargetList
         sb.append("    ; tableTargetList = list:{\n");
         setting.tableTargetList.forEach(element -> {
             sb.append(String.format("        ; %s\n", element));
         });
         sb.append("    }\n");
-
         // columnExceptMap
         sb.append("    ; columnExceptMap = map:{\n");
-        setting.columnExceptMap.entrySet().forEach(elementEntry -> {
-            sb.append(String.format("        ; %s = list:{\n", elementEntry.getKey()));
-            elementEntry.getValue().forEach(s -> {
-                sb.append(String.format("            ; %s\n", s));
+        setting.columnExceptMap.forEach((key, value) -> {
+            sb.append(String.format("        ; %s = list:{\n", key));
+            value.forEach(element -> {
+                sb.append(String.format("            ; %s\n", element));
             });
             sb.append("        }\n");
         });
         sb.append("    }\n");
-
         // isMainSchemaOnly
         sb.append(String.format("    ; isMainSchemaOnly = %s\n", String.valueOf(setting.isMainSchemaOnly)));
 
         return sb.toString();
     }
 
-    protected String buildWholeMap(SchemaPolicyWholeMap wholeMap) {
+    private String buildWholeMap(SchemaPolicyWholeMap wholeMap) {
         List<String> themeTypeCodeList =
                 wholeMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
-        return buildSchemaPolicyInnerMap("wholeMap", themeTypeCodeList, Collections.emptyList());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("    ; wholeMap = map:{\n");
+        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
+        sb.append("    }");
+
+        return sb.toString();
     }
 
-    protected String buildTableMap(SchemaPolicyTableMap tableMap) {
+    private String buildTableMap(SchemaPolicyTableMap tableMap) {
         List<String> themeTypeCodeList =
                 tableMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
-        return buildSchemaPolicyInnerMap("tableMap", themeTypeCodeList, tableMap.statementList);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("    ; tableMap = map:{\n");
+        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
+        sb.append(buildSchemaPolicyStatementList(tableMap.statementList));
+        sb.append("    }");
+
+        return sb.toString();
     }
 
     protected String buildColumnMap(SchemaPolicyColumnMap columnMap) {
         List<String> themeTypeCodeList =
                 columnMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
-        return buildSchemaPolicyInnerMap("columnMap", themeTypeCodeList, columnMap.statementList);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("    ; columnMap = map:{\n");
+        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
+        sb.append(buildSchemaPolicyStatementList(columnMap.statementList));
+        sb.append("    }");
+
+        return sb.toString();
     }
 
-    protected String buildSchemaPolicyInnerMap(String targetMapAlias, List<String> themeTypeCodeList, List<String> statementList) {
+    private String buildSchemaPolicyThemeList(List<String> themeTypeCodeList) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("    ; %s = map:{\n", targetMapAlias));
 
         // themeList
         sb.append("        ; themeList = list:{\n");
@@ -277,16 +292,17 @@ public class DfpropUpdateLogic {
         });
         sb.append("        }\n");
 
-        // statementList
-        if (!statementList.isEmpty()) {
-            sb.append("        ; statementList = list:{\n");
-            statementList.forEach(themeTypeCode -> {
-                sb.append(String.format("            ; %s\n", themeTypeCode));
-            });
-            sb.append("        }\n");
-        }
+        return sb.toString();
+    }
 
-        sb.append("    }\n");
+    private String buildSchemaPolicyStatementList(List<String> statementList) {
+        StringBuilder sb = new StringBuilder();
+        // statementList
+        sb.append("        ; statementList = list:{\n");
+        statementList.forEach(themeTypeCode -> {
+            sb.append(String.format("            ; %s\n", themeTypeCode));
+        });
+        sb.append("        }\n");
 
         return sb.toString();
     }
