@@ -35,49 +35,133 @@
 # *The line that starts with '#' means comment-out.
 #
 map:{
-    # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    # set your DB design policy here #change_it_first
+    # ドキュメントへのリンクとか、dfpropに書いておくといいんじゃないかと
+    # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    # document is here:
+    # http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/
     # _/_/_/_/_/_/_/_/_/_/
-    ; tableExceptList = list:{
-        ; prefix:MST_
-        ; suffix:_HIST
-    }
-    ; tableTargetList = list:{
-        ; prefix:MST_
-    }
-    ; columnExceptMap = map:{
-        ; GENMAI = list:{
-            ; OTHER_SYSTEM_USED_NAME
-        }
-    }
-    ; isMainSchemaOnly = true
+
+    ; tableExceptList = list:{}
+    ; tableTargetList = list:{}
+    ; columnExceptMap = map:{}
+    ; isMainSchemaOnly = false
 
     ; wholeMap = map:{
         ; themeList = list:{
             ; uniqueTableAlias
             ; sameColumnAliasIfSameColumnName
+            ; sameColumnDbTypeIfSameColumnName
+            ; sameColumnSizeIfSameColumnName
+            ; sameColumnNameIfSameColumnAlias
         }
     }
+
     ; tableMap = map:{
         ; themeList = list:{
+            ; hasPK
+            ; hasAlias
+            ; hasComment
             ; upperCaseBasis
             ; identityIfPureIDPK
         }
         ; statementList = list:{
+            ## 共通カラム ##
+            # もし、"区分値テーブルは共通カラムがない" とかであれば、ALLじゃなくてprefixなどで絞り込み
+            ; if tableName is $$ALL$$ then hasCommonColumn => 区分値のテーブルも含めて共通カラムは必須
+
+            ## 制約 (e.g. PK, FK) ##
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+            # 例えば FK なら、FK_[テーブル名]_[FKカラム名 or 相手のテーブル名]
             ; if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$
+
+            # MySQL では FK も INDEX に含まれるため、INDEX名も同様のチェックが必要
+            ; if tableName is $$ALL$$ then indexName is prefix:IX_$$table$$ or prefix:FK_$$table$$
+
+            # ERDツールによっては、PK制約名を付けづらいケースもあるかも (なら諦めるもアリ)
+            ; if tableName is $$ALL$$ then pkName is prefix:PK_$$table$$
+
+            # UQ制約名の付け方は、色々なパターンがありそう
+            ; if tableName is $$ALL$$ then uniqueName is prefix:UQ_$$table$$
+            # _/_/_/_/_/_/_/_/_/_/
+
+            ## 区分値テーブル ##
+            # CLS_で始まるテーブルを区分値テーブルとしていることが前提。
+            # コード値をchar(3)だけにするか、色々なサイズも許すか、それによってチェックするかしないかも変わりそう。
+            # 限定できるなら、char(2) or char(3) というように or でつなげることもできる。
+            ; if tableName is prefix:CLS_ then pk_dbType_with_size is char(3)
+
+            ## コメント ##
+            ; if alias is $$tableName$$ then bad => 論理名がテーブル名と同じじゃダメ
+            ; if alias is $$comment$$ then bad => コメントが論理名と同じじゃダメ
+            ; if tableName is $$comment$$ then bad => コメントがテーブル名と同じじゃダメ
         }
     }
     ; columnMap = map:{
         ; themeList = list:{
             ; hasAlias
+            # 全カラムコメント必須はさすがにつらいと思うのでコメントアウト。
+            # いやいや、コメントは必ず入れよう！というのであれば、ぜひコメントアウト解除で！
+            #; hasComment
+            ; upperCaseBasis
         }
         ; statementList = list:{
-            ; if columnName is suffix:_FLAG then bad => should be _FLG
-            ; if columnName is suffix:_FLG then notNull
-            # *needs to adjust this setting for your DBMS
-            #; if columnName is suffix:_FLG then dbType is INTEGER
-            ; if columnName is suffix:_FLG then classification
+            ## IDカラム ##
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+            ; if columnName is suffix:_ID then alias is pattern:.+ID(\(.+\))?$ => IDカラムなら論理名は "なんとかID" にしよう
+            ; if columnName is not suffix:_ID then alias is not suffix:ID => IDカラムじゃないのに、"なんとかID" という論理名なの？
+
+            # IDカラムを数値だけにするか、文字列もOKか、現場によってポリシー変わりそう
+            ; if columnName is suffix:_ID then dbType is bigint or int or bigint unsigned or int unsigned => IDカラムは数値で！
+
+            ; if columnName is $$table$$_ID then alias is $$tableAlias$$ID => カラム名が[テーブル名]_IDなのであれば、論理名も[テーブル論理名ID]にしよう
+            ; if alias is $$tableAlias$$ID then columnName is $$table$$_ID => 論理名が[テーブル論理名ID]なのであれば、カラム名も[テーブル名]_IDにしよう
+            # _/_/_/_/_/_/_/_/_/_/
+
+            ## NOカラム ##
+            ; if columnName is suffix:_NO then alias is suffix:番号 or suffix:NO => NOカラムなら論理名は "なんとか番号" とか "なんとかNO" にしよう
+            ; if columnName is not suffix:_NO then alias is not suffix:番号 and not suffix:NO => NOカラムじゃないのに、"なんとか番号" とか "なんとかNO" という論理名なの？
+
+            ## CODEカラム ##
+            ; if columnName is suffix:_CODE then alias is suffix:コード => CODEカラムなら論理名は "なんとかコード" にしよう
+            ; if columnName is not suffix:_CODE then alias is not suffix:コード => CODEカラムじゃないのに、"なんとかコード" という論理名なの？
+            ; if tableName is prefix:CLS_ and column is pk then classification => 区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)
+            ; if columnName is suffix:_CD then bad => _CODE に統一
+
+            ## FLGカラム ##
+            # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+            ; if columnName is suffix:_FLG then alias is suffix:フラグ => FLGカラムなら論理名は "なんとかフラグ" にしよう
+            ; if columnName is not suffix:_FLG then alias is not suffix:フラグ => FLGカラムじゃないのに、"なんとかフラグ" という論理名なの？
+
+            # MySQLのメタデータとしては、boolean は bit になる
+            ; if columnName is suffix:_FLG then dbType is bit
+
+            ; if columnName is suffix:_FLG then column is notNull => nullのフラグはやめよー
+            ; if columnName is suffix:_FLAG then bad => _FLG に統一
+            # _/_/_/_/_/_/_/_/_/_/
+
+            ## DATEカラム ##
+            ; if columnName is suffix:_DATE then alias is suffix:日 => DATEカラム(時分秒のない日付)なら論理名は "なんとか日" にしよう
+            ; if columnName is not suffix:_DATE then alias is not suffix:日 => DATEカラム(時分秒のない日付)じゃないのに、"なんとか日" という論理名なの？
+            ; if columnName is suffix:_DATE then dbType is date => なんとか_DATEなら、日付ということで date に
+
+            ## DATETIMEカラム ##
+            ; if columnName is suffix:_DATETIME then alias is suffix:日時 => DATETIMEカラムなら論理名は "なんとか日時" にしよう
+            ; if columnName is not suffix:_DATETIME then alias is not suffix:日時 => DATETIMEカラムじゃないのに、"なんとか日時" という論理名なの？
+            ; if columnName is suffix:_DATETIME then dbType is datetime => なんとか_DATETIMEなら、日時ということで datetime に
+
+            ## コメント ##
+            ; if alias is $$columnName$$ and columnName is not pattern:(URL|UUID|CUID) then bad => 論理名がカラム名が同じなのはダメ。ただ、URLとかはしょうがないので not pattern に列挙
+            ; if alias is $$comment$$ then bad => コメントが論理名と同じなのはダメ
+            ; if columnName is $$comment$$ then bad => コメントがカラム名と同じなのはダメ
+
+            # 区分値カラムの扱い方は、色々なパターンがありそう
+            ; if columnName is suffix:_TYPE then bad => "_TYPE" で終わるカラム名なら、"_TYPE_CODE" にして区分値テーブルで表現しよう
+
+            ## NGワード ##
+            # 表記ゆれとか曖昧な表現とかをチェックしたいなら、ここで bad, bad
+            ; if alias is contain:名称 then bad => 「名」で統一
+            ; if alias is pattern:.*[^名]カナ.* then bad => 「カナ」は「名カナ」にしてください。
+            ; if alias is pattern:(.*ユーザ[^ー].*|.*ユーザ) then bad => 「ユーザ」は、「ユーザー」で統一してください。
         }
     }
 }
-# ----------------/

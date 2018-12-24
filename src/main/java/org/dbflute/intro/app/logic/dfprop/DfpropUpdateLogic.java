@@ -33,7 +33,6 @@ import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMapMeta;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
@@ -157,42 +156,9 @@ public class DfpropUpdateLogic {
         }
     }
 
-    public void replaceSchemaPolicyMap(String project, SchemaPolicyMap schemaPolicyMap) {
-        try {
-            final File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(project, "schemaPolicyMap.dfprop");
-            final SchemaPolicyMapMeta meta = extractSchemaPolicyMeta(project, schemaPolicyMapFile);
-
-            // wholeMap
-            schemaPolicyMap.wholeMap.themeList.forEach(theme -> {
-                replaceWholeMapTheme(schemaPolicyMapFile, meta, theme.type, theme.isActive);
-            });
-            // tableMap
-            schemaPolicyMap.tableMap.themeList.forEach(theme -> {
-                replaceTableMapTheme(schemaPolicyMapFile, meta, theme.type, theme.isActive);
-            });
-            // columnMap
-            schemaPolicyMap.columnMap.themeList.forEach(theme -> {
-                replaceColumnMapTheme(schemaPolicyMapFile, meta, theme.type, theme.isActive);
-            });
-        } catch (IOException e) {
-            throw new IllegalStateException("failed replace SchemaPolicyMap. schemaPolicyMap: " + schemaPolicyMap);
-        }
-    }
-
-    protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyWholeMap.ThemeType themeType,
-            final Boolean isActive) {
-        replaceWholeMapTheme(schemaPolicyMapFile, meta, Collections.singletonList(themeType), isActive);
-    }
-
-    protected void replaceWholeMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta,
-            List<SchemaPolicyWholeMap.ThemeType> themeTypeList, final Boolean isActive) {
-        final String targetMapAlias = "wholeMap";
-        final String themeListAlias = "themeList";
-        final List<String> themeTypeCodeList = themeTypeList.stream().map(themeType -> themeType.code).collect(Collectors.toList());
-        final List<String> originalThemeCodeList = meta.wholeMapMeta.themeListMeta.originalThemeCodeList;
-
-        replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, targetMapAlias, themeListAlias, themeTypeCodeList,
-                originalThemeCodeList);
+    public void replaceSchemaPolicyMap(String project, SchemaPolicyMap inputSchemaPolicyMap) {
+        File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(project, "schemaPolicyMap.dfprop");
+        doReplaceSchemaPolicyMap(schemaPolicyMapFile, inputSchemaPolicyMap);
     }
 
     protected void doReplaceSchemaPolicyMap(File file, SchemaPolicyMap input) {
@@ -252,32 +218,32 @@ public class DfpropUpdateLogic {
     protected String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting) {
         StringBuilder sb = new StringBuilder();
         // tableExceptList
-        sb.append("    ; tableExceptList = list:{");
+        sb.append("    ; tableExceptList = list:{\n");
         setting.tableExceptList.forEach(element -> {
             sb.append(String.format("        ; %s\n", element));
         });
-        sb.append("    }");
+        sb.append("    }\n");
 
         // tableTargetList
-        sb.append("    ; tableTargetList = list:{");
+        sb.append("    ; tableTargetList = list:{\n");
         setting.tableTargetList.forEach(element -> {
             sb.append(String.format("        ; %s\n", element));
         });
-        sb.append("    }");
+        sb.append("    }\n");
 
         // columnExceptMap
-        sb.append("    ; columnExceptMap = map:{");
+        sb.append("    ; columnExceptMap = map:{\n");
         setting.columnExceptMap.entrySet().forEach(elementEntry -> {
-            sb.append(String.format("        ; %s = list:{", elementEntry.getKey()));
+            sb.append(String.format("        ; %s = list:{\n", elementEntry.getKey()));
             elementEntry.getValue().forEach(s -> {
                 sb.append(String.format("            ; %s\n", s));
             });
-            sb.append("        }");
+            sb.append("        }\n");
         });
-        sb.append("    }");
+        sb.append("    }\n");
 
         // isMainSchemaOnly
-        sb.append(String.format("    ; isMainSchemaOnly = %s", String.valueOf(setting.isMainSchemaOnly)));
+        sb.append(String.format("    ; isMainSchemaOnly = %s\n", String.valueOf(setting.isMainSchemaOnly)));
 
         return sb.toString();
     }
@@ -285,155 +251,43 @@ public class DfpropUpdateLogic {
     protected String buildWholeMap(SchemaPolicyWholeMap wholeMap) {
         List<String> themeTypeCodeList =
                 wholeMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
-        return buildSchemaPolicyInnerMap("wholeMap", themeTypeCodeList);
+        return buildSchemaPolicyInnerMap("wholeMap", themeTypeCodeList, Collections.emptyList());
     }
 
     protected String buildTableMap(SchemaPolicyTableMap tableMap) {
         List<String> themeTypeCodeList =
                 tableMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
-        return buildSchemaPolicyInnerMap("tableMap", themeTypeCodeList);
+        return buildSchemaPolicyInnerMap("tableMap", themeTypeCodeList, tableMap.statementList);
     }
 
     protected String buildColumnMap(SchemaPolicyColumnMap columnMap) {
         List<String> themeTypeCodeList =
                 columnMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
-        return buildSchemaPolicyInnerMap("columnMap", themeTypeCodeList);
+        return buildSchemaPolicyInnerMap("columnMap", themeTypeCodeList, columnMap.statementList);
     }
 
-    protected String buildSchemaPolicyInnerMap(String targetMapAlias, List<String> themeTypeCodeList) {
+    protected String buildSchemaPolicyInnerMap(String targetMapAlias, List<String> themeTypeCodeList, List<String> statementList) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("    ; %s = map:{", targetMapAlias)).append("\n");
-        // themeList
-        sb.append("        ; themeList = list:{ ").append("\n");
-        themeTypeCodeList.forEach(themeTypeCode -> {
-            sb.append(String.format("            ; %s", themeTypeCode)).append("\n");
-        });
-        sb.append("        }");
-        // statementList
+        sb.append(String.format("    ; %s = map:{\n", targetMapAlias));
 
-        sb.append("    }");
+        // themeList
+        sb.append("        ; themeList = list:{\n");
+        themeTypeCodeList.forEach(themeTypeCode -> {
+            sb.append(String.format("            ; %s\n", themeTypeCode));
+        });
+        sb.append("        }\n");
+
+        // statementList
+        if (!statementList.isEmpty()) {
+            sb.append("        ; statementList = list:{\n");
+            statementList.forEach(themeTypeCode -> {
+                sb.append(String.format("            ; %s\n", themeTypeCode));
+            });
+            sb.append("        }\n");
+        }
+
+        sb.append("    }\n");
 
         return sb.toString();
-    }
-
-    protected void replaceTableMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyTableMap.ThemeType themeType,
-            final Boolean isActive) {
-        replaceTableMapTheme(schemaPolicyMapFile, meta, Collections.singletonList(themeType), isActive);
-    }
-
-    protected void replaceTableMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta,
-            List<SchemaPolicyTableMap.ThemeType> themeTypeList, final Boolean isActive) {
-        final List<String> themeTypeCodeList = themeTypeList.stream().map(themeType -> themeType.code).collect(Collectors.toList());
-        final List<String> originalThemeCodeList = meta.tableMapMeta.themeListMeta.originalThemeCodeList;
-
-        replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, "tableMap", "themeList", themeTypeCodeList, originalThemeCodeList);
-    }
-
-    protected void replaceColumnMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyColumnMap.ThemeType themeType,
-            final Boolean isActive) {
-        replaceColumnMapTheme(schemaPolicyMapFile, meta, Collections.singletonList(themeType), isActive);
-    }
-
-    protected void replaceColumnMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta,
-            List<SchemaPolicyColumnMap.ThemeType> themeTypeList, final Boolean isActive) {
-        final List<String> themeTypeCodeList = themeTypeList.stream().map(themeType -> themeType.code).collect(Collectors.toList());
-        final List<String> originalThemeCodeList = meta.columnMapMeta.themeListMeta.originalThemeCodeList;
-
-        replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, "columnMap", "themeList", themeTypeCodeList, originalThemeCodeList);
-    }
-
-    private void replaceSchemaPolicyInnerMap(File schemaPolicyMapFile, Boolean isActive, String targetMapAlias, String themeListAlias,
-            List<String> themeTypeCodeList, List<String> originalThemeCodeList) {
-        boolean inTargetMap = false;
-        boolean inTargetMapThemeList = false;
-        boolean closeListElement = false;
-
-        try (BufferedReader br = Files.newBufferedReader(schemaPolicyMapFile.toPath())) {
-            final StringBuilder sb = new StringBuilder();
-            while (true) {
-                String line = br.readLine();
-                if (line == null) {
-                    break;
-                }
-
-                boolean isNotComment = !StringUtils.startsWith(line.trim(), "#");
-
-                // Check in
-                if (isNotComment && StringUtils.contains(line, targetMapAlias)) {
-                    inTargetMap = true;
-                }
-                if (inTargetMap && isNotComment && StringUtils.contains(line, themeListAlias)) {
-                    inTargetMapThemeList = true;
-                }
-
-                // Change Property
-                if (inTargetMapThemeList) {
-                    // change to Active
-                    if (isActive) {
-                        // append new element
-                        boolean closeThemeList = StringUtils.contains(line, "}");
-                        if (closeThemeList) {
-                            String startThemeList = line.contains(themeListAlias) ? "        ; themeList = list:{" : "";
-                            line = Stream.concat(originalThemeCodeList.stream(), themeTypeCodeList.stream())
-                                    .distinct()
-                                    .map(themeTypeCode -> String.format("            ; %s", themeTypeCode))
-                                    .reduce((v1, v2) -> v1 + "\n" + v2)
-                                    .map(themeTypeCodeLines -> startThemeList + themeTypeCodeLines + "\n" + "        }")
-                                    .orElse(line);
-                        }
-                    }
-                    // change to NotActive
-                    if (!isActive) {
-                        boolean closeThemeList = StringUtils.contains(line, "}");
-                        if (closeThemeList) {
-                            String startThemeList = "        ; themeList = list:{\n";
-                            line = originalThemeCodeList.stream()
-                                    .filter(themeTypeCode -> !themeTypeCodeList.contains(themeTypeCode))
-                                    .map(themeTypeCode -> String.format("            ; %s", themeTypeCode))
-                                    .reduce((v1, v2) -> v1 + "\n" + v2)
-                                    .map(themeTypeCodeLines -> startThemeList + themeTypeCodeLines + "\n" + "        }")
-                                    .orElse("        ; themeList = list:{ }");
-                        } else {
-                            line = "";
-                        }
-                    }
-                }
-
-                // Check out
-                if (inTargetMapThemeList && StringUtils.contains(line, "}")) {
-                    inTargetMapThemeList = false;
-                    closeListElement = true;
-                }
-                if (inTargetMap && closeListElement) {
-                    inTargetMap = false;
-                }
-                sb.append(line).append("\n");
-            }
-            flutyFileLogic.writeFile(schemaPolicyMapFile, sb.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected SchemaPolicyMapMeta extractSchemaPolicyMeta(String project, File file) throws IOException {
-        final SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(file);
-
-        SchemaPolicyMapMeta schemaPolicyMeta = new SchemaPolicyMapMeta();
-        // wholeMap
-        List<String> originalCodeList = schemaPolicyMap.wholeMap.themeList.stream().
-                filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
-        schemaPolicyMeta.wholeMapMeta.themeListMeta.originalThemeCodeList.addAll(originalCodeList);
-
-        // tableMap
-        List<String> originalTableMapThemeTypeCodeList = schemaPolicyMap.tableMap.themeList.stream().
-                filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
-        schemaPolicyMeta.tableMapMeta.themeListMeta.originalThemeCodeList.addAll(originalTableMapThemeTypeCodeList);
-
-        // columnMap
-        List<String> originalColumnMapThemeTypeCodeList = schemaPolicyMap.columnMap.themeList.stream().
-                filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList());
-        schemaPolicyMeta.columnMapMeta.themeListMeta.originalThemeCodeList.addAll(originalColumnMapThemeTypeCodeList);
-
-        return schemaPolicyMeta;
     }
 }

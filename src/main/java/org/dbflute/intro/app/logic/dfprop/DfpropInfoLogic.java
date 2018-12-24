@@ -17,6 +17,7 @@ package org.dbflute.intro.app.logic.dfprop;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,15 +149,19 @@ public class DfpropInfoLogic {
         }
 
         @SuppressWarnings("unchecked")
-        List<String> tableExceptList = (List<String>) schemaPolicyMap.get("tableExceptList");
+        List<String> tableExceptList =
+                Optional.ofNullable((List<String>) schemaPolicyMap.get("tableExceptList")).orElse(Collections.emptyList());
         @SuppressWarnings("unchecked")
-        List<String> tableTargetList = (List<String>) schemaPolicyMap.get("tableTargetList");
+        List<String> tableTargetList =
+                Optional.ofNullable((List<String>) schemaPolicyMap.get("tableTargetList")).orElse(Collections.emptyList());
         @SuppressWarnings("unchecked")
-        Map<String, List<String>> columnExceptMap = (Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap");
+        Map<String, List<String>> columnExceptMap =
+                Optional.ofNullable((Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap")).orElse(Collections.emptyMap());
         @SuppressWarnings("unchecked")
-        String isMainSchemaOnly = (String) schemaPolicyMap.get("isMainSchemaOnly");
+        boolean isMainSchemaOnly =
+                Optional.ofNullable((String) schemaPolicyMap.get("isMainSchemaOnly")).map(value -> Boolean.valueOf(value)).orElse(false);
 
-        return new SchemaPolicyTargetSetting(tableExceptList, tableTargetList, columnExceptMap, Boolean.valueOf(isMainSchemaOnly));
+        return new SchemaPolicyTargetSetting(tableExceptList, tableTargetList, columnExceptMap, isMainSchemaOnly);
 
     }
 
@@ -167,7 +172,8 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
         @SuppressWarnings("unchecked")
-        List<String> originalThemeList = (List<String>) originalWholeMap.get("themeList");
+        List<String> originalThemeList =
+                Optional.ofNullable((List<String>) originalWholeMap.get("themeList")).orElse(Collections.emptyList());
         List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
             boolean isOn = originalThemeList.contains(themeType.code);
             return new SchemaPolicyWholeMap.Theme(themeType, isOn);
@@ -183,13 +189,15 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         Map<String, Object> originalTableMap = (Map<String, Object>) schemaPolicyMap.get("tableMap");
         @SuppressWarnings("unchecked")
-        List<String> originalThemeList = (List<String>) originalTableMap.get("themeList");
+        List<String> originalThemeList =
+                Optional.ofNullable((List<String>) originalTableMap.get("themeList")).orElse(Collections.emptyList());
         List<SchemaPolicyTableMap.Theme> themeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values()).map(themeType -> {
             boolean isOn = originalThemeList.contains(themeType.code);
             return new SchemaPolicyTableMap.Theme(themeType, isOn);
         }).collect(Collectors.toList());
         @SuppressWarnings("unchecked")
-        List<String> originalStatementList = (List<String>) originalTableMap.get("statementList");
+        List<String> originalStatementList =
+                Optional.ofNullable((List<String>) originalTableMap.get("statementList")).orElse(Collections.emptyList());
 
         return new SchemaPolicyTableMap(themeList, originalStatementList);
     }
@@ -201,13 +209,15 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         Map<String, Object> originalColumnMap = (Map<String, Object>) schemaPolicyMap.get("columnMap");
         @SuppressWarnings("unchecked")
-        List<String> originalThemeList = (List<String>) originalColumnMap.get("themeList");
+        List<String> originalThemeList =
+                Optional.ofNullable((List<String>) originalColumnMap.get("themeList")).orElse(Collections.emptyList());
         List<SchemaPolicyColumnMap.Theme> themeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values()).map(themeType -> {
             boolean isOn = originalThemeList.contains(themeType.code);
             return new SchemaPolicyColumnMap.Theme(themeType, isOn);
         }).collect(Collectors.toList());
         @SuppressWarnings("unchecked")
-        List<String> originalStatementList = (List<String>) originalColumnMap.get("statementList");
+        List<String> originalStatementList =
+                Optional.ofNullable((List<String>) originalColumnMap.get("statementList")).orElse(Collections.emptyList());
 
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }

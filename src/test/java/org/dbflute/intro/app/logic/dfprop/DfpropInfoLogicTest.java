@@ -203,6 +203,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         Arrays.stream(SchemaPolicyTableMap.ThemeType.values()).forEach(themeType -> {
             assertTrue(tableMapThemeTypeList.contains(themeType));
         });
+        assertNotNull(schemaPolicyMap.tableMap.statementList);
         schemaPolicyMap.tableMap.themeList.forEach(theme -> assertFalse(theme.isActive));
         // columnMap
         List<SchemaPolicyColumnMap.ThemeType> columnMapThemeTypeList =
@@ -210,6 +211,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         Arrays.stream(SchemaPolicyColumnMap.ThemeType.values()).forEach(themeType -> {
             assertTrue(columnMapThemeTypeList.contains(themeType));
         });
+        assertNotNull(schemaPolicyMap.columnMap.statementList);
         schemaPolicyMap.columnMap.themeList.forEach(theme -> assertFalse(theme.isActive));
     }
 
