@@ -38,10 +38,17 @@ map:{
     # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     # set your DB design policy here #change_it_first
     # _/_/_/_/_/_/_/_/_/_/
-    ; tableExceptList = list:{prefix:MST_ ; suffix:_HIST}
-    ; tableTargetList = list:{prefix:MST_}
+    ; tableExceptList = list:{
+        ; prefix:MST_
+        ; suffix:_HIST
+    }
+    ; tableTargetList = list:{
+        ; prefix:MST_
+    }
     ; columnExceptMap = map:{
-        ; GENMAI = list:{OTHER_SYSTEM_USED_NAME}
+        ; GENMAI = list:{
+            ; OTHER_SYSTEM_USED_NAME
+        }
     }
     ; isMainSchemaOnly = true
 

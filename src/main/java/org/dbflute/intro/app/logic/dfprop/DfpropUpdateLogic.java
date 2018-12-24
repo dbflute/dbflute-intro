@@ -35,6 +35,7 @@ import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMapMeta;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.lastaflute.core.exception.LaSystemException;
@@ -192,6 +193,127 @@ public class DfpropUpdateLogic {
 
         replaceSchemaPolicyInnerMap(schemaPolicyMapFile, isActive, targetMapAlias, themeListAlias, themeTypeCodeList,
                 originalThemeCodeList);
+    }
+
+    protected void doReplaceSchemaPolicyMap(File file, SchemaPolicyMap input) {
+        SchemaPolicyMap base = dfpropInfoLogic.parseSchemePolicyMap(file);
+        flutyFileLogic.writeFile(file, buildSchemaPolicyMap(mergeSchemaPolicyMap(base, input)));
+    }
+
+    protected SchemaPolicyMap mergeSchemaPolicyMap(SchemaPolicyMap base, SchemaPolicyMap input) {
+        SchemaPolicyWholeMap mergedWholeMap = mergeWholeMap(base.wholeMap, input.wholeMap);
+        SchemaPolicyTableMap mergedTableMap = mergeTableMap(base.tableMap, input.tableMap);
+        SchemaPolicyColumnMap mergedColumnMap = mergeColumnMap(base.columnMap, input.columnMap);
+
+        return new SchemaPolicyMap(base.targetSetting, mergedWholeMap, mergedTableMap, mergedColumnMap);
+    }
+
+    private SchemaPolicyWholeMap mergeWholeMap(SchemaPolicyWholeMap base, SchemaPolicyWholeMap input) {
+        List<String> inputThemeTypeCode = input.themeList.stream().map(t -> t.type.code).collect(Collectors.toList());
+        Stream<SchemaPolicyWholeMap.Theme> filteredBaseStream =
+                base.themeList.stream().filter(theme -> !inputThemeTypeCode.contains(theme.type.code));
+        List<SchemaPolicyWholeMap.Theme> themeList =
+                Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
+        return new SchemaPolicyWholeMap(themeList);
+    }
+
+    private SchemaPolicyTableMap mergeTableMap(SchemaPolicyTableMap base, SchemaPolicyTableMap input) {
+        List<String> inputThemeTypeCode = input.themeList.stream().map(t -> t.type.code).collect(Collectors.toList());
+        Stream<SchemaPolicyTableMap.Theme> filteredBaseStream =
+                base.themeList.stream().filter(theme -> !inputThemeTypeCode.contains(theme.type.code));
+        List<SchemaPolicyTableMap.Theme> themeList =
+                Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
+        return new SchemaPolicyTableMap(themeList, base.statementList);
+    }
+
+    private SchemaPolicyColumnMap mergeColumnMap(SchemaPolicyColumnMap base, SchemaPolicyColumnMap input) {
+        List<String> inputThemeTypeCode = input.themeList.stream().map(t -> t.type.code).collect(Collectors.toList());
+        Stream<SchemaPolicyColumnMap.Theme> filteredBaseStream =
+                base.themeList.stream().filter(theme -> !inputThemeTypeCode.contains(theme.type.code));
+        List<SchemaPolicyColumnMap.Theme> themeList =
+                Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
+        return new SchemaPolicyColumnMap(themeList, base.statementList);
+    }
+
+    protected String buildSchemaPolicyMap(SchemaPolicyMap schemaPolicyMap) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("# /---------------------------------------------------------------------------\n");
+        sb.append("map:{\n");
+        sb.append(buildSchemaPolicyTargetSetting(schemaPolicyMap.targetSetting));
+        sb.append(buildWholeMap(schemaPolicyMap.wholeMap));
+        sb.append(buildTableMap(schemaPolicyMap.tableMap));
+        sb.append(buildColumnMap(schemaPolicyMap.columnMap));
+        sb.append("}\n");
+        sb.append("# ----------------/\n");
+
+        return sb.toString();
+    }
+
+    protected String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting) {
+        StringBuilder sb = new StringBuilder();
+        // tableExceptList
+        sb.append("    ; tableExceptList = list:{");
+        setting.tableExceptList.forEach(element -> {
+            sb.append(String.format("        ; %s\n", element));
+        });
+        sb.append("    }");
+
+        // tableTargetList
+        sb.append("    ; tableTargetList = list:{");
+        setting.tableTargetList.forEach(element -> {
+            sb.append(String.format("        ; %s\n", element));
+        });
+        sb.append("    }");
+
+        // columnExceptMap
+        sb.append("    ; columnExceptMap = map:{");
+        setting.columnExceptMap.entrySet().forEach(elementEntry -> {
+            sb.append(String.format("        ; %s = list:{", elementEntry.getKey()));
+            elementEntry.getValue().forEach(s -> {
+                sb.append(String.format("            ; %s\n", s));
+            });
+            sb.append("        }");
+        });
+        sb.append("    }");
+
+        // isMainSchemaOnly
+        sb.append(String.format("    ; isMainSchemaOnly = %s", String.valueOf(setting.isMainSchemaOnly)));
+
+        return sb.toString();
+    }
+
+    protected String buildWholeMap(SchemaPolicyWholeMap wholeMap) {
+        List<String> themeTypeCodeList =
+                wholeMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
+        return buildSchemaPolicyInnerMap("wholeMap", themeTypeCodeList);
+    }
+
+    protected String buildTableMap(SchemaPolicyTableMap tableMap) {
+        List<String> themeTypeCodeList =
+                tableMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
+        return buildSchemaPolicyInnerMap("tableMap", themeTypeCodeList);
+    }
+
+    protected String buildColumnMap(SchemaPolicyColumnMap columnMap) {
+        List<String> themeTypeCodeList =
+                columnMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
+        return buildSchemaPolicyInnerMap("columnMap", themeTypeCodeList);
+    }
+
+    protected String buildSchemaPolicyInnerMap(String targetMapAlias, List<String> themeTypeCodeList) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("    ; %s = map:{", targetMapAlias)).append("\n");
+        // themeList
+        sb.append("        ; themeList = list:{ ").append("\n");
+        themeTypeCodeList.forEach(themeTypeCode -> {
+            sb.append(String.format("            ; %s", themeTypeCode)).append("\n");
+        });
+        sb.append("        }");
+        // statementList
+
+        sb.append("    }");
+
+        return sb.toString();
     }
 
     protected void replaceTableMapTheme(File schemaPolicyMapFile, SchemaPolicyMapMeta meta, SchemaPolicyTableMap.ThemeType themeType,
