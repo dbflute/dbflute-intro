@@ -1,6 +1,7 @@
 package org.dbflute.intro.app.model.client.document;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,13 +45,15 @@ public class SchemaPolicyColumnMap {
     }
 
     public List<Theme> themeList;
+    public List<String> statementList;
 
     public static SchemaPolicyColumnMap noSettingInstance() {
         final List<Theme> themeList = Arrays.stream(ThemeType.values()).map(type -> new Theme(type, false)).collect(Collectors.toList());
-        return new SchemaPolicyColumnMap(themeList);
+        return new SchemaPolicyColumnMap(themeList, Collections.emptyList());
     }
 
-    public SchemaPolicyColumnMap(List<Theme> themeList) {
+    public SchemaPolicyColumnMap(List<Theme> themeList, List<String> statementList) {
         this.themeList = themeList;
+        this.statementList = statementList;
     }
 }

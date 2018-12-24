@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.web.dfprop;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
@@ -140,13 +142,13 @@ public class DfpropAction extends IntroBaseAction {
         List<SchemaPolicyTableMap.Theme> tableMapThemeList = body.tableMap.themeList.stream()
                 .map(theme -> new SchemaPolicyTableMap.Theme(SchemaPolicyTableMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());
-        SchemaPolicyTableMap tableMap = new SchemaPolicyTableMap(tableMapThemeList);
+        SchemaPolicyTableMap tableMap = new SchemaPolicyTableMap(tableMapThemeList, Collections.emptyList());
         List<SchemaPolicyColumnMap.Theme> columnMapThemeList = body.columnMap.themeList.stream()
                 .map(theme -> new SchemaPolicyColumnMap.Theme(SchemaPolicyColumnMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());
-        SchemaPolicyColumnMap columnMap = new SchemaPolicyColumnMap(columnMapThemeList);
+        SchemaPolicyColumnMap columnMap = new SchemaPolicyColumnMap(columnMapThemeList, Collections.emptyList());
 
-        return new SchemaPolicyMap(wholeMap, tableMap, columnMap);
+        return new SchemaPolicyMap(SchemaPolicyTargetSetting.noSettingInstance(), wholeMap, tableMap, columnMap);
     }
 
     // -----------------------------------------------------

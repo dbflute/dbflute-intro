@@ -26,6 +26,7 @@ import org.dbflute.infra.dfprop.DfPropFile;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
@@ -74,7 +75,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     }
 
     @Test
-    public void test_findSchemaPolicyMap_TableMap_containsAllThemeType() throws Exception {
+    public void test_findSchemaPolicyMap_TableMap_containsAllProperty() throws Exception {
         // ## Arrange ##
         DfpropInfoLogic logic = new DfpropInfoLogic();
         inject(logic);
@@ -86,6 +87,9 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
 
         // ## Assert ##
         assertTrue(resultThemeTypeList.containsAll(Arrays.asList(SchemaPolicyTableMap.ThemeType.values())));
+        List<String> actualStatementList = extractStatementList(fetchSchemaPolicyTableMap());
+        assertTrue(tableMap.statementList.containsAll(actualStatementList));
+
     }
 
     @Test
@@ -122,6 +126,8 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
 
         // ## Assert ##
         assertTrue(resultThemeTypeList.containsAll(Arrays.asList(SchemaPolicyColumnMap.ThemeType.values())));
+        List<String> actualStatementList = extractStatementList(fetchSchemaPolicyColumnMap());
+        assertTrue(columnMap.statementList.containsAll(actualStatementList));
     }
 
     @Test
@@ -146,7 +152,29 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     }
 
     @Test
-    public void test_parseSchemaPolicyMap_initialSchemaPolicyMapFile() throws Exception {
+    public void test_parseSchemePolicyMap_TargetSetting() throws Exception {
+        // ## Arrange ##
+        DfpropInfoLogic logic = new DfpropInfoLogic();
+        inject(logic);
+
+        // ## Act ##
+        File schemaPolicyMapFile = prepareFileForTestResource("schemaPolicyMap.dfprop");
+        SchemaPolicyTargetSetting result = logic.parseSchemePolicyMap(schemaPolicyMapFile).targetSetting;
+
+        // ## Assert ##
+        Map<String, Object> acutualSchemaPolicyMap = readDfpropFile(schemaPolicyMapFile);
+        assertTrue(result.tableExceptList.containsAll(extractTableExceptList(acutualSchemaPolicyMap)));
+        assertTrue(result.tableTargetList.containsAll(extractTableTargetList(acutualSchemaPolicyMap)));
+        Map<String, List<String>> actualColumnExceptMap = extractColumnExceptMap(acutualSchemaPolicyMap);
+        result.columnExceptMap.forEach((key, value) -> {
+            List<String> actualColumnExcept = actualColumnExceptMap.get(key);
+            assertTrue(value.containsAll(actualColumnExcept));
+        });
+        assertTrue(result.tableExceptList.containsAll(extractTableExceptList(acutualSchemaPolicyMap)));
+    }
+
+    @Test
+    public void test_parseSchemaPolicyMap_noSettingSchemaPolicyMapFile() throws Exception {
         // ## Arrange ##
         DfpropInfoLogic logic = new DfpropInfoLogic();
         inject(logic);
@@ -156,6 +184,12 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         SchemaPolicyMap schemaPolicyMap = logic.parseSchemePolicyMap(schemaPolicyMapFile);
 
         // ## Assert ##
+        // basic settings
+        assertNotNull(schemaPolicyMap.targetSetting.tableExceptList);
+        assertNotNull(schemaPolicyMap.targetSetting.tableTargetList);
+        assertNotNull(schemaPolicyMap.targetSetting.columnExceptMap);
+        assertFalse(schemaPolicyMap.targetSetting.isMainSchemaOnly);
+
         // wholeMap
         List<SchemaPolicyWholeMap.ThemeType> wholeMapThemeTypeList =
                 schemaPolicyMap.wholeMap.themeList.stream().map(theme -> theme.type).collect(Collectors.toList());
@@ -190,9 +224,9 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     private Map<String, Object> fetchSchemaPolicyTableMap() {
         Map<String, Object> schemaPolicyMapFromDfProp = fetchSchemaPolicyMap();
         @SuppressWarnings("unchecked")
-        Map<String, Object> wholeMap = (Map<String, Object>) schemaPolicyMapFromDfProp.get("tableMap");
+        Map<String, Object> tableMap = (Map<String, Object>) schemaPolicyMapFromDfProp.get("tableMap");
 
-        return wholeMap;
+        return tableMap;
     }
 
     private Map<String, Object> fetchSchemaPolicyColumnMap() {
@@ -203,6 +237,34 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         return wholeMap;
     }
 
+    private List<String> extractTableExceptList(Map<String, Object> schemaPolicyMap) {
+        @SuppressWarnings("unchecked")
+        List<String> tableExceptList = (List<String>) schemaPolicyMap.get("tableExceptList");
+
+        return tableExceptList;
+    }
+
+    private List<String> extractTableTargetList(Map<String, Object> schemaPolicyMap) {
+        @SuppressWarnings("unchecked")
+        List<String> tableExceptList = (List<String>) schemaPolicyMap.get("tableTargetList");
+
+        return tableExceptList;
+    }
+
+    private Map<String, List<String>> extractColumnExceptMap(Map<String, Object> schemaPolicyMap) {
+        @SuppressWarnings("unchecked")
+        Map<String, List<String>> columnExceptMap = (Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap");
+
+        return columnExceptMap;
+    }
+
+    private Boolean extractIsMainSchemaOnly(Map<String, Object> schemaPolicyMap) {
+        @SuppressWarnings("unchecked")
+        String isMainSchemaOnly = (String) schemaPolicyMap.get("isMainSchemaOnly");
+
+        return Boolean.valueOf(isMainSchemaOnly);
+    }
+
     private List<String> extractThemeList(Map<String, Object> actualWholeMap) {
         @SuppressWarnings("unchecked")
         List<String> themeList = (List<String>) actualWholeMap.get("themeList");
@@ -210,9 +272,24 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         return themeList;
     }
 
+    private List<String> extractStatementList(Map<String, Object> map) {
+        @SuppressWarnings("unchecked")
+        List<String> themeList = (List<String>) map.get("statementList");
+
+        return themeList;
+    }
+
     private Map<String, Object> fetchSchemaPolicyMap() {
         final File dfpropFile = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/schemaPolicyMap.dfprop");
         return new DfPropFile().readMap(dfpropFile.getAbsolutePath(), null);
+    }
+
+    private Map<String, Object> readDfpropFile(File file) {
+        return new DfPropFile().readMap(file.getAbsolutePath(), null);
+    }
+
+    private File prepareFileForTestResource(String fileName) {
+        return new File(getProjectDir(), "/src/test/resources/dfprop/" + fileName);
     }
 
     private File prepareFileForTestClient(String filePath) {

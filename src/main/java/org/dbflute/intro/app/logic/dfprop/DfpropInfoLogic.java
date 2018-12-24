@@ -35,6 +35,7 @@ import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 
@@ -129,6 +130,8 @@ public class DfpropInfoLogic {
     protected SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) {
         Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
 
+        SchemaPolicyTargetSetting targetSetting = Optional.ofNullable(parseSchemaPolicyTargetSetting(schemaPolicyMap))
+                .orElseGet(() -> SchemaPolicyTargetSetting.noSettingInstance());
         SchemaPolicyWholeMap wholeMap =
                 Optional.ofNullable(parseWholeMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyWholeMap.noSettingInstance());
         SchemaPolicyTableMap tableMap =
@@ -136,7 +139,25 @@ public class DfpropInfoLogic {
         SchemaPolicyColumnMap columnMap =
                 Optional.ofNullable(parseColumnMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyColumnMap.noSettingInstance());
 
-        return new SchemaPolicyMap(wholeMap, tableMap, columnMap);
+        return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap);
+    }
+
+    private SchemaPolicyTargetSetting parseSchemaPolicyTargetSetting(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.isEmpty()) {
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        List<String> tableExceptList = (List<String>) schemaPolicyMap.get("tableExceptList");
+        @SuppressWarnings("unchecked")
+        List<String> tableTargetList = (List<String>) schemaPolicyMap.get("tableTargetList");
+        @SuppressWarnings("unchecked")
+        Map<String, List<String>> columnExceptMap = (Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap");
+        @SuppressWarnings("unchecked")
+        String isMainSchemaOnly = (String) schemaPolicyMap.get("isMainSchemaOnly");
+
+        return new SchemaPolicyTargetSetting(tableExceptList, tableTargetList, columnExceptMap, Boolean.valueOf(isMainSchemaOnly));
+
     }
 
     private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
@@ -167,8 +188,10 @@ public class DfpropInfoLogic {
             boolean isOn = originalThemeList.contains(themeType.code);
             return new SchemaPolicyTableMap.Theme(themeType, isOn);
         }).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<String> originalStatementList = (List<String>) originalTableMap.get("statementList");
 
-        return new SchemaPolicyTableMap(themeList);
+        return new SchemaPolicyTableMap(themeList, originalStatementList);
     }
 
     private SchemaPolicyColumnMap parseColumnMap(Map<String, Object> schemaPolicyMap) {
@@ -183,8 +206,10 @@ public class DfpropInfoLogic {
             boolean isOn = originalThemeList.contains(themeType.code);
             return new SchemaPolicyColumnMap.Theme(themeType, isOn);
         }).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<String> originalStatementList = (List<String>) originalColumnMap.get("statementList");
 
-        return new SchemaPolicyColumnMap(themeList);
+        return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
     // -----------------------------------------------------
