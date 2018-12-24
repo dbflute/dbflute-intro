@@ -251,7 +251,7 @@ public class DfpropUpdateLogic {
         StringBuilder sb = new StringBuilder();
         sb.append("    ; wholeMap = map:{\n");
         sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
-        sb.append("    }");
+        sb.append("    }\n");
 
         return sb.toString();
     }
@@ -264,7 +264,7 @@ public class DfpropUpdateLogic {
         sb.append("    ; tableMap = map:{\n");
         sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
         sb.append(buildSchemaPolicyStatementList(tableMap.statementList));
-        sb.append("    }");
+        sb.append("    }\n");
 
         return sb.toString();
     }
@@ -277,7 +277,7 @@ public class DfpropUpdateLogic {
         sb.append("    ; columnMap = map:{\n");
         sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
         sb.append(buildSchemaPolicyStatementList(columnMap.statementList));
-        sb.append("    }");
+        sb.append("    }\n");
 
         return sb.toString();
     }
