@@ -20,7 +20,7 @@
 
   <h3>Schema Policy Check</h3>
   <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
-  <button class="ui primary button" onclick="{ generateTask }">Check Policy (schema-policy-check)</button>
+  <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
   <div class="ui info message">
     <div class="header">What is "Check Policy"?</div>
     <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
@@ -196,6 +196,10 @@
 
     this.schemaSyncCheckTask = () => {
       this.task('schemaSyncCheck', self.refs.checkModal)
+    }
+
+    this.schemaPolicyCheckTask = () => {
+      this.task('doc', self.refs.checkModal)
     }
 
     this.task = (task, modal) => {
