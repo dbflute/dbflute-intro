@@ -156,7 +156,7 @@ public class DfpropUpdateLogic {
     }
 
     public void replaceSchemaPolicyMap(String project, SchemaPolicyMap inputSchemaPolicyMap) {
-        File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(project, "schemaPolicyMap.dfprop");
+        File schemaPolicyMapFile = new File(dfpropPhysicalLogic.buildDfpropFilePath(project, "schemaPolicyMap.dfprop"));
         doReplaceSchemaPolicyMap(schemaPolicyMapFile, inputSchemaPolicyMap);
     }
 

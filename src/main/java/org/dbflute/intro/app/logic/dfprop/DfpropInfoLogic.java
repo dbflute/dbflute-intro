@@ -124,28 +124,28 @@ public class DfpropInfoLogic {
     //                                          SchemaPolicy
     //                                          ------------
     public SchemaPolicyMap findSchemaPolicyMap(String projectName) {
-        File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "schemaPolicyMap.dfprop");
+        File schemaPolicyMapFile = new File(dfpropPhysicalLogic.buildDfpropFilePath(projectName, "schemaPolicyMap.dfprop"));
         return parseSchemePolicyMap(schemaPolicyMapFile);
     }
 
     protected SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) {
+        if (!schemaPolicyMapFile.exists()) {
+            return SchemaPolicyMap.noSettingsInstance();
+        }
+
         Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
 
-        SchemaPolicyTargetSetting targetSetting = Optional.ofNullable(parseSchemaPolicyTargetSetting(schemaPolicyMap))
-                .orElseGet(() -> SchemaPolicyTargetSetting.noSettingInstance());
-        SchemaPolicyWholeMap wholeMap =
-                Optional.ofNullable(parseWholeMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyWholeMap.noSettingInstance());
-        SchemaPolicyTableMap tableMap =
-                Optional.ofNullable(parseTableMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyTableMap.noSettingInstance());
-        SchemaPolicyColumnMap columnMap =
-                Optional.ofNullable(parseColumnMap(schemaPolicyMap)).orElseGet(() -> SchemaPolicyColumnMap.noSettingInstance());
+        SchemaPolicyTargetSetting targetSetting = parseSchemaPolicyTargetSetting(schemaPolicyMap);
+        SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
+        SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
+        SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
 
         return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap);
     }
 
     private SchemaPolicyTargetSetting parseSchemaPolicyTargetSetting(Map<String, Object> schemaPolicyMap) {
         if (schemaPolicyMap.isEmpty()) {
-            return null;
+            return SchemaPolicyTargetSetting.noSettingInstance();
         }
 
         @SuppressWarnings("unchecked")
@@ -167,7 +167,7 @@ public class DfpropInfoLogic {
 
     private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
         if (schemaPolicyMap.get("wholeMap") == null) {
-            return null;
+            return SchemaPolicyWholeMap.noSettingInstance();
         }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
@@ -184,7 +184,7 @@ public class DfpropInfoLogic {
 
     private SchemaPolicyTableMap parseTableMap(Map<String, Object> schemaPolicyMap) {
         if (schemaPolicyMap.get("tableMap") == null) {
-            return null;
+            return SchemaPolicyTableMap.noSettingInstance();
         }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalTableMap = (Map<String, Object>) schemaPolicyMap.get("tableMap");
@@ -204,7 +204,7 @@ public class DfpropInfoLogic {
 
     private SchemaPolicyColumnMap parseColumnMap(Map<String, Object> schemaPolicyMap) {
         if (schemaPolicyMap.get("columnMap") == null) {
-            return null;
+            return SchemaPolicyColumnMap.noSettingInstance();
         }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalColumnMap = (Map<String, Object>) schemaPolicyMap.get("columnMap");

@@ -36,6 +36,39 @@ import org.junit.Test;
  */
 public class DfpropInfoLogicTest extends UnitIntroTestCase {
 
+    // ===================================================================================
+    //                                                                     SchemaPolicyMap
+    //                                                                     ===============
+    @Test
+    public void test_findSchemaPolicyMap_NotExistDfpropFile() throws Exception {
+        // ## Arrange ##
+        DfpropInfoLogic logic = new DfpropInfoLogic();
+        inject(logic);
+        File notExistFile = new File("not/exist/SchemaPolicyMap.dfprop");
+
+        // ## Act ##
+        SchemaPolicyMap result = logic.parseSchemePolicyMap(notExistFile);
+
+        // ## Assert ##
+        assertNotNull(result);
+        assertNotNull(result.targetSetting);
+        assertNotNull(result.targetSetting.tableExceptList);
+        assertNotNull(result.targetSetting.tableTargetList);
+        assertNotNull(result.targetSetting.columnExceptMap);
+        assertFalse(result.targetSetting.isMainSchemaOnly);
+        assertNotNull(result.wholeMap);
+        assertNotNull(result.wholeMap.themeList);
+        assertNotNull(result.tableMap);
+        assertNotNull(result.tableMap.themeList);
+        assertNotNull(result.tableMap.statementList);
+        assertNotNull(result.columnMap);
+        assertNotNull(result.columnMap.themeList);
+        assertNotNull(result.columnMap.statementList);
+    }
+
+    // -----------------------------------------------------
+    //                                             Whole Map
+    //                                             ---------
     @Test
     public void test_findSchemaPolicyMap_WholeMap_containsAllThemeType() throws Exception {
         // ## Arrange ##
@@ -74,6 +107,9 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         });
     }
 
+    // -----------------------------------------------------
+    //                                             Table Map
+    //                                             ---------
     @Test
     public void test_findSchemaPolicyMap_TableMap_containsAllProperty() throws Exception {
         // ## Arrange ##
@@ -113,6 +149,9 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         });
     }
 
+    // -----------------------------------------------------
+    //                                            Column Map
+    //                                            ----------
     @Test
     public void test_findSchemaPolicyMap_ColumnMap_containsAllThemeType() throws Exception {
         // ## Arrange ##
@@ -215,6 +254,9 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         schemaPolicyMap.columnMap.themeList.forEach(theme -> assertFalse(theme.isActive));
     }
 
+    // ===================================================================================
+    //                                                                             Private
+    //                                                                             =======
     private Map<String, Object> fetchSchemaPolicyWholeMap() {
         Map<String, Object> schemaPolicyMapFromDfProp = fetchSchemaPolicyMap();
         @SuppressWarnings("unchecked")

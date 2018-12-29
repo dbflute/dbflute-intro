@@ -24,8 +24,33 @@ import org.junit.Test;
 public class DfpropUpdateLogicTest extends UnitIntroTestCase {
 
     // ===================================================================================
-    //                                                                           Whole Map
-    //                                                                           =========
+    //                                                                     SchemaPolicyMap
+    //                                                                     ===============
+    @Test
+    public void test_replaceSchemaPolicyMap_NotExistDfpropFile() throws Exception {
+        // ## Arrange ##
+        DfpropUpdateLogic logic = new DfpropUpdateLogic();
+        inject(logic);
+        DfpropInfoLogic infoLogic = new DfpropInfoLogic();
+        inject(infoLogic);
+
+        final SchemaPolicyWholeMap.ThemeType targetType = SchemaPolicyWholeMap.ThemeType.SameColumnDbTypeIfSameColumnName;
+        File notExistFile = prepareFileForTestClient("not/exist/schemaPolicyMap.dfprop");
+        assertFalse(notExistFile.exists());
+
+        // ## Act ##
+        logic.doReplaceSchemaPolicyMap(notExistFile, createInputWholeMap(targetType, true));
+
+        // ## Assert ##
+        File schemaPolicyMapFile = prepareFileForTestClient("not/exist/schemaPolicyMap.dfprop");
+        assertTrue(schemaPolicyMapFile.exists());
+        SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapTheme(schemaPolicyMapFile, targetType, infoLogic);
+        assertTrue(afterTheme.isActive);
+    }
+
+    // -----------------------------------------------------
+    //                                             Whole Map
+    //                                             ---------
     @Test
     public void test_replaceWholeMapTheme_ChangeToActive() throws Exception {
         // ## Arrange ##
@@ -147,9 +172,9 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         }
     }
 
-    // ===================================================================================
-    //                                                                           Table Map
-    //                                                                           =========
+    // -----------------------------------------------------
+    //                                             Table Map
+    //                                             ---------
     @Test
     public void test_replaceTableMapThemeList_ChangeToActiveAllType() throws Exception {
         // ## Arrange ##
@@ -198,9 +223,9 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         }
     }
 
-    // ===================================================================================
-    //                                                                          Column Map
-    //                                                                          ==========
+    // -----------------------------------------------------
+    //                                            Column Map
+    //                                            ----------
     @Test
     public void test_replaceColumnMapThemeList_ChangeToActiveAllType() throws Exception {
         // ## Arrange ##

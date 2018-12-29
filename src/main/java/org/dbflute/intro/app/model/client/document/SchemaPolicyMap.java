@@ -31,4 +31,9 @@ public class SchemaPolicyMap {
         this.tableMap = tableMap;
         this.columnMap = columnMap;
     }
+
+    public static SchemaPolicyMap noSettingsInstance() {
+        return new SchemaPolicyMap(SchemaPolicyTargetSetting.noSettingInstance(), SchemaPolicyWholeMap.noSettingInstance(),
+                SchemaPolicyTableMap.noSettingInstance(), SchemaPolicyColumnMap.noSettingInstance());
+    }
 }
