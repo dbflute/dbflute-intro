@@ -1,6 +1,12 @@
 <settings>
   <h2>DBFlute Client { client.projectName }</h2>
 
+  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
+    <div class="description">
+      { opts.modal.message }
+    </div>
+  </su-modal>
+
   <h3 class="ui header">
     for { client.databaseCode }, { client.languageCode }, { client.containerCode }
   </h3>
@@ -92,6 +98,7 @@
                 </div>
               </div>
             </div>
+            <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
           </su-tab>
         </su-tabset>
       </div>
@@ -130,6 +137,11 @@
       schemaPolicy : 'SchemaPolicy'
     }
     this.activeTab = ''
+
+    this.checkModal = {
+      header : 'SchemaPolicyCheck',
+      closable: false
+    }
 
     // ===================================================================================
     //                                                                     Client Handling
@@ -213,6 +225,24 @@
       this.suToast({
         title: 'Setting updated',
         class: 'positive'
+      })
+    }
+
+    // ===================================================================================
+    //                                                                        Execute Task
+    //                                                                        ============
+    this.schemaPolicyCheckTask = () => {
+      self.checkModal.message = 'Checking...'
+      const checkModalRef = self.refs.checkModal
+      checkModalRef.show()
+
+      ApiFactory.task(self.opts.projectName, 'doc').then((response) => {
+        self.checkModal.message = response.success ? 'Success' : 'Failure'
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.update({client: response})
+        })
+      }).finally(() => {
+        checkModalRef.hide()
       })
     }
 
