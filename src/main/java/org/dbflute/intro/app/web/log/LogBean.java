@@ -19,14 +19,25 @@ import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
+ * @author cabos
  */
 public class LogBean {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    /**
+     * log file name
+     * Log files are under the dbflute_yourdb(DBFlute client)/log
+     * e.g. "intro-last-execute-failure-alterCheck.log"
+     */
     @Required
     public final String fileName;
+
+    /**
+     * long long texts in log file
+     * e.g. "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+     */
     @Required
     public final String content;
 

@@ -28,6 +28,7 @@ import java.util.List;
 
 /**
  * @author deco
+ * @author cabos
  */
 public class LogPhysicalLogic {
 
