@@ -68,6 +68,19 @@ export default class ApiFactory {
         }
       });
   }
+  schemaPolicy(projectName) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy`);
+  }
+  editSchemaPolicy(projectName, schemaPolicyData) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy/edit`,
+      {
+        body: {
+          wholeMap: schemaPolicyData.wholeMap,
+          tableMap: schemaPolicyData.tableMap,
+          columnMap: schemaPolicyData.columnMap
+        }
+      });
+  }
   document(projectName) {
     return ffetch.post(`api/dfprop/${projectName}/document`);
   }

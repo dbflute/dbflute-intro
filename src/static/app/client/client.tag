@@ -43,6 +43,14 @@
   </div>
   <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
 
+  <h3>Schema Policy Check</h3>
+  <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
+  <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
+  <div class="ui info message">
+    <div class="header">What is "Check Policy"?</div>
+    <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
+  </div>
+
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
       Generating...
@@ -217,6 +225,13 @@
 
     }
 
+    // -----------------------------------------------------
+    //                                                  GoTo
+    //                                                  ----
+    this.goToSchemaPolicySetting = () => {
+      route(`settings/${self.opts.projectName}?activeTab=SchemaPolicy`)
+    }
+
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
@@ -245,6 +260,10 @@
         })
       })
 }
+
+    this.schemaPolicyCheckTask = () => {
+      this.task('doc', self.refs.checkModal)
+    }
 
     this.task = (task, modal) => {
       modal.show()
