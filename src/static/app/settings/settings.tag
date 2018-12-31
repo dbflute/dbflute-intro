@@ -216,7 +216,7 @@
       body[targetMap].themeList = [{typeCode : typeCode, isActive : toggledActiveStatus}]
 
       ApiFactory.editSchemaPolicy(opts.projectName, body).then(() => {
-        this.schemaPolicy.wholeMap.themeList.find(theme => theme.typeCode === typeCode).isActive = toggledActiveStatus
+        this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode).isActive = toggledActiveStatus
         self.update()
       })
     }
