@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author deco
@@ -77,6 +78,14 @@ public class DocumentPhysicalLogic {
 
     public File findLastaDocHtml(String clientProject, String moduleName) {
         return toProjectNamedDocumentFile(clientProject, moduleName, "lastadoc");
+    }
+
+    public OptionalThing<File> findAlterDir(String clientProject) {
+        File file = new File(buildMigrationPath(clientProject, "", "alter"));
+        if (file.exists()) {
+            return OptionalThing.of(file);
+        }
+        return OptionalThing.empty();
     }
 
     public CDef.NgMark findAlterCheckNgMark(String clientProject) {
