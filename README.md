@@ -48,7 +48,6 @@ dbflute-intro
    ├--main
    └--static
       └-- app
-
           ├-- common
           │   ├-- FFetchWrapper.js
           │   ├-- UiAssist.js
