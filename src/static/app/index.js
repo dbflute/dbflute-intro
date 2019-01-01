@@ -116,6 +116,10 @@ route('create', () => {
 route('settings/*', projectName => {
   riot.mount('content', 'settings', { projectName })
 })
+route('settings/*?..', projectName => {
+  const activeTab = route.query().activeTab
+  riot.mount('content', 'settings', { projectName, activeTab })
+})
 route('welcome', () => {
   riot.mount('content', 'welcome')
 })

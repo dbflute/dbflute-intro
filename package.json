@@ -23,7 +23,7 @@
     "riot-route": "^3.1.1",
     "riot-tag-loader": "^2.0.2",
     "rxjs": "^6.1.0",
-    "semantic-ui-riot": "^0.13.1",
+    "semantic-ui-riot": "^0.21.0",
     "style-loader": "^0.23.0",
     "vinyl-source-stream": "^2.0.0",
     "webpack": "^4.19.1",

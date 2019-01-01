@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,30 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.infra.dfprop.DfPropFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author jflute
@@ -95,25 +104,122 @@ public class DfpropInfoLogic {
         if (dfpropFiles == null) {
             return Optional.empty();
         }
-        return Arrays.stream(dfpropFiles)
-            .filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop"))
-            .findAny()
-            .map(file -> {
-                final DfPropFile dfpropFile = new DfPropFile();
-                Map<String, Object> readMap = readMap(file, dfpropFile);
-                @SuppressWarnings("unchecked")
-                Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
-                return schemaSyncCheckMap;
-            })
-            .map(schemaSyncCheckMap -> {
-                final String url = convertSettingToString(schemaSyncCheckMap.get("url"));
-                final String schema = convertSettingToString(schemaSyncCheckMap.get("schema"));
-                final String user = convertSettingToString(schemaSyncCheckMap.get("user"));
-                final String password = convertSettingToString(schemaSyncCheckMap.get("password"));
-                final DbConnectionBox dbConnectionBox = new DbConnectionBox(url, schema, user, password);
-                final Boolean isSuppressCraftDiff = Boolean.valueOf(convertSettingToString(schemaSyncCheckMap.get("isSuppressCraftDiff")));
-                return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
-            });
+        return Arrays.stream(dfpropFiles).filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop")).findAny().map(file -> {
+            final DfPropFile dfpropFile = new DfPropFile();
+            Map<String, Object> readMap = readMap(file, dfpropFile);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
+            return schemaSyncCheckMap;
+        }).map(schemaSyncCheckMap -> {
+            final String url = convertSettingToString(schemaSyncCheckMap.get("url"));
+            final String schema = convertSettingToString(schemaSyncCheckMap.get("schema"));
+            final String user = convertSettingToString(schemaSyncCheckMap.get("user"));
+            final String password = convertSettingToString(schemaSyncCheckMap.get("password"));
+            final DbConnectionBox dbConnectionBox = new DbConnectionBox(url, schema, user, password);
+            final Boolean isSuppressCraftDiff = Boolean.valueOf(convertSettingToString(schemaSyncCheckMap.get("isSuppressCraftDiff")));
+            return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
+        });
+    }
+    // -----------------------------------------------------
+    //                                          SchemaPolicy
+    //                                          ------------
+    public SchemaPolicyMap findSchemaPolicyMap(String projectName) {
+        File schemaPolicyMapFile = new File(dfpropPhysicalLogic.buildDfpropFilePath(projectName, "schemaPolicyMap.dfprop"));
+        return parseSchemePolicyMap(schemaPolicyMapFile);
+    }
+
+    protected SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) {
+        if (!schemaPolicyMapFile.exists()) {
+            return SchemaPolicyMap.noSettingsInstance();
+        }
+
+        Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
+
+        SchemaPolicyTargetSetting targetSetting = parseSchemaPolicyTargetSetting(schemaPolicyMap);
+        SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
+        SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
+        SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
+
+        return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap);
+    }
+
+    private SchemaPolicyTargetSetting parseSchemaPolicyTargetSetting(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.isEmpty()) {
+            return SchemaPolicyTargetSetting.noSettingInstance();
+        }
+
+        @SuppressWarnings("unchecked")
+        List<String> tableExceptList =
+                Optional.ofNullable((List<String>) schemaPolicyMap.get("tableExceptList")).orElse(Collections.emptyList());
+        @SuppressWarnings("unchecked")
+        List<String> tableTargetList =
+                Optional.ofNullable((List<String>) schemaPolicyMap.get("tableTargetList")).orElse(Collections.emptyList());
+        @SuppressWarnings("unchecked")
+        Map<String, List<String>> columnExceptMap =
+                Optional.ofNullable((Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap")).orElse(Collections.emptyMap());
+        @SuppressWarnings("unchecked")
+        boolean isMainSchemaOnly =
+                Optional.ofNullable((String) schemaPolicyMap.get("isMainSchemaOnly")).map(value -> Boolean.valueOf(value)).orElse(false);
+
+        return new SchemaPolicyTargetSetting(tableExceptList, tableTargetList, columnExceptMap, isMainSchemaOnly);
+
+    }
+
+    private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.get("wholeMap") == null) {
+            return SchemaPolicyWholeMap.noSettingInstance();
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
+        @SuppressWarnings("unchecked")
+        List<String> originalThemeList =
+                Optional.ofNullable((List<String>) originalWholeMap.get("themeList")).orElse(Collections.emptyList());
+        List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
+            boolean isOn = originalThemeList.contains(themeType.code);
+            return new SchemaPolicyWholeMap.Theme(themeType, isOn);
+        }).collect(Collectors.toList());
+
+        return new SchemaPolicyWholeMap(themeList);
+    }
+
+    private SchemaPolicyTableMap parseTableMap(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.get("tableMap") == null) {
+            return SchemaPolicyTableMap.noSettingInstance();
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> originalTableMap = (Map<String, Object>) schemaPolicyMap.get("tableMap");
+        @SuppressWarnings("unchecked")
+        List<String> originalThemeList =
+                Optional.ofNullable((List<String>) originalTableMap.get("themeList")).orElse(Collections.emptyList());
+        List<SchemaPolicyTableMap.Theme> themeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values()).map(themeType -> {
+            boolean isOn = originalThemeList.contains(themeType.code);
+            return new SchemaPolicyTableMap.Theme(themeType, isOn);
+        }).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<String> originalStatementList =
+                Optional.ofNullable((List<String>) originalTableMap.get("statementList")).orElse(Collections.emptyList());
+
+        return new SchemaPolicyTableMap(themeList, originalStatementList);
+    }
+
+    private SchemaPolicyColumnMap parseColumnMap(Map<String, Object> schemaPolicyMap) {
+        if (schemaPolicyMap.get("columnMap") == null) {
+            return SchemaPolicyColumnMap.noSettingInstance();
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> originalColumnMap = (Map<String, Object>) schemaPolicyMap.get("columnMap");
+        @SuppressWarnings("unchecked")
+        List<String> originalThemeList =
+                Optional.ofNullable((List<String>) originalColumnMap.get("themeList")).orElse(Collections.emptyList());
+        List<SchemaPolicyColumnMap.Theme> themeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values()).map(themeType -> {
+            boolean isOn = originalThemeList.contains(themeType.code);
+            return new SchemaPolicyColumnMap.Theme(themeType, isOn);
+        }).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<String> originalStatementList =
+                Optional.ofNullable((List<String>) originalColumnMap.get("statementList")).orElse(Collections.emptyList());
+
+        return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
     // -----------------------------------------------------

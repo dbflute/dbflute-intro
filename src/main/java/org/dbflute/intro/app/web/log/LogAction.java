@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,15 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.lastaflute.core.message.UserMessages;
 import org.lastaflute.web.Execute;
+import org.lastaflute.web.exception.Forced404NotFoundException;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author deco
  * @author jflute
+ * @author cabos
  */
 public class LogAction extends IntroBaseAction {
 
@@ -50,6 +53,17 @@ public class LogAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                                 index
     //                                                 -----
+    @Execute
+    public JsonResponse<LogBean> index(LogBody logBody) {
+        validate(logBody, (moreValidator) -> {});
+        return logPhysicalLogic.findLogFile(logBody.project, logBody.fileName).map((file) -> {
+            return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
+        }).orElseGet(() -> {
+            String debugMsg = "file not found fileName : " + logBody.fileName;
+            throw new Forced404NotFoundException(debugMsg, UserMessages.empty());
+        });
+    }
+
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<LogBean>> list(String project) {
         List<File> logFileList = logPhysicalLogic.findLogFileAllList(project);

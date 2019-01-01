@@ -19,27 +19,37 @@
   <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
 
   <h3>Replace Schema</h3>
-  <button class="ui primary button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+  <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
 
   <h3>Alter Check</h3>
   <div class="ui list">
     <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+    <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
+    <div show="{ client.ngMark != undefined }" class="item"><a onclick="{ showAlterFailureLog }">Check last execute log</a></div>
   </div>
   <div class="ui list">
-    <div show="{ client.ngMark === 'previous-NG' }" class="ngmark">
-      Found problems on <b>Previous DDL.</b><br/>
-      Retry save previous.
+    <div show="{ client.ngMark === 'previous-NG' }" class="ui negative message">
+      <p>Found problems on <b>Previous DDL.</b><br/>
+        Retry save previous.</p>
     </div>
-    <div show="{ client.ngMark === 'alter-NG' }" class="ngmark">
-      Found problems on <b>Alter DDL.</b><br/>
-      Complete your alter DDL, referring to AlterCheckResultHTML.
+    <div show="{ client.ngMark === 'alter-NG' }" class="ui negative message">
+      <p>Found problems on <b>Alter DDL.</b><br/>
+        Complete your alter DDL, referring to AlterCheckResultHTML.</p>
     </div>
-    <div show="{ client.ngMark === 'next-NG' }" class="ngmark">
-      Found problems on <b>Next DDL.</b><br/>
-      Fix your DDL and data grammatically.
+    <div show="{ client.ngMark === 'next-NG' }" class="ui negative message">
+      <p>Found problems on <b>Next DDL.</b><br/>
+        Fix your DDL and data grammatically.</p>
     </div>
   </div>
-  <button class="ui primary button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+  <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+
+  <h3>Schema Policy Check</h3>
+  <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
+  <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
+  <div class="ui info message">
+    <div class="header">What is "Check Policy"?</div>
+    <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
+  </div>
 
   <su-modal modal="{ generateModal }" class="large" ref="generateModal">
     <div class="description">
@@ -145,6 +155,9 @@
     // -----------------------------------------------------
     //                                            Definition
     //                                            ----------
+    this.executeModal = {
+      closable: false
+    }
     this.generateModal = {
       closable: false
     }
@@ -201,6 +214,24 @@
       self.refs.resultModal.show()
     }
 
+    this.showAlterFailureLog = () => {
+      let fileName = 'intro-last-execute-failure-alterCheck.log'
+      ApiFactory.getLog(self.opts.projectName, fileName).then((res) => {
+        observable.trigger('result', { header: fileName, messages: [res.content], modalSize: 'large' })
+      }).catch(() => {
+        self.resultModal.message = 'log file not found'
+        self.refs.resultModal.show()
+      })
+
+    }
+
+    // -----------------------------------------------------
+    //                                                  GoTo
+    //                                                  ----
+    this.goToSchemaPolicySetting = () => {
+      route(`settings/${self.opts.projectName}?activeTab=SchemaPolicy`)
+    }
+
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
@@ -229,6 +260,10 @@
         })
       })
 }
+
+    this.schemaPolicyCheckTask = () => {
+      this.task('doc', self.refs.checkModal)
+    }
 
     this.task = (task, modal) => {
       modal.show()
@@ -266,6 +301,10 @@
 
     this.canCheckSchemaSetting = () => {
       return self.syncSetting.url != null && self.syncSetting.user != null
+    }
+
+    this.openAlterDir = () => {
+      ApiFactory.openAlterDir(self.opts.projectName)
     }
 
     // ===================================================================================

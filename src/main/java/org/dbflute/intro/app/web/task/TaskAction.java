@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaNotSynchronizedException;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.TaskErrorResultException;
@@ -48,6 +49,8 @@ public class TaskAction extends IntroBaseAction {
     private TaskExecutionLogic taskExecutionLogic;
     @Resource
     private IntroClsAssist introClsAssist;
+    @Resource
+    private LogPhysicalLogic logPhysicalLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -62,10 +65,15 @@ public class TaskAction extends IntroBaseAction {
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
             String processLog = e.getProcessLog();
+            loggingLastFailure(project, instruction, processLog);
             String debugMsg =
                     "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
         }
         return asJson(new TaskExecutionResult(true));
+    }
+
+    private void loggingLastFailure(String project, AppCDef.TaskInstruction instruction, String msg) {
+        logPhysicalLogic.logging(project, "intro-last-execute-failure-" + instruction.code() + ".log", msg);
     }
 }

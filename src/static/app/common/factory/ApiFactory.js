@@ -68,6 +68,19 @@ export default class ApiFactory {
         }
       });
   }
+  schemaPolicy(projectName) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy`);
+  }
+  editSchemaPolicy(projectName, schemaPolicyData) {
+    return ffetch.post(`api/dfprop/${projectName}/schemapolicy/edit`,
+      {
+        body: {
+          wholeMap: schemaPolicyData.wholeMap,
+          tableMap: schemaPolicyData.tableMap,
+          columnMap: schemaPolicyData.columnMap
+        }
+      });
+  }
   document(projectName) {
     return ffetch.post(`api/dfprop/${projectName}/document`);
   }
@@ -84,11 +97,23 @@ export default class ApiFactory {
         }
       });
   }
+  openAlterDir(projectName) {
+    return ffetch.get(`api/playsql/migration/${projectName}/alter/`)
+  }
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/${projectName}/list`);
   }
   logBeanList(projectName) {
     return ffetch.post(`api/log/${projectName}/list`);
+  }
+
+  getLog(projectName, fileName) {
+    return ffetch.post(`api/log`, {
+      body: {
+        project: projectName,
+        fileName: fileName
+      }
+    });
   }
 
   // ===============================================================================
