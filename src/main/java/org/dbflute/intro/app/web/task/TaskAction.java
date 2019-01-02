@@ -32,6 +32,8 @@ import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -41,6 +43,11 @@ import org.lastaflute.web.response.JsonResponse;
  */
 @NotAvailableDecommentServer
 public class TaskAction extends IntroBaseAction {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final Logger logger = LoggerFactory.getLogger(TaskAction.class);
 
     // ===================================================================================
     //                                                                           Attribute
@@ -74,6 +81,10 @@ public class TaskAction extends IntroBaseAction {
     }
 
     private void loggingLastFailure(String project, AppCDef.TaskInstruction instruction, String msg) {
-        logPhysicalLogic.logging(project, "intro-last-execute-failure-" + instruction.code() + ".log", msg);
+        try {
+            logPhysicalLogic.logging(project, "intro-last-execute-failure-" + instruction.code() + ".log", msg);
+        } catch (Exception e) {
+            logger.error("logging is failure. file name : intro-last-execute-failure-" + instruction.code() + ".log", e);
+        }
     }
 }
