@@ -94,7 +94,8 @@ intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/
 ```
 
 ### Send release notification 
-1. Notify all around the world
+1. Add Document at [here](https://github.com/dbflute/dbflute-document/blob/f1e0aab6d2dbc882e2aa5e4e4143637a2b87b4d0/web/ja/manual/function/generator/intro/index.html#L48)
+2. Notify all around the world
 
 ## Upgrade DBFlute
 
