@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
-import org.dbflute.jetty.JettyBoot;
+import org.dbflute.tomcat.TomcatBoot;
 
 /**
  * @author p1us2er0
@@ -43,11 +43,11 @@ public class IntroBoot {
 
     public static void main(String[] args) { // e.g. java -Dlasta.env=production -jar dbflute-intro.war
         automaticallySetupProduction();
-        JettyBoot boot = createJettyBoot();
+        TomcatBoot boot = new TomcatBoot(getPort(), CONTEXT); // no context path
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
-            //            boot.browseOnDesktop();
+            boot.browseOnDesktop();
         }
         boot.useMetaInfoResourceDetect().useWebFragmentsDetect(jarName -> {
             return jarName.contains("swagger-ui");
@@ -59,15 +59,6 @@ public class IntroBoot {
         if (hasManifest() && isDevelopment()) { // booting by war without lasta.env
             System.setProperty(LASTA_ENV_KEY, "production"); // automatically set to simple booting
         }
-    }
-
-    private static JettyBoot createJettyBoot() {
-        return new JettyBoot(getPort(), CONTEXT) { // no context path
-            @Override
-            protected String getServerHost() {
-                return IntroBoot.getServerHost();
-            }
-        };
     }
 
     public static String getServerHost() {

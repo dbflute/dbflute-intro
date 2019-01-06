@@ -42,7 +42,7 @@ ext {
             // Partner Library
             slf4j : '1.7.25',
             logback : '1.2.3',
-            jettyboot : '0.4.9',
+            tomcatboot : '0.5.8',
             lastadoc : '0.3.4',
             swaggerui : '3.19.0',
 
@@ -102,7 +102,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:${versions.slf4j}"
     runtime "ch.qos.logback:logback-classic:${versions.logback}"
     compile "javax.servlet:javax.servlet-api:3.1.0"
-    compile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
+    compile "org.dbflute.tomcat:tomcat-boot:${versions.tomcatboot}"
     compile "org.lastaflute.doc:lasta-doc:${versions.lastadoc}"
     runtime "org.webjars:swagger-ui:${versions.swaggerui}"
 
@@ -122,7 +122,7 @@ dependencies {
 mainClassName = 'org.dbflute.intro.IntroBoot'
 
 war {
-    def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all']
+    def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all', 'tomcat-boot', 'tomcat-embed-core']
     configurations.compile.collect { file ->
         if (embeddedArtifactList.any {file.getName().startsWith(it)}) {
             from(file.isDirectory() ? file : zipTree(file)) {
