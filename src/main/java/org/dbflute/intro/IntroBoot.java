@@ -47,7 +47,7 @@ public class IntroBoot {
         if (isDevelopment()) { // development
             boot.asDevelopment();
         } else { // production
-            boot.browseOnDesktop();
+            //            boot.browseOnDesktop();
         }
         boot.useMetaInfoResourceDetect().useWebFragmentsDetect(jarName -> {
             return jarName.contains("swagger-ui");
