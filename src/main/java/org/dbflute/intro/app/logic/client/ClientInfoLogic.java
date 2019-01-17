@@ -229,6 +229,11 @@ public class ClientInfoLogic {
     //                                            ----------
     private OutsideSqlMap prepareOutsideSqlMap(Map<String, Map<String, Object>> dfpropMap) {
         final Map<String, Object> dataMap = dfpropMap.get("outsideSqlMap.dfprop");
+        // If outsideSqlMap.dfprop does not exist, it returns null, because it is not required.
+        if (dataMap == null) {
+            return null;
+        }
+
         final OutsideSqlMap outsideSqlMap = new OutsideSqlMap();
         outsideSqlMap.setGenerateProcedureParameterBean(Boolean.parseBoolean((String) dataMap.get("isGenerateProcedureParameterParam")));
         outsideSqlMap.setProcedureSynonymHandlingType((String) dataMap.get("procedureSynonymHandlingType"));
