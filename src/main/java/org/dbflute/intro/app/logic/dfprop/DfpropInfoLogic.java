@@ -43,6 +43,7 @@ import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 /**
  * @author jflute
  * @author deco
+ * @author cabos
  */
 public class DfpropInfoLogic {
 
@@ -157,7 +158,6 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         Map<String, List<String>> columnExceptMap =
                 Optional.ofNullable((Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap")).orElse(Collections.emptyMap());
-        @SuppressWarnings("unchecked")
         boolean isMainSchemaOnly =
                 Optional.ofNullable((String) schemaPolicyMap.get("isMainSchemaOnly")).map(value -> Boolean.valueOf(value)).orElse(false);
 
