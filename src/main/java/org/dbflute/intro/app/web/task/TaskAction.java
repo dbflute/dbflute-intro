@@ -83,7 +83,7 @@ public class TaskAction extends IntroBaseAction {
     private void loggingLastFailure(String project, AppCDef.TaskInstruction instruction, String msg) {
         try {
             logPhysicalLogic.logging(project, "intro-last-execute-failure-" + instruction.code() + ".log", msg);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.error("logging is failure. file name : intro-last-execute-failure-" + instruction.code() + ".log", e);
         }
     }
