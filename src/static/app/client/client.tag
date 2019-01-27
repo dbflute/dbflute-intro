@@ -41,13 +41,13 @@
         Fix your DDL and data grammatically.</p>
     </div>
   </div>
-  <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
-  <div class="ui list" show="{ client.stackedAlterSqls !== undefined && client.stackedAlterSqls.length > 0 }">
-    <p>Stacked Alter SQL List</p>
+  <div show="{ client.stackedAlterSqls !== undefined && client.stackedAlterSqls.length > 0 }" class="ui list">
+    <h4>Stacked Alter SQL List</h4>
     <ul>
       <li each="{ sqlFile in client.stackedAlterSqls }">{ sqlFile }</li>
     </ul>
   </div>
+  <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
 
   <h3>Schema Policy Check</h3>
   <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
