@@ -42,6 +42,12 @@
     </div>
   </div>
   <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+  <div class="ui list" show="{ client.stackedAlterSqls !== undefined && client.stackedAlterSqls.length > 0 }">
+    <p>Stacked Alter SQL List</p>
+    <ul>
+      <li each="{ sqlFile in client.stackedAlterSqls }">{ sqlFile }</li>
+    </ul>
+  </div>
 
   <h3>Schema Policy Check</h3>
   <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
