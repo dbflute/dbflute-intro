@@ -16,6 +16,14 @@
 package org.dbflute.intro.app.logic.document;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.annotation.Resource;
 
@@ -97,6 +105,29 @@ public class DocumentPhysicalLogic {
         return null;
     }
 
+    public List<String> findStackedAlterSqls(String clientProject) {
+        String zipPath = buildCheckedAlterZipPath(clientProject);
+        if (zipPath != null) {
+            try {
+                return findAlterSqlsFromZip(zipPath);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> findAlterSqlsFromZip(String zipPath) throws IOException {
+        List<String> alterSqls = new ArrayList<>();
+        try (ZipInputStream inputStream = new ZipInputStream(Files.newInputStream(Paths.get(zipPath)))) {
+            ZipEntry entry;
+            while ((entry = inputStream.getNextEntry()) != null) {
+                alterSqls.add(entry.getName());
+            }
+        }
+        return alterSqls;
+    }
+
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
@@ -141,5 +172,19 @@ public class DocumentPhysicalLogic {
 
     private String buildMigrationPath(String clientProject, String type, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
+    }
+
+    private String buildCheckedAlterZipPath(String clientProject) {
+        String historyPath = introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history");
+        try {
+            return Files.walk(Paths.get(historyPath))
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().startsWith("checked"))
+                    .map(path -> path.toString())
+                    .findFirst()
+                    .orElse(null);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to get checked alter schema zip file under the directory: " + historyPath, e);
+        }
     }
 }
