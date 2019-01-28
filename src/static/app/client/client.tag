@@ -44,7 +44,16 @@
   <div show="{ client.stackedAlterSqls !== undefined && client.stackedAlterSqls.length > 0 }" class="ui list">
     <h4>Stacked Alter SQL List</h4>
     <ul>
-      <li each="{ sqlFile in client.stackedAlterSqls }">{ sqlFile }</li>
+      <li each="{ sqlFile in client.stackedAlterSqls }">
+        { sqlFile.fileName }
+        <div class="ui message message-area">
+          <pre>
+            <code class="language-sql">
+              <raw content="{ sqlFile.content }"></raw>
+            </code>
+          </pre>
+        </div>
+      </li>
     </ul>
   </div>
   <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>

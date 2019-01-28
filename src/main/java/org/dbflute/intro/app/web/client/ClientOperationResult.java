@@ -17,6 +17,9 @@ package org.dbflute.intro.app.web.client;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.dbflute.intro.app.logic.document.AlterSqlBean;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
 
@@ -54,5 +57,6 @@ public class ClientOperationResult {
     //                                                                         Alter Check
     //                                                                         ===========
     public CDef.NgMark ngMark;
-    public List<String> stackedAlterSqls;
+    @Valid
+    public List<AlterSqlBean> stackedAlterSqls;
 }

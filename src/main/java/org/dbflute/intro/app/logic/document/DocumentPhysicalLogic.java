@@ -17,16 +17,19 @@ package org.dbflute.intro.app.logic.document;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
@@ -105,8 +108,8 @@ public class DocumentPhysicalLogic {
         return null;
     }
 
-    public List<String> findStackedAlterSqls(String clientProject) {
-        String zipPath = buildCheckedAlterZipPath(clientProject);
+    public List<AlterSqlBean> findStackedAlterSqls(String clientProject) {
+        final String zipPath = buildCheckedAlterZipPath(clientProject);
         if (zipPath != null) {
             try {
                 return findAlterSqlsFromZip(zipPath);
@@ -117,13 +120,15 @@ public class DocumentPhysicalLogic {
         return Collections.emptyList();
     }
 
-    private List<String> findAlterSqlsFromZip(String zipPath) throws IOException {
-        List<String> alterSqls = new ArrayList<>();
-        try (ZipInputStream inputStream = new ZipInputStream(Files.newInputStream(Paths.get(zipPath)))) {
-            ZipEntry entry;
-            while ((entry = inputStream.getNextEntry()) != null) {
-                alterSqls.add(entry.getName());
-            }
+    private List<AlterSqlBean> findAlterSqlsFromZip(String zipPath) throws IOException {
+        final List<AlterSqlBean> alterSqls = new ArrayList<>();
+        final ZipFile zipFile = new ZipFile(zipPath);
+        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry entry = entries.nextElement();
+            final String fileName = entry.getName();
+            final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+            alterSqls.add(new AlterSqlBean(fileName, content));
         }
         return alterSqls;
     }
@@ -175,7 +180,7 @@ public class DocumentPhysicalLogic {
     }
 
     private String buildCheckedAlterZipPath(String clientProject) {
-        String historyPath = introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history");
+        final String historyPath = introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history");
         try {
             return Files.walk(Paths.get(historyPath))
                     .filter(Files::isRegularFile)
