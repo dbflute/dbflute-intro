@@ -41,19 +41,21 @@
         Fix your DDL and data grammatically.</p>
     </div>
   </div>
-  <div show="{ client.stackedAlterSqls !== undefined && client.stackedAlterSqls.length > 0 }" class="ui list">
+  <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
     <h4>Stacked Alter SQL List</h4>
     <ul>
-      <li each="{ sqlFile in client.stackedAlterSqls }">
-        { sqlFile.fileName }
+      <div each="{ sqlFile in stackedAlterSqls }">
+        <li>
+          { sqlFile.fileName }
+        </li>
         <div class="ui message message-area">
-          <pre>
-            <code class="language-sql">
-              <raw content="{ sqlFile.content }"></raw>
-            </code>
-          </pre>
+        <pre>
+          <code>
+            <raw content="{ sqlFile.content }"></raw>
+          </code>
+        </pre>
         </div>
-      </li>
+      </div>
     </ul>
   </div>
   <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
@@ -158,6 +160,9 @@
 
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
+    import Prism from 'prismjs'
+    import 'prismjs/components/prism-sql.min'
+    import 'prismjs/themes/prism.css'
     const ApiFactory = new _ApiFactory()
 
     let self = this
@@ -333,6 +338,7 @@
     this.prepareCurrentProject = () => {
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
+        self.prepareAlterSqls(self.client.stackedAlterSqls)
         self.update()
       })
       ApiFactory.document(self.opts.projectName).then((response) => {
@@ -340,6 +346,16 @@
         self.update()
       })
       self.initSyncSchemaSetting()
+    }
+
+    this.prepareAlterSqls = (stackedAlterSqls) => {
+      self.stackedAlterSqls = []
+      stackedAlterSqls.forEach(sql => {
+        self.stackedAlterSqls.push({
+          fileName: sql.fileName,
+          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql , 'sql')
+        })
+      })
     }
 
     this.initSyncSchemaSetting = () => {
