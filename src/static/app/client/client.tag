@@ -41,24 +41,24 @@
         Fix your DDL and data grammatically.</p>
     </div>
   </div>
+  <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
   <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
     <h4>Stacked Alter SQL List</h4>
     <ul>
-      <div each="{ sqlFile in stackedAlterSqls }">
+      <div each="{ alterItem in stackedAlterSqls }">
         <li>
-          { sqlFile.fileName }
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
         </li>
-        <div class="ui message message-area">
+        <div show="{ alterItem.show }" class="ui message message-area">
         <pre>
           <code>
-            <raw content="{ sqlFile.content }"></raw>
+            <raw content="{ alterItem.content }"></raw>
           </code>
         </pre>
         </div>
       </div>
     </ul>
   </div>
-  <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
 
   <h3>Schema Policy Check</h3>
   <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
@@ -353,9 +353,15 @@
       stackedAlterSqls.forEach(sql => {
         self.stackedAlterSqls.push({
           fileName: sql.fileName,
-          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql , 'sql')
+          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql , 'sql'),
+          show: false,
         })
       })
+    }
+
+    this.alterItemClick = (alterItem, e) => {
+      alterItem.show = !(alterItem.show)
+      return false
     }
 
     this.initSyncSchemaSetting = () => {
