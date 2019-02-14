@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -180,9 +181,12 @@ public class DocumentPhysicalLogic {
     }
 
     private String buildCheckedAlterZipPath(String clientProject) {
-        final String historyPath = introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history");
+        final Path historyPath = Paths.get(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history"));
+        if (!Files.exists(historyPath)) {
+           return null;
+        }
         try {
-            return Files.walk(Paths.get(historyPath))
+            return Files.walk(historyPath)
                     .filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().toString().startsWith("checked"))
                     .map(path -> path.toString())
