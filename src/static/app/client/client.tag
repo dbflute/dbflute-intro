@@ -2,7 +2,7 @@
   <h2>DBFlute Client { opts.projectName }</h2>
   <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
   <div class="container">
-    <clientmenu></clientmenu>
+    <clientmenu active-item="{ clientMenuMode }"></clientmenu>
     <div class="clientcontent">
       <h3>Documents</h3>
       <div class="ui list">
@@ -171,6 +171,7 @@
     }
   </style>
   <script>
+    import ClientMenuMode from '../common/ClientMenuMode.js'
     import _ApiFactory from '../common/factory/ApiFactory.js'
     import Prism from 'prismjs'
     import 'prismjs/components/prism-sql.min'
@@ -339,6 +340,11 @@
       ApiFactory.openAlterDir(self.opts.projectName)
     }
 
+    this.alterItemClick = (alterItem, e) => {
+      alterItem.show = !(alterItem.show)
+      return false
+    }
+
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
@@ -358,6 +364,7 @@
         self.update()
       })
       self.initSyncSchemaSetting()
+      self.initClientMenuMode()
     }
 
     this.prepareAlterSqls = (stackedAlterSqls) => {
@@ -371,11 +378,6 @@
       })
     }
 
-    this.alterItemClick = (alterItem, e) => {
-      alterItem.show = !(alterItem.show)
-      return false
-    }
-
     this.initSyncSchemaSetting = () => {
       ApiFactory.syncSchema(self.opts.projectName).then((response) => {
         self.syncSettingModal.syncSetting = response
@@ -383,6 +385,10 @@
           syncSetting: response
         })
       })
+    }
+
+    this.initClientMenuMode = () => {
+      this.clientMenuMode = ClientMenuMode.EX_DOCUMENTS
     }
 
     this.registerModalEvent = () => {

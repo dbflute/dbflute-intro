@@ -87,6 +87,7 @@
     import _ApiFactory from '../common/factory/ApiFactory.js'
     import route from 'riot-route'
 
+
     const ApiFactory = new _ApiFactory()
 
     const self = this
