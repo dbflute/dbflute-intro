@@ -1,4 +1,4 @@
-<clientmenu>
+<client-menu>
   <div class="ui inverted vertical menu">
     <div class="header item">Execute</div>
     <a class="{ 'active': isActiveItem(ClientMenuMode.EX_DOCUMENTS) } item"
@@ -36,7 +36,7 @@
     }
 
     this.clickItem = (clientMenuMode, e) => {
-      this.parent.clientMenuMode = clientMenuMode
+      this.parent.update({ clientMenuMode })
     }
   </script>
-</clientmenu>
+</client-menu>

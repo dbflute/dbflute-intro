@@ -2,7 +2,7 @@
   <h2>DBFlute Client { opts.projectName }</h2>
   <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
   <div class="container">
-    <clientmenu active-item="{ clientMenuMode }"></clientmenu>
+    <client-menu active-item="{ clientMenuMode }"></client-menu>
     <div class="clientcontent">
       <h3>Documents</h3>
       <div class="ui list">
@@ -365,6 +365,7 @@
       })
       self.initSyncSchemaSetting()
       self.initClientMenuMode()
+      self.mountClientContent()
     }
 
     this.prepareAlterSqls = (stackedAlterSqls) => {
@@ -419,6 +420,33 @@
           self.initSyncSchemaSetting()
         })
       })
+    }
+    this.on('update', () => {
+      self.mountClientContent()
+    })
+
+    this.mountClientContent = () => {
+      let tagName = null
+      switch (this.clientMenuMode) {
+      case ClientMenuMode.EX_DOCUMENTS:
+        tagName = 'document'
+        break
+      case ClientMenuMode.EX_SCHEMA_SYNC_CHECK:
+        tagName = 'schema-sync-check'
+        break
+      case ClientMenuMode.EX_REPLACE_SCHEMA:
+        tagName = 'replace-schema'
+        break
+      case ClientMenuMode.EX_ALTER_CHECK:
+        tagName = 'alter-check'
+        break
+      case ClientMenuMode.EX_SCHEMA_POLICY_CHECK:
+        tagName = 'schema-policy-check'
+        break
+      }
+      if (tagName) {
+        riot.mount('client-content', tagName)
+      }
     }
   </script>
 </client>
