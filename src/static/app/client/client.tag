@@ -3,71 +3,81 @@
   <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
   <div class="container">
     <client-menu active-item="{ clientMenuMode }"></client-menu>
-    <div class="clientcontent">
-      <h3>Documents</h3>
-      <div class="ui list">
-        <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
-        <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
-      </div>
-      <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
-      <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
-
-      <h3>Schema Sync Check</h3>
-      <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
-      <div class="ui list">
-        <div show="{ client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
-      </div>
-      <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-      <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
-
-      <h3>Replace Schema</h3>
-      <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
-
-      <h3>Alter Check</h3>
-      <div class="ui list">
-        <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
-        <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
-        <div show="{ client.ngMark != undefined }" class="item"><a onclick="{ showAlterFailureLog }">Check last execute log</a></div>
-      </div>
-      <div class="ui list">
-        <div show="{ client.ngMark === 'previous-NG' }" class="ui negative message">
-          <p>Found problems on <b>Previous DDL.</b><br/>
-            Retry save previous.</p>
+    <div class="client-content">
+      <div class="document" if="{ clientMenuMode === ClientMenuMode.EX_DOCUMENTS }">
+        <h3>Documents</h3>
+        <div class="ui list">
+          <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+          <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
         </div>
-        <div show="{ client.ngMark === 'alter-NG' }" class="ui negative message">
-          <p>Found problems on <b>Alter DDL.</b><br/>
-            Complete your alter DDL, referring to AlterCheckResultHTML.</p>
-        </div>
-        <div show="{ client.ngMark === 'next-NG' }" class="ui negative message">
-          <p>Found problems on <b>Next DDL.</b><br/>
-            Fix your DDL and data grammatically.</p>
-        </div>
+        <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
+        <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
       </div>
-      <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
-      <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
-        <h4>Stacked Alter SQL List</h4>
-        <ul>
-          <div each="{ alterItem in stackedAlterSqls }">
-            <li>
-              <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-            </li>
-            <div show="{ alterItem.show }" class="ui message message-area">
-        <pre>
-          <code>
-            <raw content="{ alterItem.content }"></raw>
-          </code>
-        </pre>
-            </div>
+
+      <div class="schema-sync-check" if="{ clientMenuMode === ClientMenuMode.EX_SCHEMA_SYNC_CHECK }">
+        <h3>Schema Sync Check</h3>
+        <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+        <div class="ui list">
+          <div show="{ client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
+        </div>
+        <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
+        <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
+      </div>
+
+      <div class="replace-schema" if="{ clientMenuMode === ClientMenuMode.EX_REPLACE_SCHEMA }">
+        <h3>Replace Schema</h3>
+        <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+      </div>
+
+      <div class="alter-check" if="{ clientMenuMode === ClientMenuMode.EX_ALTER_CHECK }">
+        <h3>Alter Check</h3>
+        <div class="ui list">
+          <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+          <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
+          <div show="{ client.ngMark != undefined }" class="item"><a onclick="{ showAlterFailureLog }">Check last execute log</a></div>
+        </div>
+        <div class="ui list">
+          <div show="{ client.ngMark === 'previous-NG' }" class="ui negative message">
+            <p>Found problems on <b>Previous DDL.</b><br/>
+              Retry save previous.</p>
           </div>
-        </ul>
+          <div show="{ client.ngMark === 'alter-NG' }" class="ui negative message">
+            <p>Found problems on <b>Alter DDL.</b><br/>
+              Complete your alter DDL, referring to AlterCheckResultHTML.</p>
+          </div>
+          <div show="{ client.ngMark === 'next-NG' }" class="ui negative message">
+            <p>Found problems on <b>Next DDL.</b><br/>
+              Fix your DDL and data grammatically.</p>
+          </div>
+        </div>
+        <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+        <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
+          <h4>Stacked Alter SQL List</h4>
+          <ul>
+            <div each="{ alterItem in stackedAlterSqls }">
+              <li>
+                <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+              </li>
+              <div show="{ alterItem.show }" class="ui message message-area">
+                <pre>
+                  <code>
+                    <raw content="{ alterItem.content }"></raw>
+                  </code>
+                </pre>
+              </div>
+            </div>
+          </ul>
+        </div>
       </div>
 
-      <h3>Schema Policy Check</h3>
-      <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
-      <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
-      <div class="ui info message">
-        <div class="header">What is "Check Policy"?</div>
-        <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
+      <div class="schema-policy-check" if="{ clientMenuMode === ClientMenuMode.EX_SCHEMA_POLICY_CHECK }">
+        <h3>Schema Policy Check</h3>
+        <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
+        <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
+        <div class="ui info message">
+          <div class="header">What is "Check Policy"?</div>
+          <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
+        </div>
       </div>
 
       <su-modal modal="{ generateModal }" class="large" ref="generateModal">
@@ -166,7 +176,7 @@
       display: flex;
       flex-direction: row;
     }
-    .clientcontent {
+    .client-content {
       margin-left: 10px;
     }
   </style>
@@ -181,6 +191,7 @@
     let self = this
     this.client = {}
     this.syncSetting = {}
+    this.ClientMenuMode = ClientMenuMode
 
     // ===================================================================================
     //                                                                               Modal
