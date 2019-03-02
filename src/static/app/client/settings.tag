@@ -1,106 +1,109 @@
 <settings>
-  <h2>DBFlute Client { client.projectName }</h2>
+  <navbar></navbar>
+  <div class="ui main container">
+    <h2>DBFlute Client { client.projectName }</h2>
 
-  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
-    <div class="description">
-      { opts.modal.message }
-    </div>
-  </su-modal>
+    <su-modal modal="{ checkModal }" class="large" ref="checkModal">
+      <div class="description">
+        { opts.modal.message }
+      </div>
+    </su-modal>
 
-  <h3 class="ui header">
-    for { client.databaseCode }, { client.languageCode }, { client.containerCode }
-  </h3>
-  <div class="ui form">
-    <div class="row">
-      <div class="column">
-        <su-tabset class="four column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
-                   log="{ logDropDownItems }" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }" ref="client" active="{ activeTab }">
-          <su-tab title="{ opts.tabtitles['databaseInfo']}" settings="{ opts.settings }" ref="settings">
-            <div class="required field" if="{ opts.settings }">
-              <label data-is="i18n">LABEL_url</label>
-              <input type="text" value="{ opts.settings.url }" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
-            </div>
-            <div class="field" if="{ opts.settings }">
-              <label data-is="i18n">LABEL_schema</label>
-              <input type="text" value="{ opts.settings.schema }" ref="schema" placeholder="MAIHAMADB"/>
-            </div>
-            <div class="required field" if="{ opts.settings }">
-              <label data-is="i18n">LABEL_user</label>
-              <input type="text" value="{ opts.settings.user }" ref="user" placeholder="maihamadb"/>
-            </div>
-            <div class="field" if="{ opts.settings }">
-              <label data-is="i18n">LABEL_password</label>
-              <input type="text" value="{ opts.settings.password }" ref="password"/>
-            </div>
-            <div class="field">
-              <button class="ui button primary" onclick="{ parent.parent.editClient.bind(this, url) }">Edit</button>
-            </div>
-          </su-tab>
-          <su-tab title="{ opts.tabtitles['playSql']}" playsql="{ opts.playsql }">
-            <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
-            <div class="ui message message-area">
-              <pre>
-                <code class="language-sql">
-                  <raw content="{ refs.dropdown.value }"></raw>
-                </code>
-              </pre>
-            </div>
-          </su-tab>
-          <su-tab title="{ opts.tabtitles['log']}" log="{ opts.log }">
-            <su-dropdown items="{ opts.log }" ref="dropdown"></su-dropdown>
-            <div class="ui message message-area">
-              <pre>{ refs.dropdown.value }</pre>
-            </div>
-          </su-tab>
-          <su-tab title="{ opts.tabtitles['schemaPolicy']}" schemapolicy="{ opts.schemapolicy }" >
-            <div class="">
-              <h3 class="">Whole Schema Policy</h3>
-              <div class="ui divided items" if="{opts.schemapolicy.wholeMap}">
-                <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
-                  <div class="ui left floated">
-                    <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
-                  </div>
-                  <div class="content">
-                  <a class="header">{ theme.name }</a>
-                  <div class="description">
-                    {theme.description}
+    <h3 class="ui header">
+      for { client.databaseCode }, { client.languageCode }, { client.containerCode }
+    </h3>
+    <div class="ui form">
+      <div class="row">
+        <div class="column">
+          <su-tabset class="four column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
+                     log="{ logDropDownItems }" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }" ref="client" active="{ activeTab }">
+            <su-tab title="{ opts.tabtitles['databaseInfo']}" settings="{ opts.settings }" ref="settings">
+              <div class="required field" if="{ opts.settings }">
+                <label data-is="i18n">LABEL_url</label>
+                <input type="text" value="{ opts.settings.url }" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
+              </div>
+              <div class="field" if="{ opts.settings }">
+                <label data-is="i18n">LABEL_schema</label>
+                <input type="text" value="{ opts.settings.schema }" ref="schema" placeholder="MAIHAMADB"/>
+              </div>
+              <div class="required field" if="{ opts.settings }">
+                <label data-is="i18n">LABEL_user</label>
+                <input type="text" value="{ opts.settings.user }" ref="user" placeholder="maihamadb"/>
+              </div>
+              <div class="field" if="{ opts.settings }">
+                <label data-is="i18n">LABEL_password</label>
+                <input type="text" value="{ opts.settings.password }" ref="password"/>
+              </div>
+              <div class="field">
+                <button class="ui button primary" onclick="{ parent.parent.editClient.bind(this, url) }">Edit</button>
+              </div>
+            </su-tab>
+            <su-tab title="{ opts.tabtitles['playSql']}" playsql="{ opts.playsql }">
+              <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
+              <div class="ui message message-area">
+                <pre>
+                  <code class="language-sql">
+                    <raw content="{ refs.dropdown.value }"></raw>
+                  </code>
+                </pre>
+              </div>
+            </su-tab>
+            <su-tab title="{ opts.tabtitles['log']}" log="{ opts.log }">
+              <su-dropdown items="{ opts.log }" ref="dropdown"></su-dropdown>
+              <div class="ui message message-area">
+                <pre>{ refs.dropdown.value }</pre>
+              </div>
+            </su-tab>
+            <su-tab title="{ opts.tabtitles['schemaPolicy']}" schemapolicy="{ opts.schemapolicy }" >
+              <div class="">
+                <h3 class="">Whole Schema Policy</h3>
+                <div class="ui divided items" if="{opts.schemapolicy.wholeMap}">
+                  <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
+                    <div class="ui left floated">
+                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
+                    </div>
+                    <div class="content">
+                    <a class="header">{ theme.name }</a>
+                    <div class="description">
+                      {theme.description}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="">
-              <h3 >Table Schema Policy</h3>
-              <div class="ui divided items" if="{opts.schemapolicy.tableMap}">
-                <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
-                  <div class="ui left floated">
-                    <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
-                  </div>
-                  <div class="content">
-                  <a class="header">{ theme.name }</a>
-                  <div class="description">
-                    {theme.description}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="">
-              <h3>Column Schema Policy</h3>
-                <div class="ui divided items" if="{opts.schemapolicy.columnMap}">
-                <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
-                  <div class="ui left floated">
-                    <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>
-                  </div>
-                  <div class="content">
-                  <a class="header">{ theme.name }</a>
-                  <div class="description">
-                    {theme.description}
+              <div class="">
+                <h3 >Table Schema Policy</h3>
+                <div class="ui divided items" if="{opts.schemapolicy.tableMap}">
+                  <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
+                    <div class="ui left floated">
+                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
+                    </div>
+                    <div class="content">
+                    <a class="header">{ theme.name }</a>
+                    <div class="description">
+                      {theme.description}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
-          </su-tab>
-        </su-tabset>
+              <div class="">
+                <h3>Column Schema Policy</h3>
+                  <div class="ui divided items" if="{opts.schemapolicy.columnMap}">
+                  <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
+                    <div class="ui left floated">
+                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>
+                    </div>
+                    <div class="content">
+                    <a class="header">{ theme.name }</a>
+                    <div class="description">
+                      {theme.description}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
+            </su-tab>
+          </su-tabset>
+        </div>
       </div>
     </div>
   </div>
