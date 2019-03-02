@@ -1,10 +1,14 @@
 <client>
-  <h2>DBFlute Client { opts.projectName }</h2>
-  <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
-  <div class="container">
-    <client-menu project-name="{ opts.projectName }" client-menu-type="{ opts.clientMenuType }" client-menu-name="{ opts.clientMenuName }"></client-menu>
-    <div class="client-content">
-      <div class="document" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'documents' }">
+  <div class="client-body">
+    <div class="client-menu">
+      <client-menu project-name="{ opts.projectName }"
+                   client-menu-type="{ opts.clientMenuType }"
+                   client-menu-name="{ opts.clientMenuName }"></client-menu>
+    </div>
+    <div class="client-container">
+      <h2>DBFlute Client { opts.projectName }</h2>
+      <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
+      <div class="documents" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'documents' }">
         <h3>Documents</h3>
         <div class="ui list">
           <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
@@ -16,12 +20,15 @@
 
       <div class="schema-sync-check" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'schema-sync-check' }">
         <h3>Schema Sync Check</h3>
-        <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+        <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
+          show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
         <div class="ui list">
           <div show="{ client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
         </div>
         <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-        <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
+        <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema
+          (schema-sync-check)
+        </button>
       </div>
 
       <div class="replace-schema" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'replace-schema' }">
@@ -32,7 +39,8 @@
       <div class="alter-check" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'alter-check' }">
         <h3>Alter Check</h3>
         <div class="ui list">
-          <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+          <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a>
+          </div>
           <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
           <div show="{ client.ngMark != undefined }" class="item"><a onclick="{ showAlterFailureLog }">Check last execute log</a></div>
         </div>
@@ -59,11 +67,11 @@
                 <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
               </li>
               <div show="{ alterItem.show }" class="ui message message-area">
-                <pre>
-                  <code>
-                    <raw content="{ alterItem.content }"></raw>
-                  </code>
-                </pre>
+                  <pre>
+                    <code>
+                      <raw content="{ alterItem.content }"></raw>
+                    </code>
+                  </pre>
               </div>
             </div>
           </ul>
@@ -96,7 +104,8 @@
         <form class="ui form">
           <div class="field">
             <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>
-            <input type="text" ref="aliasDelimiterInDbComment" placeholder="e.g. :" value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
+            <input type="text" ref="aliasDelimiterInDbComment" placeholder="e.g. :"
+                   value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
           </div>
           <div class="field">
             <div class="ui checkbox">
@@ -172,12 +181,15 @@
     </div>
   </div>
   <style>
-    .container {
+    .client-body {
       display: flex;
       flex-direction: row;
     }
-    .client-content {
-      margin-left: 10px;
+    .client-menu {
+      margin-top: 2.5rem;
+    }
+    .client-container {
+      margin-left: 15rem;
     }
   </style>
   <script>
@@ -185,6 +197,7 @@
     import Prism from 'prismjs'
     import 'prismjs/components/prism-sql.min'
     import 'prismjs/themes/prism.css'
+
     const ApiFactory = new _ApiFactory()
 
     let self = this
@@ -206,7 +219,7 @@
     this.documentSettingModal = {
       header: 'Document Settings (documentMap.dfprop, littleAdjustmentMap.dfprop)',
       closable: true,
-      buttons:  [
+      buttons: [
         {
           text: 'OK',
           action: 'editDocumentSettings'
@@ -220,7 +233,7 @@
     this.syncSettingModal = {
       header: 'Schema Sync Check Settings',
       closable: true,
-      buttons:  [
+      buttons: [
         {
           text: 'OK',
           action: 'editSyncSettings',
@@ -259,7 +272,7 @@
     this.showAlterFailureLog = () => {
       let fileName = 'intro-last-execute-failure-alterCheck.log'
       ApiFactory.getLog(self.opts.projectName, fileName).then((res) => {
-        observable.trigger('result', { header: fileName, messages: [res.content], modalSize: 'large' })
+        observable.trigger('result', {header: fileName, messages: [res.content], modalSize: 'large'})
       }).catch(() => {
         self.resultModal.message = 'log file not found'
         self.refs.resultModal.show()
@@ -289,7 +302,7 @@
       this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
         this.task('replaceSchema', self.refs.executeModal)
       })
-}
+    }
 
     this.alterCheckTask = () => {
       this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
@@ -301,7 +314,7 @@
           })
         })
       })
-}
+    }
 
     this.schemaPolicyCheckTask = () => {
       this.task('doc', self.refs.checkModal)
@@ -381,7 +394,7 @@
       stackedAlterSqls.forEach(sql => {
         self.stackedAlterSqls.push({
           fileName: sql.fileName,
-          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql , 'sql'),
+          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })
       })
@@ -401,7 +414,7 @@
         const documentStringModalRefs = self.refs.documentSettingModal.refs
         const documentSetting = {
           aliasDelimiterInDbComment: documentStringModalRefs.aliasDelimiterInDbComment.value,
-          upperCaseBasic:  documentStringModalRefs.upperCaseBasic.checked,
+          upperCaseBasic: documentStringModalRefs.upperCaseBasic.checked,
           dbCommentOnAliasBasis: documentStringModalRefs.dbCommentOnAliasBasis.checked,
           checkColumnDefOrderDiff: documentStringModalRefs.checkColumnDefOrderDiff.checked,
           checkDbCommentDiff: documentStringModalRefs.checkDbCommentDiff.checked,
