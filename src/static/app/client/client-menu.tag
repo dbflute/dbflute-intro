@@ -1,42 +1,35 @@
 <client-menu>
   <div class="ui inverted vertical menu">
     <div class="header item">Execute</div>
-    <a class="{ 'active': isActiveItem(ClientMenuMode.EX_DOCUMENTS) } item"
-      onclick="{ clickItem.bind(this, ClientMenuMode.EX_DOCUMENTS) }">
+    <a class="{ 'active': isActiveItem('execute', 'documents') } item"
+       href="./#operate/{ opts.projectName }/execute/documents">
       Documents
     </a>
-    <a class="{ 'active': isActiveItem(ClientMenuMode.EX_SCHEMA_SYNC_CHECK) } item"
-       onclick="{ clickItem.bind(this, ClientMenuMode.EX_SCHEMA_SYNC_CHECK) }">
+    <a class="{ 'active': isActiveItem('execute', 'schema-sync-check') } item"
+       href="./#operate/{ opts.projectName }/execute/schema-sync-check">
       Schema Sync Check
     </a>
-    <a class="{ 'active': isActiveItem(ClientMenuMode.EX_REPLACE_SCHEMA) } item"
-      onclick="{ clickItem.bind(this, ClientMenuMode.EX_REPLACE_SCHEMA) }">
+    <a class="{ 'active': isActiveItem('execute', 'replace-schema') } item"
+       href="./#operate/{ opts.projectName }/execute/replace-schema">
       Replace Schema
     </a>
-    <a class="{ 'active': isActiveItem(ClientMenuMode.EX_ALTER_CHECK) } item"
-      onclick="{ clickItem.bind(this, ClientMenuMode.EX_ALTER_CHECK) }">
+    <a class="{ 'active': isActiveItem('execute', 'alter-check') } item"
+       href="./#operate/{ opts.projectName }/execute/alter-check">
       Alter Check
     </a>
-    <a class="{ 'active': isActiveItem(ClientMenuMode.EX_SCHEMA_POLICY_CHECK) } item"
-      onclick="{ clickItem.bind(this, ClientMenuMode.EX_SCHEMA_POLICY_CHECK) }">
+    <a class="{ 'active': isActiveItem('execute', 'schema-policy-check') } item"
+       href="./#operate/{ opts.projectName }/execute/schema-policy-check">
       Schema Policy Check
     </a>
     <div class="header item">Settings</div>
-    <a class="{ 'active': isActiveItem(ClientMenuMode.SET_SCHEMA_POLICY_CHECK) } item"
-      onclick="{ clickItem.bind(this, ClientMenuMode.SET_SCHEMA_POLICY_CHECK) }">
+    <a class="{ 'active': isActiveItem('settings', 'schema-policy-check') } item"
+      href="./#operate/{ opts.projectName }/settings/schema-policy-check">
       Schema Policy
     </a>
   </div>
   <script>
-    import ClientMenuMode from '../common/ClientMenuMode.js'
-    this.ClientMenuMode = ClientMenuMode
-
-    this.isActiveItem = (itemName) => {
-      return itemName === this.opts.activeItem
-    }
-
-    this.clickItem = (clientMenuMode, e) => {
-      this.parent.update({ clientMenuMode })
+    this.isActiveItem = (menuType, menuName) => {
+      return menuType === opts.clientMenuType && menuName == opts.clientMenuName
     }
   </script>
 </client-menu>

@@ -111,6 +111,9 @@ route('', () => {
 route('operate/*', projectName => {
   riot.mount('content', 'client', { projectName })
 })
+route('operate/*/*/*', (projectName, clientMenuType, clientMenuName) => {
+  riot.mount('content', 'client', { projectName, clientMenuType, clientMenuName })
+})
 route('create', () => {
   riot.mount('content', 'create')
 })

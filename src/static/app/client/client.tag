@@ -2,9 +2,9 @@
   <h2>DBFlute Client { opts.projectName }</h2>
   <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
   <div class="container">
-    <client-menu active-item="{ clientMenuMode }"></client-menu>
+    <client-menu project-name="{ opts.projectName }" client-menu-type="{ opts.clientMenuType }" client-menu-name="{ opts.clientMenuName }"></client-menu>
     <div class="client-content">
-      <div class="document" if="{ clientMenuMode === ClientMenuMode.EX_DOCUMENTS }">
+      <div class="document" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'documents' }">
         <h3>Documents</h3>
         <div class="ui list">
           <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
@@ -14,7 +14,7 @@
         <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
       </div>
 
-      <div class="schema-sync-check" if="{ clientMenuMode === ClientMenuMode.EX_SCHEMA_SYNC_CHECK }">
+      <div class="schema-sync-check" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'schema-sync-check' }">
         <h3>Schema Sync Check</h3>
         <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
         <div class="ui list">
@@ -24,12 +24,12 @@
         <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema (schema-sync-check)</button>
       </div>
 
-      <div class="replace-schema" if="{ clientMenuMode === ClientMenuMode.EX_REPLACE_SCHEMA }">
+      <div class="replace-schema" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'replace-schema' }">
         <h3>Replace Schema</h3>
         <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
       </div>
 
-      <div class="alter-check" if="{ clientMenuMode === ClientMenuMode.EX_ALTER_CHECK }">
+      <div class="alter-check" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'alter-check' }">
         <h3>Alter Check</h3>
         <div class="ui list">
           <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
@@ -70,7 +70,7 @@
         </div>
       </div>
 
-      <div class="schema-policy-check" if="{ clientMenuMode === ClientMenuMode.EX_SCHEMA_POLICY_CHECK }">
+      <div class="schema-policy-check" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'schema-policy-check' }">
         <h3>Schema Policy Check</h3>
         <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
         <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
@@ -181,7 +181,6 @@
     }
   </style>
   <script>
-    import ClientMenuMode from '../common/ClientMenuMode.js'
     import _ApiFactory from '../common/factory/ApiFactory.js'
     import Prism from 'prismjs'
     import 'prismjs/components/prism-sql.min'
@@ -191,7 +190,6 @@
     let self = this
     this.client = {}
     this.syncSetting = {}
-    this.ClientMenuMode = ClientMenuMode
 
     // ===================================================================================
     //                                                                               Modal
@@ -375,7 +373,6 @@
         self.update()
       })
       self.initSyncSchemaSetting()
-      self.initClientMenuMode()
       // self.mountClientContent()
     }
 
@@ -397,10 +394,6 @@
           syncSetting: response
         })
       })
-    }
-
-    this.initClientMenuMode = () => {
-      this.clientMenuMode = ClientMenuMode.EX_DOCUMENTS
     }
 
     this.registerModalEvent = () => {
