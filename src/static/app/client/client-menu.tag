@@ -32,18 +32,13 @@
     <div class="item">
       <div class="header">Settings</div>
       <div class="inverted menu">
-        <a class="{ 'active': isActiveItem('settings', 'schema-policy-check') } item"
-           href="./#operate/{ opts.projectName }/settings/schema-policy-check">
+        <a class="{ 'active': isActiveItem('settings', 'schema-policy') } item"
+           href="./#operate/{ opts.projectName }/settings/schema-policy">
           Schema Policy
         </a>
       </div>
     </div>
   </div>
-  <style>
-    .ui.fluid.container {
-      width: 1rem;
-    }
-  </style>
   <script>
     this.isActiveItem = (menuType, menuName) => {
       return menuType === opts.clientMenuType && menuName == opts.clientMenuName
