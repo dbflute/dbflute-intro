@@ -56,7 +56,7 @@
     //                                                  GoTo
     //                                                  ----
     this.goToSchemaPolicySetting = () => {
-      route(`settings/${self.opts.projectName}?activeTab=SchemaPolicy`)
+      route(`operate/${self.opts.projectName}/settings/schema-policy`)
     }
 
     // ===================================================================================
