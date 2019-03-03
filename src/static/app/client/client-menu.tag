@@ -32,6 +32,10 @@
     <div class="item">
       <div class="header">Settings</div>
       <div class="inverted menu">
+        <a class="{ 'active': isActiveItem('settings', 'database-info') } item"
+           href="./#operate/{ opts.projectName }/settings/database-info">
+          Database Info
+        </a>
         <a class="{ 'active': isActiveItem('settings', 'schema-policy') } item"
            href="./#operate/{ opts.projectName }/settings/schema-policy">
           Schema Policy
