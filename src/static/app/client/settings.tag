@@ -16,7 +16,8 @@
       <div class="row">
         <div class="column">
           <su-tabset class="four column item" settings="{ client.mainSchemaSettings }" playsql="{ playsqlDropDownItems }"
-                     log="{ logDropDownItems }" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }" ref="client" active="{ activeTab }">
+                     log="{ logDropDownItems }" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }" ref="client"
+                     active="{ activeTab }">
             <su-tab title="{ opts.tabtitles['databaseInfo']}" settings="{ opts.settings }" ref="settings">
               <div class="required field" if="{ opts.settings }">
                 <label data-is="i18n">LABEL_url</label>
@@ -41,11 +42,11 @@
             <su-tab title="{ opts.tabtitles['playSql']}" playsql="{ opts.playsql }">
               <su-dropdown items="{ opts.playsql }" ref="dropdown"></su-dropdown>
               <div class="ui message message-area">
-                <pre>
-                  <code class="language-sql">
-                    <raw content="{ refs.dropdown.value }"></raw>
-                  </code>
-                </pre>
+              <pre>
+                <code class="language-sql">
+                  <raw content="{ refs.dropdown.value }"></raw>
+                </code>
+              </pre>
               </div>
             </su-tab>
             <su-tab title="{ opts.tabtitles['log']}" log="{ opts.log }">
@@ -54,53 +55,57 @@
                 <pre>{ refs.dropdown.value }</pre>
               </div>
             </su-tab>
-            <su-tab title="{ opts.tabtitles['schemaPolicy']}" schemapolicy="{ opts.schemapolicy }" >
+            <su-tab title="{ opts.tabtitles['schemaPolicy']}" schemapolicy="{ opts.schemapolicy }">
               <div class="">
                 <h3 class="">Whole Schema Policy</h3>
                 <div class="ui divided items" if="{opts.schemapolicy.wholeMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
                     <div class="ui left floated">
-                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
+                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }"
+                                   onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
                     </div>
                     <div class="content">
-                    <a class="header">{ theme.name }</a>
-                    <div class="description">
-                      {theme.description}
+                      <a class="header">{ theme.name }</a>
+                      <div class="description">
+                        {theme.description}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="">
-                <h3 >Table Schema Policy</h3>
-                <div class="ui divided items" if="{opts.schemapolicy.tableMap}">
-                  <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
-                    <div class="ui left floated">
-                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
-                    </div>
-                    <div class="content">
-                    <a class="header">{ theme.name }</a>
-                    <div class="description">
-                      {theme.description}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="">
-                <h3>Column Schema Policy</h3>
-                  <div class="ui divided items" if="{opts.schemapolicy.columnMap}">
-                  <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
-                    <div class="ui left floated">
-                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>
-                    </div>
-                    <div class="content">
-                    <a class="header">{ theme.name }</a>
-                    <div class="description">
-                      {theme.description}
+                <div class="">
+                  <h3>Table Schema Policy</h3>
+                  <div class="ui divided items" if="{opts.schemapolicy.tableMap}">
+                    <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
+                      <div class="ui left floated">
+                        <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }"
+                                     onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
+                      </div>
+                      <div class="content">
+                        <a class="header">{ theme.name }</a>
+                        <div class="description">
+                          {theme.description}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
+                  <div class="">
+                    <h3>Column Schema Policy</h3>
+                    <div class="ui divided items" if="{opts.schemapolicy.columnMap}">
+                      <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
+                        <div class="ui left floated">
+                          <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }"
+                                       onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>
+                        </div>
+                        <div class="content">
+                          <a class="header">{ theme.name }</a>
+                          <div class="description">
+                            {theme.description}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)
+                    </button>
             </su-tab>
           </su-tabset>
         </div>
@@ -134,15 +139,15 @@
     this.schemaPolicy = {}
 
     this.tabTitles = {
-      databaseInfo : 'Database info',
-      playSql : 'PlaySQL',
-      log : 'Log',
-      schemaPolicy : 'SchemaPolicy'
+      databaseInfo: 'Database info',
+      playSql: 'PlaySQL',
+      log: 'Log',
+      schemaPolicy: 'SchemaPolicy'
     }
     this.activeTab = ''
 
     this.checkModal = {
-      header : 'SchemaPolicyCheck',
+      header: 'SchemaPolicyCheck',
       closable: false
     }
 
@@ -171,7 +176,7 @@
       ApiFactory.playsqlBeanList(projectName).then(json => {
         const playsqlDropDownItems = json.map(obj => ({
           label: obj.fileName,
-          value: `<span style="display: none;">${obj.fileName}</span>`+ Prism.highlight(obj.content, Prism.languages.sql, 'sql')
+          value: `<span style="display: none;">${obj.fileName}</span>` + Prism.highlight(obj.content, Prism.languages.sql, 'sql')
         }))
         self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
         self.update()
@@ -212,11 +217,11 @@
       const toggledActiveStatus = !targetTheme.isActive
 
       let body = {
-        wholeMap : {themeList : []},
-        tableMap : {themeList : []},
-        columnMap : {themeList : []}
+        wholeMap: {themeList: []},
+        tableMap: {themeList: []},
+        columnMap: {themeList: []}
       }
-      body[targetMap].themeList = [{typeCode : typeCode, isActive : toggledActiveStatus}]
+      body[targetMap].themeList = [{typeCode: typeCode, isActive: toggledActiveStatus}]
 
       ApiFactory.editSchemaPolicy(opts.projectName, body).then(() => {
         this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode).isActive = toggledActiveStatus
