@@ -6,6 +6,7 @@
                    client-menu-name="{ opts.clientMenuName }"></client-menu>
     </div>
     <div class="client-container">
+      <client-content></client-content>
       <h2>DBFlute Client { opts.projectName }</h2>
       <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
       <div class="documents" if="{ opts.clientMenuType === 'execute' && opts.clientMenuName === 'documents' }">
@@ -379,6 +380,7 @@
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
         self.prepareAlterSqls(self.client.stackedAlterSqls)
+        self.mountClientContent()
         self.update()
       })
       ApiFactory.document(self.opts.projectName).then((response) => {
@@ -386,7 +388,6 @@
         self.update()
       })
       self.initSyncSchemaSetting()
-      // self.mountClientContent()
     }
 
     this.prepareAlterSqls = (stackedAlterSqls) => {
@@ -442,28 +443,25 @@
     //   self.mountClientContent()
     // })
 
-    // this.mountClientContent = () => {
-    //   let tagName = null
-    //   switch (this.clientMenuMode) {
-    //   case ClientMenuMode.EX_DOCUMENTS:
-    //     tagName = 'document'
-    //     break
-    //   case ClientMenuMode.EX_SCHEMA_SYNC_CHECK:
-    //     tagName = 'schema-sync-check'
-    //     break
-    //   case ClientMenuMode.EX_REPLACE_SCHEMA:
-    //     tagName = 'replace-schema'
-    //     break
-    //   case ClientMenuMode.EX_ALTER_CHECK:
-    //     tagName = 'alter-check'
-    //     break
-    //   case ClientMenuMode.EX_SCHEMA_POLICY_CHECK:
-    //     tagName = 'schema-policy-check'
-    //     break
-    //   }
-    //   if (tagName) {
-    //     riot.mount('client-content', tagName)
-    //   }
-    // }
+    this.mountClientContent = () => {
+      let tagName = null
+      const menuType = this.opts.clientMenuType
+      const menuName = this.opts.clientMenuName
+
+      if (menuType === 'execute' && menuName === 'documents') {
+        tagName = 'ex-documents'
+      } else if (menuType === 'execute' && menuName === 'schema-sync-check') {
+        tagName = 'ex-schema-sync-check'
+      } else if (menuType === 'execute' && menuName === 'replace-schema') {
+        tagName = 'ex-replace-schema'
+      } else if (menuType === 'execute' && menuName === 'alter-check') {
+        tagName = 'ex-alter-check'
+      } else if (menuType === 'execute' && menuName === 'schema-policy-check') {
+        tagName = 'ex-schema-policy-check'
+      }
+      if (tagName) {
+        riot.mount('client-content', tagName, { projectName: this.opts.projectName, client: this.client })
+      }
+    }
   </script>
 </client>
