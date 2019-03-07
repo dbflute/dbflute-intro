@@ -72,11 +72,6 @@ task refreshResourceAfter {
 }
 
 // include plugin's gradle settings (using application settings, e.g. versions)
-// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-// if ./gradlew eclipse => module.js:529 throw err; Error: Cannot find module 'internal/errors'
-// you can avoid this: by jflute (2017/12/23)
-//  e.g. fileTree(dir: 'gradle/gradlePlugin', includes: ['common.gradle', 'commonJava.gradle', 'eclipse.gradle']).each { apply from: it }
-// _/_/_/_/_/_/_/_/_/_/
 fileTree(dir: 'gradle/gradlePlugin', includes: ['*.gradle']).each { apply from: it }
 
 
