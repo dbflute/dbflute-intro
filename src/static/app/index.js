@@ -13,6 +13,14 @@ import './main/main.tag'
 import './client/settings.tag'
 import './client/create.tag'
 import './client/client.tag'
+import './client/client-menu.tag'
+import './client/client-content/ex-documents.tag'
+import './client/client-content/ex-schema-sync-check.tag'
+import './client/client-content/ex-replace-schema.tag'
+import './client/client-content/ex-alter-check.tag'
+import './client/client-content/ex-schema-policy-check.tag'
+import './client/client-content/st-database-info.tag'
+import './client/client-content/st-schema-policy.tag'
 import './welcome/welcome.tag'
 import './common/result-view.tag'
 import './common/navbar.tag'
@@ -109,6 +117,9 @@ route('', () => {
 })
 route('operate/*', projectName => {
   riot.mount('content', 'client', { projectName })
+})
+route('operate/*/*/*', (projectName, clientMenuType, clientMenuName) => {
+  riot.mount('content', 'client', { projectName, clientMenuType, clientMenuName })
 })
 route('create', () => {
   riot.mount('content', 'create')
