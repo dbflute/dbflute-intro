@@ -64,6 +64,8 @@
         tagName = 'st-database-info'
       } else if (menuType === 'settings' && menuName === 'schema-policy') {
         tagName = 'st-schema-policy'
+      } else if (menuType === 'files' && menuName === 'logs') {
+        tagName = 'fl-logs'
       }
       if (tagName) {
         riot.mount('client-content', tagName, { projectName: this.opts.projectName, client: this.client })
