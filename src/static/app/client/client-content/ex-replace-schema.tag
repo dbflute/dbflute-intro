@@ -1,6 +1,19 @@
 <ex-replace-schema>
-  <h3>Replace Schema</h3>
-  <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+  <div class="ui container">
+    <h3>Replace Schema</h3>
+    <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+    <h4 class="ui header">Play SQL</h4>
+    <div class="ui segment" title="PlaySQL">
+      <su-dropdown items="{ playsqlDropDownItems }" ref="dropdown"></su-dropdown>
+      <div class="ui message message-area">
+        <pre>
+          <code class="language-sql">
+            <raw content="{ refs.dropdown.value }"></raw>
+          </code>
+        </pre>
+      </div>
+    </div>
+  </div>
 
   <su-modal modal="{ executeModal }" class="large" ref="executeModal">
     <div class="description">
@@ -16,9 +29,44 @@
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
-    const ApiFactory = new _ApiFactory()
+    import Prism from 'prismjs'
+    import 'prismjs/components/prism-sql.min'
+    import 'prismjs/themes/prism.css'
 
+    const ApiFactory = new _ApiFactory()
+    const defaultItem = [{label: '-', value: null}]
     let self = this
+    this.playsqlDropDownItems = {}
+
+    this.on('mount', () => {
+      self.prepareSettings(self.opts.projectName)
+      self.preparePlaysql(self.opts.projectName)
+    })
+
+    this.prepareSettings = (projectName) => {
+      ApiFactory.settings(projectName).then(json => {
+        self.client = json
+        self.update()
+      })
+    }
+
+    this.preparePlaysql = (projectName) => {
+      console.log('## enter preparePlaysql')
+      console.log(projectName)
+      ApiFactory.playsqlBeanList(projectName).then(json => {
+        console.log('## enter playsqlBeanList then')
+        console.log(json)
+        const playsqlDropDownItems = json.map(obj => ({
+          label: obj.fileName,
+          value: `<span style="display: none;">${obj.fileName}</span>` + Prism.highlight(obj.content, Prism.languages.sql, 'sql')
+        }))
+        console.log(playsqlDropDownItems)
+        self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
+        console.log(self.playsqlDropDownItems)
+        self.update()
+      })
+    }
+
     // ===================================================================================
     //                                                                               Modal
     //                                                                               =====
