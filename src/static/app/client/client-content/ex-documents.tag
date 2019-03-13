@@ -1,11 +1,13 @@
 <ex-documents>
-  <h3>Documents</h3>
-  <div class="ui list">
-    <div show="{ opts.client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
-    <div show="{ opts.client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+  <div class="ui container">
+    <h3>Documents</h3>
+    <div class="ui list">
+      <div show="{ opts.client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+      <div show="{ opts.client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+    </div>
+    <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
+    <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
   </div>
-  <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
-  <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
     <form class="ui form">

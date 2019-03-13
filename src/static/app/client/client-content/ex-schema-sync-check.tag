@@ -1,14 +1,16 @@
 <ex-schema-sync-check>
-  <h3>Schema Sync Check</h3>
-  <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
-    show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
-  <div class="ui list">
-    <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
+  <div class="ui container">
+    <h3>Schema Sync Check</h3>
+    <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
+      show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+    <div class="ui list">
+      <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
+    </div>
+    <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
+    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema
+      (schema-sync-check)
+    </button>
   </div>
-  <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-  <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema
-    (schema-sync-check)
-  </button>
 
   <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
     <form class="ui form">
