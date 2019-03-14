@@ -1,14 +1,16 @@
 <ex-schema-sync-check>
-  <h3>Schema Sync Check</h3>
-  <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
-    show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
-  <div class="ui list">
-    <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
+  <div class="ui container">
+    <h3>Schema Sync Check</h3>
+    <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
+      show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+    <div class="ui list">
+      <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
+    </div>
+    <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
+    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema
+      (schema-sync-check)
+    </button>
   </div>
-  <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-  <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema
-    (schema-sync-check)
-  </button>
 
   <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
     <form class="ui form">
@@ -39,8 +41,10 @@
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
+    import _DbfluteTask from '../../common/DbfluteTask'
 
     const ApiFactory = new _ApiFactory()
+    const DbfluteTask = new _DbfluteTask()
     let self = this
     this.syncSetting = {}
 
@@ -115,20 +119,11 @@
     //                                                                        Execute Task
     //                                                                        ============
     this.schemaSyncCheckTask = () => {
-      this.task('schemaSyncCheck', self.refs.checkModal)
-    }
-    this.task = (task, modal) => {
-      modal.show()
-      ApiFactory.task(self.opts.projectName, task).then((response) => {
-        const message = response.success ? 'success' : 'failure'
+      self.refs.checkModal.show()
+      DbfluteTask.task('schemaSyncCheck', self.opts.projectName, (message) => {
         self.showResultModal(message)
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.update({
-            client: response
-          })
-        })
       }).finally(() => {
-        modal.hide()
+        self.refs.checkModal.hide()
       })
     }
 

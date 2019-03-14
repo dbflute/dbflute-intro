@@ -1,11 +1,13 @@
 <ex-documents>
-  <h3>Documents</h3>
-  <div class="ui list">
-    <div show="{ opts.client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
-    <div show="{ opts.client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+  <div class="ui container">
+    <h3>Documents</h3>
+    <div class="ui list">
+      <div show="{ opts.client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+      <div show="{ opts.client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+    </div>
+    <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
+    <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
   </div>
-  <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
-  <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
 
   <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
     <form class="ui form">
@@ -60,9 +62,11 @@
   </su-modal>
 
   <script>
-    import _ApiFactory from '../../common/factory/ApiFactory.js'
+    import _ApiFactory from '../../common/factory/ApiFactory'
+    import _DbfluteTask from '../../common/DbfluteTask'
 
     const ApiFactory = new _ApiFactory()
+    const DbfluteTask = new _DbfluteTask()
     let self = this
 
     // ===================================================================================
@@ -149,22 +153,12 @@
     //                                                                        Execute Task
     //                                                                        ============
     this.generateTask = () => {
-      this.task('doc', self.refs.generateModal)
-    }
-    this.task = (task, modal) => {
-      modal.show()
-      ApiFactory.task(self.opts.projectName, task).then((response) => {
-        const message = response.success ? 'success' : 'failure'
+      self.refs.generateModal.show()
+      DbfluteTask.task('doc', self.opts.projectName, (message) => {
         self.showResultModal(message)
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.update({
-            client: response
-          })
-        })
       }).finally(() => {
-        modal.hide()
+        self.refs.generateModal.hide()
       })
     }
-
   </script>
 </ex-documents>

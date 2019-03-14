@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="item">
-      <div class="header">Settings</div>
+      <div class="header">General Settings</div>
       <div class="inverted menu">
         <a class="{ 'active': isActiveItem('settings', 'database-info') } item"
            href="./#operate/{ opts.projectName }/settings/database-info">
@@ -39,6 +39,15 @@
         <a class="{ 'active': isActiveItem('settings', 'schema-policy') } item"
            href="./#operate/{ opts.projectName }/settings/schema-policy">
           Schema Policy
+        </a>
+      </div>
+    </div>
+    <div class="item">
+      <div class="header">Files</div>
+      <div class="inverted menu">
+        <a class="{ 'active': isActiveItem('files', 'logs') } item"
+           href="./#operate/{ opts.projectName }/files/logs">
+          Logs
         </a>
       </div>
     </div>
