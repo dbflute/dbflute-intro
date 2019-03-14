@@ -29,11 +29,13 @@
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
+    import _DbfluteTask from '../../common/DbfluteTask'
     import Prism from 'prismjs'
     import 'prismjs/components/prism-sql.min'
     import 'prismjs/themes/prism.css'
 
     const ApiFactory = new _ApiFactory()
+    const DbfluteTask = new _DbfluteTask()
     const defaultItem = [{label: '-', value: null}]
     let self = this
     this.playsqlDropDownItems = {}
@@ -93,21 +95,12 @@
     //                                                                        ============
     this.replaceSchemaTask = () => {
       this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
-        this.task('replaceSchema', self.refs.executeModal)
-      })
-    }
-    this.task = (task, modal) => {
-      modal.show()
-      ApiFactory.task(self.opts.projectName, task).then((response) => {
-        const message = response.success ? 'success' : 'failure'
-        self.showResultModal(message)
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.update({
-            client: response
-          })
+        self.refs.executeModal.show()
+        DbfluteTask.task('replaceSchema', self.opts.projectName, (message) => {
+          self.showResultModal(message)
+        }).finally(() => {
+          self.refs.executeModal.hide()
         })
-      }).finally(() => {
-        modal.hide()
       })
     }
 

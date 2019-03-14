@@ -22,9 +22,9 @@
   </su-modal>
 
   <script>
-    import _ApiFactory from '../../common/factory/ApiFactory.js'
+    import _DbfluteTask from '../../common/DbfluteTask'
 
-    const ApiFactory = new _ApiFactory()
+    const DbfluteTask = new _DbfluteTask()
     let self = this
     // ===================================================================================
     //                                                                               Modal
@@ -65,21 +65,13 @@
     //                                                                        Execute Task
     //                                                                        ============
     this.schemaPolicyCheckTask = () => {
-      this.task('doc', self.refs.checkModal)
-    }
-    this.task = (task, modal) => {
-      modal.show()
-      ApiFactory.task(self.opts.projectName, task).then((response) => {
-        const message = response.success ? 'success' : 'failure'
+      self.refs.checkModal.show()
+      DbfluteTask.task('doc', self.opts.projectName, (message) => {
         self.showResultModal(message)
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.update({
-            client: response
-          })
-        })
       }).finally(() => {
-        modal.hide()
+        self.refs.checkModal.hide()
       })
     }
+
   </script>
 </ex-schema-policy-check>

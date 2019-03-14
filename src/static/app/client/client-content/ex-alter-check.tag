@@ -54,11 +54,13 @@
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
+    import _DbfluteTask from '../../common/DbfluteTask'
     import Prism from 'prismjs'
     import 'prismjs/components/prism-sql.min'
     import 'prismjs/themes/prism.css'
 
     const ApiFactory = new _ApiFactory()
+    const DbfluteTask = new _DbfluteTask()
     let self = this
     // ===================================================================================
     //                                                                          Initialize
@@ -133,27 +135,18 @@
     //                                                                        ============
     this.alterCheckTask = () => {
       this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
-        this.task('alterCheck', self.refs.executeModal)
+        self.refs.executeModal.show()
+        DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
+          self.showResultModal(message)
+        }).finally(() => {
+          self.refs.executeModal.hide()
+        })
       }).finally(() => {
         ApiFactory.clientOperation(self.opts.projectName).then((response) => {
           self.update({
             client: response
           })
         })
-      })
-    }
-    this.task = (task, modal) => {
-      modal.show()
-      ApiFactory.task(self.opts.projectName, task).then((response) => {
-        const message = response.success ? 'success' : 'failure'
-        self.showResultModal(message)
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.update({
-            client: response
-          })
-        })
-      }).finally(() => {
-        modal.hide()
       })
     }
 
