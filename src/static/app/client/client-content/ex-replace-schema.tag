@@ -51,18 +51,12 @@
     }
 
     this.preparePlaysql = (projectName) => {
-      console.log('## enter preparePlaysql')
-      console.log(projectName)
       ApiFactory.playsqlBeanList(projectName).then(json => {
-        console.log('## enter playsqlBeanList then')
-        console.log(json)
         const playsqlDropDownItems = json.map(obj => ({
           label: obj.fileName,
           value: `<span style="display: none;">${obj.fileName}</span>` + Prism.highlight(obj.content, Prism.languages.sql, 'sql')
         }))
-        console.log(playsqlDropDownItems)
         self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
-        console.log(self.playsqlDropDownItems)
         self.update()
       })
     }
