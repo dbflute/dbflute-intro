@@ -34,6 +34,7 @@ import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
+import org.dbflute.util.DfStringUtil;
 
 /**
  * @author deco
@@ -128,6 +129,9 @@ public class DocumentPhysicalLogic {
         while (entries.hasMoreElements()) {
             final ZipEntry entry = entries.nextElement();
             final String fileName = entry.getName();
+            if (!DfStringUtil.contains(fileName, ".sql")) {
+                continue;
+            }
             final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
             alterSqls.add(new AlterSqlBean(fileName, content));
         }
