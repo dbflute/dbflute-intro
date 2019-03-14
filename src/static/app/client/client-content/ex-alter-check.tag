@@ -22,7 +22,7 @@
     </div>
     <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
     <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
-      <h4 class="ui header">Stacked Alter SQL List</h4>
+      <h4 class="ui header">Checked Alter SQL List</h4>
       <ul>
         <div each="{ alterItem in stackedAlterSqls }">
           <li>
