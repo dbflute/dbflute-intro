@@ -46,11 +46,7 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ resultModal }" class="large" ref="resultModal">
-    <div class="description">
-      { opts.modal.message }
-    </div>
-  </su-modal>
+  <result-modal></result-modal>
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
@@ -62,12 +58,13 @@
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
     let self = this
+
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
       self.prepareAlterSqls(self.opts.client.stackedAlterSqls)
-      self.update()
+      self.prepareModal()
     })
     this.prepareAlterSqls = (stackedAlterSqls) => {
       self.stackedAlterSqls = []
@@ -78,6 +75,10 @@
           show: false,
         })
       })
+      self.update()
+    }
+    this.prepareModal = () => {
+      self.resultModal = riot.mount('result-modal')[0]
     }
 
     // ===================================================================================
@@ -89,30 +90,16 @@
     this.executeModal = {
       closable: false
     }
-    this.resultModal = {
-      closable: true,
-      buttons: [
-        {
-          text: 'CLOSE',
-          default: true
-        }
-      ],
-      message: ''
-    }
+
     // -----------------------------------------------------
     //                                                  Show
     //                                                  ----
-    this.showResultModal = (message) => {
-      self.resultModal.message = message
-      self.refs.resultModal.show()
-    }
     this.showAlterFailureLog = () => {
       let fileName = 'intro-last-execute-failure-alterCheck.log'
       ApiFactory.getLog(self.opts.projectName, fileName).then((res) => {
         observable.trigger('result', {header: fileName, messages: [res.content], modalSize: 'large'})
       }).catch(() => {
-        self.resultModal.message = 'log file not found'
-        self.refs.resultModal.show()
+        self.resultModal.show('log file not found')
       })
     }
 
@@ -137,7 +124,7 @@
       this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
-          self.showResultModal(message)
+          self.resultModal.show(message)
         }).finally(() => {
           self.refs.executeModal.hide()
         })

@@ -15,17 +15,24 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ resultModal }" class="large" ref="resultModal">
-    <div class="description">
-      { opts.modal.message }
-    </div>
-  </su-modal>
+  <result-modal></result-modal>
 
   <script>
     import _DbfluteTask from '../../common/DbfluteTask'
 
     const DbfluteTask = new _DbfluteTask()
     let self = this
+
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
+    this.on('mount', () => {
+      self.prepareModal()
+    })
+    this.prepareModal = () => {
+      self.resultModal = riot.mount('result-modal')[0]
+    }
+
     // ===================================================================================
     //                                                                               Modal
     //                                                                               =====
@@ -34,24 +41,6 @@
     //                                            ----------
     this.checkModal = {
       closable: false
-    }
-    this.resultModal = {
-      closable: true,
-      buttons: [
-        {
-          text: 'CLOSE',
-          default: true
-        }
-      ],
-      message: ''
-    }
-
-    // -----------------------------------------------------
-    //                                                  Show
-    //                                                  ----
-    this.showResultModal = (message) => {
-      self.resultModal.message = message
-      self.refs.resultModal.show()
     }
 
     // -----------------------------------------------------
@@ -67,11 +56,10 @@
     this.schemaPolicyCheckTask = () => {
       self.refs.checkModal.show()
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
-        self.showResultModal(message)
+        self.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
       })
     }
-
   </script>
 </ex-schema-policy-check>
