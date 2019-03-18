@@ -29,6 +29,7 @@
     this.on('mount', () => {
       self.prepareModal()
     })
+
     this.prepareModal = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }

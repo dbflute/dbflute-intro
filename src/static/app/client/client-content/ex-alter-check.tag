@@ -66,6 +66,7 @@
       self.prepareAlterSqls(self.opts.client.stackedAlterSqls)
       self.prepareModal()
     })
+
     this.prepareAlterSqls = (stackedAlterSqls) => {
       self.stackedAlterSqls = []
       stackedAlterSqls.forEach(sql => {
@@ -77,6 +78,7 @@
       })
       self.update()
     }
+
     this.prepareModal = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
@@ -109,9 +111,11 @@
     this.openAlterCheckResultHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/altercheckresulthtml/')
     }
+
     this.openAlterDir = () => {
       ApiFactory.openAlterDir(self.opts.projectName)
     }
+
     this.alterItemClick = (alterItem, e) => {
       alterItem.show = !(alterItem.show)
       return false
@@ -136,6 +140,5 @@
         })
       })
     }
-
   </script>
 </ex-alter-check>

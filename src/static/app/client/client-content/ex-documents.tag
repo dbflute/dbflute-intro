@@ -73,15 +73,18 @@
       self.prepareModal()
       self.registerModalEvent()
     })
+
     this.prepareCurrentProject = () => {
       ApiFactory.document(self.opts.projectName).then((response) => {
         self.documentSettingModal.documentSetting = response
         self.update()
       })
     }
+
     this.prepareModal = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
+
     this.registerModalEvent = () => {
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
         const documentStringModalRefs = self.refs.documentSettingModal.refs
@@ -114,9 +117,11 @@
       ],
       documentSetting: {}
     }
+
     this.generateModal = {
       closable: false
     }
+
     // -----------------------------------------------------
     //                                                  Show
     //                                                  ----
@@ -130,6 +135,7 @@
     this.openSchemaHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
+
     this.openHistoryHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
     }

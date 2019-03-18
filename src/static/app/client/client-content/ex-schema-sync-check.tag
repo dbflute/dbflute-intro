@@ -58,6 +58,7 @@
       self.prepareModal()
       self.registerModalEvent()
     })
+
     this.initSyncSchemaSetting = () => {
       ApiFactory.syncSchema(self.opts.projectName).then((response) => {
         self.syncSettingModal.syncSetting = response
@@ -66,9 +67,11 @@
         })
       })
     }
+
     this.prepareModal = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
+
     this.registerModalEvent = () => {
       this.refs.syncSettingModal.on('editSyncSettings', () => {
         const syncSettingModalRefs = self.refs.syncSettingModal.refs
@@ -92,6 +95,7 @@
     this.canCheckSchemaSetting = () => {
       return self.syncSetting.url != null && self.syncSetting.user != null
     }
+
     this.openSyncCheckResultHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
     }
@@ -114,6 +118,7 @@
       ],
       syncSetting: {}
     }
+
     // -----------------------------------------------------
     //                                                  Show
     //                                                  ----
@@ -132,6 +137,5 @@
         self.refs.checkModal.hide()
       })
     }
-
   </script>
 </ex-schema-sync-check>

@@ -36,6 +36,9 @@
     let self = this
     this.playsqlDropDownItems = {}
 
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
     this.on('mount', () => {
       self.prepareSettings(self.opts.projectName)
       self.preparePlaysql(self.opts.projectName)
@@ -87,6 +90,5 @@
         })
       })
     }
-
   </script>
 </ex-replace-schema>
