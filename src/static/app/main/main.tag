@@ -1,62 +1,67 @@
 <main>
-  <navbar></navbar>
-  <div class="ui main container">
-    <div>
-      <h2>DBFlute Client</h2>
-      <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
-    </div>
-    <table class="ui table">
-      <thead>
-        <tr>
-          <th data-is="i18n">LABEL_projectName</th>
-          <th data-is="i18n">LABEL_databaseCode</th>
-          <th data-is="i18n">LABEL_languageCode</th>
-          <th data-is="i18n">LABEL_containerCode</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody class="list-group">
-        <tr each="{client in clientList}">
-          <td>
-            <a onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
-          </td>
-          <td>{ client.databaseCode }</td>
-          <td>{ client.languageCode }</td>
-          <td>{ client.containerCode }</td>
-          <td class="right aligned">
-            <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="main-body">
+    <common-menu></common-menu>
+    <div class="main-container">
+      <div class="ui container">
+        <div>
+          <h2>DBFlute Client</h2>
+          <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
+        </div>
 
-    <h2>DBFlute Engine</h2>
-    <button type="button" class="ui button primary" onclick="{ showDownloadModal }">
-      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
-    </button>
+        <table class="ui table">
+          <thead>
+          <tr>
+            <th data-is="i18n">LABEL_projectName</th>
+            <th data-is="i18n">LABEL_databaseCode</th>
+            <th data-is="i18n">LABEL_languageCode</th>
+            <th data-is="i18n">LABEL_containerCode</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody class="list-group">
+          <tr each="{client in clientList}">
+            <td>
+              <a onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
+            </td>
+            <td>{ client.databaseCode }</td>
+            <td>{ client.languageCode }</td>
+            <td>{ client.containerCode }</td>
+            <td class="right aligned">
+              <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-    <table class="ui table">
-      <thead>
-        <tr>
-          <th data-is="i18n">LABEL_engineVersion</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr each="{version in versions}">
-          <td>{ version }</td>
-          <td class="right aligned">
-            <input type="button" class="ui negative button" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <h3>
-      <small class="text-info">System Info</small>
-    </h3>
-    <div class="ui stackable four column grid">
-      <div class="column" each="{ key, value in manifest }">
-        <small>{ value } = { key }</small>
+        <h2>DBFlute Engine</h2>
+        <button type="button" class="ui button primary" onclick="{ showDownloadModal }">
+          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
+        </button>
+
+        <table class="ui table">
+          <thead>
+          <tr>
+            <th data-is="i18n">LABEL_engineVersion</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr each="{version in versions}">
+            <td>{ version }</td>
+            <td class="right aligned">
+              <input type="button" class="ui negative button" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>
+          <small class="text-info">System Info</small>
+        </h3>
+        <div class="ui stackable four column grid">
+          <div class="column" each="{ key, value in manifest }">
+            <small>{ value } = { key }</small>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -80,6 +85,13 @@
   </div>
 
   <style>
+    .main-body {
+      display: flex;
+      flex-direction: row;
+    }
+    .main-container {
+      margin-left: 15rem;
+    }
     table+h2,
     table+h3 {
       margin-top: 3rem;
