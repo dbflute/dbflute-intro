@@ -1,28 +1,8 @@
 <client>
-  <div class="client-body">
-    <div class="client-menu">
-      <client-menu project-name="{ opts.projectName }"
-                   client-menu-type="{ opts.clientMenuType }"
-                   client-menu-name="{ opts.clientMenuName }"></client-menu>
-    </div>
-    <div class="client-container">
-      <h2>DBFlute Client { opts.projectName }</h2>
-      <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
-      <client-content></client-content>
-    </div>
-  </div>
-  <style>
-    .client-body {
-      display: flex;
-      flex-direction: row;
-    }
-    .client-menu {
-      margin-top: 2.5rem;
-    }
-    .client-container {
-      margin-left: 15rem;
-    }
-  </style>
+  <h2>DBFlute Client { opts.projectName }</h2>
+  <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
+  <client-content></client-content>
+
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
 

@@ -21,11 +21,7 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ resultModal }" class="large" ref="resultModal">
-    <div class="description">
-      { opts.modal.message }
-    </div>
-  </su-modal>
+  <result-modal></result-modal>
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
@@ -40,9 +36,13 @@
     let self = this
     this.playsqlDropDownItems = {}
 
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
     this.on('mount', () => {
       self.prepareSettings(self.opts.projectName)
       self.preparePlaysql(self.opts.projectName)
+      self.prepareModal()
     })
 
     this.prepareSettings = (projectName) => {
@@ -63,6 +63,10 @@
       })
     }
 
+    this.prepareModal = () => {
+      self.resultModal = riot.mount('result-modal')[0]
+    }
+
     // ===================================================================================
     //                                                                               Modal
     //                                                                               =====
@@ -72,23 +76,6 @@
     this.executeModal = {
       closable: false
     }
-    this.resultModal = {
-      closable: true,
-      buttons: [
-        {
-          text: 'CLOSE',
-          default: true
-        }
-      ],
-      message: ''
-    }
-    // -----------------------------------------------------
-    //                                                  Show
-    //                                                  ----
-    this.showResultModal = (message) => {
-      self.resultModal.message = message
-      self.refs.resultModal.show()
-    }
 
     // ===================================================================================
     //                                                                        Execute Task
@@ -97,12 +84,11 @@
       this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('replaceSchema', self.opts.projectName, (message) => {
-          self.showResultModal(message)
+          self.resultModal.show(message)
         }).finally(() => {
           self.refs.executeModal.hide()
         })
       })
     }
-
   </script>
 </ex-replace-schema>

@@ -1,6 +1,5 @@
 <settings>
-  <navbar></navbar>
-  <div class="ui main container">
+  <div class="ui container">
     <h2>DBFlute Client { client.projectName }</h2>
 
     <su-modal modal="{ checkModal }" class="large" ref="checkModal">

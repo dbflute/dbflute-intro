@@ -55,11 +55,7 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ resultModal }" class="large" ref="resultModal">
-    <div class="description">
-      { opts.modal.message }
-    </div>
-  </su-modal>
+  <result-modal></result-modal>
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory'
@@ -74,14 +70,21 @@
     //                                                                          ==========
     this.on('mount', () => {
       self.prepareCurrentProject()
+      self.prepareModal()
       self.registerModalEvent()
     })
+
     this.prepareCurrentProject = () => {
       ApiFactory.document(self.opts.projectName).then((response) => {
         self.documentSettingModal.documentSetting = response
         self.update()
       })
     }
+
+    this.prepareModal = () => {
+      self.resultModal = riot.mount('result-modal')[0]
+    }
+
     this.registerModalEvent = () => {
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
         const documentStringModalRefs = self.refs.documentSettingModal.refs
@@ -114,30 +117,17 @@
       ],
       documentSetting: {}
     }
+
     this.generateModal = {
       closable: false
     }
-    this.resultModal = {
-      closable: true,
-      buttons: [
-        {
-          text: 'CLOSE',
-          default: true
-        }
-      ],
-      message: ''
-    }
+
     // -----------------------------------------------------
     //                                                  Show
     //                                                  ----
     this.showDocumentSettingModal = () => {
       self.refs.documentSettingModal.show()
     }
-    this.showResultModal = (message) => {
-      self.resultModal.message = message
-      self.refs.resultModal.show()
-    }
-
 
     // ===================================================================================
     //                                                                       Open Document
@@ -145,6 +135,7 @@
     this.openSchemaHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
+
     this.openHistoryHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
     }
@@ -155,7 +146,7 @@
     this.generateTask = () => {
       self.refs.generateModal.show()
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
-        self.showResultModal(message)
+        self.resultModal.show(message)
       }).finally(() => {
         self.refs.generateModal.hide()
       })

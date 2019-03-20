@@ -8,23 +8,23 @@
       <div class="header">Execute</div>
       <div class="inverted menu">
         <a class="{ 'active': isActiveItem('execute', 'documents') } item"
-           href="./#operate/{ opts.projectName }/execute/documents">
+           onclick="{ goToMenuItem.bind(this, 'execute', 'documents') }">
           Documents
         </a>
         <a class="{ 'active': isActiveItem('execute', 'schema-sync-check') } item"
-           href="./#operate/{ opts.projectName }/execute/schema-sync-check">
+           onclick="{ goToMenuItem.bind(this, 'execute', 'schema-sync-check') }">
           Schema Sync Check
         </a>
         <a class="{ 'active': isActiveItem('execute', 'replace-schema') } item"
-           href="./#operate/{ opts.projectName }/execute/replace-schema">
+           onclick="{ goToMenuItem.bind(this, 'execute', 'replace-schema') }">
           Replace Schema
         </a>
         <a class="{ 'active': isActiveItem('execute', 'alter-check') } item"
-           href="./#operate/{ opts.projectName }/execute/alter-check">
+           onclick="{ goToMenuItem.bind(this, 'execute', 'alter-check') }">
           Alter Check
         </a>
         <a class="{ 'active': isActiveItem('execute', 'schema-policy-check') } item"
-           href="./#operate/{ opts.projectName }/execute/schema-policy-check">
+           onclick="{ goToMenuItem.bind(this, 'execute', 'schema-policy-check') }">
           Schema Policy Check
         </a>
       </div>
@@ -33,11 +33,11 @@
       <div class="header">General Settings</div>
       <div class="inverted menu">
         <a class="{ 'active': isActiveItem('settings', 'database-info') } item"
-           href="./#operate/{ opts.projectName }/settings/database-info">
+           onclick="{ goToMenuItem.bind(this, 'settings', 'database-info') }">
           Database Info
         </a>
         <a class="{ 'active': isActiveItem('settings', 'schema-policy') } item"
-           href="./#operate/{ opts.projectName }/settings/schema-policy">
+           onclick="{ goToMenuItem.bind(this, 'settings', 'schema-policy') }">
           Schema Policy
         </a>
       </div>
@@ -46,7 +46,7 @@
       <div class="header">Files</div>
       <div class="inverted menu">
         <a class="{ 'active': isActiveItem('files', 'logs') } item"
-           href="./#operate/{ opts.projectName }/files/logs">
+           onclick="{ goToMenuItem.bind(this, 'files', 'logs') }">
           Logs
         </a>
       </div>
@@ -54,7 +54,10 @@
   </div>
   <script>
     this.isActiveItem = (menuType, menuName) => {
-      return menuType === opts.clientMenuType && menuName == opts.clientMenuName
+      return menuType === this.opts.clientMenuType && menuName === this.opts.clientMenuName
+    }
+    this.goToMenuItem = (menuType, menuName) => {
+      route(`operate/${this.opts.projectName}/${menuType}/${menuName}`)
     }
   </script>
 </client-menu>
