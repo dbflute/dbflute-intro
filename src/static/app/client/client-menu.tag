@@ -11,6 +11,10 @@
            onclick="{ goToMenuItem.bind(this, 'execute', 'documents') }">
           Documents
         </a>
+        <a class="{ 'active': isActiveItem('execute', 'schema-policy-check') } item"
+           onclick="{ goToMenuItem.bind(this, 'execute', 'schema-policy-check') }">
+          Schema Policy Check
+        </a>
         <a class="{ 'active': isActiveItem('execute', 'schema-sync-check') } item"
            onclick="{ goToMenuItem.bind(this, 'execute', 'schema-sync-check') }">
           Schema Sync Check
@@ -22,10 +26,6 @@
         <a class="{ 'active': isActiveItem('execute', 'alter-check') } item"
            onclick="{ goToMenuItem.bind(this, 'execute', 'alter-check') }">
           Alter Check
-        </a>
-        <a class="{ 'active': isActiveItem('execute', 'schema-policy-check') } item"
-           onclick="{ goToMenuItem.bind(this, 'execute', 'schema-policy-check') }">
-          Schema Policy Check
         </a>
       </div>
     </div>
