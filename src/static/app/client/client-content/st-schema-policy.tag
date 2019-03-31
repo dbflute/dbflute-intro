@@ -1,11 +1,6 @@
 <st-schema-policy>
   <div class="ui container">
     <div class="ui segment" title="SchemaPolicy">
-      <su-modal modal="{ checkModal }" class="large" ref="checkModal">
-        <div class="description">
-          { opts.modal.message }
-        </div>
-      </su-modal>
 
       <div class="ui form">
         <div class="row">
@@ -68,15 +63,24 @@
       </div>
     </div>
   </div>
+  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
+    <div class="description">
+      Checking...
+    </div>
+  </su-modal>
+  <result-modal></result-modal>
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
+    import _DbfluteTask from '../../common/DbfluteTask'
     import 'prismjs/components/prism-sql.min'
     import 'prismjs/themes/prism.css'
 
     const ApiFactory = new _ApiFactory()
+    const DbfluteTask = new _DbfluteTask()
 
     const self = this
+
     this.schemaPolicy = {}
 
     this.tabTitles = {
@@ -96,7 +100,6 @@
     this.prepareSchemaPolicy = (projectName) => {
       ApiFactory.schemaPolicy(projectName).then(json => {
         self.schemaPolicy = json
-        console.log(json)
         self.update()
       })
     }
@@ -122,22 +125,23 @@
     //                                                                        Execute Task
     //                                                                        ============
     this.schemaPolicyCheckTask = () => {
-      self.checkModal.message = 'Checking...'
-      const checkModalRef = self.refs.checkModal
-      checkModalRef.show()
-
-      ApiFactory.task(self.opts.projectName, 'doc').then((response) => {
-        self.checkModal.message = response.success ? 'Success' : 'Failure'
+      self.refs.checkModal.show()
+      DbfluteTask.task('doc', self.opts.projectName, (message) => {
+        self.resultModal.show(message)
       }).finally(() => {
-        checkModalRef.hide()
+        self.refs.checkModal.hide()
       })
     }
-
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
+      this.prepareModal()
     })
+
+    this.prepareModal = () => {
+      self.resultModal = riot.mount('result-modal')[0]
+    }
   </script>
 </st-schema-policy>
