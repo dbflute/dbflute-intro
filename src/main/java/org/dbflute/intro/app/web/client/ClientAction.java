@@ -15,11 +15,13 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -27,8 +29,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
+import org.dbflute.intro.app.logic.document.AlterSqlBean;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
@@ -40,6 +44,7 @@ import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
+import org.dbflute.intro.app.web.playsql.PlaysqlBean;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
@@ -72,6 +77,8 @@ public class ClientAction extends IntroBaseAction {
     private DocumentPhysicalLogic documentLogic;
     @Resource
     private DatabaseInfoLogic databaseInfoLogic;
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -188,6 +195,13 @@ public class ClientAction extends IntroBaseAction {
         operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
         operation.ngMark = documentLogic.findAlterCheckNgMark(clientProject);
+        operation.editingAlterSql = documentLogic.findAlterDir(clientProject)
+                .map(dir -> dir.listFiles())
+                .filter(files -> files != null)
+                .map(files -> Arrays.stream(files))
+                .orElse(Stream.empty())
+                .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .collect(Collectors.toList());
         operation.stackedAlterSqls = documentLogic.findStackedAlterSqls(clientProject);
         return operation;
     }
