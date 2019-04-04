@@ -21,6 +21,23 @@
       </div>
     </div>
     <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+    <div show="{ editingAlterSqls !== undefined && editingAlterSqls.length > 0 }" class="ui list">
+      <h4 class="ui header">Checked Alter SQL List</h4>
+      <ul>
+        <div each="{ alterItem in editingAlterSqls }">
+          <li>
+            <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+          </li>
+          <div show="{ alterItem.show }" class="ui message message-area">
+            <pre>
+              <code>
+                <raw content="{ alterItem.content }"></raw>
+              </code>
+            </pre>
+          </div>
+        </div>
+      </ul>
+    </div>
     <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
       <h4 class="ui header">Checked Alter SQL List</h4>
       <ul>
@@ -63,11 +80,24 @@
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      self.prepareAlterSqls(self.opts.client.stackedAlterSqls)
+      self.prepareEditingAlterSqls(self.opts.client.editingAlterSqls)
+      self.prepareStackedAlterSqls(self.opts.client.stackedAlterSqls)
       self.prepareModal()
     })
 
-    this.prepareAlterSqls = (stackedAlterSqls) => {
+    this.prepareEditingAlterSqls = (editingAlterSqls) => {
+      self.editingAlterSqls = []
+      editingAlterSqls.forEach(sql => {
+        self.editingAlterSqls.push({
+          fileName: sql.fileName,
+          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql, 'sql'),
+          show: false,
+        })
+      })
+      self.update()
+    }
+
+    this.prepareStackedAlterSqls = (stackedAlterSqls) => {
       self.stackedAlterSqls = []
       stackedAlterSqls.forEach(sql => {
         self.stackedAlterSqls.push({
