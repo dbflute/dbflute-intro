@@ -22,15 +22,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
@@ -49,6 +53,8 @@ public class DocumentPhysicalLogic {
     //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                         Find/Exists
@@ -99,6 +105,16 @@ public class DocumentPhysicalLogic {
             return OptionalThing.of(file);
         }
         return OptionalThing.empty();
+    }
+
+    public List<AlterSqlBean> findAlterFiles(String clientProject) {
+        return findAlterDir(clientProject)
+                .map(dir -> dir.listFiles())
+                .filter(files -> files != null)
+                .map(files -> Arrays.stream(files))
+                .orElse(Stream.empty())
+                .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .collect(Collectors.toList());
     }
 
     public CDef.NgMark findAlterCheckNgMark(String clientProject) {

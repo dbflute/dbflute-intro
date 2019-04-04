@@ -58,5 +58,7 @@ public class ClientOperationResult {
     //                                                                         ===========
     public CDef.NgMark ngMark;
     @Valid
+    public List<AlterSqlBean> editingAlterSqls;
+    @Valid
     public List<AlterSqlBean> stackedAlterSqls;
 }
