@@ -6,7 +6,7 @@
     </a>
     <div class="item">
       <div class="header">Execute</div>
-      <div class="inverted menu">
+      <div class="ui tiny inverted vertical menu">
         <a class="{ 'active': isActiveItem('execute', 'documents') } item"
            onclick="{ goToMenuItem.bind(this, 'execute', 'documents') }">
           Documents
@@ -31,7 +31,7 @@
     </div>
     <div class="item">
       <div class="header">General Settings</div>
-      <div class="inverted menu">
+      <div class="ui tiny inverted vertical menu">
         <a class="{ 'active': isActiveItem('settings', 'database-info') } item"
            onclick="{ goToMenuItem.bind(this, 'settings', 'database-info') }">
           Database Info
@@ -44,7 +44,7 @@
     </div>
     <div class="item">
       <div class="header">Files</div>
-      <div class="inverted menu">
+      <div class="ui tiny inverted vertical menu">
         <a class="{ 'active': isActiveItem('files', 'logs') } item"
            onclick="{ goToMenuItem.bind(this, 'files', 'logs') }">
           Logs
@@ -52,6 +52,11 @@
       </div>
     </div>
   </div>
+  <style>
+    .ui.tiny.inverted.vertical.menu {
+      margin-left: 0px;
+    }
+  </style>
   <script>
     this.isActiveItem = (menuType, menuName) => {
       return menuType === this.opts.clientMenuType && menuName === this.opts.clientMenuName
