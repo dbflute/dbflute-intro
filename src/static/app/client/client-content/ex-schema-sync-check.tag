@@ -7,8 +7,8 @@
       <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
     </div>
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
-    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Check Schema
-      (schema-sync-check)
+    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
+      Check Schema (schema-sync-check)
     </button>
   </div>
 
@@ -39,6 +39,12 @@
     </form>
   </su-modal>
 
+  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
+    <div class="description">
+      Checking...
+    </div>
+  </su-modal>
+
   <result-modal></result-modal>
 
   <script>
@@ -49,6 +55,11 @@
     const DbfluteTask = new _DbfluteTask()
     let self = this
     this.syncSetting = {}
+
+    this.checkModal = {
+      header : 'SchemaPolicyCheck',
+      closable: false
+    }
 
     // ===================================================================================
     //                                                                          Initialize
