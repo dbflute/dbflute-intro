@@ -66,7 +66,8 @@ public class TaskAction extends IntroBaseAction {
     public JsonResponse<TaskExecutionResult> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         try {
-            taskExecutionLogic.execute(project, taskTypeList, env);
+            String log = taskExecutionLogic.execute(project, taskTypeList, env);
+            loggingLastSuccess(project, instruction, log);
         } catch (SchemaNotSynchronizedException e) {
             return asJson(new TaskExecutionResult(false));
         } catch (TaskErrorResultException e) {
@@ -78,6 +79,14 @@ public class TaskAction extends IntroBaseAction {
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
         }
         return asJson(new TaskExecutionResult(true));
+    }
+
+    private void loggingLastSuccess(String project, AppCDef.TaskInstruction instruction, String msg) {
+        try {
+            logPhysicalLogic.logging(project, "intro-last-execute-success-" + instruction.code() + ".log", msg);
+        } catch (RuntimeException e) {
+            logger.error("logging is failure. file name : intro-last-execute-success-" + instruction.code() + ".log", e);
+        }
     }
 
     private void loggingLastFailure(String project, AppCDef.TaskInstruction instruction, String msg) {
