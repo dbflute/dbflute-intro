@@ -7,6 +7,11 @@
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
+    <div show="{ hasLog }">
+      <h4>Last Log</h4>
+      <div>{ logFileName }</div>
+      <div>{ logContent }</div>
+    </div>
   </div>
 
   <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
@@ -17,10 +22,10 @@
                value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
       </div>
       <div class="field">
-        <div class="ui checkbox">
+        <di class="ui checkbox">
           <input type="checkbox" ref="upperCaseBasic" checked="{ opts.modal.documentSetting.upperCaseBasic }">
           <label>Upper case basis <span class="frm">(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase)</span></label>
-        </div>
+        </di>
       </div>
       <div class="field">
         <div class="ui checkbox">
@@ -65,6 +70,8 @@
     const DbfluteTask = new _DbfluteTask()
     let self = this
 
+    self.hasLog = false
+
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
@@ -77,6 +84,14 @@
     this.prepareCurrentProject = () => {
       ApiFactory.document(self.opts.projectName).then((response) => {
         self.documentSettingModal.documentSetting = response
+        self.update()
+      })
+      ApiFactory.latestLog(self.opts.projectName, 'doc').then((response) => {
+        if (response.fileName) {
+          self.hasLog = true
+          self.logFileName = response.fileName
+          self.logContent = response.content
+        }
         self.update()
       })
     }

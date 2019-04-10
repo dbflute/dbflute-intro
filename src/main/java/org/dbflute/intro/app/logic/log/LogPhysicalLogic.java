@@ -15,16 +15,17 @@
  */
 package org.dbflute.intro.app.logic.log;
 
-import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.optional.OptionalThing;
-
-import javax.annotation.Resource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.optional.OptionalThing;
 
 /**
  * @author deco
@@ -70,6 +71,16 @@ public class LogPhysicalLogic {
         if (logFiles == null || logFiles.length == 0) {
             return OptionalThing.empty();
         }
+        return OptionalThing.of(logFiles[0]);
+    }
+
+    public OptionalThing<File> findLatestLogFile(String project, String task) {
+        final File logDir = new File(buildLogPath(project));
+        final File[] logFiles = logDir.listFiles((dir, name) -> name.startsWith("intro-last-execute-") && name.endsWith(task + ".log"));
+        if (logFiles == null || logFiles.length == 0) {
+            return OptionalThing.empty();
+        }
+        Arrays.sort(logFiles, (f1, f2) -> f1.lastModified() <= f2.lastModified() ? 1 : -1);
         return OptionalThing.of(logFiles[0]);
     }
 
