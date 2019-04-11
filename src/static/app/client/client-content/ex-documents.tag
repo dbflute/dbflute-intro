@@ -7,10 +7,18 @@
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
-    <div show="{ hasLog }">
-      <h4>Last Log</h4>
-      <div>{ logFileName }</div>
-      <div>{ logContent }</div>
+    <div show="{ latestLog }" class="ui list">
+      <h4 class="ui header">Latest Log</h4>
+      <div>
+        <span>Result: { latestLog.result }&nbsp;&nbsp;&nbsp;&nbsp;</span><a onclick="{ toggleLatestLog }">show more detail...</a>
+      </div>
+      <div show="{ latestLog.show }" class="ui message message-area">
+        <pre>
+          <code>
+            <raw content="{ latestLog.content }"></raw>
+          </code>
+        </pre>
+      </div>
     </div>
   </div>
 
@@ -66,11 +74,12 @@
     import _ApiFactory from '../../common/factory/ApiFactory'
     import _DbfluteTask from '../../common/DbfluteTask'
 
+
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
     let self = this
 
-    self.hasLog = false
+    self.latestLog = null
 
     // ===================================================================================
     //                                                                          Initialize
@@ -88,9 +97,11 @@
       })
       ApiFactory.latestLog(self.opts.projectName, 'doc').then((response) => {
         if (response.fileName) {
-          self.hasLog = true
-          self.logFileName = response.fileName
-          self.logContent = response.content
+          self.latestLog = {
+            result: response.fileName.includes('success') ? 'Success' : 'Failure',
+            content: response.content,
+            show: false,
+          }
         }
         self.update()
       })
@@ -153,6 +164,10 @@
 
     this.openHistoryHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
+    }
+    this.toggleLatestLog = () => {
+      self.latestLog.show = !self.latestLog.show
+      return false
     }
 
     // ===================================================================================
