@@ -38,17 +38,21 @@ public class DfpropSchemaPolicyResult {
 
     public static class TableMap {
         List<Theme> themeList;
+        List<String> statementList;
 
         public TableMap(SchemaPolicyTableMap tableMap) {
             this.themeList = tableMap.themeList.stream().map(theme -> new Theme(theme)).collect(Collectors.toList());
+            this.statementList = tableMap.statementList;
         }
     }
 
     public static class ColumnMap {
         List<Theme> themeList;
+        List<String> statementList;
 
         public ColumnMap(SchemaPolicyColumnMap columnMap) {
             this.themeList = columnMap.themeList.stream().map(theme -> new Theme(theme)).collect(Collectors.toList());
+            this.statementList = columnMap.statementList;
         }
     }
 
