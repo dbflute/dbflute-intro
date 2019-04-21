@@ -117,6 +117,7 @@ public class TaskExecutionLogic {
         }
         int resultCode = 0;
         boolean schemaNotSynchronized = false;
+        boolean schemaPolicyViolated = false;
         StringBuilder logSb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
         ) {
@@ -137,6 +138,10 @@ public class TaskExecutionLogic {
                 if (isSchemaNotSynchronized(line)) {
                     schemaNotSynchronized = true;
                 }
+
+                if (isSchemaPolicyViolated(line)) {
+                    schemaPolicyViolated = true;
+                }
             }
         } catch (IOException e) {
             if (isNazoErrorByJetty(e)) { // #for_now may be unneeded by quitting output stream by jflute
@@ -151,6 +156,7 @@ public class TaskExecutionLogic {
             resultCode = waitForProcessEnding(process);
         }
         throwIfSchemaNotSynchronized(schemaNotSynchronized, resultCode, logSb);
+        throwIfSchemaPolicyViolated(schemaPolicyViolated, resultCode, logSb);
         handleErrorResultCode(resultCode, logSb);
         return logSb.toString();
     }
@@ -165,6 +171,10 @@ public class TaskExecutionLogic {
 
     private boolean isSchemaNotSynchronized(String line) {
         return line.contains("org.dbflute.exception.DfSchemaSyncCheckGhastlyTragedyException");
+    }
+
+    private boolean isSchemaPolicyViolated(String line) {
+        return line.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException");
     }
 
     private boolean isNazoErrorByJetty(IOException e) {
@@ -185,6 +195,14 @@ public class TaskExecutionLogic {
         if (schemaNotSynchronized) {
             String msg = "Schema not synchronized";
             throw new SchemaNotSynchronizedException(msg, resultCode, logSb.toString());
+        }
+    }
+
+    private void throwIfSchemaPolicyViolated(boolean schemaPolicyViolated, int resultCode, StringBuilder logSb)
+            throws SchemaPolicyViolatedException {
+        if (schemaPolicyViolated) {
+            String msg = "Schema Policy is violated";
+            throw new SchemaPolicyViolatedException(msg, resultCode, logSb.toString());
         }
     }
 
@@ -221,6 +239,14 @@ public class TaskExecutionLogic {
         private static final long serialVersionUID = 1L;
 
         public SchemaNotSynchronizedException(String msg, int resultCode, String processLog) {
+            super(msg, resultCode, processLog);
+        }
+    }
+
+    public static class SchemaPolicyViolatedException extends TaskErrorResultException {
+        private static final long serialVersionUID = 1L;
+
+        public SchemaPolicyViolatedException(String msg, int resultCode, String processLog) {
             super(msg, resultCode, processLog);
         }
     }

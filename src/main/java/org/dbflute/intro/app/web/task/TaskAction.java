@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaNotSynchronizedException;
+import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaPolicyViolatedException;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.TaskErrorResultException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
@@ -68,7 +69,7 @@ public class TaskAction extends IntroBaseAction {
         try {
             String log = taskExecutionLogic.execute(project, taskTypeList, env);
             loggingLastSuccess(project, instruction, log);
-        } catch (SchemaNotSynchronizedException e) {
+        } catch (SchemaNotSynchronizedException | SchemaPolicyViolatedException e) {
             return asJson(new TaskExecutionResult(false));
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
