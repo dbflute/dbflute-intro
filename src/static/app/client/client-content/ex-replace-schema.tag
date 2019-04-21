@@ -74,7 +74,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      riot.mount('latest-log', { projectName: self.opts.projectName, task: 'replaceSchema' })
+      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'replaceSchema' })[0]
     }
 
     // ===================================================================================
@@ -97,6 +97,7 @@
           self.resultModal.show(message)
         }).finally(() => {
           self.refs.executeModal.hide()
+          self.latestLog.updateLatestLog()
         })
       })
     }

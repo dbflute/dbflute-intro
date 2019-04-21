@@ -92,7 +92,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      riot.mount('latest-log', { projectName: self.opts.projectName, task: 'doc' })
+      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'doc' })[0]
     }
 
     this.registerModalEvent = () => {
@@ -159,6 +159,7 @@
         self.resultModal.show(message)
       }).finally(() => {
         self.refs.generateModal.hide()
+        self.latestLog.updateLatestLog()
       })
     }
   </script>

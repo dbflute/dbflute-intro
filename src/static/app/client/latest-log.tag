@@ -29,6 +29,10 @@
     let self = this
 
     this.on('mount', () => {
+      self.updateLatestLog()
+    })
+
+    this.updateLatestLog = () => {
       ApiFactory.latestLog(self.opts.projectName, self.opts.task).then((response) => {
         if (response.fileName) {
           self.latestLog = {
@@ -39,7 +43,7 @@
         }
         self.update()
       })
-    })
+    }
 
     this.toggleLatestLog = () => {
       self.latestLog.show = !self.latestLog.show
