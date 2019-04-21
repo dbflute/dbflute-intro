@@ -146,7 +146,7 @@
       ApiFactory.openAlterDir(self.opts.projectName)
     }
 
-    this.alterItemClick = (alterItem, e) => {
+    this.alterItemClick = (alterItem) => {
       alterItem.show = !(alterItem.show)
       return false
     }
