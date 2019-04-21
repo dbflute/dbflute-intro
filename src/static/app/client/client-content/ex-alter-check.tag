@@ -40,8 +40,8 @@
         </div>
       </ul>
     </div>
-    <div class="latest-log">
-      <latest-log></latest-log>
+    <div class="latest-result">
+      <latest-result></latest-result>
     </div>
   </div>
 
@@ -54,7 +54,7 @@
   <result-modal></result-modal>
 
   <style>
-    .latest-log {
+    .latest-result {
       margin-top: 1em;
     }
   </style>
@@ -105,31 +105,31 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
-      self.updateLatestLogText(opts.client)
+      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
+      self.updateLatestResultText(opts.client)
     }
 
-    this.updateLatestLogText = (client) => {
-      if (!self.latestLog) {
+    this.updateLatestResultText = (client) => {
+      if (!self.latestResult) {
         return
       }
       if (client.ngMark ==='previous-NG') {
-        self.latestLog.failure = {
+        self.latestResult.failure = {
           title: 'Found problems on Previous DDL.',
           message: 'Retry save previous.',
         }
       } else if (client.ngMark ==='alter-NG') {
-        self.latestLog.failure = {
+        self.latestResult.failure = {
           title: 'Found problems on Alter DDL.',
           message: 'Complete your alter DDL, referring to AlterCheckResultHTML.',
         }
       } else if (client.ngMark ==='next-NG') {
-        self.latestLog.failure = {
+        self.latestResult.failure = {
           title: 'Found problems on Next DDL.',
           message: 'Fix your DDL and data grammatically.',
         }
       }
-      self.latestLog.success = {
+      self.latestResult.success = {
         title: 'Alter Check Successfully finished',
       }
     }
@@ -189,8 +189,8 @@
             client: response
           })
         })
-        self.latestLog.updateLatestLog()
-        self.updateLatestLogText(client)
+        self.latestResult.updateLatestResult()
+        self.updateLatestResultText(client)
       })
     }
   </script>

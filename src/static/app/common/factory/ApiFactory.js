@@ -116,7 +116,7 @@ export default class ApiFactory {
     });
   }
 
-  latestLog(projectName, task) {
+  latestResult(projectName, task) {
     return ffetch.get(`api/log/${projectName}/${task}/latest`)
   }
 

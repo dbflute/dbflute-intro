@@ -7,8 +7,8 @@
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
-    <div class="latest-log">
-      <latest-log></latest-log>
+    <div class="latest-result">
+      <latest-result></latest-result>
     </div>
   </div>
 
@@ -61,7 +61,7 @@
   <result-modal></result-modal>
 
   <style>
-    .latest-log {
+    .latest-result {
       margin-top: 1em;
     }
   </style>
@@ -92,7 +92,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'doc' })[0]
+      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
     }
 
     this.registerModalEvent = () => {
@@ -159,7 +159,7 @@
         self.resultModal.show(message)
       }).finally(() => {
         self.refs.generateModal.hide()
-        self.latestLog.updateLatestLog()
+        self.latestResult.updateLatestResult()
       })
     }
   </script>

@@ -10,8 +10,8 @@
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
       Check Schema (schema-sync-check)
     </button>
-    <div class="latest-log">
-      <latest-log></latest-log>
+    <div class="latest-result">
+      <latest-result></latest-result>
     </div>
   </div>
 
@@ -51,7 +51,7 @@
   <result-modal></result-modal>
 
   <style>
-    .latest-log {
+    .latest-result {
       margin-top: 1em;
     }
   </style>
@@ -90,7 +90,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'schemaSyncCheck' })[0]
+      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'schemaSyncCheck' })[0]
     }
 
     this.registerModalEvent = () => {
@@ -156,7 +156,7 @@
         self.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
-        self.latestLog.updateLatestLog()
+        self.latestResult.updateLatestResult()
       })
     }
   </script>

@@ -2,8 +2,8 @@
   <div class="ui container">
     <h3>Replace Schema</h3>
     <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
-    <div class="latest-log">
-      <latest-log></latest-log>
+    <div class="latest-result">
+      <latest-result></latest-result>
     </div>
     <h4 class="ui header">Play SQL</h4>
     <div class="ui segment" title="PlaySQL">
@@ -27,7 +27,7 @@
   <result-modal></result-modal>
 
   <style>
-    .latest-log {
+    .latest-result {
       margin-top: 1em;
     }
   </style>
@@ -74,7 +74,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'replaceSchema' })[0]
+      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'replaceSchema' })[0]
     }
 
     // ===================================================================================
@@ -97,7 +97,7 @@
           self.resultModal.show(message)
         }).finally(() => {
           self.refs.executeModal.hide()
-          self.latestLog.updateLatestLog()
+          self.latestResult.updateLatestResult()
         })
       })
     }

@@ -74,7 +74,7 @@ public class LogPhysicalLogic {
         return OptionalThing.of(logFiles[0]);
     }
 
-    public OptionalThing<File> findLatestLogFile(String project, String task) {
+    public OptionalThing<File> findLatestResultFile(String project, String task) {
         final File logDir = new File(buildLogPath(project));
         final File[] logFiles = logDir.listFiles((dir, name) -> name.startsWith("intro-last-execute-") && name.endsWith(task + ".log"));
         if (logFiles == null || logFiles.length == 0) {
