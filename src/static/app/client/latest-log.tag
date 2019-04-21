@@ -2,7 +2,10 @@
   <div show="{ latestLog }">
     <h4 class="ui header">Latest Log</h4>
     <div class="ui { latestLog.success ? 'positive' : 'negative' } message">
-      <span>Result: { latestLog.success ? 'Success' : 'Failure' }&nbsp;&nbsp;&nbsp;&nbsp;</span><a onclick="{ toggleLatestLog }">{ latestLog.show ? 'hide detail...' : 'show more detail...' }</a>
+      <h4>{ latestLog.success ? success.title : failure.title }</h4>
+      <p show="{ latestLog.success && success.message }">{ success.message }</p>
+      <p show="{ !latestLog.success && failure.message }">{ failure.message }</p>
+      <a onclick="{ toggleLatestLog }">{ latestLog.show ? 'hide detail...' : 'show more detail...' }</a>
       <div show="{ latestLog.show }" class="ui message message-area">
         <pre>
           <code>
@@ -31,6 +34,16 @@
     this.on('mount', () => {
       self.updateLatestLog()
     })
+
+    this.success = {
+      title: 'Result: Success',
+      message: null,
+    }
+
+    this.failure = {
+      title: 'Result: Failure',
+      message: null,
+    }
 
     this.updateLatestLog = () => {
       ApiFactory.latestLog(self.opts.projectName, self.opts.task).then((response) => {
