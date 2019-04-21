@@ -151,18 +151,6 @@
       closable: false
     }
 
-    // -----------------------------------------------------
-    //                                                  Show
-    //                                                  ----
-    this.showAlterFailureLog = () => {
-      let fileName = 'intro-last-execute-failure-alterCheck.log'
-      ApiFactory.getLog(self.opts.projectName, fileName).then((res) => {
-        observable.trigger('result', {header: fileName, messages: [res.content], modalSize: 'large'})
-      }).catch(() => {
-        self.resultModal.show('log file not found')
-      })
-    }
-
     // ===================================================================================
     //                                                                       Open Document
     //                                                                       =============
