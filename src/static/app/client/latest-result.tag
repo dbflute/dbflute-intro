@@ -1,5 +1,5 @@
 <latest-result>
-  <div show="{ latestResult }">
+  <div show="{ latestResult.loaded }">
     <h4 class="ui header">Latest Result</h4>
     <div class="ui { latestResult.success ? 'positive' : 'negative' } message">
       <h4>{ latestResult.success ? success.title : failure.title }</h4>
@@ -30,7 +30,9 @@
     const ApiFactory = new _ApiFactory()
     let self = this
 
-    self.latestResult = {}
+    self.latestResult = {
+      loaded: false
+    }
 
     this.on('mount', () => {
       self.updateLatestResult()
@@ -53,6 +55,7 @@
             success: response.fileName.includes('success'),
             content: response.content,
             show: false,
+            loaded: true
           }
         }
         self.update()

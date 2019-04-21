@@ -1,7 +1,6 @@
 <ex-schema-policy-check>
   <div class="ui container">
     <h3>Schema Policy Check</h3>
-    <button class="ui positive button" onclick="{ goToSchemaPolicySetting }">Edit Policy Check</button>
     <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
     <div class="ui info message">
       <div class="header">What is "Check Policy"?</div>
@@ -10,13 +9,14 @@
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
+    <h4>Settings</h4>
     <div class="ui segment" title="SchemaPolicy">
       <div class="ui form">
         <div class="row">
           <div class="column">
             <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h3 class="">Theme</h3>
+                <h5>Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
                     <div class="ui left floated">
@@ -33,7 +33,7 @@
                 <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h3 >Theme</h3>
+                <h5>Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
                     <div class="ui left floated">
@@ -47,7 +47,7 @@
                     </div>
                   </div>
                 </div>
-                <h3 >Statement</h3>
+                <h5>Statement</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <a class="item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
                     <div class="content">
@@ -58,7 +58,7 @@
                 <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h3>Theme</h3>
+                <h5>Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
                     <div class="ui left floated">
@@ -72,7 +72,7 @@
                     </div>
                   </div>
                 </div>
-                <h3 >Statement</h3>
+                <h5>Statement</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <a class="item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="content">
@@ -144,13 +144,6 @@
       wholeMap : 'Whole Schema Policy',
       tableMap : 'Table Schema Policy',
       columnMap : 'Column Schema Policy'
-    }
-
-    // -----------------------------------------------------
-    //                                                  GoTo
-    //                                                  ----
-    this.goToSchemaPolicySetting = () => {
-      route(`operate/${self.opts.projectName}/settings/schema-policy`)
     }
 
     // ===================================================================================
