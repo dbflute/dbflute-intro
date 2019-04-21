@@ -7,18 +7,8 @@
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
-    <div show="{ latestLog }" class="ui list">
-      <h4 class="ui header">Latest Log</h4>
-      <div class="ui { latestLog.success ? 'positive' : 'negative' } message">
-        <span>Result: { latestLog.success ? 'Success' : 'Failure' }&nbsp;&nbsp;&nbsp;&nbsp;</span><a onclick="{ toggleLatestLog }">show more detail...</a>
-        <div show="{ latestLog.show }" class="ui message message-area">
-        <pre>
-          <code>
-            <raw content="{ latestLog.content }"></raw>
-          </code>
-        </pre>
-        </div>
-      </div>
+    <div class="latest-log">
+      <latest-log></latest-log>
     </div>
   </div>
 
@@ -71,10 +61,8 @@
   <result-modal></result-modal>
 
   <style>
-    pre {
-      overflow: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
+    .latest-log {
+      margin-top: 1em;
     }
   </style>
 
@@ -82,19 +70,16 @@
     import _ApiFactory from '../../common/factory/ApiFactory'
     import _DbfluteTask from '../../common/DbfluteTask'
 
-
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
     let self = this
-
-    self.latestLog = null
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
       self.prepareCurrentProject()
-      self.prepareModal()
+      self.prepareComponents()
       self.registerModalEvent()
     })
 
@@ -103,20 +88,11 @@
         self.documentSettingModal.documentSetting = response
         self.update()
       })
-      ApiFactory.latestLog(self.opts.projectName, 'doc').then((response) => {
-        if (response.fileName) {
-          self.latestLog = {
-            success: response.fileName.includes('success'),
-            content: response.content,
-            show: false,
-          }
-        }
-        self.update()
-      })
     }
 
-    this.prepareModal = () => {
+    this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
+      riot.mount('latest-log', { projectName: self.opts.projectName })
     }
 
     this.registerModalEvent = () => {
@@ -172,10 +148,6 @@
 
     this.openHistoryHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
-    }
-    this.toggleLatestLog = () => {
-      self.latestLog.show = !self.latestLog.show
-      return false
     }
 
     // ===================================================================================
