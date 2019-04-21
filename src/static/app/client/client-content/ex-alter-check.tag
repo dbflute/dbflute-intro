@@ -110,7 +110,7 @@
     }
 
     this.prepareModal = () => {
-      self.resultModal = riot.mount('result-modal')[0]
+      self.resultModal = self.riot.mount('result-modal')[0]
     }
 
     // ===================================================================================
@@ -146,7 +146,7 @@
       ApiFactory.openAlterDir(self.opts.projectName)
     }
 
-    this.alterItemClick = (alterItem, e) => {
+    this.alterItemClick = (alterItem) => {
       alterItem.show = !(alterItem.show)
       return false
     }

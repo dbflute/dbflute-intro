@@ -64,7 +64,7 @@
     }
 
     this.prepareModal = () => {
-      self.resultModal = riot.mount('result-modal')[0]
+      self.resultModal = self.riot.mount('result-modal')[0]
     }
 
     // ===================================================================================
