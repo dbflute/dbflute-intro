@@ -42,8 +42,6 @@
         tagName = 'ex-schema-policy-check'
       } else if (menuType === 'settings' && menuName === 'database-info') {
         tagName = 'st-database-info'
-      } else if (menuType === 'settings' && menuName === 'schema-policy') {
-        tagName = 'st-schema-policy'
       } else if (menuType === 'files' && menuName === 'logs') {
         tagName = 'fl-logs'
       }

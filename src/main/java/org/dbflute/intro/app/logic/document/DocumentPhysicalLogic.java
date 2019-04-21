@@ -113,6 +113,7 @@ public class DocumentPhysicalLogic {
                 .filter(files -> files != null)
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
+                .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
                 .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
                 .collect(Collectors.toList());
     }

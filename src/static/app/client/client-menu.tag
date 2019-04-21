@@ -36,10 +36,6 @@
            onclick="{ goToMenuItem.bind(this, 'settings', 'database-info') }">
           Database Info
         </a>
-        <a class="{ 'active': isActiveItem('settings', 'schema-policy') } item"
-           onclick="{ goToMenuItem.bind(this, 'settings', 'schema-policy') }">
-          Schema Policy
-        </a>
       </div>
     </div>
     <div class="item">
