@@ -10,6 +10,9 @@
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
       Check Schema (schema-sync-check)
     </button>
+    <div class="latest-log">
+      <latest-log></latest-log>
+    </div>
   </div>
 
   <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
@@ -47,6 +50,12 @@
 
   <result-modal></result-modal>
 
+  <style>
+    .latest-log {
+      margin-top: 1em;
+    }
+  </style>
+
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
     import _DbfluteTask from '../../common/DbfluteTask'
@@ -81,6 +90,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
+      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'schemaSyncCheck' })[0]
     }
 
     this.registerModalEvent = () => {
@@ -146,6 +156,7 @@
         self.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
+        self.latestLog.updateLatestLog()
       })
     }
   </script>

@@ -7,6 +7,9 @@
       <div class="header">What is "Check Policy"?</div>
       <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
     </div>
+    <div class="latest-log">
+      <latest-log></latest-log>
+    </div>
   </div>
 
   <su-modal modal="{ checkModal }" class="large" ref="checkModal">
@@ -16,6 +19,12 @@
   </su-modal>
 
   <result-modal></result-modal>
+
+  <style>
+    .latest-log {
+      margin-top: 1em;
+    }
+  </style>
 
   <script>
     import _DbfluteTask from '../../common/DbfluteTask'
@@ -32,6 +41,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
+      self.latestLog = riot.mount('latest-log', { projectName: self.opts.projectName, task: 'doc' })[0]
     }
 
     // ===================================================================================
@@ -60,6 +70,7 @@
         self.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
+        self.latestLog.updateLatestLog()
       })
     }
   </script>
