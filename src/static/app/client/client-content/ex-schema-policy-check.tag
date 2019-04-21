@@ -15,7 +15,7 @@
             <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h3 class="">Theme</h3>
-                <div class="ui divided items" if="{opts.schemapolicy.wholeMap}">
+                <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
                     <div class="ui left floated">
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
@@ -32,7 +32,7 @@
               </su-tab>
               <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h3 >Theme</h3>
-                <div class="ui divided items" if="{opts.schemapolicy.tableMap}">
+                <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
                     <div class="ui left floated">
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
@@ -45,11 +45,19 @@
                     </div>
                   </div>
                 </div>
+                <h3 >Statement</h3>
+                <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
+                  <a class="item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
+                    <div class="content">
+                      <div class="header">{ statement }</div>
+                    </div>
+                  </a>
+                </div>
                 <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h3>Theme</h3>
-                <div class="ui divided items" if="{opts.schemapolicy.columnMap}">
+                <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
                     <div class="ui left floated">
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>
@@ -61,6 +69,14 @@
                       </div>
                     </div>
                   </div>
+                </div>
+                <h3 >Statement</h3>
+                <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
+                  <a class="item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
+                    <div class="content">
+                      <div class="header">{ statement }</div>
+                    </div>
+                  </a>
                 </div>
                 <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
