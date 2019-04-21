@@ -5,7 +5,7 @@
       <h4>{ latestResult.success ? success.title : failure.title }</h4>
       <p show="{ latestResult.success && success.message }">{ success.message }</p>
       <p show="{ !latestResult.success && failure.message }">{ failure.message }</p>
-      <a onclick="{ toggleLatestResult }">{ latestResult.show ? 'hide detail...' : 'show more detail...' }</a>
+      <a onclick="{ toggleLatestResult }">{ latestResult.show ? 'hide latest log' : 'show latest log' }</a>
       <div show="{ latestResult.show }" class="ui message message-area">
         <pre>
           <code>
@@ -28,8 +28,9 @@
     import _ApiFactory from '../common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
-
     let self = this
+
+    self.latestResult = {}
 
     this.on('mount', () => {
       self.updateLatestResult()
