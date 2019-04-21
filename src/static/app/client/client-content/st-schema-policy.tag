@@ -137,10 +137,10 @@
     //                                                                          ==========
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
-      this.prepareModal()
+      this.prepareComponents()
     })
 
-    this.prepareModal = () => {
+    this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
   </script>

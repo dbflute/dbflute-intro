@@ -92,7 +92,7 @@
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
-      riot.mount('latest-log', { projectName: self.opts.projectName })
+      riot.mount('latest-log', { projectName: self.opts.projectName, task: 'doc' })
     }
 
     this.registerModalEvent = () => {

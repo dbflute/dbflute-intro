@@ -29,7 +29,7 @@
     let self = this
 
     this.on('mount', () => {
-      ApiFactory.latestLog(self.opts.projectName, 'doc').then((response) => {
+      ApiFactory.latestLog(self.opts.projectName, self.opts.task).then((response) => {
         if (response.fileName) {
           self.latestLog = {
             success: response.fileName.includes('success'),

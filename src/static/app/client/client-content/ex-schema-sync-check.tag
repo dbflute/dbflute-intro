@@ -66,7 +66,7 @@
     //                                                                          ==========
     this.on('mount', () => {
       self.initSyncSchemaSetting()
-      self.prepareModal()
+      self.prepareComponents()
       self.registerModalEvent()
     })
 
@@ -79,7 +79,7 @@
       })
     }
 
-    this.prepareModal = () => {
+    this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
 

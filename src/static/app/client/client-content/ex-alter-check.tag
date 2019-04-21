@@ -82,7 +82,7 @@
     this.on('mount', () => {
       self.prepareEditingAlterSqls(self.opts.client.editingAlterSqls)
       self.prepareStackedAlterSqls(self.opts.client.stackedAlterSqls)
-      self.prepareModal()
+      self.prepareComponents()
     })
 
     this.prepareEditingAlterSqls = (editingAlterSqls) => {
@@ -109,7 +109,7 @@
       self.update()
     }
 
-    this.prepareModal = () => {
+    this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
 

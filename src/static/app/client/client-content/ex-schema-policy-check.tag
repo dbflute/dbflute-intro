@@ -27,10 +27,10 @@
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      self.prepareModal()
+      self.prepareComponents()
     })
 
-    this.prepareModal = () => {
+    this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
     }
 

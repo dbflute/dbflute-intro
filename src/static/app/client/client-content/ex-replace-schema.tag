@@ -2,6 +2,9 @@
   <div class="ui container">
     <h3>Replace Schema</h3>
     <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+    <div class="latest-log">
+      <latest-log></latest-log>
+    </div>
     <h4 class="ui header">Play SQL</h4>
     <div class="ui segment" title="PlaySQL">
       <su-dropdown items="{ playsqlDropDownItems }" ref="dropdown"></su-dropdown>
@@ -23,6 +26,12 @@
 
   <result-modal></result-modal>
 
+  <style>
+    .latest-log {
+      margin-top: 1em;
+    }
+  </style>
+
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory.js'
     import _DbfluteTask from '../../common/DbfluteTask'
@@ -42,7 +51,7 @@
     this.on('mount', () => {
       self.prepareSettings(self.opts.projectName)
       self.preparePlaysql(self.opts.projectName)
-      self.prepareModal()
+      self.prepareComponents()
     })
 
     this.prepareSettings = (projectName) => {
@@ -63,8 +72,9 @@
       })
     }
 
-    this.prepareModal = () => {
+    this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
+      riot.mount('latest-log', { projectName: self.opts.projectName, task: 'replaceSchema' })
     }
 
     // ===================================================================================
