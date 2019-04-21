@@ -2,8 +2,8 @@
   <div class="ui container">
     <h3>Alter Check</h3>
     <div class="ui list">
-      <div show="{ opts.client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
-      <div show="{ opts.client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
+      <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+      <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
     </div>
     <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
     <div show="{ editing && editingAlterSqls.length > 0 }" class="ui list">
@@ -70,6 +70,7 @@
     const DbfluteTask = new _DbfluteTask()
     let self = this
 
+    self.client = opts.client
     self.editing = false
     self.editingAlterSqls = []
     self.stackedAlterSqls = []
@@ -78,9 +79,10 @@
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      self.prepareEditingAlterSqls(self.opts.client.editingAlterSqls)
-      self.prepareStackedAlterSqls(self.opts.client.stackedAlterSqls)
+      self.prepareEditingAlterSqls(self.client.editingAlterSqls)
+      self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
       self.prepareComponents()
+      self.update()
     })
 
     this.prepareEditingAlterSqls = (editingAlterSqls) => {
@@ -95,7 +97,6 @@
       if (self.editingAlterSqls.length > 0) {
         self.editing = true
       }
-      self.update()
     }
 
     this.prepareStackedAlterSqls = (stackedAlterSqls) => {
@@ -107,16 +108,15 @@
           show: false,
         })
       })
-      self.update()
     }
 
     this.prepareComponents = () => {
       self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
-      self.updateLatestResultText(opts.client)
+      self.updateLatestResult(self.client)
     }
 
-    this.updateLatestResultText = (client) => {
+    this.updateLatestResult = (client) => {
       if (!self.latestResult) {
         return
       }
@@ -139,6 +139,7 @@
       self.latestResult.success = {
         title: 'Alter Check Successfully finished',
       }
+      self.latestResult.updateLatestResult()
     }
 
     // ===================================================================================
@@ -180,12 +181,12 @@
         })
       }).finally(() => {
         ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.update({
-            client: response
-          })
+          self.client = response
+          self.updateLatestResult(self.client)
+          self.prepareEditingAlterSqls(self.client.editingAlterSqls)
+          self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
+          self.update()
         })
-        self.latestResult.updateLatestResult()
-        self.updateLatestResultText(client)
       })
     }
   </script>
