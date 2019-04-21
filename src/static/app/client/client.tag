@@ -46,7 +46,7 @@
         tagName = 'fl-logs'
       }
       if (tagName) {
-        self.riot.mount('client-content', tagName, { projectName: this.opts.projectName, client: this.client })
+        riot.mount('client-content', tagName, { projectName: this.opts.projectName, client: this.client })
       }
     }
   </script>

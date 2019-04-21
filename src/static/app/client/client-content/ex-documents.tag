@@ -82,7 +82,7 @@
     }
 
     this.prepareModal = () => {
-      self.resultModal = self.riot.mount('result-modal')[0]
+      self.resultModal = riot.mount('result-modal')[0]
     }
 
     this.registerModalEvent = () => {
