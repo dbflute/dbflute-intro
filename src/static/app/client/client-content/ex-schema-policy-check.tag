@@ -90,12 +90,17 @@
   </div>
 
   <su-modal modal="{ checkModal }" class="large" ref="checkModal">
-    <div class="description">
-      Checking...
+    <div class="content" if="{opts.modal.status === 'Check'}">
+      <div class="header" >{ opts.modal.message }</div>
+    </div>
+    <div class="ui positive message" if="{opts.modal.status === 'Success'}">
+      <h4>{ opts.modal.message }</h4>
+    </div>
+    <div class="ui negative message" if="{opts.modal.status === 'Failure'}">
+      <h4>{ opts.modal.message }</h4>
+      <a class="" if="{opts.modal.status === 'Failure'}" onclick="{ parent.openSchemaHTML }">Check Schema Policy Violation</a>
     </div>
   </su-modal>
-
-  <result-modal></result-modal>
 
   <style>
     .latest-result {
@@ -125,7 +130,6 @@
     })
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
     }
 
@@ -137,6 +141,7 @@
     //                                            ----------
     this.checkModal = {
       header : 'SchemaPolicyCheck',
+      status : 'Check',
       closable: false
     }
 
@@ -178,12 +183,32 @@
     //                                                                        ============
     this.schemaPolicyCheckTask = () => {
       self.refs.checkModal.show()
+      self.checkModal.status = 'Check'
+      self.checkModal.message = 'Checking...'
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
-        self.resultModal.show(message)
+        if (message === 'success') {
+          self.checkModal.message = 'Success!!'
+          self.checkModal.status = 'Success'
+          self.checkModal.closable = true
+        } else if (message === 'failure'){
+          self.checkModal.message = 'Failure: You need check violation.'
+          self.checkModal.status = 'Failure'
+          self.checkModal.closable = true
+        }
+        self.update()
       }).finally(() => {
-        self.refs.checkModal.hide()
+        if (self.checkModal.status === 'Check') {
+          self.refs.checkModal.hide()
+        }
         self.latestResult.updateLatestResult()
       })
+    }
+
+    // ===================================================================================
+    //                                                                       Open Document
+    //                                                                       =============
+    this.openSchemaHTML = () => {
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
   </script>
 </ex-schema-policy-check>
