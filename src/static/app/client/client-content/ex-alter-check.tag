@@ -6,8 +6,8 @@
       <div show="{ opts.client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
     </div>
     <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
-    <div show="{ editingAlterSqls !== undefined && editingAlterSqls.length > 0 }" class="ui list">
-      <h4 class="ui header">Checked Alter SQL List</h4>
+    <div show="{ editing && editingAlterSqls.length > 0 }" class="ui list">
+      <h4 class="ui header">Editing Alter SQL List</h4>
       <ul>
         <div each="{ alterItem in editingAlterSqls }">
           <li>
@@ -23,7 +23,7 @@
         </div>
       </ul>
     </div>
-    <div show="{ stackedAlterSqls !== undefined && stackedAlterSqls.length > 0 }" class="ui list">
+    <div show="{ !editing && stackedAlterSqls.length > 0 }" class="ui list">
       <h4 class="ui header">Checked Alter SQL List</h4>
       <ul>
         <div each="{ alterItem in stackedAlterSqls }">
@@ -70,6 +70,10 @@
     const DbfluteTask = new _DbfluteTask()
     let self = this
 
+    self.editing = false
+    self.editingAlterSqls = []
+    self.stackedAlterSqls = []
+
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
@@ -88,6 +92,9 @@
           show: false,
         })
       })
+      if (self.editingAlterSqls.length > 0) {
+        self.editing = true
+      }
       self.update()
     }
 
