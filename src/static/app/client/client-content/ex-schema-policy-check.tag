@@ -142,7 +142,22 @@
     this.checkModal = {
       header : 'SchemaPolicyCheck',
       status : 'Check',
-      closable: false
+      closable: false,
+      check : function() {
+        self.checkModal.status = 'Check'
+        self.checkModal.message = 'Checking...'
+        self.checkModal.closable = false
+      },
+      success : function() {
+        self.checkModal.status = 'Success'
+        self.checkModal.message = 'Success!!'
+        self.checkModal.closable = true
+      },
+      fail : function () {
+        self.checkModal.status = 'Failure'
+        self.checkModal.message = 'Failure: You need check violation.'
+        self.checkModal.closable = true
+      }
     }
 
     this.tabTitles = {
@@ -183,17 +198,12 @@
     //                                                                        ============
     this.schemaPolicyCheckTask = () => {
       self.refs.checkModal.show()
-      self.checkModal.status = 'Check'
-      self.checkModal.message = 'Checking...'
+      self.checkModal.check()
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
         if (message === 'success') {
-          self.checkModal.message = 'Success!!'
-          self.checkModal.status = 'Success'
-          self.checkModal.closable = true
+          self.checkModal.success()
         } else if (message === 'failure'){
-          self.checkModal.message = 'Failure: You need check violation.'
-          self.checkModal.status = 'Failure'
-          self.checkModal.closable = true
+          self.checkModal.fail()
         }
         self.update()
       }).finally(() => {
