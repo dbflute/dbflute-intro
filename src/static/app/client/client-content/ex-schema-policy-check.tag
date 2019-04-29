@@ -98,7 +98,7 @@
     </div>
     <div class="ui negative message" if="{opts.modal.status === 'Failure'}">
       <h4>{ opts.modal.message }</h4>
-      <a class="" if="{opts.modal.status === 'Failure'}" onclick="{ parent.openSchemaHTML }">Check Schema Policy Violation</a>
+      <a class="" onclick="{ parent.openSchemaHTML }">Check Schema Policy Violation</a>
     </div>
   </su-modal>
 
