@@ -188,6 +188,8 @@ public class ClientAction extends IntroBaseAction {
         operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
         operation.ngMark = documentLogic.findAlterCheckNgMark(clientProject);
+        operation.editingAlterSqls = documentLogic.findAlterFiles(clientProject);
+        operation.stackedAlterSqls = documentLogic.findStackedAlterSqls(clientProject);
         return operation;
     }
 
@@ -198,6 +200,7 @@ public class ClientAction extends IntroBaseAction {
         client.databaseCode = basicInfoMap.getDatabase();
         client.languageCode = basicInfoMap.getTargetLanguage();
         client.containerCode = basicInfoMap.getTargetContainer();
+        client.dbfluteVersion = projectInfra.getDbfluteVersion();
     }
 
     // -----------------------------------------------------

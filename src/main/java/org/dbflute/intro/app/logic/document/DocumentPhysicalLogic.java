@@ -16,12 +16,29 @@
 package org.dbflute.intro.app.logic.document;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.IOUtils;
+import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
+import org.dbflute.util.DfStringUtil;
 
 /**
  * @author deco
@@ -36,6 +53,8 @@ public class DocumentPhysicalLogic {
     //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
+    private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
     //                                                                         Find/Exists
@@ -88,6 +107,17 @@ public class DocumentPhysicalLogic {
         return OptionalThing.empty();
     }
 
+    public List<AlterSqlBean> findAlterFiles(String clientProject) {
+        return findAlterDir(clientProject)
+                .map(dir -> dir.listFiles())
+                .filter(files -> files != null)
+                .map(files -> Arrays.stream(files))
+                .orElse(Stream.empty())
+                .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
+                .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .collect(Collectors.toList());
+    }
+
     public CDef.NgMark findAlterCheckNgMark(String clientProject) {
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
             if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
@@ -95,6 +125,34 @@ public class DocumentPhysicalLogic {
             }
         }
         return null;
+    }
+
+    public List<AlterSqlBean> findStackedAlterSqls(String clientProject) {
+        final String zipPath = buildCheckedAlterZipPath(clientProject);
+        if (zipPath != null) {
+            try {
+                return findAlterSqlsFromZip(zipPath);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<AlterSqlBean> findAlterSqlsFromZip(String zipPath) throws IOException {
+        final List<AlterSqlBean> alterSqls = new ArrayList<>();
+        final ZipFile zipFile = new ZipFile(zipPath);
+        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry entry = entries.nextElement();
+            final String fileName = entry.getName();
+            if (!DfStringUtil.contains(fileName, ".sql")) {
+                continue;
+            }
+            final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+            alterSqls.add(new AlterSqlBean(fileName, content));
+        }
+        return alterSqls;
     }
 
     // ===================================================================================
@@ -141,5 +199,22 @@ public class DocumentPhysicalLogic {
 
     private String buildMigrationPath(String clientProject, String type, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
+    }
+
+    private String buildCheckedAlterZipPath(String clientProject) {
+        final Path historyPath = Paths.get(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history"));
+        if (!Files.exists(historyPath)) {
+           return null;
+        }
+        try {
+            return Files.walk(historyPath)
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().startsWith("checked"))
+                    .map(path -> path.toString())
+                    .findFirst()
+                    .orElse(null);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to get checked alter schema zip file under the directory: " + historyPath, e);
+        }
     }
 }

@@ -8,27 +8,27 @@
     "build": "webpack --mode production"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-loader": "^7.1.3",
     "babel-preset-es2015-riot": "^1.1.0",
     "css-loader": "^1.0.0",
-    "eslint": "^4.18.1",
+    "eslint": "^5.16.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-html": "^3.1.1",
     "ffetch": "^0.1.1",
     "prismjs": "^1.15.0",
     "q": "^1.5.1",
-    "riot": "^3.9.1",
+    "riot": "^3.13.2",
     "riot-i18nlet": "^0.2.5",
     "riot-route": "^3.1.1",
     "riot-tag-loader": "^2.0.2",
     "rxjs": "^6.1.0",
-    "semantic-ui-riot": "^0.21.0",
+    "semantic-ui-riot": "^0.22.2",
     "style-loader": "^0.23.0",
     "vinyl-source-stream": "^2.0.0",
     "webpack": "^4.19.1",
-    "webpack-cli": "^2.0.12",
-    "webpack-dev-server": "^3.1.8"
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1"
   },
   "engines": {
     "node": ">=6.7.0"

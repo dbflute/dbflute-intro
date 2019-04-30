@@ -64,6 +64,17 @@ public class LogAction extends IntroBaseAction {
         });
     }
 
+    @Execute(urlPattern = "{}/{}/@word")
+    public JsonResponse<LogBean> latest(String project, String task) {
+        return logPhysicalLogic.findLatestResultFile(project, task).map((file) -> {
+            return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
+        }).orElseGet(() -> {
+            return JsonResponse.asEmptyBody();
+            //            String debugMsg = "not found any log files of " + task;
+            //            throw new Forced404NotFoundException(debugMsg, UserMessages.empty());
+        });
+    }
+
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<List<LogBean>> list(String project) {
         List<File> logFileList = logPhysicalLogic.findLogFileAllList(project);

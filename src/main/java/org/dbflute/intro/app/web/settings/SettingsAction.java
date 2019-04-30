@@ -21,9 +21,6 @@ import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.D
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
-import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
-import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
-import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.logic.settings.SettingsUpdateLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
@@ -34,7 +31,6 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
-import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -49,17 +45,9 @@ public class SettingsAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private TimeManager timeManager;
-    @Resource
-    private ClientUpdateLogic clientUpdateLogic;
-    @Resource
     private SettingsUpdateLogic settingsUpdateLogic;
     @Resource
     private ClientInfoLogic clientInfoLogic;
-    @Resource
-    private TestConnectionLogic testConnectionLogic;
-    @Resource
-    private DocumentPhysicalLogic documentLogic;
 
     // ===================================================================================
     //                                                                             Execute

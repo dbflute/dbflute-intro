@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaNotSynchronizedException;
+import org.dbflute.intro.app.logic.task.TaskExecutionLogic.SchemaPolicyViolatedException;
 import org.dbflute.intro.app.logic.task.TaskExecutionLogic.TaskErrorResultException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
@@ -32,6 +33,8 @@ import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -41,6 +44,11 @@ import org.lastaflute.web.response.JsonResponse;
  */
 @NotAvailableDecommentServer
 public class TaskAction extends IntroBaseAction {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final Logger logger = LoggerFactory.getLogger(TaskAction.class);
 
     // ===================================================================================
     //                                                                           Attribute
@@ -59,8 +67,10 @@ public class TaskAction extends IntroBaseAction {
     public JsonResponse<TaskExecutionResult> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         try {
-            taskExecutionLogic.execute(project, taskTypeList, env);
-        } catch (SchemaNotSynchronizedException e) {
+            String log = taskExecutionLogic.execute(project, taskTypeList, env);
+            loggingLastSuccess(project, instruction, log);
+        } catch (SchemaNotSynchronizedException | SchemaPolicyViolatedException e) {
+            loggingLastFailure(project, instruction, e.getProcessLog());
             return asJson(new TaskExecutionResult(false));
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
@@ -73,7 +83,19 @@ public class TaskAction extends IntroBaseAction {
         return asJson(new TaskExecutionResult(true));
     }
 
+    private void loggingLastSuccess(String project, AppCDef.TaskInstruction instruction, String msg) {
+        try {
+            logPhysicalLogic.logging(project, "intro-last-execute-success-" + instruction.code() + ".log", msg);
+        } catch (RuntimeException e) {
+            logger.error("logging is failure. file name : intro-last-execute-success-" + instruction.code() + ".log", e);
+        }
+    }
+
     private void loggingLastFailure(String project, AppCDef.TaskInstruction instruction, String msg) {
-        logPhysicalLogic.logging(project, "intro-last-execute-failure-" + instruction.code() + ".log", msg);
+        try {
+            logPhysicalLogic.logging(project, "intro-last-execute-failure-" + instruction.code() + ".log", msg);
+        } catch (RuntimeException e) {
+            logger.error("logging is failure. file name : intro-last-execute-failure-" + instruction.code() + ".log", e);
+        }
     }
 }

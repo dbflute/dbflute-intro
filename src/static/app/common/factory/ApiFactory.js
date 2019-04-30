@@ -116,6 +116,10 @@ export default class ApiFactory {
     });
   }
 
+  latestResult(projectName, task) {
+    return ffetch.get(`api/log/${projectName}/${task}/latest`)
+  }
+
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======

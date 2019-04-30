@@ -15,14 +15,6 @@
  */
 package org.dbflute.intro.app.logic.task;
 
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.util.ProcessUtil;
-import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.dbflute.optional.OptionalThing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +24,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.util.ProcessUtil;
+import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.dbflute.optional.OptionalThing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author p1us2er0
@@ -51,9 +52,11 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    public void execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
+    public String execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env)
+            throws TaskErrorResultException {
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
+        final StringBuilder logSb = new StringBuilder();
         for (ProcessBuilder processBuilder : dbfluteTaskList) {
             final Map<String, String> environment = processBuilder.environment();
             environment.put("pause_at_end", "n");
@@ -63,8 +66,9 @@ public class TaskExecutionLogic {
             });
             final String clientPath = introPhysicalLogic.buildClientPath(clientProject);
             processBuilder.directory(new File(clientPath));
-            executeCommand(processBuilder);
+            logSb.append(executeCommand(processBuilder));
         }
+        return logSb.toString();
     }
 
     // ===================================================================================
@@ -103,7 +107,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Process
     //                                                                             =======
-    private void executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException {
+    private String executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException {
         processBuilder.redirectErrorStream(true);
         Process process;
         try {
@@ -113,6 +117,7 @@ public class TaskExecutionLogic {
         }
         int resultCode = 0;
         boolean schemaNotSynchronized = false;
+        boolean schemaPolicyViolated = false;
         StringBuilder logSb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream())) // for getting console
         ) {
@@ -133,11 +138,15 @@ public class TaskExecutionLogic {
                 if (isSchemaNotSynchronized(line)) {
                     schemaNotSynchronized = true;
                 }
+
+                if (isSchemaPolicyViolated(line)) {
+                    schemaPolicyViolated = true;
+                }
             }
         } catch (IOException e) {
             if (isNazoErrorByJetty(e)) { // #for_now may be unneeded by quitting output stream by jflute
                 logger.debug("Nazo Error! {}", processBuilder, e);
-                return;
+                return logSb.toString();
             } else {
                 String msg = "Failed to execute the command: " + process;
                 throw new IllegalStateException(msg, e);
@@ -147,7 +156,9 @@ public class TaskExecutionLogic {
             resultCode = waitForProcessEnding(process);
         }
         throwIfSchemaNotSynchronized(schemaNotSynchronized, resultCode, logSb);
+        throwIfSchemaPolicyViolated(schemaPolicyViolated, resultCode, logSb);
         handleErrorResultCode(resultCode, logSb);
+        return logSb.toString();
     }
 
     private boolean isErrorMessageLine(String line) {
@@ -160,6 +171,10 @@ public class TaskExecutionLogic {
 
     private boolean isSchemaNotSynchronized(String line) {
         return line.contains("org.dbflute.exception.DfSchemaSyncCheckGhastlyTragedyException");
+    }
+
+    private boolean isSchemaPolicyViolated(String line) {
+        return line.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException");
     }
 
     private boolean isNazoErrorByJetty(IOException e) {
@@ -175,10 +190,19 @@ public class TaskExecutionLogic {
         }
     }
 
-    private void throwIfSchemaNotSynchronized(boolean schemaNotSynchronized, int resultCode, StringBuilder logSb) throws SchemaNotSynchronizedException {
+    private void throwIfSchemaNotSynchronized(boolean schemaNotSynchronized, int resultCode, StringBuilder logSb)
+            throws SchemaNotSynchronizedException {
         if (schemaNotSynchronized) {
             String msg = "Schema not synchronized";
             throw new SchemaNotSynchronizedException(msg, resultCode, logSb.toString());
+        }
+    }
+
+    private void throwIfSchemaPolicyViolated(boolean schemaPolicyViolated, int resultCode, StringBuilder logSb)
+            throws SchemaPolicyViolatedException {
+        if (schemaPolicyViolated) {
+            String msg = "Schema Policy is violated";
+            throw new SchemaPolicyViolatedException(msg, resultCode, logSb.toString());
         }
     }
 
@@ -215,6 +239,14 @@ public class TaskExecutionLogic {
         private static final long serialVersionUID = 1L;
 
         public SchemaNotSynchronizedException(String msg, int resultCode, String processLog) {
+            super(msg, resultCode, processLog);
+        }
+    }
+
+    public static class SchemaPolicyViolatedException extends TaskErrorResultException {
+        private static final long serialVersionUID = 1L;
+
+        public SchemaPolicyViolatedException(String msg, int resultCode, String processLog) {
             super(msg, resultCode, processLog);
         }
     }

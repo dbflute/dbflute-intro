@@ -1,10 +1,12 @@
 <main>
-  <div>
-    <h2>DBFlute Client</h2>
-    <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
-  </div>
-  <table class="ui table">
-    <thead>
+  <div class="ui container">
+    <div>
+      <h2>DBFlute Client</h2>
+      <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
+    </div>
+
+    <table class="ui table">
+      <thead>
       <tr>
         <th data-is="i18n">LABEL_projectName</th>
         <th data-is="i18n">LABEL_databaseCode</th>
@@ -12,8 +14,8 @@
         <th data-is="i18n">LABEL_containerCode</th>
         <th></th>
       </tr>
-    </thead>
-    <tbody class="list-group">
+      </thead>
+      <tbody class="list-group">
       <tr each="{client in clientList}">
         <td>
           <a onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
@@ -25,36 +27,37 @@
           <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
         </td>
       </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 
-  <h2>DBFlute Engine</h2>
-  <button type="button" class="ui button primary" onclick="{ showDownloadModal }">
-    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
-  </button>
+    <h2>DBFlute Engine</h2>
+    <button type="button" class="ui button primary" onclick="{ showDownloadModal }">
+      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
+    </button>
 
-  <table class="ui table">
-    <thead>
+    <table class="ui table">
+      <thead>
       <tr>
         <th data-is="i18n">LABEL_engineVersion</th>
         <th></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <tr each="{version in versions}">
         <td>{ version }</td>
         <td class="right aligned">
           <input type="button" class="ui negative button" value="Remove" onclick="{ removeEngine.bind(this,version) }" />
         </td>
       </tr>
-    </tbody>
-  </table>
-  <h3>
-    <small class="text-info">System Info</small>
-  </h3>
-  <div class="ui stackable four column grid">
-    <div class="column" each="{ key, value in manifest }">
-      <small>{ value } = { key }</small>
+      </tbody>
+    </table>
+    <h3>
+      <small class="text-info">System Info</small>
+    </h3>
+    <div class="ui stackable four column grid">
+      <div class="column" each="{ key, value in manifest }">
+        <small>{ value } = { key }</small>
+      </div>
     </div>
   </div>
 
@@ -86,6 +89,7 @@
   <script>
     import _ApiFactory from '../common/factory/ApiFactory.js'
     import route from 'riot-route'
+
 
     const ApiFactory = new _ApiFactory()
 
@@ -158,7 +162,7 @@
     }
 
     this.goToClient = (client) => {
-      route('operate/' + client.projectName)
+      route('operate/' + client.projectName + '/execute/documents')
     }
 
     this.goToClientCreate = () => {

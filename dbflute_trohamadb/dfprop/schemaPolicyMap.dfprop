@@ -11,7 +11,7 @@
 #     ; tableTargetList = list:{}
 #     ; columnExceptMap = map:{}
 #     ; isMainSchemaOnly = false
-#     
+#
 #     ; wholeMap = map:{
 #         ; themeList = list:{ uniqueTableAlias ; sameColumnAliasIfSameColumnName }
 #     }
@@ -26,8 +26,8 @@
 #         ; statementList = list:{
 #             ; if columnName is suffix:_FLAG then bad
 #             ; if columnName is suffix:_FLG then notNull
-#             ; if columnName is suffix:_FLG then dbType is INTEGER 
-#             ; if columnName is suffix:_FLG then classification 
+#             ; if columnName is suffix:_FLG then dbType is INTEGER
+#             ; if columnName is suffix:_FLG then classification
 #         }
 #     }
 # }
