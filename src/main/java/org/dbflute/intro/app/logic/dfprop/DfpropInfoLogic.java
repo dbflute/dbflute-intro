@@ -135,13 +135,14 @@ public class DfpropInfoLogic {
         }
 
         Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
+        Map<String, Object> comments = readComments(schemaPolicyMapFile, new DfPropFile());
 
         SchemaPolicyTargetSetting targetSetting = parseSchemaPolicyTargetSetting(schemaPolicyMap);
         SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
         SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
         SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
 
-        return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap);
+        return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap, comments);
     }
 
     private SchemaPolicyTargetSetting parseSchemaPolicyTargetSetting(Map<String, Object> schemaPolicyMap) {
@@ -262,6 +263,15 @@ public class DfpropInfoLogic {
             return dfpropFile.readMap(absolutePath, null);
         } catch (RuntimeException e) {
             throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
+        }
+    }
+
+    private Map<String, Object> readComments(File targetFile, DfPropFile dfpropFile) {
+        final String absolutePath = targetFile.getAbsolutePath();
+        try {
+            return dfpropFile.readComments(absolutePath, null);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Cannot read the dfprop comments: " + absolutePath, e);
         }
     }
 

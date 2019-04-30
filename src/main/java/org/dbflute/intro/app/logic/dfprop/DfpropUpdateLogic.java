@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -170,7 +171,7 @@ public class DfpropUpdateLogic {
         SchemaPolicyTableMap mergedTableMap = mergeTableMap(base.tableMap, input.tableMap);
         SchemaPolicyColumnMap mergedColumnMap = mergeColumnMap(base.columnMap, input.columnMap);
 
-        return new SchemaPolicyMap(base.targetSetting, mergedWholeMap, mergedTableMap, mergedColumnMap);
+        return new SchemaPolicyMap(base.targetSetting, mergedWholeMap, mergedTableMap, mergedColumnMap, base.comments);
     }
 
     private SchemaPolicyWholeMap mergeWholeMap(SchemaPolicyWholeMap base, SchemaPolicyWholeMap input) {
@@ -204,106 +205,116 @@ public class DfpropUpdateLogic {
         StringBuilder sb = new StringBuilder();
         sb.append("# /---------------------------------------------------------------------------\n");
         sb.append("map:{\n");
-        sb.append(buildSchemaPolicyTargetSetting(schemaPolicyMap.targetSetting));
-        sb.append(buildWholeMap(schemaPolicyMap.wholeMap));
-        sb.append(buildTableMap(schemaPolicyMap.tableMap));
-        sb.append(buildColumnMap(schemaPolicyMap.columnMap));
+        sb.append(buildSchemaPolicyTargetSetting(schemaPolicyMap.targetSetting, schemaPolicyMap.comments));
+        sb.append(buildWholeMap(schemaPolicyMap.wholeMap, schemaPolicyMap.comments));
+        sb.append(buildTableMap(schemaPolicyMap.tableMap, schemaPolicyMap.comments));
+        sb.append(buildColumnMap(schemaPolicyMap.columnMap, schemaPolicyMap.comments));
         sb.append("}\n");
         sb.append("# ----------------/\n");
 
         return sb.toString();
     }
 
-    private String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting) {
+    private String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting, Map<String, Object> comments) {
         StringBuilder sb = new StringBuilder();
         // tableExceptList
-        sb.append("    ; tableExceptList = list:{\n");
+        sb.append(buildLinesWithComments("targetExceptList", "    ; %s = list:{\n", comments));
         setting.tableExceptList.forEach(element -> {
-            sb.append(String.format("        ; %s\n", element));
+            sb.append(buildLinesWithComments(element, "        ; %s\n", comments));
         });
         sb.append("    }\n");
         // tableTargetList
-        sb.append("    ; tableTargetList = list:{\n");
+        sb.append(buildLinesWithComments("tableTargetList", "    ; %s = list:{\n", comments));
         setting.tableTargetList.forEach(element -> {
-            sb.append(String.format("        ; %s\n", element));
+            sb.append(buildLinesWithComments(element, "        ; %s\n", comments));
         });
         sb.append("    }\n");
         // columnExceptMap
-        sb.append("    ; columnExceptMap = map:{\n");
+        sb.append(buildLinesWithComments("columnExceptMap", "    ; %s = map:{\n", comments));
         setting.columnExceptMap.forEach((key, value) -> {
-            sb.append(String.format("        ; %s = list:{\n", key));
+            sb.append(buildLinesWithComments(key, "        ; %s = list:{\n", comments));
             value.forEach(element -> {
-                sb.append(String.format("            ; %s\n", element));
+                sb.append(buildLinesWithComments(element, "            ; %s\n", comments));
             });
             sb.append("        }\n");
         });
         sb.append("    }\n");
         // isMainSchemaOnly
-        sb.append(String.format("    ; isMainSchemaOnly = %s\n", String.valueOf(setting.isMainSchemaOnly)));
+        sb.append(buildLinesWithComments("isMainSchemaOnly", "    ; %s = " + setting.isMainSchemaOnly + "\n", comments));
 
         return sb.toString();
     }
 
-    private String buildWholeMap(SchemaPolicyWholeMap wholeMap) {
+    private String buildWholeMap(SchemaPolicyWholeMap wholeMap, Map<String, Object> comments) {
         List<String> themeTypeCodeList =
                 wholeMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("    ; wholeMap = map:{\n");
-        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
+        sb.append(buildLinesWithComments("wholeMap", "    ; %s = map:{\n", comments));
+        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList, comments));
         sb.append("    }\n");
 
         return sb.toString();
     }
 
-    private String buildTableMap(SchemaPolicyTableMap tableMap) {
+    private String buildTableMap(SchemaPolicyTableMap tableMap, Map<String, Object> comments) {
         List<String> themeTypeCodeList =
                 tableMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("    ; tableMap = map:{\n");
-        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
-        sb.append(buildSchemaPolicyStatementList(tableMap.statementList));
+        sb.append(buildLinesWithComments("tableMap", "    ; %s = map:{\n", comments));
+        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList, comments));
+        sb.append(buildSchemaPolicyStatementList(tableMap.statementList, comments));
         sb.append("    }\n");
 
         return sb.toString();
     }
 
-    protected String buildColumnMap(SchemaPolicyColumnMap columnMap) {
+    protected String buildColumnMap(SchemaPolicyColumnMap columnMap, Map<String, Object> comments) {
         List<String> themeTypeCodeList =
                 columnMap.themeList.stream().map(theme -> theme.type).map(type -> type.code).collect(Collectors.toList());
 
         StringBuilder sb = new StringBuilder();
-        sb.append("    ; columnMap = map:{\n");
-        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList));
-        sb.append(buildSchemaPolicyStatementList(columnMap.statementList));
+        sb.append(buildLinesWithComments("columnMap", "    ; %s = map:{\n", comments));
+        sb.append(buildSchemaPolicyThemeList(themeTypeCodeList, comments));
+        sb.append(buildSchemaPolicyStatementList(columnMap.statementList, comments));
         sb.append("    }\n");
 
         return sb.toString();
     }
 
-    private String buildSchemaPolicyThemeList(List<String> themeTypeCodeList) {
+    private String buildSchemaPolicyThemeList(List<String> themeTypeCodeList, Map<String, Object> comments) {
         StringBuilder sb = new StringBuilder();
 
         // themeList
-        sb.append("        ; themeList = list:{\n");
+        sb.append(buildLinesWithComments("themeList", "        ; %s = list:{\n", comments));
         themeTypeCodeList.forEach(themeTypeCode -> {
-            sb.append(String.format("            ; %s\n", themeTypeCode));
+            sb.append(buildLinesWithComments(themeTypeCode, "            ; %s\n", comments));
         });
         sb.append("        }\n");
 
         return sb.toString();
     }
 
-    private String buildSchemaPolicyStatementList(List<String> statementList) {
+    private String buildSchemaPolicyStatementList(List<String> statementList, Map<String, Object> comments) {
         StringBuilder sb = new StringBuilder();
         // statementList
-        sb.append("        ; statementList = list:{\n");
+        sb.append(buildLinesWithComments("statementList", "        ; %s = list:{\n", comments));
         statementList.forEach(themeTypeCode -> {
-            sb.append(String.format("            ; %s\n", themeTypeCode));
+            sb.append(buildLinesWithComments(themeTypeCode, "            ; %s\n", comments));
         });
         sb.append("        }\n");
 
         return sb.toString();
+    }
+
+    private String buildLinesWithComments(String key, String format, Map<String, Object> comments) {
+        String lines = "";
+        if (comments.containsKey(key)) {
+            final String space = StringUtils.repeat(" ", format.length() - format.trim().length());
+            lines += space + "#" + comments.get(key) + "\n";
+        }
+        lines += String.format(format, key);
+        return lines;
     }
 }

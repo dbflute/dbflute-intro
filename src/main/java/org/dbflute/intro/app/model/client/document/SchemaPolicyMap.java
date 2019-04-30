@@ -15,6 +15,9 @@
  */
 package org.dbflute.intro.app.model.client.document;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * @author hakiba
  */
@@ -23,17 +26,19 @@ public class SchemaPolicyMap {
     public SchemaPolicyWholeMap wholeMap;
     public SchemaPolicyTableMap tableMap;
     public SchemaPolicyColumnMap columnMap;
+    public Map<String, Object> comments;
 
     public SchemaPolicyMap(SchemaPolicyTargetSetting targetSetting, SchemaPolicyWholeMap wholeMap, SchemaPolicyTableMap tableMap,
-            SchemaPolicyColumnMap columnMap) {
+            SchemaPolicyColumnMap columnMap, Map<String, Object> comments) {
         this.targetSetting = targetSetting;
         this.wholeMap = wholeMap;
         this.tableMap = tableMap;
         this.columnMap = columnMap;
+        this.comments = comments;
     }
 
     public static SchemaPolicyMap noSettingsInstance() {
         return new SchemaPolicyMap(SchemaPolicyTargetSetting.noSettingInstance(), SchemaPolicyWholeMap.noSettingInstance(),
-                SchemaPolicyTableMap.noSettingInstance(), SchemaPolicyColumnMap.noSettingInstance());
+                SchemaPolicyTableMap.noSettingInstance(), SchemaPolicyColumnMap.noSettingInstance(), Collections.emptyMap());
     }
 }
