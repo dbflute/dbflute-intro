@@ -4,6 +4,7 @@
   <client-content></client-content>
 
   <script>
+    let riot = require('riot')
     import _ApiFactory from '../common/factory/ApiFactory.js'
 
     const ApiFactory = new _ApiFactory()

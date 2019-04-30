@@ -60,6 +60,7 @@
   </style>
 
   <script>
+    let riot = require('riot')
     import _ApiFactory from '../../common/factory/ApiFactory.js'
     import _DbfluteTask from '../../common/DbfluteTask'
     import Prism from 'prismjs'
