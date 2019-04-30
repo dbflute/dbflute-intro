@@ -1,6 +1,6 @@
 <client>
   <h2>DBFlute Client { opts.projectName }</h2>
-  <!-- p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p -->
+  <!-- p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p TODO invisible this information -->
   <client-content></client-content>
 
   <script>
