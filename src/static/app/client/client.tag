@@ -21,7 +21,7 @@
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
         self.mountClientContent()
-        self.update()
+        riot.update()
       })
     }
 
