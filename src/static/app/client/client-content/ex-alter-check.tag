@@ -83,6 +83,7 @@
       self.prepareEditingAlterSqls(self.client.editingAlterSqls)
       self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
       self.prepareComponents()
+      self.update()
     })
 
     this.prepareEditingAlterSqls = (editingAlterSqls) => {

@@ -1,6 +1,6 @@
 <client>
   <h2>DBFlute Client { opts.projectName }</h2>
-  <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
+  <!-- p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p -->
   <client-content></client-content>
 
   <script>
@@ -22,7 +22,6 @@
       ApiFactory.clientOperation(self.opts.projectName).then((response) => {
         self.client = response
         self.mountClientContent()
-        riot.update()
       })
     }
 
