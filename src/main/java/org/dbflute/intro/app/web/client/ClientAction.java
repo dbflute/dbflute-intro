@@ -200,6 +200,7 @@ public class ClientAction extends IntroBaseAction {
         client.databaseCode = basicInfoMap.getDatabase();
         client.languageCode = basicInfoMap.getTargetLanguage();
         client.containerCode = basicInfoMap.getTargetContainer();
+        client.dbfluteVersion = projectInfra.getDbfluteVersion();
     }
 
     // -----------------------------------------------------
