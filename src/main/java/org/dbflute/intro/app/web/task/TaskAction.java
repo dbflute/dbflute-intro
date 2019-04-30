@@ -70,6 +70,7 @@ public class TaskAction extends IntroBaseAction {
             String log = taskExecutionLogic.execute(project, taskTypeList, env);
             loggingLastSuccess(project, instruction, log);
         } catch (SchemaNotSynchronizedException | SchemaPolicyViolatedException e) {
+            loggingLastFailure(project, instruction, e.getProcessLog());
             return asJson(new TaskExecutionResult(false));
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
