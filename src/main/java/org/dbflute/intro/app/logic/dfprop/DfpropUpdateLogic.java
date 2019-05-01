@@ -37,6 +37,7 @@ import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.util.Srl;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
@@ -218,7 +219,7 @@ public class DfpropUpdateLogic {
     private String buildSchemaPolicyTargetSetting(SchemaPolicyTargetSetting setting, Map<String, Object> comments) {
         StringBuilder sb = new StringBuilder();
         // tableExceptList
-        sb.append(buildLinesWithComments("targetExceptList", "    ; %s = list:{\n", comments));
+        sb.append(buildLinesWithComments("tableExceptList", "    ; %s = list:{\n", comments));
         setting.tableExceptList.forEach(element -> {
             sb.append(buildLinesWithComments(element, "        ; %s\n", comments));
         });
@@ -311,8 +312,8 @@ public class DfpropUpdateLogic {
     private String buildLinesWithComments(String key, String format, Map<String, Object> comments) {
         String lines = "";
         if (comments.containsKey(key)) {
-            final String space = StringUtils.repeat(" ", format.length() - format.trim().length());
-            lines += space + "#" + comments.get(key) + "\n";
+            final String space = Srl.substringFirstFront(format, format.trim());
+            lines += space + "# " + comments.get(key) + "\n";
         }
         lines += String.format(format, key);
         return lines;

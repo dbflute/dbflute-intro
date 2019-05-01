@@ -29,6 +29,10 @@ public class SchemaPolicyMap {
     public Map<String, Object> comments;
 
     public SchemaPolicyMap(SchemaPolicyTargetSetting targetSetting, SchemaPolicyWholeMap wholeMap, SchemaPolicyTableMap tableMap,
+            SchemaPolicyColumnMap columnMap) {
+        this(targetSetting, wholeMap, tableMap, columnMap, Collections.emptyMap());
+    }
+    public SchemaPolicyMap(SchemaPolicyTargetSetting targetSetting, SchemaPolicyWholeMap wholeMap, SchemaPolicyTableMap tableMap,
             SchemaPolicyColumnMap columnMap, Map<String, Object> comments) {
         this.targetSetting = targetSetting;
         this.wholeMap = wholeMap;
