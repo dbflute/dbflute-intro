@@ -17,7 +17,6 @@ package org.dbflute.intro.app.web.client;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.dbflute.intro.app.logic.document.AlterSqlBean;
@@ -42,7 +41,7 @@ public class ClientOperationResult {
     public CDef.TargetLanguage languageCode;
     @Required
     public CDef.TargetContainer containerCode;
-    @Resource
+    @Required
     public String dbfluteVersion;
 
     // ===================================================================================
