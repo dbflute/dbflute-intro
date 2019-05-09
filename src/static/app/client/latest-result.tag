@@ -7,11 +7,7 @@
       <p show="{ !latestResult.success && failure.message }">{ failure.message }</p>
       <a onclick="{ toggleLatestResult }">{ latestResult.show ? 'hide latest log' : 'show latest log' }</a>
       <div show="{ latestResult.show }" class="ui message message-area">
-        <pre>
-          <code>
-            <raw content="{ latestResult.content }"></raw>
-          </code>
-        </pre>
+        <pre><code><raw content="{ latestResult.content }"></raw></code></pre>
       </div>
     </div>
   </div>
