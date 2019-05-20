@@ -16,7 +16,11 @@
 package org.dbflute.intro.app.model.client.document;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.dbflute.util.DfCollectionUtil;
 
 /**
  * @author hakiba
@@ -39,6 +43,39 @@ public class SchemaPolicyMap {
         this.tableMap = tableMap;
         this.columnMap = columnMap;
         this.comments = comments;
+    }
+
+    public Map<String, Object> convertToMap() {
+        Map<String, Object> map = DfCollectionUtil.newLinkedHashMap();
+        map.put("tableExceptList", targetSetting.tableExceptList);
+        map.put("tableTargetList", targetSetting.tableTargetList);
+        map.put("columnExceptMap", targetSetting.columnExceptMap);
+        map.put("isMainSchemaOnly", targetSetting.isMainSchemaOnly ? "true" : "false");
+
+        map.put("wholeMap", convertWholeMapToMap());
+        map.put("tableMap", convertTableMapToMap());
+        map.put("columnMap", convertColumnMapToMap());
+        return map;
+    }
+
+    private Map<String, Object> convertWholeMapToMap() {
+        LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
+        map.put("themeList", wholeMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        return map;
+    }
+
+    private Map<String, Object> convertTableMapToMap() {
+        LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
+        map.put("themeList", tableMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("statementList", tableMap.statementList);
+        return map;
+    }
+
+    private Map<String, Object> convertColumnMapToMap() {
+        LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
+        map.put("themeList", columnMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("statementList", columnMap.statementList);
+        return map;
     }
 
     public static SchemaPolicyMap noSettingsInstance() {

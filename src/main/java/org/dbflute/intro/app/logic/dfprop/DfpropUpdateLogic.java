@@ -28,7 +28,10 @@ import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dbflute.helper.dfmap.DfMapFile;
+import org.dbflute.helper.dfmap.DfMapStyle;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
@@ -165,7 +168,49 @@ public class DfpropUpdateLogic {
 
     protected void doReplaceSchemaPolicyMap(File file, SchemaPolicyMap input) {
         SchemaPolicyMap base = dfpropInfoLogic.parseSchemePolicyMap(file);
-        flutyFileLogic.writeFile(file, buildSchemaPolicyMap(mergeSchemaPolicyMap(base, input)));
+        SchemaPolicyMap merge = mergeSchemaPolicyMap(base, input);
+        try {
+            new DfMapFile() {
+                protected DfMapStyle newMapStyle() {
+                    return new DfMapStyle() {
+                        private List<String> SCOPE_LIST =
+                                Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap",
+                                        "tableMap", "columnMap");
+
+                        private String scope = "";
+
+                        protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
+                                String currentIndent, int index, String key, Object value) {
+                            if (SCOPE_LIST.contains(key)) {
+                                scope = key;
+                            }
+                            if (base.comments.get(scope) != null && ((Map) base.comments.get(scope)).get(key) != null) {
+                                String[] comments = ((String) ((Map) base.comments.get(scope)).get(key)).split("\n");
+                                for (String c : comments) {
+                                    sb.append("\n" + currentIndent + c);
+                                }
+                            }
+                            super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, index, key, value);
+                        }
+
+                        protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent,
+                                String currentIndent, int index, Object value) {
+                            if (base.comments.get(scope) != null && ((Map) base.comments.get(scope)).get(value) != null) {
+                                String[] comments = ((String) ((Map) base.comments.get(scope)).get(value)).split("\n");
+                                for (String c : comments) {
+                                    sb.append("\n" + currentIndent + c);
+                                }
+                            }
+                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, index, value);
+                        }
+                    };
+                }
+
+            }.writeMap(FileUtils.openOutputStream(file), merge.convertToMap());
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to write dfprop file: " + file.getAbsolutePath(), e);
+
+        }
     }
 
     protected SchemaPolicyMap mergeSchemaPolicyMap(SchemaPolicyMap base, SchemaPolicyMap input) {

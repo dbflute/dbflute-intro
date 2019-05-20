@@ -15,7 +15,12 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -28,7 +33,7 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbflute.infra.dfprop.DfPropFile;
+import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
@@ -39,6 +44,8 @@ import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.util.DfCollectionUtil;
+import org.dbflute.util.Srl;
 
 /**
  * @author jflute
@@ -77,12 +84,11 @@ public class DfpropInfoLogic {
             } else {
                 fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
             }
-            final DfPropFile dfpropFile = new DfPropFile();
-            dfpropMap.put(fileNameKey, readMap(file, dfpropFile));
+            dfpropMap.put(fileNameKey, readMap(file));
 
             final File plusFile = new File(file.getName().replace("Map.dfprop", "Map+.dfprop"));
             if (plusFile.exists()) {
-                dfpropMap.get(fileNameKey).putAll(readMap(plusFile, dfpropFile));
+                dfpropMap.get(fileNameKey).putAll(readMap(plusFile));
             }
         });
         final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
@@ -106,8 +112,7 @@ public class DfpropInfoLogic {
             return Optional.empty();
         }
         return Arrays.stream(dfpropFiles).filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop")).findAny().map(file -> {
-            final DfPropFile dfpropFile = new DfPropFile();
-            Map<String, Object> readMap = readMap(file, dfpropFile);
+            Map<String, Object> readMap = readMap(file);
             @SuppressWarnings("unchecked")
             Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
             return schemaSyncCheckMap;
@@ -134,8 +139,8 @@ public class DfpropInfoLogic {
             return SchemaPolicyMap.noSettingsInstance();
         }
 
-        Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
-        Map<String, Object> comments = readComments(schemaPolicyMapFile, new DfPropFile());
+        Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile);
+        Map<String, Object> comments = readComments(schemaPolicyMapFile);
 
         SchemaPolicyTargetSetting targetSetting = parseSchemaPolicyTargetSetting(schemaPolicyMap);
         SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
@@ -228,7 +233,7 @@ public class DfpropInfoLogic {
     //                                      ----------------
     public LittleAdjustmentMap findLittleAdjustmentMap(String projectName) {
         final File littleAdjustmentMap = dfpropPhysicalLogic.findDfpropFile(projectName, "littleAdjustmentMap.dfprop");
-        final Map<String, Object> readMap = readMap(littleAdjustmentMap, new DfPropFile());
+        final Map<String, Object> readMap = readMap(littleAdjustmentMap);
         final boolean isTableDispNameUpperCase = convertSettingToBoolean(readMap.get("isTableDispNameUpperCase"));
         final boolean isTableSqlNameUpperCase = convertSettingToBoolean(readMap.get("isTableSqlNameUpperCase"));
         final boolean isColumnSqlNameUpperCase = convertSettingToBoolean(readMap.get("isColumnSqlNameUpperCase"));
@@ -240,7 +245,7 @@ public class DfpropInfoLogic {
     //                                              --------
     public DocumentMap findDocumentMap(String projectName) {
         final File documentDefinitionMap = dfpropPhysicalLogic.findDfpropFile(projectName, "documentMap.dfprop");
-        final Map<String, Object> readMap = readMap(documentDefinitionMap, new DfPropFile());
+        final Map<String, Object> readMap = readMap(documentDefinitionMap);
         return prepareDocumentMapInner(readMap);
     }
 
@@ -257,20 +262,66 @@ public class DfpropInfoLogic {
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============
-    private Map<String, Object> readMap(File targetFile, DfPropFile dfpropFile) {
+    private Map<String, Object> readMap(File targetFile) {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
-            return dfpropFile.readMap(absolutePath, null);
-        } catch (RuntimeException e) {
+            return new DfMapFile().readMap(new FileInputStream(targetFile));
+        } catch (IOException | RuntimeException e) {
             throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
         }
     }
 
-    private Map<String, Object> readComments(File targetFile, DfPropFile dfpropFile) {
+    private Map<String, Object> readComments(File targetFile) {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
-            return dfpropFile.readComments(absolutePath, null);
-        } catch (RuntimeException e) {
+            return new DfMapFile() {
+                private List<String> SCOPE_LIST =
+                        Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap", "tableMap",
+                                "columnMap");
+                @SuppressWarnings("unchecked")
+                public Map<String, Object> readComments(InputStream ins) throws IOException {
+                    assertObjectNotNull("ins", ins);
+                    final Map<String, Object> keyCommentMap = DfCollectionUtil.newLinkedHashMap();
+                    final String encoding = "UTF-8";
+                    BufferedReader br = new BufferedReader(new InputStreamReader(ins, encoding));
+                    String previousComment = "";
+                    String scope = "";
+                    while (true) {
+                        final String line = br.readLine();
+                        if (line == null) {
+                            break;
+                        }
+                        final String ltrimmedLine = Srl.ltrim(line);
+                        if (ltrimmedLine.startsWith("#") || "".equals(ltrimmedLine.trim())) { // comment or empty lines
+                            previousComment += ltrimmedLine + "\n";
+                            continue;
+                        }
+                        // key value here
+                        String key = ltrimmedLine.contains("=") ? Srl.substringFirstFront(ltrimmedLine, "=").trim() : ltrimmedLine.trim();
+                        if (key.startsWith(";")) {
+                            key = Srl.substringFirstRear(key, ";").trim();
+                        }
+                        if (SCOPE_LIST.contains(key)) {
+                            scope = key;
+                        }
+                        if (previousComment.equals("")) {
+                            continue;
+                        }
+                        if (keyCommentMap.containsKey(scope)) {
+                            ((Map) keyCommentMap.get(scope)).put(key, previousComment);
+                        } else {
+                            keyCommentMap.put(scope, DfCollectionUtil.newLinkedHashMap(key, previousComment));
+                        }
+                        previousComment = "";
+                    }
+                    try {
+                        br.close();
+                    } catch (IOException ignored) {
+                    }
+                    return keyCommentMap;
+                }
+            }.readComments(new FileInputStream(targetFile));
+        } catch (IOException | RuntimeException e) {
             throw new IllegalStateException("Cannot read the dfprop comments: " + absolutePath, e);
         }
     }
