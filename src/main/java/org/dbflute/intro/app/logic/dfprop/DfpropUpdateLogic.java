@@ -182,28 +182,26 @@ public class DfpropUpdateLogic {
                             if (SCOPE_LIST.contains(key)) {
                                 scope = key;
                             }
-                            if (base.comments.get(scope) != null && ((Map) base.comments.get(scope)).get(key) != null) {
-                                String[] comments = ((String) ((Map) base.comments.get(scope)).get(key)).split("\n");
-                                for (String c : comments) {
-                                    sb.append("\n" + currentIndent + c);
-                                }
-                            }
+                            doBuildCommentStringCurrentElement(sb, currentIndent, key);
                             super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, index, key, value);
                         }
 
                         protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent,
                                 String currentIndent, int index, Object value) {
-                            if (base.comments.get(scope) != null && ((Map) base.comments.get(scope)).get(value) != null) {
-                                String[] comments = ((String) ((Map) base.comments.get(scope)).get(value)).split("\n");
+                            doBuildCommentStringCurrentElement(sb, currentIndent, (String) value);
+                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, index, value);
+                        }
+
+                        private void doBuildCommentStringCurrentElement(StringBuilder sb, String currentIndent, String key) {
+                            if (merge.comments.get(scope) != null && ((Map) merge.comments.get(scope)).get(key) != null) {
+                                String[] comments = ((String) ((Map) merge.comments.get(scope)).get(key)).split("\n");
                                 for (String c : comments) {
-                                    sb.append("\n" + currentIndent + c);
+                                    sb.append("\n").append(currentIndent).append(c);
                                 }
                             }
-                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, index, value);
                         }
                     };
                 }
-
             }.writeMap(FileUtils.openOutputStream(file), merge.convertToMap());
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write dfprop file: " + file.getAbsolutePath(), e);
