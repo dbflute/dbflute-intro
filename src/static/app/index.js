@@ -112,39 +112,39 @@ ffetch.errors.subscribe(response => {
  * URL mapping
  */
 route(() => {
-  riot.mount('content', 'main')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'main')
 })
 route('', () => {
-  riot.mount('content', 'main')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'main')
 })
 route('operate/*', projectName => {
   const opts = { projectName, clientMenuType: 'execute', clientMenuName: 'documents' }
-  riot.mount('content', 'client', opts)
   riot.mount('side-menu', 'client-menu', opts)
+  riot.mount('content', 'client', opts)
 })
 route('operate/*/*/*', (projectName, clientMenuType, clientMenuName) => {
   const opts = { projectName, clientMenuType, clientMenuName }
-  riot.mount('content', 'client', opts)
   riot.mount('side-menu', 'client-menu', opts)
+  riot.mount('content', 'client', opts)
 })
 route('create', () => {
-  riot.mount('content', 'create')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'create')
 })
 route('settings/*', projectName => {
-  riot.mount('content', 'settings', { projectName })
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'settings', { projectName })
 })
 route('settings/*?..', projectName => {
   const activeTab = route.query().activeTab
-  riot.mount('content', 'settings', { projectName, activeTab })
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'settings', { projectName, activeTab })
 })
 route('welcome', () => {
-  riot.mount('content', 'welcome')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'welcome')
 })
 route('/*', () => {
   riot.mount('content', 'error404')

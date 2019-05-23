@@ -51,7 +51,7 @@
     </div>
   </su-modal>
 
-  <result-modal></result-modal>
+  <result-modal ref="resultModal"></result-modal>
 
   <style>
     .latest-result {
@@ -112,7 +112,6 @@
     }
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
       self.updateLatestResult(self.client)
     }
@@ -176,7 +175,7 @@
       this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
-          self.resultModal.show(message)
+          self.refs.resultModal.show(message)
         }).finally(() => {
           self.refs.executeModal.hide()
         })
