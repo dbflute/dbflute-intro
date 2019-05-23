@@ -10,7 +10,6 @@ import i18n_ja from '../assets/i18n/locale-ja.json'
 import i18n_en from '../assets/i18n/locale-en.json'
 
 import './main/main.tag'
-import './client/settings.tag'
 import './client/create.tag'
 import './client/client.tag'
 import './client/client-menu.tag'
@@ -132,15 +131,6 @@ route('operate/*/*/*', (projectName, clientMenuType, clientMenuName) => {
 route('create', () => {
   riot.mount('side-menu', 'common-menu')
   riot.mount('content', 'create')
-})
-route('settings/*', projectName => {
-  riot.mount('side-menu', 'common-menu')
-  riot.mount('content', 'settings', { projectName })
-})
-route('settings/*?..', projectName => {
-  const activeTab = route.query().activeTab
-  riot.mount('side-menu', 'common-menu')
-  riot.mount('content', 'settings', { projectName, activeTab })
 })
 route('welcome', () => {
   riot.mount('side-menu', 'common-menu')
