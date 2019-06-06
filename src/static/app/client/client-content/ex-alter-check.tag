@@ -178,15 +178,14 @@
         DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
           self.resultModal.show(message)
         }).finally(() => {
+          ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+            self.client = response
+            self.updateLatestResult(self.client)
+            self.prepareEditingAlterSqls(self.client.editingAlterSqls)
+            self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
+            self.update()
+          })
           self.refs.executeModal.hide()
-        })
-      }).finally(() => {
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.client = response
-          self.updateLatestResult(self.client)
-          self.prepareEditingAlterSqls(self.client.editingAlterSqls)
-          self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
-          self.update()
         })
       })
     }
