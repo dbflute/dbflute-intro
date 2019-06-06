@@ -3,7 +3,7 @@
     <h3>Schema Policy Check</h3>
     <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
     <div class="ui info message">
-      <div class="header">What is "Check Policy"?</div>
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"Check Policy"?</a></div>
       <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
     </div>
     <div class="latest-result">

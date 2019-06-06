@@ -6,6 +6,10 @@
       <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
     </div>
     <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"Alter Check"?</a></div>
+      <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
+    </div>
     <div show="{ editing && editingAlterSqls.length > 0 }" class="ui list">
       <h4 class="ui header">Editing Alter SQL List</h4>
       <ul>

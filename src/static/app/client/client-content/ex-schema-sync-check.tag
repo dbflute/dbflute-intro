@@ -10,6 +10,10 @@
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
       Check Schema (schema-sync-check)
     </button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Schema Sync Check"?</a></div>
+      <p>Check there is a difference between the two schema structures.</p>
+    </div>
     <div class="latest-result">
       <latest-result></latest-result>
     </div>

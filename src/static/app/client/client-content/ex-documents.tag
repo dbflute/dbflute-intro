@@ -7,6 +7,10 @@
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/index.html" target="_blank">"Doc Task"?</a></div>
+      <p>Doc task is a DBFlute task that automatically generates various documents.</p>
+    </div>
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
