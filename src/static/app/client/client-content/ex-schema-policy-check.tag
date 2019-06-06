@@ -30,7 +30,6 @@
                     </div>
                   </div>
                 </div>
-                <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5>Theme</h5>
@@ -55,7 +54,6 @@
                     </div>
                   </a>
                 </div>
-                <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5>Theme</h5>
@@ -80,7 +78,6 @@
                     </div>
                   </a>
                 </div>
-                <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
             </su-tabset>
           </div>

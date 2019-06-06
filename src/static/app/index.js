@@ -10,7 +10,6 @@ import i18n_ja from '../assets/i18n/locale-ja.json'
 import i18n_en from '../assets/i18n/locale-en.json'
 
 import './main/main.tag'
-import './client/settings.tag'
 import './client/create.tag'
 import './client/client.tag'
 import './client/client-menu.tag'
@@ -112,39 +111,30 @@ ffetch.errors.subscribe(response => {
  * URL mapping
  */
 route(() => {
-  riot.mount('content', 'main')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'main')
 })
 route('', () => {
-  riot.mount('content', 'main')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'main')
 })
 route('operate/*', projectName => {
   const opts = { projectName, clientMenuType: 'execute', clientMenuName: 'documents' }
-  riot.mount('content', 'client', opts)
   riot.mount('side-menu', 'client-menu', opts)
+  riot.mount('content', 'client', opts)
 })
 route('operate/*/*/*', (projectName, clientMenuType, clientMenuName) => {
   const opts = { projectName, clientMenuType, clientMenuName }
-  riot.mount('content', 'client', opts)
   riot.mount('side-menu', 'client-menu', opts)
+  riot.mount('content', 'client', opts)
 })
 route('create', () => {
+  riot.mount('side-menu', 'common-menu')
   riot.mount('content', 'create')
-  riot.mount('side-menu', 'common-menu')
-})
-route('settings/*', projectName => {
-  riot.mount('content', 'settings', { projectName })
-  riot.mount('side-menu', 'common-menu')
-})
-route('settings/*?..', projectName => {
-  const activeTab = route.query().activeTab
-  riot.mount('content', 'settings', { projectName, activeTab })
-  riot.mount('side-menu', 'common-menu')
 })
 route('welcome', () => {
-  riot.mount('content', 'welcome')
   riot.mount('side-menu', 'common-menu')
+  riot.mount('content', 'welcome')
 })
 route('/*', () => {
   riot.mount('content', 'error404')

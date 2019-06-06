@@ -52,7 +52,7 @@
     </div>
   </su-modal>
 
-  <result-modal></result-modal>
+  <result-modal ref="resultModal"></result-modal>
 
   <style>
     .latest-result {
@@ -94,7 +94,6 @@
     }
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'schemaSyncCheck' })[0]
     }
 
@@ -158,7 +157,7 @@
     this.schemaSyncCheckTask = () => {
       self.refs.checkModal.show()
       DbfluteTask.task('schemaSyncCheck', self.opts.projectName, (message) => {
-        self.resultModal.show(message)
+        self.refs.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
         self.latestResult.updateLatestResult()
