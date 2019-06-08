@@ -171,7 +171,7 @@ public class DfpropUpdateLogic {
             new DfMapFile() {
                 protected DfMapStyle newMapStyle() {
                     return new DfMapStyle() {
-                        private List<String> SCOPE_LIST =
+                        private final List<String> SCOPE_LIST =
                                 Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap",
                                         "tableMap", "columnMap");
 

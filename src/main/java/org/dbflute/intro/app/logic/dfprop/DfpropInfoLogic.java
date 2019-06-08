@@ -275,7 +275,7 @@ public class DfpropInfoLogic {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
             return new DfMapFile() {
-                private List<String> SCOPE_LIST =
+                private final List<String> SCOPE_LIST =
                         Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap", "tableMap",
                                 "columnMap");
                 @SuppressWarnings("unchecked")
