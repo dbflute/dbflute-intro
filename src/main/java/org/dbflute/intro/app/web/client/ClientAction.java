@@ -30,6 +30,8 @@ import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
+import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
+import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -72,6 +74,10 @@ public class ClientAction extends IntroBaseAction {
     private DocumentPhysicalLogic documentLogic;
     @Resource
     private DatabaseInfoLogic databaseInfoLogic;
+    @Resource
+    private LogPhysicalLogic logPhysicalLogic;
+    @Resource
+    private EngineInfoLogic engineInfoLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -190,6 +196,10 @@ public class ClientAction extends IntroBaseAction {
         operation.ngMark = documentLogic.findAlterCheckNgMark(clientProject);
         operation.editingAlterSqls = documentLogic.findAlterFiles(clientProject);
         operation.stackedAlterSqls = documentLogic.findStackedAlterSqls(clientProject);
+        if (engineInfoLogic.existsNewerVersionThan("1.2.0") || engineInfoLogic.existsVersion("1.x") // for debug
+        ) {
+            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientProject);
+        }
         return operation;
     }
 

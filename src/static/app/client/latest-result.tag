@@ -5,6 +5,9 @@
       <h4>{ latestResult.success ? success.title : failure.title }</h4>
       <p show="{ latestResult.success && success.message }">{ success.message }</p>
       <p show="{ !latestResult.success && failure.message }">{ failure.message }</p>
+      <p show="{ !latestResult.success && failure.link.message }" >
+        <a onclick="{ failure.link.clickAction }">{ failure.link.message }</a>
+      </p>
       <a onclick="{ toggleLatestResult }">{ latestResult.show ? 'hide latest log' : 'show latest log' }</a>
       <div show="{ latestResult.show }" class="ui message message-area">
         <pre><code><raw content="{ latestResult.content }"></raw></code></pre>
@@ -42,6 +45,10 @@
     this.failure = {
       title: 'Result: Failure',
       message: null,
+      link: {
+        message: null,
+        clickAction: null
+      }
     }
 
     this.updateLatestResult = () => {

@@ -95,7 +95,6 @@
     </div>
     <div class="ui negative message" if="{opts.modal.status === 'Failure'}">
       <h4>{ opts.modal.message }</h4>
-      <a class="" onclick="{ parent.openSchemaHTML }">Check Schema Policy Violation</a>
     </div>
   </su-modal>
 
@@ -116,7 +115,7 @@
     const DbfluteTask = new _DbfluteTask()
 
     let self = this
-
+    self.client = opts.client
     this.schemaPolicy = {}
 
     // ===================================================================================
@@ -129,6 +128,23 @@
 
     this.prepareComponents = () => {
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
+      self.updateLatestResult(self.client)
+    }
+
+    this.updateLatestResult = (client) => {
+      if (!self.latestResult) {
+        return
+      }
+      if (client.violatesSchemaPolicy) {
+        self.latestResult.failure = {
+          title: 'Result: Failure',
+          link: {
+            message: 'Check Schema Policy Violation (from DBFluteEngine 1.2.0).',
+            clickAction: self.openSchemaHTML
+          }
+        }
+      }
+      self.latestResult.updateLatestResult()
     }
 
     // ===================================================================================
