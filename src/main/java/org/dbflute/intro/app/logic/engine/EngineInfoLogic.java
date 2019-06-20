@@ -21,7 +21,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -67,48 +69,34 @@ public class EngineInfoLogic {
             int minorVersionOfCompare = Integer.parseInt(splitCompareVersion[1]);
             int releaseVersionOfCompare = Integer.parseInt(splitCompareVersion[2]);
 
-            boolean existsNewerMajorVersion = getExistingVersionList().stream()
-                    .anyMatch(version -> Integer.parseInt(version.split(SPLIT_DELIMITER)[0]) > majorVersionOfCompare);
+            String majorVersionKey = "Major";
+            String minorVersionKey = "Minor";
+            String releaseVersionKey = "Release";
+            List<Map<String, Integer>> existingVersionMapList =
+                    getExistingVersionList().stream().map(version -> version.split(SPLIT_DELIMITER)).map(splitVersion -> {
+                        Map<String, Integer> versionMap = new HashMap<>();
+                        versionMap.put(majorVersionKey, Integer.parseInt(splitVersion[0]));
+                        versionMap.put(minorVersionKey, Integer.parseInt(splitVersion[1]));
+                        versionMap.put(releaseVersionKey, Integer.parseInt(splitVersion[2]));
+                        return versionMap;
+                    }).collect(Collectors.toList());
+
+            boolean existsNewerMajorVersion =
+                    existingVersionMapList.stream().anyMatch(verMap -> verMap.get(majorVersionKey) > majorVersionOfCompare);
             if (existsNewerMajorVersion) {
                 return true;
             }
-            boolean existsNewerMinorVersion = getExistingVersionList().stream()
-                    .map(version -> version.split(SPLIT_DELIMITER))
-                    .filter(splitVersion -> Integer.parseInt(splitVersion[0]) >= majorVersionOfCompare)
-                    .anyMatch(splitVersion -> Integer.parseInt(splitVersion[1]) > minorVersionOfCompare);
+            boolean existsNewerMinorVersion = existingVersionMapList.stream()
+                    .filter(verMap -> verMap.get(majorVersionKey) >= majorVersionOfCompare)
+                    .anyMatch(verMap -> verMap.get(minorVersionKey) > minorVersionOfCompare);
             if (existsNewerMinorVersion) {
                 return true;
             }
-            boolean existsNewerReleaseVersion = getExistingVersionList().stream()
-                    .map(version -> version.split(SPLIT_DELIMITER))
-                    .filter(splitVersion -> Integer.parseInt(splitVersion[0]) >= majorVersionOfCompare)
-                    .filter(splitVersion -> Integer.parseInt(splitVersion[1]) >= minorVersionOfCompare)
-                    .anyMatch(splitVersion -> Integer.parseInt(splitVersion[2]) >= releaseVersionOfCompare);
+            boolean existsNewerReleaseVersion = existingVersionMapList.stream()
+                    .filter(verMap -> verMap.get(majorVersionKey) >= majorVersionOfCompare)
+                    .filter(verMap -> verMap.get(minorVersionKey) >= minorVersionOfCompare)
+                    .anyMatch(verMap -> verMap.get(releaseVersionKey) >= releaseVersionOfCompare);
             return existsNewerReleaseVersion;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public boolean existsVersion(String compareVersion) {
-        try {
-            String[] splitCompareVersion = compareVersion.split(SPLIT_DELIMITER);
-            String majorVersionOfCompare = splitCompareVersion[0];
-            String minorVersionOfCompare = splitCompareVersion[1];
-            boolean notExistsReleaseVersion = splitCompareVersion.length == 2;
-            if (notExistsReleaseVersion) {
-                return getExistingVersionList().stream()
-                        .map(version -> version.split(SPLIT_DELIMITER))
-                        .filter(splitVersion -> splitVersion[0].equals(majorVersionOfCompare))
-                        .anyMatch(splitVersion -> splitVersion[1].equals(minorVersionOfCompare));
-            } else {
-                String releaseVersionOfCompare = splitCompareVersion[2];
-                return getExistingVersionList().stream()
-                        .map(version -> version.split(SPLIT_DELIMITER))
-                        .filter(splitVersion -> splitVersion[0].equals(majorVersionOfCompare))
-                        .filter(splitVersion -> splitVersion[1].equals(minorVersionOfCompare))
-                        .anyMatch(splitVersion -> splitVersion[2].equals(releaseVersionOfCompare));
-            }
         } catch (NumberFormatException e) {
             return false;
         }

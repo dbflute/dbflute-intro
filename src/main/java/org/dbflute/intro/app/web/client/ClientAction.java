@@ -196,8 +196,8 @@ public class ClientAction extends IntroBaseAction {
         operation.ngMark = documentLogic.findAlterCheckNgMark(clientProject);
         operation.editingAlterSqls = documentLogic.findAlterFiles(clientProject);
         operation.stackedAlterSqls = documentLogic.findStackedAlterSqls(clientProject);
-        if (engineInfoLogic.existsNewerVersionThan("1.2.0") || engineInfoLogic.existsVersion("1.x") // for debug
-        ) {
+        boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
+        if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
             operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientProject);
         }
         return operation;
