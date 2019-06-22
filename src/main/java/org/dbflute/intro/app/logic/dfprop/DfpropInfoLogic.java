@@ -298,7 +298,7 @@ public class DfpropInfoLogic {
                             continue;
                         }
                         // key value here
-                        String key = ltrimmedLine.contains("=") ? Srl.substringFirstFront(ltrimmedLine, "=").trim() : ltrimmedLine.trim();
+                        String key = extractKey(ltrimmedLine);
                         if (key.startsWith(";")) {
                             key = Srl.substringFirstRear(key, ";").trim();
                         }
@@ -320,6 +320,15 @@ public class DfpropInfoLogic {
                     } catch (IOException ignored) {
                     }
                     return keyCommentMap;
+                }
+
+                private String extractKey(String line) {
+                    if (line.contains("=>")) {
+                        return line.trim();
+                    } else if (line.contains("=")) {
+                        return Srl.substringFirstFront(line, "=").trim();
+                    }
+                    return line.trim();
                 }
             }.readComments(new FileInputStream(targetFile));
         } catch (IOException | RuntimeException e) {

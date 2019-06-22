@@ -177,6 +177,10 @@ public class DfpropUpdateLogic {
 
                         private String scope = "";
 
+                        protected boolean isIgnoreEqualAsEscapeControlMarkInList() {
+                            return true;
+                        }
+
                         protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
                                 String currentIndent, int index, String key, Object value) {
                             if (SCOPE_LIST.contains(key)) {
