@@ -312,7 +312,7 @@ public class DfpropInfoLogic {
                             continue;
                         }
 
-                        if (scope == null && "map:{".startsWith(key)) {
+                        if (scope == null && key.startsWith("map:{")) {
                             scope = OTHER_SCOPE;
                             key = BEGINNING_KEY;
                         }
@@ -328,9 +328,9 @@ public class DfpropInfoLogic {
 
                 private String extractKey(String line) {
                     String key;
-                    if ("=>".contains(line)) {
+                    if (line.contains("=>")) {
                         key = line.trim();
-                    } else if ("=".contains(line)) {
+                    } else if (line.contains("=")) {
                         key = Srl.substringFirstFront(line, "=").trim();
                     } else {
                         key = line.trim();
