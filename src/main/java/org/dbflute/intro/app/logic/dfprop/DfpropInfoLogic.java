@@ -299,7 +299,7 @@ public class DfpropInfoLogic {
                             break;
                         }
                         final String ltrimmedLine = Srl.ltrim(line);
-                        if (ltrimmedLine.startsWith(_lineCommentMark) || "".equals(ltrimmedLine.trim())) { // comment or empty lines
+                        if (ltrimmedLine.startsWith(_lineCommentMark)) {
                             previousComment += ltrimmedLine + "\n";
                             continue;
                         }
