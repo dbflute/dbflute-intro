@@ -181,6 +181,21 @@ public class DfpropUpdateLogic {
                             return true;
                         }
 
+                        public String toMapString(Map<String, ? extends Object> map) {
+                            final StringBuilder sb = new StringBuilder();
+                            doBuildOtherCommentString(sb, "beginningComments");
+                            sb.append(super.toMapString(map)).append("\n");
+                            doBuildOtherCommentString(sb, "endComments");
+                            return sb.toString();
+                        }
+
+                        private void doBuildOtherCommentString(StringBuilder sb, String key) {
+                            final String scope = "other";
+                            if (merge.comments.containsKey(scope) && ((Map) merge.comments.get(scope)).containsKey(key)) {
+                                sb.append(((Map) merge.comments.get(scope)).get(key));
+                            }
+                        }
+
                         protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
                                 String currentIndent, int index, String key, Object value) {
                             if (SCOPE_LIST.contains(key)) {

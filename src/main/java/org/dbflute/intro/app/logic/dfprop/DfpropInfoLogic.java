@@ -279,17 +279,23 @@ public class DfpropInfoLogic {
                 private final List<String> SCOPE_LIST =
                         Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap", "tableMap",
                                 "columnMap");
-                @SuppressWarnings("unchecked")
+                private final String OTHER_SCOPE = "other";
+                private final String BEGINNING_KEY = "beginningComments";
+                private final String END_KEY = "endComments";
+
                 public Map<String, Object> readComments(InputStream ins) throws IOException {
                     assertObjectNotNull("ins", ins);
                     final Map<String, Object> keyCommentMap = DfCollectionUtil.newLinkedHashMap();
                     final String encoding = "UTF-8";
                     BufferedReader br = new BufferedReader(new InputStreamReader(ins, encoding));
                     String previousComment = "";
-                    String scope = "";
+                    String scope = null;
                     while (true) {
                         final String line = br.readLine();
                         if (line == null) {
+                            if (!previousComment.isEmpty()) {
+                                addComments(keyCommentMap, OTHER_SCOPE, END_KEY, previousComment);
+                            }
                             break;
                         }
                         final String ltrimmedLine = Srl.ltrim(line);
@@ -299,20 +305,18 @@ public class DfpropInfoLogic {
                         }
                         // key value here
                         String key = extractKey(ltrimmedLine);
-                        if (key.startsWith(";")) {
-                            key = Srl.substringFirstRear(key, ";").trim();
-                        }
                         if (SCOPE_LIST.contains(key)) {
                             scope = key;
                         }
-                        if (previousComment.equals("")) {
+                        if ("".equals(previousComment)) {
                             continue;
                         }
-                        if (keyCommentMap.containsKey(scope)) {
-                            ((Map) keyCommentMap.get(scope)).put(key, previousComment);
-                        } else {
-                            keyCommentMap.put(scope, DfCollectionUtil.newLinkedHashMap(key, previousComment));
+
+                        if (scope == null && "map:{".startsWith(key)) {
+                            scope = OTHER_SCOPE;
+                            key = BEGINNING_KEY;
                         }
+                        addComments(keyCommentMap, scope, key, previousComment);
                         previousComment = "";
                     }
                     try {
@@ -323,12 +327,28 @@ public class DfpropInfoLogic {
                 }
 
                 private String extractKey(String line) {
-                    if (line.contains("=>")) {
-                        return line.trim();
-                    } else if (line.contains("=")) {
-                        return Srl.substringFirstFront(line, "=").trim();
+                    String key;
+                    if ("=>".contains(line)) {
+                        key = line.trim();
+                    } else if ("=".contains(line)) {
+                        key = Srl.substringFirstFront(line, "=").trim();
+                    } else {
+                        key = line.trim();
                     }
-                    return line.trim();
+
+                    if (key.startsWith(";")) {
+                        return Srl.substringFirstRear(key, ";").trim();
+                    }
+                    return key;
+                }
+
+                @SuppressWarnings("unchecked")
+                private void addComments(Map<String, Object> map, String scope, String key, String comments) {
+                    if (map.containsKey(scope)) {
+                        ((Map) map.get(scope)).put(key, comments);
+                    } else {
+                        map.put(scope, DfCollectionUtil.newLinkedHashMap(key, comments));
+                    }
                 }
             }.readComments(new FileInputStream(targetFile));
         } catch (IOException | RuntimeException e) {
