@@ -15,7 +15,9 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -83,115 +85,17 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         logic.doReplaceSchemaPolicyMap(outputFile, inputMap);
 
         // ## Assert ##
-        SchemaPolicyMap outputMap = infoLogic.parseSchemePolicyMap(outputFile);
-        assertTargetSetting(inputMap, outputMap);
-        assertWholeMap(inputMap, outputMap);
-        assertTableMap(inputMap, outputMap);
-        assertColumnMap(inputMap, outputMap);
-        assertComments(inputMap, outputMap);
-    }
+        BufferedReader inputReader = new BufferedReader(new FileReader(inputFile));
+        BufferedReader outputReader = new BufferedReader(new FileReader(outputFile));
 
-    private void assertTargetSetting(SchemaPolicyMap inputMap, SchemaPolicyMap outputMap) {
-        SchemaPolicyTargetSetting inputTargetSetting = inputMap.targetSetting;
-        SchemaPolicyTargetSetting outputTargetSetting = outputMap.targetSetting;
+        String inputLine;
+        String outputLine;
 
-        log("asserting tableExceptList");
-        inputTargetSetting.tableExceptList.forEach(except -> {
-            log("   asserting {}", except);
-            assertContainsKeyword(outputTargetSetting.tableExceptList, except);
-        });
-        log("asserting tableTargetList");
-        inputTargetSetting.tableTargetList.forEach(target -> {
-            log("   asserting {}", target);
-            assertContainsKeyword(outputTargetSetting.tableTargetList, target);
-        });
-        log("asserting columnExceptMap");
-        inputTargetSetting.columnExceptMap.keySet().forEach(key -> {
-            log("   asserting {}", key);
-            assertTrue(outputTargetSetting.columnExceptMap.containsKey(key));
-            inputTargetSetting.columnExceptMap.get(key).forEach(value -> {
-                log("       asserting {}", value);
-                assertContainsKeyword(outputTargetSetting.columnExceptMap.get(key), value);
-            });
-        });
-        log("asserting isMainSchemaOnly");
-        assertEquals(inputTargetSetting.isMainSchemaOnly, outputTargetSetting.isMainSchemaOnly);
-    }
-
-    private void assertWholeMap(SchemaPolicyMap inputMap, SchemaPolicyMap outputMap) {
-        SchemaPolicyWholeMap inputWholeMap = inputMap.wholeMap;
-        SchemaPolicyWholeMap outputWholeMap = outputMap.wholeMap;
-
-        log("asserting wholeMap");
-        log("   asserting themeList");
-        inputWholeMap.themeList.forEach(inputTheme -> {
-            SchemaPolicyWholeMap.Theme outputTheme =
-                    outputWholeMap.themeList.stream().filter(t -> t.type.code.equals(inputTheme.type.code)).findFirst().orElse(null);
-            log("       asserting {}", inputTheme.type.code);
-            assertNotNull(outputTheme);
-            assertEquals(inputTheme.isActive, outputTheme.isActive);
-        });
-    }
-
-    private void assertTableMap(SchemaPolicyMap inputMap, SchemaPolicyMap outputMap) {
-        SchemaPolicyTableMap inputTableMap = inputMap.tableMap;
-        SchemaPolicyTableMap outputTableMap = outputMap.tableMap;
-
-        log("asserting tableMap");
-        log("   asserting themeList");
-        inputTableMap.themeList.forEach(inputTheme -> {
-            SchemaPolicyTableMap.Theme outputTheme =
-                    outputTableMap.themeList.stream().filter(t -> t.type.code.equals(inputTheme.type.code)).findFirst().orElse(null);
-            log("       asserting {}", inputTheme.type.code);
-            assertNotNull(outputTheme);
-            assertEquals(inputTheme.isActive, outputTheme.isActive);
-        });
-
-        log("   asserting statementList");
-        inputTableMap.statementList.forEach(statement -> {
-            log("       asserting {}", statement);
-            assertContainsKeyword(outputTableMap.statementList, statement);
-        });
-    }
-
-    private void assertColumnMap(SchemaPolicyMap inputMap, SchemaPolicyMap outputMap) {
-        SchemaPolicyColumnMap inputColumnMap = inputMap.columnMap;
-        SchemaPolicyColumnMap outputColumnMap = outputMap.columnMap;
-
-        log("asserting columnMap");
-        log("   asserting themeList");
-        inputColumnMap.themeList.forEach(inputTheme -> {
-            SchemaPolicyColumnMap.Theme outputTheme =
-                    outputColumnMap.themeList.stream().filter(t -> t.type.code.equals(inputTheme.type.code)).findFirst().orElse(null);
-            log("       asserting {}", inputTheme.type.code);
-            assertNotNull(outputTheme);
-            assertEquals(inputTheme.isActive, outputTheme.isActive);
-        });
-
-        log("   asserting statementList");
-        inputColumnMap.statementList.forEach(statement -> {
-            log("       asserting {}", statement);
-            assertContainsKeyword(outputColumnMap.statementList, statement);
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    private void assertComments(SchemaPolicyMap inputMap, SchemaPolicyMap outputMap) {
-        Map<String, Object> inputComments = inputMap.comments;
-        Map<String, Object> outputComments = outputMap.comments;
-
-        log("asserting comments");
-        inputComments.keySet().forEach(scope -> {
-            log("   asserting {} scope comments", scope);
-            assertContainsKeyword(outputComments.keySet(), scope);
-            Map<String, String> inputXX = (Map<String, String>) inputComments.get(scope);
-            Map<String, String> outputXX = (Map<String, String>) outputComments.get(scope);
-            inputXX.keySet().forEach(key -> {
-                log("       asserting {} comments", key);
-                assertContainsKeyword(outputXX.keySet(), key);
-                assertEquals(inputXX.get(key), outputXX.get(key));
-            });
-        });
+        while ((inputLine = inputReader.readLine()) != null | (outputLine = outputReader.readLine()) != null) {
+            log("inputLine: \t{}", inputLine);
+            log("outputLine:\t{}", outputLine);
+            assertEquals(inputLine, outputLine);
+        }
     }
 
     // -----------------------------------------------------
