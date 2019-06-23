@@ -1,5 +1,5 @@
 <main>
-  <div class="ui container">
+  <div class="ui text container">
     <div>
       <h2>DBFlute Client</h2>
       <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
