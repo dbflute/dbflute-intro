@@ -213,9 +213,14 @@ public class DfpropUpdateLogic {
 
                         private void doBuildCommentStringCurrentElement(StringBuilder sb, String currentIndent, String key) {
                             if (merge.comments.get(scope) != null && ((Map) merge.comments.get(scope)).get(key) != null) {
-                                String[] comments = ((String) ((Map) merge.comments.get(scope)).get(key)).split("\n");
-                                for (String c : comments) {
-                                    sb.append("\n").append(currentIndent).append(c);
+                                String commentString = (String) ((Map) merge.comments.get(scope)).get(key);
+                                String[] comments = commentString.split("\n");
+                                if (comments.length == 0) { // case of containing only '\n'
+                                    sb.append(commentString);
+                                } else {
+                                    for (String c : comments) {
+                                        sb.append("\n").append(currentIndent).append(c);
+                                    }
                                 }
                             }
                         }
