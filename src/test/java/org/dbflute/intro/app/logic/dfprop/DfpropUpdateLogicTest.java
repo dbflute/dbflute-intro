@@ -73,8 +73,8 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         DfpropInfoLogic infoLogic = new DfpropInfoLogic();
         inject(infoLogic);
 
-        File inputFile = prepareFileForTestClient("dfprop/schemaPolicyMap.dfprop");
-        File outputFile = prepareFileForTestClient("dfprop/schemaPolicyMap_output.dfprop");
+        File inputFile = prepareFileForTestClient("dfprop/unittest/schemaPolicyMap.dfprop");
+        File outputFile = prepareFileForTestClient("dfprop/unittest/schemaPolicyMap_output.dfprop");
 
         Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
