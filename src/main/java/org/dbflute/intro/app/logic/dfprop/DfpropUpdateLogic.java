@@ -217,10 +217,10 @@ public class DfpropUpdateLogic {
                                 String[] comments = commentString.split("\n");
                                 if (comments.length == 0) { // case of containing only '\n'
                                     sb.append(commentString);
-                                } else {
-                                    for (String c : comments) {
-                                        sb.append("\n").append(currentIndent).append(c);
-                                    }
+                                    return;
+                                }
+                                for (String c : comments) {
+                                    sb.append(c.trim().isEmpty() ? "\n" + c : "\n" + currentIndent + c);
                                 }
                             }
                         }

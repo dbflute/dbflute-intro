@@ -94,10 +94,6 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         while ((inputLine = inputReader.readLine()) != null | (outputLine = outputReader.readLine()) != null) {
             log("inputLine: \t{}", inputLine);
             log("outputLine:\t{}", outputLine);
-            // ignore difference of empty line, space only line, tab only line and etc..
-            if ("".equals(inputLine.trim()) && "".equals(outputLine.trim())) {
-                continue;
-            }
             assertEquals(inputLine, outputLine);
         }
     }
