@@ -189,6 +189,7 @@ public class DfpropUpdateLogic {
                             return sb.toString();
                         }
 
+                        @SuppressWarnings("unchecked")
                         private void doBuildOtherCommentString(StringBuilder sb, String key) {
                             final String scope = "other";
                             if (merge.comments.containsKey(scope) && ((Map<String, Object>) merge.comments.get(scope)).containsKey(key)) {
@@ -211,6 +212,7 @@ public class DfpropUpdateLogic {
                             super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, index, value);
                         }
 
+                        @SuppressWarnings("unchecked")
                         private void doBuildCommentStringCurrentElement(StringBuilder sb, String currentIndent, String key) {
                             if (merge.comments.get(scope) != null && ((Map<String, Object>) merge.comments.get(scope)).get(key) != null) {
                                 String commentString = (String) ((Map<String, Object>) merge.comments.get(scope)).get(key);
