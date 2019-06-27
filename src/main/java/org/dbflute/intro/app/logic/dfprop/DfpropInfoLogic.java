@@ -345,7 +345,7 @@ public class DfpropInfoLogic {
                 @SuppressWarnings("unchecked")
                 private void addComments(Map<String, Object> map, String scope, String key, String comments) {
                     if (map.containsKey(scope)) {
-                        ((Map) map.get(scope)).put(key, comments);
+                        ((Map<String, Object>) map.get(scope)).put(key, comments);
                     } else {
                         map.put(scope, DfCollectionUtil.newLinkedHashMap(key, comments));
                     }

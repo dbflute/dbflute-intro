@@ -191,8 +191,8 @@ public class DfpropUpdateLogic {
 
                         private void doBuildOtherCommentString(StringBuilder sb, String key) {
                             final String scope = "other";
-                            if (merge.comments.containsKey(scope) && ((Map) merge.comments.get(scope)).containsKey(key)) {
-                                sb.append(((Map) merge.comments.get(scope)).get(key));
+                            if (merge.comments.containsKey(scope) && ((Map<String, Object>) merge.comments.get(scope)).containsKey(key)) {
+                                sb.append(((Map<String, Object>) merge.comments.get(scope)).get(key));
                             }
                         }
 
@@ -212,8 +212,8 @@ public class DfpropUpdateLogic {
                         }
 
                         private void doBuildCommentStringCurrentElement(StringBuilder sb, String currentIndent, String key) {
-                            if (merge.comments.get(scope) != null && ((Map) merge.comments.get(scope)).get(key) != null) {
-                                String commentString = (String) ((Map) merge.comments.get(scope)).get(key);
+                            if (merge.comments.get(scope) != null && ((Map<String, Object>) merge.comments.get(scope)).get(key) != null) {
+                                String commentString = (String) ((Map<String, Object>) merge.comments.get(scope)).get(key);
                                 String[] comments = commentString.split("\n");
                                 if (comments.length == 0) { // case of containing only '\n'
                                     sb.append(commentString);
