@@ -96,6 +96,9 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
             log("outputLine:\t{}", outputLine);
             assertEquals(inputLine, outputLine);
         }
+
+        inputReader.close();
+        outputReader.close();
     }
 
     // -----------------------------------------------------
