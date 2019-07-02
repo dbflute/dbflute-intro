@@ -181,10 +181,14 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         List<String> originalThemeList =
                 Optional.ofNullable((List<String>) originalWholeMap.get("themeList")).orElse(Collections.emptyList());
-        List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
-            boolean isOn = originalThemeList.contains(themeType.code);
-            return new SchemaPolicyWholeMap.Theme(themeType, isOn);
-        }).collect(Collectors.toList());
+        List<SchemaPolicyWholeMap.Theme> themeList = originalThemeList.stream()
+                .map(code -> new SchemaPolicyWholeMap.Theme(SchemaPolicyWholeMap.ThemeType.valueByCode(code), true))
+                .collect(Collectors.toList());
+        List<SchemaPolicyWholeMap.Theme> notExistsThemeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values())
+                .filter(themeType -> !originalThemeList.contains(themeType.code))
+                .map(themeType -> new SchemaPolicyWholeMap.Theme(themeType, false))
+                .collect(Collectors.toList());
+        themeList.addAll(notExistsThemeList);
 
         return new SchemaPolicyWholeMap(themeList);
     }
@@ -198,10 +202,14 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         List<String> originalThemeList =
                 Optional.ofNullable((List<String>) originalTableMap.get("themeList")).orElse(Collections.emptyList());
-        List<SchemaPolicyTableMap.Theme> themeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values()).map(themeType -> {
-            boolean isOn = originalThemeList.contains(themeType.code);
-            return new SchemaPolicyTableMap.Theme(themeType, isOn);
-        }).collect(Collectors.toList());
+        List<SchemaPolicyTableMap.Theme> themeList = originalThemeList.stream()
+                .map(code -> new SchemaPolicyTableMap.Theme(SchemaPolicyTableMap.ThemeType.valueByCode(code), true))
+                .collect(Collectors.toList());
+        List<SchemaPolicyTableMap.Theme> notExistsThemeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values())
+                .filter(themeType -> !originalThemeList.contains(themeType.code))
+                .map(themeType -> new SchemaPolicyTableMap.Theme(themeType, false))
+                .collect(Collectors.toList());
+        themeList.addAll(notExistsThemeList);
         @SuppressWarnings("unchecked")
         List<String> originalStatementList =
                 Optional.ofNullable((List<String>) originalTableMap.get("statementList")).orElse(Collections.emptyList());
@@ -218,10 +226,14 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         List<String> originalThemeList =
                 Optional.ofNullable((List<String>) originalColumnMap.get("themeList")).orElse(Collections.emptyList());
-        List<SchemaPolicyColumnMap.Theme> themeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values()).map(themeType -> {
-            boolean isOn = originalThemeList.contains(themeType.code);
-            return new SchemaPolicyColumnMap.Theme(themeType, isOn);
-        }).collect(Collectors.toList());
+        List<SchemaPolicyColumnMap.Theme> themeList = originalThemeList.stream()
+                .map(code -> new SchemaPolicyColumnMap.Theme(SchemaPolicyColumnMap.ThemeType.valueByCode(code), true))
+                .collect(Collectors.toList());
+        List<SchemaPolicyColumnMap.Theme> notExistsThemeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values())
+                .filter(themeType -> !originalThemeList.contains(themeType.code))
+                .map(themeType -> new SchemaPolicyColumnMap.Theme(themeType, false))
+                .collect(Collectors.toList());
+        themeList.addAll(notExistsThemeList);
         @SuppressWarnings("unchecked")
         List<String> originalStatementList =
                 Optional.ofNullable((List<String>) originalColumnMap.get("statementList")).orElse(Collections.emptyList());
