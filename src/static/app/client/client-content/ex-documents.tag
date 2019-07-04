@@ -2,8 +2,8 @@
   <div class="ui container">
     <h3>Documents</h3>
     <div class="ui list">
-      <div show="{ opts.client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
-      <div show="{ opts.client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+      <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+      <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
@@ -78,6 +78,8 @@
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
     let self = this
+
+    self.client = opts.client
 
     // ===================================================================================
     //                                                                          Initialize
@@ -162,6 +164,10 @@
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
         self.refs.resultModal.show(message)
       }).finally(() => {
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.client = response
+          self.update()
+        })
         self.refs.generateModal.hide()
         self.latestResult.updateLatestResult()
       })
