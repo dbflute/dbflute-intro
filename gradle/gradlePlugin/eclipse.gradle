@@ -16,6 +16,16 @@ eclipse {
             }*.path = "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-${versions.jdk}"
         }
     }
+
+    project {
+        // intro's committters do not use WTP (so remove them to avoid warning)
+        natures.removeAll {
+            it.startsWith('org.eclipse.wst') || it == 'org.eclipse.jem.workbench.JavaEMFNature'
+        }
+        buildCommands.removeAll {
+            it.name.startsWith('org.eclipse.wst')
+        }
+    }
 }
 
 tasks.eclipseJdt {
