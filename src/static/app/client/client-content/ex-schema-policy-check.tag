@@ -219,12 +219,15 @@
         } else if (message === 'failure'){
           self.checkModal.fail()
         }
-        self.update()
       }).finally(() => {
         if (self.checkModal.status === 'Check') {
           self.refs.checkModal.hide()
         }
-        self.latestResult.updateLatestResult()
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.client = response
+          self.updateLatestResult(self.client)
+          self.update()
+        })
       })
     }
 
