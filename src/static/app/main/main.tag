@@ -1,5 +1,5 @@
 <main>
-  <div class="ui container">
+  <div class="ui text container">
     <div>
       <h2>DBFlute Client</h2>
       <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }" />
@@ -12,7 +12,6 @@
         <th data-is="i18n">LABEL_databaseCode</th>
         <th data-is="i18n">LABEL_languageCode</th>
         <th data-is="i18n">LABEL_containerCode</th>
-        <th></th>
       </tr>
       </thead>
       <tbody class="list-group">
@@ -23,9 +22,6 @@
         <td>{ client.databaseCode }</td>
         <td>{ client.languageCode }</td>
         <td>{ client.containerCode }</td>
-        <td class="right aligned">
-          <input type="button" class="ui button primary" value="Settings" onclick="{ goToSettings.bind(this, client) }" />
-        </td>
       </tr>
       </tbody>
     </table>

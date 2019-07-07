@@ -2,11 +2,15 @@
   <div class="ui container">
     <h3>Documents</h3>
     <div class="ui list">
-      <div show="{ opts.client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
-      <div show="{ opts.client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+      <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+      <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/index.html" target="_blank">"Doc Task"?</a></div>
+      <p>Doc task is a DBFlute task that automatically generates various documents.</p>
+    </div>
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
@@ -58,7 +62,7 @@
     </div>
   </su-modal>
 
-  <result-modal></result-modal>
+  <result-modal ref="resultModal"></result-modal>
 
   <style>
     .latest-result {
@@ -74,6 +78,8 @@
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
     let self = this
+
+    self.client = opts.client
 
     // ===================================================================================
     //                                                                          Initialize
@@ -92,7 +98,6 @@
     }
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
     }
 
@@ -157,8 +162,12 @@
     this.generateTask = () => {
       self.refs.generateModal.show()
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
-        self.resultModal.show(message)
+        self.refs.resultModal.show(message)
       }).finally(() => {
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.client = response
+          self.update()
+        })
         self.refs.generateModal.hide()
         self.latestResult.updateLatestResult()
       })

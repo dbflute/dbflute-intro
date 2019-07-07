@@ -6,6 +6,10 @@
       <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
     </div>
     <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"Alter Check"?</a></div>
+      <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
+    </div>
     <div show="{ editing && editingAlterSqls.length > 0 }" class="ui list">
       <h4 class="ui header">Editing Alter SQL List</h4>
       <ul>
@@ -51,7 +55,7 @@
     </div>
   </su-modal>
 
-  <result-modal></result-modal>
+  <result-modal ref="resultModal"></result-modal>
 
   <style>
     .latest-result {
@@ -112,7 +116,6 @@
     }
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
       self.updateLatestResult(self.client)
     }
@@ -176,17 +179,16 @@
       this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
-          self.resultModal.show(message)
+          self.refs.resultModal.show(message)
         }).finally(() => {
+          ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+            self.client = response
+            self.updateLatestResult(self.client)
+            self.prepareEditingAlterSqls(self.client.editingAlterSqls)
+            self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
+            self.update()
+          })
           self.refs.executeModal.hide()
-        })
-      }).finally(() => {
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-          self.client = response
-          self.updateLatestResult(self.client)
-          self.prepareEditingAlterSqls(self.client.editingAlterSqls)
-          self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
-          self.update()
         })
       })
     }

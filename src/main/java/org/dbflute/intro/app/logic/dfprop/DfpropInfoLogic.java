@@ -15,7 +15,12 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -28,7 +33,7 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbflute.infra.dfprop.DfPropFile;
+import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
@@ -39,11 +44,14 @@ import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.util.DfCollectionUtil;
+import org.dbflute.util.Srl;
 
 /**
  * @author jflute
  * @author deco
  * @author cabos
+ * @author subaru
  */
 public class DfpropInfoLogic {
 
@@ -77,12 +85,11 @@ public class DfpropInfoLogic {
             } else {
                 fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
             }
-            final DfPropFile dfpropFile = new DfPropFile();
-            dfpropMap.put(fileNameKey, readMap(file, dfpropFile));
+            dfpropMap.put(fileNameKey, readMap(file));
 
             final File plusFile = new File(file.getName().replace("Map.dfprop", "Map+.dfprop"));
             if (plusFile.exists()) {
-                dfpropMap.get(fileNameKey).putAll(readMap(plusFile, dfpropFile));
+                dfpropMap.get(fileNameKey).putAll(readMap(plusFile));
             }
         });
         final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
@@ -106,8 +113,7 @@ public class DfpropInfoLogic {
             return Optional.empty();
         }
         return Arrays.stream(dfpropFiles).filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop")).findAny().map(file -> {
-            final DfPropFile dfpropFile = new DfPropFile();
-            Map<String, Object> readMap = readMap(file, dfpropFile);
+            Map<String, Object> readMap = readMap(file);
             @SuppressWarnings("unchecked")
             Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
             return schemaSyncCheckMap;
@@ -134,14 +140,15 @@ public class DfpropInfoLogic {
             return SchemaPolicyMap.noSettingsInstance();
         }
 
-        Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile, new DfPropFile());
+        Map<String, Object> schemaPolicyMap = readMap(schemaPolicyMapFile);
+        Map<String, Object> comments = readComments(schemaPolicyMapFile);
 
         SchemaPolicyTargetSetting targetSetting = parseSchemaPolicyTargetSetting(schemaPolicyMap);
         SchemaPolicyWholeMap wholeMap = parseWholeMap(schemaPolicyMap);
         SchemaPolicyTableMap tableMap = parseTableMap(schemaPolicyMap);
         SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
 
-        return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap);
+        return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap, comments);
     }
 
     private SchemaPolicyTargetSetting parseSchemaPolicyTargetSetting(Map<String, Object> schemaPolicyMap) {
@@ -174,10 +181,14 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         List<String> originalThemeList =
                 Optional.ofNullable((List<String>) originalWholeMap.get("themeList")).orElse(Collections.emptyList());
-        List<SchemaPolicyWholeMap.Theme> themeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values()).map(themeType -> {
-            boolean isOn = originalThemeList.contains(themeType.code);
-            return new SchemaPolicyWholeMap.Theme(themeType, isOn);
-        }).collect(Collectors.toList());
+        List<SchemaPolicyWholeMap.Theme> themeList = originalThemeList.stream()
+                .map(code -> new SchemaPolicyWholeMap.Theme(SchemaPolicyWholeMap.ThemeType.valueByCode(code), true))
+                .collect(Collectors.toList());
+        List<SchemaPolicyWholeMap.Theme> notExistsThemeList = Arrays.stream(SchemaPolicyWholeMap.ThemeType.values())
+                .filter(themeType -> !originalThemeList.contains(themeType.code))
+                .map(themeType -> new SchemaPolicyWholeMap.Theme(themeType, false))
+                .collect(Collectors.toList());
+        themeList.addAll(notExistsThemeList);
 
         return new SchemaPolicyWholeMap(themeList);
     }
@@ -191,10 +202,14 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         List<String> originalThemeList =
                 Optional.ofNullable((List<String>) originalTableMap.get("themeList")).orElse(Collections.emptyList());
-        List<SchemaPolicyTableMap.Theme> themeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values()).map(themeType -> {
-            boolean isOn = originalThemeList.contains(themeType.code);
-            return new SchemaPolicyTableMap.Theme(themeType, isOn);
-        }).collect(Collectors.toList());
+        List<SchemaPolicyTableMap.Theme> themeList = originalThemeList.stream()
+                .map(code -> new SchemaPolicyTableMap.Theme(SchemaPolicyTableMap.ThemeType.valueByCode(code), true))
+                .collect(Collectors.toList());
+        List<SchemaPolicyTableMap.Theme> notExistsThemeList = Arrays.stream(SchemaPolicyTableMap.ThemeType.values())
+                .filter(themeType -> !originalThemeList.contains(themeType.code))
+                .map(themeType -> new SchemaPolicyTableMap.Theme(themeType, false))
+                .collect(Collectors.toList());
+        themeList.addAll(notExistsThemeList);
         @SuppressWarnings("unchecked")
         List<String> originalStatementList =
                 Optional.ofNullable((List<String>) originalTableMap.get("statementList")).orElse(Collections.emptyList());
@@ -211,10 +226,14 @@ public class DfpropInfoLogic {
         @SuppressWarnings("unchecked")
         List<String> originalThemeList =
                 Optional.ofNullable((List<String>) originalColumnMap.get("themeList")).orElse(Collections.emptyList());
-        List<SchemaPolicyColumnMap.Theme> themeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values()).map(themeType -> {
-            boolean isOn = originalThemeList.contains(themeType.code);
-            return new SchemaPolicyColumnMap.Theme(themeType, isOn);
-        }).collect(Collectors.toList());
+        List<SchemaPolicyColumnMap.Theme> themeList = originalThemeList.stream()
+                .map(code -> new SchemaPolicyColumnMap.Theme(SchemaPolicyColumnMap.ThemeType.valueByCode(code), true))
+                .collect(Collectors.toList());
+        List<SchemaPolicyColumnMap.Theme> notExistsThemeList = Arrays.stream(SchemaPolicyColumnMap.ThemeType.values())
+                .filter(themeType -> !originalThemeList.contains(themeType.code))
+                .map(themeType -> new SchemaPolicyColumnMap.Theme(themeType, false))
+                .collect(Collectors.toList());
+        themeList.addAll(notExistsThemeList);
         @SuppressWarnings("unchecked")
         List<String> originalStatementList =
                 Optional.ofNullable((List<String>) originalColumnMap.get("statementList")).orElse(Collections.emptyList());
@@ -227,7 +246,7 @@ public class DfpropInfoLogic {
     //                                      ----------------
     public LittleAdjustmentMap findLittleAdjustmentMap(String projectName) {
         final File littleAdjustmentMap = dfpropPhysicalLogic.findDfpropFile(projectName, "littleAdjustmentMap.dfprop");
-        final Map<String, Object> readMap = readMap(littleAdjustmentMap, new DfPropFile());
+        final Map<String, Object> readMap = readMap(littleAdjustmentMap);
         final boolean isTableDispNameUpperCase = convertSettingToBoolean(readMap.get("isTableDispNameUpperCase"));
         final boolean isTableSqlNameUpperCase = convertSettingToBoolean(readMap.get("isTableSqlNameUpperCase"));
         final boolean isColumnSqlNameUpperCase = convertSettingToBoolean(readMap.get("isColumnSqlNameUpperCase"));
@@ -239,7 +258,7 @@ public class DfpropInfoLogic {
     //                                              --------
     public DocumentMap findDocumentMap(String projectName) {
         final File documentDefinitionMap = dfpropPhysicalLogic.findDfpropFile(projectName, "documentMap.dfprop");
-        final Map<String, Object> readMap = readMap(documentDefinitionMap, new DfPropFile());
+        final Map<String, Object> readMap = readMap(documentDefinitionMap);
         return prepareDocumentMapInner(readMap);
     }
 
@@ -256,12 +275,96 @@ public class DfpropInfoLogic {
     // ===================================================================================
     //                                                                        Small Helper
     //                                                                        ============
-    private Map<String, Object> readMap(File targetFile, DfPropFile dfpropFile) {
+    private Map<String, Object> readMap(File targetFile) {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
-            return dfpropFile.readMap(absolutePath, null);
-        } catch (RuntimeException e) {
+            return new DfMapFile().readMap(new FileInputStream(targetFile));
+        } catch (IOException | RuntimeException e) {
             throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
+        }
+    }
+
+    private Map<String, Object> readComments(File targetFile) {
+        final String absolutePath = targetFile.getAbsolutePath();
+        try {
+            return new DfMapFile() {
+                private final List<String> SCOPE_LIST =
+                        Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap", "tableMap",
+                                "columnMap");
+                private final String OTHER_SCOPE = "other";
+                private final String BEGINNING_KEY = "beginningComments";
+                private final String END_KEY = "endComments";
+
+                public Map<String, Object> readComments(InputStream ins) throws IOException {
+                    assertObjectNotNull("ins", ins);
+                    final Map<String, Object> keyCommentMap = DfCollectionUtil.newLinkedHashMap();
+                    final String encoding = "UTF-8";
+                    BufferedReader br = new BufferedReader(new InputStreamReader(ins, encoding));
+                    String previousComment = "";
+                    String scope = null;
+                    while (true) {
+                        final String line = br.readLine();
+                        if (line == null) {
+                            if (!previousComment.isEmpty()) {
+                                addComments(keyCommentMap, OTHER_SCOPE, END_KEY, previousComment);
+                            }
+                            break;
+                        }
+                        final String ltrimmedLine = Srl.ltrim(line);
+                        if (ltrimmedLine.startsWith(_lineCommentMark) || "".equals(ltrimmedLine)) {
+                            previousComment += ltrimmedLine + "\n";
+                            continue;
+                        }
+                        // key value here
+                        String key = extractKey(ltrimmedLine);
+                        if (SCOPE_LIST.contains(key)) {
+                            scope = key;
+                        }
+                        if ("".equals(previousComment)) {
+                            continue;
+                        }
+
+                        if (scope == null && key.startsWith("map:{")) {
+                            scope = OTHER_SCOPE;
+                            key = BEGINNING_KEY;
+                        }
+                        addComments(keyCommentMap, scope, key, previousComment);
+                        previousComment = "";
+                    }
+                    try {
+                        br.close();
+                    } catch (IOException ignored) {
+                    }
+                    return keyCommentMap;
+                }
+
+                private String extractKey(String line) {
+                    String key;
+                    if (line.contains("=>")) {
+                        key = line.trim();
+                    } else if (line.contains("=")) {
+                        key = Srl.substringFirstFront(line, "=").trim();
+                    } else {
+                        key = line.trim();
+                    }
+
+                    if (key.startsWith(";")) {
+                        return Srl.substringFirstRear(key, ";").trim();
+                    }
+                    return key;
+                }
+
+                @SuppressWarnings("unchecked")
+                private void addComments(Map<String, Object> map, String scope, String key, String comments) {
+                    if (map.containsKey(scope)) {
+                        ((Map<String, Object>) map.get(scope)).put(key, comments);
+                    } else {
+                        map.put(scope, DfCollectionUtil.newLinkedHashMap(key, comments));
+                    }
+                }
+            }.readComments(new FileInputStream(targetFile));
+        } catch (IOException | RuntimeException e) {
+            throw new IllegalStateException("Cannot read the dfprop comments: " + absolutePath, e);
         }
     }
 

@@ -15,8 +15,12 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +65,40 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         assertTrue(schemaPolicyMapFile.exists());
         SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapTheme(schemaPolicyMapFile, targetType, infoLogic);
         assertTrue(afterTheme.isActive);
+    }
+
+    @Test
+    public void test_doReplaceSchemaPolicyMap_noChange() throws Exception {
+        // ## Arrange ##
+        DfpropUpdateLogic logic = new DfpropUpdateLogic();
+        inject(logic);
+        DfpropInfoLogic infoLogic = new DfpropInfoLogic();
+        inject(infoLogic);
+
+        File inputFile = prepareFileForTestClient("dfprop/unittest/schemaPolicyMap.dfprop");
+        File outputFile = prepareFileForTestClient("dfprop/unittest/schemaPolicyMap_output.dfprop");
+
+        Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+        // ## Act ##
+        SchemaPolicyMap inputMap = infoLogic.parseSchemePolicyMap(inputFile);
+        logic.doReplaceSchemaPolicyMap(outputFile, inputMap);
+
+        // ## Assert ##
+        BufferedReader inputReader = new BufferedReader(new FileReader(inputFile));
+        BufferedReader outputReader = new BufferedReader(new FileReader(outputFile));
+
+        String inputLine;
+        String outputLine;
+
+        while ((inputLine = inputReader.readLine()) != null | (outputLine = outputReader.readLine()) != null) {
+            log("inputLine: \t{}", inputLine);
+            log("outputLine:\t{}", outputLine);
+            assertEquals(inputLine, outputLine);
+        }
+
+        inputReader.close();
+        outputReader.close();
     }
 
     // -----------------------------------------------------

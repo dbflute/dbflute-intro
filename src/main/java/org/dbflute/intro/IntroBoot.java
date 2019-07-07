@@ -71,7 +71,7 @@ public class IntroBoot {
     }
 
     public static String getServerHost() {
-        return System.getProperty(INTRO_HOST_KEY, "localhost");
+        return System.getProperty(INTRO_HOST_KEY, null);
     }
 
     public static int getPort() {

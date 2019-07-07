@@ -10,6 +10,10 @@
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
       Check Schema (schema-sync-check)
     </button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Schema Sync Check"?</a></div>
+      <p>Check there is a difference between the two schema structures.</p>
+    </div>
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
@@ -48,7 +52,7 @@
     </div>
   </su-modal>
 
-  <result-modal></result-modal>
+  <result-modal ref="resultModal"></result-modal>
 
   <style>
     .latest-result {
@@ -90,7 +94,6 @@
     }
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'schemaSyncCheck' })[0]
     }
 
@@ -154,7 +157,7 @@
     this.schemaSyncCheckTask = () => {
       self.refs.checkModal.show()
       DbfluteTask.task('schemaSyncCheck', self.opts.projectName, (message) => {
-        self.resultModal.show(message)
+        self.refs.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
         self.latestResult.updateLatestResult()

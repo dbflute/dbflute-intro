@@ -2,6 +2,10 @@
   <div class="ui container">
     <h3>Replace Schema</h3>
     <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Replace Schema"?</a></div>
+      <p>Automates (re) building DB schemas.</p>
+    </div>
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
@@ -24,7 +28,7 @@
     </div>
   </su-modal>
 
-  <result-modal></result-modal>
+  <result-modal ref="resultModal"></result-modal>
 
   <style>
     .latest-result {
@@ -74,7 +78,6 @@
     }
 
     this.prepareComponents = () => {
-      self.resultModal = riot.mount('result-modal')[0]
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'replaceSchema' })[0]
     }
 
@@ -95,7 +98,7 @@
       this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('replaceSchema', self.opts.projectName, (message) => {
-          self.resultModal.show(message)
+          self.refs.resultModal.show(message)
         }).finally(() => {
           self.refs.executeModal.hide()
           self.latestResult.updateLatestResult()

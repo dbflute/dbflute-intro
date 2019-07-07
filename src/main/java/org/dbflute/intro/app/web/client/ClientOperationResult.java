@@ -64,4 +64,9 @@ public class ClientOperationResult {
     public List<AlterSqlBean> editingAlterSqls;
     @Valid
     public List<AlterSqlBean> stackedAlterSqls;
+
+    // ===================================================================================
+    //                                                                 Schema Policy Check
+    //                                                                 ===================
+    public Boolean violatesSchemaPolicy;
 }

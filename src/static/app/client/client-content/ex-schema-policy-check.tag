@@ -3,7 +3,7 @@
     <h3>Schema Policy Check</h3>
     <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
     <div class="ui info message">
-      <div class="header">What is "Check Policy"?</div>
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"Check Policy"?</a></div>
       <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
     </div>
     <div class="latest-result">
@@ -30,7 +30,6 @@
                     </div>
                   </div>
                 </div>
-                <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5>Theme</h5>
@@ -55,7 +54,6 @@
                     </div>
                   </a>
                 </div>
-                <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5>Theme</h5>
@@ -80,7 +78,6 @@
                     </div>
                   </a>
                 </div>
-                <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
             </su-tabset>
           </div>
@@ -98,7 +95,6 @@
     </div>
     <div class="ui negative message" if="{opts.modal.status === 'Failure'}">
       <h4>{ opts.modal.message }</h4>
-      <a class="" onclick="{ parent.openSchemaHTML }">Check Schema Policy Violation</a>
     </div>
   </su-modal>
 
@@ -119,7 +115,7 @@
     const DbfluteTask = new _DbfluteTask()
 
     let self = this
-
+    self.client = opts.client
     this.schemaPolicy = {}
 
     // ===================================================================================
@@ -132,6 +128,23 @@
 
     this.prepareComponents = () => {
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
+      self.updateLatestResult(self.client)
+    }
+
+    this.updateLatestResult = (client) => {
+      if (!self.latestResult) {
+        return
+      }
+      if (client.violatesSchemaPolicy) {
+        self.latestResult.failure = {
+          title: 'Result: Failure',
+          link: {
+            message: 'Check Schema Policy Violation (from DBFluteEngine 1.2.0).',
+            clickAction: self.openSchemaHTML
+          }
+        }
+      }
+      self.latestResult.updateLatestResult()
     }
 
     // ===================================================================================
@@ -206,12 +219,15 @@
         } else if (message === 'failure'){
           self.checkModal.fail()
         }
-        self.update()
       }).finally(() => {
         if (self.checkModal.status === 'Check') {
           self.refs.checkModal.hide()
         }
-        self.latestResult.updateLatestResult()
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.client = response
+          self.updateLatestResult(self.client)
+          self.update()
+        })
       })
     }
 

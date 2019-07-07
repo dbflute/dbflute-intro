@@ -56,6 +56,12 @@ public class LogPhysicalLogic {
     // ===================================================================================
     //                                                                                Read
     //                                                                                ====
+    public boolean existsViolationSchemaPolicyCheck(String clientProject) {
+        return findLatestResultFile(clientProject, "doc").map(file -> fileLogic.readFile(file))
+                .map(s -> s.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException"))
+                .orElse(false);
+    }
+
     public List<File> findLogFileAllList(String project) {
         final File logDir = new File(buildLogPath(project));
         final File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));

@@ -35,24 +35,24 @@ ext {
             node : '8.7.0',
 
             // Main Framework
-            dbflute : '1.1.9',
-            h2 : '1.4.197',
-            lastaflute : '1.1.1',
+            dbflute : '1.2.0-patch20190620-RC1',
+            h2 : '1.4.199',
+            lastaflute : '1.1.2',
 
             // Partner Library
-            slf4j : '1.7.25',
+            slf4j : '1.7.26',
             logback : '1.2.3',
-            jettyboot : '0.4.9',
-            lastadoc : '0.3.4',
-            swaggerui : '3.19.0',
+            jettyboot : '0.5.0-RC1',
+            lastadoc : '0.3.6',
+            swaggerui : '3.22.1',
 
             // GoodNeighbor Library
-            commonslang : '3.7',
+            commonslang : '3.9',
             commonsio : '2.6',
 
             // Testing
             junit : '4.12',
-            utflute : '0.8.9'
+            utflute : '0.9.1'
         ]
 }
 

@@ -302,13 +302,6 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
         return columnExceptMap;
     }
 
-    private Boolean extractIsMainSchemaOnly(Map<String, Object> schemaPolicyMap) {
-        @SuppressWarnings("unchecked")
-        String isMainSchemaOnly = (String) schemaPolicyMap.get("isMainSchemaOnly");
-
-        return Boolean.valueOf(isMainSchemaOnly);
-    }
-
     private List<String> extractThemeList(Map<String, Object> actualWholeMap) {
         @SuppressWarnings("unchecked")
         List<String> themeList = (List<String>) actualWholeMap.get("themeList");

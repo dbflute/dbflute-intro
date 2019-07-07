@@ -152,6 +152,7 @@ public class DocumentPhysicalLogic {
             final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
             alterSqls.add(new AlterSqlBean(fileName, content));
         }
+        zipFile.close();
         return alterSqls;
     }
 
