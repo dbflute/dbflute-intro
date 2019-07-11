@@ -3,9 +3,9 @@
     <h4 class="ui header">Latest Result</h4>
     <div class="ui { latestResult.success ? 'positive' : 'negative' } message">
       <h4>{ latestResult.success ? success.title : failure.title }</h4>
-      <p show="{ latestResult.success && success.message }">{ success.message }</p>
-      <p show="{ !latestResult.success && failure.message }">{ failure.message }</p>
-      <p show="{ !latestResult.success && failure.link.message }" >
+      <p if="{ latestResult.success && success.message }">{ success.message }</p>
+      <p if="{ !latestResult.success && failure.message }">{ failure.message }</p>
+      <p if="{ !latestResult.success && failure.link && failure.link.message }" >
         <a onclick="{ failure.link.clickAction }">{ failure.link.message }</a>
       </p>
       <a onclick="{ toggleLatestResult }">{ latestResult.show ? 'hide latest log' : 'show latest log' }</a>
