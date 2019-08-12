@@ -1,6 +1,87 @@
 <ex-alter-check>
   <div class="ui container">
     <h3>Alter Check</h3>
+
+    <section class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"Alter Check"?</a></div>
+      <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
+    </section>
+
+    <div class="ui divider"></div>
+
+    <section>
+      <h4 class="ui header">Step1. Check other developer alter sql</h4>
+
+      <h5 class="ui header">Checked Alter SQL List</h5>
+      <div class="ui list">
+        <div class="item" each="{ alterItem in stackedAlterSqls }">
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+          <div show="{ alterItem.show }" class="ui message message-area">
+          <pre>
+            <code>
+              <raw content="{ alterItem.content }"></raw>
+            </code>
+          </pre>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="ui header">Editing Alter SQL List</h5>
+      <div class="ui list">
+        <div class="item" each="{ alterItem in editingAlterSqls }">
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+          <div show="{ alterItem.show }" class="ui message message-area">
+          <pre>
+            <code>
+              <raw content="{ alterItem.content }"></raw>
+            </code>
+          </pre>
+          </div>
+        </div>
+      </div>
+
+      <a><button class="ui button"><i class="folder open icon"></i>Open Editing Alter Directory</button></a>
+    </section>
+
+
+    <div class="ui divider"></div>
+
+    <section>
+      <h4 class="ui header">Step2. Prepare Alter Check</h4>
+      <form class="ui form">
+        <div class="fields">
+          <div class="seven wide inline field">
+            <label>alter_schema_</label>
+            <input type="text" placeholder="input your ticket name and so on">
+            <label>.sql</label>
+          </div>
+          <div class="three wide field">
+            <button class="ui primary button">Prepare Alter Check</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <div class="ui divider"></div>
+
+    <section>
+      <h4 class="ui header">Step3. Execute Alter Check</h4>
+      <button class="ui red button" onclick="{ alterCheckTask }">Execute Alter Check</button>
+    </section>
+
+    <div class="ui divider"></div>
+
+    <section>
+      <h4 class="ui header">Step4. Fix Alter SQLs If Failure</h4>
+      <a><button class="ui button"><i class="folder open icon"></i>Open Editing Alter Directory</button></a>
+
+      <div class="latest-result">
+        <latest-result></latest-result>
+      </div>
+    </section>
+
+    <p><br><br><br>===============================<br><br><br></p>
+
     <div class="ui list">
       <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
       <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
@@ -117,6 +198,7 @@
 
     this.prepareComponents = () => {
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
+      self.latestResult.latestResult.header.show = false
       self.updateLatestResult(self.client)
     }
 
