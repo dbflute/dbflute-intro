@@ -1,6 +1,6 @@
 <latest-result>
   <div show="{ latestResult.loaded }">
-    <h4 class="ui header">Latest Result</h4>
+    <h4 if="{ latestResult.header.show }" class="ui header">{ latestResult.header.text }</h4>
     <div class="ui { latestResult.success ? 'positive' : 'negative' } message">
       <h4>{ latestResult.success ? success.title : failure.title }</h4>
       <p if="{ latestResult.success && success.message }">{ success.message }</p>
@@ -30,7 +30,11 @@
     let self = this
 
     self.latestResult = {
-      loaded: false
+      loaded: false,
+      header: {
+        text: 'Latest Result',
+        show: true
+      }
     }
 
     this.on('mount', () => {
@@ -54,12 +58,12 @@
     this.updateLatestResult = () => {
       ApiFactory.latestResult(self.opts.projectName, self.opts.task).then((response) => {
         if (response.fileName) {
-          self.latestResult = {
+          self.latestResult = Object.assign(self.latestResult, {
             success: response.fileName.includes('success'),
             content: response.content,
             show: false,
-            loaded: true
-          }
+            loaded: true,
+          })
         }
         self.update()
       })
