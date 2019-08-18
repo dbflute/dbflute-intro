@@ -10,7 +10,7 @@
     <div class="ui divider"></div>
 
     <section>
-      <h4 class="ui header">Step1. Check other developer alter sql</h4>
+      <h4 class="ui header">Step1. Prepare alter sql</h4>
 
       <h5 class="ui header">Checked Alter SQL List</h5>
       <div class="ui list">
@@ -26,28 +26,6 @@
         </div>
       </div>
 
-      <h5 class="ui header">Editing Alter SQL List</h5>
-      <div class="ui list">
-        <div class="item" each="{ alterItem in editingAlterSqls }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
-
-      <a><button class="ui button"><i class="folder open icon"></i>Open Editing Alter Directory</button></a>
-    </section>
-
-
-    <div class="ui divider"></div>
-
-    <section>
-      <h4 class="ui header">Step2. Prepare Alter Check</h4>
       <form class="ui form">
         <div class="fields">
           <div class="seven wide inline field">
@@ -65,15 +43,24 @@
     <div class="ui divider"></div>
 
     <section>
-      <h4 class="ui header">Step3. Execute Alter Check</h4>
-      <button class="ui red button" onclick="{ alterCheckTask }">Execute Alter Check</button>
-    </section>
+      <h4 class="ui header">Step2. Execute Alter Check</h4>
 
-    <div class="ui divider"></div>
+      <h5 class="ui header">Editing Alter SQL List</h5>
+      <div class="ui list">
+        <div class="item" each="{ alterItem in editingAlterSqls }">
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+          <div show="{ alterItem.show }" class="ui message message-area">
+          <pre>
+            <code>
+              <raw content="{ alterItem.content }"></raw>
+            </code>
+          </pre>
+          </div>
+        </div>
+      </div>
 
-    <section>
-      <h4 class="ui header">Step4. Fix Alter SQLs If Failure</h4>
       <a><button class="ui button"><i class="folder open icon"></i>Open Editing Alter Directory</button></a>
+      <button class="ui red button" onclick="{ alterCheckTask }">Execute Alter Check</button>
 
       <div class="latest-result">
         <latest-result></latest-result>
