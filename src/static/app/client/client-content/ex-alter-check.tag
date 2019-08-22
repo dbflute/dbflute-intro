@@ -264,7 +264,9 @@
 
     this.prepareAlterCheck = () => {
       const alterFileName = 'alter_schema_' + self.refs.alterNameInput.value + '.sql'
-      ApiFactory.prepareAlterCheck(self.opts.projectName, alterFileName)
+      ApiFactory.prepareAlterCheck(self.opts.projectName, alterFileName).then(() => {
+        ApiFactory.openAlterDir(self.opts.projectName)
+      })
     }
   </script>
 </ex-alter-check>
