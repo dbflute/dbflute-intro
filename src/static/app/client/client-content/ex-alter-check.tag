@@ -30,11 +30,11 @@
         <div class="fields">
           <div class="seven wide inline field">
             <label>alter_schema_</label>
-            <input type="text" placeholder="input your ticket name and so on">
+            <input type="text" ref="alterNameInput" placeholder="input your ticket name and so on">
             <label>.sql</label>
           </div>
           <div class="three wide field">
-            <button class="ui primary button">Prepare Alter Check</button>
+            <button class="ui primary button" onclick="{ prepareAlterCheck }">Prepare Alter Check</button>
           </div>
         </div>
       </form>
@@ -260,6 +260,11 @@
           self.refs.executeModal.hide()
         })
       })
+    }
+
+    this.prepareAlterCheck = () => {
+      const alterFileName = 'alter_schema_' + self.refs.alterNameInput.value + '.sql'
+      ApiFactory.prepareAlterCheck(self.opts.projectName, alterFileName)
     }
   </script>
 </ex-alter-check>

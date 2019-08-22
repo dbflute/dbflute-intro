@@ -100,6 +100,13 @@ export default class ApiFactory {
   openAlterDir(projectName) {
     return ffetch.get(`api/playsql/migration/${projectName}/alter/`)
   }
+  prepareAlterCheck(projectName, alterFileName) {
+    return ffetch.post(`api/playsql/migration/${projectName}/alter/prepare/`, {
+      body: {
+        alterFileName
+      }
+    })
+  }
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/${projectName}/list`);
   }

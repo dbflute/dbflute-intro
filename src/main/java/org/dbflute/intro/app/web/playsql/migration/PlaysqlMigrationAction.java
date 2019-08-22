@@ -15,17 +15,18 @@
  */
 package org.dbflute.intro.app.web.playsql.migration;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 
 /**
  * @author cabos
@@ -52,7 +53,13 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
             return JsonResponse.asEmptyBody();
         } else {
             throwVerifiedClientError(clientProject + " has not alter directory");
-            return  null; // not reached
+            return null; // not reached
         }
+    }
+
+    @Execute(urlPattern = "{}/@word/@word")
+    public JsonResponse<Void> alterPrepare(String clientProject, AlterPrepareBody body) {
+        validate(body, messages -> {});
+        return JsonResponse.asEmptyBody();
     }
 }
