@@ -264,8 +264,8 @@
 
     this.prepareAlterCheck = () => {
       const alterFileName = 'alter_schema_' + self.refs.alterNameInput.value + '.sql'
-      ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
-        .then(() => ApiFactory.prepareAlterCheck(self.opts.projectName))
+      ApiFactory.prepareAlterCheck(self.opts.projectName)
+        .then(() => ApiFactory.createAlterSql(self.opts.projectName, alterFileName))
         .then(() => ApiFactory.openAlterDir(self.opts.projectName))
     }
   </script>

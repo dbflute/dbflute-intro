@@ -21,11 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -175,10 +171,21 @@ public class DocumentPhysicalLogic {
         String zipPath = buildCheckedAlterZipPath(clientProject);
         String alterDirPath = buildMigrationPath(clientProject, "", "alter");
         try {
-            doUnzipAlterSqlZip(zipPath, alterDirPath);
+            unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to unzip checked alter sql zip file: " + zipPath, e);
         }
+    }
+
+    private void unzipAlterSqlZipIfNeeds(String zipPath, String dstPath) throws IOException {
+        if (!existsSqlFiles(dstPath)) {
+            doUnzipAlterSqlZip(zipPath, dstPath);
+        }
+    }
+
+    private boolean existsSqlFiles(String dirPath) {
+        return Arrays.stream(Objects.requireNonNull(new File(dirPath).listFiles()))
+                .anyMatch(file -> DfStringUtil.endsWith(file.getName(), ".sql"));
     }
 
     private void doUnzipAlterSqlZip(String zipPath, String dstPath) throws IOException {
