@@ -177,6 +177,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: this endpoint is not available */
     public static final String ERRORS_NOT_AVAILABLE_ENDPOINT = "{errors.not.available.endpoint}";
 
+    /** The key of the message: this endpoint is not available */
+    public static final String ERRORS_INVALID_FILE_EXTENSION = "{errors.invalid.file.extension}";
+
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
      * <pre>
@@ -912,6 +915,20 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsNotAvailableEndpoint(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_NOT_AVAILABLE_ENDPOINT));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.invalid.file.extension' with parameters.
+     * <pre>
+     * message: submitted file type is invalid
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsInvalidFileExtenstion(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_INVALID_FILE_EXTENSION));
         return this;
     }
 }
