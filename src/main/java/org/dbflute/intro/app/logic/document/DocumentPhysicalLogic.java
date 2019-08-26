@@ -107,9 +107,24 @@ public class DocumentPhysicalLogic {
         return OptionalThing.empty();
     }
 
+    public void createAlterDir(String clientProject) {
+        File file = new File(buildMigrationPath(clientProject, "", "alter"));
+        if (!file.exists()) {
+            file.mkdir();
+        }
+    }
+
+    public void createAlterSql(String clientProject, String alterFileName) {
+        File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to create new alter sql file: " + file.getAbsolutePath(), e);
+        }
+    }
+
     public List<AlterSqlBean> findAlterFiles(String clientProject) {
-        return findAlterDir(clientProject)
-                .map(dir -> dir.listFiles())
+        return findAlterDir(clientProject).map(dir -> dir.listFiles())
                 .filter(files -> files != null)
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
@@ -154,6 +169,27 @@ public class DocumentPhysicalLogic {
         }
         zipFile.close();
         return alterSqls;
+    }
+
+    public void unzipAlterSqlZip(String clientProject) {
+        String zipPath = buildCheckedAlterZipPath(clientProject);
+        String alterDirPath = buildMigrationPath(clientProject, "", "alter");
+        try {
+            doUnzipAlterSqlZip(zipPath, alterDirPath);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to unzip checked alter sql zip file: " + zipPath, e);
+        }
+    }
+
+    private void doUnzipAlterSqlZip(String zipPath, String dstPath) throws IOException {
+        final ZipFile zipFile = new ZipFile(zipPath);
+        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry entry = entries.nextElement();
+            final String fileName = entry.getName();
+            final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+            Files.write(Paths.get(dstPath, fileName), Collections.singletonList(content));
+        }
     }
 
     // ===================================================================================
@@ -205,7 +241,7 @@ public class DocumentPhysicalLogic {
     private String buildCheckedAlterZipPath(String clientProject) {
         final Path historyPath = Paths.get(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history"));
         if (!Files.exists(historyPath)) {
-           return null;
+            return null;
         }
         try {
             return Files.walk(historyPath)

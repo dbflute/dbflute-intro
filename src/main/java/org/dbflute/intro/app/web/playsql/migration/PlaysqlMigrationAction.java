@@ -56,10 +56,4 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
             return null; // not reached
         }
     }
-
-    @Execute(urlPattern = "{}/@word/@word")
-    public JsonResponse<Void> alterPrepare(String clientProject, AlterPrepareBody body) {
-        validate(body, messages -> {});
-        return JsonResponse.asEmptyBody();
-    }
 }
