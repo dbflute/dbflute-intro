@@ -46,7 +46,7 @@ public class AlterAction extends IntroBaseAction {
     //                                                                          ==========
     private void moreValidate(AlterCreateBody body, IntroMessages messages) {
         if (body.alterFileName != null && !body.alterFileName.endsWith(".sql")) {
-            messages.addErrorsInvalidFileExtenstion(body.alterFileName);
+            messages.addErrorsInvalidFileExtension(body.alterFileName);
         }
     }
 }

@@ -133,7 +133,6 @@ public interface AppCDef extends Classification {
          * Get the classification by the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
-         * @deprecated use of()
          */
         public static TaskInstruction codeOf(Object code) {
             if (code == null) { return null; }
@@ -212,12 +211,12 @@ public interface AppCDef extends Classification {
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public Classification codeOf(Object code) { // null if not found, old style so use classificationOf(code)
+        public Classification codeOf(Object code) { // null if not found, old style so use of(code)
             if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.codeOf(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
-        public Classification nameOf(String name) { // null if not found, old style so use classificationByName(name)
+        public Classification nameOf(String name) { // null if not found, old style so use byName(name)
             if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
