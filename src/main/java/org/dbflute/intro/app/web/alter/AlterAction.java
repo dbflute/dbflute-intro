@@ -48,5 +48,8 @@ public class AlterAction extends IntroBaseAction {
         if (body.alterFileName != null && !body.alterFileName.endsWith(".sql")) {
             messages.addErrorsInvalidFileExtension(body.alterFileName);
         }
+        if (body.alterFileName != null && !body.alterFileName.startsWith("alter_schema_")) {
+            messages.addErrorsInvalidFileName(body.alterFileName);
+        }
     }
 }
