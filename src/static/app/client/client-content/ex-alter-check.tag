@@ -64,55 +64,6 @@
         <latest-result></latest-result>
       </div>
     </section>
-
-    <p><br><br><br>===============================<br><br><br></p>
-
-    <div class="ui list">
-      <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
-      <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
-    </div>
-    <button class="ui red button" onclick="{ alterCheckTask }">Alter Check (alter-check)</button>
-    <div class="ui info message">
-      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"Alter Check"?</a></div>
-      <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
-    </div>
-    <div show="{ editing && editingAlterSqls.length > 0 }" class="ui list">
-      <h4 class="ui header">Editing Alter SQL List</h4>
-      <ul>
-        <div each="{ alterItem in editingAlterSqls }">
-          <li>
-            <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          </li>
-          <div show="{ alterItem.show }" class="ui message message-area">
-            <pre>
-              <code>
-                <raw content="{ alterItem.content }"></raw>
-              </code>
-            </pre>
-          </div>
-        </div>
-      </ul>
-    </div>
-    <div show="{ !editing && stackedAlterSqls.length > 0 }" class="ui list">
-      <h4 class="ui header">Checked Alter SQL List</h4>
-      <ul>
-        <div each="{ alterItem in stackedAlterSqls }">
-          <li>
-            <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          </li>
-          <div show="{ alterItem.show }" class="ui message message-area">
-            <pre>
-              <code>
-                <raw content="{ alterItem.content }"></raw>
-              </code>
-            </pre>
-          </div>
-        </div>
-      </ul>
-    </div>
-    <div class="latest-result">
-      <latest-result></latest-result>
-    </div>
   </div>
 
   <su-modal modal="{ executeModal }" class="large" ref="executeModal">
