@@ -9,7 +9,7 @@
 
     <div class="ui divider"></div>
 
-    <section>
+    <section if="{ !editing }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
       <h5 class="ui header">Checked Alter SQL List</h5>
@@ -40,9 +40,7 @@
       </form>
     </section>
 
-    <div class="ui divider"></div>
-
-    <section>
+    <section if="{ editing }">
       <h4 class="ui header">Step2. Execute Alter Check</h4>
 
       <h5 class="ui header">Editing Alter SQL List</h5>
@@ -250,13 +248,7 @@
         DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
           self.refs.resultModal.show(message)
         }).finally(() => {
-          ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-            self.client = response
-            self.updateLatestResult(self.client)
-            self.prepareEditingAlterSqls(self.client.editingAlterSqls)
-            self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
-            self.update()
-          })
+          self.updateContents()
           self.refs.executeModal.hide()
         })
       })
@@ -267,6 +259,17 @@
       ApiFactory.prepareAlterCheck(self.opts.projectName)
         .then(() => ApiFactory.createAlterSql(self.opts.projectName, alterFileName))
         .then(() => ApiFactory.openAlterDir(self.opts.projectName))
+        .finally(() => self.updateContents())
+    }
+
+    this.updateContents = () => {
+      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+        self.client = response
+        self.updateLatestResult(self.client)
+        self.prepareEditingAlterSqls(self.client.editingAlterSqls)
+        self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
+        self.update()
+      })
     }
   </script>
 </ex-alter-check>
