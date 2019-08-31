@@ -29,7 +29,7 @@
       <form class="ui form">
         <div class="fields">
           <div class="seven wide inline field">
-            <label>alter_schema_</label>
+            <label>alter-schema_</label>
             <input type="text" ref="alterNameInput" placeholder="input your ticket name and so on">
             <label>.sql</label>
           </div>
@@ -206,7 +206,7 @@
     }
 
     this.prepareAlterCheck = () => {
-      const alterFileName = 'alter_schema_' + self.refs.alterNameInput.value + '.sql'
+      const alterFileName = 'alter-schema_' + self.refs.alterNameInput.value + '.sql'
       ApiFactory.prepareAlterCheck(self.opts.projectName)
         .then(() => ApiFactory.createAlterSql(self.opts.projectName, alterFileName))
         .then(() => ApiFactory.openAlterDir(self.opts.projectName))
