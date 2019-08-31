@@ -13,6 +13,7 @@ import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author subaru
+ * @author cabos
  */
 public class AlterAction extends IntroBaseAction {
     // ===================================================================================
