@@ -1,5 +1,9 @@
 package org.dbflute.intro.app.web.alter;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.lastaflute.web.validation.exception.ValidationErrorException;
 
@@ -9,11 +13,54 @@ import org.lastaflute.web.validation.exception.ValidationErrorException;
 public class AlterActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final String ALTER_DIR = TEST_CLIENT_PATH + PLAYSQL_DIR_PATH + "/migration/alter";
+
+    // ===================================================================================
+    //                                                                          Initialize
+    //                                                                          ==========
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        preparePlaysqlFiles();
+    }
+
+    // ===================================================================================
     //                                                                               Test
     //                                                                              ======
     // -----------------------------------------------------
-    //                                              Validate
-    //                                              --------
+    //                                               Prepare
+    //                                               -------
+    public void test_prepare_existsAlterDir() {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        // ## Act ##
+        alterAction.prepare(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        // do nothing
+    }
+
+    public void test_prepare_notExistsAlterDir() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        removeAlterDir();
+
+        // ## Act ##
+        alterAction.prepare(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        // do nothing
+    }
+
+    // -----------------------------------------------------
+    //                                                create
+    //                                                ------
     public void test_create_validateInvalidPrefix() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
@@ -84,4 +131,10 @@ public class AlterActionTest extends UnitIntroTestCase {
         });
     }
 
+    // ===================================================================================
+    //                                                                       Client Helper
+    //                                                                       =============
+    private void removeAlterDir() throws IOException {
+        FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
+    }
 }
