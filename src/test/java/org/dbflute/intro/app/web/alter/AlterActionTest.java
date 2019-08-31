@@ -17,6 +17,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     //                                                                          ==========
     private static final String MIGRATION_DIR = TEST_CLIENT_PATH + PLAYSQL_DIR_PATH + "/migration";
     private static final String ALTER_DIR = MIGRATION_DIR + "/alter";
+    private static final String HISTORY_DIR = MIGRATION_DIR + "/history";
 
     // ===================================================================================
     //                                                                          Initialize
@@ -59,7 +60,21 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
-    public void test_prepare_notExistsMigrationDir() throws IOException {
+    public void test_prepare_notExistsHistoryDir() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        removeHistoryDir();
+
+        // ## Act ##
+        alterAction.prepare(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        // do nothing
+    }
+
+    public void test_prepare_notMigrationDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -149,11 +164,16 @@ public class AlterActionTest extends UnitIntroTestCase {
     // ===================================================================================
     //                                                                       Client Helper
     //                                                                       =============
+
     private void removeAlterDir() throws IOException {
         FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
     }
 
+    private void removeHistoryDir() throws IOException {
+        FileUtils.deleteDirectory(new File(getProjectDir(), HISTORY_DIR));
+    }
+
     private void removeMigrationDir() throws IOException {
-        FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
+        FileUtils.deleteDirectory(new File(getProjectDir(), MIGRATION_DIR));
     }
 }
