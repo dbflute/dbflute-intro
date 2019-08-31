@@ -134,7 +134,6 @@
 
     this.prepareComponents = () => {
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
-      self.latestResult.latestResult.header.show = false
       self.updateLatestResult(self.client)
     }
 
