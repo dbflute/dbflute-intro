@@ -52,7 +52,7 @@ public class AlterAction extends IntroBaseAction {
         if (alterFileName != null && !alterFileName.startsWith("alter_schema_")) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (alterFileName != null && alterFileName.equals("alter_schema_.sql")) {
+        if (alterFileName != null && alterFileName.equals("alter_schema_.sql")) { // not express business
             messages.addErrorsInvalidFileName(alterFileName);
         }
     }
