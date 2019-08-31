@@ -45,11 +45,15 @@ public class AlterAction extends IntroBaseAction {
     //                                                                          Validation
     //                                                                          ==========
     private void moreValidate(AlterCreateBody body, IntroMessages messages) {
-        if (body.alterFileName != null && !body.alterFileName.endsWith(".sql")) {
-            messages.addErrorsInvalidFileExtension(body.alterFileName);
+        final String alterFileName = body.alterFileName;
+        if (alterFileName != null && !alterFileName.endsWith(".sql")) {
+            messages.addErrorsInvalidFileExtension(alterFileName);
         }
-        if (body.alterFileName != null && !body.alterFileName.startsWith("alter_schema_")) {
-            messages.addErrorsInvalidFileName(body.alterFileName);
+        if (alterFileName != null && !alterFileName.startsWith("alter_schema_")) {
+            messages.addErrorsInvalidFileName(alterFileName);
+        }
+        if (alterFileName != null && alterFileName.equals("alter_schema_.sql")) {
+            messages.addErrorsInvalidFileName(alterFileName);
         }
     }
 }
