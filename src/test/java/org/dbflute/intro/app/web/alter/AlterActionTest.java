@@ -59,6 +59,20 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
+    public void test_prepare_notExistsMigrationDir() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        removeMigrationDir();
+
+        // ## Act ##
+        alterAction.prepare(TEST_CLIENT_PROJECT);
+
+        // ## Assert ##
+        // do nothing
+    }
+
     // -----------------------------------------------------
     //                                                create
     //                                                ------
@@ -136,6 +150,10 @@ public class AlterActionTest extends UnitIntroTestCase {
     //                                                                       Client Helper
     //                                                                       =============
     private void removeAlterDir() throws IOException {
+        FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
+    }
+
+    private void removeMigrationDir() throws IOException {
         FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
     }
 }
