@@ -32,13 +32,8 @@ public class AlterAction extends IntroBaseAction {
         if (!optAlterDir.isPresent()) {
             documentPhysicalLogic.createAlterDir(clientProject);
         }
-        documentPhysicalLogic.createAlterSql(clientProject, body.alterFileName);
-        return JsonResponse.asEmptyBody();
-    }
-
-    @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> prepare(String clientProject) {
         documentPhysicalLogic.unzipAlterSqlZip(clientProject);
+        documentPhysicalLogic.createAlterSql(clientProject, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }
 
@@ -53,7 +48,7 @@ public class AlterAction extends IntroBaseAction {
         if (alterFileName != null && !alterFileName.startsWith("alter-schema-")) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (alterFileName != null && alterFileName.equals("alter-schema_.sql")) { // not express business
+        if (alterFileName != null && alterFileName.equals("alter-schema-.sql")) { // not express business
             messages.addErrorsInvalidFileName(alterFileName);
         }
     }
