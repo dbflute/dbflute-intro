@@ -106,7 +106,7 @@ public class DocumentPhysicalLogic {
     public void createAlterDir(String clientProject) {
         File file = new File(buildMigrationPath(clientProject, "", "alter"));
         if (!file.exists()) {
-            file.mkdir();
+            file.mkdirs();
         }
     }
 
