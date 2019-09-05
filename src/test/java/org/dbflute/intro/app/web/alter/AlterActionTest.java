@@ -31,66 +31,72 @@ public class AlterActionTest extends UnitIntroTestCase {
     // ===================================================================================
     //                                                                               Test
     //                                                                              ======
-    // -----------------------------------------------------
-    //                                               Prepare
-    //                                               -------
-    public void test_prepare_existsAlterDir() {
+    public void test_create_existsAlterDir() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
 
+        AlterCreateBody body = new AlterCreateBody();
+        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
+
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT);
+        alterAction.create(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
     }
 
-    public void test_prepare_notExistsAlterDir() throws IOException {
+    public void test_create_notExistsAlterDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
 
         removeAlterDir();
 
+        AlterCreateBody body = new AlterCreateBody();
+        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
+
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT);
+        alterAction.create(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
     }
 
-    public void test_prepare_notExistsHistoryDir() throws IOException {
+    public void test_create_notExistsHistoryDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
 
         removeHistoryDir();
 
+        AlterCreateBody body = new AlterCreateBody();
+        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
+
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT);
+        alterAction.create(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
     }
 
-    public void test_prepare_notMigrationDir() throws IOException {
+    public void test_create_notMigrationDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
 
         removeMigrationDir();
 
+        AlterCreateBody body = new AlterCreateBody();
+        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
+
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT);
+        alterAction.create(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
     }
 
-    // -----------------------------------------------------
-    //                                                create
-    //                                                ------
     public void test_create_validateInvalidPrefix() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
@@ -111,7 +117,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema_sample_business.txt";
+        body.alterFileName = "alter-schema-sample_business.txt";
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
@@ -125,7 +131,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema_sample.sql"; // see test/resource/playsql/mygration/alter/alter-schema_sample.sql
+        body.alterFileName = "alter-schema-sample.sql"; // see test/resource/playsql/mygration/alter/alter-schema_sample.sql
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
@@ -139,21 +145,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema_/\\<>*?\"|:;\0 .sql";
-
-        // ## Act, Assert ##
-        assertException(ValidationErrorException.class, () -> {
-            alterAction.create(TEST_CLIENT_PROJECT, body);
-        });
-    }
-
-    public void test_create_validateEmptyBusiness() {
-        // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
-        inject(alterAction);
-
-        AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema_.sql";
+        body.alterFileName = "alter-schema-/\\<>*?\"|:;\0 .sql";
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
