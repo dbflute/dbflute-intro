@@ -167,8 +167,24 @@ public class DocumentPhysicalLogic {
         return alterSqls;
     }
 
+    private List<String> findAlterSqlNamesFromZip(String zipPath) throws IOException {
+        final List<String> nameList = new ArrayList<>();
+        final ZipFile zipFile = new ZipFile(zipPath);
+        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry entry = entries.nextElement();
+            final String fileName = entry.getName();
+            if (!DfStringUtil.contains(fileName, ".sql")) {
+                continue;
+            }
+            nameList.add(fileName);
+        }
+        zipFile.close();
+        return nameList;
+    }
+
     public void unzipAlterSqlZip(String clientProject) {
-        final String historyPath = buildHistoryPath(clientProject);
+        final String historyPath = buildMigrationPath(clientProject, "history");
         if (Files.notExists(Paths.get(historyPath))) {
             return;
         }
@@ -250,12 +266,8 @@ public class DocumentPhysicalLogic {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
     }
 
-    private String buildHistoryPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history");
-    }
-
     private String buildCheckedAlterZipPath(String clientProject) {
-        final Path historyPath = Paths.get(buildHistoryPath(clientProject));
+        final Path historyPath = Paths.get(buildMigrationPath(clientProject, "history"));
         if (Files.notExists(historyPath)) {
             return null;
         }
@@ -268,6 +280,30 @@ public class DocumentPhysicalLogic {
                     .orElse(null);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to get checked alter schema zip file under the directory: " + historyPath, e);
+        }
+    }
+
+    public boolean existsAlterFileAlready(String clientProject, String alterFileName) {
+        return existsAlterFileInAlterDir(clientProject, alterFileName) || existsAlterFileInCheckedZip(clientProject, alterFileName);
+    }
+
+    private boolean existsAlterFileInAlterDir(String clientProject, String alterFileName) {
+        final String alterPath = buildMigrationPath(clientProject, "alter");
+        return Files.exists(Paths.get(alterPath, alterFileName));
+    }
+
+    private boolean existsAlterFileInCheckedZip(String clientProject, String alterFileName) {
+        final String historyPath = buildMigrationPath(clientProject, "history");
+        if (Files.notExists(Paths.get(historyPath))) {
+            return false;
+        }
+
+        final String zipPath = buildCheckedAlterZipPath(clientProject);
+        try {
+            List<String> alterSqlNames = findAlterSqlNamesFromZip(zipPath);
+            return alterSqlNames.contains(alterFileName);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
         }
     }
 }

@@ -180,6 +180,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: submitted file name is invalid */
     public static final String ERRORS_INVALID_FILE_NAME = "{errors.invalid.file.name}";
 
+    /** The key of the message: submitted file already exists */
+    public static final String ERRORS_DUPLICATE_FILE_NAME = "{errors.duplicate.file.name}";
+
     /** The key of the message: submitted file type is invalid */
     public static final String ERRORS_INVALID_FILE_EXTENSION = "{errors.invalid.file.extension}";
 
@@ -932,6 +935,20 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsInvalidFileName(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_INVALID_FILE_NAME));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.duplicate.file.name' with parameters.
+     * <pre>
+     * message: submitted file already exists
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsDuplicateFileName(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_DUPLICATE_FILE_NAME));
         return this;
     }
 

@@ -131,7 +131,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema-sample.sql"; // see test/resource/playsql/mygration/alter/alter-schema_sample.sql
+        body.alterFileName = "alter-schema_sample.sql"; // see test/resource/playsql/mygration/alter/alter-schema_sample.sql
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {

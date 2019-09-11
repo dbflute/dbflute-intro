@@ -27,7 +27,7 @@ public class AlterAction extends IntroBaseAction {
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
-        validate(body, messages -> moreValidate(body, messages));
+        validate(body, messages -> moreValidate(clientProject, body, messages));
         OptionalThing<File> optAlterDir = documentPhysicalLogic.findAlterDir(clientProject);
         if (!optAlterDir.isPresent()) {
             documentPhysicalLogic.createAlterDir(clientProject);
@@ -40,13 +40,16 @@ public class AlterAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                          Validation
     //                                                                          ==========
-    private void moreValidate(AlterCreateBody body, IntroMessages messages) {
+    private void moreValidate(String clientProject, AlterCreateBody body, IntroMessages messages) {
         final String alterFileName = body.alterFileName;
         if (alterFileName != null && !alterFileName.endsWith(".sql")) {
             messages.addErrorsInvalidFileExtension(alterFileName);
         }
         if (alterFileName != null && !alterFileName.startsWith("alter-schema")) {
             messages.addErrorsInvalidFileName(alterFileName);
+        }
+        if (documentPhysicalLogic.existsAlterFileAlready(clientProject, body.alterFileName)) {
+            messages.addErrorsDuplicateFileName(alterFileName);
         }
     }
 }
