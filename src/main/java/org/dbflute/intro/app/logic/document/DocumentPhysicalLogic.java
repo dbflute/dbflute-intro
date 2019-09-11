@@ -168,8 +168,13 @@ public class DocumentPhysicalLogic {
     }
 
     public void unzipAlterSqlZip(String clientProject) {
-        String zipPath = buildCheckedAlterZipPath(clientProject);
-        String alterDirPath = buildMigrationPath(clientProject, "", "alter");
+        final String historyPath = buildHistoryPath(clientProject);
+        if (Files.notExists(Paths.get(historyPath))) {
+            return;
+        }
+
+        final String zipPath = buildCheckedAlterZipPath(clientProject);
+        final String alterDirPath = buildMigrationPath(clientProject, "", "alter");
         try {
             unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
         } catch (IOException e) {
@@ -245,9 +250,13 @@ public class DocumentPhysicalLogic {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
     }
 
+    private String buildHistoryPath(String clientProject) {
+        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history");
+    }
+
     private String buildCheckedAlterZipPath(String clientProject) {
-        final Path historyPath = Paths.get(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history"));
-        if (!Files.exists(historyPath)) {
+        final Path historyPath = Paths.get(buildHistoryPath(clientProject));
+        if (Files.notExists(historyPath)) {
             return null;
         }
         try {
