@@ -2,6 +2,10 @@
   <div class="ui container">
     <h3>Alter Check</h3>
 
+    <div class="ui list">
+      <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></div>
+      <div show="{ client.hasAlterCheckResultHtml }" class="item"><a onclick="{ openAlterDir }">Open alter directory</a></div>
+    </div>
     <section class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"Alter Check"?</a></div>
       <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
