@@ -107,9 +107,6 @@ export default class ApiFactory {
       }
     })
   }
-  prepareAlterCheck(projectName) {
-    return ffetch.post(`api/alter/${projectName}/prepare/`)
-  }
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/${projectName}/list`);
   }
