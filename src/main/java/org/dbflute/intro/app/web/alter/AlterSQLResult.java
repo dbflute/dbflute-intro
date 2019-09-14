@@ -15,7 +15,7 @@ public class AlterSQLResult {
 
     /**
      * Alter Check Result
-     * e.g. OK
+     * e.g. alter-NG
      */
     @Required
     public CDef.NgMark ngMark;
