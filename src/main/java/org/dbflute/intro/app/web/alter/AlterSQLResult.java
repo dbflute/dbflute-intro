@@ -22,11 +22,11 @@ public class AlterSQLResult {
 
     /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
     @Valid
-    public List<AlterSQLFileResult> edittingFiles;
+    public List<AlterSQLFileResult> editingFiles;
 
     /** list of checked sql files */
     @Valid
-    public List<CheckedZipResult> checkdZips;
+    public List<CheckedZipResult> checkedZips;
 
     public static class CheckedZipResult {
 
@@ -36,7 +36,7 @@ public class AlterSQLResult {
 
         /** list of checked sql files */
         @Valid
-        public List<AlterSQLFileResult> chekedFiles;
+        public List<AlterSQLFileResult> checkedFiles;
     }
 
     public static class AlterSQLFileResult {

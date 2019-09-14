@@ -49,7 +49,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.edittingFiles;
+        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 1);
         {
             AlterSQLResult.AlterSQLFileResult alterSQLFileResult = editingFileList.get(0);
@@ -58,7 +58,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         }
 
         // checked
-        List<AlterSQLResult.CheckedZipResult> checkedFileList = result.checkdZips;
+        List<AlterSQLResult.CheckedZipResult> checkedFileList = result.checkedZips;
         assertEquals(checkedFileList.size(), 0);
     }
 
@@ -76,17 +76,17 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.edittingFiles;
+        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
-        List<AlterSQLResult.CheckedZipResult> checkedZipList = result.checkdZips;
+        List<AlterSQLResult.CheckedZipResult> checkedZipList = result.checkedZips;
         assertEquals(checkedZipList.size(), 2);
         {
             AlterSQLResult.CheckedZipResult checkedZip = checkedZipList.get(0);
             assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
 
-            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.chekedFiles;
+            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.checkedFiles;
             assertEquals(checkedFileList.size(), 2);
 
             {
@@ -102,7 +102,7 @@ public class AlterActionTest extends UnitIntroTestCase {
             AlterSQLResult.CheckedZipResult checkedZip = checkedZipList.get(1);
             assertEquals(checkedZip.fileName, "20190912_1223/checked-alter-to-20190422-2332.zip");
 
-            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.chekedFiles;
+            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.checkedFiles;
             assertEquals(checkedFileList.size(), 2);
 
             {
