@@ -20,11 +20,11 @@ public class AlterSQLResult {
     @Required
     public CDef.NgMark ngMark;
 
-    /** list of editing sql files */
+    /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
     @Valid
     public List<AlterSQLFileResult> edittingFiles;
 
-    /** list of cheked sql files */
+    /** list of checked sql files */
     @Valid
     public List<CheckedZipResult> checkdZips;
 
