@@ -30,7 +30,7 @@ public class AlterSQLResult {
 
     public static class CheckedZipResult {
 
-        /** zip file name e.g. checked-alter-to-20190422-2332.zip */
+        /** zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip */
         @NotNull
         public String fileName;
 
