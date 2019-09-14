@@ -21,8 +21,9 @@
 export default class ApiFactory {
 
 #foreach($api in $data)
-  function ${api.methodName} () {
-    return ffetch.post('${api.url}')
+  ${api.methodName} (${api.params}) {
+    return ffetch.post(`${api.url}`)
   }
+
 #end
 }

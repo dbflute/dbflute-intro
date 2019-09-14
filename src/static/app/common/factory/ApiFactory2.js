@@ -5,136 +5,188 @@
 */
 export default class ApiFactory {
 
-  function Swagger/ () {
-    return ffetch.post('/swagger/')
+  swagger () {
+    return ffetch.post(`/swagger/`)
   }
-  function SwaggerJson () {
-    return ffetch.post('/swagger/json')
+
+  swaggerJson () {
+    return ffetch.post(`/swagger/json`)
   }
-  function ClientList () {
-    return ffetch.post('/client/list')
+
+  alter (clientProject) {
+    return ffetch.post(`/alter/${clientProject}`)
   }
-  function ClientOperation{clientProject} () {
-    return ffetch.post('/client/operation/{clientProject}')
+
+  alterCreate (clientProject) {
+    return ffetch.post(`/alter/${clientProject}/create`)
   }
-  function ClientCreate () {
-    return ffetch.post('/client/create')
+
+  clientList () {
+    return ffetch.post(`/client/list`)
   }
-  function ClientEdit{projectName} () {
-    return ffetch.post('/client/edit/{projectName}')
+
+  clientOperation (clientProject) {
+    return ffetch.post(`/client/operation/${clientProject}`)
   }
-  function ClientDelete{clientProject} () {
-    return ffetch.post('/client/delete/{clientProject}')
+
+  clientCreate () {
+    return ffetch.post(`/client/create`)
   }
-  function Dfprop{project}List () {
-    return ffetch.post('/dfprop/{project}/list')
+
+  clientEdit (projectName) {
+    return ffetch.post(`/client/edit/${projectName}`)
   }
-  function Dfprop{project}Update{fileName} () {
-    return ffetch.post('/dfprop/{project}/update/{fileName}')
+
+  clientDelete (clientProject) {
+    return ffetch.post(`/client/delete/${clientProject}`)
   }
-  function Dfprop{project}Syncschema () {
-    return ffetch.post('/dfprop/{project}/syncschema')
+
+  dfpropList (project) {
+    return ffetch.post(`/dfprop/${project}/list`)
   }
-  function Dfprop{project}SyncschemaEdit () {
-    return ffetch.post('/dfprop/{project}/syncschema/edit')
+
+  dfprop (project, fileName) {
+    return ffetch.post(`/dfprop/${project}/update/${fileName}`)
   }
-  function Dfprop{project}Schemapolicy () {
-    return ffetch.post('/dfprop/{project}/schemapolicy')
+
+  dfpropSyncschema (project) {
+    return ffetch.post(`/dfprop/${project}/syncschema`)
   }
-  function Dfprop{project}SchemapolicyEdit () {
-    return ffetch.post('/dfprop/{project}/schemapolicy/edit')
+
+  dfpropSyncschemaEdit (project) {
+    return ffetch.post(`/dfprop/${project}/syncschema/edit`)
   }
-  function Dfprop{project}Document () {
-    return ffetch.post('/dfprop/{project}/document')
+
+  dfpropSchemapolicy (project) {
+    return ffetch.post(`/dfprop/${project}/schemapolicy`)
   }
-  function Dfprop{project}DocumentEdit () {
-    return ffetch.post('/dfprop/{project}/document/edit')
+
+  dfpropSchemapolicyEdit (project) {
+    return ffetch.post(`/dfprop/${project}/schemapolicy/edit`)
   }
-  function Document{clientProject}Schemahtml () {
-    return ffetch.post('/document/{clientProject}/schemahtml')
+
+  dfpropDocument (project) {
+    return ffetch.post(`/dfprop/${project}/document`)
   }
-  function Document{clientProject}Historyhtml () {
-    return ffetch.post('/document/{clientProject}/historyhtml')
+
+  dfpropDocumentEdit (project) {
+    return ffetch.post(`/dfprop/${project}/document/edit`)
   }
-  function Document{clientProject}Propertieshtml () {
-    return ffetch.post('/document/{clientProject}/propertieshtml')
+
+  documentSchemahtml (clientProject) {
+    return ffetch.post(`/document/${clientProject}/schemahtml`)
   }
-  function Document{clientProject}Synccheckresulthtml () {
-    return ffetch.post('/document/{clientProject}/synccheckresulthtml')
+
+  documentHistoryhtml (clientProject) {
+    return ffetch.post(`/document/${clientProject}/historyhtml`)
   }
-  function Document{clientProject}Altercheckresulthtml () {
-    return ffetch.post('/document/{clientProject}/altercheckresulthtml')
+
+  documentPropertieshtml (clientProject) {
+    return ffetch.post(`/document/${clientProject}/propertieshtml`)
   }
-  function Document{clientProject}Lastadochtml{moduleName} () {
-    return ffetch.post('/document/{clientProject}/lastadochtml/{moduleName}')
+
+  documentSynccheckresulthtml (clientProject) {
+    return ffetch.post(`/document/${clientProject}/synccheckresulthtml`)
   }
-  function DocumentDecomment{projectName}Save () {
-    return ffetch.post('/document/decomment/{projectName}/save')
+
+  documentAltercheckresulthtml (clientProject) {
+    return ffetch.post(`/document/${clientProject}/altercheckresulthtml`)
   }
-  function DocumentDecomment{projectName}Pickup () {
-    return ffetch.post('/document/decomment/{projectName}/pickup')
+
+  document (clientProject, moduleName) {
+    return ffetch.post(`/document/${clientProject}/lastadochtml/${moduleName}`)
   }
-  function DocumentDecomment{projectName}Mapping () {
-    return ffetch.post('/document/decomment/{projectName}/mapping')
+
+  documentDecommentSave (projectName) {
+    return ffetch.post(`/document/decomment/${projectName}/save`)
   }
-  function DocumentHacomment{projectName}Save () {
-    return ffetch.post('/document/hacomment/{projectName}/save')
+
+  documentDecommentPickup (projectName) {
+    return ffetch.post(`/document/decomment/${projectName}/pickup`)
   }
-  function DocumentHacomment{projectName}Pickup () {
-    return ffetch.post('/document/hacomment/{projectName}/pickup')
+
+  documentDecommentMapping (projectName) {
+    return ffetch.post(`/document/decomment/${projectName}/mapping`)
   }
-  function EngineLatest () {
-    return ffetch.post('/engine/latest')
+
+  documentHacommentSave (projectName) {
+    return ffetch.post(`/document/hacomment/${projectName}/save`)
   }
-  function EngineVersions () {
-    return ffetch.post('/engine/versions')
+
+  documentHacommentPickup (projectName) {
+    return ffetch.post(`/document/hacomment/${projectName}/pickup`)
   }
-  function EngineDownload{dbfluteVersion} () {
-    return ffetch.post('/engine/download/{dbfluteVersion}')
+
+  engineLatest () {
+    return ffetch.post(`/engine/latest`)
   }
-  function EngineRemove{version} () {
-    return ffetch.post('/engine/remove/{version}')
+
+  engineVersions () {
+    return ffetch.post(`/engine/versions`)
   }
-  function IntroManifest () {
-    return ffetch.post('/intro/manifest')
+
+  engineDownload (dbfluteVersion) {
+    return ffetch.post(`/engine/download/${dbfluteVersion}`)
   }
-  function IntroClassifications () {
-    return ffetch.post('/intro/classifications')
+
+  engineRemove (version) {
+    return ffetch.post(`/engine/remove/${version}`)
   }
-  function IntroConfiguration () {
-    return ffetch.post('/intro/configuration')
+
+  introManifest () {
+    return ffetch.post(`/intro/manifest`)
   }
-  function Log/ () {
-    return ffetch.post('/log/')
+
+  introClassifications () {
+    return ffetch.post(`/intro/classifications`)
   }
-  function Log{project}{task}Latest () {
-    return ffetch.post('/log/{project}/{task}/latest')
+
+  introConfiguration () {
+    return ffetch.post(`/intro/configuration`)
   }
-  function Log{project}List () {
-    return ffetch.post('/log/{project}/list')
+
+  log () {
+    return ffetch.post(`/log/`)
   }
-  function Playsql{project}List () {
-    return ffetch.post('/playsql/{project}/list')
+
+  logLatest (project, task) {
+    return ffetch.post(`/log/${project}/${task}/latest`)
   }
-  function Playsql{project}Update{fileName} () {
-    return ffetch.post('/playsql/{project}/update/{fileName}')
+
+  logList (project) {
+    return ffetch.post(`/log/${project}/list`)
   }
-  function PlaysqlMigration{clientProject}Alter () {
-    return ffetch.post('/playsql/migration/{clientProject}/alter')
+
+  playsqlList (project) {
+    return ffetch.post(`/playsql/${project}/list`)
   }
-  function Settings{clientProject} () {
-    return ffetch.post('/settings/{clientProject}')
+
+  playsql (project, fileName) {
+    return ffetch.post(`/playsql/${project}/update/${fileName}`)
   }
-  function SettingsEdit{projectName} () {
-    return ffetch.post('/settings/edit/{projectName}')
+
+  playsqlMigrationAlter (clientProject) {
+    return ffetch.post(`/playsql/migration/${clientProject}/alter`)
   }
-  function TaskExecute{project}{instruction} () {
-    return ffetch.post('/task/execute/{project}/{instruction}')
+
+  settings (clientProject) {
+    return ffetch.post(`/settings/${clientProject}`)
   }
-  function TaskExecute{project}{instruction}{env} () {
-    return ffetch.post('/task/execute/{project}/{instruction}/{env}')
+
+  settingsEdit (projectName) {
+    return ffetch.post(`/settings/edit/${projectName}`)
   }
-  function WelcomeCreate () {
-    return ffetch.post('/welcome/create')
+
+  taskExecute (project, instruction) {
+    return ffetch.post(`/task/execute/${project}/${instruction}`)
   }
+
+  taskExecute (project, instruction, env) {
+    return ffetch.post(`/task/execute/${project}/${instruction}/${env}`)
+  }
+
+  welcomeCreate () {
+    return ffetch.post(`/welcome/create`)
+  }
+
 }

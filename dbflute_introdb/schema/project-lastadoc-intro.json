@@ -135,6 +135,259 @@
       "methodLineCount": 6
     },
     {
+      "url": "/alter/{clientProject}",
+      "typeName": "org.dbflute.intro.app.web.alter.AlterAction",
+      "simpleTypeName": "AlterAction",
+      "description": "@author subaru",
+      "typeComment": "@author subaru\n@author cabos",
+      "fieldTypeDocMetaList": [
+        {
+          "name": "documentPhysicalLogic",
+          "publicName": "documentPhysicalLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
+          "simpleTypeName": "DocumentPhysicalLogic",
+          "value": null,
+          "description": "@author deco",
+          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "methodName": "index",
+      "methodComment": null,
+      "annotationList": [
+        "Execute"
+      ],
+      "parameterTypeDocMetaList": [
+        {
+          "name": "clientProject",
+          "publicName": "clientProject",
+          "typeName": "java.lang.String",
+          "simpleTypeName": "String",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "formTypeDocMeta": null,
+      "returnTypeDocMeta": {
+        "name": null,
+        "publicName": null,
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.alter.AlterSQLResult\u003e",
+        "simpleTypeName": "JsonResponse\u003cAlterSQLResult\u003e",
+        "value": "JsonResponse.asEmptyBody()",
+        "description": null,
+        "comment": null,
+        "annotationList": [],
+        "nestTypeDocMetaList": [
+          {
+            "name": "ngMark",
+            "publicName": "ngMark",
+            "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$NgMark",
+            "simpleTypeName": "CDef.NgMark",
+            "value": "{previous-NG\u003dPreviousNG, alter-NG\u003dAlterNG, next-NG\u003dNextNG}",
+            "description": "Alter Check Result\ne.g. alter-NG",
+            "comment": "Alter Check Result\ne.g. alter-NG",
+            "annotationList": [
+              "Required"
+            ],
+            "nestTypeDocMetaList": []
+          },
+          {
+            "name": "editingFiles",
+            "publicName": "editingFiles",
+            "typeName": "java.util.List\u003corg.dbflute.intro.app.web.alter.AlterSQLResult$AlterSQLFileResult\u003e",
+            "simpleTypeName": "List\u003cAlterSQLFileResult\u003e",
+            "value": null,
+            "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory",
+            "comment": "list of editing sql files in dbflute_client/playsql/migration/alter directory",
+            "annotationList": [
+              "Valid"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "fileName",
+                "publicName": "fileName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": "sql file name e.g. alter-sql-SAMPLE",
+                "comment": "sql file name e.g. alter-sql-SAMPLE.sql",
+                "annotationList": [
+                  "NotNull"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "content",
+                "publicName": "content",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": "sql file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                "comment": "sql file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                "annotationList": [
+                  "NotNull"
+                ],
+                "nestTypeDocMetaList": []
+              }
+            ]
+          },
+          {
+            "name": "checkedZips",
+            "publicName": "checkedZips",
+            "typeName": "java.util.List\u003corg.dbflute.intro.app.web.alter.AlterSQLResult$CheckedZipResult\u003e",
+            "simpleTypeName": "List\u003cCheckedZipResult\u003e",
+            "value": null,
+            "description": "list of checked sql files",
+            "comment": "list of checked sql files",
+            "annotationList": [
+              "Valid"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "fileName",
+                "publicName": "fileName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": "zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332",
+                "comment": "zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip",
+                "annotationList": [
+                  "NotNull"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "checkedFiles",
+                "publicName": "checkedFiles",
+                "typeName": "java.util.List\u003corg.dbflute.intro.app.web.alter.AlterSQLResult$AlterSQLFileResult\u003e",
+                "simpleTypeName": "List\u003cAlterSQLFileResult\u003e",
+                "value": null,
+                "description": "list of checked sql files",
+                "comment": "list of checked sql files",
+                "annotationList": [
+                  "Valid"
+                ],
+                "nestTypeDocMetaList": [
+                  {
+                    "name": "fileName",
+                    "publicName": "fileName",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": "sql file name e.g. alter-sql-SAMPLE",
+                    "comment": "sql file name e.g. alter-sql-SAMPLE.sql",
+                    "annotationList": [
+                      "NotNull"
+                    ],
+                    "nestTypeDocMetaList": []
+                  },
+                  {
+                    "name": "content",
+                    "publicName": "content",
+                    "typeName": "java.lang.String",
+                    "simpleTypeName": "String",
+                    "value": null,
+                    "description": "sql file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                    "comment": "sql file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                    "annotationList": [
+                      "NotNull"
+                    ],
+                    "nestTypeDocMetaList": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fileLineCount": 43,
+      "methodLineCount": 4
+    },
+    {
+      "url": "/alter/{clientProject}/create",
+      "typeName": "org.dbflute.intro.app.web.alter.AlterAction",
+      "simpleTypeName": "AlterAction",
+      "description": "@author subaru",
+      "typeComment": "@author subaru\n@author cabos",
+      "fieldTypeDocMetaList": [
+        {
+          "name": "documentPhysicalLogic",
+          "publicName": "documentPhysicalLogic",
+          "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
+          "simpleTypeName": "DocumentPhysicalLogic",
+          "value": null,
+          "description": "@author deco",
+          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "annotationList": [
+            "Resource"
+          ],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "methodName": "create",
+      "methodComment": null,
+      "annotationList": [
+        "Execute{urlPattern\u003d{}/@word}"
+      ],
+      "parameterTypeDocMetaList": [
+        {
+          "name": "clientProject",
+          "publicName": "clientProject",
+          "typeName": "java.lang.String",
+          "simpleTypeName": "String",
+          "value": null,
+          "description": null,
+          "comment": null,
+          "annotationList": [],
+          "nestTypeDocMetaList": []
+        }
+      ],
+      "formTypeDocMeta": {
+        "name": null,
+        "publicName": null,
+        "typeName": "org.dbflute.intro.app.web.alter.AlterCreateBody",
+        "simpleTypeName": "AlterCreateBody",
+        "value": null,
+        "description": "@author subaru",
+        "comment": "@author subaru",
+        "annotationList": [],
+        "nestTypeDocMetaList": [
+          {
+            "name": "alterFileName",
+            "publicName": "alterFileName",
+            "typeName": "java.lang.String",
+            "simpleTypeName": "String",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Required"
+            ],
+            "nestTypeDocMetaList": []
+          }
+        ]
+      },
+      "returnTypeDocMeta": {
+        "name": null,
+        "publicName": null,
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003cjava.lang.Void\u003e",
+        "simpleTypeName": "JsonResponse\u003cVoid\u003e",
+        "value": "JsonResponse.asEmptyBody()",
+        "description": null,
+        "comment": null,
+        "annotationList": [],
+        "nestTypeDocMetaList": []
+      },
+      "fileLineCount": 43,
+      "methodLineCount": 10
+    },
+    {
       "url": "/client/list",
       "typeName": "org.dbflute.intro.app.web.client.ClientAction",
       "simpleTypeName": "ClientAction",

@@ -225,8 +225,9 @@ function processHull(request) {
       var api = apiList[apiIndex]
       var clientMethod = {};
       var url = api.url
-      clientMethod.url = url;
+      clientMethod.url = buildUrlForReques(url);
       clientMethod.methodName = buildMethodName(url);
+      clientMethod.params = buildParams(url);
 
       clientMethodList.push(clientMethod)
     }
@@ -253,14 +254,27 @@ function processJs(rule, request, clientMethodList) {
   generate('./remoteapi/ApiClient.vm', path, clientMethodList, true);
 }
 
+function buildUrlForReques(url) {
+  return url.replaceAll('\\{', '\\$\\{');
+}
+
 function buildMethodName(url){
-  return url.replace(/\/./g,
+  var replaced = url.replace(/\/./g,
     function(s) {
       return s.charAt(1).toUpperCase();
     }
-  );
+  ).replace('/', '').replace(/{.*}/g, '');
+
+  return replaced.charAt(0).toLowerCase() + replaced.slice(1);
 }
 
+function buildParams(url) {
+  var split = url.split('{');
+  split.shift();
+  return split.map(function (s) {
+    return s.split('}').shift();
+  }).join(', ');
+}
 
 /**
  * Keep information of bean.
