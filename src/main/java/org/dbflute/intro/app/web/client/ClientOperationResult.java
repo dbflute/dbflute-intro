@@ -59,6 +59,7 @@ public class ClientOperationResult {
     // ===================================================================================
     //                                                                         Alter Check
     //                                                                         ===========
+    // TODO cabos Delete It. (Refactoring) (2019-09-14)
     public CDef.NgMark ngMark;
     @Valid
     public List<AlterSqlBean> editingAlterSqls;
