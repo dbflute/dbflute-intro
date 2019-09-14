@@ -2,8 +2,10 @@ package org.dbflute.intro.app.web.alter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.lastaflute.web.validation.exception.ValidationErrorException;
 
@@ -31,6 +33,93 @@ public class AlterActionTest extends UnitIntroTestCase {
     // ===================================================================================
     //                                                                               Test
     //                                                                              ======
+    // -----------------------------------------------------
+    //                                                 index
+    //                                                 -----
+    public void test_index_existsAlterDir() {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        // ## Act ##
+        AlterSQLResult result = alterAction.index(TEST_CLIENT_PROJECT).getJsonResult();
+
+        // ## Assert ##
+        // mark
+        assertEquals(result.ngMark, CDef.NgMark.AlterNG);
+
+        // editing
+        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.edittingFiles;
+        assertEquals(editingFileList.size(), 1);
+        {
+            AlterSQLResult.AlterSQLFileResult alterSQLFileResult = editingFileList.get(0);
+            assertEquals(alterSQLFileResult.fileName, "alter-schema_sample.sql");
+            assertEquals(alterSQLFileResult.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);");
+        }
+
+        // checked
+        List<AlterSQLResult.CheckedZipResult> checkedFileList = result.checkdZips;
+        assertEquals(checkedFileList.size(), 0);
+    }
+
+    public void test_index_notExistsAlterDir() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+        removeAlterDir();
+
+        // ## Act ##
+        AlterSQLResult result = alterAction.index(TEST_CLIENT_PROJECT).getJsonResult();
+
+        // ## Assert ##
+        // mark
+        assertEquals(result.ngMark, CDef.NgMark.AlterNG);
+
+        // editing
+        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.edittingFiles;
+        assertEquals(editingFileList.size(), 0);
+
+        // checked
+        List<AlterSQLResult.CheckedZipResult> checkedZipList = result.checkdZips;
+        assertEquals(checkedZipList.size(), 2);
+        {
+            AlterSQLResult.CheckedZipResult checkedZip = checkedZipList.get(0);
+            assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
+
+            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.chekedFiles;
+            assertEquals(checkedFileList.size(), 2);
+
+            {
+                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(0);
+                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
+            }
+            {
+                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(1);
+                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
+            }
+        }
+        {
+            AlterSQLResult.CheckedZipResult checkedZip = checkedZipList.get(1);
+            assertEquals(checkedZip.fileName, "20190912_1223/checked-alter-to-20190422-2332.zip");
+
+            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.chekedFiles;
+            assertEquals(checkedFileList.size(), 2);
+
+            {
+                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(0);
+                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
+            }
+            {
+                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(1);
+                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_003.sql");
+                assertEquals(checkedAlterSQLFile.content, "ALTER TABLE MEMBER DROP COLUMN BIRTHDATE;");
+            }
+        }
+    }
+
+    // -----------------------------------------------------
+    //                                                create
+    //                                                ------
     public void test_create_existsAlterDir() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
