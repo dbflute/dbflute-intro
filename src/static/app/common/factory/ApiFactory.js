@@ -100,6 +100,9 @@ export default class ApiFactory {
   openAlterDir(projectName) {
     return ffetch.get(`api/playsql/migration/${projectName}/alter/`)
   }
+  alter(projectName) {
+    return ffetch.get(`api/alter/${projectName}/`);
+  }
   createAlterSql(projectName, alterFileName) {
     return ffetch.post(`api/alter/${projectName}/create/`, {
       body: {
