@@ -249,7 +249,7 @@ function processJs(rule, request, clientMethodList) {
   abstractBehavior.className = className;
   abstractBehavior.remoteApiExp = request.requestName;
   abstractBehavior.frameworkBehaviorClass = rule['frameworkBehaviorClass'];
-  var path = abstractBehavior.package.replace(/\./g, '/') + '/' + abstractBehavior.className + '.js';
+  var path = abstractBehavior.package.replace(/\./g, '/') + '/ApiFactory2.js';
   generate('./remoteapi/ApiClient.vm', path, clientMethodList, true);
 }
 
