@@ -25,6 +25,11 @@ public class AlterAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    @Execute
+    public JsonResponse<AlterSQLResult> index(String clientProject) {
+        return JsonResponse.asEmptyBody();
+    }
+
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));
