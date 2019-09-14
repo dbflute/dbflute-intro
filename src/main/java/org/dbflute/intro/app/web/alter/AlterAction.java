@@ -27,6 +27,7 @@ public class AlterAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<AlterSQLResult> index(String clientProject) {
+        // TODO someone implement it (2019-09-14)
         return JsonResponse.asEmptyBody();
     }
 
