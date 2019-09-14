@@ -1,0 +1,16 @@
+map:{
+    # ==========================================================================
+    #                                                       Remote Api(Petstore)
+    #                                                       ====================
+    ; RemoteApiPetstore = map:{
+        ; resourceMap = map:{
+            ; baseDir = ..
+            ; resourceType = SWAGGER
+            ; resourceFile = $$baseDir$$/build/lastadoc/swagger.json
+        }
+        ; outputMap = map:{
+            ; outputDirectory = ../src/static/app/common/ApiFactory2.js
+            ; package = org.dbflute.intro.remote
+        }
+    }
+}
