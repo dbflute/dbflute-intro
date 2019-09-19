@@ -22,13 +22,17 @@ public class AlterSQLResult {
 
     /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
     @Valid
-    public List<AlterSQLFileResult> editingFiles;
+    public List<AlterSQLFilePart> editingFiles;
 
-    /** list of checked sql files */
+    /** checked sql zip file */
     @Valid
-    public List<CheckedZipResult> checkedZips;
+    public CheckedZipPart checkedZip;
 
-    public static class CheckedZipResult {
+    /** unreleased sql dir */
+    @Valid
+    public UnreleasedDirPart unreleasedDir;
+
+    public static class CheckedZipPart {
 
         /** zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip */
         @NotNull
@@ -36,10 +40,17 @@ public class AlterSQLResult {
 
         /** list of checked sql files */
         @Valid
-        public List<AlterSQLFileResult> checkedFiles;
+        public List<AlterSQLFilePart> checkedFiles;
     }
 
-    public static class AlterSQLFileResult {
+    public static class UnreleasedDirPart {
+
+        /** list of checked sql files */
+        @Valid
+        public List<AlterSQLFilePart> checkedFiles;
+    }
+
+    public static class AlterSQLFilePart {
 
         /** sql file name e.g. alter-sql-SAMPLE.sql */
         @NotNull

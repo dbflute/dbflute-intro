@@ -1,5 +1,7 @@
 package org.dbflute.intro.app.web.alter;
 
+import static org.dbflute.intro.app.web.alter.AlterSQLResult.CheckedZipPart;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -49,17 +51,17 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.editingFiles;
+        List<AlterSQLResult.AlterSQLFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 1);
         {
-            AlterSQLResult.AlterSQLFileResult alterSQLFileResult = editingFileList.get(0);
-            assertEquals(alterSQLFileResult.fileName, "alter-schema_sample.sql");
-            assertEquals(alterSQLFileResult.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);");
+            AlterSQLResult.AlterSQLFilePart alterSQLFilePart = editingFileList.get(0);
+            assertEquals(alterSQLFilePart.fileName, "alter-schema_sample.sql");
+            assertEquals(alterSQLFilePart.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);");
         }
 
         // checked
-        List<AlterSQLResult.CheckedZipResult> checkedFileList = result.checkedZips;
-        assertEquals(checkedFileList.size(), 0);
+        CheckedZipPart checkedFile = result.checkedZip;
+        assertNull(checkedFile);
     }
 
     public void test_index_notExistsAlterDir() throws IOException {
@@ -76,44 +78,22 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterSQLFileResult> editingFileList = result.editingFiles;
+        List<AlterSQLResult.AlterSQLFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
-        List<AlterSQLResult.CheckedZipResult> checkedZipList = result.checkedZips;
-        assertEquals(checkedZipList.size(), 2);
+        CheckedZipPart checkedZip = result.checkedZip;
+        assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
+
+        List<AlterSQLResult.AlterSQLFilePart> checkedFileList = checkedZip.checkedFiles;
+        assertEquals(checkedFileList.size(), 2);
         {
-            AlterSQLResult.CheckedZipResult checkedZip = checkedZipList.get(0);
-            assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
-
-            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.checkedFiles;
-            assertEquals(checkedFileList.size(), 2);
-
-            {
-                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(0);
-                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
-            }
-            {
-                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(1);
-                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
-            }
+            AlterSQLResult.AlterSQLFilePart checkedAlterSQLFile = checkedFileList.get(0);
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
         }
         {
-            AlterSQLResult.CheckedZipResult checkedZip = checkedZipList.get(1);
-            assertEquals(checkedZip.fileName, "20190912_1223/checked-alter-to-20190422-2332.zip");
-
-            List<AlterSQLResult.AlterSQLFileResult> checkedFileList = checkedZip.checkedFiles;
-            assertEquals(checkedFileList.size(), 2);
-
-            {
-                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(0);
-                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
-            }
-            {
-                AlterSQLResult.AlterSQLFileResult checkedAlterSQLFile = checkedFileList.get(1);
-                assertEquals(checkedAlterSQLFile.fileName, "alter-schema_003.sql");
-                assertEquals(checkedAlterSQLFile.content, "ALTER TABLE MEMBER DROP COLUMN BIRTHDATE;");
-            }
+            AlterSQLResult.AlterSQLFilePart checkedAlterSQLFile = checkedFileList.get(1);
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
         }
     }
 
