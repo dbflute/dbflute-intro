@@ -1,6 +1,6 @@
 package org.dbflute.intro.app.web.alter;
 
-import static org.dbflute.intro.app.web.alter.AlterSQLResult.CheckedZipPart;
+import static org.dbflute.intro.app.web.alter.AlterSQLResult.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     private static final String MIGRATION_DIR = TEST_CLIENT_PATH + PLAYSQL_DIR_PATH + "/migration";
     private static final String ALTER_DIR = MIGRATION_DIR + "/alter";
     private static final String HISTORY_DIR = MIGRATION_DIR + "/history";
+    private static final String UNRELEASED_DIR = HISTORY_DIR + "unreleased-checked-alter";
 
     // ===================================================================================
     //                                                                          Initialize
@@ -38,23 +39,22 @@ public class AlterActionTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                                 index
     //                                                 -----
-    public void test_index_existsAlterDir() {
+    public void test_index_editingState() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
+        removeHistoryDir();
 
         // ## Act ##
         AlterSQLResult result = alterAction.index(TEST_CLIENT_PROJECT).getJsonResult();
 
         // ## Assert ##
-        // mark
-        assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterSQLFilePart> editingFileList = result.editingFiles;
+        List<AlterSQLResult.AlterDirFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 1);
         {
-            AlterSQLResult.AlterSQLFilePart alterSQLFilePart = editingFileList.get(0);
+            AlterSQLResult.AlterDirFilePart alterSQLFilePart = editingFileList.get(0);
             assertEquals(alterSQLFilePart.fileName, "alter-schema_sample.sql");
             assertEquals(alterSQLFilePart.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);");
         }
@@ -64,7 +64,41 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertNull(checkedFile);
     }
 
-    public void test_index_notExistsAlterDir() throws IOException {
+    public void test_index_checkedZipState() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+        removeAlterDir();
+        removeUnreleasedDir();
+
+        // ## Act ##
+        AlterSQLResult result = alterAction.index(TEST_CLIENT_PROJECT).getJsonResult();
+
+        // ## Assert ##
+        // mark
+        assertEquals(result.ngMark, CDef.NgMark.AlterNG);
+
+        // editing
+        List<AlterSQLResult.AlterDirFilePart> editingFileList = result.editingFiles;
+        assertEquals(editingFileList.size(), 0);
+
+        // checked
+        CheckedZipPart checkedZip = result.checkedZip;
+        assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
+
+        List<AlterSQLResult.AlterDirFilePart> checkedFileList = checkedZip.checkedFiles;
+        assertEquals(checkedFileList.size(), 2);
+        {
+            AlterSQLResult.AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(0);
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
+        }
+        {
+            AlterSQLResult.AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(1);
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
+        }
+    }
+
+    public void test_index_checkedUnreleasedState() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -78,22 +112,28 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterSQLFilePart> editingFileList = result.editingFiles;
+        List<AlterSQLResult.AlterDirFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
-        CheckedZipPart checkedZip = result.checkedZip;
-        assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
+        // tested at test_index_checkedZipState
 
-        List<AlterSQLResult.AlterSQLFilePart> checkedFileList = checkedZip.checkedFiles;
-        assertEquals(checkedFileList.size(), 2);
+        // unreleased
+        UnreleasedDirPart unreleasedDir = result.unreleasedDir;
+        assertNotNull(unreleasedDir);
+
+        List<AlterDirFilePart> checkedFiles = unreleasedDir.checkedFiles;
         {
-            AlterSQLResult.AlterSQLFilePart checkedAlterSQLFile = checkedFileList.get(0);
-            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
+            AlterDirFilePart file = checkedFiles.get(0);
+            assertEquals(file.fileName, "DONT_EDIT_HERE.dfmark");
         }
         {
-            AlterSQLResult.AlterSQLFilePart checkedAlterSQLFile = checkedFileList.get(1);
-            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
+            AlterDirFilePart file = checkedFiles.get(1);
+            assertEquals(file.fileName, "for-previous-20120804-1746.dfmark");
+        }
+        {
+            AlterDirFilePart file = checkedFiles.get(2);
+            assertEquals(file.fileName, "READONLY_alter-schema_sample.sql");
         }
     }
 
@@ -225,13 +265,16 @@ public class AlterActionTest extends UnitIntroTestCase {
     // ===================================================================================
     //                                                                       Client Helper
     //                                                                       =============
-
     private void removeAlterDir() throws IOException {
         FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
     }
 
     private void removeHistoryDir() throws IOException {
         FileUtils.deleteDirectory(new File(getProjectDir(), HISTORY_DIR));
+    }
+
+    private void removeUnreleasedDir() throws IOException {
+        FileUtils.deleteDirectory(new File(getProjectDir(), UNRELEASED_DIR));
     }
 
     private void removeMigrationDir() throws IOException {
