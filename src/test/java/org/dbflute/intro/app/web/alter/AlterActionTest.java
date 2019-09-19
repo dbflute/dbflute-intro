@@ -51,10 +51,10 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
 
         // editing
-        List<AlterSQLResult.AlterDirFilePart> editingFileList = result.editingFiles;
+        List<AlterDirFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 1);
         {
-            AlterSQLResult.AlterDirFilePart alterSQLFilePart = editingFileList.get(0);
+            AlterDirFilePart alterSQLFilePart = editingFileList.get(0);
             assertEquals(alterSQLFilePart.fileName, "alter-schema_sample.sql");
             assertEquals(alterSQLFilePart.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);");
         }
@@ -79,21 +79,21 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterDirFilePart> editingFileList = result.editingFiles;
+        List<AlterDirFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
         CheckedZipPart checkedZip = result.checkedZip;
         assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
 
-        List<AlterSQLResult.AlterDirFilePart> checkedFileList = checkedZip.checkedFiles;
+        List<AlterDirFilePart> checkedFileList = checkedZip.checkedFiles;
         assertEquals(checkedFileList.size(), 2);
         {
-            AlterSQLResult.AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(0);
+            AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(0);
             assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
         }
         {
-            AlterSQLResult.AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(1);
+            AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(1);
             assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
         }
     }
@@ -112,7 +112,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterSQLResult.AlterDirFilePart> editingFileList = result.editingFiles;
+        List<AlterDirFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
