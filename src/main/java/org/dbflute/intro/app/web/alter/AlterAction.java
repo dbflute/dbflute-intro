@@ -28,6 +28,9 @@ public class AlterAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    // -----------------------------------------------------
+    //                                                 index
+    //                                                 -----
     @Execute
     public JsonResponse<AlterSQLResult> index(String clientProject) {
         return asJson(generateAlterSQLResult(clientProject));
@@ -78,6 +81,9 @@ public class AlterAction extends IntroBaseAction {
         }).orElse(null);
     }
 
+    // -----------------------------------------------------
+    //                                               prepare
+    //                                               -------
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> prepare(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));
