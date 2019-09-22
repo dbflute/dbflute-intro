@@ -43,7 +43,7 @@
     <section if="{ editing }">
       <h4 class="ui header">Step2. Execute Alter Check</h4>
 
-      <h5 class="ui header">Editing Alter SQL List</h5>
+      <h5 class="ui header">Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingAlterSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -57,9 +57,10 @@
         </div>
       </div>
 
-      <a><button class="ui button"><i class="folder open icon"></i>Open Editing Alter Directory</button></a>
-      <!-- button class="ui button" show="{ client.hasAlterCheckResultHtml }"><a onclick="{ openAlterCheckResultHTML }">AlterCheckResultHTML</a></button -->
-      <button class="ui blue button" onclick="{ openAlterCheckResultHTML }">Open Alter Check Result Html</button>
+      <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+      <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="file icon"></i>Alter Check Result</button>
+
+      <h5 class="ui header">Executor</h5>
       <button class="ui red button" onclick="{ alterCheckTask }">Execute Alter Check</button>
 
 
@@ -209,7 +210,7 @@
 
     this.prepareAlterCheck = () => {
       const alterFileName = 'alter-schema-' + self.refs.alterNameInput.value + '.sql'
-      ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
+      ApiFactory.prepareAlterSql(self.opts.projectName, alterFileName)
         .then(() => ApiFactory.openAlterDir(self.opts.projectName))
         .finally(() => self.updateContents())
     }
