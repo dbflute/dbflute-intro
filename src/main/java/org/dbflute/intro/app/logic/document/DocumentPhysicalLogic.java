@@ -150,6 +150,30 @@ public class DocumentPhysicalLogic {
         return Collections.emptyList();
     }
 
+    public OptionalThing<CheckedZipBean> findCheckedZip(String clientProject) {
+        final String zipPath = buildCheckedAlterZipPath(clientProject);
+        if (zipPath == null) {
+            return OptionalThing.empty();
+        }
+        return OptionalThing.of(new CheckedZipBean(new File(zipPath).getName(), findStackedAlterSqls(clientProject)));
+    }
+
+    public OptionalThing<UnreleasedDirBean> findUnrereasedAlterDir(String clientProject) {
+        String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
+        File dir = new File(unreleasedAlterDirPath);
+        File[] files = dir.listFiles();
+        if (!dir.exists() || dir.isFile() || files == null) {
+            return OptionalThing.empty();
+        }
+        return OptionalThing.of(new UnreleasedDirBean(getUnreleasedSqlList(files)));
+    }
+
+    private List<AlterSqlBean> getUnreleasedSqlList(File[] files) {
+        return Arrays.stream(Objects.requireNonNull(files)).map(file -> {
+            return new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file));
+        }).collect(Collectors.toList());
+    }
+
     private List<AlterSqlBean> findAlterSqlsFromZip(String zipPath) throws IOException {
         final List<AlterSqlBean> alterSqls = new ArrayList<>();
         final ZipFile zipFile = new ZipFile(zipPath);
@@ -281,6 +305,10 @@ public class DocumentPhysicalLogic {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to get checked alter schema zip file under the directory: " + historyPath, e);
         }
+    }
+
+    private String buildUnreleasedAlterDirPath(String clientProject) {
+        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history", "unreleased-checked-alter");
     }
 
     public boolean existsAlterFileAlready(String clientProject, String alterFileName) {

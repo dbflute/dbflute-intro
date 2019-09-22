@@ -56,7 +56,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         {
             AlterDirFilePart alterSQLFilePart = editingFileList.get(0);
             assertEquals(alterSQLFilePart.fileName, "alter-schema_sample.sql");
-            assertEquals(alterSQLFilePart.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);");
+            assertEquals(alterSQLFilePart.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);\n");
         }
 
         // checked
@@ -84,7 +84,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // checked
         CheckedZipPart checkedZip = result.checkedZip;
-        assertEquals(checkedZip.fileName, "20190831_2249/checked-alter-to-20190422-2332.zip");
+        assertEquals(checkedZip.fileName, "checked-alter-to-20190422-2332.zip");
 
         List<AlterDirFilePart> checkedFileList = checkedZip.checkedFiles;
         assertEquals(checkedFileList.size(), 2);
@@ -94,7 +94,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         }
         {
             AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(1);
-            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_002.sql");
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_003.sql");
         }
     }
 
@@ -125,15 +125,15 @@ public class AlterActionTest extends UnitIntroTestCase {
         List<AlterDirFilePart> checkedFiles = unreleasedDir.checkedFiles;
         {
             AlterDirFilePart file = checkedFiles.get(0);
-            assertEquals(file.fileName, "DONT_EDIT_HERE.dfmark");
-        }
-        {
-            AlterDirFilePart file = checkedFiles.get(1);
             assertEquals(file.fileName, "for-previous-20120804-1746.dfmark");
         }
         {
-            AlterDirFilePart file = checkedFiles.get(2);
+            AlterDirFilePart file = checkedFiles.get(1);
             assertEquals(file.fileName, "READONLY_alter-schema_sample.sql");
+        }
+        {
+            AlterDirFilePart file = checkedFiles.get(2);
+            assertEquals(file.fileName, "DONT_EDIT_HERE.dfmark");
         }
     }
 

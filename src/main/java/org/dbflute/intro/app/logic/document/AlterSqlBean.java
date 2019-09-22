@@ -22,6 +22,7 @@ import org.lastaflute.web.validation.Required;
  * @author cabos (add copy right)
  */
 public class AlterSqlBean {
+
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
