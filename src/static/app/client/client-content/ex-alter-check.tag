@@ -105,11 +105,16 @@
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      self.prepareEditingAlterSqls(self.client.editingAlterSqls)
+      self.preparePhase(self.client.editingAlterSqls)
       self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
+      self.prepareEditingAlterSqls(self.client.editingAlterSqls)
       self.prepareComponents()
       self.update()
     })
+
+    this.preparePhase= (editingAlterSqls) => {
+      self.editing = editingAlterSqls.length > 0
+    }
 
     this.prepareEditingAlterSqls = (editingAlterSqls) => {
       self.editingAlterSqls = []
@@ -120,9 +125,6 @@
           show: false,
         })
       })
-      if (self.editingAlterSqls.length > 0) {
-        self.editing = true
-      }
     }
 
     this.prepareStackedAlterSqls = (stackedAlterSqls) => {
@@ -211,8 +213,12 @@
     this.prepareAlterCheck = () => {
       const alterFileName = 'alter-schema-' + self.refs.alterNameInput.value + '.sql'
       ApiFactory.prepareAlterSql(self.opts.projectName, alterFileName)
-        .then(() => ApiFactory.openAlterDir(self.opts.projectName))
-        .finally(() => self.updateContents())
+        .then(() => {
+          ApiFactory.openAlterDir(self.opts.projectName)
+          self.editing = true
+        }).finally(() => {
+          self.updateContents()
+        })
     }
 
     this.updateContents = () => {
