@@ -79,7 +79,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
+    public JsonResponse<Void> prepare(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));
         OptionalThing<File> optAlterDir = documentPhysicalLogic.findAlterDir(clientProject);
         if (!optAlterDir.isPresent()) {

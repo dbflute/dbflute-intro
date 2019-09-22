@@ -149,7 +149,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.create(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
@@ -166,7 +166,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.create(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
@@ -183,7 +183,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.create(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
@@ -200,7 +200,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.create(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
         // do nothing
@@ -216,7 +216,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.create(TEST_CLIENT_PROJECT, body);
+            alterAction.prepare(TEST_CLIENT_PROJECT, body);
         });
     }
 
@@ -230,7 +230,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.create(TEST_CLIENT_PROJECT, body);
+            alterAction.prepare(TEST_CLIENT_PROJECT, body);
         });
     }
 
@@ -244,7 +244,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.create(TEST_CLIENT_PROJECT, body);
+            alterAction.prepare(TEST_CLIENT_PROJECT, body);
         });
     }
 
@@ -258,7 +258,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.create(TEST_CLIENT_PROJECT, body);
+            alterAction.prepare(TEST_CLIENT_PROJECT, body);
         });
     }
 
