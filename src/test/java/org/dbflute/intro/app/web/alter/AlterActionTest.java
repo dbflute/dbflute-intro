@@ -138,8 +138,8 @@ public class AlterActionTest extends UnitIntroTestCase {
     }
 
     // -----------------------------------------------------
-    //                                                create
-    //                                                ------
+    //                                               prepare
+    //                                               -------
     public void test_create_existsAlterDir() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
