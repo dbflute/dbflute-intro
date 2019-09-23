@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.lastaflute.web.validation.Required;
 
 /**
  * @author cabos
@@ -14,10 +13,9 @@ import org.lastaflute.web.validation.Required;
 public class AlterSQLResult {
 
     /**
-     * Alter Check Result
+     * Alter Check Result (Enable Null)
      * e.g. alter-NG
      */
-    @Required
     public CDef.NgMark ngMark;
 
     /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
