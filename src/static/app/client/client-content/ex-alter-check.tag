@@ -9,12 +9,26 @@
 
     <div class="ui divider"></div>
 
-    <section if="{ !editing }">
+    <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
-      <h5 class="ui header">Checked Alter SQL List</h5>
-      <div class="ui list">
-        <div class="item" each="{ alterItem in stackedAlterSqls }">
+      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL List</h5>
+      <div class="ui list" if="{ existsCheckedFiles() }">
+        <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+          <div show="{ alterItem.show }" class="ui message message-area">
+          <pre>
+            <code>
+              <raw content="{ alterItem.content }"></raw>
+            </code>
+          </pre>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL List</h5>
+      <div class="ui list" if="{ existsUnreleasedFiles() }">
+        <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
           <div show="{ alterItem.show }" class="ui message message-area">
           <pre>
@@ -40,12 +54,12 @@
       </form>
     </section>
 
-    <section if="{ editing }">
+    <section show="{ isEditing() }">
       <h4 class="ui header">Step2. Execute Alter Check</h4>
 
-      <h5 class="ui header">Editing Alter SQL Files</h5>
+      <h5 class="ui header">Open Editing Alter SQL Files</h5>
       <div class="ui list">
-        <div class="item" each="{ alterItem in editingAlterSqls }">
+        <div class="item" each="{ alterItem in editingSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
           <div show="{ alterItem.show }" class="ui message message-area">
           <pre>
@@ -58,12 +72,12 @@
       </div>
 
       <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
-      <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="file icon"></i>Alter Check Result</button>
 
       <h5 class="ui header">Executor</h5>
-      <button class="ui red button" onclick="{ alterCheckTask }">Execute Alter Check</button>
+      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute Alter Check</button>
 
-
+      <h5 class="ui header">Latest Alter Check Result</h5>
+      <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
       <div class="latest-result">
         <latest-result></latest-result>
       </div>
@@ -97,67 +111,102 @@
     let self = this
 
     self.client = opts.client
-    self.editing = false
-    self.editingAlterSqls = []
-    self.stackedAlterSqls = []
+    self.projectName = opts.projectName
+
+    // api response
+    self.alter = {}
+
+    // view params
+    self.ngMark = undefined
+    self.editingSqls = []
+    self.checkedZip = {
+      fileName : '',
+      checkedFiles : []
+    }
+    self.unreleasedDir = {
+      checkedFiles : []
+    }
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     this.on('mount', () => {
-      self.preparePhase(self.client.editingAlterSqls)
-      self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
-      self.prepareEditingAlterSqls(self.client.editingAlterSqls)
-      self.prepareComponents()
-      self.update()
+      self.updateContents()
     })
 
-    this.preparePhase= (editingAlterSqls) => {
-      self.editing = editingAlterSqls.length > 0
+    this.prepareAlterInfo = (projectName) => {
+      return ApiFactory.alter(projectName).then(resp => {
+        self.alter = resp
+      })
     }
 
-    this.prepareEditingAlterSqls = (editingAlterSqls) => {
-      self.editingAlterSqls = []
-      editingAlterSqls.forEach(sql => {
-        self.editingAlterSqls.push({
-          fileName: sql.fileName,
-          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql, 'sql'),
+    this.prepareNgMark = () => {
+      self.ngMark = self.alter.ngMark
+    }
+
+    this.prepareEditing = () => {
+      self.editingSqls = []
+      self.alter.editingFiles.forEach(file => {
+        self.editingSqls.push({
+          fileName: file.fileName,
+          content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })
       })
     }
 
-    this.prepareStackedAlterSqls = (stackedAlterSqls) => {
-      self.stackedAlterSqls = []
-      stackedAlterSqls.forEach(sql => {
-        self.stackedAlterSqls.push({
-          fileName: sql.fileName,
-          content: Prism.highlight('\n' + sql.content.trim(), Prism.languages.sql, 'sql'),
+    this.prepareChecked = () => {
+      if (!self.alter.checkedZip) {
+        return
+      }
+      self.checkedZip = {}
+      self.checkedZip.fileName = self.alter.checkedZip.fileName
+      self.checkedZip.checkedFiles = []
+      self.alter.checkedZip.checkedFiles.forEach(file => {
+        self.checkedZip.checkedFiles.push({
+          fileName: file.fileName,
+          content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })
       })
     }
 
-    this.prepareComponents = () => {
+    this.prepareUnreleased = () => {
+      if (!self.alter.unreleasedDir) {
+        return
+      }
+      self.unreleasedDir = {}
+      self.unreleasedDir.checkedFiles = []
+      self.alter.unreleasedDir.checkedFiles.forEach(file => {
+        self.unreleasedDir.checkedFiles.push({
+          fileName: file.fileName,
+          content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
+          show: false,
+        })
+      })
+    }
+
+    this.prepareLatestResult = () => {
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'alterCheck' })[0]
-      self.updateLatestResult(self.client)
+      self.updateLatestResult()
     }
 
-    this.updateLatestResult = (client) => {
+    this.updateLatestResult = () => {
       if (!self.latestResult) {
         return
       }
-      if (client.ngMark ==='previous-NG') {
+      self.latestResult.latestResult.header.show = false
+      if (self.ngMark ==='previous-NG') {
         self.latestResult.failure = {
           title: 'Found problems on Previous DDL.',
           message: 'Retry save previous.',
         }
-      } else if (client.ngMark ==='alter-NG') {
+      } else if (self.ngMark ==='alter-NG') {
         self.latestResult.failure = {
           title: 'Found problems on Alter DDL.',
           message: 'Complete your alter DDL, referring to AlterCheckResultHTML.',
         }
-      } else if (client.ngMark ==='next-NG') {
+      } else if (self.ngMark ==='next-NG') {
         self.latestResult.failure = {
           title: 'Found problems on Next DDL.',
           message: 'Fix your DDL and data grammatically.',
@@ -167,6 +216,18 @@
         title: 'Alter Check Successfully finished',
       }
       self.latestResult.updateLatestResult()
+    }
+
+    this.isEditing = () => {
+      return self.editingSqls !== undefined && self.editingSqls.length > 0
+    }
+
+    this.existsCheckedFiles = () => {
+      return self.checkedZip !== undefined && self.checkedZip.checkedFiles !== undefined && self.checkedZip.checkedFiles.length > 0
+    }
+
+    this.existsUnreleasedFiles = () => {
+      return self.unreleasedDir !== undefined && self.unreleasedDir.checkedFiles !== undefined && self.unreleasedDir.checkedFiles.length > 0
     }
 
     // ===================================================================================
@@ -222,11 +283,13 @@
     }
 
     this.updateContents = () => {
-      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
-        self.client = response
-        self.updateLatestResult(self.client)
-        self.prepareEditingAlterSqls(self.client.editingAlterSqls)
-        self.prepareStackedAlterSqls(self.client.stackedAlterSqls)
+      self.prepareAlterInfo(self.projectName).then(() => {
+        self.prepareNgMark()
+        self.prepareEditing()
+        self.prepareChecked()
+        self.prepareUnreleased()
+        self.prepareLatestResult()
+      }).finally(() => {
         self.update()
       })
     }

@@ -32,7 +32,7 @@
     self.latestResult = {
       loaded: false,
       header: {
-        text: 'Latest Result',
+        text: 'Latest Manage Task Execution Log',
         show: true
       }
     }
