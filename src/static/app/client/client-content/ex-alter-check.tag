@@ -12,7 +12,7 @@
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
-      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL List</h5>
+      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
       <div class="ui list" if="{ existsCheckedFiles() }">
         <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL List</h5>
+      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
       <div class="ui list" if="{ existsUnreleasedFiles() }">
         <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
