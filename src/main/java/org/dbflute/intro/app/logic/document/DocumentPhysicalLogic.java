@@ -341,6 +341,6 @@ public class DocumentPhysicalLogic {
 
     private boolean existsAlterFileInUnreleasedDir(String clientProject, String alterFileName) {
         final String unreleasedDIrPath = buildMigrationPath(clientProject, "history", "unreleased-checked-alter");
-        return Files.exists(Paths.get(unreleasedDIrPath, alterFileName));
+        return Files.exists(Paths.get(unreleasedDIrPath, "READONLY_" + alterFileName));
     }
 }
