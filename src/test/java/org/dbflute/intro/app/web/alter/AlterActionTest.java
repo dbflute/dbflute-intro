@@ -140,7 +140,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                               prepare
     //                                               -------
-    public void test_create_existsAlterDir() {
+    public void test_prepare_existsAlterDir() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -155,7 +155,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
-    public void test_create_notExistsAlterDir() throws IOException {
+    public void test_prepare_notExistsAlterDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -172,7 +172,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
-    public void test_create_notExistsHistoryDir() throws IOException {
+    public void test_prepare_notExistsHistoryDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -189,7 +189,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
-    public void test_create_notMigrationDir() throws IOException {
+    public void test_prepare_notMigrationDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -206,7 +206,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
-    public void test_create_validateInvalidPrefix() {
+    public void test_prepare_validateInvalidPrefix() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -220,7 +220,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         });
     }
 
-    public void test_create_validateNotSQLFile() {
+    public void test_prepare_validateNotSQLFile() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -234,7 +234,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         });
     }
 
-    public void test_create_validateSameFileName() {
+    public void test_prepare_validateSameFileName() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -248,7 +248,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         });
     }
 
-    public void test_create_validateInvalidChar() {
+    public void test_prepare_validateInvalidChar() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
