@@ -312,7 +312,8 @@ public class DocumentPhysicalLogic {
     }
 
     public boolean existsAlterFileAlready(String clientProject, String alterFileName) {
-        return existsAlterFileInAlterDir(clientProject, alterFileName) || existsAlterFileInCheckedZip(clientProject, alterFileName);
+        return existsAlterFileInAlterDir(clientProject, alterFileName) || existsAlterFileInCheckedZip(clientProject, alterFileName)
+                || existsAlterFileInUnreleasedDir(clientProject, alterFileName);
     }
 
     private boolean existsAlterFileInAlterDir(String clientProject, String alterFileName) {
@@ -327,11 +328,19 @@ public class DocumentPhysicalLogic {
         }
 
         final String zipPath = buildCheckedAlterZipPath(clientProject);
+        if (zipPath == null) {
+            return false;
+        }
         try {
             List<String> alterSqlNames = findAlterSqlNamesFromZip(zipPath);
             return alterSqlNames.contains(alterFileName);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
         }
+    }
+
+    private boolean existsAlterFileInUnreleasedDir(String clientProject, String alterFileName) {
+        final String unreleasedDIrPath = buildMigrationPath(clientProject, "history", "unreleased-checked-alter");
+        return Files.exists(Paths.get(unreleasedDIrPath, alterFileName));
     }
 }
