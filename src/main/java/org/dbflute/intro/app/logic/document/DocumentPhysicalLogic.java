@@ -116,12 +116,7 @@ public class DocumentPhysicalLogic {
         return introPhysicalLogic.buildClientPath(clientProject, "output", "doc", pureName);
     }
 
-    private String buildMigrationPath(String clientProject, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", pureName);
-    }
-
     private String buildMigrationPath(String clientProject, String type, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
     }
-
 }

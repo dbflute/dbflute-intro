@@ -1,9 +1,9 @@
 <ex-alter-check>
   <div class="ui container">
-    <h3>Alter Check</h3>
+    <h3>AlterCheck</h3>
 
     <section class="ui info message">
-      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"Alter Check"?</a></div>
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"AlterCheck"?</a></div>
       <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
     </section>
 
@@ -12,7 +12,7 @@
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
-      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL List</h5>
+      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
       <div class="ui list" if="{ existsCheckedFiles() }">
         <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL List</h5>
+      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
       <div class="ui list" if="{ existsUnreleasedFiles() }">
         <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -44,23 +44,28 @@
         <div class="fields">
           <div class="seven wide inline field">
             <label>alter-schema-</label>
-            <input type="text" ref="alterNameInput" placeholder="input your ticket name and so on">
+            <input type="text" ref="alterNameInput" placeholder="ticket name">
             <label>.sql</label>
           </div>
+        </div>
+        <div class="fields">
           <div class="three wide field">
-            <button class="ui primary button" onclick="{ prepareAlterCheck }">Prepare Alter Check</button>
+            <button class="ui primary button" onclick="{ prepareAlterCheck }">Begin New AlterCheck!!</button>
+          </div>
+          <div class="three wide field">
+            <a class="" onclick="{ prepareAlterCheck }">Or only fix Alter SQL</a>
           </div>
         </div>
       </form>
     </section>
 
     <section show="{ isEditing() }">
-      <h4 class="ui header">Step2. Execute Alter Check</h4>
+      <h4 class="ui header">Step2. Execute AlterCheck</h4>
 
       <h5 class="ui header">Open Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">()</span></a>
           <div show="{ alterItem.show }" class="ui message message-area">
           <pre>
             <code>
@@ -74,9 +79,9 @@
       <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
 
       <h5 class="ui header">Executor</h5>
-      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute Alter Check</button>
+      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
 
-      <h5 class="ui header">Latest Alter Check Result</h5>
+      <h5 class="ui header">Latest AlterCheck Result</h5>
       <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
       <div class="latest-result">
         <latest-result></latest-result>
@@ -126,6 +131,7 @@
     self.unreleasedDir = {
       checkedFiles : []
     }
+    self.preparedFileName = ''
 
     // ===================================================================================
     //                                                                          Initialize
@@ -213,7 +219,7 @@
         }
       }
       self.latestResult.success = {
-        title: 'Alter Check Successfully finished',
+        title: 'AlterCheck Successfully finished',
       }
       self.latestResult.updateLatestResult()
     }
@@ -260,7 +266,7 @@
     //                                                                        Execute Task
     //                                                                        ============
     this.alterCheckTask = () => {
-      this.suConfirm('Are you sure to execute Alter Check task?').then(() => {
+      this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
           self.refs.resultModal.show(message)
@@ -276,7 +282,7 @@
       ApiFactory.prepareAlterSql(self.opts.projectName, alterFileName)
         .then(() => {
           ApiFactory.openAlterDir(self.opts.projectName)
-          self.editing = true
+          self.preparedFileName = alterFileName
         }).finally(() => {
           self.updateContents()
         })
