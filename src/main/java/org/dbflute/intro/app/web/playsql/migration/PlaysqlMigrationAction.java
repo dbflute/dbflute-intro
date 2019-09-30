@@ -23,6 +23,7 @@ import java.io.UncheckedIOException;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
+import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
@@ -37,11 +38,11 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DocumentPhysicalLogic documentPhysicalLogic;
+    private PlaysqlMigrateLogic playsqlMigrateLogic;
 
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> alter(String clientProject) {
-        OptionalThing<File> optAlterDir = documentPhysicalLogic.findAlterDir(clientProject);
+        OptionalThing<File> optAlterDir = playsqlMigrateLogic.findAlterDir(clientProject);
         if (optAlterDir.isPresent()) {
             File file = optAlterDir.get();
             try {

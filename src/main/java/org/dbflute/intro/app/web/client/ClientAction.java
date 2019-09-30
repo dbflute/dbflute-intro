@@ -32,6 +32,7 @@ import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
+import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -78,6 +79,8 @@ public class ClientAction extends IntroBaseAction {
     private LogPhysicalLogic logPhysicalLogic;
     @Resource
     private EngineInfoLogic engineInfoLogic;
+    @Resource
+    private PlaysqlMigrateLogic playsqlMigrateLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -193,9 +196,9 @@ public class ClientAction extends IntroBaseAction {
         operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
         operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
-        operation.ngMark = documentLogic.findAlterCheckNgMark(clientProject);
-        operation.editingAlterSqls = documentLogic.findAlterFiles(clientProject);
-        operation.stackedAlterSqls = documentLogic.findStackedAlterSqls(clientProject);
+        operation.ngMark = playsqlMigrateLogic.findAlterCheckNgMark(clientProject);
+        operation.editingAlterSqls = playsqlMigrateLogic.findAlterFiles(clientProject);
+        operation.stackedAlterSqls = playsqlMigrateLogic.findStackedAlterSqls(clientProject);
         boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
         if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
             operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientProject);
