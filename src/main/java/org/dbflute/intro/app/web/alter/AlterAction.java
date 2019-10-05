@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
+import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.optional.OptionalThing;
@@ -23,7 +23,7 @@ public class AlterAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DocumentPhysicalLogic documentPhysicalLogic;
+    private PlaysqlMigrateLogic playsqlMigrateLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -38,7 +38,7 @@ public class AlterAction extends IntroBaseAction {
 
     private AlterSQLResult generateAlterSQLResult(String clientProject) {
         AlterSQLResult result = new AlterSQLResult();
-        result.ngMark = documentPhysicalLogic.findAlterCheckNgMark(clientProject);
+        result.ngMark = playsqlMigrateLogic.findAlterCheckNgMark(clientProject);
         result.editingFiles = generateAlterEditingFilePart(clientProject);
         result.checkedZip = generateCheckedZipPart(clientProject);
         result.unreleasedDir = generateUnreleasedDirPart(clientProject);
@@ -46,7 +46,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private List<AlterSQLResult.AlterDirFilePart> generateAlterEditingFilePart(String clientProject) {
-        return documentPhysicalLogic.findAlterFiles(clientProject).stream().map(editingFile -> {
+        return playsqlMigrateLogic.findAlterFiles(clientProject).stream().map(editingFile -> {
             AlterSQLResult.AlterDirFilePart filePart = new AlterSQLResult.AlterDirFilePart();
             filePart.fileName = editingFile.fileName;
             filePart.content = editingFile.content;
@@ -55,7 +55,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private AlterSQLResult.CheckedZipPart generateCheckedZipPart(String clientProject) {
-        return documentPhysicalLogic.findCheckedZip(clientProject).map(checkedZipBean -> {
+        return playsqlMigrateLogic.findCheckedZip(clientProject).map(checkedZipBean -> {
             AlterSQLResult.CheckedZipPart checkedZipPart = new AlterSQLResult.CheckedZipPart();
             checkedZipPart.fileName = checkedZipBean.getFileName();
             checkedZipPart.checkedFiles = checkedZipBean.getCheckedSqlList().stream().map(checkedFile -> {
@@ -69,7 +69,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private AlterSQLResult.UnreleasedDirPart generateUnreleasedDirPart(String clientProject) {
-        return documentPhysicalLogic.findUnrereasedAlterDir(clientProject).map(dirBean -> {
+        return playsqlMigrateLogic.findUnreleasedAlterDir(clientProject).map(dirBean -> {
             AlterSQLResult.UnreleasedDirPart dirPart = new AlterSQLResult.UnreleasedDirPart();
             dirPart.checkedFiles = dirBean.getCheckedSqlList().stream().map(alterSqlBean -> {
                 AlterSQLResult.AlterDirFilePart filePart = new AlterSQLResult.AlterDirFilePart();
@@ -87,12 +87,12 @@ public class AlterAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> prepare(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));
-        OptionalThing<File> optAlterDir = documentPhysicalLogic.findAlterDir(clientProject);
+        OptionalThing<File> optAlterDir = playsqlMigrateLogic.findAlterDir(clientProject);
         if (!optAlterDir.isPresent()) {
-            documentPhysicalLogic.createAlterDir(clientProject);
+            playsqlMigrateLogic.createAlterDir(clientProject);
         }
-        documentPhysicalLogic.unzipAlterSqlZip(clientProject);
-        documentPhysicalLogic.createAlterSql(clientProject, body.alterFileName);
+        playsqlMigrateLogic.unzipAlterSqlZip(clientProject);
+        playsqlMigrateLogic.createAlterSql(clientProject, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }
 
@@ -111,7 +111,7 @@ public class AlterAction extends IntroBaseAction {
         if (containsInvalidCharacter) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (!containsInvalidCharacter && documentPhysicalLogic.existsAlterFileAlready(clientProject, body.alterFileName)) {
+        if (!containsInvalidCharacter && playsqlMigrateLogic.existsAlterFileAlready(clientProject, body.alterFileName)) {
             messages.addErrorsDuplicateFileName(alterFileName);
         }
     }
