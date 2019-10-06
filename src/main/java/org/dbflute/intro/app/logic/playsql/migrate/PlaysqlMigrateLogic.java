@@ -31,6 +31,7 @@ import org.dbflute.util.DfStringUtil;
 
 /**
  * @author cabos
+ * @author subaru
  */
 public class PlaysqlMigrateLogic {
 
