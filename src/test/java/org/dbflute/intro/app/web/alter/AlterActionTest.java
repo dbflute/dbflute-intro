@@ -149,7 +149,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // do nothing
@@ -166,7 +166,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // do nothing
@@ -183,7 +183,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // do nothing
@@ -200,12 +200,15 @@ public class AlterActionTest extends UnitIntroTestCase {
         body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
-        alterAction.prepare(TEST_CLIENT_PROJECT, body);
+        alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         // do nothing
     }
 
+    // -----------------------------------------------------
+    //                                                create
+    //                                                ------
     public void test_prepare_validateInvalidPrefix() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
@@ -216,7 +219,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.prepare(TEST_CLIENT_PROJECT, body);
+            alterAction.create(TEST_CLIENT_PROJECT, body);
         });
     }
 
@@ -230,11 +233,11 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.prepare(TEST_CLIENT_PROJECT, body);
+            alterAction.create(TEST_CLIENT_PROJECT, body);
         });
     }
 
-    public void test_prepare_validateSameFileName() {
+    public void test_create_validateSameFileName() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -244,7 +247,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.prepare(TEST_CLIENT_PROJECT, body);
+            alterAction.create(TEST_CLIENT_PROJECT, body);
         });
     }
 
@@ -258,7 +261,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Act, Assert ##
         assertException(ValidationErrorException.class, () -> {
-            alterAction.prepare(TEST_CLIENT_PROJECT, body);
+            alterAction.create(TEST_CLIENT_PROJECT, body);
         });
     }
 

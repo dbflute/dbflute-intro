@@ -1,6 +1,5 @@
 package org.dbflute.intro.app.web.alter;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +8,6 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.action.IntroMessages;
-import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -85,14 +83,16 @@ public class AlterAction extends IntroBaseAction {
     //                                               prepare
     //                                               -------
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> prepare(String clientProject, AlterCreateBody body) {
-        validate(body, messages -> moreValidate(clientProject, body, messages));
-        OptionalThing<File> optAlterDir = playsqlMigrateLogic.findAlterDir(clientProject);
-        if (!optAlterDir.isPresent()) {
-            playsqlMigrateLogic.createAlterDir(clientProject);
-        }
+    public JsonResponse<Void> prepare(String clientProject) {
         playsqlMigrateLogic.unzipAlterSqlZip(clientProject);
         playsqlMigrateLogic.copyUnreleasedAlterDir(clientProject);
+        return JsonResponse.asEmptyBody();
+    }
+
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
+        validate(body, messages -> moreValidate(clientProject, body, messages));
+        playsqlMigrateLogic.createAlterDir(clientProject);
         playsqlMigrateLogic.createAlterSql(clientProject, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }

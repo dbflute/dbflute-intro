@@ -80,6 +80,7 @@ public class PlaysqlMigrateLogic {
         return alterSqls;
     }
 
+    // TODO cabos fix response type Optional<File> -> File (2019-10-07)
     public OptionalThing<File> findAlterDir(String clientProject) {
         File file = new File(buildMigrationPath(clientProject, "", "alter"));
         if (file.exists()) {
@@ -212,12 +213,23 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                              Create
     //                                                                              ======
-    public File createAlterDir(String clientProject) {
-        File file = new File(buildMigrationPath(clientProject, "", "alter"));
-        if (!file.exists()) {
-            file.mkdirs();
+    /**
+     * Create alter directory if not exists alter directory.
+     * Do nothing if already alter directory exists.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return alter directory path (NotEmpty)
+     */
+    public String createAlterDir(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        final File alterDir = new File(buildMigrationPath(clientProject, "", "alter"));
+        if (alterDir.exists()) {
+            return alterDir.getPath(); // do nothing
         }
-        return file;
+        if (!alterDir.mkdirs()) {
+            throw new IntroFileOperaionException("'Make directory' is failure", "Path : " + alterDir.getPath());
+        }
+        return alterDir.getPath();
     }
 
     public void createAlterSql(String clientProject, String alterFileName) {
@@ -279,7 +291,7 @@ public class PlaysqlMigrateLogic {
      */
     public void copyUnreleasedAlterDir(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
-        final String alterDirPath = createAlterDirIfNeeds(clientProject);
+        final String alterDirPath = createAlterDir(clientProject);
         final String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File unreleasedDir = new File(unreleasedAlterDirPath);
         if (!unreleasedDir.exists()) {
@@ -296,19 +308,6 @@ public class PlaysqlMigrateLogic {
             }
             copyUnreleasedAlterSqlFile(alterDirPath, sourceFile);
         });
-    }
-
-    /**
-     * Create alter directory if not exists alter directory.
-     *
-     * @param clientProject dbflute client project name (NotEmpty)
-     * @return alter directory path (NotEmpty)
-     */
-    private String createAlterDirIfNeeds(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
-        return findAlterDir(clientProject).orElseGet(() -> {
-            return createAlterDir(clientProject);
-        }).getPath();
     }
 
     /**
