@@ -92,6 +92,7 @@ public class AlterAction extends IntroBaseAction {
             playsqlMigrateLogic.createAlterDir(clientProject);
         }
         playsqlMigrateLogic.unzipAlterSqlZip(clientProject);
+        playsqlMigrateLogic.copyUnreleasedAlterDir(clientProject);
         playsqlMigrateLogic.createAlterSql(clientProject, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }

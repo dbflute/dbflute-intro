@@ -6,12 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -25,6 +20,8 @@ import org.dbflute.intro.app.logic.document.AlterSqlBean;
 import org.dbflute.intro.app.logic.document.CheckedZipBean;
 import org.dbflute.intro.app.logic.document.UnreleasedDirBean;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.bizfw.tellfailure.IntroFileOperaionException;
+import org.dbflute.intro.bizfw.util.AssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
@@ -215,11 +212,12 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                              Create
     //                                                                              ======
-    public void createAlterDir(String clientProject) {
+    public File createAlterDir(String clientProject) {
         File file = new File(buildMigrationPath(clientProject, "", "alter"));
         if (!file.exists()) {
             file.mkdirs();
         }
+        return file;
     }
 
     public void createAlterSql(String clientProject, String alterFileName) {
@@ -264,5 +262,97 @@ public class PlaysqlMigrateLogic {
             final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
             Files.write(Paths.get(dstPath, fileName), Collections.singletonList(content));
         }
+    }
+
+    // ===================================================================================
+    //                                                                                Copy
+    //                                                                                ====
+    /**
+     * Copy from unreleased directory to alter directory only unreleased sql files.
+     * Do nothing, if unreleased directory is not exists.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     */
+    public void copyUnreleasedAlterDir(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        final String alterDirPath = createAlterDirIfNeeds(clientProject);
+        final String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
+        final File unreleasedDir = new File(unreleasedAlterDirPath);
+        if (!unreleasedDir.exists()) {
+            return;
+        }
+        final File[] files = unreleasedDir.listFiles();
+        if (files == null) {
+            return;
+        }
+
+        Arrays.asList(files).forEach(sourceFile -> {
+            if (!isUnreleasedSql(sourceFile)) {
+                return;
+            }
+            copyUnreleasedAlterSqlFile(alterDirPath, sourceFile);
+        });
+    }
+
+    /**
+     * Create alter directory if not exists alter directory.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return alter directory path (NotEmpty)
+     */
+    private String createAlterDirIfNeeds(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        return findAlterDir(clientProject).orElseGet(() -> {
+            return createAlterDir(clientProject);
+        }).getPath();
+    }
+
+    /**
+     * Copy sql file from unreleased dir to alter dir only.
+     *
+     * @param alterDirPath alter directory (NotEmpty)
+     * @param sourceFile source file (NotNull)
+     */
+    private void copyUnreleasedAlterSqlFile(String alterDirPath, File sourceFile) {
+        AssertUtil.assertNotEmpty(alterDirPath);
+        AssertUtil.assertNotNull(sourceFile);
+        final File targetFile = new File(alterDirPath + "/" + convertEditableAlterSqlFileName(sourceFile.getName()));
+        try {
+            Files.copy(sourceFile.toPath(), targetFile.toPath());
+        } catch (IOException e) {
+            throw new IntroFileOperaionException("File copy is failure", "from: " + sourceFile.getPath() + ", to: " + targetFile.getPath());
+        }
+    }
+
+    /**
+     * Check that file is unreleased sql.
+     * o path contains "unreleased"
+     * o filename starts with "READONLY_alter-schema"
+     * o filename ends with ".sql"
+     *
+     * @param file file (NotNull)
+     * @return true, if file is unreleased sql
+     */
+    private boolean isUnreleasedSql(File file) {
+        AssertUtil.assertNotNull(file);
+        if (file.exists()) {
+            return false;
+        }
+        if (!DfStringUtil.contains(file.getPath(), "unreleased")) {
+            return false;
+        }
+
+        final String fileName = file.getName();
+        return DfStringUtil.startsWith(fileName, "READONLY_alter-schema") && DfStringUtil.endsWith(fileName, ".sql");
+    }
+
+    /**
+     * Convert checked sql file name to edit. (Remove READONLY_)
+     * e.g. READONLY_alter-schema-sample.sql => alter-schema-sample.sql
+     * @return editable file name
+     */
+    private String convertEditableAlterSqlFileName(String fileName) {
+        AssertUtil.assertNotEmpty(fileName);
+        return DfStringUtil.replace(fileName, "READONLY_", "");
     }
 }

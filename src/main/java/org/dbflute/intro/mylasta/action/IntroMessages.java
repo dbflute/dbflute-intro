@@ -138,6 +138,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: Intro Error =&gt; {0} */
     public static final String ERRORS_APP_INTRO_ERROR = "{errors.app.intro.error}";
 
+    /** The key of the message: Intro Cannot operate files : {0} */
+    public static final String ERRORS_APP_FILE_OPERATION_ERROR = "{errors.app.file.operation.error}";
+
     /** The key of the message: Cannot connect to the database: {0} */
     public static final String ERRORS_APP_DATABASE_CONNECTION = "{errors.app.database.connection}";
 
@@ -728,6 +731,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppIntroError(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_INTRO_ERROR, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.file.operation.error' with parameters.
+     * <pre>
+     * message: Intro Cannot operate files : {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppFileOperationError(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_FILE_OPERATION_ERROR, arg0));
         return this;
     }
 
