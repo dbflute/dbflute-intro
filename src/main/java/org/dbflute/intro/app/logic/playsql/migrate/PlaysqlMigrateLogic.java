@@ -59,7 +59,7 @@ public class PlaysqlMigrateLogic {
      */
     public OptionalThing<CheckedZipBean> loadCheckedZip(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
-        return findNewestCheckedZipFile(clientProject).map(checkedZip -> {
+        return loadNewestCheckedZipFile(clientProject).map(checkedZip -> {
             return new CheckedZipBean(checkedZip.getName(), loadCheckedSqlList(checkedZip));
         });
     }
@@ -228,7 +228,7 @@ public class PlaysqlMigrateLogic {
             return false;
         }
 
-        return findNewestCheckedZipFile(clientProject).map(zipFile -> {
+        return loadNewestCheckedZipFile(clientProject).map(zipFile -> {
             String zipPath = zipFile.getPath();
             try {
                 List<String> alterSqlNames = findAlterSqlNamesFromZip(zipPath);
@@ -271,7 +271,7 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
-    private OptionalThing<File> findNewestCheckedZipFile(String clientProject) {
+    private OptionalThing<File> loadNewestCheckedZipFile(String clientProject) {
         final Path historyPath = new File(buildMigrationPath(clientProject, "history")).toPath();
         if (Files.notExists(historyPath)) {
             return OptionalThing.empty();
@@ -366,7 +366,7 @@ public class PlaysqlMigrateLogic {
         if (Files.notExists(Paths.get(historyPath))) {
             return;
         }
-        findNewestCheckedZipFile(clientProject).ifPresent(zipFile -> {
+        loadNewestCheckedZipFile(clientProject).ifPresent(zipFile -> {
             final String zipPath = zipFile.getPath();
             final String alterDirPath = buildMigrationPath(clientProject, "", "alter");
             try {
