@@ -51,10 +51,10 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
 
         // editing
-        List<AlterDirFilePart> editingFileList = result.editingFiles;
+        List<SQLFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 1);
         {
-            AlterDirFilePart alterSQLFilePart = editingFileList.get(0);
+            SQLFilePart alterSQLFilePart = editingFileList.get(0);
             assertEquals(alterSQLFilePart.fileName, "alter-schema_sample.sql");
             assertEquals(alterSQLFilePart.content, "ALTER TABLE MEMBER ADD INDEX IX_BIRTHDATE(birthdate);\n");
         }
@@ -79,21 +79,21 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterDirFilePart> editingFileList = result.editingFiles;
+        List<SQLFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
         CheckedZipPart checkedZip = result.checkedZip;
         assertEquals(checkedZip.fileName, "checked-alter-to-20190422-2332.zip");
 
-        List<AlterDirFilePart> checkedFileList = checkedZip.checkedFiles;
+        List<SQLFilePart> checkedFileList = checkedZip.checkedFiles;
         assertEquals(checkedFileList.size(), 2);
         {
-            AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(0);
+            SQLFilePart checkedAlterSQLFile = checkedFileList.get(0);
             assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
         }
         {
-            AlterDirFilePart checkedAlterSQLFile = checkedFileList.get(1);
+            SQLFilePart checkedAlterSQLFile = checkedFileList.get(1);
             assertEquals(checkedAlterSQLFile.fileName, "alter-schema_003.sql");
         }
     }
@@ -112,7 +112,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertEquals(result.ngMark, CDef.NgMark.AlterNG);
 
         // editing
-        List<AlterDirFilePart> editingFileList = result.editingFiles;
+        List<SQLFilePart> editingFileList = result.editingFiles;
         assertEquals(editingFileList.size(), 0);
 
         // checked
@@ -122,17 +122,17 @@ public class AlterActionTest extends UnitIntroTestCase {
         UnreleasedDirPart unreleasedDir = result.unreleasedDir;
         assertNotNull(unreleasedDir);
 
-        List<AlterDirFilePart> checkedFiles = unreleasedDir.checkedFiles;
+        List<SQLFilePart> checkedFiles = unreleasedDir.checkedFiles;
         {
-            AlterDirFilePart file = checkedFiles.get(0);
+            SQLFilePart file = checkedFiles.get(0);
             assertEquals(file.fileName, "for-previous-20120804-1746.dfmark");
         }
         {
-            AlterDirFilePart file = checkedFiles.get(1);
+            SQLFilePart file = checkedFiles.get(1);
             assertEquals(file.fileName, "READONLY_alter-schema_sample.sql");
         }
         {
-            AlterDirFilePart file = checkedFiles.get(2);
+            SQLFilePart file = checkedFiles.get(2);
             assertEquals(file.fileName, "DONT_EDIT_HERE.dfmark");
         }
     }

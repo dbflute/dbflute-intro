@@ -20,7 +20,7 @@ public class AlterSQLResult {
 
     /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
     @Valid
-    public List<AlterDirFilePart> editingFiles;
+    public List<SQLFilePart> editingFiles;
 
     /** checked sql zip file */
     @Valid
@@ -38,17 +38,17 @@ public class AlterSQLResult {
 
         /** list of checked sql files */
         @Valid
-        public List<AlterDirFilePart> checkedFiles;
+        public List<SQLFilePart> checkedFiles;
     }
 
     public static class UnreleasedDirPart {
 
         /** list of checked sql files */
         @Valid
-        public List<AlterDirFilePart> checkedFiles;
+        public List<SQLFilePart> checkedFiles;
     }
 
-    public static class AlterDirFilePart {
+    public static class SQLFilePart {
 
         /** file name e.g. alter-sql-SAMPLE.sql */
         @NotNull

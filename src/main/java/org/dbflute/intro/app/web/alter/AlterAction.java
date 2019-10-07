@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.document.AlterSqlBean;
 import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.action.IntroMessages;
@@ -43,9 +44,9 @@ public class AlterAction extends IntroBaseAction {
         return result;
     }
 
-    private List<AlterSQLResult.AlterDirFilePart> generateAlterEditingFilePart(String clientProject) {
+    private List<AlterSQLResult.SQLFilePart> generateAlterEditingFilePart(String clientProject) {
         return playsqlMigrateLogic.findAlterFiles(clientProject).stream().map(editingFile -> {
-            AlterSQLResult.AlterDirFilePart filePart = new AlterSQLResult.AlterDirFilePart();
+            AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
             filePart.fileName = editingFile.fileName;
             filePart.content = editingFile.content;
             return filePart;
@@ -56,12 +57,7 @@ public class AlterAction extends IntroBaseAction {
         return playsqlMigrateLogic.findCheckedZip(clientProject).map(checkedZipBean -> {
             AlterSQLResult.CheckedZipPart checkedZipPart = new AlterSQLResult.CheckedZipPart();
             checkedZipPart.fileName = checkedZipBean.getFileName();
-            checkedZipPart.checkedFiles = checkedZipBean.getCheckedSqlList().stream().map(checkedFile -> {
-                AlterSQLResult.AlterDirFilePart filePart = new AlterSQLResult.AlterDirFilePart();
-                filePart.fileName = checkedFile.fileName;
-                filePart.content = checkedFile.content;
-                return filePart;
-            }).collect(Collectors.toList());
+            checkedZipPart.checkedFiles = generateSqlFileBean(checkedZipBean.getCheckedSqlList());
             return checkedZipPart;
         }).orElse(null);
     }
@@ -69,14 +65,18 @@ public class AlterAction extends IntroBaseAction {
     private AlterSQLResult.UnreleasedDirPart generateUnreleasedDirPart(String clientProject) {
         return playsqlMigrateLogic.findUnreleasedAlterDir(clientProject).map(dirBean -> {
             AlterSQLResult.UnreleasedDirPart dirPart = new AlterSQLResult.UnreleasedDirPart();
-            dirPart.checkedFiles = dirBean.getCheckedSqlList().stream().map(alterSqlBean -> {
-                AlterSQLResult.AlterDirFilePart filePart = new AlterSQLResult.AlterDirFilePart();
-                filePart.fileName = alterSqlBean.fileName;
-                filePart.content = alterSqlBean.content;
-                return filePart;
-            }).collect(Collectors.toList());
+            dirPart.checkedFiles = generateSqlFileBean(dirBean.getCheckedSqlList());
             return dirPart;
         }).orElse(null);
+    }
+
+    private List<AlterSQLResult.SQLFilePart> generateSqlFileBean(List<AlterSqlBean> sqlBeanList) {
+        return sqlBeanList.stream().map(alterSqlBean -> {
+            AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
+            filePart.fileName = alterSqlBean.fileName;
+            filePart.content = alterSqlBean.content;
+            return filePart;
+        }).collect(Collectors.toList());
     }
 
     // -----------------------------------------------------
