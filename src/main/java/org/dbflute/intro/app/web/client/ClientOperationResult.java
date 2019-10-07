@@ -15,11 +15,6 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.dbflute.intro.app.logic.document.AlterSqlBean;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
 
@@ -55,16 +50,6 @@ public class ClientOperationResult {
     public Boolean hasSyncCheckResultHtml;
     @Required
     public Boolean hasAlterCheckResultHtml;
-
-    // ===================================================================================
-    //                                                                         Alter Check
-    //                                                                         ===========
-    // TODO cabos Delete It. (Refactoring) (2019-09-14)
-    public CDef.NgMark ngMark;
-    @Valid
-    public List<AlterSqlBean> editingAlterSqls;
-    @Valid
-    public List<AlterSqlBean> stackedAlterSqls;
 
     // ===================================================================================
     //                                                                 Schema Policy Check

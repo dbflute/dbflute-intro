@@ -196,9 +196,6 @@ public class ClientAction extends IntroBaseAction {
         operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
         operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
         operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
-        operation.ngMark = playsqlMigrateLogic.findAlterCheckNgMark(clientProject);
-        operation.editingAlterSqls = playsqlMigrateLogic.findAlterFiles(clientProject);
-        operation.stackedAlterSqls = playsqlMigrateLogic.findStackedAlterSqls(clientProject);
         boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
         if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
             operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientProject);
