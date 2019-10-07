@@ -46,8 +46,11 @@ public class PlaysqlMigrateLogic {
     private FlutyFileLogic flutyFileLogic;
 
     // ===================================================================================
-    //                                                                         Find/Exists
-    //                                                                         ===========
+    //                                                                      load sql files
+    //                                                                      ==============
+    // -----------------------------------------------------
+    //                                           checked zip
+    //                                           -----------
     /**
      * Load newest checked zip file info.
      *
@@ -107,45 +110,9 @@ public class PlaysqlMigrateLogic {
         }
     }
 
-    private File findAlterDir(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
-        return new File(buildMigrationPath(clientProject, "", "alter"));
-    }
-
-    /**
-     * Open alter directory by filer. (e.g. finder if mac, explorer if windows)
-     * Use OS command.
-     *
-     * @param clientProject dbflute client project name (NotEmpty)
-     */
-    public void openAlterDir(String clientProject) {
-        File alterDir = findAlterDir(clientProject);
-        if (alterDir.exists()) {
-            try {
-                Desktop desktop = Desktop.getDesktop();
-                desktop.open(alterDir);
-            } catch (IOException e) {
-                throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
-            }
-        }
-    }
-
-    /**
-     * Load sql files in alter directory.
-     *
-     * @param clientProject dbflute client project name (NotEmpty)
-     * @return list of alter files in alter directory. (NotNull)
-     */
-    public List<AlterSqlBean> loadAlterSqlFiles(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
-        return OptionalThing.ofNullable(findAlterDir(clientProject).listFiles(), () -> {})
-                .map(files -> Arrays.stream(files))
-                .orElse(Stream.empty())
-                .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
-                .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
-                .collect(Collectors.toList());
-    }
-
+    // -----------------------------------------------------
+    //                                  unreleased directory
+    //                                  --------------------
     /**
      * Load unreleased directory info.
      *
@@ -193,6 +160,51 @@ public class PlaysqlMigrateLogic {
         return OptionalThing.empty();
     }
 
+    // -----------------------------------------------------
+    //                                       alter directory
+    //                                       ---------------
+    /**
+     * Load sql files in alter directory.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return list of alter files in alter directory. (NotNull)
+     */
+    public List<AlterSqlBean> loadAlterSqlFiles(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        return OptionalThing.ofNullable(findAlterDir(clientProject).listFiles(), () -> {})
+                .map(files -> Arrays.stream(files))
+                .orElse(Stream.empty())
+                .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
+                .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Open alter directory by filer. (e.g. finder if mac, explorer if windows)
+     * Use OS command.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     */
+    public void openAlterDir(String clientProject) {
+        File alterDir = findAlterDir(clientProject);
+        if (alterDir.exists()) {
+            try {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(alterDir);
+            } catch (IOException e) {
+                throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
+            }
+        }
+    }
+
+    private File findAlterDir(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        return new File(buildMigrationPath(clientProject, "", "alter"));
+    }
+
+    // -----------------------------------------------------
+    //                                          exists check
+    //                                          ------------
     /**
      * Check to exist same name alter SQL file before release.
      * @param clientProject dbflute client project name (NotEmpty)
