@@ -20,7 +20,7 @@ import org.dbflute.intro.app.logic.document.AlterSqlBean;
 import org.dbflute.intro.app.logic.document.CheckedZipBean;
 import org.dbflute.intro.app.logic.document.UnreleasedDirBean;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.tellfailure.IntroFileOperaionException;
+import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.AssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
@@ -227,7 +227,7 @@ public class PlaysqlMigrateLogic {
             return alterDir.getPath(); // do nothing
         }
         if (!alterDir.mkdirs()) {
-            throw new IntroFileOperaionException("'Make directory' is failure", "Path : " + alterDir.getPath());
+            throw new IntroFileOperationException("'Make directory' is failure", "Path : " + alterDir.getPath());
         }
         return alterDir.getPath();
     }
@@ -323,7 +323,7 @@ public class PlaysqlMigrateLogic {
         try {
             Files.copy(sourceFile.toPath(), targetFile.toPath());
         } catch (IOException e) {
-            throw new IntroFileOperaionException("File copy is failure", "from: " + sourceFile.getPath() + ", to: " + targetFile.getPath());
+            throw new IntroFileOperationException("File copy is failure", "from: " + sourceFile.getPath() + ", to: " + targetFile.getPath());
         }
     }
 

@@ -8,9 +8,9 @@ import org.dbflute.intro.mylasta.action.IntroMessages;
 /**
  * @author cabos
  */
-public class IntroFileOperaionException extends IntroApplicationException {
+public class IntroFileOperationException extends IntroApplicationException {
 
-    public IntroFileOperaionException(String debugMsg, String failureHint) {
+    public IntroFileOperationException(String debugMsg, String failureHint) {
         super(debugMsg, prepareMessages(failureHint));
     }
 
