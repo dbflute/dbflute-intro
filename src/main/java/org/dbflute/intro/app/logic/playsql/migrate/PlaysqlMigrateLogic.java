@@ -239,6 +239,10 @@ public class PlaysqlMigrateLogic {
         }
 
         final String zipPath = buildCheckedAlterZipPath(clientProject);
+        if (zipPath == null) {
+            return;
+        }
+
         final String alterDirPath = buildMigrationPath(clientProject, "", "alter");
         try {
             unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
@@ -335,7 +339,7 @@ public class PlaysqlMigrateLogic {
      */
     private boolean isUnreleasedSql(File file) {
         AssertUtil.assertNotNull(file);
-        if (file.exists()) {
+        if (!file.exists()) {
             return false;
         }
         if (!DfStringUtil.contains(file.getPath(), "unreleased")) {
