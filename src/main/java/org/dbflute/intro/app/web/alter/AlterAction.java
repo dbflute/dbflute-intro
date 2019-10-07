@@ -32,19 +32,19 @@ public class AlterAction extends IntroBaseAction {
     //                                                 -----
     @Execute
     public JsonResponse<AlterSQLResult> index(String clientProject) {
-        return asJson(generateAlterSQLResult(clientProject));
+        return asJson(mappingAlterSQLResult(clientProject));
     }
 
-    private AlterSQLResult generateAlterSQLResult(String clientProject) {
+    private AlterSQLResult mappingAlterSQLResult(String clientProject) {
         AlterSQLResult result = new AlterSQLResult();
         result.ngMark = playsqlMigrateLogic.findAlterCheckNgMark(clientProject);
-        result.editingFiles = generateAlterEditingFilePart(clientProject);
-        result.checkedZip = generateCheckedZipPart(clientProject);
-        result.unreleasedDir = generateUnreleasedDirPart(clientProject);
+        result.editingFiles = mappingAlterEditingFilePart(clientProject);
+        result.checkedZip = mappingCheckedZipPart(clientProject);
+        result.unreleasedDir = mappingUnreleasedDirPart(clientProject);
         return result;
     }
 
-    private List<AlterSQLResult.SQLFilePart> generateAlterEditingFilePart(String clientProject) {
+    private List<AlterSQLResult.SQLFilePart> mappingAlterEditingFilePart(String clientProject) {
         return playsqlMigrateLogic.findAlterFiles(clientProject).stream().map(editingFile -> {
             AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
             filePart.fileName = editingFile.fileName;
@@ -53,24 +53,24 @@ public class AlterAction extends IntroBaseAction {
         }).collect(Collectors.toList());
     }
 
-    private AlterSQLResult.CheckedZipPart generateCheckedZipPart(String clientProject) {
+    private AlterSQLResult.CheckedZipPart mappingCheckedZipPart(String clientProject) {
         return playsqlMigrateLogic.findCheckedZip(clientProject).map(checkedZipBean -> {
             AlterSQLResult.CheckedZipPart checkedZipPart = new AlterSQLResult.CheckedZipPart();
             checkedZipPart.fileName = checkedZipBean.getFileName();
-            checkedZipPart.checkedFiles = generateSqlFileBean(checkedZipBean.getCheckedSqlList());
+            checkedZipPart.checkedFiles = mappingSqlFileBean(checkedZipBean.getCheckedSqlList());
             return checkedZipPart;
         }).orElse(null);
     }
 
-    private AlterSQLResult.UnreleasedDirPart generateUnreleasedDirPart(String clientProject) {
+    private AlterSQLResult.UnreleasedDirPart mappingUnreleasedDirPart(String clientProject) {
         return playsqlMigrateLogic.findUnreleasedAlterDir(clientProject).map(dirBean -> {
             AlterSQLResult.UnreleasedDirPart dirPart = new AlterSQLResult.UnreleasedDirPart();
-            dirPart.checkedFiles = generateSqlFileBean(dirBean.getCheckedSqlList());
+            dirPart.checkedFiles = mappingSqlFileBean(dirBean.getCheckedSqlList());
             return dirPart;
         }).orElse(null);
     }
 
-    private List<AlterSQLResult.SQLFilePart> generateSqlFileBean(List<AlterSqlBean> sqlBeanList) {
+    private List<AlterSQLResult.SQLFilePart> mappingSqlFileBean(List<AlterSqlBean> sqlBeanList) {
         return sqlBeanList.stream().map(alterSqlBean -> {
             AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
             filePart.fileName = alterSqlBean.fileName;
