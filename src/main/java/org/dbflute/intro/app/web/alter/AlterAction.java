@@ -92,7 +92,6 @@ public class AlterAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));
-        playsqlMigrateLogic.createAlterDir(clientProject);
         playsqlMigrateLogic.createAlterSql(clientProject, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }

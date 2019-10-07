@@ -182,8 +182,7 @@ public class PlaysqlMigrateLogic {
         if (Objects.isNull(files)) {
             return false;
         }
-        return Arrays.stream(files)
-                .anyMatch(file -> DfStringUtil.endsWith(file.getName(), ".sql"));
+        return Arrays.stream(files).anyMatch(file -> DfStringUtil.endsWith(file.getName(), ".sql"));
     }
 
     // ===================================================================================
@@ -221,6 +220,16 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                              Create
     //                                                                              ======
+    public void createAlterSql(String clientProject, String alterFileName) {
+        createAlterDirIfNotExists(clientProject);
+        File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to create new alter sql file: " + file.getAbsolutePath(), e);
+        }
+    }
+
     /**
      * Create alter directory if not exists alter directory.
      * Do nothing if already alter directory exists.
@@ -228,7 +237,7 @@ public class PlaysqlMigrateLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return alter directory path (NotEmpty)
      */
-    public String createAlterDir(String clientProject) {
+    private String createAlterDirIfNotExists(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
         final File alterDir = new File(buildMigrationPath(clientProject, "", "alter"));
         if (alterDir.exists()) {
@@ -240,19 +249,11 @@ public class PlaysqlMigrateLogic {
         return alterDir.getPath();
     }
 
-    public void createAlterSql(String clientProject, String alterFileName) {
-        File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to create new alter sql file: " + file.getAbsolutePath(), e);
-        }
-    }
-
     // ===================================================================================
     //                                                                                 Zip
     //                                                                                 ===
     public void unzipAlterSqlZip(String clientProject) {
+        createAlterDirIfNotExists(clientProject);
         final String historyPath = buildMigrationPath(clientProject, "history");
         if (Files.notExists(Paths.get(historyPath))) {
             return;
@@ -299,7 +300,7 @@ public class PlaysqlMigrateLogic {
      */
     public void copyUnreleasedAlterDir(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
-        final String alterDirPath = createAlterDir(clientProject);
+        final String alterDirPath = createAlterDirIfNotExists(clientProject);
         final String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File unreleasedDir = new File(unreleasedAlterDirPath);
         if (!unreleasedDir.exists()) {
