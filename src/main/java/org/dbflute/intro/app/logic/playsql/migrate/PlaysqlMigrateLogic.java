@@ -112,6 +112,12 @@ public class PlaysqlMigrateLogic {
         return new File(buildMigrationPath(clientProject, "", "alter"));
     }
 
+    /**
+     * Open alter directory by filer. (e.g. finder if mac, explorer if windows)
+     * Use OS command.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     */
     public void openAlterDir(String clientProject) {
         File alterDir = findAlterDir(clientProject);
         if (alterDir.exists()) {
