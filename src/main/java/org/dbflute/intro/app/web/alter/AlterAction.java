@@ -18,6 +18,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author cabos
  */
 public class AlterAction extends IntroBaseAction {
+
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
@@ -25,16 +26,16 @@ public class AlterAction extends IntroBaseAction {
     private PlaysqlMigrateLogic playsqlMigrateLogic;
 
     // ===================================================================================
-    //                                                                             Execute
-    //                                                                             =======
-    // -----------------------------------------------------
-    //                                                 index
-    //                                                 -----
+    //                                                                               Index
+    //                                                                               =====
     @Execute
     public JsonResponse<AlterSQLResult> index(String clientProject) {
         return asJson(mappingAlterSQLResult(clientProject));
     }
 
+    // -----------------------------------------------------
+    //                                               mapping
+    //                                               -------
     private AlterSQLResult mappingAlterSQLResult(String clientProject) {
         AlterSQLResult result = new AlterSQLResult();
         result.ngMark = playsqlMigrateLogic.findAlterCheckNgMark(clientProject);
@@ -54,7 +55,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private AlterSQLResult.CheckedZipPart mappingCheckedZipPart(String clientProject) {
-        return playsqlMigrateLogic.findCheckedZip(clientProject).map(checkedZipBean -> {
+        return playsqlMigrateLogic.loadCheckedZip(clientProject).map(checkedZipBean -> {
             AlterSQLResult.CheckedZipPart checkedZipPart = new AlterSQLResult.CheckedZipPart();
             checkedZipPart.fileName = checkedZipBean.getFileName();
             checkedZipPart.checkedFiles = mappingSqlFileBean(checkedZipBean.getCheckedSqlList());
@@ -79,9 +80,9 @@ public class AlterAction extends IntroBaseAction {
         }).collect(Collectors.toList());
     }
 
-    // -----------------------------------------------------
-    //                                               prepare
-    //                                               -------
+    // ===================================================================================
+    //                                                                             Prepare
+    //                                                                             =======
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> prepare(String clientProject) {
         playsqlMigrateLogic.unzipCheckedAlterZip(clientProject);
@@ -89,6 +90,9 @@ public class AlterAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    // ===================================================================================
+    //                                                                              Create
+    //                                                                              ======
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));

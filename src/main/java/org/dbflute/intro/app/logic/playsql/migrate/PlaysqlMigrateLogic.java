@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -48,24 +49,24 @@ public class PlaysqlMigrateLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return zip file bean (Maybe empty)
      */
-    public OptionalThing<CheckedZipBean> findCheckedZip(String clientProject) {
-        final String zipPath = buildCheckedAlterZipPath(clientProject);
-        if (zipPath == null) {
-            return OptionalThing.empty();
-        }
-        return OptionalThing.of(new CheckedZipBean(new File(zipPath).getName(), findStackedAlterSqls(clientProject)));
+    public OptionalThing<CheckedZipBean> loadCheckedZip(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        return findNewestCheckedZipFile(clientProject).map(checkedZip -> {
+            return new CheckedZipBean(checkedZip.getName(), loadCheckedSqlList(checkedZip));
+        });
     }
 
-    public List<AlterSqlBean> findStackedAlterSqls(String clientProject) {
-        final String zipPath = buildCheckedAlterZipPath(clientProject);
-        if (zipPath != null) {
-            try {
-                return findAlterSqlsFromZip(zipPath);
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
-            }
+    private List<AlterSqlBean> loadCheckedSqlList(File zipFile) {
+        AssertUtil.assertNotNull(zipFile);
+        if (!zipFile.exists()) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+        String zipPath = zipFile.getPath();
+        try {
+            return findAlterSqlsFromZip(zipPath);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
+        }
     }
 
     private List<AlterSqlBean> findAlterSqlsFromZip(String zipPath) throws IOException {
@@ -85,7 +86,6 @@ public class PlaysqlMigrateLogic {
         return alterSqls;
     }
 
-    // TODO cabos fix response type Optional<File> -> File (2019-10-07)
     public File findAlterDir(String clientProject) {
         return new File(buildMigrationPath(clientProject, "", "alter"));
     }
@@ -162,16 +162,15 @@ public class PlaysqlMigrateLogic {
             return false;
         }
 
-        final String zipPath = buildCheckedAlterZipPath(clientProject);
-        if (zipPath == null) {
-            return false;
-        }
-        try {
-            List<String> alterSqlNames = findAlterSqlNamesFromZip(zipPath);
-            return alterSqlNames.contains(alterFileName);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
-        }
+        return findNewestCheckedZipFile(clientProject).map(zipFile -> {
+            String zipPath = zipFile.getPath();
+            try {
+                List<String> alterSqlNames = findAlterSqlNamesFromZip(zipPath);
+                return alterSqlNames.contains(alterFileName);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
+            }
+        }).orElse(false);
     }
 
     private boolean existsAlterFileInUnreleasedDir(String clientProject, String alterFileName) {
@@ -190,20 +189,31 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
-    private String buildCheckedAlterZipPath(String clientProject) {
-        final Path historyPath = Paths.get(buildMigrationPath(clientProject, "history"));
+    private OptionalThing<File> findNewestCheckedZipFile(String clientProject) {
+        final Path historyPath = new File(buildMigrationPath(clientProject, "history")).toPath();
         if (Files.notExists(historyPath)) {
-            return null;
+            return OptionalThing.empty();
         }
         try {
             return Files.walk(historyPath)
                     .filter(Files::isRegularFile)
-                    .filter(path -> path.getFileName().toString().startsWith("checked"))
-                    .map(path -> path.toString())
-                    .findFirst()
-                    .orElse(null);
+                    .filter(path -> DfStringUtil.startsWith(path.getFileName().toString(), "checked"))
+                    .map(path -> path.toFile())
+                    .max((f1, f2) -> compareFileCreationTime(f1, f2))
+                    .map(OptionalThing::of)
+                    .orElse(OptionalThing.empty());
         } catch (IOException e) {
             throw new IllegalStateException("Failed to get checked alter schema zip file under the directory: " + historyPath, e);
+        }
+    }
+
+    private int compareFileCreationTime(File file1, File file2) {
+        try {
+            final BasicFileAttributes file1Attributes = Files.readAttributes(file1.toPath(), BasicFileAttributes.class);
+            final BasicFileAttributes file2Attributes = Files.readAttributes(file2.toPath(), BasicFileAttributes.class);
+            return file1Attributes.creationTime().compareTo(file2Attributes.creationTime());
+        } catch (IOException e) {
+            return 1;
         }
     }
 
@@ -260,18 +270,15 @@ public class PlaysqlMigrateLogic {
         if (Files.notExists(Paths.get(historyPath))) {
             return;
         }
-
-        final String zipPath = buildCheckedAlterZipPath(clientProject);
-        if (zipPath == null) {
-            return;
-        }
-
-        final String alterDirPath = buildMigrationPath(clientProject, "", "alter");
-        try {
-            unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to unzip checked alter sql zip file: " + zipPath, e);
-        }
+        findNewestCheckedZipFile(clientProject).ifPresent(zipFile -> {
+            final String zipPath = zipFile.getPath();
+            final String alterDirPath = buildMigrationPath(clientProject, "", "alter");
+            try {
+                unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to unzip checked alter sql zip file: " + zipPath, e);
+            }
+        });
     }
 
     private void unzipAlterSqlZipIfNeeds(String zipPath, String dstPath) throws IOException {
