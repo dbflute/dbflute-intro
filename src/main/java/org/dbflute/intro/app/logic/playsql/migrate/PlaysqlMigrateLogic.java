@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -312,6 +313,7 @@ public class PlaysqlMigrateLogic {
 
     /**
      * Copy sql file from unreleased dir to alter dir only.
+     * Overwrite if same name sql file exists.
      *
      * @param alterDirPath alter directory (NotEmpty)
      * @param sourceFile source file (NotNull)
@@ -321,9 +323,10 @@ public class PlaysqlMigrateLogic {
         AssertUtil.assertNotNull(sourceFile);
         final File targetFile = new File(alterDirPath + "/" + convertEditableAlterSqlFileName(sourceFile.getName()));
         try {
-            Files.copy(sourceFile.toPath(), targetFile.toPath());
+            Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new IntroFileOperationException("File copy is failure", "from: " + sourceFile.getPath() + ", to: " + targetFile.getPath());
+            throw new IntroFileOperationException("File copy is failure",
+                    "from: " + sourceFile.getPath() + ", to: " + targetFile.getPath());
         }
     }
 
