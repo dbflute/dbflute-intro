@@ -15,11 +15,6 @@
  */
 package org.dbflute.intro.app.web.playsql.migration;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
@@ -40,19 +35,7 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
 
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> alter(String clientProject) {
-        File alterDir = playsqlMigrateLogic.findAlterDir(clientProject);
-        // TODO cabos move under logic (2019-10-07)
-        if (alterDir.exists()) {
-            try {
-                Desktop desktop = Desktop.getDesktop();
-                desktop.open(alterDir);
-            } catch (IOException e) {
-                throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
-            }
-            return JsonResponse.asEmptyBody();
-        } else {
-            throwVerifiedClientError(clientProject + " has not alter directory");
-            return null; // not reached
-        }
+        playsqlMigrateLogic.openAlterDir(clientProject);
+        return JsonResponse.asEmptyBody();
     }
 }

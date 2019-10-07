@@ -1,5 +1,6 @@
 package org.dbflute.intro.app.logic.playsql.migrate;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -9,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -105,11 +107,21 @@ public class PlaysqlMigrateLogic {
         }
     }
 
-    // TODO cabos make this method private (see PlaysqlMigrationAction) (2019-10-08)
-    @Deprecated
-    public File findAlterDir(String clientProject) {
+    private File findAlterDir(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
         return new File(buildMigrationPath(clientProject, "", "alter"));
+    }
+
+    public void openAlterDir(String clientProject) {
+        File alterDir = findAlterDir(clientProject);
+        if (alterDir.exists()) {
+            try {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(alterDir);
+            } catch (IOException e) {
+                throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
+            }
+        }
     }
 
     /**
