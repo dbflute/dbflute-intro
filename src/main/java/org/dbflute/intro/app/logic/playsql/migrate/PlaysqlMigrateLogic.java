@@ -43,6 +43,11 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                         Find/Exists
     //                                                                         ===========
+    /**
+     * Find checked zip file.
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return zip file bean (Maybe empty)
+     */
     public OptionalThing<CheckedZipBean> findCheckedZip(String clientProject) {
         final String zipPath = buildCheckedAlterZipPath(clientProject);
         if (zipPath == null) {
