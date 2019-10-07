@@ -231,7 +231,7 @@ public class PlaysqlMigrateLogic {
         return loadNewestCheckedZipFile(clientProject).map(zipFile -> {
             String zipPath = zipFile.getPath();
             try {
-                List<String> alterSqlNames = findAlterSqlNamesFromZip(zipPath);
+                final List<String> alterSqlNames = loadFileNamesFromCheckedZip(zipPath);
                 return alterSqlNames.contains(alterFileName);
             } catch (IOException e) {
                 throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
@@ -239,20 +239,13 @@ public class PlaysqlMigrateLogic {
         }).orElse(false);
     }
 
-    private List<String> findAlterSqlNamesFromZip(String zipPath) throws IOException {
-        final List<String> nameList = new ArrayList<>();
+    private List<String> loadFileNamesFromCheckedZip(String zipPath) throws IOException {
         final ZipFile zipFile = new ZipFile(zipPath);
-        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            final ZipEntry entry = entries.nextElement();
-            final String fileName = entry.getName();
-            if (!DfStringUtil.contains(fileName, ".sql")) {
-                continue;
-            }
-            nameList.add(fileName);
-        }
-        zipFile.close();
-        return nameList;
+        return Collections.list(zipFile.entries())
+                .stream()
+                .filter(zipEntry -> DfStringUtil.contains(zipEntry.getName(), ".sql"))
+                .map(zipEntry -> zipEntry.getName())
+                .collect(Collectors.toList());
     }
 
     private boolean existsAlterFileInUnreleasedDir(String clientProject, String alterFileName) {
@@ -271,6 +264,7 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
+    // TODO cabos write test about newest (2019-10-08)
     private OptionalThing<File> loadNewestCheckedZipFile(String clientProject) {
         final Path historyPath = new File(buildMigrationPath(clientProject, "history")).toPath();
         if (Files.notExists(historyPath)) {
@@ -357,6 +351,8 @@ public class PlaysqlMigrateLogic {
     //                                                                                 ===
     /**
      * Unzip checked file and copy sql files to alter directory.
+     * Do nothing if checked zip not exists.
+     *
      * @param clientProject dbflute client project name (NotEmpty)
      */
     public void unzipCheckedAlterZip(String clientProject) {
