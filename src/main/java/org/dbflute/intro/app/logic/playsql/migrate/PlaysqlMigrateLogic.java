@@ -48,9 +48,9 @@ public class PlaysqlMigrateLogic {
     //                                                                         ===========
     /**
      * Load newest checked zip file info.
-     * .
+     *
      * @param clientProject dbflute client project name (NotEmpty)
-     * @return zip file bean (Maybe empty)
+     * @return checked zip file bean (Maybe empty)
      */
     public OptionalThing<CheckedZipBean> loadCheckedZip(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
@@ -60,7 +60,7 @@ public class PlaysqlMigrateLogic {
     }
 
     /**
-     * Load sql files in checked zip files.
+     * Load sql files in checked zip file.
      *
      * @param checkedZipFile checked zip file
      * @return sql files in checked zip file (NotNull)
@@ -119,7 +119,7 @@ public class PlaysqlMigrateLogic {
      */
     public List<AlterSqlBean> loadAlterSqlFiles(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
-        return Optional.ofNullable(findAlterDir(clientProject).listFiles())
+        return OptionalThing.ofNullable(findAlterDir(clientProject).listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
                 .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
@@ -127,23 +127,34 @@ public class PlaysqlMigrateLogic {
                 .collect(Collectors.toList());
     }
 
-    public OptionalThing<UnreleasedDirBean> findUnreleasedAlterDir(String clientProject) {
+    /**
+     * Load unreleased directory info.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return unreleased directory bean (Maybe empty). (NotNull)
+     */
+    public OptionalThing<UnreleasedDirBean> loadUnreleasedDir(String clientProject) {
         String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
-        File dir = new File(unreleasedAlterDirPath);
-        File[] files = dir.listFiles();
-        if (!dir.exists() || dir.isFile() || files == null) {
+        final File alterDir = new File(unreleasedAlterDirPath);
+        if (!alterDir.exists() || alterDir.isFile()) {
             return OptionalThing.empty();
         }
-        return OptionalThing.of(new UnreleasedDirBean(getUnreleasedSqlList(files)));
+        return OptionalThing.of(new UnreleasedDirBean(loadFilesInUnreleasedDirectory(alterDir)));
     }
 
-    private List<AlterSqlBean> getUnreleasedSqlList(File[] files) {
-        if (Objects.isNull(files)) {
-            return Collections.emptyList();
-        }
-        return Arrays.stream(files).map(file -> {
-            return new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file));
-        }).collect(Collectors.toList());
+    /**
+     * Load files in unreleased directory.
+     *
+     * @param unreleasedDir unreleased directory (NotNull)
+     * @return file list in unreleased directory (NotNull)
+     */
+    private List<AlterSqlBean> loadFilesInUnreleasedDirectory(File unreleasedDir) {
+        AssertUtil.assertNotNull(unreleasedDir);
+        return OptionalThing.ofNullable(unreleasedDir.listFiles(), () -> {})
+                .map(files -> Arrays.stream(files))
+                .orElse(Stream.empty())
+                .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .collect(Collectors.toList());
     }
 
     public CDef.NgMark findAlterCheckNgMark(String clientProject) {

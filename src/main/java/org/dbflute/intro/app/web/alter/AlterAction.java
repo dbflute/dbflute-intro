@@ -64,7 +64,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private AlterSQLResult.UnreleasedDirPart mappingUnreleasedDirPart(String clientProject) {
-        return playsqlMigrateLogic.findUnreleasedAlterDir(clientProject).map(dirBean -> {
+        return playsqlMigrateLogic.loadUnreleasedDir(clientProject).map(dirBean -> {
             AlterSQLResult.UnreleasedDirPart dirPart = new AlterSQLResult.UnreleasedDirPart();
             dirPart.checkedFiles = mappingSqlFileBean(dirBean.getCheckedSqlList());
             return dirPart;
