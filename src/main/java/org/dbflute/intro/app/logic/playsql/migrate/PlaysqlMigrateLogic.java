@@ -108,6 +108,7 @@ public class PlaysqlMigrateLogic {
     // TODO cabos make this method private (see PlaysqlMigrationAction) (2019-10-08)
     @Deprecated
     public File findAlterDir(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
         return new File(buildMigrationPath(clientProject, "", "alter"));
     }
 
@@ -134,6 +135,7 @@ public class PlaysqlMigrateLogic {
      * @return unreleased directory bean (Maybe empty). (NotNull)
      */
     public OptionalThing<UnreleasedDirBean> loadUnreleasedDir(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
         String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File alterDir = new File(unreleasedAlterDirPath);
         if (!alterDir.exists() || alterDir.isFile()) {
@@ -164,6 +166,7 @@ public class PlaysqlMigrateLogic {
      * @return Ng mark file (Maybe empty)
      */
     public OptionalThing<CDef.NgMark> loadAlterCheckNgMarkFile(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
             if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
                 return OptionalThing.of(ngMark);
@@ -172,25 +175,16 @@ public class PlaysqlMigrateLogic {
         return OptionalThing.empty();
     }
 
-    private List<String> findAlterSqlNamesFromZip(String zipPath) throws IOException {
-        final List<String> nameList = new ArrayList<>();
-        final ZipFile zipFile = new ZipFile(zipPath);
-        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            final ZipEntry entry = entries.nextElement();
-            final String fileName = entry.getName();
-            if (!DfStringUtil.contains(fileName, ".sql")) {
-                continue;
-            }
-            nameList.add(fileName);
-        }
-        zipFile.close();
-        return nameList;
-    }
-
-    public boolean existsAlterFileAlready(String clientProject, String alterFileName) {
-        return existsAlterFileInAlterDir(clientProject, alterFileName) || existsAlterFileInCheckedZip(clientProject, alterFileName)
-                || existsAlterFileInUnreleasedDir(clientProject, alterFileName);
+    /**
+     * Check to exist same name alter SQL file before release.
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @param sqlFileName checked sql file name
+     * @return true if exists same name file.
+     */
+    public boolean existsAlterFileAlready(String clientProject, String sqlFileName) {
+        return existsAlterFileInAlterDir(clientProject, sqlFileName)           // exists editing sql
+                || existsAlterFileInCheckedZip(clientProject, sqlFileName)     // exists sql in checked zip
+                || existsAlterFileInUnreleasedDir(clientProject, sqlFileName); // exists sql in unreleased directory
     }
 
     private boolean existsAlterFileInAlterDir(String clientProject, String alterFileName) {
@@ -213,6 +207,22 @@ public class PlaysqlMigrateLogic {
                 throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
             }
         }).orElse(false);
+    }
+
+    private List<String> findAlterSqlNamesFromZip(String zipPath) throws IOException {
+        final List<String> nameList = new ArrayList<>();
+        final ZipFile zipFile = new ZipFile(zipPath);
+        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            final ZipEntry entry = entries.nextElement();
+            final String fileName = entry.getName();
+            if (!DfStringUtil.contains(fileName, ".sql")) {
+                continue;
+            }
+            nameList.add(fileName);
+        }
+        zipFile.close();
+        return nameList;
     }
 
     private boolean existsAlterFileInUnreleasedDir(String clientProject, String alterFileName) {
