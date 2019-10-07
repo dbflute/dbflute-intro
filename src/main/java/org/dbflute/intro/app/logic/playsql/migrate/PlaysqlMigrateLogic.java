@@ -273,7 +273,7 @@ public class PlaysqlMigrateLogic {
     //                                                                                ====
     /**
      * Copy from unreleased directory to alter directory only unreleased sql files.
-     * Do nothing, if unreleased directory is not exists.
+     * Do nothing if unreleased directory is not exists.
      *
      * @param clientProject dbflute client project name (NotEmpty)
      */
