@@ -111,7 +111,10 @@ public class PlaysqlMigrateLogic {
     }
 
     private List<AlterSqlBean> getUnreleasedSqlList(File[] files) {
-        return Arrays.stream(Objects.requireNonNull(files)).map(file -> {
+        if (Objects.isNull(files)) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(files).map(file -> {
             return new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file));
         }).collect(Collectors.toList());
     }
@@ -175,7 +178,11 @@ public class PlaysqlMigrateLogic {
     }
 
     private boolean existsSqlFiles(String dirPath) {
-        return Arrays.stream(Objects.requireNonNull(new File(dirPath).listFiles()))
+        File[] files = new File(dirPath).listFiles();
+        if (Objects.isNull(files)) {
+            return false;
+        }
+        return Arrays.stream(files)
                 .anyMatch(file -> DfStringUtil.endsWith(file.getName(), ".sql"));
     }
 
