@@ -2,6 +2,7 @@ package org.dbflute.intro.app.logic.playsql.migrate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,7 +46,8 @@ public class PlaysqlMigrateLogic {
     //                                                                         Find/Exists
     //                                                                         ===========
     /**
-     * Find checked zip file.
+     * Load newest checked zip file info.
+     * .
      * @param clientProject dbflute client project name (NotEmpty)
      * @return zip file bean (Maybe empty)
      */
@@ -56,36 +58,54 @@ public class PlaysqlMigrateLogic {
         });
     }
 
-    private List<AlterSqlBean> loadCheckedSqlList(File zipFile) {
-        AssertUtil.assertNotNull(zipFile);
-        if (!zipFile.exists()) {
+    /**
+     * Load sql files in checked zip files.
+     *
+     * @param checkedZipFile checked zip file
+     * @return sql files in checked zip file (NotNull)
+     */
+    private List<AlterSqlBean> loadCheckedSqlList(File checkedZipFile) {
+        AssertUtil.assertNotNull(checkedZipFile);
+        if (!checkedZipFile.exists()) {
             return Collections.emptyList();
         }
-        String zipPath = zipFile.getPath();
-        try {
-            return findAlterSqlsFromZip(zipPath);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read zip file: " + zipPath, e);
+        return loadAlterSqlFilesInCheckedZip(checkedZipFile);
+    }
+
+    /**
+     * Load alter sql files in checked zip.
+     * Return empty list if zip file not exists.
+     *
+     * @param checkedZipFile checked zip (NotNull)
+     * @return sql files in checkedZipFile (NotNull)
+     */
+    private List<AlterSqlBean> loadAlterSqlFilesInCheckedZip(File checkedZipFile) {
+        AssertUtil.assertNotNull(checkedZipFile);
+        if (!checkedZipFile.exists()) {
+            return Collections.emptyList();
+        }
+
+        try (ZipFile zipFile = new ZipFile(checkedZipFile.getPath())) {
+            return Collections.list(zipFile.entries())
+                    .stream()
+                    .filter(zipEntry -> DfStringUtil.endsWith(zipEntry.getName(), ".sql"))
+                    .map(zipEntry -> {
+                        try {
+                            final String content = IOUtils.toString(zipFile.getInputStream(zipEntry), StandardCharsets.UTF_8);
+                            final AlterSqlBean bean = new AlterSqlBean(zipEntry.getName(), content);
+                            return bean;
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e); // for handle out of lambda
+                        }
+                    })
+                    .collect(Collectors.toList());
+        } catch (IOException | UncheckedIOException e) {
+            throw new IntroFileOperationException("Unable load file in zip.", "zipFileName : " + checkedZipFile.getPath(), e);
         }
     }
 
-    private List<AlterSqlBean> findAlterSqlsFromZip(String zipPath) throws IOException {
-        final List<AlterSqlBean> alterSqls = new ArrayList<>();
-        final ZipFile zipFile = new ZipFile(zipPath);
-        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            final ZipEntry entry = entries.nextElement();
-            final String fileName = entry.getName();
-            if (!DfStringUtil.contains(fileName, ".sql")) {
-                continue;
-            }
-            final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
-            alterSqls.add(new AlterSqlBean(fileName, content));
-        }
-        zipFile.close();
-        return alterSqls;
-    }
-
+    // TODO cabos make this method private (see PlaysqlMigrationAction) (2019-10-08)
+    @Deprecated
     public File findAlterDir(String clientProject) {
         return new File(buildMigrationPath(clientProject, "", "alter"));
     }

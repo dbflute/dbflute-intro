@@ -14,6 +14,10 @@ public class IntroFileOperationException extends IntroApplicationException {
         super(debugMsg, prepareMessages(failureHint));
     }
 
+    public IntroFileOperationException(String debugMsg, String failureHint, Throwable e) {
+        super(debugMsg, prepareMessages(failureHint), e);
+    }
+
     private static Consumer<IntroMessages> prepareMessages(String failureHint) {
         return messages -> messages.addErrorsAppFileOperationError(GLOBAL, failureHint);
     }
