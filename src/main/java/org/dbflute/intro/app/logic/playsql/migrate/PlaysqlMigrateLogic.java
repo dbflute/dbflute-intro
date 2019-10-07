@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -82,19 +81,17 @@ public class PlaysqlMigrateLogic {
     }
 
     // TODO cabos fix response type Optional<File> -> File (2019-10-07)
-    public OptionalThing<File> findAlterDir(String clientProject) {
-        File file = new File(buildMigrationPath(clientProject, "", "alter"));
-        if (file.exists()) {
-            return OptionalThing.of(file);
-        }
-        return OptionalThing.empty();
+    public File findAlterDir(String clientProject) {
+        return new File(buildMigrationPath(clientProject, "", "alter"));
     }
 
     public List<AlterSqlBean> findAlterFiles(String clientProject) {
-        return findAlterDir(clientProject).map(dir -> dir.listFiles())
-                .filter(files -> files != null)
-                .map(files -> Arrays.stream(files))
-                .orElse(Stream.empty())
+        File[] files = findAlterDir(clientProject).listFiles();
+        if (Objects.isNull(files)) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(files)
                 .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
                 .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
                 .collect(Collectors.toList());
