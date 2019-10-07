@@ -249,7 +249,7 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                                 Zip
     //                                                                                 ===
-    public void unzipAlterSqlZip(String clientProject) {
+    public void unzipCheckedAlterZip(String clientProject) {
         createAlterDirIfNotExists(clientProject);
         final String historyPath = buildMigrationPath(clientProject, "history");
         if (Files.notExists(Paths.get(historyPath))) {

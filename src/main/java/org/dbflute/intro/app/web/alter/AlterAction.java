@@ -84,7 +84,7 @@ public class AlterAction extends IntroBaseAction {
     //                                               -------
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> prepare(String clientProject) {
-        playsqlMigrateLogic.unzipAlterSqlZip(clientProject);
+        playsqlMigrateLogic.unzipCheckedAlterZip(clientProject);
         playsqlMigrateLogic.copyUnreleasedAlterDir(clientProject);
         return JsonResponse.asEmptyBody();
     }
