@@ -1,6 +1,6 @@
 package org.dbflute.intro.app.logic.playsql.migrate;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -296,13 +296,22 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                              Create
     //                                                                              ======
+    /**
+     * Create sql file in alter directory.
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @param alterFileName file name (NotEmpry)
+     */
     public void createAlterSql(String clientProject, String alterFileName) {
+        AssertUtil.assertNotEmpty(clientProject, alterFileName);
         createAlterDirIfNotExists(clientProject);
         File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
         try {
-            file.createNewFile();
+            if (!file.createNewFile()) {
+                throw new IOException("Failure to create alter file, file.createNewFile() returns false");
+            }
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to create new alter sql file: " + file.getAbsolutePath(), e);
+            throw new IntroFileOperationException("Failed to create new alter sql file: " + file.getAbsolutePath(),
+                    "FileName : " + file.getPath(), e);
         }
     }
 
@@ -328,7 +337,12 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                                 Zip
     //                                                                                 ===
+    /**
+     * Unzip checked file and copy sql files to alter directory.
+     * @param clientProject dbflute client project name (NotEmpty)
+     */
     public void unzipCheckedAlterZip(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
         createAlterDirIfNotExists(clientProject);
         final String historyPath = buildMigrationPath(clientProject, "history");
         if (Files.notExists(Paths.get(historyPath))) {
