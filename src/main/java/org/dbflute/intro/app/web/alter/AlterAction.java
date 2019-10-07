@@ -46,7 +46,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private List<AlterSQLResult.SQLFilePart> mappingAlterEditingFilePart(String clientProject) {
-        return playsqlMigrateLogic.findAlterFiles(clientProject).stream().map(editingFile -> {
+        return playsqlMigrateLogic.loadAlterSqlFiles(clientProject).stream().map(editingFile -> {
             AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
             filePart.fileName = editingFile.fileName;
             filePart.content = editingFile.content;

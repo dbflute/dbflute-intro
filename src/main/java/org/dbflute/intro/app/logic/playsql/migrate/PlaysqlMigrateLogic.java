@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -110,13 +111,17 @@ public class PlaysqlMigrateLogic {
         return new File(buildMigrationPath(clientProject, "", "alter"));
     }
 
-    public List<AlterSqlBean> findAlterFiles(String clientProject) {
-        File[] files = findAlterDir(clientProject).listFiles();
-        if (Objects.isNull(files)) {
-            return Collections.emptyList();
-        }
-
-        return Arrays.stream(files)
+    /**
+     * Load sql files in alter directory.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return list of alter files in alter directory. (NotNull)
+     */
+    public List<AlterSqlBean> loadAlterSqlFiles(String clientProject) {
+        AssertUtil.assertNotEmpty(clientProject);
+        return Optional.ofNullable(findAlterDir(clientProject).listFiles())
+                .map(files -> Arrays.stream(files))
+                .orElse(Stream.empty())
                 .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
                 .map(file -> new AlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
                 .collect(Collectors.toList());
