@@ -157,13 +157,19 @@ public class PlaysqlMigrateLogic {
                 .collect(Collectors.toList());
     }
 
-    public CDef.NgMark findAlterCheckNgMark(String clientProject) {
+    /**
+     * Load alter ng mark if exists.
+     *
+     * @param clientProject dbflute client project name (NotEmpty)
+     * @return Ng mark file (Maybe empty)
+     */
+    public OptionalThing<CDef.NgMark> loadAlterCheckNgMarkFile(String clientProject) {
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
             if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
-                return ngMark;
+                return OptionalThing.of(ngMark);
             }
         }
-        return null;
+        return OptionalThing.empty();
     }
 
     private List<String> findAlterSqlNamesFromZip(String zipPath) throws IOException {

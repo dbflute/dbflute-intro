@@ -38,7 +38,7 @@ public class AlterAction extends IntroBaseAction {
     //                                               -------
     private AlterSQLResult mappingAlterSQLResult(String clientProject) {
         AlterSQLResult result = new AlterSQLResult();
-        result.ngMark = playsqlMigrateLogic.findAlterCheckNgMark(clientProject);
+        result.ngMark = playsqlMigrateLogic.loadAlterCheckNgMarkFile(clientProject).orElse(null);
         result.editingFiles = mappingAlterEditingFilePart(clientProject);
         result.checkedZip = mappingCheckedZipPart(clientProject);
         result.unreleasedDir = mappingUnreleasedDirPart(clientProject);
