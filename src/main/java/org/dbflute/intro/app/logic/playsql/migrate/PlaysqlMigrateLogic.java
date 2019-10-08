@@ -201,8 +201,8 @@ public class PlaysqlMigrateLogic {
     }
 
     // ===================================================================================
-    //                                                                        Exists check
-    //                                                                        ============
+    //                                                      Check to exists Same Name file
+    //                                                      ==============================
     /**
      * Check to exist same name alter SQL file before release.
      * @param clientProject dbflute client project name (NotEmpty)
