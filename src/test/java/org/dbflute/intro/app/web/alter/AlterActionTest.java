@@ -225,6 +225,21 @@ public class AlterActionTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                                create
     //                                                ------
+    public void test_prepare_success() {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        AlterCreateBody body = new AlterCreateBody();
+        body.alterFileName = "alter-schema_creatable.sql";
+
+        // ## Act ##
+        alterAction.create(TEST_CLIENT_PROJECT, body);
+
+        // ## Assert ##
+        // do nothing
+    }
+
     public void test_prepare_validateInvalidPrefix() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
