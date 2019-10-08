@@ -473,8 +473,11 @@ public class PlaysqlMigrateLogic {
     }
 
     // ===================================================================================
-    //                                                                          Build path
-    //                                                                          ==========
+    //                                                               File/Directory Helper
+    //                                                               =====================
+    // -----------------------------------------------------
+    //                                  Build Directory Path
+    //                                  --------------------
     private String buildAlterDirectoryPath(String clientProject) {
         return buildMigrationPath(clientProject, "alter");
     }
