@@ -115,7 +115,7 @@ public class AlterAction extends IntroBaseAction {
         if (containsInvalidCharacter) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (!containsInvalidCharacter && playsqlMigrateLogic.existsAlterFileAlready(clientProject, body.alterFileName)) {
+        if (!containsInvalidCharacter && playsqlMigrateLogic.existsSameNameAlterSqlFile(clientProject, body.alterFileName)) {
             messages.addErrorsDuplicateFileName(alterFileName);
         }
     }
