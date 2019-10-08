@@ -313,7 +313,7 @@ public class PlaysqlMigrateLogic {
         File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
         try {
             if (!file.createNewFile()) {
-                throw new IOException("Failure to create alter file, file.createNewFile() returns false");
+                throw new IOException("Failure to create alter file, file.createNewFile() returns false"); // catch immediately
             }
         } catch (IOException e) {
             throw new IntroFileOperationException("Failed to create new alter sql file: " + file.getAbsolutePath(),
