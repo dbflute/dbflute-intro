@@ -39,6 +39,22 @@ public class AlterActionTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                                 index
     //                                                 -----
+    public void test_index_afterCreateClientOnly() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+        removeMigrationDir();
+
+        // ## Act ##
+        AlterSQLResult result = alterAction.index(TEST_CLIENT_PROJECT).getJsonResult();
+
+        // ## Assert ##
+        assertNull(result.ngMark);
+        assertNull(result.checkedZip);
+        assertNull(result.unreleasedDir);
+        assertTrue(result.editingFiles.isEmpty());
+    }
+
     public void test_index_editingState() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
