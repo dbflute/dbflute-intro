@@ -59,7 +59,7 @@ public class PlaysqlMigrateLogic {
      */
     public List<AlterSqlBean> loadAlterSqlFiles(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
-        return OptionalThing.ofNullable(findAlterDir(clientProject).listFiles(), () -> {})
+        return OptionalThing.ofNullable(new File(buildAlterDirectoryPath(clientProject)).listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
                 .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
@@ -189,7 +189,7 @@ public class PlaysqlMigrateLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      */
     public void openAlterDir(String clientProject) {
-        File alterDir = findAlterDir(clientProject);
+        File alterDir = new File(buildAlterDirectoryPath(clientProject));
         if (alterDir.exists()) {
             try {
                 Desktop desktop = Desktop.getDesktop();
@@ -198,11 +198,6 @@ public class PlaysqlMigrateLogic {
                 throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
             }
         }
-    }
-
-    private File findAlterDir(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
-        return new File(buildMigrationPath(clientProject, "", "alter"));
     }
 
     // ===================================================================================
@@ -239,7 +234,7 @@ public class PlaysqlMigrateLogic {
      * @return true if exists same name file in unreleased directory.
      */
     private boolean existsSameNameFileInUnreleasedDir(String clientProject, String alterFileName) {
-        final String unreleasedDIrPath = buildMigrationPath(clientProject, "history", "unreleased-checked-alter");
+        final String unreleasedDIrPath = buildUnreleasedAlterDirPath(clientProject);
         return Files.exists(Paths.get(unreleasedDIrPath, alterFileName));
     }
 
@@ -334,7 +329,7 @@ public class PlaysqlMigrateLogic {
      */
     private String createAlterDirIfNotExists(String clientProject) {
         AssertUtil.assertNotEmpty(clientProject);
-        final File alterDir = new File(buildMigrationPath(clientProject, "", "alter"));
+        final File alterDir = new File(buildAlterDirectoryPath(clientProject));
         if (alterDir.exists()) {
             return alterDir.getPath(); // do nothing
         }
@@ -362,7 +357,7 @@ public class PlaysqlMigrateLogic {
         }
         loadNewestCheckedZipFile(clientProject).ifPresent(zipFile -> {
             final String zipPath = zipFile.getPath();
-            final String alterDirPath = buildMigrationPath(clientProject, "", "alter");
+            final String alterDirPath = buildAlterDirectoryPath(clientProject);
             try {
                 unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
             } catch (IOException e) {
@@ -480,6 +475,14 @@ public class PlaysqlMigrateLogic {
     // ===================================================================================
     //                                                                          Build path
     //                                                                          ==========
+    private String buildAlterDirectoryPath(String clientProject) {
+        return buildMigrationPath(clientProject, "alter");
+    }
+
+    private String buildUnreleasedAlterDirPath(String clientProject) {
+        return buildMigrationPath(clientProject, "history", "unreleased-checked-alter");
+    }
+
     private String buildMigrationPath(String clientProject, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", pureName);
     }
@@ -487,9 +490,4 @@ public class PlaysqlMigrateLogic {
     private String buildMigrationPath(String clientProject, String type, String pureName) {
         return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
     }
-
-    private String buildUnreleasedAlterDirPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "history", "unreleased-checked-alter");
-    }
-
 }
