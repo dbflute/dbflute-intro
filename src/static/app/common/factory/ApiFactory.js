@@ -103,8 +103,11 @@ export default class ApiFactory {
   alter(projectName) {
     return ffetch.get(`api/alter/${projectName}/`);
   }
-  prepareAlterSql(projectName, alterFileName) {
-    return ffetch.post(`api/alter/${projectName}/prepare/`, {
+  prepareAlterSql(projectName) {
+    return ffetch.post(`api/alter/${projectName}/prepare/`)
+  }
+  createAlterSql(projectName, alterFileName) {
+    return ffetch.post(`api/alter/${projectName}/create/`, {
       body: {
         alterFileName
       }
