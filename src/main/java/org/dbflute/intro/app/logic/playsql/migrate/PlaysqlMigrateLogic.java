@@ -369,17 +369,7 @@ public class PlaysqlMigrateLogic {
     }
 
     private void unzipAlterSqlZipIfNeeds(String zipPath, String dstPath) throws IOException {
-        if (!existsSqlFiles(dstPath)) {
-            doUnzipAlterSqlZip(zipPath, dstPath);
-        }
-    }
-
-    private boolean existsSqlFiles(String dirPath) {
-        File[] files = new File(dirPath).listFiles();
-        if (Objects.isNull(files)) {
-            return false;
-        }
-        return Arrays.stream(files).anyMatch(file -> DfStringUtil.endsWith(file.getName(), ".sql"));
+        doUnzipAlterSqlZip(zipPath, dstPath);
     }
 
     private void doUnzipAlterSqlZip(String zipPath, String dstPath) throws IOException {
