@@ -58,12 +58,12 @@
               </div>
             </form>
           </div>
-          <div class="middle aligned column">
+          <div class="column">
             <h5 class="header">Fix existing Alter SQL</h5>
             <form class="ui form">
               <div class="fields">
-                <div class="three wide field">
-                  <a class="ui button" onclick="{ prepareAlterCheck }">Fix</a>
+                <div class="field">
+                  <button class="ui button" onclick="{ prepareAlterCheck }">Fix</button>
                 </div>
               </div>
             </form>
