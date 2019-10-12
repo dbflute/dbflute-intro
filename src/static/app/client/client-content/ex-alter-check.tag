@@ -3,12 +3,13 @@
     <h3>AlterCheck</h3>
 
     <section class="ui info message">
-      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/replaceschema/altercheck.html" target="_blank">"AlterCheck"?</a></div>
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/intro/alterbyintro.html" target="_blank">"AlterCheck"?</a></div>
       <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
     </section>
 
     <div class="ui divider"></div>
 
+    <!-- Step 1 -->
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
@@ -40,25 +41,42 @@
         </div>
       </div>
 
-      <form class="ui form">
-        <div class="fields">
-          <div class="seven wide inline field">
-            <label>alter-schema-</label>
-            <input type="text" ref="alterNameInput" placeholder="ticket name">
-            <label>.sql</label>
+      <div class="ui placeholder segment">
+        <div class="ui two column very relaxed stackable grid">
+          <div class="column">
+            <h5 class="header">Begin New AlterCheck!!</h5>
+            <form class="ui form">
+              <div class="fields">
+                <div class="inline field">
+                  <label>alter-schema-</label>
+                  <input type="text" ref="alterNameInput" placeholder="input ticket name">
+                  <label>.sql</label>
+                </div>
+                <div class="inline field">
+                  <button class="ui primary button" onclick="{ prepareAlterCheck }">Begin</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="middle aligned column">
+            <h5 class="header">Fix existing Alter SQL</h5>
+            <form class="ui form">
+              <div class="fields">
+                <div class="three wide field">
+                  <a class="ui button" onclick="{ prepareAlterCheck }">Fix</a>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <div class="fields">
-          <div class="three wide field">
-            <button class="ui primary button" onclick="{ prepareAlterCheck }">Begin New AlterCheck!!</button>
-          </div>
-          <div class="three wide field">
-            <a class="" onclick="{ prepareAlterCheck }">Or only fix Alter SQL</a>
-          </div>
+        <div class="ui vertical divider">
+          Or
         </div>
-      </form>
+      </div>
+
     </section>
 
+    <!-- Step 2 -->
     <section show="{ isEditing() }">
       <h4 class="ui header">Step2. Execute AlterCheck</h4>
 
