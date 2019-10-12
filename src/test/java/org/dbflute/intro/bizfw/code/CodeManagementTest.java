@@ -25,12 +25,13 @@ import org.dbflute.util.Srl;
 import org.lastaflute.web.Execute;
 
 /**
+ * @author cabos
  * @author jflute
  */
 public class CodeManagementTest extends PlainTestCase {
 
     private static final List<String> EDITABLE_METHOD_NAME =
-            Arrays.asList("edit", "update", "create", "delete", "download", "remove", "execute");
+            Arrays.asList("edit", "update", "create", "delete", "download", "remove", "execute", "prepare");
 
     public void test_decomment_decoMapFile_dependency() {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
