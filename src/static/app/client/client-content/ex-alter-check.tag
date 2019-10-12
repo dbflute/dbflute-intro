@@ -105,6 +105,7 @@
         <latest-result></latest-result>
       </div>
     </section>
+
   </div>
 
   <su-modal modal="{ executeModal }" class="large" ref="executeModal">
@@ -314,7 +315,7 @@
     }
 
     this.nowPrepared = (fileName) => {
-      return self.preparedFileName != null && self.preparedFileName == fileName
+      return self.preparedFileName != null && self.preparedFileName === fileName
     }
 
     this.updateContents = () => {
