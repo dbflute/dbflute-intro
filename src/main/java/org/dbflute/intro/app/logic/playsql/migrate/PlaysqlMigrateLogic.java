@@ -26,7 +26,7 @@ import org.dbflute.intro.app.logic.document.CheckedZipBean;
 import org.dbflute.intro.app.logic.document.UnreleasedDirBean;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
-import org.dbflute.intro.bizfw.util.AssertUtil;
+import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
@@ -58,7 +58,7 @@ public class PlaysqlMigrateLogic {
      * @return list of alter files in alter directory. (NotNull)
      */
     public List<AlterSqlBean> loadAlterSqlFiles(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         return OptionalThing.ofNullable(new File(buildAlterDirectoryPath(clientProject)).listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
@@ -77,7 +77,7 @@ public class PlaysqlMigrateLogic {
      * @return unreleased directory bean (Maybe empty). (NotNull)
      */
     public OptionalThing<UnreleasedDirBean> loadUnreleasedDir(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File alterDir = new File(unreleasedAlterDirPath);
         if (!alterDir.exists() || alterDir.isFile()) {
@@ -93,7 +93,7 @@ public class PlaysqlMigrateLogic {
      * @return file list in unreleased directory (NotNull)
      */
     private List<AlterSqlBean> loadFilesInUnreleasedDirectory(File unreleasedDir) {
-        AssertUtil.assertNotNull(unreleasedDir);
+        IntroAssertUtil.assertNotNull(unreleasedDir);
         return OptionalThing.ofNullable(unreleasedDir.listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
@@ -108,7 +108,7 @@ public class PlaysqlMigrateLogic {
      * @return Ng mark file (Maybe empty)
      */
     public OptionalThing<CDef.NgMark> loadAlterCheckNgMarkFile(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
             if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
                 return OptionalThing.of(ngMark);
@@ -127,7 +127,7 @@ public class PlaysqlMigrateLogic {
      * @return checked zip file bean (Maybe empty)
      */
     public OptionalThing<CheckedZipBean> loadCheckedZip(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         return loadNewestCheckedZipFile(clientProject).map(checkedZip -> {
             return new CheckedZipBean(checkedZip.getName(), loadCheckedSqlList(checkedZip));
         });
@@ -140,7 +140,7 @@ public class PlaysqlMigrateLogic {
      * @return sql files in checked zip file (NotNull)
      */
     private List<AlterSqlBean> loadCheckedSqlList(File checkedZipFile) {
-        AssertUtil.assertNotNull(checkedZipFile);
+        IntroAssertUtil.assertNotNull(checkedZipFile);
         if (!checkedZipFile.exists()) {
             return Collections.emptyList();
         }
@@ -156,7 +156,7 @@ public class PlaysqlMigrateLogic {
      */
     private List<AlterSqlBean> loadAlterSqlFilesInCheckedZip(File checkedZipFile) {
         // TODO cabos resolve duplicate unzip load (2019-10-08)
-        AssertUtil.assertNotNull(checkedZipFile);
+        IntroAssertUtil.assertNotNull(checkedZipFile);
         if (!checkedZipFile.exists()) {
             return Collections.emptyList();
         }
@@ -211,7 +211,7 @@ public class PlaysqlMigrateLogic {
      * @return true if exists same name file.
      */
     public boolean existsSameNameAlterSqlFile(String clientProject, String sqlFileName) {
-        AssertUtil.assertNotEmpty(clientProject, sqlFileName);
+        IntroAssertUtil.assertNotEmpty(clientProject, sqlFileName);
         return existsSameNameFileInAlterDir(clientProject, sqlFileName)           // exists editing sql
                 || existsSameNameFileInUnreleasedDir(clientProject, sqlFileName)  // exists sql in unreleased directory
                 || existsSameNameFileInCheckedZip(clientProject, sqlFileName);    // exists sql in checked zip
@@ -308,7 +308,7 @@ public class PlaysqlMigrateLogic {
      * @param alterFileName file name (NotEmpry)
      */
     public void createAlterSql(String clientProject, String alterFileName) {
-        AssertUtil.assertNotEmpty(clientProject, alterFileName);
+        IntroAssertUtil.assertNotEmpty(clientProject, alterFileName);
         createAlterDirIfNotExists(clientProject);
         File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
         try {
@@ -329,7 +329,7 @@ public class PlaysqlMigrateLogic {
      * @return alter directory path (NotEmpty)
      */
     private String createAlterDirIfNotExists(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         final File alterDir = new File(buildAlterDirectoryPath(clientProject));
         if (alterDir.exists()) {
             return alterDir.getPath(); // do nothing
@@ -351,7 +351,7 @@ public class PlaysqlMigrateLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      */
     public void unzipCheckedAlterZip(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         createAlterDirIfNotExists(clientProject);
         final String historyPath = buildMigrationPath(clientProject, "history");
         if (Files.notExists(Paths.get(historyPath))) {
@@ -403,7 +403,7 @@ public class PlaysqlMigrateLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      */
     public void copyUnreleasedAlterDir(String clientProject) {
-        AssertUtil.assertNotEmpty(clientProject);
+        IntroAssertUtil.assertNotEmpty(clientProject);
         final String alterDirPath = createAlterDirIfNotExists(clientProject);
         final String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File unreleasedDir = new File(unreleasedAlterDirPath);
@@ -431,8 +431,8 @@ public class PlaysqlMigrateLogic {
      * @param sourceFile source file (NotNull)
      */
     private void copyUnreleasedAlterSqlFile(String alterDirPath, File sourceFile) {
-        AssertUtil.assertNotEmpty(alterDirPath);
-        AssertUtil.assertNotNull(sourceFile);
+        IntroAssertUtil.assertNotEmpty(alterDirPath);
+        IntroAssertUtil.assertNotNull(sourceFile);
         final File targetFile = new File(alterDirPath + "/" + convertEditableAlterSqlFileName(sourceFile.getName()));
         try {
             Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -452,7 +452,7 @@ public class PlaysqlMigrateLogic {
      * @return true, if file is unreleased sql
      */
     private boolean isUnreleasedSql(File file) {
-        AssertUtil.assertNotNull(file);
+        IntroAssertUtil.assertNotNull(file);
         if (!file.exists()) {
             return false;
         }
@@ -470,7 +470,7 @@ public class PlaysqlMigrateLogic {
      * @return editable file name
      */
     private String convertEditableAlterSqlFileName(String fileName) {
-        AssertUtil.assertNotEmpty(fileName);
+        IntroAssertUtil.assertNotEmpty(fileName);
         return DfStringUtil.replace(fileName, "READONLY_", "");
     }
 

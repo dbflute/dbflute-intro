@@ -4,7 +4,7 @@ package org.dbflute.intro.bizfw.util;
  * parameter assertion util.
  * @author cabos
  */
-public class AssertUtil {
+public class IntroAssertUtil {
 
     /**
      * Assert Not null.
