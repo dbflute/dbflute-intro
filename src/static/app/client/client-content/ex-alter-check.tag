@@ -53,7 +53,7 @@
                   <label>.sql</label>
                 </div>
                 <div class="inline field">
-                  <button class="ui primary button" onclick="{ prepareAlterCheck }">Begin</button>
+                  <button class="ui primary button" onclick="{ createAlterSql }">Begin</button>
                 </div>
               </div>
             </form>
@@ -83,7 +83,7 @@
       <h5 class="ui header">Open Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">()</span></a>
+          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
           <div show="{ alterItem.show }" class="ui message message-area">
           <pre>
             <code>
@@ -296,14 +296,25 @@
     }
 
     this.prepareAlterCheck = () => {
-      const alterFileName = 'alter-schema-' + self.refs.alterNameInput.value + '.sql'
-      ApiFactory.prepareAlterSql(self.opts.projectName, alterFileName)
+      ApiFactory.prepareAlterSql(self.opts.projectName)
         .then(() => {
           ApiFactory.openAlterDir(self.opts.projectName)
-          self.preparedFileName = alterFileName
         }).finally(() => {
           self.updateContents()
         })
+    }
+
+    this.createAlterSql = () => {
+      const alterFileName = 'alter-schema-' + self.refs.alterNameInput.value + '.sql'
+      ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
+        .then(() => {
+          self.preparedFileName = alterFileName
+          self.prepareAlterCheck()
+        })
+    }
+
+    this.nowPrepared = (fileName) => {
+      return self.preparedFileName != null && self.preparedFileName == fileName
     }
 
     this.updateContents = () => {
