@@ -36,6 +36,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     //                                        DBFlute CLient
     //                                        --------------
     private static final String SRC_CLIENT_PATH = "dbflute_introdb";
+    protected static final String TEST_RESOURCE_BASE = "/src/test/resources/default";
 
     protected static final String TEST_CLIENT_PATH = "dbflute_testdb";
     protected static final String TEST_CLIENT_PROJECT = "testdb";
@@ -43,22 +44,22 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // -----------------------------------------------------
     //                                             Decomment
     //                                             ---------
-    private static final String TEST_RESOURCE_PICKUP_FILE_PATH = "/src/test/resources/schema/decomment/pickup/decomment-pickup.dfmap";
-    private static final String TEST_RESOURCE_PICKUP_PATH = "/src/test/resources/schema/decomment/piece";
+    private static final String TEST_RESOURCE_PICKUP_FILE_PATH = TEST_RESOURCE_BASE + "/schema/decomment/pickup/decomment-pickup.dfmap";
+    private static final String TEST_RESOURCE_PICKUP_PATH = TEST_RESOURCE_BASE + "/schema/decomment/piece";
     private static final String PICKUP_FILE_PATH = "/schema/decomment/pickup/decomment-pickup.dfmap";
     private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
     // -----------------------------------------------------
     //                                             Hacomment
     //                                             ---------
     private static final String TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH =
-            "/src/test/resources/schema/hacomment/pickup/hacomment-pickup.dfmap";
-    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = "/src/test/resources/schema/hacomment/piece";
+            TEST_RESOURCE_BASE + "/schema/hacomment/pickup/hacomment-pickup.dfmap";
+    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = TEST_RESOURCE_BASE + "/schema/hacomment/piece";
     private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/hacomment-pickup.dfmap";
     private static final String HACOMMENT_PIECE_DIR_PATH = "/schema/hacomment/piece";
     // -----------------------------------------------------
     //                                               Playsql
     //                                               -------
-    protected static final String TEST_RESOURCE_PLAYSQL_DIR_PATH = "/src/test/resources/playsql";
+    protected static final String TEST_RESOURCE_PLAYSQL_DIR_PATH = TEST_RESOURCE_BASE + "/playsql";
     protected static final String PLAYSQL_DIR_PATH = "/playsql";
 
     // ===================================================================================

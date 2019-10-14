@@ -462,7 +462,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         FileUtils.copyFile(srcFile, destFile);
     }
     private File prepareFileForTestResource(String fileName) {
-        return new File(getProjectDir(), "/src/test/resources/dfprop/" + fileName);
+        return new File(getProjectDir(), TEST_RESOURCE_BASE + "/dfprop/" + fileName);
     }
 
     private File prepareFileForTestClient(String filePath) {
