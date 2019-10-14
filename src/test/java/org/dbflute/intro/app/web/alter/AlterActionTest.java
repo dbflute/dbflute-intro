@@ -19,11 +19,14 @@ import static org.dbflute.intro.app.web.alter.AlterSQLResult.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.unit.UnitIntroTestCase;
+import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.validation.exception.ValidationErrorException;
 
 /**
@@ -180,7 +183,20 @@ public class AlterActionTest extends UnitIntroTestCase {
         alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        // do nothing
+        List<File> fileList = loadAlterDir();
+        assertEquals(3, fileList.size());
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
+        {
+            File file = fileList.get(1);
+            assertEquals(file.getName(), "alter-schema_003.sql");
+        }
+        {
+            File file = fileList.get(2);
+            assertEquals(file.getName(), "alter-schema_001.sql");
+        }
     }
 
     public void test_prepare_notExistsAlterDir() throws IOException {
@@ -194,7 +210,20 @@ public class AlterActionTest extends UnitIntroTestCase {
         alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        // do nothing
+        List<File> fileList = loadAlterDir();
+        assertEquals(3, fileList.size());
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
+        {
+            File file = fileList.get(1);
+            assertEquals(file.getName(), "alter-schema_003.sql");
+        }
+        {
+            File file = fileList.get(2);
+            assertEquals(file.getName(), "alter-schema_001.sql");
+        }
     }
 
     public void test_prepare_notExistsHistoryDir() throws IOException {
@@ -208,7 +237,12 @@ public class AlterActionTest extends UnitIntroTestCase {
         alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        // do nothing
+        List<File> fileList = loadAlterDir();
+        assertEquals(1, fileList.size());
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
     }
 
     public void test_prepare_notExistsMigrationDir() throws IOException {
@@ -222,13 +256,36 @@ public class AlterActionTest extends UnitIntroTestCase {
         alterAction.prepare(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        // do nothing
+        List<File> fileList = loadAlterDir();
+        assertEquals(0, fileList.size());
     }
 
     // -----------------------------------------------------
     //                                                create
     //                                                ------
-    public void test_prepare_success() {
+    public void test_prepare_success() throws IOException {
+        // ## Arrange ##
+        AlterAction alterAction = new AlterAction();
+        inject(alterAction);
+
+        removeAlterDir();
+
+        AlterCreateBody body = new AlterCreateBody();
+        body.alterFileName = "alter-schema_creatable.sql";
+
+        // ## Act ##
+        alterAction.create(TEST_CLIENT_PROJECT, body);
+
+        // ## Assert ##
+        List<File> fileList = loadAlterDir();
+        assertEquals(1, fileList.size());
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), body.alterFileName);
+        }
+    }
+
+    public void test_prepare_alreadyExistsAlterDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -240,7 +297,16 @@ public class AlterActionTest extends UnitIntroTestCase {
         alterAction.create(TEST_CLIENT_PROJECT, body);
 
         // ## Assert ##
-        // do nothing
+        List<File> fileList = loadAlterDir();
+        assertEquals(2, fileList.size());
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), body.alterFileName);
+        }
+        {
+            File file = fileList.get(1);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
     }
 
     public void test_prepare_validateInvalidPrefix() {
@@ -300,7 +366,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     }
 
     // ===================================================================================
-    //                                                                       Client Helper
+    //                                                                       Client Adjust
     //                                                                       =============
     private void removeAlterDir() throws IOException {
         FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
@@ -316,5 +382,14 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     private void removeMigrationDir() throws IOException {
         FileUtils.deleteDirectory(new File(getProjectDir(), MIGRATION_DIR));
+    }
+
+    // ===================================================================================
+    //                                                                         File Search
+    //                                                                         ===========
+    private List<File> loadAlterDir() {
+        return OptionalThing.ofNullable(new File(getProjectDir(), ALTER_DIR).listFiles(), () -> {})
+                .map(Arrays::asList)
+                .orElse(Collections.emptyList());
     }
 }
