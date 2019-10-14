@@ -176,9 +176,6 @@ public class AlterActionTest extends UnitIntroTestCase {
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
 
-        AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
-
         // ## Act ##
         alterAction.prepare(TEST_CLIENT_PROJECT);
 
@@ -192,9 +189,6 @@ public class AlterActionTest extends UnitIntroTestCase {
         inject(alterAction);
 
         removeAlterDir();
-
-        AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
         alterAction.prepare(TEST_CLIENT_PROJECT);
@@ -210,9 +204,6 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         removeHistoryDir();
 
-        AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
-
         // ## Act ##
         alterAction.prepare(TEST_CLIENT_PROJECT);
 
@@ -226,9 +217,6 @@ public class AlterActionTest extends UnitIntroTestCase {
         inject(alterAction);
 
         removeMigrationDir();
-
-        AlterCreateBody body = new AlterCreateBody();
-        body.alterFileName = "alter-schema-BUSINESSINFO.sql";
 
         // ## Act ##
         alterAction.prepare(TEST_CLIENT_PROJECT);
