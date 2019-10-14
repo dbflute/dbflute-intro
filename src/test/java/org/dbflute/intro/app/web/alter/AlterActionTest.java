@@ -211,7 +211,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         // do nothing
     }
 
-    public void test_prepare_notMigrationDir() throws IOException {
+    public void test_prepare_notExistsMigrationDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
