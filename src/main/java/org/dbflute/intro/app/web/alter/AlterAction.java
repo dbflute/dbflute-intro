@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
-import org.dbflute.intro.app.logic.playsql.migrate.bean.PlaysqlMigrateAlterSqlBean;
+import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrateLogic;
+import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrateAlterSqlBean;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.mylasta.action.IntroMessages;

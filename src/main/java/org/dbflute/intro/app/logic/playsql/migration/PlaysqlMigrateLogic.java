@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migrate;
+package org.dbflute.intro.app.logic.playsql.migration;
 
 import java.awt.*;
 import java.io.File;
@@ -39,9 +39,9 @@ import javax.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.app.logic.playsql.migrate.bean.PlaysqlMigrateAlterSqlBean;
-import org.dbflute.intro.app.logic.playsql.migrate.bean.PlaysqlMigrateCheckedZipBean;
-import org.dbflute.intro.app.logic.playsql.migrate.bean.PlaysqlMigrateUnreleasedDirBean;
+import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrateAlterSqlBean;
+import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrateCheckedZipBean;
+import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrateUnreleasedDirBean;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;

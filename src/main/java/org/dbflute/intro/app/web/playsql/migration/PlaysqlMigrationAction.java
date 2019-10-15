@@ -17,7 +17,7 @@ package org.dbflute.intro.app.web.playsql.migration;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
+import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
