@@ -87,4 +87,22 @@ public class CodeManagementTest extends PlainTestCase {
             }
         });
     }
+
+    /**
+     * DBFlute does not provide service that needs auth.
+     * Don't use AllowAnyoneAccess annotation.
+     */
+    public void test_notUseAllowAnyoneAccess() {
+        policeStoryOfJavaClassChase((srcFile, clazz) -> {
+            if (clazz.getName().startsWith("org.dbflute.intro.web")) {
+                log("...Checking logic class: {}", clazz.getName());
+                readLine(srcFile, "UTF-8", line -> {
+                    if (line.contains("@AllowAnyoneAccess")) {
+                        String msg = "Enable all access, remove annotation. class name : " + clazz.getName();
+                        throw new IllegalStateException(msg);
+                    }
+                });
+            }
+        });
+    }
 }
