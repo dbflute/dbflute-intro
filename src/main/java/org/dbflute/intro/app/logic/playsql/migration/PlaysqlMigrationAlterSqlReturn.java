@@ -13,31 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration.retrun;
+package org.dbflute.intro.app.logic.playsql.migration;
 
-import java.util.List;
+import org.lastaflute.web.validation.Required;
 
 /**
- * @author cabos
+ * @author subaru
+ * @author cabos (add copy right)
  */
-public class PlaysqlMigrationUnreleasedDirReturn {
+public class PlaysqlMigrationAlterSqlReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private List<PlaysqlMigrationAlterSqlReturn> checkedSqlList;
+    @Required
+    public final String fileName;
+    public final String content; // may be empty file
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationUnreleasedDirReturn(List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
-        this.checkedSqlList = checkedSqlList;
-    }
-
-    // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
-    public List<PlaysqlMigrationAlterSqlReturn> getCheckedSqlList() {
-        return checkedSqlList;
+    public PlaysqlMigrationAlterSqlReturn(String fileName, String content) {
+        this.fileName = fileName;
+        this.content = content;
     }
 }

@@ -13,36 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration.retrun;
+package org.dbflute.intro.app.logic.playsql.migration;
 
 import java.util.List;
 
 /**
  * @author cabos
  */
-public class PlaysqlMigrationCheckedZipRetrun {
+public class PlaysqlMigrationUnreleasedDirReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private String fileName;
     private List<PlaysqlMigrationAlterSqlReturn> checkedSqlList;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationCheckedZipRetrun(String fileName, List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
-        this.fileName = fileName;
+    public PlaysqlMigrationUnreleasedDirReturn(List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
         this.checkedSqlList = checkedSqlList;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getFileName() {
-        return fileName;
-    }
-
     public List<PlaysqlMigrationAlterSqlReturn> getCheckedSqlList() {
         return checkedSqlList;
     }

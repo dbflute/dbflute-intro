@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.logic.playsql.migration.retrun;
+package org.dbflute.intro.app.logic.playsql.migration;
 
 import java.util.List;
 
@@ -15,14 +15,14 @@ public class PlaysqlMigrationDirReturn {
     //                                                                           =========
     private final CDef.NgMark ngMark;
     private final List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList;
-    private final PlaysqlMigrationCheckedZipRetrun checkedZipBean;
+    private final PlaysqlMigrationCheckedZipReturn checkedZipBean;
     private final PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
     public PlaysqlMigrationDirReturn(CDef.NgMark ngMark, List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList,
-            PlaysqlMigrationCheckedZipRetrun checkedZipBean, PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean) {
+            PlaysqlMigrationCheckedZipReturn checkedZipBean, PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean) {
         this.ngMark = ngMark;
         this.alterSqlBeanList = alterSqlBeanList;
         this.checkedZipBean = checkedZipBean;
@@ -37,7 +37,7 @@ public class PlaysqlMigrationDirReturn {
         return alterSqlBeanList;
     }
 
-    public OptionalThing<PlaysqlMigrationCheckedZipRetrun> getCheckedZipBean() {
+    public OptionalThing<PlaysqlMigrationCheckedZipReturn> getCheckedZipBean() {
         return OptionalThing.ofNullable(checkedZipBean, () -> {});
     }
 

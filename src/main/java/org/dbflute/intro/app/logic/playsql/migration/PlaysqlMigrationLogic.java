@@ -39,10 +39,6 @@ import javax.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationAlterSqlReturn;
-import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationCheckedZipRetrun;
-import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationDirReturn;
-import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationUnreleasedDirReturn;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
@@ -162,10 +158,10 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return checked zip file bean (Maybe empty)
      */
-    public OptionalThing<PlaysqlMigrationCheckedZipRetrun> loadCheckedZip(String clientProject) {
+    public OptionalThing<PlaysqlMigrationCheckedZipReturn> loadCheckedZip(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         return loadNewestCheckedZipFile(clientProject).map(checkedZip -> {
-            return new PlaysqlMigrationCheckedZipRetrun(checkedZip.getName(), loadCheckedSqlList(checkedZip));
+            return new PlaysqlMigrationCheckedZipReturn(checkedZip.getName(), loadCheckedSqlList(checkedZip));
         });
     }
 

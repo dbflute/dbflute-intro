@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationAlterSqlReturn;
+import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationDirReturn;
 import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
-import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationAlterSqlReturn;
-import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationDirReturn;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.mylasta.action.IntroMessages;
