@@ -35,7 +35,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // -----------------------------------------------------
     //                                        DBFlute CLient
     //                                        --------------
-    private static final String SRC_CLIENT_PATH = "dbflute_introdb";
+    protected static final String SRC_CLIENT_PATH = "dbflute_introdb";
     protected static final String TEST_RESOURCE_BASE = "/src/test/resources/default";
 
     protected static final String TEST_CLIENT_PATH = "dbflute_testdb";
