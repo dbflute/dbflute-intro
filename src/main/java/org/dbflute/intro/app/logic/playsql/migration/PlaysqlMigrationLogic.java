@@ -41,6 +41,7 @@ import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationAlterSqlBean;
 import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationCheckedZipBean;
+import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationDirBean;
 import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationUnreleasedDirBean;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
@@ -66,6 +67,24 @@ public class PlaysqlMigrationLogic {
     //                                                                      load sql files
     //                                                                      ==============
     // -----------------------------------------------------
+    //                                             migration
+    //                                             ---------
+    /**
+     * Load migration directory.
+     * @return dbflute_client/playsql/migration directory information (NotNull)
+     */
+    public PlaysqlMigrationDirBean loadPlaysqlMigrationDir(String clientProject) {
+        IntroAssertUtil.assertNotEmpty(clientProject);
+        return new PlaysqlMigrationDirBean(                                  //
+                loadAlterCheckNgMarkFile(clientProject).orElse(null), //
+                loadAlterSqlFiles(clientProject),                            //
+                loadCheckedZip(clientProject).orElse(null),           //
+                loadUnreleasedDir(clientProject).orElse(null)         //
+        );
+
+    }
+
+    // -----------------------------------------------------
     //                                       alter directory
     //                                       ---------------
     /**
@@ -74,7 +93,7 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return list of alter files in alter directory. (NotNull)
      */
-    public List<PlaysqlMigrationAlterSqlBean> loadAlterSqlFiles(String clientProject) {
+    private List<PlaysqlMigrationAlterSqlBean> loadAlterSqlFiles(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         return OptionalThing.ofNullable(new File(buildAlterDirectoryPath(clientProject)).listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
@@ -93,7 +112,7 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return unreleased directory bean (Maybe empty). (NotNull)
      */
-    public OptionalThing<PlaysqlMigrationUnreleasedDirBean> loadUnreleasedDir(String clientProject) {
+    private OptionalThing<PlaysqlMigrationUnreleasedDirBean> loadUnreleasedDir(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File alterDir = new File(unreleasedAlterDirPath);
@@ -124,7 +143,7 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return Ng mark file (Maybe empty)
      */
-    public OptionalThing<CDef.NgMark> loadAlterCheckNgMarkFile(String clientProject) {
+    private OptionalThing<CDef.NgMark> loadAlterCheckNgMarkFile(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
             if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
