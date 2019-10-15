@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrateLogic;
-import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrateAlterSqlBean;
+import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
+import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationAlterSqlBean;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.mylasta.action.IntroMessages;
@@ -39,7 +39,7 @@ public class AlterAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private PlaysqlMigrateLogic playsqlMigrateLogic;
+    private PlaysqlMigrationLogic playsqlMigrationLogic;
 
     // ===================================================================================
     //                                                                               Index
@@ -54,7 +54,7 @@ public class AlterAction extends IntroBaseAction {
     //                                               -------
     private AlterSQLResult mappingAlterSQLResult(String clientProject) {
         AlterSQLResult result = new AlterSQLResult();
-        result.ngMark = playsqlMigrateLogic.loadAlterCheckNgMarkFile(clientProject).orElse(null);
+        result.ngMark = playsqlMigrationLogic.loadAlterCheckNgMarkFile(clientProject).orElse(null);
         result.editingFiles = mappingAlterEditingFilePart(clientProject);
         result.checkedZip = mappingCheckedZipPart(clientProject);
         result.unreleasedDir = mappingUnreleasedDirPart(clientProject);
@@ -62,7 +62,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private List<AlterSQLResult.SQLFilePart> mappingAlterEditingFilePart(String clientProject) {
-        return playsqlMigrateLogic.loadAlterSqlFiles(clientProject).stream().map(editingFile -> {
+        return playsqlMigrationLogic.loadAlterSqlFiles(clientProject).stream().map(editingFile -> {
             AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
             filePart.fileName = editingFile.fileName;
             filePart.content = editingFile.content;
@@ -71,7 +71,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private AlterSQLResult.CheckedZipPart mappingCheckedZipPart(String clientProject) {
-        return playsqlMigrateLogic.loadCheckedZip(clientProject).map(checkedZipBean -> {
+        return playsqlMigrationLogic.loadCheckedZip(clientProject).map(checkedZipBean -> {
             AlterSQLResult.CheckedZipPart checkedZipPart = new AlterSQLResult.CheckedZipPart();
             checkedZipPart.fileName = checkedZipBean.getFileName();
             checkedZipPart.checkedFiles = mappingSqlFileBean(checkedZipBean.getCheckedSqlList());
@@ -80,14 +80,14 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private AlterSQLResult.UnreleasedDirPart mappingUnreleasedDirPart(String clientProject) {
-        return playsqlMigrateLogic.loadUnreleasedDir(clientProject).map(dirBean -> {
+        return playsqlMigrationLogic.loadUnreleasedDir(clientProject).map(dirBean -> {
             AlterSQLResult.UnreleasedDirPart dirPart = new AlterSQLResult.UnreleasedDirPart();
             dirPart.checkedFiles = mappingSqlFileBean(dirBean.getCheckedSqlList());
             return dirPart;
         }).orElse(null);
     }
 
-    private List<AlterSQLResult.SQLFilePart> mappingSqlFileBean(List<PlaysqlMigrateAlterSqlBean> sqlBeanList) {
+    private List<AlterSQLResult.SQLFilePart> mappingSqlFileBean(List<PlaysqlMigrationAlterSqlBean> sqlBeanList) {
         return sqlBeanList.stream().map(playsqlMigrateAlterSqlBean -> {
             AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
             filePart.fileName = playsqlMigrateAlterSqlBean.fileName;
@@ -102,8 +102,8 @@ public class AlterAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/@word")
     @NotAvailableDecommentServer
     public JsonResponse<Void> prepare(String clientProject) {
-        playsqlMigrateLogic.unzipCheckedAlterZip(clientProject);
-        playsqlMigrateLogic.copyUnreleasedAlterDir(clientProject);
+        playsqlMigrationLogic.unzipCheckedAlterZip(clientProject);
+        playsqlMigrationLogic.copyUnreleasedAlterDir(clientProject);
         return JsonResponse.asEmptyBody();
     }
 
@@ -114,7 +114,7 @@ public class AlterAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientProject, body, messages));
-        playsqlMigrateLogic.createAlterSql(clientProject, body.alterFileName);
+        playsqlMigrationLogic.createAlterSql(clientProject, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }
 
@@ -133,7 +133,7 @@ public class AlterAction extends IntroBaseAction {
         if (containsInvalidCharacter) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (!containsInvalidCharacter && playsqlMigrateLogic.existsSameNameAlterSqlFile(clientProject, body.alterFileName)) {
+        if (!containsInvalidCharacter && playsqlMigrationLogic.existsSameNameAlterSqlFile(clientProject, body.alterFileName)) {
             messages.addErrorsDuplicateFileName(alterFileName);
         }
     }

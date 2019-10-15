@@ -15,35 +15,26 @@
  */
 package org.dbflute.intro.app.logic.playsql.migration.bean;
 
-import java.util.List;
+import org.lastaflute.web.validation.Required;
 
 /**
- * @author cabos
+ * @author subaru
+ * @author cabos (add copy right)
  */
-public class PlaysqlMigrateCheckedZipBean {
+public class PlaysqlMigrationAlterSqlBean {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private String fileName;
-    private List<PlaysqlMigrateAlterSqlBean> checkedSqlList;
+    @Required
+    public final String fileName;
+    public final String content; // may be empty file
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrateCheckedZipBean(String fileName, List<PlaysqlMigrateAlterSqlBean> checkedSqlList) {
+    public PlaysqlMigrationAlterSqlBean(String fileName, String content) {
         this.fileName = fileName;
-        this.checkedSqlList = checkedSqlList;
-    }
-
-    // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
-    public String getFileName() {
-        return fileName;
-    }
-
-    public List<PlaysqlMigrateAlterSqlBean> getCheckedSqlList() {
-        return checkedSqlList;
+        this.content = content;
     }
 }

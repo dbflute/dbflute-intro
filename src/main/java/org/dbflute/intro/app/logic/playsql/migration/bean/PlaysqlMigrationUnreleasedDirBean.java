@@ -20,24 +20,24 @@ import java.util.List;
 /**
  * @author cabos
  */
-public class PlaysqlMigrateUnreleasedDirBean {
+public class PlaysqlMigrationUnreleasedDirBean {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private List<PlaysqlMigrateAlterSqlBean> checkedSqlList;
+    private List<PlaysqlMigrationAlterSqlBean> checkedSqlList;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrateUnreleasedDirBean(List<PlaysqlMigrateAlterSqlBean> checkedSqlList) {
+    public PlaysqlMigrationUnreleasedDirBean(List<PlaysqlMigrationAlterSqlBean> checkedSqlList) {
         this.checkedSqlList = checkedSqlList;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public List<PlaysqlMigrateAlterSqlBean> getCheckedSqlList() {
+    public List<PlaysqlMigrationAlterSqlBean> getCheckedSqlList() {
         return checkedSqlList;
     }
 }
