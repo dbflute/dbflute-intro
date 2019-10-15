@@ -203,8 +203,11 @@
       self.unreleasedDir = {}
       self.unreleasedDir.checkedFiles = []
       self.alter.unreleasedDir.checkedFiles.forEach(file => {
+        if (file.fileName.indexOf('.sql') === -1) {
+          return
+        }
         self.unreleasedDir.checkedFiles.push({
-          fileName: file.fileName,
+          fileName: file.fileName.replace('READONLY_', ''),
           content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })
