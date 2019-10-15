@@ -31,6 +31,8 @@ import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
+ * Api for alter check support.
+ *
  * @author subaru
  * @author cabos
  */
@@ -45,6 +47,11 @@ public class AlterAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                               Index
     //                                                                               =====
+    /**
+     * Respond migration directory information of dbflute_client/playsql/migration.
+     * @param clientProject client project (NotNull)
+     * @return migration directory information (NotNull)
+     */
     @Execute
     public JsonResponse<AlterSQLResult> index(String clientProject) {
         return asJson(mappingAlterSQLResult(playsqlMigrationLogic.loadPlaysqlMigrationDir(clientProject)));
