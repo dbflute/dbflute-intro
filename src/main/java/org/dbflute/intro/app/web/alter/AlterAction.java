@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.playsql.migrate.bean.AlterSqlBean;
 import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
+import org.dbflute.intro.app.logic.playsql.migrate.bean.PlaysqlMigrateAlterSqlBean;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.mylasta.action.IntroMessages;
@@ -87,11 +87,11 @@ public class AlterAction extends IntroBaseAction {
         }).orElse(null);
     }
 
-    private List<AlterSQLResult.SQLFilePart> mappingSqlFileBean(List<AlterSqlBean> sqlBeanList) {
-        return sqlBeanList.stream().map(alterSqlBean -> {
+    private List<AlterSQLResult.SQLFilePart> mappingSqlFileBean(List<PlaysqlMigrateAlterSqlBean> sqlBeanList) {
+        return sqlBeanList.stream().map(playsqlMigrateAlterSqlBean -> {
             AlterSQLResult.SQLFilePart filePart = new AlterSQLResult.SQLFilePart();
-            filePart.fileName = alterSqlBean.fileName;
-            filePart.content = alterSqlBean.content;
+            filePart.fileName = playsqlMigrateAlterSqlBean.fileName;
+            filePart.content = playsqlMigrateAlterSqlBean.content;
             return filePart;
         }).collect(Collectors.toList());
     }
