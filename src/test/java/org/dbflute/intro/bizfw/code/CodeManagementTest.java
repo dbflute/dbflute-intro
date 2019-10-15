@@ -74,7 +74,7 @@ public class CodeManagementTest extends PlainTestCase {
      * Logic package check.
      * See details in http://dbflute.seasar.org/ja/lastaflute/howto/impldesign/beandesign.html#insidebean .
      */
-    public void test_notExistsInvalidLogicClassInLogicPackage() {
+    public void test_notExistsInvalidClassNameInLogicPackage() {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
             if (clazz.getName().startsWith("org.dbflute.intro.app.logic")) {
                 log("...Checking logic class: {}", clazz.getName());
