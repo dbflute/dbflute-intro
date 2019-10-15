@@ -33,6 +33,26 @@ public class CodeManagementTest extends PlainTestCase {
     private static final List<String> EDITABLE_METHOD_NAME =
             Arrays.asList("edit", "update", "create", "delete", "download", "remove", "execute", "prepare");
 
+    public void test_decomment_annotation_check() {
+        policeStoryOfJavaClassChase((srcFile, clazz) -> {
+            for (Method method : clazz.getMethods()) {
+                final Execute execute = method.getAnnotation(Execute.class);
+                final String methodName = method.getName();
+                if (execute != null) {
+                    if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> methodName.toLowerCase().contains(name))) {
+                        final NotAvailableDecommentServer methodAnnotation = method.getAnnotation(NotAvailableDecommentServer.class);
+                        final NotAvailableDecommentServer classAnnotation = clazz.getAnnotation(NotAvailableDecommentServer.class);
+                        if (methodAnnotation == null && classAnnotation == null) {
+                            String msg = clazz.getName() + "#" + methodName + " doesn't have NotAvailableDecommentServer annotation.\n"
+                                    + "This method is editable method.";
+                            throw new IllegalStateException(msg);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     public void test_decomment_decoMapFile_dependency() {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
             if (clazz.getName().startsWith("org.dbflute.infra")) { // e.g. DfDecoMapFile
@@ -50,21 +70,19 @@ public class CodeManagementTest extends PlainTestCase {
         });
     }
 
-    public void test_decomment_annotation_check() {
+    /**
+     * Logic package check.
+     * See details in http://dbflute.seasar.org/ja/lastaflute/howto/impldesign/beandesign.html#insidebean .
+     */
+    public void test_notExistsInvalidLogicClassInLogicPackage() {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
-            for (Method method : clazz.getMethods()) {
-                final Execute execute = method.getAnnotation(Execute.class);
-                final String methodName = method.getName();
-                if (execute != null) {
-                    if (EDITABLE_METHOD_NAME.stream().anyMatch(name -> methodName.toLowerCase().contains(name))) {
-                        final NotAvailableDecommentServer methodAnnotation = method.getAnnotation(NotAvailableDecommentServer.class);
-                        final NotAvailableDecommentServer classAnnotation = clazz.getAnnotation(NotAvailableDecommentServer.class);
-                        if (methodAnnotation == null && classAnnotation == null) {
-                            String msg = clazz.getName() + "#" + methodName + " doesn't have NotAvailableDecommentServer annotation.\n"
-                                    + "This method is editable method.";
-                            throw new IllegalStateException(msg);
-                        }
-                    }
+            if (clazz.getName().startsWith("org.dbflute.intro.app.logic")) {
+                log("...Checking logic class: {}", clazz.getName());
+                if (!Srl.endsWith(clazz.getName(), "Logic", "Return", "Param", "Exception")) {
+                    String msg = "Class in logic package should ends with \"Logic\", \"Return\", \"Param\" or \"Exception\" .\n"
+                            + "class name : " + clazz.getName();
+                    // TODO cabos create class of code management test (2019-10-15)
+                    throw new IllegalStateException(msg);
                 }
             }
         });
