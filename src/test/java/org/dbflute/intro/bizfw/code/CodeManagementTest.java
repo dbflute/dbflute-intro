@@ -53,23 +53,6 @@ public class CodeManagementTest extends PlainTestCase {
         });
     }
 
-    public void test_decomment_decoMapFile_dependency() {
-        policeStoryOfJavaClassChase((srcFile, clazz) -> {
-            if (clazz.getName().startsWith("org.dbflute.infra")) { // e.g. DfDecoMapFile
-                log("...Checking infra class: {}", clazz.getName());
-                readLine(srcFile, "UTF-8", line -> {
-                    if (line.startsWith("import ")) {
-                        String refName = Srl.rtrim(Srl.substringFirstRear(line, "import "), ";");
-                        if (refName.startsWith("org.dbflute.intro")) {
-                            String msg = "Cannot refer to intro classes: " + clazz.getName() + ", " + refName;
-                            throw new IllegalStateException(msg);
-                        }
-                    }
-                });
-            }
-        });
-    }
-
     /**
      * Logic package check.
      * See details in http://dbflute.seasar.org/ja/lastaflute/howto/impldesign/beandesign.html#insidebean .
