@@ -32,7 +32,6 @@ import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
-import org.dbflute.intro.app.logic.playsql.migrate.PlaysqlMigrateLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -79,8 +78,6 @@ public class ClientAction extends IntroBaseAction {
     private LogPhysicalLogic logPhysicalLogic;
     @Resource
     private EngineInfoLogic engineInfoLogic;
-    @Resource
-    private PlaysqlMigrateLogic playsqlMigrateLogic;
 
     // ===================================================================================
     //                                                                             Execute
