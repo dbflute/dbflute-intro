@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration.bean;
+package org.dbflute.intro.app.logic.playsql.migration.retrun;
 
 import org.lastaflute.web.validation.Required;
 
@@ -21,7 +21,7 @@ import org.lastaflute.web.validation.Required;
  * @author subaru
  * @author cabos (add copy right)
  */
-public class PlaysqlMigrationAlterSqlBean {
+public class PlaysqlMigrationAlterSqlReturn {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -33,7 +33,7 @@ public class PlaysqlMigrationAlterSqlBean {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationAlterSqlBean(String fileName, String content) {
+    public PlaysqlMigrationAlterSqlReturn(String fileName, String content) {
         this.fileName = fileName;
         this.content = content;
     }

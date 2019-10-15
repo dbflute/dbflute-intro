@@ -39,10 +39,10 @@ import javax.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationAlterSqlBean;
-import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationCheckedZipBean;
-import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationDirBean;
-import org.dbflute.intro.app.logic.playsql.migration.bean.PlaysqlMigrationUnreleasedDirBean;
+import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationAlterSqlReturn;
+import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationCheckedZipRetrun;
+import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationDirReturn;
+import org.dbflute.intro.app.logic.playsql.migration.retrun.PlaysqlMigrationUnreleasedDirReturn;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
@@ -73,9 +73,9 @@ public class PlaysqlMigrationLogic {
      * Load migration directory.
      * @return dbflute_client/playsql/migration directory information (NotNull)
      */
-    public PlaysqlMigrationDirBean loadPlaysqlMigrationDir(String clientProject) {
+    public PlaysqlMigrationDirReturn loadPlaysqlMigrationDir(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
-        return new PlaysqlMigrationDirBean(                                  //
+        return new PlaysqlMigrationDirReturn(                                  //
                 loadAlterCheckNgMarkFile(clientProject).orElse(null), //
                 loadAlterSqlFiles(clientProject),                            //
                 loadCheckedZip(clientProject).orElse(null),           //
@@ -93,13 +93,13 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return list of alter files in alter directory. (NotNull)
      */
-    private List<PlaysqlMigrationAlterSqlBean> loadAlterSqlFiles(String clientProject) {
+    private List<PlaysqlMigrationAlterSqlReturn> loadAlterSqlFiles(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         return OptionalThing.ofNullable(new File(buildAlterDirectoryPath(clientProject)).listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
                 .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
-                .map(file -> new PlaysqlMigrationAlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .map(file -> new PlaysqlMigrationAlterSqlReturn(file.getName(), flutyFileLogic.readFile(file)))
                 .collect(Collectors.toList());
     }
 
@@ -112,14 +112,14 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return unreleased directory bean (Maybe empty). (NotNull)
      */
-    private OptionalThing<PlaysqlMigrationUnreleasedDirBean> loadUnreleasedDir(String clientProject) {
+    private OptionalThing<PlaysqlMigrationUnreleasedDirReturn> loadUnreleasedDir(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
         final File alterDir = new File(unreleasedAlterDirPath);
         if (!alterDir.exists() || alterDir.isFile()) {
             return OptionalThing.empty();
         }
-        return OptionalThing.of(new PlaysqlMigrationUnreleasedDirBean(loadFilesInUnreleasedDirectory(alterDir)));
+        return OptionalThing.of(new PlaysqlMigrationUnreleasedDirReturn(loadFilesInUnreleasedDirectory(alterDir)));
     }
 
     /**
@@ -128,12 +128,12 @@ public class PlaysqlMigrationLogic {
      * @param unreleasedDir unreleased directory (NotNull)
      * @return file list in unreleased directory (NotNull)
      */
-    private List<PlaysqlMigrationAlterSqlBean> loadFilesInUnreleasedDirectory(File unreleasedDir) {
+    private List<PlaysqlMigrationAlterSqlReturn> loadFilesInUnreleasedDirectory(File unreleasedDir) {
         IntroAssertUtil.assertNotNull(unreleasedDir);
         return OptionalThing.ofNullable(unreleasedDir.listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
-                .map(file -> new PlaysqlMigrationAlterSqlBean(file.getName(), flutyFileLogic.readFile(file)))
+                .map(file -> new PlaysqlMigrationAlterSqlReturn(file.getName(), flutyFileLogic.readFile(file)))
                 .collect(Collectors.toList());
     }
 
@@ -162,10 +162,10 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return checked zip file bean (Maybe empty)
      */
-    public OptionalThing<PlaysqlMigrationCheckedZipBean> loadCheckedZip(String clientProject) {
+    public OptionalThing<PlaysqlMigrationCheckedZipRetrun> loadCheckedZip(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         return loadNewestCheckedZipFile(clientProject).map(checkedZip -> {
-            return new PlaysqlMigrationCheckedZipBean(checkedZip.getName(), loadCheckedSqlList(checkedZip));
+            return new PlaysqlMigrationCheckedZipRetrun(checkedZip.getName(), loadCheckedSqlList(checkedZip));
         });
     }
 
@@ -175,7 +175,7 @@ public class PlaysqlMigrationLogic {
      * @param checkedZipFile checked zip file
      * @return sql files in checked zip file (NotNull)
      */
-    private List<PlaysqlMigrationAlterSqlBean> loadCheckedSqlList(File checkedZipFile) {
+    private List<PlaysqlMigrationAlterSqlReturn> loadCheckedSqlList(File checkedZipFile) {
         IntroAssertUtil.assertNotNull(checkedZipFile);
         if (!checkedZipFile.exists()) {
             return Collections.emptyList();
@@ -190,7 +190,7 @@ public class PlaysqlMigrationLogic {
      * @param checkedZipFile checked zip (NotNull)
      * @return sql files in checkedZipFile (NotNull)
      */
-    private List<PlaysqlMigrationAlterSqlBean> loadAlterSqlFilesInCheckedZip(File checkedZipFile) {
+    private List<PlaysqlMigrationAlterSqlReturn> loadAlterSqlFilesInCheckedZip(File checkedZipFile) {
         // TODO cabos resolve duplicate unzip load (2019-10-08)
         IntroAssertUtil.assertNotNull(checkedZipFile);
         if (!checkedZipFile.exists()) {
@@ -204,7 +204,7 @@ public class PlaysqlMigrationLogic {
                     .map(zipEntry -> {
                         try {
                             final String content = IOUtils.toString(zipFile.getInputStream(zipEntry), StandardCharsets.UTF_8);
-                            final PlaysqlMigrationAlterSqlBean bean = new PlaysqlMigrationAlterSqlBean(zipEntry.getName(), content);
+                            final PlaysqlMigrationAlterSqlReturn bean = new PlaysqlMigrationAlterSqlReturn(zipEntry.getName(), content);
                             return bean;
                         } catch (IOException e) {
                             throw new UncheckedIOException(e); // for handle out of lambda

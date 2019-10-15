@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.logic.playsql.migration.bean;
+package org.dbflute.intro.app.logic.playsql.migration.retrun;
 
 import java.util.List;
 
@@ -8,21 +8,21 @@ import org.dbflute.optional.OptionalThing;
 /**
  * @author cabos
  */
-public class PlaysqlMigrationDirBean {
+public class PlaysqlMigrationDirReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     private final CDef.NgMark ngMark;
-    private final List<PlaysqlMigrationAlterSqlBean> alterSqlBeanList;
-    private final PlaysqlMigrationCheckedZipBean checkedZipBean;
-    private final PlaysqlMigrationUnreleasedDirBean unreleasedDirBean;
+    private final List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList;
+    private final PlaysqlMigrationCheckedZipRetrun checkedZipBean;
+    private final PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationDirBean(CDef.NgMark ngMark, List<PlaysqlMigrationAlterSqlBean> alterSqlBeanList,
-            PlaysqlMigrationCheckedZipBean checkedZipBean, PlaysqlMigrationUnreleasedDirBean unreleasedDirBean) {
+    public PlaysqlMigrationDirReturn(CDef.NgMark ngMark, List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList,
+            PlaysqlMigrationCheckedZipRetrun checkedZipBean, PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean) {
         this.ngMark = ngMark;
         this.alterSqlBeanList = alterSqlBeanList;
         this.checkedZipBean = checkedZipBean;
@@ -33,15 +33,15 @@ public class PlaysqlMigrationDirBean {
         return OptionalThing.ofNullable(ngMark, () -> {});
     }
 
-    public List<PlaysqlMigrationAlterSqlBean> getAlterSqlBeanList() {
+    public List<PlaysqlMigrationAlterSqlReturn> getAlterSqlBeanList() {
         return alterSqlBeanList;
     }
 
-    public OptionalThing<PlaysqlMigrationCheckedZipBean> getCheckedZipBean() {
+    public OptionalThing<PlaysqlMigrationCheckedZipRetrun> getCheckedZipBean() {
         return OptionalThing.ofNullable(checkedZipBean, () -> {});
     }
 
-    public OptionalThing<PlaysqlMigrationUnreleasedDirBean> getUnreleasedDirBean() {
+    public OptionalThing<PlaysqlMigrationUnreleasedDirReturn> getUnreleasedDirBean() {
         return OptionalThing.ofNullable(unreleasedDirBean, () -> {});
     }
 }

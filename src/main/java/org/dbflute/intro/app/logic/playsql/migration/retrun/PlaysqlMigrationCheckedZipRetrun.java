@@ -13,25 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration.bean;
+package org.dbflute.intro.app.logic.playsql.migration.retrun;
 
 import java.util.List;
 
 /**
  * @author cabos
  */
-public class PlaysqlMigrationCheckedZipBean {
+public class PlaysqlMigrationCheckedZipRetrun {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     private String fileName;
-    private List<PlaysqlMigrationAlterSqlBean> checkedSqlList;
+    private List<PlaysqlMigrationAlterSqlReturn> checkedSqlList;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationCheckedZipBean(String fileName, List<PlaysqlMigrationAlterSqlBean> checkedSqlList) {
+    public PlaysqlMigrationCheckedZipRetrun(String fileName, List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
         this.fileName = fileName;
         this.checkedSqlList = checkedSqlList;
     }
@@ -43,7 +43,7 @@ public class PlaysqlMigrationCheckedZipBean {
         return fileName;
     }
 
-    public List<PlaysqlMigrationAlterSqlBean> getCheckedSqlList() {
+    public List<PlaysqlMigrationAlterSqlReturn> getCheckedSqlList() {
         return checkedSqlList;
     }
 }
