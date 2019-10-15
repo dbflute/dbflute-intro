@@ -33,7 +33,11 @@ public class CodeManagementTest extends PlainTestCase {
     private static final List<String> EDITABLE_METHOD_NAME =
             Arrays.asList("edit", "update", "create", "delete", "download", "remove", "execute", "prepare");
 
-    public void test_decomment_annotation_check() {
+    /**
+     * Intro suppress file edit when intro boots decomment server mode.
+     * This test check not to forget to write decomment annotation on editable endpoint.
+     */
+    public void test_writeDecomentAnnotationOnEditingEndpoint() {
         policeStoryOfJavaClassChase((srcFile, clazz) -> {
             for (Method method : clazz.getMethods()) {
                 final Execute execute = method.getAnnotation(Execute.class);
