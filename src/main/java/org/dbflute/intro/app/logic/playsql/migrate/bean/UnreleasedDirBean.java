@@ -13,28 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.document;
+package org.dbflute.intro.app.logic.playsql.migrate.bean;
 
-import org.lastaflute.web.validation.Required;
+import java.util.List;
 
 /**
- * @author subaru
- * @author cabos (add copy right)
+ * @author cabos
  */
-public class AlterSqlBean {
+public class UnreleasedDirBean {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Required
-    public final String fileName;
-    public final String content; // may be empty file
+    private List<AlterSqlBean> checkedSqlList;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public AlterSqlBean(String fileName, String content) {
-        this.fileName = fileName;
-        this.content = content;
+    public UnreleasedDirBean(List<AlterSqlBean> checkedSqlList) {
+        this.checkedSqlList = checkedSqlList;
+    }
+
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
+    public List<AlterSqlBean> getCheckedSqlList() {
+        return checkedSqlList;
     }
 }

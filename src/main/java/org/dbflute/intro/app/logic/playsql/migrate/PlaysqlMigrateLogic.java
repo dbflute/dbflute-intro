@@ -38,10 +38,10 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.document.AlterSqlBean;
-import org.dbflute.intro.app.logic.document.CheckedZipBean;
-import org.dbflute.intro.app.logic.document.UnreleasedDirBean;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.logic.playsql.migrate.bean.AlterSqlBean;
+import org.dbflute.intro.app.logic.playsql.migrate.bean.CheckedZipBean;
+import org.dbflute.intro.app.logic.playsql.migrate.bean.UnreleasedDirBean;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
