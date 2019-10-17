@@ -207,7 +207,7 @@
           return
         }
         self.unreleasedDir.checkedFiles.push({
-          fileName: file.fileName.replace('READONLY_', ''),
+          fileName: file.fileName,
           content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })
