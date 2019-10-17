@@ -31,7 +31,8 @@ public class AlterSQLResult {
      * Alter Check Result (Enable Null)
      * e.g. alter-NG
      */
-    public CDef.NgMark ngMark;
+    @Valid
+    public AlterSQLResult.NgMarkFilePart ngMarkFile;
 
     /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
     @Valid
@@ -44,6 +45,26 @@ public class AlterSQLResult {
     /** unreleased sql dir */
     @Valid
     public UnreleasedDirPart unreleasedDir;
+
+    public static class NgMarkFilePart {
+
+        @NotNull
+        public CDef.NgMark ngMark;
+
+        @NotNull
+        public String content;
+    }
+
+    public static class SQLFilePart {
+
+        /** file name e.g. alter-sql-SAMPLE.sql */
+        @NotNull
+        public String fileName;
+
+        /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); */
+        @NotNull
+        public String content;
+    }
 
     public static class CheckedZipPart {
 
@@ -61,16 +82,5 @@ public class AlterSQLResult {
         /** list of checked sql files */
         @Valid
         public List<SQLFilePart> checkedFiles;
-    }
-
-    public static class SQLFilePart {
-
-        /** file name e.g. alter-sql-SAMPLE.sql */
-        @NotNull
-        public String fileName;
-
-        /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); */
-        @NotNull
-        public String content;
     }
 }

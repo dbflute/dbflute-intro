@@ -67,7 +67,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         AlterSQLResult result = alterAction.index(TEST_CLIENT_PROJECT).getJsonResult();
 
         // ## Assert ##
-        assertNull(result.ngMark);
+        assertNull(result.ngMarkFile);
         assertNull(result.checkedZip);
         assertNull(result.unreleasedDir);
         assertTrue(result.editingFiles.isEmpty());
@@ -110,7 +110,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         // mark
-        assertEquals(result.ngMark, CDef.NgMark.AlterNG);
+        assertEquals(result.ngMarkFile.ngMark, CDef.NgMark.AlterNG);
 
         // editing
         List<SQLFilePart> editingFileList = result.editingFiles;
@@ -143,7 +143,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         // mark
-        assertEquals(result.ngMark, CDef.NgMark.AlterNG);
+        assertEquals(result.ngMarkFile.ngMark, CDef.NgMark.AlterNG);
 
         // editing
         List<SQLFilePart> editingFileList = result.editingFiles;

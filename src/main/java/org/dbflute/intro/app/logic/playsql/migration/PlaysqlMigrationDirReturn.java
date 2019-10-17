@@ -2,7 +2,6 @@ package org.dbflute.intro.app.logic.playsql.migration;
 
 import java.util.List;
 
-import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.optional.OptionalThing;
 
 /**
@@ -13,7 +12,7 @@ public class PlaysqlMigrationDirReturn {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private final CDef.NgMark ngMark;
+    private final PlaysqlMigrationNgMarkFileReturn ngMark;
     private final List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList;
     private final PlaysqlMigrationCheckedZipReturn checkedZipBean;
     private final PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean;
@@ -21,7 +20,7 @@ public class PlaysqlMigrationDirReturn {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationDirReturn(CDef.NgMark ngMark, List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList,
+    public PlaysqlMigrationDirReturn(PlaysqlMigrationNgMarkFileReturn ngMark, List<PlaysqlMigrationAlterSqlReturn> alterSqlBeanList,
             PlaysqlMigrationCheckedZipReturn checkedZipBean, PlaysqlMigrationUnreleasedDirReturn unreleasedDirBean) {
         this.ngMark = ngMark;
         this.alterSqlBeanList = alterSqlBeanList;
@@ -29,7 +28,7 @@ public class PlaysqlMigrationDirReturn {
         this.unreleasedDirBean = unreleasedDirBean;
     }
 
-    public OptionalThing<CDef.NgMark> getNgMark() {
+    public OptionalThing<PlaysqlMigrationNgMarkFileReturn> getNgMark() {
         return OptionalThing.ofNullable(ngMark, () -> {});
     }
 

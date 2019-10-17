@@ -139,11 +139,12 @@ public class PlaysqlMigrationLogic {
      * @param clientProject dbflute client project name (NotEmpty)
      * @return Ng mark file (Maybe empty)
      */
-    private OptionalThing<CDef.NgMark> loadAlterCheckNgMarkFile(String clientProject) {
+    private OptionalThing<PlaysqlMigrationNgMarkFileReturn> loadAlterCheckNgMarkFile(String clientProject) {
         IntroAssertUtil.assertNotEmpty(clientProject);
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
-            if (new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark")).exists()) {
-                return OptionalThing.of(ngMark);
+            File file = new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark"));
+            if (file.exists()) {
+                return OptionalThing.of(new PlaysqlMigrationNgMarkFileReturn(ngMark, flutyFileLogic.readFile(file)));
             }
         }
         return OptionalThing.empty();

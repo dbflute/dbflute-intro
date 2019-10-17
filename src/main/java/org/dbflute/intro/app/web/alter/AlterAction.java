@@ -62,11 +62,20 @@ public class AlterAction extends IntroBaseAction {
     //                                               -------
     private AlterSQLResult mappingAlterSQLResult(PlaysqlMigrationDirReturn bean) {
         AlterSQLResult result = new AlterSQLResult();
-        result.ngMark = bean.getNgMark().orElse(null);
+        result.ngMarkFile = mappingNgMarkFileResult(bean);
         result.editingFiles = mappingAlterEditingFilePart(bean);
         result.checkedZip = mappingCheckedZipPart(bean);
         result.unreleasedDir = mappingUnreleasedDirPart(bean);
         return result;
+    }
+
+    private AlterSQLResult.NgMarkFilePart mappingNgMarkFileResult(PlaysqlMigrationDirReturn bean) {
+        return bean.getNgMark().map(ngMark -> {
+            AlterSQLResult.NgMarkFilePart part = new AlterSQLResult.NgMarkFilePart();
+            part.ngMark = ngMark.getNgMark();
+            part.content = ngMark.getContent();
+            return part;
+        }).orElse(null);
     }
 
     private List<AlterSQLResult.SQLFilePart> mappingAlterEditingFilePart(PlaysqlMigrationDirReturn bean) {

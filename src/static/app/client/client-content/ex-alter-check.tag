@@ -141,7 +141,7 @@
     self.alter = {}
 
     // view params
-    self.ngMark = undefined
+    self.ngMarkFile = undefined
     self.editingSqls = []
     self.checkedZip = {
       fileName : '',
@@ -166,7 +166,7 @@
     }
 
     this.prepareNgMark = () => {
-      self.ngMark = self.alter.ngMark
+      self.ngMarkFile = self.alter.ngMarkFile
     }
 
     this.prepareEditing = () => {
@@ -224,17 +224,17 @@
         return
       }
       self.latestResult.latestResult.header.show = false
-      if (self.ngMark ==='previous-NG') {
+      if (self.ngMarkFile.ngMark ==='previous-NG') {
         self.latestResult.failure = {
           title: 'Found problems on Previous DDL.',
           message: 'Retry save previous.',
         }
-      } else if (self.ngMark ==='alter-NG') {
+      } else if (self.ngMarkFile.ngMark ==='alter-NG') {
         self.latestResult.failure = {
           title: 'Found problems on Alter DDL.',
-          message: 'Complete your alter DDL, referring to AlterCheckResultHTML.',
+          message: self.ngMarkFile.content.split('\n')[0],
         }
-      } else if (self.ngMark ==='next-NG') {
+      } else if (self.ngMarkFile.ngMark ==='next-NG') {
         self.latestResult.failure = {
           title: 'Found problems on Next DDL.',
           message: 'Fix your DDL and data grammatically.',
