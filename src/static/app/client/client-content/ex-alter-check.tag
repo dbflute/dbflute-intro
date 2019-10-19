@@ -99,7 +99,7 @@
       <h5 class="ui header">Executor</h5>
       <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
 
-      <h5 class="ui header">Latest AlterCheck Result</h5>
+      <h5 class="ui header" show="{ client.hasAlterCheckResultHtml || self.latestResult.loaded}">Latest AlterCheck Result</h5>
       <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
       <div class="latest-result">
         <latest-result></latest-result>
