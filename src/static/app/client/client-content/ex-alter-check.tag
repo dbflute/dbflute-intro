@@ -159,6 +159,13 @@
       self.updateContents()
     })
 
+    // TODO cabos remove this because this method replace parent object
+    this.prepareClient = () => {
+      return ApiFactory.clientOperation(self.projectName).then(resp => {
+        self.client = resp
+      })
+    }
+
     this.prepareAlterInfo = (projectName) => {
       return ApiFactory.alter(projectName).then(resp => {
         self.alter = resp
@@ -323,13 +330,15 @@
 
     this.updateContents = () => {
       self.prepareAlterInfo(self.projectName).then(() => {
-        self.prepareNgMark()
-        self.prepareEditing()
-        self.prepareChecked()
-        self.prepareUnreleased()
-        self.prepareLatestResult()
-      }).finally(() => {
-        self.update()
+        self.prepareClient().then(() => {
+          self.prepareNgMark()
+          self.prepareEditing()
+          self.prepareChecked()
+          self.prepareUnreleased()
+          self.prepareLatestResult()
+        }).finally(() => {
+          self.update()
+        })
       })
     }
   </script>
