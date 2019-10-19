@@ -42,6 +42,7 @@ public class ClientOperationResult {
     // ===================================================================================
     //                                                                        Client State
     //                                                                        ============
+    // TODO cabos move own logic place (2019-10-19)
     @Required
     public Boolean hasSchemaHtml;
     @Required
