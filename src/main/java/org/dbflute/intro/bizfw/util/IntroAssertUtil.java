@@ -45,7 +45,7 @@ public class IntroAssertUtil {
 
     /**
      * Assert Not null and Empty.
-     * @param params parameters (Not Null & Empty)
+     * @param params parameters (Not Null and Empty)
      */
     public static void assertNotEmpty(String... params) {
         if (params == null) {

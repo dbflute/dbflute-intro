@@ -98,8 +98,6 @@ intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/
 ```
 $ cd path/to/dbflute-intro
 $ ./docker-build.sh
-$ docker push dbflute/dbflute-intro:latest
-$ docker push dbflute/dbflute-intro:${intro-version}
 ```
 
 ### Document
