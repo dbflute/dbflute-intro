@@ -262,7 +262,7 @@ alter table MEMBER_ADDRESS add constraint FK_MEMBER_ADDRESS_REGION
     foreign key (REGION_ID) references REGION (REGION_ID);
     
 alter table MEMBER_FOLLOWING add constraint FK_MEMBER_FOLLOWING_MY_MEMBER 
-    foreign key (MY_MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MY_MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_FOLLOWING add constraint FK_MEMBER_FOLLOWING_YOUR_MEMBER 
     foreign key (YOUR_MEMBER_ID) references `MEMBER` (MEMBER_ID);
