@@ -32,7 +32,7 @@ import './error/404.tag'
 
 global.route = route;
 global.observable = riot.observable();
-riot.mount('*')
+riot.mount('main')
 
 /**
  * ffetch for API access
