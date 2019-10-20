@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.util.DfStringUtil;
 import org.lastaflute.core.message.UserMessages;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.exception.Forced404NotFoundException;
@@ -67,10 +68,20 @@ public class LogAction extends IntroBaseAction {
     @Execute(urlPattern = "{}/{}/@word")
     public JsonResponse<LogBean> latest(String project, String task) {
         return logPhysicalLogic.findLatestResultFile(project, task).map((file) -> {
-            return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
+            return asJson(new LogBean(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
         }).orElseGet(() -> {
             return JsonResponse.asEmptyBody();
         });
+    }
+
+    // TODO cabos create log logic and move this method (2019-10-20)
+    private String cutOffErrorLogIfNeeds(String content) {
+        final String delimiter = "Look! Read the message below.";
+        if (DfStringUtil.contains(content, delimiter)) {
+            return DfStringUtil.substringLastRear(content, delimiter);
+        } else {
+            return content;
+        }
     }
 
     @Execute(urlPattern = "{}/@word")
