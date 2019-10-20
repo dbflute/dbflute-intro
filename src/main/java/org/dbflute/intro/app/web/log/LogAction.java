@@ -70,8 +70,6 @@ public class LogAction extends IntroBaseAction {
             return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
         }).orElseGet(() -> {
             return JsonResponse.asEmptyBody();
-            //            String debugMsg = "not found any log files of " + task;
-            //            throw new Forced404NotFoundException(debugMsg, UserMessages.empty());
         });
     }
 
