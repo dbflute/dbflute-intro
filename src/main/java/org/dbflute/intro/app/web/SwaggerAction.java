@@ -25,7 +25,6 @@ import org.lastaflute.doc.SwaggerGenerator;
 import org.lastaflute.doc.agent.SwaggerAgent;
 import org.lastaflute.doc.web.LaActionSwaggerable;
 import org.lastaflute.web.Execute;
-import org.lastaflute.web.login.AllowAnyoneAccess;
 import org.lastaflute.web.response.HtmlResponse;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.RequestManager;
@@ -33,7 +32,6 @@ import org.lastaflute.web.servlet.request.RequestManager;
 /**
  * @author cabos
  */
-@AllowAnyoneAccess
 public class SwaggerAction extends IntroBaseAction implements LaActionSwaggerable {
 
     // ===================================================================================

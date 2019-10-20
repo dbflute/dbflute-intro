@@ -138,6 +138,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: Intro Error =&gt; {0} */
     public static final String ERRORS_APP_INTRO_ERROR = "{errors.app.intro.error}";
 
+    /** The key of the message: Intro Cannot operate files : {0} */
+    public static final String ERRORS_APP_FILE_OPERATION_ERROR = "{errors.app.file.operation.error}";
+
     /** The key of the message: Cannot connect to the database: {0} */
     public static final String ERRORS_APP_DATABASE_CONNECTION = "{errors.app.database.connection}";
 
@@ -176,6 +179,15 @@ public class IntroMessages extends IntroLabels {
 
     /** The key of the message: this endpoint is not available */
     public static final String ERRORS_NOT_AVAILABLE_ENDPOINT = "{errors.not.available.endpoint}";
+
+    /** The key of the message: submitted file name is invalid */
+    public static final String ERRORS_INVALID_FILE_NAME = "{errors.invalid.file.name}";
+
+    /** The key of the message: submitted file already exists */
+    public static final String ERRORS_DUPLICATE_FILE_NAME = "{errors.duplicate.file.name}";
+
+    /** The key of the message: submitted file type is invalid */
+    public static final String ERRORS_INVALID_FILE_EXTENSION = "{errors.invalid.file.extension}";
 
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
@@ -723,6 +735,21 @@ public class IntroMessages extends IntroLabels {
     }
 
     /**
+     * Add the created action message for the key 'errors.app.file.operation.error' with parameters.
+     * <pre>
+     * message: Intro Cannot operate files : {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppFileOperationError(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_FILE_OPERATION_ERROR, arg0));
+        return this;
+    }
+
+    /**
      * Add the created action message for the key 'errors.app.database.connection' with parameters.
      * <pre>
      * message: Cannot connect to the database: {0}
@@ -912,6 +939,48 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsNotAvailableEndpoint(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_NOT_AVAILABLE_ENDPOINT));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.invalid.file.name' with parameters.
+     * <pre>
+     * message: submitted file name is invalid
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsInvalidFileName(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_INVALID_FILE_NAME));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.duplicate.file.name' with parameters.
+     * <pre>
+     * message: submitted file already exists
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsDuplicateFileName(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_DUPLICATE_FILE_NAME));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.invalid.file.extension' with parameters.
+     * <pre>
+     * message: submitted file type is invalid
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsInvalidFileExtension(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_INVALID_FILE_EXTENSION));
         return this;
     }
 }

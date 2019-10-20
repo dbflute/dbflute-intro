@@ -5,7 +5,7 @@
 -- #df:assertListZero#
 -- formalized members should have their own formalized date-times
 select MEMBER_ID, MEMBER_NAME, MEMBER_STATUS_CODE, FORMALIZED_DATETIME
-  from MEMBER
+  from `MEMBER`
  where MEMBER_STATUS_CODE = 'FML'
    and FORMALIZED_DATETIME is null
 ;
@@ -13,7 +13,7 @@ select MEMBER_ID, MEMBER_NAME, MEMBER_STATUS_CODE, FORMALIZED_DATETIME
 -- #df:assertListZero#
 -- withdrawal members should have their own withdrawal informations
 select mb.MEMBER_ID, mb.MEMBER_NAME, mb.MEMBER_STATUS_CODE
-  from MEMBER mb
+  from `MEMBER` mb
  where mb.MEMBER_STATUS_CODE = 'WDL'
    and not exists (select wdl.MEMBER_ID
                      from MEMBER_WITHDRAWAL wdl
@@ -26,24 +26,24 @@ select mb.MEMBER_ID, mb.MEMBER_NAME, mb.MEMBER_STATUS_CODE
 --                                                                     TestData Constraint
 --                                                                     ===================
 -- #df:assertListZero#
-select member.MEMBER_ID as MEMBER_ID
-     , count(member.MEMBER_ID) as SELECTED_COUNT
+select mb.MEMBER_ID as MEMBER_ID
+     , count(mb.MEMBER_ID) as SELECTED_COUNT
      , min(address.MEMBER_ADDRESS_ID) as MIN_ADDRESS_ID
      , max(address.MEMBER_ADDRESS_ID) as MAX_ADDRESS_ID
      , CURRENT_DATE as TARGET_DATE
-  from MEMBER member
+  from `MEMBER` mb
     left outer join MEMBER_ADDRESS address
-      on member.MEMBER_ID = address.MEMBER_ID
+      on mb.MEMBER_ID = address.MEMBER_ID
      and address.VALID_BEGIN_DATE <= CURRENT_DATE
      and address.VALID_END_DATE >= CURRENT_DATE
- group by member.MEMBER_ID
-   having count(member.MEMBER_ID) > 1 
+ group by mb.MEMBER_ID
+   having count(mb.MEMBER_ID) > 1 
 ;
 
 -- #df:assertListExists#
-select member.MEMBER_ID, member.MEMBER_NAME
-  from MEMBER member
- where member.BIRTHDATE is null
+select mb.MEMBER_ID, mb.MEMBER_NAME
+  from `MEMBER` mb
+ where mb.BIRTHDATE is null
 ;
 
 -- #df:assertListZero#

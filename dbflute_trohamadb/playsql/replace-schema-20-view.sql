@@ -15,22 +15,22 @@ select product.PRODUCT_ID
 -- treated as no-primary-key table 
 create view SUMMARY_WITHDRAWAL as
 select withdrawal.MEMBER_ID
-     , member.MEMBER_NAME
+     , mb.MEMBER_NAME
      , withdrawal.WITHDRAWAL_REASON_CODE
      , reason.WITHDRAWAL_REASON_TEXT
      , withdrawal.WITHDRAWAL_REASON_INPUT_TEXT
      , withdrawal.WITHDRAWAL_DATETIME
-     , member.MEMBER_STATUS_CODE
+     , mb.MEMBER_STATUS_CODE
      , status.MEMBER_STATUS_NAME
      , (select max(purchase.PURCHASE_PRICE)
           from PURCHASE purchase
-         where purchase.MEMBER_ID = member.MEMBER_ID
+         where purchase.MEMBER_ID = mb.MEMBER_ID
        ) as MAX_PURCHASE_PRICE
   from MEMBER_WITHDRAWAL withdrawal
     left outer join WITHDRAWAL_REASON reason
       on withdrawal.WITHDRAWAL_REASON_CODE = reason.WITHDRAWAL_REASON_CODE
-    left outer join MEMBER member
-      on withdrawal.MEMBER_ID = member.MEMBER_ID
+    left outer join `MEMBER` mb
+      on withdrawal.MEMBER_ID = mb.MEMBER_ID
     left outer join MEMBER_STATUS status
-      on member.MEMBER_STATUS_CODE = status.MEMBER_STATUS_CODE
+      on mb.MEMBER_STATUS_CODE = status.MEMBER_STATUS_CODE
 ;

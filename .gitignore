@@ -17,13 +17,14 @@ log/
 .classpath
 .settings/
 
-# IntelliJ
-/.idea/*
-!/.idea/inspectionProfiles
-!/.idea/codeStyleSettings.xml
-!/.idea/misc.xml
-!/.idea/saveactions_settings.xml
-/*.iml
+# IntelliJ IDEA
+**/.idea/*
+!**/.idea/codeStyles
+!**/.idea/inspectionProfiles
+!**/.idea/encodings.xml
+!**/.idea/misc.xml
+!**/.idea/saveactions_settings.xml
+**/*.iml
 /out
 
 # Java
@@ -49,6 +50,7 @@ latest-data.zip
 /dbflute_hakibadb
 /dbflute_testdb
 /dbflute_maihamadb
+/dbflute_new_maihamadb
 /dbflute-intro.jar
 /dbflute-intro.war
 trial_config.ignored
