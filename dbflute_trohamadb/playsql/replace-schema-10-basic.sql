@@ -1,5 +1,5 @@
 
-create table MEMBER(
+create table `MEMBER`(
     MEMBER_ID INTEGER AUTO_INCREMENT NOT NULL COMMENT '会員ID: mapStyle, map:{ sea = mystic ; land = oneman } そのまま書くぞー',
     MEMBER_NAME VARCHAR(180) NOT NULL COMMENT '会員名称: mapStyle, map:\\{ sea \\= mystic \\; land \\= oneman \\} 記号をエスケープするぞー',
     MEMBER_ACCOUNT VARCHAR(50) NOT NULL COMMENT '会員アカウント: ベタッと \'シングルクォーテーション\' で囲うぞー',
@@ -252,11 +252,11 @@ create table WITHDRAWAL_REASON(
 ) COMMENT='退会理由: 会員に選ばせる定型的な退会理由のマスタ。';
 
 
-alter table MEMBER add constraint FK_MEMBER_MEMBER_STATUS 
+alter table `MEMBER` add constraint FK_MEMBER_MEMBER_STATUS 
     foreign key (MEMBER_STATUS_CODE) references MEMBER_STATUS (MEMBER_STATUS_CODE);
 
 alter table MEMBER_ADDRESS add constraint FK_MEMBER_ADDRESS_MEMBER 
-    foreign key (MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_ADDRESS add constraint FK_MEMBER_ADDRESS_REGION 
     foreign key (REGION_ID) references REGION (REGION_ID);
@@ -265,31 +265,31 @@ alter table MEMBER_FOLLOWING add constraint FK_MEMBER_FOLLOWING_MY_MEMBER
     foreign key (MY_MEMBER_ID) references MEMBER (MEMBER_ID);
 
 alter table MEMBER_FOLLOWING add constraint FK_MEMBER_FOLLOWING_YOUR_MEMBER 
-    foreign key (YOUR_MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (YOUR_MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_LOGIN add constraint FK_MEMBER_LOGIN_MEMBER_STATUS 
     foreign key (LOGIN_MEMBER_STATUS_CODE) references MEMBER_STATUS (MEMBER_STATUS_CODE);
 
 alter table MEMBER_LOGIN add constraint FK_MEMBER_LOGIN_MEMBER 
-    foreign key (MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_SERVICE add constraint FK_MEMBER_SERVICE_MEMBER 
-    foreign key (MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_SERVICE add constraint FK_MEMBER_SERVICE_SERVICE_RANK_CODE 
     foreign key (SERVICE_RANK_CODE) references SERVICE_RANK (SERVICE_RANK_CODE);
 
 alter table MEMBER_SECURITY add constraint FK_MEMBER_SECURITY_MEMBER 
-    foreign key (MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_WITHDRAWAL add constraint FK_MEMBER_WITHDRAWAL_MEMBER 
-    foreign key (MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table MEMBER_WITHDRAWAL add constraint FK_MEMBER_WITHDRAWAL_WITHDRAWAL_REASON 
     foreign key (WITHDRAWAL_REASON_CODE) references WITHDRAWAL_REASON (WITHDRAWAL_REASON_CODE);
 
 alter table PURCHASE add constraint FK_PURCHASE_MEMBER 
-    foreign key (MEMBER_ID) references MEMBER (MEMBER_ID);
+    foreign key (MEMBER_ID) references `MEMBER` (MEMBER_ID);
 
 alter table PURCHASE add constraint FK_PURCHASE_PRODUCT 
     foreign key (PRODUCT_ID) references PRODUCT (PRODUCT_ID);
@@ -307,8 +307,8 @@ alter table PRODUCT_CATEGORY add constraint FK_PRODUCT_CATEGORY_PARENT
     foreign key (PARENT_CATEGORY_CODE) references PRODUCT_CATEGORY (PRODUCT_CATEGORY_CODE);
 
 
-create index IX_MEMBER_MEMBER_NAME ON MEMBER(MEMBER_NAME);
-create index IX_MEMBER_FORMALIZED_DATETIME ON MEMBER(FORMALIZED_DATETIME);
+create index IX_MEMBER_MEMBER_NAME ON `MEMBER`(MEMBER_NAME);
+create index IX_MEMBER_FORMALIZED_DATETIME ON `MEMBER`(FORMALIZED_DATETIME);
 create index IX_MEMBER_FOLLOWING_UNIQUE_REVERSE on MEMBER_FOLLOWING(YOUR_MEMBER_ID, MY_MEMBER_ID);
 create index IX_MEMBER_FOLLOWING_FOLLOW_DATETIME on MEMBER_FOLLOWING(FOLLOW_DATETIME);
 create index IX_MEMBER_LOGIN_DATETIME ON MEMBER_LOGIN(LOGIN_DATETIME);

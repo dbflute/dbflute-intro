@@ -58,7 +58,7 @@ end;
 create procedure SP_RETURN_RESULT_SET()
 begin
   select MEMBER_ID, MEMBER_NAME, BIRTHDATE, FORMALIZED_DATETIME, MEMBER_STATUS_CODE
-    from MEMBER;
+    from `MEMBER`;
 end;
 -- #df:end#
 
@@ -66,7 +66,7 @@ end;
 create procedure SP_RETURN_RESULT_SET_MORE()
 begin
   select MEMBER_ID, MEMBER_NAME, BIRTHDATE, FORMALIZED_DATETIME, MEMBER_STATUS_CODE
-    from MEMBER;
+    from `MEMBER`;
   select * from MEMBER_STATUS;
 end;
 -- #df:end#
@@ -81,7 +81,7 @@ begin
   set v_out_varchar = 'qux';
   set v_inout_varchar = 'quux';
   select MEMBER_ID, MEMBER_NAME, BIRTHDATE, FORMALIZED_DATETIME, MEMBER_STATUS_CODE
-    from MEMBER
+    from `MEMBER`
    where MEMBER_STATUS_CODE = v_in_char;
   select * from MEMBER_STATUS
    where MEMBER_STATUS_CODE = v_in_char;
