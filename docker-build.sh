@@ -13,3 +13,4 @@ docker tag dbflute-intro dbflute/dbflute-intro:${VERSION}
 docker tag dbflute-intro dbflute/dbflute-intro:latest
 
 docker push dbflute/dbflute-intro:${VERSION}
+docker push dbflute/dbflute-intro:latest
