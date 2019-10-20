@@ -65,6 +65,7 @@ public class LogAction extends IntroBaseAction {
         });
     }
 
+    // TODO cabos implements all log (2019-10-20)
     @Execute(urlPattern = "{}/{}/@word")
     public JsonResponse<LogBean> latest(String project, String task) {
         return logPhysicalLogic.findLatestResultFile(project, task).map((file) -> {
