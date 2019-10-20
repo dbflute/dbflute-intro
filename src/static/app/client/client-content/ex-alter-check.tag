@@ -191,10 +191,15 @@
       if (!self.alter.checkedZip) {
         return
       }
+      const unreleasedFileNames = self.unreleasedDir.checkedFiles.map(checkedFile => checkedFile.fileName.replace('READONLY_', ''))
       self.checkedZip = {}
       self.checkedZip.fileName = self.alter.checkedZip.fileName
       self.checkedZip.checkedFiles = []
       self.alter.checkedZip.checkedFiles.forEach(file => {
+        // for hybrid state 0.2.0, 0.2.1
+        if (unreleasedFileNames.includes(file.fileName)) {
+          return
+        }
         self.checkedZip.checkedFiles.push({
           fileName: file.fileName,
           content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
@@ -333,8 +338,8 @@
         self.prepareClient().then(() => {
           self.prepareNgMark()
           self.prepareEditing()
-          self.prepareChecked()
           self.prepareUnreleased()
+          self.prepareChecked()
           self.prepareLatestResult()
         }).finally(() => {
           self.update()
