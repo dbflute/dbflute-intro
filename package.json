@@ -1,6 +1,6 @@
 {
   "name": "dbflute-intro",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "dependencies": {},
   "scripts": {
     "start": "webpack-dev-server --mode development --inline --watch --hot --content-base ./src/static --port 3000 --open",
