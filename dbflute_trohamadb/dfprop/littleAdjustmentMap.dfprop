@@ -319,7 +319,7 @@ map:{
     #  The list of table DB names that need to be quoted.
     #  Specified tables is quoted on auto-generated SQL.
     #
-    ; quoteTableNameList = list:{WHITE_QUOTED ; WHITE_QUOTED_REF}
+    ; quoteTableNameList = list:{MEMBER ; WHITE_QUOTED ; WHITE_QUOTED_REF}
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

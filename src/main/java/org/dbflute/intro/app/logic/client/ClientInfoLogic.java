@@ -114,6 +114,14 @@ public class ClientInfoLogic {
     //                                                                        Client Model
     //                                                                        ============
     public OptionalThing<ClientModel> findClient(String clientProject) {
+        try {
+            return doFindClient(clientProject);
+        } catch (RuntimeException e) {
+            throw new ClientReadFailureException("Failed to find DBFlute client: " + clientProject, e);
+        }
+    }
+
+    private OptionalThing<ClientModel> doFindClient(String clientProject) {
         if (!existsClientProject(clientProject)) {
             return OptionalThing.ofNullable(null, () -> {
                 throw new IllegalStateException("Not found the client project: " + clientProject);
@@ -172,9 +180,15 @@ public class ClientInfoLogic {
     //                                            ----------
     private BasicInfoMap prepareBasicInfoMap(Map<String, Map<String, Object>> dfpropMap) {
         final Map<String, Object> dataMap = dfpropMap.get("basicInfoMap.dfprop");
-        final CDef.TargetDatabase databaseType = toCls(CDef.TargetDatabase.class, dataMap, "database");
-        final CDef.TargetLanguage languageType = toCls(CDef.TargetLanguage.class, dataMap, "targetLanguage");
-        final CDef.TargetContainer containerType = toCls(CDef.TargetContainer.class, dataMap, "targetContainer");
+
+        // support implicit default value of DBFlute here by jflute (2019/10/24)
+        // (e.g. targetLanguage and targetContainer may be omitted in non-generate client)
+        final CDef.TargetDatabase databaseType = toClsOrDefault(CDef.TargetDatabase.class, dataMap, "database", null);
+        final CDef.TargetLanguage languageType =
+                toClsOrDefault(CDef.TargetLanguage.class, dataMap, "targetLanguage", CDef.TargetLanguage.Java);
+        final CDef.TargetContainer containerType =
+                toClsOrDefault(CDef.TargetContainer.class, dataMap, "targetContainer", CDef.TargetContainer.LastaDi);
+
         final String generationPackageBase = required(dataMap, "packageBase");
         return new BasicInfoMap(databaseType, languageType, containerType, generationPackageBase);
     }
@@ -282,15 +296,41 @@ public class ClientInfoLogic {
     //                                                                        Assist Logic
     //                                                                        ============
     @SuppressWarnings("unchecked")
-    private <CLS extends Classification> CLS toCls(Class<CLS> cdefType, Map<String, Object> map, String key) {
-        return (CLS) LaClassificationUtil.findByCode(cdefType, required(map, key)).get();
+    private <CLS extends Classification> CLS toClsOrDefault(Class<CLS> cdefType, Map<String, Object> map, String key, CLS defaultCls) {
+        final String requiredCode = orDefault(map, key, defaultCls != null ? defaultCls.code() : null); // default may be null (then completely required)
+        return (CLS) LaClassificationUtil.findByCode(cdefType, requiredCode).get();
     }
 
     private String required(Map<String, Object> map, String key) {
-        final Object value = map.get(key);
+        return orDefault(map, key, null);
+    }
+
+    private String orDefault(Map<String, Object> map, String key, Object defaultValue) { // default may be null (then completely required)
+        final Object value = map.getOrDefault(key, defaultValue);
         if (value == null) {
-            throw new IllegalStateException("Not found the key in the map: key=" + key + ", map=" + map.keySet());
+            throw new ClientDfPropKeyRequiredException("Not found the key in the map: key=" + key + ", map=" + map.keySet());
         }
         return (String) value;
+    }
+
+    // ===================================================================================
+    //                                                                           Exception
+    //                                                                           =========
+    private static class ClientReadFailureException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public ClientReadFailureException(String msg, Throwable cause) {
+            super(msg, cause);
+        }
+    }
+
+    private static class ClientDfPropKeyRequiredException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public ClientDfPropKeyRequiredException(String msg) {
+            super(msg);
+        }
     }
 }
