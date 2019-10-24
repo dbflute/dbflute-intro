@@ -213,8 +213,13 @@ public class ClientInfoLogic {
     // -----------------------------------------------------
     //                                              Document
     //                                              --------
-    private DocumentMap prepareDocumentMap(Map<String, Map<String, Object>> dfpropMap) {
-        final Map<String, Object> dataMap = dfpropMap.get("documentMap.dfprop");
+    private DocumentMap prepareDocumentMap(Map<String, Map<String, Object>> dfpropMap) { // null allowed
+        final Map<String, Object> dataMap = dfpropMap.get("documentMap.dfprop"); // already resolved about "Definition" suffix here
+        // If documentMap.dfprop does not exist, it returns null, because it is not required.
+        if (dataMap == null) {
+            return null;
+        }
+
         final DocumentMap documentMap = new DocumentMap();
         documentMap.setDbCommentOnAliasBasis(Boolean.parseBoolean((String) dataMap.get("isDbCommentOnAliasBasis")));
         documentMap.setAliasDelimiterInDbComment((String) dataMap.get("aliasDelimiterInDbComment"));
@@ -228,7 +233,7 @@ public class ClientInfoLogic {
     //                                            OutsideSql
     //                                            ----------
     private OutsideSqlMap prepareOutsideSqlMap(Map<String, Map<String, Object>> dfpropMap) {
-        final Map<String, Object> dataMap = dfpropMap.get("outsideSqlMap.dfprop");
+        final Map<String, Object> dataMap = dfpropMap.get("outsideSqlMap.dfprop"); // already resolved about "Definition" suffix here
         // If outsideSqlMap.dfprop does not exist, it returns null, because it is not required.
         if (dataMap == null) {
             return null;
@@ -253,7 +258,7 @@ public class ClientInfoLogic {
     }
 
     private SystemUserMap prepareSystemUserModel(Map<String, Map<String, Object>> dfpropMap) {
-        final Map<String, Object> replaceSchemaMap = dfpropMap.get("replaceSchemaMap.dfprop");
+        final Map<String, Object> replaceSchemaMap = dfpropMap.get("replaceSchemaMap.dfprop"); // already resolved about "Definition" suffix here
         if (replaceSchemaMap != null) {
             @SuppressWarnings("unchecked")
             final Map<String, Object> additionalUserMap = (Map<String, Object>) replaceSchemaMap.get("additionalUserMap");

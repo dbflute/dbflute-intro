@@ -73,14 +73,12 @@ public class ClientRowResult {
 
     public static class OptionPart {
 
-        @Required
+        // documentMap.dfprop is not required so may be null
+        // #thinking jflute however... can boolean property be false as default? (2019/10/24)
         public Boolean dbCommentOnAliasBasis;
         public String aliasDelimiterInDbComment;
-        @Required
         public Boolean checkColumnDefOrderDiff;
-        @Required
         public Boolean checkDbCommentDiff;
-        @Required
         public Boolean checkProcedureDiff;
         public Boolean generateProcedureParameterBean; // If outsideSqlMap.dfprop does not exist, this property is null.
         public String procedureSynonymHandlingType;
