@@ -15,16 +15,16 @@
  */
 package org.dbflute.intro.app.web.client;
 
+import java.io.File;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
-
-import javax.annotation.Resource;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * @author jflute
@@ -61,12 +61,12 @@ public class ClientActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<ClientOperationResult> response = action.operation(UnitIntroTestCase.TEST_CLIENT_PROJECT);
+        JsonResponse<ClientBasicResult> response = action.operation(UnitIntroTestCase.TEST_CLIENT_PROJECT);
 
         // ## Assert ##
         showJson(response);
-        TestingJsonData<ClientOperationResult> jsonData = validateJsonData(response);
-        ClientOperationResult operation = jsonData.getJsonResult();
+        TestingJsonData<ClientBasicResult> jsonData = validateJsonData(response);
+        ClientBasicResult operation = jsonData.getJsonResult();
         assertEquals(UnitIntroTestCase.TEST_CLIENT_PROJECT, operation.projectName);
     }
 

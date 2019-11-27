@@ -23,7 +23,7 @@ import org.lastaflute.web.validation.Required;
  * @author subaru
  * @author cabos
  */
-public class ClientOperationResult {
+public class ClientBasicResult {
 
     // ===================================================================================
     //                                                                         Client Info
