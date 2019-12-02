@@ -170,4 +170,8 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     protected File getTestPlaysqlDir() {
         return new File(getProjectDir(), TEST_CLIENT_PATH + PLAYSQL_DIR_PATH);
     }
+
+    protected File prepareFileForTestClient(String filePath) {
+        return new File(getProjectDir(), TEST_CLIENT_PATH + "/" + filePath);
+    }
 }

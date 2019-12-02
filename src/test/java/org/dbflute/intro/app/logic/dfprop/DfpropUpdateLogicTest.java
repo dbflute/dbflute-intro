@@ -29,11 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+import org.dbflute.intro.app.model.client.document.*;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 
@@ -58,7 +54,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         assertFalse(notExistFile.exists());
 
         // ## Act ##
-        logic.doReplaceSchemaPolicyMap(notExistFile, createInputWholeMap(targetType, true));
+        logic.doReplaceSchemaPolicyMapWithInput(notExistFile, createInputWholeMap(targetType, true));
 
         // ## Assert ##
         File schemaPolicyMapFile = prepareFileForTestClient("not/exist/schemaPolicyMap.dfprop");
@@ -82,7 +78,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
 
         // ## Act ##
         SchemaPolicyMap inputMap = infoLogic.parseSchemePolicyMap(inputFile);
-        logic.doReplaceSchemaPolicyMap(outputFile, inputMap);
+        logic.doReplaceSchemaPolicyMapWithInput(outputFile, inputMap);
 
         // ## Assert ##
         BufferedReader inputReader = new BufferedReader(new FileReader(inputFile));
@@ -119,7 +115,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         final List<SchemaPolicyWholeMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
         // ## Act ##
-        logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(targetType, true));
+        logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(targetType, true));
 
         // ## Assert ##
         SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapThemeByTestClient(targetType, infoLogic);
@@ -142,7 +138,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
         final List<SchemaPolicyWholeMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
         // ## Act ##
-        logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(targetType, false));
+        logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(targetType, false));
 
         // ## Assert ##
         SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapThemeByTestClient(targetType, infoLogic);
@@ -165,7 +161,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(themeType, true));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(themeType, true));
 
             // ## Assert ##
             SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapThemeByTestClient(themeType, infoLogic);
@@ -189,7 +185,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(themeType, false));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(themeType, false));
             log(themeType.code + " was replaced.");
 
             // ## Assert ##
@@ -216,7 +212,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(themeType, true));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(themeType, true));
 
             // ## Assert ##
             SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapTheme(schemaPolicyMapFile, themeType, infoLogic);
@@ -243,7 +239,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyTableMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputTableMap(themeType, true));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputTableMap(themeType, true));
 
             // ## Assert ##
             SchemaPolicyTableMap.Theme afterTheme = fetchTableMapTheme(schemaPolicyMapFile, themeType, infoLogic);
@@ -267,7 +263,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyTableMap.Theme> beforeThemeList = infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputTableMap(themeType, false));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputTableMap(themeType, false));
 
             // ## Assert ##
             SchemaPolicyTableMap.Theme afterTheme = fetchTableMapTheme(schemaPolicyMapFile, themeType, infoLogic);
@@ -295,7 +291,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
                     infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).columnMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputColumnMap(themeType, true));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputColumnMap(themeType, true));
             log(themeType + "was replaced to true.");
 
             // ## Assert ##
@@ -321,7 +317,7 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
                     infoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).columnMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMap(schemaPolicyMapFile, createInputColumnMap(themeType, false));
+            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputColumnMap(themeType, false));
             log(themeType + "was replaced to false.");
 
             // ## Assert ##
@@ -463,10 +459,6 @@ public class DfpropUpdateLogicTest extends UnitIntroTestCase {
     }
     private File prepareFileForTestResource(String fileName) {
         return new File(getProjectDir(), TEST_RESOURCE_BASE + "/dfprop/" + fileName);
-    }
-
-    private File prepareFileForTestClient(String filePath) {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + "/" + filePath);
     }
 
     private SchemaPolicyMap createInputWholeMap(SchemaPolicyWholeMap.ThemeType themeType, boolean isActive) {

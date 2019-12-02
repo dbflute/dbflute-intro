@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.helper.dfmap.DfMapStyle;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.model.client.document.DocumentMap;
-import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
-import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.intro.app.model.client.document.*;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
@@ -160,13 +155,17 @@ public class DfpropUpdateLogic {
     }
 
     public void replaceSchemaPolicyMap(String project, SchemaPolicyMap inputSchemaPolicyMap) {
-        File schemaPolicyMapFile = new File(dfpropPhysicalLogic.buildDfpropFilePath(project, "schemaPolicyMap.dfprop"));
-        doReplaceSchemaPolicyMap(schemaPolicyMapFile, inputSchemaPolicyMap);
+        File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
+        doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, inputSchemaPolicyMap);
     }
 
-    protected void doReplaceSchemaPolicyMap(File file, SchemaPolicyMap input) {
+    protected void doReplaceSchemaPolicyMapWithInput(File file, SchemaPolicyMap input) {
         SchemaPolicyMap base = dfpropInfoLogic.parseSchemePolicyMap(file);
         SchemaPolicyMap merge = mergeSchemaPolicyMap(base, input);
+        doReplaceSchemaPolicyMap(file, merge);
+    }
+
+    private void doReplaceSchemaPolicyMap(File file, SchemaPolicyMap schemaPolicyMap) {
         try {
             new DfMapFile() {
                 protected DfMapStyle newMapStyle() {
@@ -177,10 +176,12 @@ public class DfpropUpdateLogic {
 
                         private String scope = "";
 
+                        @Override
                         protected boolean isIgnoreEqualAsEscapeControlMarkInList() {
                             return true;
                         }
 
+                        @Override
                         public String toMapString(Map<String, ? extends Object> map) {
                             final StringBuilder sb = new StringBuilder();
                             doBuildOtherCommentString(sb, "beginningComments");
@@ -192,11 +193,13 @@ public class DfpropUpdateLogic {
                         @SuppressWarnings("unchecked")
                         private void doBuildOtherCommentString(StringBuilder sb, String key) {
                             final String scope = "other";
-                            if (merge.comments.containsKey(scope) && ((Map<String, Object>) merge.comments.get(scope)).containsKey(key)) {
-                                sb.append(((Map<String, Object>) merge.comments.get(scope)).get(key));
+                            if (schemaPolicyMap.comments.containsKey(scope) && ((Map<String, Object>) schemaPolicyMap.comments.get(
+                                    scope)).containsKey(key)) {
+                                sb.append(((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key));
                             }
                         }
 
+                        @Override
                         protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
                                 String currentIndent, int index, String key, Object value) {
                             if (SCOPE_LIST.contains(key)) {
@@ -206,6 +209,7 @@ public class DfpropUpdateLogic {
                             super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, index, key, value);
                         }
 
+                        @Override
                         protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent,
                                 String currentIndent, int index, Object value) {
                             doBuildCommentStringCurrentElement(sb, currentIndent, (String) value);
@@ -214,8 +218,9 @@ public class DfpropUpdateLogic {
 
                         @SuppressWarnings("unchecked")
                         private void doBuildCommentStringCurrentElement(StringBuilder sb, String currentIndent, String key) {
-                            if (merge.comments.get(scope) != null && ((Map<String, Object>) merge.comments.get(scope)).get(key) != null) {
-                                String commentString = (String) ((Map<String, Object>) merge.comments.get(scope)).get(key);
+                            if (schemaPolicyMap.comments.get(scope) != null
+                                    && ((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key) != null) {
+                                String commentString = (String) ((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key);
                                 String[] comments = commentString.split("\n");
                                 if (comments.length == 0) { // case of containing only '\n'
                                     sb.append(commentString);
@@ -228,7 +233,7 @@ public class DfpropUpdateLogic {
                         }
                     };
                 }
-            }.writeMap(FileUtils.openOutputStream(file), merge.convertToMap());
+            }.writeMap(FileUtils.openOutputStream(file), schemaPolicyMap.convertToMap());
         } catch (IOException e) {
             throw new IllegalStateException("Failed to write dfprop file: " + file.getAbsolutePath(), e);
         }
@@ -267,5 +272,24 @@ public class DfpropUpdateLogic {
         List<SchemaPolicyColumnMap.Theme> themeList =
                 Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
         return new SchemaPolicyColumnMap(themeList, base.statementList);
+    }
+
+    public void registerSchemaPolicyStatement(String project, String statement, String type) {
+        File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
+        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(schemaPolicyMapFile);
+        if ("tableMap".equals(type)) {
+            List<String> statements = new ArrayList<>(schemaPolicyMap.tableMap.statementList);
+            statements.add(statement);
+            schemaPolicyMap.tableMap.statementList = statements;
+        } else if ("columnMap".equals(type)) {
+            List<String> statements = new ArrayList<>(schemaPolicyMap.columnMap.statementList);
+            statements.add(statement);
+            schemaPolicyMap.columnMap.statementList = statements;
+        }
+        doReplaceSchemaPolicyMap(schemaPolicyMapFile, schemaPolicyMap);
+    }
+
+    private File findSchemaPolicyMapFile(String project) {
+        return new File(dfpropPhysicalLogic.buildDfpropFilePath(project, "schemaPolicyMap.dfprop"));
     }
 }
