@@ -150,6 +150,7 @@ public class DfpropAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word/@word")
     public JsonResponse<Void> schemapolicyStatementRegister(String project, DfpropRegisterSchemaPolicyStatementBody body) {
+        validate(body, messages -> {});
         String statement = body.statement;
         String type = body.type;
         dfpropUpdateLogic.registerSchemaPolicyStatement(project, statement, type);

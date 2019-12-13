@@ -99,77 +99,8 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ statementModal }" statement="{ statement }" class="large" ref="statementModal">
-    <div class="ui form">
-      <div class="field">
-        <label>Subject</label>
-        <input class="ui search" type="text" name="subject" ref="subject" value="{ opts.statement.subject }">
-      </div>
-      <div class="grouped fields">
-        <label>Condition</label>
-        <div class="ui icon input field" each="{ condition, index in opts.statement.conditions }">
-          <input type="text" name="condition" ref="condition_{index}" value="{ condition }">
-          <i class="delete link icon" if={opts.statement.conditions.length > 1} onclick="{ opts.statement.deleteConditionField.bind(this, index) }"></i>
-        </div>
-        <div class="ui grid">
-          <div class="four wide right floated column">
-            <i class="plus link icon" style="float: right" onclick="{ opts.statement.addConditionField }" ></i>
-            <div class="inline fields" style="float: right" show={opts.statement.conditions.length > 1}>
-              <div class="field">
-                <div class="ui radio checkbox">
-                  <input type="radio" name="condition-mode" ref="isAndCondition" checked="checked">
-                  <label>and</label>
-                </div>
-              </div>
-              <div class="field">
-                <div class="ui radio checkbox">
-                  <input type="radio" name="condition-mode">
-                  <label>or</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="grouped fields">
-        <label>Expected</label>
-        <div class="ui icon input field" each="{ expected, index in opts.statement.expecteds }">
-          <input type="text" name="expected" ref="expected_{index}" value="{ expected }">
-          <i class="delete link icon" if={opts.statement.expecteds.length > 1} onclick="{ opts.statement.deleteExpectedField.bind(this, index) }"></i>
-        </div>
-        <div class="ui grid">
-          <div class="four wide right floated column">
-              <i class="plus link icon" style="float: right" onclick="{ opts.statement.addExpectedField }" ></i>
-              <div class="inline fields" style="float: right" show={opts.statement.expecteds.length > 1}>
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked">
-                    <label>and</label>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="ui radio checkbox">
-                    <input type="radio" name="expected-mode">
-                    <label>or</label>
-                  </div>
-                </div>
-              </div>
-          </div>
-        </div>
-        <div class="field">
-          <label>Error Message</label>
-          <input type="text" name="comment" ref="comment" value="{ opts.statement.comment }">
-        </div>
-
-        <div class="ui divider"></div>
-        <div class="field">
-          <label>preview</label>
-          <div class="ui inverted segment">
-            <p>{ opts.statement.buildStatement() }</p>
-          </div>
-        </div>
-      </div>
-    </div>
+  <su-modal modal="{ statementModal }" class="large" ref="statementModal">
+    <statement-form></statement-form>
   </su-modal>
 
   <style>
@@ -197,94 +128,31 @@
     //                                                                          ==========
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
-      self.prepareComponents()
-      self.registerModalEvent()
+      this.prepareComponents(opts.projectName)
+      this.registerModalEvent()
     })
 
-    this.buildStatement = () => {
-      let sModelRefs = self.refs.statementModal.refs
-      let subject = sModelRefs.subject.value ? sModelRefs.subject.value : '<Subject>'
-      let statementPrefix = 'if ' + subject + ' is '
+    this.prepareSchemaPolicy = (projectName) => {
+      ApiFactory.schemaPolicy(projectName).then(json => {
+        self.schemaPolicy = json
+        self.update()
+      })
+    }
 
-      let conditionOperator = sModelRefs.isAndCondition.checked ? ' and ' : ' or '
-      let conditions = []
-      for (let i = 0; i < self.statement.conditions.length; i++) {
-        conditions.push(sModelRefs['condition_' + i].value)
-      }
-      let joinedConds = conditions.join(conditionOperator)
-      let conditionsStr = joinedConds ? joinedConds : '<Condition>'
-
-      let expectedOperator = sModelRefs.isAndExpected.checked ? ' and ' : ' or '
-      let expecteds = []
-      for (let i = 0; i < self.statement.expecteds.length; i++) {
-        expecteds.push(sModelRefs['expected_' + i].value)
-      }
-      let joinedExps = expecteds.join(expectedOperator)
-      let expectedsStr = joinedExps ? joinedExps : '<Expected>'
-
-      let comment = sModelRefs.comment.value ? ' => ' + sModelRefs.comment.value : ''
-      return statementPrefix + conditionsStr + ' then ' + expectedsStr + comment
+    this.prepareComponents = (projectName) => {
+      self.latestResult = riot.mount('latest-result', { projectName: projectName, task: 'doc' })[0]
+      self.tableMapStatementForm = riot.mount('statement-form', { projectName: projectName, type: 'tableMap'})[0]
+      self.updateLatestResult(self.client)
     }
 
     this.registerModalEvent = () => {
       self.refs.statementModal.on('submit', () => {
-        // TODO
+        self.tableMapStatementForm.register()
       })
     }
 
     this.showModal = () => {
       self.refs.statementModal.show()
-    }
-
-    this.statement = {
-      subject: '',
-      conditions: [''],
-      expecteds: [''],
-      comment: '',
-      buildStatement: () => {
-        return self.buildStatement()
-      },
-      addConditionField: () => {
-        self.statement.conditions.push('')
-      },
-      saveConditionField: () => {
-        for (let i = 0; i < self.statement.conditions.length; i++) {
-          self.statement.conditions[i] = self.refs.statementModal.refs['condition_' + i].value
-        }
-      },
-      deleteConditionField: (index) => {
-        self.statement.saveConditionField()
-        self.statement.conditions.splice(index, 1)
-      },
-      addExpectedField: () => {
-        self.statement.expecteds.push('')
-      },
-      saveExpectedField: () => {
-        for (let i = 0; i < self.statement.expecteds.length; i++) {
-          self.statement.expecteds[i] = self.refs.statementModal.refs['expected_' + i].value
-        }
-      },
-      deleteExpectedField: (index) => {
-        self.statement.saveExpectedField()
-        self.statement.expecteds.splice(index, 1)
-      },
-    }
-
-    this.statementModal = {
-      header: 'Add Statement',
-      buttons: [{
-        text: 'Submit',
-        action: 'submit',
-        type: 'primary',
-        icon: 'checkmark'
-      }, {
-        text: 'Cancel'
-      }],
-    }
-
-    this.prepareComponents = () => {
-      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
-      self.updateLatestResult(self.client)
     }
 
     this.updateLatestResult = (client) => {
@@ -330,6 +198,18 @@
       }
     }
 
+    this.statementModal = {
+      header: 'Add Statement',
+      buttons: [{
+        text: 'Submit',
+        action: 'submit',
+        type: 'primary',
+        icon: 'checkmark'
+      }, {
+        text: 'Cancel'
+      }],
+    }
+
     this.tabTitles = {
       wholeMap : 'Whole Schema Policy',
       tableMap : 'Table Schema Policy',
@@ -339,13 +219,6 @@
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    this.prepareSchemaPolicy = (projectName) => {
-      ApiFactory.schemaPolicy(projectName).then(json => {
-        self.schemaPolicy = json
-        self.update()
-      })
-    }
-
     this.editSchemaPolicyMap = (targetMap, typeCode) => {
       const targetTheme = this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode)
       const toggledActiveStatus = !targetTheme.isActive
