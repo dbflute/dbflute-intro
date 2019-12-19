@@ -56,9 +56,9 @@ public class SettingsAction extends IntroBaseAction {
     //                                              Settings
     //                                              --------
     @Execute
-    public JsonResponse<SettingsResult> index(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+    public JsonResponse<SettingsResult> index(String clientName) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
         SettingsResult result = mappingToSettingsResult(clientModel);
         return asJson(result);

@@ -89,8 +89,8 @@ public class DatabaseInfoMap {
     // ===================================================================================
     //                                                                            Physical
     //                                                                            ========
-    public File findDfpropFile(String clientProject) {
-        return clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
+    public File findDfpropFile(String clientName) {
+        return clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
     }
 
     // ===================================================================================

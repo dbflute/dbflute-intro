@@ -52,9 +52,9 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    public String execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env)
+    public String execute(String clientName, List<CDef.TaskType> taskTypeList, OptionalThing<String> env)
             throws TaskErrorResultException {
-        logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
+        logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientName, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         final StringBuilder logSb = new StringBuilder();
         for (ProcessBuilder processBuilder : dbfluteTaskList) {
@@ -64,7 +64,7 @@ public class TaskExecutionLogic {
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            final String clientPath = introPhysicalLogic.buildClientPath(clientProject);
+            final String clientPath = introPhysicalLogic.buildClientPath(clientName);
             processBuilder.directory(new File(clientPath));
             logSb.append(executeCommand(processBuilder));
         }

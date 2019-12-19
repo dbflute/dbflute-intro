@@ -127,10 +127,10 @@ public class ClientAction extends IntroBaseAction {
         //        });
         //    }
 
-        String clientProject = clientModel.getProjectInfra().getClientProject();
-        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
-        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
-        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
+        String clientName = clientModel.getProjectInfra().getClientProject();
+        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
+        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
+        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientName);
         return rowBean;
     }
 
@@ -177,9 +177,9 @@ public class ClientAction extends IntroBaseAction {
     //                                             Operation
     //                                             ---------
     @Execute
-    public JsonResponse<ClientBasicResult> operation(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+    public JsonResponse<ClientBasicResult> operation(String clientName) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
         ClientBasicResult detailBean = mappingToOperationResult(clientModel);
         return asJson(detailBean);
@@ -188,14 +188,14 @@ public class ClientAction extends IntroBaseAction {
     private ClientBasicResult mappingToOperationResult(ClientModel clientModel) {
         ClientBasicResult operation = new ClientBasicResult();
         prepareBasic(operation, clientModel);
-        String clientProject = clientModel.getProjectInfra().getClientProject();
-        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
-        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
-        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
-        operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
+        String clientName = clientModel.getProjectInfra().getClientProject();
+        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
+        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
+        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientName);
+        operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientName);
         boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
         if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
-            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientProject);
+            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientName);
         }
         return operation;
     }
@@ -296,8 +296,8 @@ public class ClientAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> delete(String clientProject) {
-        clientUpdateLogic.deleteClient(clientProject);
+    public JsonResponse<Void> delete(String clientName) {
+        clientUpdateLogic.deleteClient(clientName);
         return JsonResponse.asEmptyBody();
     }
 }

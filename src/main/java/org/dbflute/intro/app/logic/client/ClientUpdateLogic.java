@@ -60,13 +60,13 @@ public class ClientUpdateLogic {
     //                                                                       Create Client
     //                                                                       =============
     public void createClient(ClientModel clientModel) {
-        final String clientProject = clientModel.getProjectInfra().getClientProject();
-        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
-        readyCreateClient(clientModel, clientProject, clientDir);
+        final String clientName = clientModel.getProjectInfra().getClientProject();
+        final File clientDir = introPhysicalLogic.findClientDir(clientName);
+        readyCreateClient(clientModel, clientName, clientDir);
         try {
-            replaceClientFilePlainly(clientModel, clientProject);
-            replaceClientFileRegex(clientModel, clientProject);
-            copyJarFileToExtlib(clientModel, clientProject);
+            replaceClientFilePlainly(clientModel, clientName);
+            replaceClientFileRegex(clientModel, clientName);
+            copyJarFileToExtlib(clientModel, clientName);
 
             // #pending: SchemaSyncCheck, Document Options, SystemUser, AdditionalSchema by jflute
         } catch (RuntimeException e) {
@@ -75,27 +75,27 @@ public class ClientUpdateLogic {
         }
     }
 
-    private void readyCreateClient(ClientModel clientModel, String clientProject, File clientDir) {
+    private void readyCreateClient(ClientModel clientModel, String clientName, File clientDir) {
         if (!clientDir.exists()) { // yes, new-create!
             clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
         } else { // no no no no, already exists
             // #hope to be application excecption by jflute
-            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientProject=" + clientProject);
+            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + clientName);
         }
     }
 
-    private void replaceClientFilePlainly(ClientModel clientModel, String clientProject) {
+    private void replaceClientFilePlainly(ClientModel clientModel, String clientName) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         {
             final ProjectInfra projectInfra = clientModel.getProjectInfra();
             final Map<String, Object> replaceMap = projectInfra.prepareInitReplaceMap();
-            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientProject), replaceMap);
-            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientProject), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientName), replaceMap);
         }
         {
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("torque.project = dfclient", "torque.project = " + clientProject);
-            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(clientProject), replaceMap);
+            replaceMap.put("torque.project = dfclient", "torque.project = " + clientName);
+            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(clientName), replaceMap);
         }
         {
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
@@ -104,21 +104,21 @@ public class ClientUpdateLogic {
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
             replaceMap.put("@packageBase@", basicInfoMap.getPackageBase());
-            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(clientProject), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(clientName), replaceMap);
         }
         {
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            fileReplaceMap.put(databaseInfoMap.findDfpropFile(clientProject), databaseInfoMap.prepareInitReplaceMap());
+            fileReplaceMap.put(databaseInfoMap.findDfpropFile(clientName), databaseInfoMap.prepareInitReplaceMap());
         }
         doReplaceClientFile(fileReplaceMap, false);
     }
 
-    private void replaceClientFileRegex(ClientModel clientModel, final String clientProject) {
+    private void replaceClientFileRegex(ClientModel clientModel, final String clientName) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
         replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getProjectInfra().getDbfluteVersion());
-        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientProject), replaceMap);
-        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientProject), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientName), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientName), replaceMap);
         doReplaceClientFile(fileReplaceMap, true);
     }
 
@@ -138,9 +138,9 @@ public class ClientUpdateLogic {
         }
     }
 
-    private void copyJarFileToExtlib(ClientModel clientModel, String clientProject) {
+    private void copyJarFileToExtlib(ClientModel clientModel, String clientName) {
         clientModel.getProjectInfra().getJdbcDriverExtlibFile().ifPresent(jarFile -> {
-            final File extlibDir = clientPhysicalLogic.findExtlibDir(clientProject);
+            final File extlibDir = clientPhysicalLogic.findExtlibDir(clientName);
             final String fileName = jarFile.getFile().getName();
             final File previousJar = new File(extlibDir, fileName);
             try {
@@ -169,23 +169,23 @@ public class ClientUpdateLogic {
     }
 
     private void doUpdateClient(ClientModel clientModel) {
-        final String clientProject = clientModel.getProjectInfra().getClientProject();
-        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
+        final String clientName = clientModel.getProjectInfra().getClientProject();
+        final File clientDir = introPhysicalLogic.findClientDir(clientName);
         // done hakiba 2016/12/27 make readyClient for update
-        readyUpdateClient(clientModel, clientProject, clientDir);
+        readyUpdateClient(clientModel, clientName, clientDir);
 
         // #for_now hakiba update only minimum database items here (for settings), may increase at future (2017/01/19)
-        replaceDfpropDatabaseInfoMap(clientModel, clientProject);
+        replaceDfpropDatabaseInfoMap(clientModel, clientName);
     }
 
-    private void readyUpdateClient(ClientModel clientModel, String clientProject, File clientDir) {
+    private void readyUpdateClient(ClientModel clientModel, String clientName, File clientDir) {
         if (!clientDir.exists()) { // no no no no, new-create
-            throw new IllegalStateException("The DBFlute client has already been deleted: clientProject=" + clientProject);
+            throw new IllegalStateException("The DBFlute client has already been deleted: clientName=" + clientName);
         }
     }
 
-    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
+    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientName) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
         final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
 
@@ -210,8 +210,8 @@ public class ClientUpdateLogic {
     // ===================================================================================
     //                                                                       Delete Client
     //                                                                       =============
-    public void deleteClient(String clientProject) {
-        final File clientDir = introPhysicalLogic.findClientDir(clientProject);
+    public void deleteClient(String clientName) {
+        final File clientDir = introPhysicalLogic.findClientDir(clientName);
         try {
             FileUtils.deleteDirectory(clientDir);
         } catch (IOException e) {
