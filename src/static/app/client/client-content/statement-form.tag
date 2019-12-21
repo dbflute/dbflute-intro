@@ -134,9 +134,12 @@
       return statementPrefix + conditionsStr + ' then ' + expectedsStr + comment
     }
 
-    this.register = () => {
-      let body = {statement : self.buildStatement(), type: self.opts.type}
-      ApiFactory.registerSchemapolicyStatement(self.opts.projectName, body)
+    this.register = (callback) => {
+      let statement = self.buildStatement()
+      let body = {statement : statement, type: self.opts.type}
+      ApiFactory.registerSchemapolicyStatement(self.opts.projectName, body).then(() => {
+        callback(statement)
+      })
     }
   </script>
 </statement-form>

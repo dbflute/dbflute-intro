@@ -99,7 +99,7 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ statementModal }" class="large" ref="statementModal">
+  <su-modal modal="{ tableMapStatementModal }" class="large" ref="tableMapStatementModal">
     <statement-form></statement-form>
   </su-modal>
 
@@ -146,13 +146,16 @@
     }
 
     this.registerModalEvent = () => {
-      self.refs.statementModal.on('submit', () => {
-        self.tableMapStatementForm.register()
+      self.refs.tableMapStatementModal.on('submit', () => {
+        self.tableMapStatementForm.register((statement) => {
+          self.schemaPolicy.tableMap.statementList.push(statement)
+          self.update()
+        })
       })
     }
 
     this.showModal = () => {
-      self.refs.statementModal.show()
+      self.refs.tableMapStatementModal.show()
     }
 
     this.updateLatestResult = (client) => {
@@ -198,7 +201,7 @@
       }
     }
 
-    this.statementModal = {
+    this.tableMapStatementModal = {
       header: 'Add Statement',
       buttons: [{
         text: 'Submit',
