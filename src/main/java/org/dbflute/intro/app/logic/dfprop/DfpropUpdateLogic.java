@@ -274,19 +274,21 @@ public class DfpropUpdateLogic {
         return new SchemaPolicyColumnMap(themeList, base.statementList);
     }
 
-    public void registerSchemaPolicyStatement(String project, String statement, String type) {
+    public String registerSchemaPolicyStatement(String project, SchemaPolicyStatement statement) {
         File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
         SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(schemaPolicyMapFile);
-        if ("tableMap".equals(type)) {
+        String builtStatement = statement.buildStatement();
+        if ("tableMap".equals(statement.mapType)) {
             List<String> statements = new ArrayList<>(schemaPolicyMap.tableMap.statementList);
-            statements.add(statement);
+            statements.add(builtStatement);
             schemaPolicyMap.tableMap.statementList = statements;
-        } else if ("columnMap".equals(type)) {
+        } else if ("columnMap".equals(statement.mapType)) {
             List<String> statements = new ArrayList<>(schemaPolicyMap.columnMap.statementList);
-            statements.add(statement);
+            statements.add(builtStatement);
             schemaPolicyMap.columnMap.statementList = statements;
         }
         doReplaceSchemaPolicyMap(schemaPolicyMapFile, schemaPolicyMap);
+        return builtStatement;
     }
 
     private File findSchemaPolicyMapFile(String project) {

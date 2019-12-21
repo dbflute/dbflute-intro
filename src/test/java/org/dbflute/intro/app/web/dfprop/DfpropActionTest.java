@@ -17,6 +17,8 @@ package org.dbflute.intro.app.web.dfprop;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -24,11 +26,11 @@ import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.validation.exception.ValidationErrorException;
 
 /**
  * @author deco
@@ -83,42 +85,197 @@ public class DfpropActionTest extends UnitIntroTestCase {
         assertEquals(body.content, content);
     }
 
-    public void test_schemapolicy_statement_register_tableMap() throws Exception {
-        // ## Arrange ##
-        DfpropAction action = new DfpropAction();
-        inject(action);
-        prepareEmptySchemaPolicyMap();
-        String type = "tableMap";
-        String statement = "if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$";
+    static class RegisterStatementTestCase {
+        String name;
+        String type;
+        String subject;
+        String conditionOperator;
+        List<String> conditionValues;
+        String expectedOperator;
+        List<String> expectedValues;
+        String errorMessage;
+        String expected;
+        boolean isValid = true;
 
-        // ## Act ##
-        DfpropRegisterSchemaPolicyStatementBody body = new DfpropRegisterSchemaPolicyStatementBody();
-        body.type = type;
-        body.statement = statement;
-        action.schemapolicyStatementRegister(TEST_CLIENT_PROJECT, body);
+        public static RegisterStatementTestCase nameOf(String name) {
+            RegisterStatementTestCase testCase = new RegisterStatementTestCase();
+            testCase.name = name;
+            return testCase;
+        }
 
-        // ## Assert ##
-        SchemaPolicyTableMap tableMap = dfpropInfoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap;
-        assertTrue(tableMap.statementList.contains(statement));
+        public RegisterStatementTestCase by(String type, String subject, String conditionOperator, List<String> conditionValues,
+                String expectedOperator, List<String> expectedValues, String errorMessage) {
+            this.type = type;
+            this.subject = subject;
+            this.conditionOperator = conditionOperator;
+            this.conditionValues = conditionValues;
+            this.expectedOperator = expectedOperator;
+            this.expectedValues = expectedValues;
+            this.errorMessage = errorMessage;
+            return this;
+        }
+
+        public RegisterStatementTestCase hasExpected(String expected) {
+            this.expected = expected;
+            return this;
+        }
+
+        public RegisterStatementTestCase isInvalid() {
+            this.isValid = false;
+            return this;
+        }
     }
 
-    public void test_schemapolicy_statement_register_columnMap() throws Exception {
+    //@formatter:off
+    List<RegisterStatementTestCase> registerStatementTestCases = Arrays.asList(
+        RegisterStatementTestCase
+            .nameOf("add TableMap statement")
+            .by(
+                "tableMap",
+                "tableName",
+                "and",
+                Collections.singletonList("$$ALL$$"),
+                "and",
+                Collections.singletonList("fkName is prefix:FK_$$table$$"),
+                "add FK_ to the table name prefix")
+            .hasExpected("if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$ => add FK_ to the table name prefix"),
+        RegisterStatementTestCase
+            .nameOf("add ColumnMap statement")
+            .by(
+                "columnMap",
+                "columnName",
+                "and",
+                Collections.singletonList("suffix:_ID"),
+                "and",
+                Collections.singletonList("alias is pattern:.+ID(\\(.+\\))?$"),
+                "IDカラムなら論理名は \"なんとかID\" にしよう")
+            .hasExpected("if columnName is suffix:_ID then alias is pattern:.+ID(\\(.+\\))?$ => IDカラムなら論理名は \"なんとかID\" にしよう"),
+        RegisterStatementTestCase
+            .nameOf("add multiple statement")
+            .by(
+                "columnMap",
+                "tableName",
+                "and",
+                Arrays.asList("prefix:CLS_", "column is pk"),
+                "and",
+                Collections.singletonList("classification"),
+                "区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)")
+            .hasExpected("if tableName is prefix:CLS_ and column is pk then classification => 区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)"),
+        RegisterStatementTestCase
+            .nameOf("type is null")
+            .by(
+                null,
+                "tableName",
+                "and",
+                Arrays.asList("prefix:CLS_", "column is pk"),
+                "and",
+                Collections.singletonList("classification"),
+                "区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)")
+            .isInvalid(),
+        RegisterStatementTestCase
+            .nameOf("subject is null")
+            .by(
+                "columnMap",
+                null,
+                "and",
+                Arrays.asList("prefix:CLS_", "column is pk"),
+                "and",
+                Collections.singletonList("classification"),
+                "区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)")
+            .isInvalid(),
+        RegisterStatementTestCase
+            .nameOf("condition is null")
+            .by(
+                "columnMap",
+                "tableName",
+                null,
+                null,
+                "and",
+                Collections.singletonList("classification"),
+                "区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)")
+            .isInvalid(),
+        RegisterStatementTestCase
+            .nameOf("expected is null")
+            .by(
+                "columnMap",
+                "tableName",
+                "and",
+                Arrays.asList("prefix:CLS_", "column is pk"),
+                null,
+                null,
+                "区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)")
+            .isInvalid(),
+        RegisterStatementTestCase
+            .nameOf("errorMessage is null")
+            .by(
+                "columnMap",
+                "tableName",
+                "and",
+                Arrays.asList("prefix:CLS_", "column is pk"),
+                "and",
+                Collections.singletonList("classification"),
+                null)
+            .isInvalid(),
+        RegisterStatementTestCase
+            .nameOf("errorMessage is empty")
+            .by(
+                "columnMap",
+                "tableName",
+                "and",
+                Arrays.asList("prefix:CLS_", "column is pk"),
+                "and",
+                Collections.singletonList("classification"),
+                "")
+            .isInvalid()
+    );
+    //@formatter:on
+
+    public void test_schemapolicy_statement_register() throws Exception {
         // ## Arrange ##
         DfpropAction action = new DfpropAction();
         inject(action);
         prepareEmptySchemaPolicyMap();
-        String type = "columnMap";
-        String statement = "if columnName is suffix:_ID then alias is pattern:.+ID(\\(.+\\))?$ => IDカラムなら論理名は \"なんとかID\" にしよう";
+        registerStatementTestCases.forEach(testCase -> {
+            if (testCase.isValid) {
+                // ## Act ##
+                JsonResponse<String> response = action.schemapolicyStatementRegister(TEST_CLIENT_PROJECT, prepareBody(testCase));
+                // ## Assert ##
+                assertEquals(testCase.name, testCase.expected, response.getJsonResult());
+                assertTrue(testCase.name, findStatementsOf(testCase.type).contains(testCase.expected));
+            } else {
+                // ## Act & Assert ##
+                assertException(ValidationErrorException.class, () -> {
+                    action.schemapolicyStatementRegister(TEST_CLIENT_PROJECT, prepareBody(testCase));
+                });
+            }
+        });
+    }
 
-        // ## Act ##
+    private List<String> findStatementsOf(String mapType) {
+        List<String> statementList = Collections.emptyList();
+        SchemaPolicyMap policyMap = dfpropInfoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT);
+        if (mapType.equals("tableMap")) {
+            statementList = policyMap.tableMap.statementList;
+        } else if (mapType.equals("columnMap")) {
+            statementList = policyMap.columnMap.statementList;
+        }
+        return statementList;
+    }
+
+    private DfpropRegisterSchemaPolicyStatementBody prepareBody(RegisterStatementTestCase testCase) {
+        DfpropRegisterSchemaPolicyStatementBody.Condition conditionBody = new DfpropRegisterSchemaPolicyStatementBody.Condition();
+        conditionBody.operator = testCase.conditionOperator;
+        conditionBody.values = testCase.conditionValues;
+        DfpropRegisterSchemaPolicyStatementBody.Expected expectedBody = new DfpropRegisterSchemaPolicyStatementBody.Expected();
+        expectedBody.operator = testCase.expectedOperator;
+        expectedBody.values = testCase.expectedValues;
         DfpropRegisterSchemaPolicyStatementBody body = new DfpropRegisterSchemaPolicyStatementBody();
-        body.type = type;
-        body.statement = statement;
-        action.schemapolicyStatementRegister(TEST_CLIENT_PROJECT, body);
-
-        // ## Assert ##
-        SchemaPolicyColumnMap columnMap = dfpropInfoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).columnMap;
-        assertTrue(columnMap.statementList.contains(statement));
+        body.type = testCase.type;
+        body.subject = testCase.subject;
+        body.condition = conditionBody;
+        body.expected = expectedBody;
+        body.errorMessage = testCase.errorMessage;
+        return body;
     }
 
     private void prepareEmptySchemaPolicyMap() {

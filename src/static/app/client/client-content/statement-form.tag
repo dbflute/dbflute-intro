@@ -64,7 +64,7 @@
       <div class="field">
         <label>preview</label>
         <div class="ui inverted segment">
-          <p>{ statement.buildStatement() }</p>
+          <p>{ statement.buildPreview() }</p>
         </div>
       </div>
     </div>
@@ -81,15 +81,15 @@
       conditions: [''],
       expecteds: [''],
       comment: '',
-      buildStatement: () => {
-        return self.buildStatement()
+      buildPreview: () => {
+        return self.buildPreview()
       },
       addConditionField: () => {
         self.statement.conditions.push('')
       },
       saveConditionField: () => {
         for (let i = 0; i < self.statement.conditions.length; i++) {
-          self.statement.conditions[i] = self.refs.statementModal.refs['condition_' + i].value
+          self.statement.conditions[i] = self.refs['condition_' + i].value
         }
       },
       deleteConditionField: (index) => {
@@ -101,7 +101,7 @@
       },
       saveExpectedField: () => {
         for (let i = 0; i < self.statement.expecteds.length; i++) {
-          self.statement.expecteds[i] = self.refs.statementModal.refs['expected_' + i].value
+          self.statement.expecteds[i] = self.refs['expected_' + i].value
         }
       },
       deleteExpectedField: (index) => {
@@ -110,7 +110,7 @@
       },
     }
 
-    this.buildStatement = () => {
+    this.buildPreview = () => {
       let subject = self.refs.subject.value ? self.refs.subject.value : '<Subject>'
       let statementPrefix = 'if ' + subject + ' is '
 
@@ -134,10 +134,35 @@
       return statementPrefix + conditionsStr + ' then ' + expectedsStr + comment
     }
 
+    this.buildBody = () => {
+      let conditionOperator = self.refs.isAndCondition.checked ? 'and' : 'or '
+      let conditions = []
+      for (let i = 0; i < self.statement.conditions.length; i++) {
+        conditions.push(self.refs['condition_' + i].value)
+      }
+      let expectedOperator = self.refs.isAndExpected.checked ? 'and' : 'or'
+      let expecteds = []
+      for (let i = 0; i < self.statement.expecteds.length; i++) {
+        expecteds.push(self.refs['expected_' + i].value)
+      }
+      return {
+        type: self.opts.type,
+        subject: self.refs.subject.value,
+        condition: {
+          operator: conditionOperator,
+          values: conditions
+        },
+        expected: {
+          operator: expectedOperator,
+          values: expecteds
+        },
+        errorMessage: self.refs.comment.value
+      }
+    }
+
     this.register = (callback) => {
-      let statement = self.buildStatement()
-      let body = {statement : statement, type: self.opts.type}
-      ApiFactory.registerSchemapolicyStatement(self.opts.projectName, body).then(() => {
+      let statement = self.buildPreview()
+      ApiFactory.registerSchemapolicyStatement(self.opts.projectName, self.buildBody()).then(() => {
         callback(statement)
       })
     }

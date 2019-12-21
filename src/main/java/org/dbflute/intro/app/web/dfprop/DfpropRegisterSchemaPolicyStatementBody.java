@@ -15,14 +15,47 @@
  */
 package org.dbflute.intro.app.web.dfprop;
 
+import java.util.List;
+
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author hakiba
  */
 public class DfpropRegisterSchemaPolicyStatementBody {
-    @Valid
+    public static class Condition {
+        @NotNull
+        public String operator;
+        @NotEmpty
+        public List<String> values;
+    }
+
+    public static class Expected {
+        @NotNull
+        public String operator;
+        @NotEmpty
+        public List<String> values;
+    }
+
+    @NotNull
     public String type;
+
+    @Required
+    @NotBlank
+    public String subject;
+
     @Valid
-    public String statement;
+    public Condition condition;
+
+    @Valid
+    public Expected expected;
+
+    @Required
+    @NotBlank
+    public String errorMessage;
 }

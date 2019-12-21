@@ -84,10 +84,7 @@ export default class ApiFactory {
   registerSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(`api/dfprop/${projectName}/schemapolicy/statement/register`,
       {
-        body: {
-          statement: schemaPolicyData.statement,
-          type: schemaPolicyData.type,
-        }
+        body: schemaPolicyData
       });
   }
   document(projectName) {

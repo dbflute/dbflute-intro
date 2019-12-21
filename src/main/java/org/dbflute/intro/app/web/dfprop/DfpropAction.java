@@ -149,12 +149,16 @@ public class DfpropAction extends IntroBaseAction {
     //                         -----------------------------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word/@word")
-    public JsonResponse<Void> schemapolicyStatementRegister(String project, DfpropRegisterSchemaPolicyStatementBody body) {
+    public JsonResponse<String> schemapolicyStatementRegister(String project, DfpropRegisterSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        String statement = body.statement;
-        String type = body.type;
-        dfpropUpdateLogic.registerSchemaPolicyStatement(project, statement, type);
-        return JsonResponse.asEmptyBody();
+        SchemaPolicyStatement statement = mappingToStatement(body);
+        String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(project, statement);
+        return asJson(builtStatement);
+    }
+    private SchemaPolicyStatement mappingToStatement(DfpropRegisterSchemaPolicyStatementBody body) {
+        SchemaPolicyStatement.Condition condition = new SchemaPolicyStatement.Condition(body.condition.operator, body.condition.values);
+        SchemaPolicyStatement.Expected expected = new SchemaPolicyStatement.Expected(body.expected.operator, body.expected.values);
+        return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.errorMessage);
     }
 
     // -----------------------------------------------------
