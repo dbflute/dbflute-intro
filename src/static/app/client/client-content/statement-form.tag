@@ -76,6 +76,20 @@
     const ApiFactory = new _ApiFactory()
     const self = this
 
+    self.on('mount', () => {
+      self.addChangeEvent()
+    })
+
+    self.on('updated', () => {
+      self.addChangeEvent()
+    })
+
+    this.addChangeEvent = () => {
+      [].forEach.call(document.querySelectorAll('statement-form input'), (input) => {
+        input.addEventListener('change', () => self.update())
+      })
+    }
+
     self.statement = {
       subject: '',
       conditions: [''],
