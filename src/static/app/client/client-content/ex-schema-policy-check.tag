@@ -99,8 +99,8 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ tableMapStatementModal }" class="large" ref="tableMapStatementModal">
-    <statement-form></statement-form>
+  <su-modal modal="{ tableMapStatementModal }" projectName="{ projectName }" class="large" ref="tableMapStatementModal">
+    <statement-form projectName="{ opts.projectname }" type="tableMap" ref="form"></statement-form>
   </su-modal>
 
   <style>
@@ -122,10 +122,15 @@
     let self = this
     self.client = opts.client
     this.schemaPolicy = {}
+    this.projectName = ''
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    this.on('before-mount', () => {
+      self.projectName = opts.projectName
+    })
+
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
       this.prepareComponents(opts.projectName)
@@ -141,13 +146,12 @@
 
     this.prepareComponents = (projectName) => {
       self.latestResult = riot.mount('latest-result', { projectName: projectName, task: 'doc' })[0]
-      self.tableMapStatementForm = riot.mount('statement-form', { projectName: projectName, type: 'tableMap'})[0]
       self.updateLatestResult(self.client)
     }
 
     this.registerModalEvent = () => {
       self.refs.tableMapStatementModal.on('submit', () => {
-        self.tableMapStatementForm.register((statement) => {
+        self.refs.tableMapStatementModal.refs.form.register((statement) => {
           self.schemaPolicy.tableMap.statementList.push(statement)
           self.update()
         })

@@ -1,6 +1,13 @@
 <statement-form>
   <div class="ui form">
     <div class="field">
+      <label>Preview</label>
+      <div class="ui inverted segment">
+        <p>{ statement.buildPreview() }</p>
+      </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="field">
       <label>Subject</label>
       <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }">
     </div>
@@ -59,14 +66,6 @@
         <label>Supplementary Comment</label>
         <input type="text" name="comment" ref="comment" value="{ statement.comment }">
       </div>
-
-      <div class="ui divider"></div>
-      <div class="field">
-        <label>preview</label>
-        <div class="ui inverted segment">
-          <p>{ statement.buildPreview() }</p>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -74,10 +73,16 @@
     import _ApiFactory from '../../common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
-    const self = this
+    let self = this
+    self.mounted = false
+    self.mapType = ''
+    self.projectName = ''
 
     self.on('mount', () => {
+      self.mapType = self.opts.type
+      self.projectName = self.opts.projectname
       self.addChangeEvent()
+      self.mounted = true
     })
 
     self.on('updated', () => {
@@ -125,13 +130,19 @@
     }
 
     this.buildPreview = () => {
+      if (!self.mounted) {
+        return 'if <Subject> is <Condition> then <Expected> => <Supplementary Comment>'
+      }
+
       let subject = self.refs.subject.value ? self.refs.subject.value : '<Subject>'
       let statementPrefix = 'if ' + subject + ' is '
-
       let conditionOperator = self.refs.isAndCondition.checked ? ' and ' : ' or '
+
       let conditions = []
       for (let i = 0; i < self.statement.conditions.length; i++) {
-        conditions.push(self.refs['condition_' + i].value)
+        if (self.refs['condition_' + i]) {
+          conditions.push(self.refs['condition_' + i].value)
+        }
       }
       let joinedConds = conditions.join(conditionOperator)
       let conditionsStr = joinedConds ? joinedConds : '<Condition>'
@@ -139,17 +150,19 @@
       let expectedOperator = self.refs.isAndExpected.checked ? ' and ' : ' or '
       let expecteds = []
       for (let i = 0; i < self.statement.expecteds.length; i++) {
-        expecteds.push(self.refs['expected_' + i].value)
+        if (self.refs['expected_' + i]) {
+          expecteds.push(self.refs['expected_' + i].value)
+        }
       }
       let joinedExps = expecteds.join(expectedOperator)
       let expectedsStr = joinedExps ? joinedExps : '<Expected>'
 
-      let comment = self.refs.comment.value ? ' => ' + self.refs.comment.value : ''
+      let comment = self.refs.comment.value ? ' => ' + self.refs.comment.value : ' => <Supplementary Comment>'
       return statementPrefix + conditionsStr + ' then ' + expectedsStr + comment
     }
 
     this.buildBody = () => {
-      let conditionOperator = self.refs.isAndCondition.checked ? 'and' : 'or '
+      let conditionOperator = self.refs.isAndCondition.checked ? 'and' : 'or'
       let conditions = []
       for (let i = 0; i < self.statement.conditions.length; i++) {
         conditions.push(self.refs['condition_' + i].value)
@@ -160,7 +173,7 @@
         expecteds.push(self.refs['expected_' + i].value)
       }
       return {
-        type: self.opts.type,
+        type: self.mapType,
         subject: self.refs.subject.value,
         condition: {
           operator: conditionOperator,
@@ -176,7 +189,7 @@
 
     this.register = (callback) => {
       let statement = self.buildPreview()
-      ApiFactory.registerSchemapolicyStatement(self.opts.projectName, self.buildBody()).then(() => {
+      ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody()).then(() => {
         callback(statement)
       })
     }
