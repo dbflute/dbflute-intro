@@ -93,7 +93,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
         List<String> conditionValues;
         String expectedOperator;
         List<String> expectedValues;
-        String errorMessage;
+        String comment;
         String expected;
         boolean isValid = true;
 
@@ -104,14 +104,14 @@ public class DfpropActionTest extends UnitIntroTestCase {
         }
 
         public RegisterStatementTestCase by(String type, String subject, String conditionOperator, List<String> conditionValues,
-                String expectedOperator, List<String> expectedValues, String errorMessage) {
+                String expectedOperator, List<String> expectedValues, String comment) {
             this.type = type;
             this.subject = subject;
             this.conditionOperator = conditionOperator;
             this.conditionValues = conditionValues;
             this.expectedOperator = expectedOperator;
             this.expectedValues = expectedValues;
-            this.errorMessage = errorMessage;
+            this.comment = comment;
             return this;
         }
 
@@ -206,7 +206,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
                 "区分値テーブルだったら、PKは区分値カラムのはず (dfpropを確認しよう)")
             .isInvalid(),
         RegisterStatementTestCase
-            .nameOf("errorMessage is null")
+            .nameOf("comment is null")
             .by(
                 "columnMap",
                 "tableName",
@@ -217,7 +217,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
                 null)
             .isInvalid(),
         RegisterStatementTestCase
-            .nameOf("errorMessage is empty")
+            .nameOf("comment is empty")
             .by(
                 "columnMap",
                 "tableName",
@@ -274,7 +274,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
         body.subject = testCase.subject;
         body.condition = conditionBody;
         body.expected = expectedBody;
-        body.errorMessage = testCase.errorMessage;
+        body.comment = testCase.comment;
         return body;
     }
 

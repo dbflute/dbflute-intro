@@ -57,5 +57,5 @@ public class DfpropRegisterSchemaPolicyStatementBody {
 
     @Required
     @NotBlank
-    public String errorMessage;
+    public String comment;
 }

@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="field">
-        <label>Error Message</label>
+        <label>Supplementary Comment</label>
         <input type="text" name="comment" ref="comment" value="{ statement.comment }">
       </div>
 
@@ -170,7 +170,7 @@
           operator: expectedOperator,
           values: expecteds
         },
-        errorMessage: self.refs.comment.value
+        comment: self.refs.comment.value
       }
     }
 

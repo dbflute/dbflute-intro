@@ -158,7 +158,7 @@ public class DfpropAction extends IntroBaseAction {
     private SchemaPolicyStatement mappingToStatement(DfpropRegisterSchemaPolicyStatementBody body) {
         SchemaPolicyStatement.Condition condition = new SchemaPolicyStatement.Condition(body.condition.operator, body.condition.values);
         SchemaPolicyStatement.Expected expected = new SchemaPolicyStatement.Expected(body.expected.operator, body.expected.values);
-        return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.errorMessage);
+        return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.comment);
     }
 
     // -----------------------------------------------------
