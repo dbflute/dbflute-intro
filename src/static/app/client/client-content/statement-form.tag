@@ -9,12 +9,12 @@
     <div class="ui divider"></div>
     <div class="field">
       <label>Subject</label>
-      <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }">
+      <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
     </div>
     <div class="grouped fields">
       <label>Condition</label>
       <div class="ui icon input field" each="{ condition, index in statement.conditions }">
-        <input type="text" name="condition" ref="condition_{index}" value="{ condition }">
+        <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
       </div>
       <div class="ui grid">
@@ -23,13 +23,13 @@
           <div class="inline fields" style="float: right" show={statement.conditions.length > 1}>
             <div class="field">
               <div class="ui radio checkbox">
-                <input type="radio" name="condition-mode" ref="isAndCondition" checked="checked">
+                <input type="radio" name="condition-mode" ref="isAndCondition" checked="checked" onchange="{ handleChange }">
                 <label>and</label>
               </div>
             </div>
             <div class="field">
               <div class="ui radio checkbox">
-                <input type="radio" name="condition-mode">
+                <input type="radio" name="condition-mode" onchange="{ handleChange }">
                 <label>or</label>
               </div>
             </div>
@@ -40,7 +40,7 @@
     <div class="grouped fields">
       <label>Expected</label>
       <div class="ui icon input field" each="{ expected, index in statement.expecteds }">
-        <input type="text" name="expected" ref="expected_{index}" value="{ expected }">
+        <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.expecteds.length > 1} onclick="{ statement.deleteExpectedField.bind(this, index) }"></i>
       </div>
       <div class="ui grid">
@@ -49,13 +49,13 @@
           <div class="inline fields" style="float: right" show={statement.expecteds.length > 1}>
             <div class="field">
               <div class="ui radio checkbox">
-                <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked">
+                <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked" onchange="{ handleChange }">
                 <label>and</label>
               </div>
             </div>
             <div class="field">
               <div class="ui radio checkbox">
-                <input type="radio" name="expected-mode">
+                <input type="radio" name="expected-mode" onchange="{ handleChange }">
                 <label>or</label>
               </div>
             </div>
@@ -64,7 +64,7 @@
       </div>
       <div class="field">
         <label>Supplementary Comment</label>
-        <input type="text" name="comment" ref="comment" value="{ statement.comment }">
+        <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
       </div>
     </div>
   </div>
@@ -81,18 +81,13 @@
     self.on('mount', () => {
       self.mapType = self.opts.type
       self.projectName = self.opts.projectname
-      self.addChangeEvent()
       self.mounted = true
     })
 
-    self.on('updated', () => {
-      self.addChangeEvent()
-    })
-
-    this.addChangeEvent = () => {
-      [].forEach.call(document.querySelectorAll('statement-form input'), (input) => {
-        input.addEventListener('change', () => self.update())
-      })
+    this.handleChange = () => {
+      self.statement.saveConditionField()
+      self.statement.saveExpectedField()
+      self.update()
     }
 
     self.statement = {
@@ -112,7 +107,6 @@
         }
       },
       deleteConditionField: (index) => {
-        self.statement.saveConditionField()
         self.statement.conditions.splice(index, 1)
       },
       addExpectedField: () => {
@@ -124,7 +118,6 @@
         }
       },
       deleteExpectedField: (index) => {
-        self.statement.saveExpectedField()
         self.statement.expecteds.splice(index, 1)
       },
     }
@@ -140,8 +133,9 @@
 
       let conditions = []
       for (let i = 0; i < self.statement.conditions.length; i++) {
-        if (self.refs['condition_' + i]) {
-          conditions.push(self.refs['condition_' + i].value)
+        let conditionRef = self.refs['condition_' + i]
+        if (conditionRef && conditionRef.value) {
+          conditions.push(conditionRef.value)
         }
       }
       let joinedConds = conditions.join(conditionOperator)
@@ -150,8 +144,9 @@
       let expectedOperator = self.refs.isAndExpected.checked ? ' and ' : ' or '
       let expecteds = []
       for (let i = 0; i < self.statement.expecteds.length; i++) {
-        if (self.refs['expected_' + i]) {
-          expecteds.push(self.refs['expected_' + i].value)
+        let expectedRef = self.refs['expected_' + i]
+        if (expectedRef && expectedRef.value) {
+          expecteds.push(expectedRef.value)
         }
       }
       let joinedExps = expecteds.join(expectedOperator)
@@ -181,11 +176,11 @@
         subject: self.refs.subject.value,
         condition: {
           operator: conditionOperator,
-          values: conditions
+          conditions: conditions
         },
         expected: {
           operator: expectedOperator,
-          values: expecteds
+          expected: expecteds
         },
         comment: self.refs.comment.value
       }
