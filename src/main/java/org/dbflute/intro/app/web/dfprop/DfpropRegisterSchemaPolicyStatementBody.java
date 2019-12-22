@@ -22,40 +22,36 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.lastaflute.web.validation.Required;
-
 /**
  * @author hakiba
  */
 public class DfpropRegisterSchemaPolicyStatementBody {
-    public static class Condition {
+    public static class ConditionPart {
         @NotNull
         public String operator;
         @NotEmpty
-        public List<String> values;
+        public List<String> conditions;
     }
 
-    public static class Expected {
+    public static class ExpectedPart {
         @NotNull
         public String operator;
         @NotEmpty
-        public List<String> values;
+        public List<String> expected;
     }
 
     @NotNull
     public String type;
 
-    @Required
     @NotBlank
     public String subject;
 
     @Valid
-    public Condition condition;
+    public ConditionPart condition;
 
     @Valid
-    public Expected expected;
+    public ExpectedPart expected;
 
-    @Required
     @NotBlank
     public String comment;
 }

@@ -165,12 +165,16 @@
       let conditionOperator = self.refs.isAndCondition.checked ? 'and' : 'or'
       let conditions = []
       for (let i = 0; i < self.statement.conditions.length; i++) {
-        conditions.push(self.refs['condition_' + i].value)
+        if (self.refs['condition_' + i].value) {
+          conditions.push(self.refs['condition_' + i].value)
+        }
       }
       let expectedOperator = self.refs.isAndExpected.checked ? 'and' : 'or'
       let expecteds = []
       for (let i = 0; i < self.statement.expecteds.length; i++) {
-        expecteds.push(self.refs['expected_' + i].value)
+        if (self.refs['expected_' + i].value) {
+          expecteds.push(self.refs['expected_' + i].value)
+        }
       }
       return {
         type: self.mapType,

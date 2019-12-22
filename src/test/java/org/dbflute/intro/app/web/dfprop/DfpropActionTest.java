@@ -263,17 +263,17 @@ public class DfpropActionTest extends UnitIntroTestCase {
     }
 
     private DfpropRegisterSchemaPolicyStatementBody prepareBody(RegisterStatementTestCase testCase) {
-        DfpropRegisterSchemaPolicyStatementBody.Condition conditionBody = new DfpropRegisterSchemaPolicyStatementBody.Condition();
-        conditionBody.operator = testCase.conditionOperator;
-        conditionBody.values = testCase.conditionValues;
-        DfpropRegisterSchemaPolicyStatementBody.Expected expectedBody = new DfpropRegisterSchemaPolicyStatementBody.Expected();
-        expectedBody.operator = testCase.expectedOperator;
-        expectedBody.values = testCase.expectedValues;
+        DfpropRegisterSchemaPolicyStatementBody.ConditionPart conditionPart = new DfpropRegisterSchemaPolicyStatementBody.ConditionPart();
+        conditionPart.operator = testCase.conditionOperator;
+        conditionPart.conditions = testCase.conditionValues;
+        DfpropRegisterSchemaPolicyStatementBody.ExpectedPart expectedPart = new DfpropRegisterSchemaPolicyStatementBody.ExpectedPart();
+        expectedPart.operator = testCase.expectedOperator;
+        expectedPart.expected = testCase.expectedValues;
         DfpropRegisterSchemaPolicyStatementBody body = new DfpropRegisterSchemaPolicyStatementBody();
         body.type = testCase.type;
         body.subject = testCase.subject;
-        body.condition = conditionBody;
-        body.expected = expectedBody;
+        body.condition = conditionPart;
+        body.expected = expectedPart;
         body.comment = testCase.comment;
         return body;
     }
