@@ -85,8 +85,8 @@
     })
 
     this.handleChange = () => {
-      self.statement.saveConditionField()
-      self.statement.saveExpectedField()
+      self.saveConditionField()
+      self.saveExpectedField()
       self.update()
     }
 
@@ -101,25 +101,27 @@
       addConditionField: () => {
         self.statement.conditions.push('')
       },
-      saveConditionField: () => {
-        for (let i = 0; i < self.statement.conditions.length; i++) {
-          self.statement.conditions[i] = self.refs['condition_' + i].value
-        }
-      },
       deleteConditionField: (index) => {
         self.statement.conditions.splice(index, 1)
       },
       addExpectedField: () => {
         self.statement.expecteds.push('')
       },
-      saveExpectedField: () => {
-        for (let i = 0; i < self.statement.expecteds.length; i++) {
-          self.statement.expecteds[i] = self.refs['expected_' + i].value
-        }
-      },
       deleteExpectedField: (index) => {
         self.statement.expecteds.splice(index, 1)
       },
+    }
+
+    this.saveConditionField = () => {
+      for (let i = 0; i < self.statement.conditions.length; i++) {
+        self.statement.conditions[i] = self.refs['condition_' + i].value
+      }
+    }
+
+    this.saveExpectedField = () => {
+      for (let i = 0; i < self.statement.expecteds.length; i++) {
+        self.statement.expecteds[i] = self.refs['expected_' + i].value
+      }
     }
 
     this.buildPreview = () => {
