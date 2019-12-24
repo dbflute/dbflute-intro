@@ -49,10 +49,11 @@
                 <h5>Statement</h5>
                 <button class="ui button" onclick="{ parent.parent.showModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
-                  <a class="item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
-                    <div class="content">
+                  <a class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
+                    <div class="statement content">
                       <div class="header">{ statement }</div>
                     </div>
+                    <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
                   </a>
                 </div>
               </su-tab>
@@ -73,10 +74,11 @@
                 </div>
                 <h5>Statement</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
-                  <a class="item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
-                    <div class="content">
+                  <a class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
+                    <div class="statement content">
                       <div class="header">{ statement }</div>
                     </div>
+                    <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </a>
                 </div>
               </su-tab>
@@ -106,6 +108,12 @@
   <style>
     .latest-result {
       margin-top: 1em;
+    }
+    .statement.delete.link.icon {
+      display: none;
+    }
+    .statement.item:hover .statement.delete.link.icon {
+      display: inline-block;
     }
   </style>
 
@@ -138,10 +146,7 @@
     })
 
     this.prepareSchemaPolicy = (projectName) => {
-      ApiFactory.schemaPolicy(projectName).then(json => {
-        self.schemaPolicy = json
-        self.update()
-      })
+      self.fetchSchemaPolicy(projectName)
     }
 
     this.prepareComponents = (projectName) => {
@@ -239,6 +244,22 @@
 
       ApiFactory.editSchemaPolicy(opts.projectName, body).then(() => {
         this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode).isActive = toggledActiveStatus
+        self.update()
+      })
+    }
+    // ===================================================================================
+    //                                                                           Operation
+    //                                                                           =========
+    this.fetchSchemaPolicy = (projectName) => {
+      ApiFactory.schemaPolicy(projectName).then(json => {
+        self.schemaPolicy = json
+        self.update()
+      })
+    }
+
+    this.deleteStatement = (mapType, statement) => {
+      ApiFactory.deleteSchemapolicyStatement(opts.projectName, {mapType: mapType, statement: statement}).then(() => {
+        self.fetchSchemaPolicy(self.projectName)
         self.update()
       })
     }

@@ -164,7 +164,10 @@ public class DfpropAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                      DeleteSchemaPolicyCheckStatement
     //                      --------------------------------
+    @NotAvailableDecommentServer
+    @Execute(urlPattern = "{}/@word/@word/@word")
     public JsonResponse<Void> schemapolicyStatementDelete(String project, DfpropDeleteSchemaPolicyStatementBody body) {
+        validate(body, messages -> {});
         dfpropUpdateLogic.deleteSchemaPolicyStatement(project, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
