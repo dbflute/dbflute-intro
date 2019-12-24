@@ -287,4 +287,40 @@ public class DfpropActionTest extends UnitIntroTestCase {
             e.printStackTrace();
         }
     }
+
+    public void test_schemapolicy_statement_delete_tableMap() throws Exception {
+        // ## Arrange ##
+        List<String> before = findStatementsOf("tableMap");
+        String deleteStatement = before.get(0);
+        DfpropAction action = new DfpropAction();
+        inject(action);
+
+        // ## Act ##
+        DfpropDeleteSchemaPolicyStatementBody body = new DfpropDeleteSchemaPolicyStatementBody();
+        body.mapType = "tableMap";
+        body.statement = deleteStatement;
+        action.schemapolicyStatementDelete(TEST_CLIENT_PROJECT, body);
+
+        // ## Assert ##
+        List<String> after = findStatementsOf("tableMap");
+        assertFalse(after.contains(deleteStatement));
+    }
+
+    public void test_schemapolicy_statement_delete_columnMap() throws Exception {
+        // ## Arrange ##
+        List<String> before = findStatementsOf("columnMap");
+        String deleteStatement = before.get(0);
+        DfpropAction action = new DfpropAction();
+        inject(action);
+
+        // ## Act ##
+        DfpropDeleteSchemaPolicyStatementBody body = new DfpropDeleteSchemaPolicyStatementBody();
+        body.mapType = "columnMap";
+        body.statement = deleteStatement;
+        action.schemapolicyStatementDelete(TEST_CLIENT_PROJECT, body);
+
+        // ## Assert ##
+        List<String> after = findStatementsOf("columnMap");
+        assertFalse(after.contains(deleteStatement));
+    }
 }

@@ -162,6 +162,14 @@ public class DfpropAction extends IntroBaseAction {
     }
 
     // -----------------------------------------------------
+    //                      DeleteSchemaPolicyCheckStatement
+    //                      --------------------------------
+    public JsonResponse<Void> schemapolicyStatementDelete(String project, DfpropDeleteSchemaPolicyStatementBody body) {
+        dfpropUpdateLogic.deleteSchemaPolicyStatement(project, body.mapType, body.statement);
+        return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
     //                                           GetDocument
     //                                           -----------
     @Execute(urlPattern = "{}/@word")

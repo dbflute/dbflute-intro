@@ -294,4 +294,17 @@ public class DfpropUpdateLogic {
     private File findSchemaPolicyMapFile(String project) {
         return new File(dfpropPhysicalLogic.buildDfpropFilePath(project, "schemaPolicyMap.dfprop"));
     }
+
+    public void deleteSchemaPolicyStatement(String project, String mapType, String statement) {
+        File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
+        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(schemaPolicyMapFile);
+        if ("tableMap".equals(mapType)) {
+            schemaPolicyMap.tableMap.statementList =
+                    schemaPolicyMap.tableMap.statementList.stream().filter(s -> !s.equals(statement)).collect(Collectors.toList());
+        } else if ("columnMap".equals(mapType)) {
+            schemaPolicyMap.columnMap.statementList =
+                    schemaPolicyMap.columnMap.statementList.stream().filter(s -> !s.equals(statement)).collect(Collectors.toList());
+        }
+        doReplaceSchemaPolicyMap(schemaPolicyMapFile, schemaPolicyMap);
+    }
 }
