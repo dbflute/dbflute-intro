@@ -8,11 +8,17 @@
     </div>
     <div class="ui divider"></div>
     <div class="field">
-      <label>Subject</label>
+      <label>Subject
+        <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank"><i class="question circle outline icon"></i></a>
+        <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank"><i class="question circle outline icon"></i></a>
+      </label>
       <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
     </div>
     <div class="grouped fields">
-      <label>Condition</label>
+      <label>Condition
+        <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank"><i class="question circle outline icon"></i></a>
+        <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank"><i class="question circle outline icon"></i></a>
+      </label>
       <div class="ui icon input field" each="{ condition, index in statement.conditions }">
         <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
@@ -38,7 +44,10 @@
       </div>
     </div>
     <div class="grouped fields">
-      <label>Expected</label>
+      <label>Expected
+        <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank"><i class="question circle outline icon"></i></a>
+        <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank"><i class="question circle outline icon"></i></a>
+      </label>
       <div class="ui icon input field" each="{ expected, index in statement.expecteds }">
         <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.expecteds.length > 1} onclick="{ statement.deleteExpectedField.bind(this, index) }"></i>
@@ -63,7 +72,9 @@
         </div>
       </div>
       <div class="field">
-        <label>Supplementary Comment</label>
+        <label>Supplementary Comment
+          <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank"><i class="question circle outline icon"></i></a>
+        </label>
         <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
       </div>
     </div>
