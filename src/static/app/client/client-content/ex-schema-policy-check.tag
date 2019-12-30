@@ -325,9 +325,11 @@
     }
 
     this.deleteStatement = (mapType, statement) => {
-      ApiFactory.deleteSchemapolicyStatement(opts.projectName, {mapType: mapType, statement: statement}).then(() => {
-        self.fetchSchemaPolicy(self.projectName)
-        self.update()
+      self.suConfirm('Are you sure to delete this statement?').then(() => {
+        ApiFactory.deleteSchemapolicyStatement(opts.projectName, {mapType: mapType, statement: statement}).then(() => {
+          self.fetchSchemaPolicy(self.projectName)
+          self.update()
+        })
       })
     }
 
