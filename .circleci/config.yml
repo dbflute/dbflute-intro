@@ -64,7 +64,7 @@ jobs:
       - image: circleci/node
     steps:
       - slack/notify:
-          channel: biz_v1_ci_notify
+          channel: intro_ci_notify
           title: ":circleci-pass: Suceess"
           message: "<https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}|Execute Workflow>"
           color: '#adff2f'
