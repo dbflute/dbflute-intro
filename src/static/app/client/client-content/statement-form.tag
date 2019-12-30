@@ -216,6 +216,12 @@
       deleteExpectedField: (index) => {
         self.statement.expecteds.splice(index, 1)
       },
+      clean: () => {
+        self.statement.subject = ''
+        self.statement.conditions = ['']
+        self.statement.expecteds = ['']
+        self.statement.comment = ''
+      }
     }
 
     this.saveConditionField = () => {
@@ -228,6 +234,13 @@
       for (let i = 0; i < self.statement.expecteds.length; i++) {
         self.statement.expecteds[i] = self.refs['expected_' + i].value
       }
+    }
+
+    this.cleanInput = () => {
+      self.statement.clean()
+      self.refs.subject.value = ''
+      self.refs.comment.value = ''
+      self.update()
     }
 
     this.buildPreview = () => {
@@ -298,6 +311,7 @@
       let statement = self.buildPreview()
       ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody()).then(() => {
         callback(statement)
+        self.cleanInput()
       })
     }
   </script>
