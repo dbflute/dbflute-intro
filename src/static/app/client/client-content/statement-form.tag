@@ -7,14 +7,14 @@
       </div>
     </div>
     <div class="ui divider"></div>
-    <div class="field">
+    <div class="field required">
       <label>Subject
         <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank"><i class="info circle icon"></i></a>
         <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank"><i class="info circle icon"></i></a>
       </label>
       <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
     </div>
-    <div class="grouped fields">
+    <div class="grouped fields required">
       <label>Condition
         <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank"><i class="info circle icon"></i></a>
         <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank"><i class="info circle icon"></i></a>
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="grouped fields">
+    <div class="grouped fields required">
       <label>Expected
         <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank"><i class="info circle icon"></i></a>
         <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank"><i class="info circle icon"></i></a>
@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div class="field">
+      <div class="field required">
         <label>Supplementary Comment
           <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank"><i class="info circle icon"></i></a>
         </label>
