@@ -15,7 +15,32 @@
         <a if="{ mapType === 'columnMap' }" class="help link"
            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank"><i
           class="info circle icon"></i></a>
+        <a onclick="{ toggleSubjectHelp }"><i class="circle help icon"></i></a>
       </label>
+      <toggle-help ref="subjecthelp">
+        <h5>Sample</h5>
+          <div class="ui two column grid">
+            <div class="column">
+              <div class="ui inverted segment">
+                <div class="comment">// table name</div>
+                <div><span class="variable">tableName</span></div>
+                <div class="comment">// column name</div>
+                <div><span class="variable">columnName</span></div>
+                <div class="comment">// table(column) alias name</div>
+                <div><span class="variable">alias</span></div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="ui inverted segment">
+                <div class="comment">// column's db type</div>
+                <div><span class="variable">dbType</span></div>
+                <div class="comment">// column registration date</div>
+                <div><span class="variable">firstDate</span></div>
+              </div>
+            </div>
+          </div>
+        <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
+    </toggle-help>
       <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
     </div>
     <div class="grouped fields required">
@@ -29,24 +54,28 @@
         <a onclick="{ toggleConditionHelp }"><i class="circle help icon"></i></a>
       </label>
       <toggle-help ref="conditionhelp">
+        <h5>Sample</h5>
         <div class="ui two column grid">
           <div class="column">
-            <h5>Format</h5>
-            <div class="ui segment">
-              <span class="variable">SUBJECT</span> is (not) <span class="variable">VALUE</span> ([and|or] <span class="variable">VALUE</span> ...)
+            <div class="ui inverted segment">
+              <div class="comment">// all table(column)</div>
+              <div><span class="variable">$$ALL$$</span></div>
+              <div class="comment">// table name</div>
+              <div><span class="variable">$$tableName$$</span></div>
+              <div class="comment">// column name</div>
+              <div><span class="variable">$$columnName$$</span></div>
             </div>
           </div>
           <div class="column">
-            <h5>Sample</h5>
             <div class="ui inverted segment">
-              <div class="comment">// all table</div>
-              <div><span class="variable">tableName</span> is <span class="variable">$$ALL$$</span></div>
-              <div class="comment">// column name with suffix "_FLG"</div>
-              <div><span class="variable">columnName</span> is <span class="variable">suffix:_FLG</span></div>
+              <div class="comment">// suffix is not "_DATE"</div>
+              <div><span class="variable">not suffix:_DATE</span></div>
+              <div class="comment">// contains XXX</div>
+              <div><span class="variable">contain:XXX</span></div>
             </div>
-            <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
           </div>
         </div>
+        <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
       </toggle-help>
       <div class="ui icon input field" each="{ condition, index in statement.conditions }">
         <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
@@ -87,7 +116,7 @@
           <div class="column">
             <h5>Format</h5>
             <div class="ui segment">
-              <span class="variable">SUBJECT</span> is (not) <span class="variable">VALUE</span> ([and|or] <span class="variable">VALUE</span> ...)
+              <span class="variable">SUBJECT</span> is (not) <span class="variable">VALUE</span>
             </div>
             <p>or</p>
             <div class="ui segment">
@@ -162,6 +191,10 @@
       self.saveConditionField()
       self.saveExpectedField()
       self.update()
+    }
+
+    this.toggleSubjectHelp = () => {
+      self.refs.subjecthelp.toggle()
     }
 
     this.toggleConditionHelp = () => {
