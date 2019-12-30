@@ -83,7 +83,7 @@
                 <h5>Statement</h5>
                 <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
-                  <a class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
+                  <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
                       <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
                         { statement }
@@ -96,7 +96,7 @@
                       </div>
                     </div>
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
-                  </a>
+                  </div>
                 </div>
               </su-tab>
             </su-tabset>
