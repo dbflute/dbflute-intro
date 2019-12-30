@@ -8,15 +8,14 @@
     </div>
     <div class="ui divider"></div>
     <div class="grouped fields required">
-      <label>Subject
+      <label>Subject</label>
+      <p>
         <a if="{ mapType === 'tableMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank"><i
-          class="info circle icon"></i></a>
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank">document</a>
         <a if="{ mapType === 'columnMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank"><i
-          class="info circle icon"></i></a>
-        <a onclick="{ toggleSubjectHelp }"><i class="circle help icon"></i></a>
-      </label>
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank">document</a>
+        /
+        <a onclick="{ toggleSubjectHelp }">sample</a></p>
       <toggle-help ref="subjecthelp">
         <h5>Sample</h5>
           <div class="ui two column grid">
@@ -46,15 +45,15 @@
       </div>
     </div>
     <div class="grouped fields required">
-      <label>Condition
+      <label>Condition</label>
+      <p>
         <a if="{ mapType === 'tableMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank"><i
-          class="info circle icon"></i></a>
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank">document</a>
         <a if="{ mapType === 'columnMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank"><i
-          class="info circle icon"></i></a>
-        <a onclick="{ toggleConditionHelp }"><i class="circle help icon"></i></a>
-      </label>
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank">document</a>
+        /
+        <a onclick="{ toggleConditionHelp }">sample</a>
+      </p>
       <toggle-help ref="conditionhelp">
         <h5>Sample</h5>
         <div class="ui two column grid">
@@ -104,15 +103,15 @@
       </div>
     </div>
     <div class="grouped fields required">
-      <label>Expected
+      <label>Expected</label>
+      <p>
         <a if="{ mapType === 'tableMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank"><i
-          class="info circle icon"></i></a>
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
         <a if="{ mapType === 'columnMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank"><i
-          class="info circle icon"></i></a>
-        <a onclick="{ toggleExpectedHelp }"><i class="circle help icon"></i></a>
-      </label>
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
+        /
+        <a onclick="{ toggleExpectedHelp }">sample</a>
+      </p>
       <toggle-help ref="expectedhelp">
         <div class="ui two column grid">
           <div class="column">
@@ -166,9 +165,8 @@
         </div>
       </div>
       <div class="field required">
-        <label>Supplementary Comment
-          <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank"><i class="info circle icon"></i></a>
-        </label>
+        <label>Supplementary Comment</label>
+        <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank">document</a>
         <div class="ui input">
           <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
         </div>
