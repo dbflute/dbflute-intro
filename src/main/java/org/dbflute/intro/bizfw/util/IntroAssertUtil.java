@@ -18,6 +18,7 @@ package org.dbflute.intro.bizfw.util;
 /**
  * parameter assertion util.
  * @author cabos
+ * @author jflute
  */
 public class IntroAssertUtil {
 
@@ -38,6 +39,9 @@ public class IntroAssertUtil {
     }
 
     public static class AssertNotNullException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
         AssertNotNullException(String message) {
             super(message);
         }
@@ -62,6 +66,9 @@ public class IntroAssertUtil {
     }
 
     public static class AssertNotEmptyException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
         AssertNotEmptyException(String message) {
             super(message);
         }
