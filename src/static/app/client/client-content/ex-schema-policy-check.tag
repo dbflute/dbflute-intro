@@ -58,7 +58,7 @@
                         { parent.parent.parent.extractStatement(statement) }
                       </div>
                       <div if="{parent.parent.parent.isIncludeComment(statement)}">
-                        <span>&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
+                        <span class="frm">&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
                       </div>
                     </div>
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
@@ -92,7 +92,7 @@
                         { parent.parent.parent.extractStatement(statement) }
                       </div>
                       <div if="{parent.parent.parent.isIncludeComment(statement)}">
-                        <span>&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
+                        <span class="frm">&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
                       </div>
                     </div>
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
