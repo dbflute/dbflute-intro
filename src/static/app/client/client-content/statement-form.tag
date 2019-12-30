@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="ui divider"></div>
-    <div class="field required">
+    <div class="grouped fields required">
       <label>Subject
         <a if="{ mapType === 'tableMap' }" class="help link"
            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank"><i
@@ -41,7 +41,9 @@
           </div>
         <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
     </toggle-help>
-      <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
+      <div class="ui input field">
+        <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
+      </div>
     </div>
     <div class="grouped fields required">
       <label>Condition
@@ -167,7 +169,9 @@
         <label>Supplementary Comment
           <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank"><i class="info circle icon"></i></a>
         </label>
-        <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
+        <div class="ui input">
+          <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
+        </div>
       </div>
     </div>
   </div>
