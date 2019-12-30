@@ -51,7 +51,15 @@
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
                     <div class="statement content">
-                      <div class="header">{ statement }</div>
+                      <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
+                        { statement }
+                      </div>
+                      <div class="header" if="{parent.parent.parent.isIncludeComment(statement)}">
+                        { parent.parent.parent.extractStatement(statement) }
+                      </div>
+                      <div if="{parent.parent.parent.isIncludeComment(statement)}">
+                        <span>&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
+                      </div>
                     </div>
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
                   </div>
@@ -77,7 +85,15 @@
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <a class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
-                      <div class="header">{ statement }</div>
+                      <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
+                        { statement }
+                      </div>
+                      <div class="header" if="{parent.parent.parent.isIncludeComment(statement)}">
+                        { parent.parent.parent.extractStatement(statement) }
+                      </div>
+                      <div if="{parent.parent.parent.isIncludeComment(statement)}">
+                        <span>&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
+                      </div>
                     </div>
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </a>
@@ -196,6 +212,26 @@
         }
       }
       self.latestResult.updateLatestResult()
+    }
+
+    this.isIncludeComment = (statement) => {
+      return statement.includes('=>')
+    }
+
+    this.extractStatement = (statement) => {
+      if (!self.isIncludeComment(statement)) {
+        return statement
+      }
+      const splitStatements = statement.split('=>')
+      return splitStatements[0]
+    }
+
+    this.extractComment = (statement) => {
+      if (!self.isIncludeComment(statement)) {
+        return ''
+      }
+      const splitStatements = statement.split('=>')
+      return splitStatements[1]
     }
 
     // ===================================================================================
