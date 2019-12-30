@@ -9,23 +9,52 @@
     <div class="ui divider"></div>
     <div class="field required">
       <label>Subject
-        <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank"><i class="info circle icon"></i></a>
-        <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank"><i class="info circle icon"></i></a>
+        <a if="{ mapType === 'tableMap' }" class="help link"
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank"><i
+          class="info circle icon"></i></a>
+        <a if="{ mapType === 'columnMap' }" class="help link"
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank"><i
+          class="info circle icon"></i></a>
       </label>
       <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
     </div>
     <div class="grouped fields required">
       <label>Condition
-        <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank"><i class="info circle icon"></i></a>
-        <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank"><i class="info circle icon"></i></a>
+        <a if="{ mapType === 'tableMap' }" class="help link"
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank"><i
+          class="info circle icon"></i></a>
+        <a if="{ mapType === 'columnMap' }" class="help link"
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank"><i
+          class="info circle icon"></i></a>
+        <a onclick="{ toggleConditionHelp }"><i class="circle help icon"></i></a>
       </label>
+      <toggle-help ref="conditionhelp">
+        <div class="ui two column grid">
+          <div class="column">
+            <h5>Format</h5>
+            <div class="ui segment">
+              <span class="variable">SUBJECT</span> is (not) <span class="variable">VALUE</span> ([and|or] <span class="variable">VALUE</span> ...)
+            </div>
+          </div>
+          <div class="column">
+            <h5>Sample</h5>
+            <div class="ui inverted segment">
+              <div class="comment">// all table</div>
+              <div><span class="variable">tableName</span> is <span class="variable">$$ALL$$</span></div>
+              <div class="comment">// column name with suffix "_FLG"</div>
+              <div><span class="variable">columnName</span> is <span class="variable">suffix:_FLG</span></div>
+            </div>
+            <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
+          </div>
+        </div>
+      </toggle-help>
       <div class="ui icon input field" each="{ condition, index in statement.conditions }">
         <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
       </div>
       <div class="ui grid">
         <div class="four wide right floated column">
-          <i class="plus link icon" style="float: right" onclick="{ statement.addConditionField }" ></i>
+          <i class="plus link icon" style="float: right" onclick="{ statement.addConditionField }"></i>
           <div class="inline fields" style="float: right" show={statement.conditions.length > 1}>
             <div class="field">
               <div class="ui radio checkbox">
@@ -45,16 +74,50 @@
     </div>
     <div class="grouped fields required">
       <label>Expected
-        <a if="{ mapType === 'tableMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank"><i class="info circle icon"></i></a>
-        <a if="{ mapType === 'columnMap' }" class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank"><i class="info circle icon"></i></a>
+        <a if="{ mapType === 'tableMap' }" class="help link"
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank"><i
+          class="info circle icon"></i></a>
+        <a if="{ mapType === 'columnMap' }" class="help link"
+           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank"><i
+          class="info circle icon"></i></a>
+        <a onclick="{ toggleExpectedHelp }"><i class="circle help icon"></i></a>
       </label>
+      <toggle-help ref="expectedhelp">
+        <div class="ui two column grid">
+          <div class="column">
+            <h5>Format</h5>
+            <div class="ui segment">
+              <span class="variable">SUBJECT</span> is (not) <span class="variable">VALUE</span> ([and|or] <span class="variable">VALUE</span> ...)
+            </div>
+            <p>or</p>
+            <div class="ui segment">
+              <span class="variable">THEME</span>
+            </div>
+          </div>
+          <div class="column">
+            <h5>Sample</h5>
+            <div class="ui inverted segment">
+              <div class="comment">// FK name must be FK_[tableName]_[fk column name | target table name]</div>
+              <div><span class="variable">fkName</span> is <span class="variable">prefix:FK_$$table$$</span></div>
+              <div class="comment">// db type must be bit</div>
+              <div><span class="variable">dbType</span> is <span class="variable">bit</span></div>
+              <div class="ui divider"></div>
+              <div class="comment">// must has pk</div>
+              <div><span class="variable">hasPK</span></div>
+              <div class="comment">// must not be null</div>
+              <div><span class="variable">notNull</span></div>
+            </div>
+            <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
+          </div>
+        </div>
+      </toggle-help>
       <div class="ui icon input field" each="{ expected, index in statement.expecteds }">
         <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.expecteds.length > 1} onclick="{ statement.deleteExpectedField.bind(this, index) }"></i>
       </div>
       <div class="ui grid">
         <div class="four wide right floated column">
-          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }" ></i>
+          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
           <div class="inline fields" style="float: right" show={statement.expecteds.length > 1}>
             <div class="field">
               <div class="ui radio checkbox">
@@ -99,6 +162,15 @@
       self.saveConditionField()
       self.saveExpectedField()
       self.update()
+    }
+
+    this.toggleConditionHelp = () => {
+      self.refs.conditionhelp.toggle()
+    }
+
+
+    this.toggleExpectedHelp = () => {
+      self.refs.expectedhelp.toggle()
     }
 
     self.statement = {
@@ -207,3 +279,37 @@
     }
   </script>
 </statement-form>
+
+<toggle-help>
+  <div show="{ showed }">
+    <div class="ui info message">
+      <yield />
+    </div>
+  </div>
+
+  <style>
+    .variable {
+      font-style: italic;
+      font-weight: bold;
+    }
+    .comment {
+      color: darkgray;
+    }
+  </style>
+
+  <script>
+    let self = this
+    self.showed = false
+    this.on('mount', () => {
+      if (self.opts.showed) {
+        self.showed = self.opts.showed
+      }
+    })
+
+    this.toggle = () => {
+      self.showed = !self.showed
+      self.update()
+    }
+  </script>
+
+</toggle-help>
