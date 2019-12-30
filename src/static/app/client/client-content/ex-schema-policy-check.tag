@@ -179,12 +179,14 @@
       self.refs.tableMapStatementModal.on('submit', () => {
         self.refs.tableMapStatementModal.refs.form.register((statement) => {
           self.schemaPolicy.tableMap.statementList.push(statement)
+          self.refs.tableMapStatementModal.hide()
           self.update()
         })
       })
       self.refs.columnMapStatementModal.on('submit', () => {
         self.refs.columnMapStatementModal.refs.form.register((statement) => {
           self.schemaPolicy.columnMap.statementList.push(statement)
+          self.refs.columnMapStatementModal.hide()
           self.update()
         })
       })
@@ -267,7 +269,8 @@
         text: 'Submit',
         action: 'submit',
         type: 'primary',
-        icon: 'checkmark'
+        icon: 'checkmark',
+        closable: false
       }, {
         text: 'Cancel'
       }],
@@ -279,7 +282,8 @@
         text: 'Submit',
         action: 'submit',
         type: 'primary',
-        icon: 'checkmark'
+        icon: 'checkmark',
+        closable: false
       }, {
         text: 'Cancel'
       }],
