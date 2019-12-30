@@ -42,8 +42,8 @@ ext {
             // Partner Library
             slf4j : '1.7.26',
             logback : '1.2.3',
-            jettyboot : '0.5.0-RC1',
-            lastadoc : '0.3.6',
+            jettyboot : '0.5.0',
+            lastadoc : '0.3.7',
             swaggerui : '3.22.1',
 
             // GoodNeighbor Library
