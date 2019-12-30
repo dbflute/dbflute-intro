@@ -21,20 +21,15 @@
           <div class="ui two column grid">
             <div class="column">
               <div class="ui inverted segment">
-                <div class="comment">// table name</div>
-                <div><span class="variable">tableName</span></div>
-                <div class="comment">// column name</div>
-                <div><span class="variable">columnName</span></div>
-                <div class="comment">// table(column) alias name</div>
-                <div><span class="variable">alias</span></div>
+                <div><span class="variable">tableName</span> <span class="comment">// table name on DB</span></div>
+                <div><span class="variable">columnName</span> <span class="comment">// column name on DB (only for column)</span></div>
+                <div><span class="variable">alias</span> <span class="comment">// table/column alias name e.g. Japanese name</span></div>
               </div>
             </div>
             <div class="column">
               <div class="ui inverted segment">
-                <div class="comment">// column's db type</div>
-                <div><span class="variable">dbType</span></div>
-                <div class="comment">// column registration date</div>
-                <div><span class="variable">firstDate</span></div>
+                <div><span class="variable">dbType</span> <span class="comment">// column's DB type (only for column)</span></div>
+                <div><span class="variable">firstDate</span> <span class="comment">// table/column registration date</span></div>
               </div>
             </div>
           </div>
@@ -59,20 +54,15 @@
         <div class="ui two column grid">
           <div class="column">
             <div class="ui inverted segment">
-              <div class="comment">// all table(column)</div>
-              <div><span class="variable">$$ALL$$</span></div>
-              <div class="comment">// table name</div>
-              <div><span class="variable">$$tableName$$</span></div>
-              <div class="comment">// column name</div>
-              <div><span class="variable">$$columnName$$</span></div>
+              <div><span class="variable">$$ALL$$</span> <span class="comment">// all tables/columns are target</span></div>
+              <div><span class="variable">prefix:MST_</span> <span class="comment">// that starts with "MST_" are target</span></div>
+              <div><span class="variable">suffix:_DAT</span> <span class="comment">// that ends with "_DATE" are target</span></div>
             </div>
           </div>
           <div class="column">
             <div class="ui inverted segment">
-              <div class="comment">// suffix is not "_DATE"</div>
-              <div><span class="variable">not suffix:_DATE</span></div>
-              <div class="comment">// contains XXX</div>
-              <div><span class="variable">contain:XXX</span></div>
+              <div><span class="variable">not ABC_DATE</span> <span class="comment">// "ABC_DATE" are NOT target</span></div>
+              <div><span class="variable">after:2018/05/03</span> <spab class="comment">// only for "firstDate" subject</spab></div>
             </div>
           </div>
         </div>
@@ -127,15 +117,13 @@
           <div class="column">
             <h5>Sample</h5>
             <div class="ui inverted segment">
-              <div class="comment">// FK name must be FK_[tableName]_[fk column name | target table name]</div>
+              <div class="comment">// FK constraint name must be FK_[tableName]_...</div>
               <div><span class="variable">fkName</span> is <span class="variable">prefix:FK_$$table$$</span></div>
-              <div class="comment">// db type must be bit</div>
-              <div><span class="variable">dbType</span> is <span class="variable">bit</span></div>
+              <div class="comment">// column DB type must be VARCHAR (only for column)</div>
+              <div><span class="variable">dbType</span> is <span class="variable">VARCHAR</span></div>
               <div class="ui divider"></div>
-              <div class="comment">// must has pk</div>
-              <div><span class="variable">hasPK</span></div>
-              <div class="comment">// must not be null</div>
-              <div><span class="variable">notNull</span></div>
+              <div><span class="variable">hasPK</span> <span class="comment">// must has PK constraint</span></div>
+              <div><span class="variable">notNull</span> <span class="comment">// must has NotNull constraint</span></div>
             </div>
             <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
           </div>
