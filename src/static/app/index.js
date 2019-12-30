@@ -29,6 +29,7 @@ import './common/common-menu.tag'
 import './common/i18n.tag'
 import './common/loading.tag'
 import './common/raw.tag'
+import './components/menu/menu-home.tag'
 import './error/404.tag'
 
 global.route = route;

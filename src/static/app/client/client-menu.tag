@@ -1,9 +1,6 @@
 <client-menu>
   <div class="ui left fixed small inverted vertical menu">
-    <a href="/" class="header item">
-      <span class="glyphicon glyphicon-home"></span>
-      DBFlute Intro
-    </a>
+    <menu-home></menu-home>
     <div class="item">
       <div class="header">Execute</div>
       <div class="ui tiny inverted vertical menu">
