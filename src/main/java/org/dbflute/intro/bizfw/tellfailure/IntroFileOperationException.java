@@ -22,8 +22,11 @@ import org.dbflute.intro.mylasta.action.IntroMessages;
 
 /**
  * @author cabos
+ * @author jflute
  */
 public class IntroFileOperationException extends IntroApplicationException {
+
+    private static final long serialVersionUID = 1L;
 
     public IntroFileOperationException(String debugMsg, String failureHint) {
         super(debugMsg, prepareMessages(failureHint));

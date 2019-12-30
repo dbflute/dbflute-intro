@@ -23,7 +23,7 @@
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
                     </div>
                     <div class="content">
-                      <a class="header">{ theme.name }</a>
+                      <div class="header">{ theme.name }</div>
                       <div class="description">
                         {theme.description}
                       </div>
@@ -39,7 +39,7 @@
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
                     </div>
                     <div class="content">
-                      <a class="header">{ theme.name }</a>
+                      <div class="header">{ theme.name }</div>
                       <div class="description">
                         {theme.description}
                       </div>
@@ -47,12 +47,14 @@
                   </div>
                 </div>
                 <h5>Statement</h5>
+                <button class="ui button" onclick="{ parent.parent.showTableMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
-                  <a class="item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
-                    <div class="content">
+                  <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
+                    <div class="statement content">
                       <div class="header">{ statement }</div>
                     </div>
-                  </a>
+                    <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
+                  </div>
                 </div>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
@@ -71,11 +73,13 @@
                   </div>
                 </div>
                 <h5>Statement</h5>
+                <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
-                  <a class="item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
-                    <div class="content">
+                  <a class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
+                    <div class="statement content">
                       <div class="header">{ statement }</div>
                     </div>
+                    <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </a>
                 </div>
               </su-tab>
@@ -98,9 +102,23 @@
     </div>
   </su-modal>
 
+  <su-modal modal="{ tableMapStatementModal }" projectName="{ projectName }" class="large" ref="tableMapStatementModal">
+    <statement-form projectName="{ opts.projectname }" type="tableMap" ref="form"></statement-form>
+  </su-modal>
+
+  <su-modal modal="{ columnMapStatementModal }" projectName="{ projectName }" class="large" ref="columnMapStatementModal">
+    <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
+  </su-modal>
+
   <style>
     .latest-result {
       margin-top: 1em;
+    }
+    .statement.delete.link.icon {
+      display: none;
+    }
+    .statement.item:hover .statement.delete.link.icon {
+      display: inline-block;
     }
   </style>
 
@@ -117,18 +135,51 @@
     let self = this
     self.client = opts.client
     this.schemaPolicy = {}
+    this.projectName = ''
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
-    this.on('mount', () => {
-      this.prepareSchemaPolicy(opts.projectName)
-      self.prepareComponents()
+    this.on('before-mount', () => {
+      self.projectName = opts.projectName
     })
 
-    this.prepareComponents = () => {
-      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
+    this.on('mount', () => {
+      this.prepareSchemaPolicy(opts.projectName)
+      this.prepareComponents(opts.projectName)
+      this.registerModalEvent()
+    })
+
+    this.prepareSchemaPolicy = (projectName) => {
+      self.fetchSchemaPolicy(projectName)
+    }
+
+    this.prepareComponents = (projectName) => {
+      self.latestResult = riot.mount('latest-result', { projectName: projectName, task: 'doc' })[0]
       self.updateLatestResult(self.client)
+    }
+
+    this.registerModalEvent = () => {
+      self.refs.tableMapStatementModal.on('submit', () => {
+        self.refs.tableMapStatementModal.refs.form.register((statement) => {
+          self.schemaPolicy.tableMap.statementList.push(statement)
+          self.update()
+        })
+      })
+      self.refs.columnMapStatementModal.on('submit', () => {
+        self.refs.columnMapStatementModal.refs.form.register((statement) => {
+          self.schemaPolicy.columnMap.statementList.push(statement)
+          self.update()
+        })
+      })
+    }
+
+    this.showTableMapModal = () => {
+      self.refs.tableMapStatementModal.show()
+    }
+
+    this.showColumnMapModal = () => {
+      self.refs.columnMapStatementModal.show()
     }
 
     this.updateLatestResult = (client) => {
@@ -174,6 +225,30 @@
       }
     }
 
+    this.tableMapStatementModal = {
+      header: 'Add TableMap Statement',
+      buttons: [{
+        text: 'Submit',
+        action: 'submit',
+        type: 'primary',
+        icon: 'checkmark'
+      }, {
+        text: 'Cancel'
+      }],
+    }
+
+    this.columnMapStatementModal = {
+      header: 'Add ColumnMap Statement',
+      buttons: [{
+        text: 'Submit',
+        action: 'submit',
+        type: 'primary',
+        icon: 'checkmark'
+      }, {
+        text: 'Cancel'
+      }],
+    }
+
     this.tabTitles = {
       wholeMap : 'Whole Schema Policy',
       tableMap : 'Table Schema Policy',
@@ -183,13 +258,6 @@
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
-    this.prepareSchemaPolicy = (projectName) => {
-      ApiFactory.schemaPolicy(projectName).then(json => {
-        self.schemaPolicy = json
-        self.update()
-      })
-    }
-
     this.editSchemaPolicyMap = (targetMap, typeCode) => {
       const targetTheme = this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode)
       const toggledActiveStatus = !targetTheme.isActive
@@ -203,6 +271,22 @@
 
       ApiFactory.editSchemaPolicy(opts.projectName, body).then(() => {
         this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode).isActive = toggledActiveStatus
+        self.update()
+      })
+    }
+    // ===================================================================================
+    //                                                                           Operation
+    //                                                                           =========
+    this.fetchSchemaPolicy = (projectName) => {
+      ApiFactory.schemaPolicy(projectName).then(json => {
+        self.schemaPolicy = json
+        self.update()
+      })
+    }
+
+    this.deleteStatement = (mapType, statement) => {
+      ApiFactory.deleteSchemapolicyStatement(opts.projectName, {mapType: mapType, statement: statement}).then(() => {
+        self.fetchSchemaPolicy(self.projectName)
         self.update()
       })
     }

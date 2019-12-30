@@ -23,11 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.dbflute.infra.dfprop.DfPropFile;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+import org.dbflute.intro.app.model.client.document.*;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 
@@ -327,9 +323,5 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
 
     private File prepareFileForTestResource(String fileName) {
         return new File(getProjectDir(), TEST_RESOURCE_BASE + "/dfprop/" + fileName);
-    }
-
-    private File prepareFileForTestClient(String filePath) {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + "/" + filePath);
     }
 }
