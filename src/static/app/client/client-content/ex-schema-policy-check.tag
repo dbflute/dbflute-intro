@@ -23,7 +23,7 @@
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
                     </div>
                     <div class="content">
-                      <a class="header">{ theme.name }</a>
+                      <div class="header">{ theme.name }</div>
                       <div class="description">
                         {theme.description}
                       </div>
@@ -39,7 +39,7 @@
                       <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
                     </div>
                     <div class="content">
-                      <a class="header">{ theme.name }</a>
+                      <div class="header">{ theme.name }</div>
                       <div class="description">
                         {theme.description}
                       </div>
@@ -47,14 +47,14 @@
                   </div>
                 </div>
                 <h5>Statement</h5>
-                <button class="ui button" onclick="{ parent.parent.showModal }">Add</button>
+                <button class="ui button" onclick="{ parent.parent.showTableMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
-                  <a class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
+                  <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
                     <div class="statement content">
                       <div class="header">{ statement }</div>
                     </div>
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
-                  </a>
+                  </div>
                 </div>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
@@ -73,6 +73,7 @@
                   </div>
                 </div>
                 <h5>Statement</h5>
+                <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <a class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
@@ -103,6 +104,10 @@
 
   <su-modal modal="{ tableMapStatementModal }" projectName="{ projectName }" class="large" ref="tableMapStatementModal">
     <statement-form projectName="{ opts.projectname }" type="tableMap" ref="form"></statement-form>
+  </su-modal>
+
+  <su-modal modal="{ columnMapStatementModal }" projectName="{ projectName }" class="large" ref="columnMapStatementModal">
+    <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
   </su-modal>
 
   <style>
@@ -161,10 +166,20 @@
           self.update()
         })
       })
+      self.refs.columnMapStatementModal.on('submit', () => {
+        self.refs.columnMapStatementModal.refs.form.register((statement) => {
+          self.schemaPolicy.columnMap.statementList.push(statement)
+          self.update()
+        })
+      })
     }
 
-    this.showModal = () => {
+    this.showTableMapModal = () => {
       self.refs.tableMapStatementModal.show()
+    }
+
+    this.showColumnMapModal = () => {
+      self.refs.columnMapStatementModal.show()
     }
 
     this.updateLatestResult = (client) => {
@@ -211,7 +226,19 @@
     }
 
     this.tableMapStatementModal = {
-      header: 'Add Statement',
+      header: 'Add TableMap Statement',
+      buttons: [{
+        text: 'Submit',
+        action: 'submit',
+        type: 'primary',
+        icon: 'checkmark'
+      }, {
+        text: 'Cancel'
+      }],
+    }
+
+    this.columnMapStatementModal = {
+      header: 'Add ColumnMap Statement',
       buttons: [{
         text: 'Submit',
         action: 'submit',
