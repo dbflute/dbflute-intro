@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.dbflute.allcommon.CDef;
@@ -122,14 +123,8 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         List<SQLFilePart> checkedFileList = checkedZip.checkedFiles;
         assertEquals(checkedFileList.size(), 2);
-        {
-            SQLFilePart checkedAlterSQLFile = checkedFileList.get(0);
-            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
-        }
-        {
-            SQLFilePart checkedAlterSQLFile = checkedFileList.get(1);
-            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_003.sql");
-        }
+        List<String> fileNameList = checkedFileList.stream().map(sqlFilePart -> sqlFilePart.fileName).collect(Collectors.toList());
+        assertTrue(fileNameList.containsAll(Arrays.asList("alter-schema_001.sql", "alter-schema_003.sql")));
     }
 
     public void test_index_checkedUnreleasedState() throws IOException {
@@ -157,18 +152,9 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertNotNull(unreleasedDir);
 
         List<SQLFilePart> checkedFiles = unreleasedDir.checkedFiles;
-        {
-            SQLFilePart file = checkedFiles.get(0);
-            assertEquals(file.fileName, "for-previous-20120804-1746.dfmark");
-        }
-        {
-            SQLFilePart file = checkedFiles.get(1);
-            assertEquals(file.fileName, "READONLY_alter-schema_sample.sql");
-        }
-        {
-            SQLFilePart file = checkedFiles.get(2);
-            assertEquals(file.fileName, "DONT_EDIT_HERE.dfmark");
-        }
+        List<String> fileNameList = checkedFiles.stream().map(sqlFilePart -> sqlFilePart.fileName).collect(Collectors.toList());
+        assertTrue(fileNameList.containsAll(
+                Arrays.asList("for-previous-20120804-1746.dfmark", "READONLY_alter-schema_sample.sql", "DONT_EDIT_HERE.dfmark")));
     }
 
     // -----------------------------------------------------
@@ -185,18 +171,8 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(3, fileList.size());
-        {
-            File file = fileList.get(0);
-            assertEquals(file.getName(), "alter-schema_sample.sql");
-        }
-        {
-            File file = fileList.get(1);
-            assertEquals(file.getName(), "alter-schema_003.sql");
-        }
-        {
-            File file = fileList.get(2);
-            assertEquals(file.getName(), "alter-schema_001.sql");
-        }
+        List<String> fileNameList = fileList.stream().map(file -> file.getName()).collect(Collectors.toList());
+        assertTrue(fileNameList.containsAll(Arrays.asList("alter-schema_sample.sql", "alter-schema_003.sql", "alter-schema_001.sql")));
     }
 
     public void test_prepare_notExistsAlterDir() throws IOException {
@@ -212,18 +188,8 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(3, fileList.size());
-        {
-            File file = fileList.get(0);
-            assertEquals(file.getName(), "alter-schema_sample.sql");
-        }
-        {
-            File file = fileList.get(1);
-            assertEquals(file.getName(), "alter-schema_003.sql");
-        }
-        {
-            File file = fileList.get(2);
-            assertEquals(file.getName(), "alter-schema_001.sql");
-        }
+        List<String> fileNameList = fileList.stream().map(file -> file.getName()).collect(Collectors.toList());
+        assertTrue(fileNameList.containsAll(Arrays.asList("alter-schema_sample.sql", "alter-schema_003.sql", "alter-schema_001.sql")));
     }
 
     public void test_prepare_notExistsHistoryDir() throws IOException {
@@ -299,14 +265,8 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(2, fileList.size());
-        {
-            File file = fileList.get(0);
-            assertEquals(file.getName(), body.alterFileName);
-        }
-        {
-            File file = fileList.get(1);
-            assertEquals(file.getName(), "alter-schema_sample.sql");
-        }
+        List<String> fileNameList = fileList.stream().map(file -> file.getName()).collect(Collectors.toList());
+        assertTrue(fileNameList.containsAll(Arrays.asList(body.alterFileName, "alter-schema_sample.sql")));
     }
 
     public void test_prepare_validateInvalidPrefix() {
