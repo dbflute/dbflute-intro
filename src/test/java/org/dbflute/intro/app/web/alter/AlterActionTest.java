@@ -124,7 +124,8 @@ public class AlterActionTest extends UnitIntroTestCase {
         List<SQLFilePart> checkedFileList = checkedZip.checkedFiles;
         assertEquals(checkedFileList.size(), 2);
         List<String> fileNameList = checkedFileList.stream().map(sqlFilePart -> sqlFilePart.fileName).collect(Collectors.toList());
-        assertTrue(fileNameList.containsAll(Arrays.asList("alter-schema_001.sql", "alter-schema_003.sql")));
+        List<String> expected = Arrays.asList("alter-schema_001.sql", "alter-schema_003.sql");
+        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
     }
 
     public void test_index_checkedUnreleasedState() throws IOException {
@@ -153,8 +154,9 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         List<SQLFilePart> checkedFiles = unreleasedDir.checkedFiles;
         List<String> fileNameList = checkedFiles.stream().map(sqlFilePart -> sqlFilePart.fileName).collect(Collectors.toList());
-        assertTrue(fileNameList.containsAll(
-                Arrays.asList("for-previous-20120804-1746.dfmark", "READONLY_alter-schema_sample.sql", "DONT_EDIT_HERE.dfmark")));
+        List<String> expected =
+                Arrays.asList("for-previous-20120804-1746.dfmark", "READONLY_alter-schema_sample.sql", "DONT_EDIT_HERE.dfmark");
+        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
     }
 
     // -----------------------------------------------------
@@ -171,8 +173,9 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(3, fileList.size());
-        List<String> fileNameList = fileList.stream().map(file -> file.getName()).collect(Collectors.toList());
-        assertTrue(fileNameList.containsAll(Arrays.asList("alter-schema_sample.sql", "alter-schema_003.sql", "alter-schema_001.sql")));
+        List<String> fileNameList = fileList.stream().map(File::getName).collect(Collectors.toList());
+        List<String> expected = Arrays.asList("alter-schema_sample.sql", "alter-schema_003.sql", "alter-schema_001.sql");
+        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
     }
 
     public void test_prepare_notExistsAlterDir() throws IOException {
@@ -188,8 +191,9 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(3, fileList.size());
-        List<String> fileNameList = fileList.stream().map(file -> file.getName()).collect(Collectors.toList());
-        assertTrue(fileNameList.containsAll(Arrays.asList("alter-schema_sample.sql", "alter-schema_003.sql", "alter-schema_001.sql")));
+        List<String> fileNameList = fileList.stream().map(File::getName).collect(Collectors.toList());
+        List<String> expected = Arrays.asList("alter-schema_sample.sql", "alter-schema_003.sql", "alter-schema_001.sql");
+        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
     }
 
     public void test_prepare_notExistsHistoryDir() throws IOException {
@@ -251,7 +255,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         }
     }
 
-    public void test_prepare_alreadyExistsAlterDir() throws IOException {
+    public void test_prepare_alreadyExistsAlterDir() {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -265,8 +269,9 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(2, fileList.size());
-        List<String> fileNameList = fileList.stream().map(file -> file.getName()).collect(Collectors.toList());
-        assertTrue(fileNameList.containsAll(Arrays.asList(body.alterFileName, "alter-schema_sample.sql")));
+        List<String> fileNameList = fileList.stream().map(File::getName).collect(Collectors.toList());
+        List<String> expected = Arrays.asList(body.alterFileName, "alter-schema_sample.sql");
+        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
     }
 
     public void test_prepare_validateInvalidPrefix() {
