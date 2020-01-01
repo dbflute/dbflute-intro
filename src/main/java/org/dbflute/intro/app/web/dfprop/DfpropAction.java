@@ -28,14 +28,7 @@ import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.dbflute.intro.app.model.client.document.DocumentMap;
-import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
-import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.intro.app.model.client.document.*;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
@@ -149,6 +142,34 @@ public class DfpropAction extends IntroBaseAction {
         SchemaPolicyColumnMap columnMap = new SchemaPolicyColumnMap(columnMapThemeList, Collections.emptyList());
 
         return new SchemaPolicyMap(SchemaPolicyTargetSetting.noSettingInstance(), wholeMap, tableMap, columnMap);
+    }
+
+    // -----------------------------------------------------
+    //                         AddSchemaPolicyCheckStatement
+    //                         -----------------------------
+    @NotAvailableDecommentServer
+    @Execute(urlPattern = "{}/@word/@word/@word")
+    public JsonResponse<String> schemapolicyStatementRegister(String project, DfpropRegisterSchemaPolicyStatementBody body) {
+        validate(body, messages -> {});
+        SchemaPolicyStatement statement = mappingToStatement(body);
+        String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(project, statement);
+        return asJson(builtStatement);
+    }
+    private SchemaPolicyStatement mappingToStatement(DfpropRegisterSchemaPolicyStatementBody body) {
+        SchemaPolicyStatement.Condition condition = new SchemaPolicyStatement.Condition(body.condition.operator, body.condition.conditions);
+        SchemaPolicyStatement.Expected expected = new SchemaPolicyStatement.Expected(body.expected.operator, body.expected.expected);
+        return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.comment);
+    }
+
+    // -----------------------------------------------------
+    //                      DeleteSchemaPolicyCheckStatement
+    //                      --------------------------------
+    @NotAvailableDecommentServer
+    @Execute(urlPattern = "{}/@word/@word/@word")
+    public JsonResponse<Void> schemapolicyStatementDelete(String project, DfpropDeleteSchemaPolicyStatementBody body) {
+        validate(body, messages -> {});
+        dfpropUpdateLogic.deleteSchemaPolicyStatement(project, body.mapType, body.statement);
+        return JsonResponse.asEmptyBody();
     }
 
     // -----------------------------------------------------

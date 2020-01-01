@@ -58,6 +58,7 @@ map:{
     ; columnMap = map:{
         ; themeList = list:{ upperCaseBasis }
         ; statementList = list:{
+            # standard policy
             ; if columnName is suffix:_FLAG then bad => should be _FLG
             ; if columnName is suffix:_FLG then notNull
             ; if columnName is suffix:_FLG then dbType is INT
@@ -70,6 +71,11 @@ map:{
             ; if tableColumnName is contain:BER.MEM then tableColumnName is contain:ER.ME
             ; if firstDate is after:2014/05/01 and tableName is MEMBER then sameColumnAliasIfSameColumnName
             ; if tableName is PURCHASE and firstDate is after:2014/06/01 then sameColumnNameIfSameColumnAlias
+
+            # test of long supplement comment
+            ; if columnName is suffix:DATE then alias is suffix:日 => DATEカラム(時分秒のない日付)なら論理名は "なんとか日" にしよう
+            ; if columnName is not suffix:DATE then alias is not suffix:日 => DATEカラム(時分秒のない日付)じゃないのに、"なんとか日" という論理名なの？
+            ; if columnName is suffix:DATE then dbType is date => なんとかDATEなら、日付ということで date に
         }
     }
 }

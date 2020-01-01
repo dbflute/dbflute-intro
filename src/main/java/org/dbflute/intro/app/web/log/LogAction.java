@@ -31,6 +31,8 @@ import org.lastaflute.web.exception.Forced404NotFoundException;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
+ * Endpoint for reading log files.
+ *
  * @author deco
  * @author jflute
  * @author cabos

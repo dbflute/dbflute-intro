@@ -50,8 +50,8 @@
     <h3>
       <small class="text-info">System Info</small>
     </h3>
-    <div class="ui stackable four column grid">
-      <div class="column" each="{ key, value in manifest }">
+    <div class="ui list">
+      <div class="item" each="{ key, value in manifest }">
         <small>{ value } = { key }</small>
       </div>
     </div>
@@ -117,7 +117,10 @@
     //                                                                          ==========
     this.introManifest = () => {
       ApiFactory.manifest().then((json) => {
-        self.manifest = json
+        self.manifest = {
+          'Implementation-Version': json['Implementation-Version'],
+          'Build-Timestamp': json['Build-Timestamp']
+        }
         self.update()
       })
     }

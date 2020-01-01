@@ -22,7 +22,7 @@ apply plugin: 'project-report' // ./gradlew dependencyReport: can make dependenc
 //                                                                              Basic Info
 //                                                                              ==========
 group = 'org.dbflute'
-version = '0.3.7'
+version = '0.3.8'
 
 ext {
     encoding = 'UTF-8'
@@ -35,15 +35,15 @@ ext {
             node : '8.7.0',
 
             // Main Framework
-            dbflute : '1.2.0-patch20190620-RC1',
+            dbflute : '1.2.1',
             h2 : '1.4.199',
-            lastaflute : '1.1.2',
+            lastaflute : '1.1.6',
 
             // Partner Library
             slf4j : '1.7.26',
             logback : '1.2.3',
-            jettyboot : '0.5.0-RC1',
-            lastadoc : '0.3.6',
+            jettyboot : '0.5.0',
+            lastadoc : '0.3.7',
             swaggerui : '3.22.1',
 
             // GoodNeighbor Library

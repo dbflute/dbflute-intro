@@ -25,6 +25,11 @@
   "LABEL_TAB_PLAYSQL": "playsql",
   "LABEL_TAB_LOG": "log",
 
+  "LABEL_subject" : "Subject",
+  "LABEL_conditions" : "Condition",
+  "LABEL_expected" : "Expected",
+  "LABEL_comment" : "Supplementary Comment",
+
   "MSG_REQUIRED" : "{{name}}を入力してください。",
   "MSG_INVALID" : "{{name}}「{{value}}」が不正です。",
   "MSG_EXIST_PROJECT" : "DB名「{{project}}」がすでに存在します。",

@@ -177,16 +177,16 @@ public class ClientAction extends IntroBaseAction {
     //                                             Operation
     //                                             ---------
     @Execute
-    public JsonResponse<ClientOperationResult> operation(String clientProject) {
+    public JsonResponse<ClientBasicResult> operation(String clientProject) {
         ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
         });
-        ClientOperationResult detailBean = mappingToOperationResult(clientModel);
+        ClientBasicResult detailBean = mappingToOperationResult(clientModel);
         return asJson(detailBean);
     }
 
-    private ClientOperationResult mappingToOperationResult(ClientModel clientModel) {
-        ClientOperationResult operation = new ClientOperationResult();
+    private ClientBasicResult mappingToOperationResult(ClientModel clientModel) {
+        ClientBasicResult operation = new ClientBasicResult();
         prepareBasic(operation, clientModel);
         String clientProject = clientModel.getProjectInfra().getClientProject();
         operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
@@ -200,7 +200,7 @@ public class ClientAction extends IntroBaseAction {
         return operation;
     }
 
-    private void prepareBasic(ClientOperationResult client, ClientModel clientModel) {
+    private void prepareBasic(ClientBasicResult client, ClientModel clientModel) {
         ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
         client.projectName = projectInfra.getClientProject();

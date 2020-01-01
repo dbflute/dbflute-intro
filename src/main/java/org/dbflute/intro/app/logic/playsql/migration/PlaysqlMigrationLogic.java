@@ -295,12 +295,13 @@ public class PlaysqlMigrationLogic {
     }
 
     private List<String> loadFileNamesFromCheckedZip(String zipPath) throws IOException {
-        final ZipFile zipFile = new ZipFile(zipPath);
-        return Collections.list(zipFile.entries())
-                .stream()
-                .filter(zipEntry -> DfStringUtil.endsWith(zipEntry.getName(), ".sql"))
-                .map(zipEntry -> zipEntry.getName())
-                .collect(Collectors.toList());
+        try (final ZipFile zipFile = new ZipFile(zipPath)) {
+            return Collections.list(zipFile.entries())
+                    .stream()
+                    .filter(zipEntry -> DfStringUtil.endsWith(zipEntry.getName(), ".sql"))
+                    .map(zipEntry -> zipEntry.getName())
+                    .collect(Collectors.toList());
+        }
     }
 
     // TODO cabos write test about newest (2019-10-08)
@@ -406,13 +407,14 @@ public class PlaysqlMigrationLogic {
     }
 
     private void doUnzipAlterSqlZip(String zipPath, String dstPath) throws IOException {
-        final ZipFile zipFile = new ZipFile(zipPath);
-        final Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            final ZipEntry entry = entries.nextElement();
-            final String fileName = entry.getName();
-            final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
-            Files.write(Paths.get(dstPath, fileName), Collections.singletonList(content));
+        try (final ZipFile zipFile = new ZipFile(zipPath)) {
+            final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                final ZipEntry entry = entries.nextElement();
+                final String fileName = entry.getName();
+                final String content = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+                Files.write(Paths.get(dstPath, fileName), Collections.singletonList(content));
+            }
         }
     }
 
