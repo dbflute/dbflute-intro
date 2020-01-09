@@ -47,7 +47,7 @@
             <h5 class="header">Begin New AlterCheck!!</h5>
             <form class="ui form">
               <div class="fields">
-                <div class="inline field">
+                <div class="inline field error{!validated}">
                   <label>alter-schema-</label>
                   <input type="text" ref="alterNameInput" placeholder="input ticket name">
                   <label>.sql</label>
@@ -151,6 +151,7 @@
       checkedFiles : []
     }
     self.preparedFileName = ''
+    self.validated = false
 
     // ===================================================================================
     //                                                                          Initialize
@@ -321,7 +322,12 @@
     }
 
     this.createAlterSql = () => {
-      const alterFileName = 'alter-schema-' + self.refs.alterNameInput.value + '.sql'
+      const ticketName = self.refs.alterNameInput.value
+      if (ticketName || ticketName === '') {
+        self.validated = true
+        return
+      }
+      const alterFileName = 'alter-schema-' + ticketName + '.sql'
       ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
         .then(() => {
           self.preparedFileName = alterFileName
