@@ -323,7 +323,7 @@
 
     this.createAlterSql = () => {
       const ticketName = self.refs.alterNameInput.value
-      if (ticketName || ticketName === '') {
+      if (!ticketName || ticketName === '') {
         self.validated = true
         return
       }
