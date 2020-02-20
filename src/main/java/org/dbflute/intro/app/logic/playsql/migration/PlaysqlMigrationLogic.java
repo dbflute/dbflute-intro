@@ -55,6 +55,7 @@ public class PlaysqlMigrationLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    // This pattern is same as DBFlute specification.
     private static final DateTimeFormatter ZIP_PATH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
     // ===================================================================================
