@@ -24,7 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -50,6 +51,12 @@ import org.dbflute.util.DfStringUtil;
  * @author subaru
  */
 public class PlaysqlMigrationLogic {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    // This pattern is same as DBFlute specification.
+    private static final DateTimeFormatter ZIP_PATH_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
     // ===================================================================================
     //                                                                           Attribute
@@ -304,7 +311,6 @@ public class PlaysqlMigrationLogic {
         }
     }
 
-    // TODO cabos write test about newest (2019-10-08)
     private OptionalThing<File> loadNewestCheckedZipFile(String clientProject) {
         final Path historyPath = new File(buildMigrationPath(clientProject, "history")).toPath();
         if (Files.notExists(historyPath)) {
@@ -323,14 +329,12 @@ public class PlaysqlMigrationLogic {
         }
     }
 
-    private int compareFileCreationTime(File file1, File file2) {
-        try {
-            final BasicFileAttributes file1Attributes = Files.readAttributes(file1.toPath(), BasicFileAttributes.class);
-            final BasicFileAttributes file2Attributes = Files.readAttributes(file2.toPath(), BasicFileAttributes.class);
-            return file1Attributes.creationTime().compareTo(file2Attributes.creationTime());
-        } catch (IOException e) {
-            return 1;
-        }
+    protected int compareFileCreationTime(File file1, File file2) {
+        final String file1Dir = file1.getParentFile().getName().replace("_", "");
+        final String file2Dir = file2.getParentFile().getName().replace("_", "");
+        final LocalDateTime date1 = LocalDateTime.parse(file1Dir, ZIP_PATH_DATE_FORMATTER);
+        final LocalDateTime date2 = LocalDateTime.parse(file2Dir, ZIP_PATH_DATE_FORMATTER);
+        return date1.compareTo(date2);
     }
 
     // ===================================================================================
