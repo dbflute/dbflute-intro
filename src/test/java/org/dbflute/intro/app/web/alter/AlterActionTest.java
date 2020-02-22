@@ -19,13 +19,11 @@ import static org.dbflute.intro.app.web.alter.AlterSQLResult.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.optional.OptionalThing;
@@ -33,7 +31,6 @@ import org.lastaflute.web.validation.exception.ValidationErrorException;
 
 /**
  * @author cabos
- * @author hakiba
  */
 public class AlterActionTest extends UnitIntroTestCase {
 
@@ -125,9 +122,14 @@ public class AlterActionTest extends UnitIntroTestCase {
 
         List<SQLFilePart> checkedFileList = checkedZip.checkedFiles;
         assertEquals(checkedFileList.size(), 2);
-        List<String> fileNameList = checkedFileList.stream().map(sqlFilePart -> sqlFilePart.fileName).collect(Collectors.toList());
-        List<String> expected = loadNewestCheckedFileNames();
-        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
+        {
+            SQLFilePart checkedAlterSQLFile = checkedFileList.get(0);
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_001.sql");
+        }
+        {
+            SQLFilePart checkedAlterSQLFile = checkedFileList.get(1);
+            assertEquals(checkedAlterSQLFile.fileName, "alter-schema_003.sql");
+        }
     }
 
     public void test_index_checkedUnreleasedState() throws IOException {
@@ -155,10 +157,18 @@ public class AlterActionTest extends UnitIntroTestCase {
         assertNotNull(unreleasedDir);
 
         List<SQLFilePart> checkedFiles = unreleasedDir.checkedFiles;
-        List<String> fileNameList = checkedFiles.stream().map(sqlFilePart -> sqlFilePart.fileName).collect(Collectors.toList());
-        List<String> expected =
-                Arrays.asList("for-previous-20120804-1746.dfmark", "READONLY_alter-schema_sample.sql", "DONT_EDIT_HERE.dfmark");
-        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
+        {
+            SQLFilePart file = checkedFiles.get(0);
+            assertEquals(file.fileName, "for-previous-20120804-1746.dfmark");
+        }
+        {
+            SQLFilePart file = checkedFiles.get(1);
+            assertEquals(file.fileName, "READONLY_alter-schema_sample.sql");
+        }
+        {
+            SQLFilePart file = checkedFiles.get(2);
+            assertEquals(file.fileName, "DONT_EDIT_HERE.dfmark");
+        }
     }
 
     // -----------------------------------------------------
@@ -175,9 +185,18 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(3, fileList.size());
-        List<String> fileNameList = fileList.stream().map(File::getName).collect(Collectors.toList());
-        List<String> expected = loadNewestCheckedFileNames();
-        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
+        {
+            File file = fileList.get(1);
+            assertEquals(file.getName(), "alter-schema_003.sql");
+        }
+        {
+            File file = fileList.get(2);
+            assertEquals(file.getName(), "alter-schema_001.sql");
+        }
     }
 
     public void test_prepare_notExistsAlterDir() throws IOException {
@@ -193,9 +212,18 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(3, fileList.size());
-        List<String> fileNameList = fileList.stream().map(File::getName).collect(Collectors.toList());
-        List<String> expected = loadNewestCheckedFileNames();
-        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
+        {
+            File file = fileList.get(1);
+            assertEquals(file.getName(), "alter-schema_003.sql");
+        }
+        {
+            File file = fileList.get(2);
+            assertEquals(file.getName(), "alter-schema_001.sql");
+        }
     }
 
     public void test_prepare_notExistsHistoryDir() throws IOException {
@@ -257,7 +285,7 @@ public class AlterActionTest extends UnitIntroTestCase {
         }
     }
 
-    public void test_prepare_alreadyExistsAlterDir() {
+    public void test_prepare_alreadyExistsAlterDir() throws IOException {
         // ## Arrange ##
         AlterAction alterAction = new AlterAction();
         inject(alterAction);
@@ -271,9 +299,14 @@ public class AlterActionTest extends UnitIntroTestCase {
         // ## Assert ##
         List<File> fileList = loadAlterDir();
         assertEquals(2, fileList.size());
-        List<String> fileNameList = fileList.stream().map(File::getName).collect(Collectors.toList());
-        List<String> expected = Arrays.asList(body.alterFileName, "alter-schema_sample.sql");
-        assertTrue(String.format("expected=%s, actual=%s", expected, fileNameList), fileNameList.containsAll(expected));
+        {
+            File file = fileList.get(0);
+            assertEquals(file.getName(), body.alterFileName);
+        }
+        {
+            File file = fileList.get(1);
+            assertEquals(file.getName(), "alter-schema_sample.sql");
+        }
     }
 
     public void test_prepare_validateInvalidPrefix() {
@@ -358,24 +391,5 @@ public class AlterActionTest extends UnitIntroTestCase {
         return OptionalThing.ofNullable(new File(getProjectDir(), ALTER_DIR).listFiles(), () -> {})
                 .map(Arrays::asList)
                 .orElse(Collections.emptyList());
-    }
-
-    // TODO hakiba delete when assertions can be made in checked zip files for test (2020-01-01)
-    private List<String> loadNewestCheckedFileNames() {
-        PlaysqlMigrationLogic logic = new PlaysqlMigrationLogic();
-        inject(logic);
-        return logic.loadNewestCheckedZipFile(TEST_CLIENT_PROJECT).map(zipFile -> {
-            List<String> fileNames = new ArrayList<>();
-            try (final ZipFile file = new ZipFile(zipFile.getPath())) {
-                final Enumeration<? extends ZipEntry> entries = file.entries();
-                while (entries.hasMoreElements()) {
-                    final ZipEntry entry = entries.nextElement();
-                    fileNames.add(entry.getName());
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Failed to unzip checked alter sql zip file: " + zipFile.getPath(), e);
-            }
-            return fileNames;
-        }).orElse(Collections.emptyList());
     }
 }
