@@ -71,18 +71,18 @@ public class DocumentDecommentAction extends IntroBaseAction {
     /**
      * save decomment piece map
      *
-     * @param projectName project name e.g. maihamadb (NotNull)
+     * @param clientName project name e.g. maihamadb (NotNull)
      * @param body decomment save body (NotNull)
      * @return void (NotNull)
      */
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> save(String projectName, DecommentSaveBody body) {
+    public JsonResponse<Void> save(String clientName, DecommentSaveBody body) {
         // done cabos validate columnName exists if target type is COLUMN in more validation by jflute (2017/11/11)
         // this is as client error so you can use verifyOrClientError(debugMsg, expectedBool);
         validate(body, messages -> moreValidate(body, messages));
         verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
         verifyOrClientError(buildDebugMessageInputAuthorIsNull(body), hasInputAuthorWhenIntroServer(body));
-        decommentPhysicalLogic.saveDecommentPiece(projectName, mappingToDecoMapPiece(body));
+        decommentPhysicalLogic.saveDecommentPiece(clientName, mappingToDecoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
 
@@ -123,9 +123,10 @@ public class DocumentDecommentAction extends IntroBaseAction {
         String author = introSystemLogic.isDecommentServer() ? body.inputAuthor : getAuthor();
         String gitBranch = getGitBranch().orElse(null);
         LocalDateTime pieceDatetime = timeManager.currentDateTime();
-        DfDecoMapPiece piece = new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType,
-                body.decomment, body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author),
-                pieceDatetime, author, gitBranch, body.previousPieces);
+        DfDecoMapPiece piece =
+                new DfDecoMapPiece(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, body.tableName, body.columnName, body.targetType, body.decomment,
+                        body.databaseComment, body.commentVersion, body.authors, buildPieceCode(body, pieceDatetime, author), pieceDatetime,
+                        author, gitBranch, body.previousPieces);
         return piece;
     }
 
@@ -151,12 +152,12 @@ public class DocumentDecommentAction extends IntroBaseAction {
     /**
      * save decomment piece map
      *
-     * @param projectName project name e.g. maihamadb (NotNull)
+     * @param clientName project name e.g. maihamadb (NotNull)
      * @return merged pickup as json (NotNull)
      */
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DecommentPickupResult> pickup(String projectName) {
-        DfDecoMapPickup pickup = decommentPhysicalLogic.readMergedPickup(projectName);
+    public JsonResponse<DecommentPickupResult> pickup(String clientName) {
+        DfDecoMapPickup pickup = decommentPhysicalLogic.readMergedPickup(clientName);
         return asJson(new DecommentPickupResult(pickup.getTableList()));
     }
 
@@ -166,15 +167,15 @@ public class DocumentDecommentAction extends IntroBaseAction {
     /**
      * save decomment mapping map
      *
-     * @param projectName project name e.g. maihamadb (NotNull)
+     * @param clientName project name e.g. maihamadb (NotNull)
      * @param body decomment mapping save body (NotNull)
      * @return void (NotNull)
      */
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> mapping(String projectName, DecommentMappingSaveBody body) {
+    public JsonResponse<Void> mapping(String clientName, DecommentMappingSaveBody body) {
         validate(body, messages -> {});
         verifyOrClientError(buildDebugMessageColumnNameIsNull(body), hasColumnNameWhenTargetTypeIsColumn(body));
-        decommentPhysicalLogic.saveDecommentMapping(projectName, mappingToDecoMapMapping(body));
+        decommentPhysicalLogic.saveDecommentMapping(clientName, mappingToDecoMapMapping(body));
         return JsonResponse.asEmptyBody();
     }
 

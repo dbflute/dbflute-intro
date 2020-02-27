@@ -91,9 +91,9 @@ public class SettingsAction extends IntroBaseAction {
     //                                                  ----
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String projectName, SettingsUpdateBody settingsBody) {
+    public JsonResponse<Void> edit(String clientName, SettingsUpdateBody settingsBody) {
         validate(settingsBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(projectName, settingsBody.client);
+        ClientModel clientModel = mappingToClientModel(clientName, settingsBody.client);
         settingsUpdateLogic.updateDatabaseInfoMap(clientModel);
         return JsonResponse.asEmptyBody();
     }
