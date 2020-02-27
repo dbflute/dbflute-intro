@@ -1,6 +1,7 @@
 #!/bin/sh
 
-TAG=`git tag | tail -1f`
+TAG=${1}
+echo ${TAG}
 VERSION=`echo ${TAG} | sed s/dbflute-intro-//g`
 
 echo "TAG      : ${TAG}"
