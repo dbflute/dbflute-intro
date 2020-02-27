@@ -1,0 +1,83 @@
+version: 2.1
+orbs:
+  slack: circleci/slack@3.4.0
+executors:
+  build_container:
+    docker:
+      - image: circleci/openjdk:8-jdk-node
+commands:
+  restore-gradle:
+    steps:
+      - restore_cache:
+          keys:
+            - dbflute-intro-gradle-build-{{ checksum "build.gradle" }}
+            - dbflute-intro-gradle-build-
+  save-gradle:
+    steps:
+      - save_cache:
+          key: dbflute-intro-gradle-build-{{ checksum "build.gradle" }}
+          paths:
+            - ~/.gradle
+  setup-front:
+    steps:
+      - run:
+          name: setup front
+          command: |
+            npm install node@8
+  restore-npm:
+    steps:
+      - restore_cache:
+          keys:
+            - dbflute-intro-npm-deps-{{ checksum "package.json" }}
+            - dbflute-intro-npm-deps-
+  save-npm:
+    steps:
+      - save_cache:
+          key: dbflute-npm-deps-{{ checksum "package.json" }}
+          paths:
+            - ~/node_modules
+jobs:
+  test_and_build:
+    executor:
+      name: build_container
+    steps:
+      - checkout
+      - restore-gradle
+      - save-gradle
+      - run:
+          name: run unit test
+          command: ./gradlew test --debug
+          when: always
+      - store_test_results:
+          path: ./build/test-results
+      - store_artifacts:
+          path: ./build/test-results
+      - run:
+          name: build backend
+          command: ./gradlew build
+      - persist_to_workspace:
+          root: ./build/libs
+          paths:
+            - dbflute-intro.jar
+  notify_result:
+    docker:
+      - image: circleci/node
+    steps:
+      - slack/notify:
+          channel: intro_ci_notify
+          title: ":tada: Suceess!!"
+          message: "<https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}|Execute Workflow>"
+          color: '#adff2f'
+workflows:
+  version: 2.1
+  topic_branch_test_and_build:
+    jobs:
+      - test_and_build
+      - notify_result:
+          requires:
+            - test_and_build
+      - ★ start_deploy:
+          type: approval
+          requires:
+            - test_and_build
+

@@ -135,6 +135,7 @@ war {
     includeEmptyDirs = false
 
     version = ''
+    archivesBaseName = 'dbflute-intro'
     extension = 'jar'
 
     def scmBranch = 'unknown'
