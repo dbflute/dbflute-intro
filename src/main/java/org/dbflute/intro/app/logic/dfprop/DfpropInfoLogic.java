@@ -15,8 +15,18 @@
  */
 package org.dbflute.intro.app.logic.dfprop;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,7 +36,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.dbflute.intro.app.model.client.document.*;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.util.DfCollectionUtil;
 import org.dbflute.util.Srl;
 
