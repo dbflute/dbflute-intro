@@ -89,8 +89,8 @@ public class DfpropInfoLogic {
     // -----------------------------------------------------
     //                                       SchemaSyncCheck
     //                                       ---------------
-    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String clientName) {
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) {
             return Optional.empty();

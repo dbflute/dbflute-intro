@@ -98,8 +98,8 @@ public class SettingsAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
-        return newClientModel(projectName, clientBody);
+    private ClientModel mappingToClientModel(String clientName, ClientPart clientBody) {
+        return newClientModel(clientName, clientBody);
     }
 
     private ClientModel newClientModel(String projectName, ClientPart clientBody) {
@@ -110,8 +110,8 @@ public class SettingsAction extends IntroBaseAction {
         return clientModel;
     }
 
-    private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
-        return new ProjectInfra(projectName, clientBody.dbfluteVersion, null);
+    private ProjectInfra prepareProjectInfra(String clientName, ClientPart clientBody) {
+        return new ProjectInfra(clientName, clientBody.dbfluteVersion, null);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {

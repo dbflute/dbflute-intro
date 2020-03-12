@@ -216,11 +216,11 @@ public class ClientAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
-        String projectName = clientCreateBody.client.projectName;
+        String clientName = clientCreateBody.client.projectName;
         validate(clientCreateBody, messages -> {
             ClientPart client = clientCreateBody.client;
-            if (clientInfoLogic.getProjectList().contains(projectName)) {
-                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
+            if (clientInfoLogic.getProjectList().contains(clientName)) {
+                messages.addErrorsWelcomeClientAlreadyExists("projectName", clientName);
             }
             TargetDatabase databaseCd = client.databaseCode;
             if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
@@ -231,7 +231,7 @@ public class ClientAction extends IntroBaseAction {
                     .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
                     .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
-        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(clientName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -241,9 +241,9 @@ public class ClientAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> edit(String clientName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(clientName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -251,25 +251,25 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
-        return newClientModel(projectName, clientBody);
+    private ClientModel mappingToClientModel(String clientName, ClientPart clientBody) {
+        return newClientModel(clientName, clientBody);
     }
 
-    private ClientModel newClientModel(String projectName, ClientPart clientBody) {
-        ProjectInfra projectInfra = prepareProjectInfra(projectName, clientBody);
+    private ClientModel newClientModel(String clientName, ClientPart clientBody) {
+        ProjectInfra projectInfra = prepareProjectInfra(clientName, clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
         ClientModel clientModel = new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
         return clientModel;
     }
 
-    private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
+    private ProjectInfra prepareProjectInfra(String clientName, ClientPart clientBody) {
         if (Objects.isNull(clientBody.jdbcDriver)) {
-            return new ProjectInfra(projectName, clientBody.dbfluteVersion);
+            return new ProjectInfra(clientName, clientBody.dbfluteVersion);
         }
         ExtlibFile extlibFile =
-                clientPhysicalLogic.createExtlibFile(projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
-        return new ProjectInfra(projectName, clientBody.dbfluteVersion, extlibFile);
+                clientPhysicalLogic.createExtlibFile(clientName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+        return new ProjectInfra(clientName, clientBody.dbfluteVersion, extlibFile);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
