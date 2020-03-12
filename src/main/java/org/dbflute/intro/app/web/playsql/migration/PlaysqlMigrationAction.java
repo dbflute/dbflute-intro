@@ -34,8 +34,8 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
     private PlaysqlMigrationLogic playsqlMigrationLogic;
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> alter(String clientProject) {
-        playsqlMigrationLogic.openAlterDir(clientProject);
+    public JsonResponse<Void> alter(String clientName) {
+        playsqlMigrationLogic.openAlterDir(clientName);
         return JsonResponse.asEmptyBody();
     }
 }

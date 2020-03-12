@@ -84,8 +84,8 @@ public class EngineAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> remove(String version) {
-        engineInstallLogic.remove(version);
+    public JsonResponse<Void> remove(String dbfluteVersion) {
+        engineInstallLogic.remove(dbfluteVersion);
         return JsonResponse.asEmptyBody();
     }
 }

@@ -51,62 +51,62 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
-    private String buildDfpropDirPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "dfprop");
+    private String buildDfpropDirPath(String clientName) {
+        return introPhysicalLogic.buildClientPath(clientName, "dfprop");
     }
 
-    private String buildDfpropFilePath(String clientProject, String fileName) {
-        return buildDfpropDirPath(clientProject) + "/" + fileName;
+    private String buildDfpropFilePath(String clientName, String fileName) {
+        return buildDfpropDirPath(clientName) + "/" + fileName;
     }
 
-    public File findDfpropBasicInfoMap(String clientProject) {
-        return new File(buildDfpropFilePath(clientProject, BASIC_INFO_MAP_DFPROP));
+    public File findDfpropBasicInfoMap(String clientName) {
+        return new File(buildDfpropFilePath(clientName, BASIC_INFO_MAP_DFPROP));
     }
 
-    public File findDfpropDatabaseInfoMap(String clientProject) {
-        return new File(buildDfpropFilePath(clientProject, DATABASE_INFO_MAP_DFPROP));
+    public File findDfpropDatabaseInfoMap(String clientName) {
+        return new File(buildDfpropFilePath(clientName, DATABASE_INFO_MAP_DFPROP));
     }
 
     // ===================================================================================
     //                                                                              extlib
     //                                                                              ======
-    public ExtlibFile createExtlibFile(String clientProject, String fileName, String jdbcDriverFileDataBase64) {
-        String filePath = buildExtlibDirPath(clientProject) + "/" + fileName;
+    public ExtlibFile createExtlibFile(String clientName, String fileName, String jdbcDriverFileDataBase64) {
+        String filePath = buildExtlibDirPath(clientName) + "/" + fileName;
         return new ExtlibFile(filePath, jdbcDriverFileDataBase64);
     }
 
-    private String buildExtlibDirPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "extlib");
+    private String buildExtlibDirPath(String clientName) {
+        return introPhysicalLogic.buildClientPath(clientName, "extlib");
     }
 
-    public File findExtlibDir(String clientProject) {
-        return new File(buildExtlibDirPath(clientProject));
+    public File findExtlibDir(String clientName) {
+        return new File(buildExtlibDirPath(clientName));
     }
 
     // ===================================================================================
     //                                                                             playsql
     //                                                                             =======
-    private String buildPlaysqlDirPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql");
+    private String buildPlaysqlDirPath(String clientName) {
+        return introPhysicalLogic.buildClientPath(clientName, "playsql");
     }
 
-    public File findPlaysqlDir(String clientProject) {
-        return new File(buildPlaysqlDirPath(clientProject));
+    public File findPlaysqlDir(String clientName) {
+        return new File(buildPlaysqlDirPath(clientName));
     }
 
     // ===================================================================================
     //                                                                               Meta
     //                                                                              ======
-    public File findProjectBat(String clientProject) {
-        return new File(introPhysicalLogic.buildClientPath(clientProject, "_project.bat"));
+    public File findProjectBat(String clientName) {
+        return new File(introPhysicalLogic.buildClientPath(clientName, "_project.bat"));
     }
 
-    public File findProjectSh(String clientProject) {
-        return new File(introPhysicalLogic.buildClientPath(clientProject, "_project.sh"));
+    public File findProjectSh(String clientName) {
+        return new File(introPhysicalLogic.buildClientPath(clientName, "_project.sh"));
     }
 
-    public File findBuildProperties(String clientProject) {
-        return new File(introPhysicalLogic.buildClientPath(clientProject, "build.properties"));
+    public File findBuildProperties(String clientName) {
+        return new File(introPhysicalLogic.buildClientPath(clientName, "build.properties"));
     }
 
     // ===================================================================================
