@@ -14,18 +14,9 @@
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
       <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
-      <div class="ui list" if="{ existsCheckedFiles() }">
-        <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
+      <alter-check-files if="{ existsCheckedFiles() }" alterfiles="{ checkedZip.checkedFiles }">
+        <!-- -->
+      </alter-check-files>
 
       <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
       <div class="ui list" if="{ existsUnreleasedFiles() }">
