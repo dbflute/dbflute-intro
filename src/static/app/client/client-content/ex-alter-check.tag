@@ -14,14 +14,14 @@
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
       <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
-      <alter-check-files if="{ existsCheckedFiles() }" checkedfiles="{ checkedZip.checkedFiles }">
+      <alter-check-checked-files if="{ existsCheckedFiles() }" checkedfiles="{ checkedZip.checkedFiles }">
         <!-- -->
-      </alter-check-files>
+      </alter-check-checked-files>
 
       <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
-      <alter-check-files if="{ existsUnreleasedFiles() }" checkedfiles="{ unreleasedDir.checkedFiles }">
+      <alter-check-checked-files if="{ existsUnreleasedFiles() }" checkedfiles="{ unreleasedDir.checkedFiles }">
         <!-- -->
-      </alter-check-files>
+      </alter-check-checked-files>
 
       <div class="ui placeholder segment">
         <div class="ui two column very relaxed stackable grid">
