@@ -12,23 +12,12 @@
     <!-- Step 1 -->
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
-
-      <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
-
-      <div class="ui placeholder segment">
-        <div class="ui two column very relaxed stackable grid">
-          <div class="column">
-            <alter-check-begin-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
-          </div>
-          <div class="column">
-            <alter-check-fix-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
-          </div>
-        </div>
-        <div class="ui vertical divider">
-          Or
-        </div>
+      <div class="ui basic segment">
+        <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
       </div>
-
+      <div class="ui basic segment">
+        <alter-check-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
+      </div>
     </section>
 
     <!-- Step 2 -->
