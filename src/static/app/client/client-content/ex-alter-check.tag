@@ -12,12 +12,8 @@
     <!-- Step 1 -->
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
-      <div class="ui basic segment">
-        <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
-      </div>
-      <div class="ui basic segment">
-        <alter-check-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
-      </div>
+      <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
+      <alter-check-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
     </section>
 
     <!-- Step 2 -->

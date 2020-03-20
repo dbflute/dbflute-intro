@@ -1,5 +1,5 @@
 <alter-check-checked>
-  <div class="ui items">
+  <div class="ui items basic segment">
     <div class="item">
       <alter-check-checked-zip if="{ existsCheckedFiles }" checkedzip="{ opts.checkedzip }" />
     </div>
