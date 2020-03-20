@@ -25,29 +25,10 @@
       <div class="ui placeholder segment">
         <div class="ui two column very relaxed stackable grid">
           <div class="column">
-            <h5 class="header">Begin New AlterCheck!!</h5>
-            <form class="ui form">
-              <div class="fields">
-                <div class="inline field error{!validated}">
-                  <label>alter-schema-</label>
-                  <input type="text" ref="alterNameInput" placeholder="input ticket name">
-                  <label>.sql</label>
-                </div>
-                <div class="inline field">
-                  <button class="ui primary button" onclick="{ createAlterSql }">Begin</button>
-                </div>
-              </div>
-            </form>
+            <alter-check-begin-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
           </div>
           <div class="column">
-            <h5 class="header">Fix existing Alter SQL</h5>
-            <form class="ui form">
-              <div class="fields">
-                <div class="field">
-                  <button class="ui button" onclick="{ prepareAlterCheck }">Fix</button>
-                </div>
-              </div>
-            </form>
+            <alter-check-fix-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
           </div>
         </div>
         <div class="ui vertical divider">
@@ -291,15 +272,6 @@
           self.refs.executeModal.hide()
         })
       })
-    }
-
-    this.prepareAlterCheck = () => {
-      ApiFactory.prepareAlterSql(self.opts.projectName)
-        .then(() => {
-          ApiFactory.openAlterDir(self.opts.projectName)
-        }).finally(() => {
-          self.updateContents()
-        })
     }
 
     this.createAlterSql = () => {
