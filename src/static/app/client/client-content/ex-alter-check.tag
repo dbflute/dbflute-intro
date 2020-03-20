@@ -13,9 +13,14 @@
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
 
-      <alter-check-checked-zip if="{ existsCheckedFiles() }" checkedzip="{ checkedZip }" />
-
-      <alter-check-unrelease-dir if="{ existsUnreleasedFiles() }" unreleaseddir="{ unreleasedDir }" />
+      <div class="ui items">
+        <div class="item">
+          <alter-check-checked-zip if="{ existsCheckedFiles() }" checkedzip="{ checkedZip }" />
+        </div>
+        <div class="item">
+          <alter-check-unrelease-dir if="{ existsUnreleasedFiles() }" unreleaseddir="{ unreleasedDir }" />
+        </div>
+      </div>
 
       <div class="ui placeholder segment">
         <div class="ui two column very relaxed stackable grid">
