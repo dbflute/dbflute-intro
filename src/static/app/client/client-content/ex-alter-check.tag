@@ -13,7 +13,7 @@
     <section if="{ !isEditing() }">
       <h4 class="ui header">Step1. Prepare alter sql</h4>
       <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
-      <alter-check-form projectname="{ opts.projectName }" updatehandler="{ updateContents }" />
+      <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
     </section>
 
     <!-- Step 2 -->
@@ -92,6 +92,10 @@
     }
     self.preparedFileName = ''
     self.validated = false
+
+    self.state = {
+      inputFileName : ''
+    }
 
     // ===================================================================================
     //                                                                          Initialize
@@ -267,7 +271,16 @@
     }
 
     this.nowPrepared = (fileName) => {
-      return self.preparedFileName != null && self.preparedFileName === fileName
+      const inputFileName = self.state.inputFileName
+      const alterFileName = 'alter-schema-' + inputFileName + '.sql'
+      return alterFileName === fileName
+    }
+
+    this.updateBegin = () => {
+      self.state = {
+        inputFileName : self.refs.altercheckform.refs.beginform.refs.alterNameInput.value
+      }
+      self.updateContents()
     }
 
     this.updateContents = () => {
