@@ -31,14 +31,11 @@
     this.createAlterSql = () => {
       const ticketName = self.refs.alterNameInput.value
       if (self.validate(ticketName)) {
-        console.log('validated')
         return
       }
       apiFactory.prepareAlterSql(projectName).then(() => {
-        console.log('prepared')
         const alterFileName = 'alter-schema-' + ticketName + '.sql'
         apiFactory.createAlterSql(projectName, alterFileName).then(() => {
-          self.preparedFileName = alterFileName
           updateHandler()
         })
       })
