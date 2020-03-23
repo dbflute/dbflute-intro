@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.infra.doc.decomment.DfDecoMapPiece;
 import org.dbflute.infra.doc.decomment.DfDecoMapPieceTargetType;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
@@ -69,7 +69,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         // Assert by visual confirmation
         // done cabos file assert by testdb by jflute (2017/09/07)
         File pieceFile = verifyPieceFile(pieceDir);
-        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        Map<String, Object> actualMap = new DfMapFile().readMap(new FileInputStream(pieceFile));
         log("[Saved Piece]: {}", pieceFile.getName());
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
@@ -109,7 +109,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         // Assert by visual confirmation
         // done cabos file assert by testdb by jflute (2017/09/07)
         File pieceFile = verifyPieceFile(pieceDir);
-        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        Map<String, Object> actualMap = new DfMapFile().readMap(new FileInputStream(pieceFile));
         log("[Saved Piece]: {}", pieceFile.getName());
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
@@ -274,7 +274,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         // Assert by visual confirmation
         // done cabos file assert by testdb by jflute (2017/09/07)
         File pieceFile = verifyMappingFile(pieceDir);
-        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        Map<String, Object> actualMap = new DfMapFile().readMap(new FileInputStream(pieceFile));
         log("[Saved Piece]: {}", pieceFile.getName());
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
@@ -314,7 +314,7 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         // Assert by visual confirmation
         // done cabos file assert by testdb by jflute (2017/09/07)
         File pieceFile = verifyMappingFile(pieceDir);
-        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        Map<String, Object> actualMap = new DfMapFile().readMap(new FileInputStream(pieceFile));
         log("[Saved Piece]: {}", pieceFile.getName());
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);

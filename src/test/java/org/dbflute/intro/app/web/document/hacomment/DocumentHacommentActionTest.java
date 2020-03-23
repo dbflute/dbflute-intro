@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.dbflute.helper.mapstring.MapListFile;
+import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.lastaflute.web.response.JsonResponse;
@@ -54,7 +54,7 @@ public class DocumentHacommentActionTest extends UnitIntroTestCase {
 
         // ## Assert ##
         File pieceFile = verifyPieceFile(pieceDir);
-        Map<String, Object> actualMap = new MapListFile().readMap(new FileInputStream(pieceFile));
+        Map<String, Object> actualMap = new DfMapFile().readMap(new FileInputStream(pieceFile));
         log("[Saved Piece]: {}", pieceFile.getName());
         actualMap.forEach((key, value) -> {
             log("  {} = {}", key, value);
