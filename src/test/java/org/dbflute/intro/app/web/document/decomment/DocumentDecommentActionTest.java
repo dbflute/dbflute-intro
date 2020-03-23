@@ -283,9 +283,9 @@ public class DocumentDecommentActionTest extends UnitIntroTestCase {
         assertEquals(DfDecoMapPiece.DEFAULT_FORMAT_VERSION, actualMap.get("formatVersion"));
         body.mappings.forEach(mapping -> {
             assertEquals(mapping.oldTableName, actualMap.get("oldTableName"));
-            assertEquals(actualMap.get("oldColumnName"), null);
+            assertNull(actualMap.get("oldColumnName"));
             assertEquals(mapping.newTableName, actualMap.get("newTableName"));
-            assertEquals(actualMap.get("newColumnName"), null);
+            assertNull(actualMap.get("newColumnName"));
             List<String> expectedAuthorList = newArrayList(mapping.authors);
             expectedAuthorList.add(documentAuthorLogic.getAuthor());
             assertEquals(expectedAuthorList, actualMap.get("authorList"));
