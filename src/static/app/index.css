@@ -31,7 +31,7 @@ span.frm {
 =======================================================*/
 
 /* to move menu to left side */
-.body {
+.fixed-user-area {
   display: flex;
   flex-direction: row;
 }
