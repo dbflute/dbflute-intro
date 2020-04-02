@@ -1,35 +1,57 @@
 /* ======================================================
-  common.
+  common
 =======================================================*/
+
+/* DBFlute-like background */
 body {
   background: transparent url(../image/parts/background.png) repeat-x;
 }
 
+/* DBFlute-like title */
 h2 {
   padding-left:40px;
   line-height: 62px;
   background: transparent url(../image/parts/head-score.png) no-repeat;
 }
 
+/* finder pointer for link (why needed?) */
 a:hover {
   cursor : pointer;
 }
 
+/* free comment like DBFlute official site */
 span.frm {
   color: green;
   font-size: 85%;/*11px*/
 }
 
+
+/* ======================================================
+  index.html
+=======================================================*/
+
+/* to move menu to left side */
 .body {
   display: flex;
   flex-direction: row;
 }
 
-content {
-  margin-left: 15rem;
-}
 
-/* ------------------------------------------ menu --- */
+/* ======================================================
+  Menu
+=======================================================*/
+
+/* for Intro home on left-side menu */
 .menu-home-text {
   font-size: 150%;
+}
+
+
+/* ======================================================
+  SchemaPolicyCheck
+=======================================================*/
+
+/* for ex-schema-policy-check.tag and st-schema-policy.tag */
+content {
+  margin-left: 15rem;
 }
