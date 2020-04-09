@@ -30,10 +30,15 @@ span.frm {
   index.html
 =======================================================*/
 
-/* to move menu to left side */
+/* means side-menu and content, to move menu to left side */
 .fixed-user-area {
   display: flex;
   flex-direction: row;
+}
+
+/* content tag on fixed-user-area, to save from left menu shadow */
+content {
+  margin-left: 15rem;
 }
 
 
@@ -46,12 +51,3 @@ span.frm {
   font-size: 150%;
 }
 
-
-/* ======================================================
-  SchemaPolicyCheck
-=======================================================*/
-
-/* for ex-schema-policy-check.tag and st-schema-policy.tag */
-content {
-  margin-left: 15rem;
-}
