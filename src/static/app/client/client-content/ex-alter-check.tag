@@ -20,23 +20,9 @@
     <section show="{ isEditing() }">
       <h3>Step2. Execute AlterCheck</h3>
 
-      <div class="ui list">
-        <div class="item" each="{ alterItem in editingSqls }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
+      <alter-check-editting-files editingsqls="{ editingSqls }" preparedfilename="{ preparedFileName }" projectname="{ projectName }" />
 
-      <div class="ui list">
-        <div class="item">
-          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
-        </div>
+      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
 
         <div class="item altercheck-execution">
           <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
@@ -265,11 +251,12 @@
         return
       }
       const alterFileName = 'alter-schema-' + ticketName + '.sql'
+      self.preparedFileName = alterFileName
       ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
         .then(() => {
-          self.preparedFileName = alterFileName
           self.prepareAlterCheck()
         })
+      riot.mount('alter-check-editting-files', {}, 'alter-check-editting-files')
     }
 
     this.nowPrepared = (fileName) => {
