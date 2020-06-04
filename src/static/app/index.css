@@ -7,11 +7,42 @@ body {
   background: transparent url(../image/parts/background.png) repeat-x;
 }
 
+h1 {
+	margin: 0 -20px 40px -20px;
+	padding: 40px 0 10px 140px;
+	line-height: 40px;
+	font-size: 200%;
+	text-align: left;
+	/* #thinking jflute not matched for now (2020/04/30)
+	background: url("../image/parts/head-flutist.png") no-repeat bottom left;
+	*/
+	font-family: Times, "Times New Roman", "Hiragino Mincho Pro", "ƒqƒ‰ƒMƒm–¾’© Pro W3", "MS P Mincho", "‚l‚r ‚o–¾’©", serif;
+	font-weight: normal;
+}
+
 /* DBFlute-like title */
 h2 {
   padding-left:40px;
   line-height: 62px;
   background: transparent url(../image/parts/head-score.png) no-repeat;
+}
+
+h3 {
+	margin: 40px 0 15px 0;
+	padding-left: 30px;
+	line-height: 28px;
+	font-size: 138.5%;/*18px*/
+	border-bottom: solid 1px #666;
+	background: transparent url(../image/parts/head-staff.gif) no-repeat bottom left;
+}
+
+h4 {
+	margin: 15px 140px 15px 12px;
+	padding-left: 10px;
+	line-height: 28px;
+	text-indent: 1em;
+	font-size: 115%;
+	border-bottom: dotted 1px #666;
 }
 
 /* finder pointer for link (why needed?) */
@@ -49,5 +80,14 @@ content {
 /* for Intro home on left-side menu */
 .menu-home-text {
   font-size: 150%;
+}
+
+/* ======================================================
+  SchemaPolicyCHeck
+=======================================================*/
+
+h5.spolicy-category {
+  padding: 1em 0 0 1em;
+  font-size: 120%;
 }
 

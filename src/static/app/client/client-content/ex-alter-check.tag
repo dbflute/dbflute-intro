@@ -1,6 +1,6 @@
 <ex-alter-check>
   <div class="ui container">
-    <h3>AlterCheck</h3>
+    <h2>AlterCheck</h2>
 
     <section class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/intro/alterbyintro.html" target="_blank">"AlterCheck"?</a></div>
@@ -11,9 +11,9 @@
 
     <!-- Step 1 -->
     <section if="{ !isEditing() }">
-      <h4 class="ui header">Step1. Prepare alter sql</h4>
+      <h3>Step1. Prepare alter sql</h3>
 
-      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
+      <h4 if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h4>
       <div class="ui list" if="{ existsCheckedFiles() }">
         <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
+      <h4 if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h4>
       <div class="ui list" if="{ existsUnreleasedFiles() }">
         <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -44,7 +44,7 @@
       <div class="ui placeholder segment">
         <div class="ui two column very relaxed stackable grid">
           <div class="column">
-            <h5 class="header">Begin New AlterCheck!!</h5>
+            <h4>Begin New AlterCheck!!</h4>
             <form class="ui form">
               <div class="fields">
                 <div class="inline field error{!validated}">
@@ -59,7 +59,7 @@
             </form>
           </div>
           <div class="column">
-            <h5 class="header">Fix existing Alter SQL</h5>
+            <h4>Fix existing Alter SQL</h4>
             <form class="ui form">
               <div class="fields">
                 <div class="field">
@@ -78,9 +78,9 @@
 
     <!-- Step 2 -->
     <section show="{ isEditing() }">
-      <h4 class="ui header">Step2. Execute AlterCheck</h4>
+      <h3>Step2. Execute AlterCheck</h3>
 
-      <h5 class="ui header">Open Editing Alter SQL Files</h5>
+      <h4>Open Editing Alter SQL Files</h4>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
@@ -96,10 +96,10 @@
 
       <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
 
-      <h5 class="ui header">Executor</h5>
+      <h4>Executor</h4>
       <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
 
-      <h5 class="ui header" show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h5>
+      <h4 show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h4>
       <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
       <div class="latest-result">
         <latest-result></latest-result>

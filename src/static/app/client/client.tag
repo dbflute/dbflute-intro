@@ -1,5 +1,5 @@
 <client>
-  <h2>DBFlute Client { opts.projectName }</h2>
+  <h1>DBFlute Client { opts.projectName }</h1>
   <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
   <client-content></client-content>
 
