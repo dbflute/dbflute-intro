@@ -42,8 +42,8 @@ public class SettingsUpdateLogic {
         replaceDfpropDatabaseInfoMap(clientModel, clientModel.getProjectInfra().getClientProject());
     }
 
-    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
+    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientName) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
         final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
 

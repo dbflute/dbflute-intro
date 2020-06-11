@@ -60,8 +60,8 @@ public class DfpropAction extends IntroBaseAction {
     //                                                  list
     //                                                  ----
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<List<DfpropBean>> list(String project) {
-        List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(project);
+    public JsonResponse<List<DfpropBean>> list(String clientName) {
+        List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(clientName);
         List<DfpropBean> beans = dfpropFileList.stream()
                 .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), flutyFileLogic.readFile(dfpropFile)))
                 .collect(Collectors.toList());
@@ -73,10 +73,10 @@ public class DfpropAction extends IntroBaseAction {
     //                                                ------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/{}")
-    public JsonResponse<Void> update(String project, String fileName, DfpropUpdateBody body) {
+    public JsonResponse<Void> update(String clientName, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
 
-        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(project, fileName);
+        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(clientName, fileName);
         flutyFileLogic.writeFile(dfpropFile, body.content);
 
         return JsonResponse.asEmptyBody();
@@ -86,8 +86,8 @@ public class DfpropAction extends IntroBaseAction {
     //                                         GetSyncSchema
     //                                         -------------
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String project) {
-        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(project);
+    public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String clientName) {
+        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(clientName);
         final DfpropSchemaSyncCheckResult bean =
                 schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElseGet(() -> new DfpropSchemaSyncCheckResult());
         return asJson(bean);
@@ -98,11 +98,11 @@ public class DfpropAction extends IntroBaseAction {
     //                                        --------------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word")
-    public JsonResponse<Void> syncschemaEdit(String project, DfpropEditSyncSchemaBody body) {
+    public JsonResponse<Void> syncschemaEdit(String clientName, DfpropEditSyncSchemaBody body) {
         validate(body, messages -> {});
         final DbConnectionBox dbConnectionBox = new DbConnectionBox(body.url, body.schema, body.user, body.password);
         final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
-        dfpropUpdateLogic.replaceSchemaSyncCheckMap(project, schemaSyncCheckMap);
+        dfpropUpdateLogic.replaceSchemaSyncCheckMap(clientName, schemaSyncCheckMap);
         return JsonResponse.asEmptyBody();
     }
 
@@ -110,8 +110,8 @@ public class DfpropAction extends IntroBaseAction {
     //                                       GetSchemaPolicy
     //                                       ---------------
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DfpropSchemaPolicyResult> schemapolicy(String project) {
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(project);
+    public JsonResponse<DfpropSchemaPolicyResult> schemapolicy(String clientName) {
+        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(clientName);
         return asJson(new DfpropSchemaPolicyResult(schemaPolicyMap));
     }
 
@@ -120,10 +120,10 @@ public class DfpropAction extends IntroBaseAction {
     //                                      ----------------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word")
-    public JsonResponse<Void> schemapolicyEdit(String project, DfpropEditSchemaPolicyBody body) {
+    public JsonResponse<Void> schemapolicyEdit(String clientName, DfpropEditSchemaPolicyBody body) {
         validate(body, messages -> {});
         SchemaPolicyMap schemaPolicyMap = mappingToSchemaPolicyMap(body);
-        dfpropUpdateLogic.replaceSchemaPolicyMap(project, schemaPolicyMap);
+        dfpropUpdateLogic.replaceSchemaPolicyMap(clientName, schemaPolicyMap);
         return JsonResponse.asEmptyBody();
     }
 
@@ -149,10 +149,10 @@ public class DfpropAction extends IntroBaseAction {
     //                         -----------------------------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word/@word")
-    public JsonResponse<String> schemapolicyStatementRegister(String project, DfpropRegisterSchemaPolicyStatementBody body) {
+    public JsonResponse<String> schemapolicyStatementRegister(String clientName, DfpropRegisterSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
         SchemaPolicyStatement statement = mappingToStatement(body);
-        String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(project, statement);
+        String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
         return asJson(builtStatement);
     }
     private SchemaPolicyStatement mappingToStatement(DfpropRegisterSchemaPolicyStatementBody body) {
@@ -166,9 +166,9 @@ public class DfpropAction extends IntroBaseAction {
     //                      --------------------------------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word/@word")
-    public JsonResponse<Void> schemapolicyStatementDelete(String project, DfpropDeleteSchemaPolicyStatementBody body) {
+    public JsonResponse<Void> schemapolicyStatementDelete(String clientName, DfpropDeleteSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        dfpropUpdateLogic.deleteSchemaPolicyStatement(project, body.mapType, body.statement);
+        dfpropUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
 
@@ -176,9 +176,9 @@ public class DfpropAction extends IntroBaseAction {
     //                                           GetDocument
     //                                           -----------
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<DfpropDocumentResult> document(String project) {
-        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(project);
-        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(project);
+    public JsonResponse<DfpropDocumentResult> document(String clientName) {
+        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(clientName);
+        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(clientName);
         return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
     }
 
@@ -187,17 +187,17 @@ public class DfpropAction extends IntroBaseAction {
     //                                          ------------
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/@word")
-    public JsonResponse<Void> documentEdit(String project, DfpropDocumentEditBody body) {
+    public JsonResponse<Void> documentEdit(String clientName, DfpropDocumentEditBody body) {
         validate(body, messages -> {});
         final LittleAdjustmentMap littleAdjustmentMap = LittleAdjustmentMap.createAsTableNameUpperCase(body.upperCaseBasic);
-        dfpropUpdateLogic.replaceLittleAdjustmentMap(project, littleAdjustmentMap);
+        dfpropUpdateLogic.replaceLittleAdjustmentMap(clientName, littleAdjustmentMap);
         final DocumentMap documentMap = new DocumentMap();
         documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
         documentMap.setDbCommentOnAliasBasis(body.dbCommentOnAliasBasis);
         documentMap.setCheckColumnDefOrderDiff(body.checkColumnDefOrderDiff);
         documentMap.setCheckDbCommentDiff(body.checkDbCommentDiff);
         documentMap.setCheckProcedureDiff(body.checkProcedureDiff);
-        dfpropUpdateLogic.replaceDocumentMap(project, documentMap);
+        dfpropUpdateLogic.replaceDocumentMap(clientName, documentMap);
         return JsonResponse.asEmptyBody();
     }
 }

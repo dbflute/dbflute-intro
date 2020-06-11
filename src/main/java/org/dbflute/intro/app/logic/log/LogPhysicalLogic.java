@@ -56,8 +56,8 @@ public class LogPhysicalLogic {
     // ===================================================================================
     //                                                                                Read
     //                                                                                ====
-    public boolean existsViolationSchemaPolicyCheck(String clientProject) {
-        return findLatestResultFile(clientProject, "doc").map(file -> fileLogic.readFile(file))
+    public boolean existsViolationSchemaPolicyCheck(String clientName) {
+        return findLatestResultFile(clientName, "doc").map(file -> fileLogic.readFile(file))
                 .map(s -> s.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException"))
                 .orElse(false);
     }

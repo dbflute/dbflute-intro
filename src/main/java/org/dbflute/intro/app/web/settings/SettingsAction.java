@@ -56,9 +56,9 @@ public class SettingsAction extends IntroBaseAction {
     //                                              Settings
     //                                              --------
     @Execute
-    public JsonResponse<SettingsResult> index(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+    public JsonResponse<SettingsResult> index(String clientName) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
         SettingsResult result = mappingToSettingsResult(clientModel);
         return asJson(result);
@@ -91,15 +91,15 @@ public class SettingsAction extends IntroBaseAction {
     //                                                  ----
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String projectName, SettingsUpdateBody settingsBody) {
+    public JsonResponse<Void> edit(String clientName, SettingsUpdateBody settingsBody) {
         validate(settingsBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(projectName, settingsBody.client);
+        ClientModel clientModel = mappingToClientModel(clientName, settingsBody.client);
         settingsUpdateLogic.updateDatabaseInfoMap(clientModel);
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
-        return newClientModel(projectName, clientBody);
+    private ClientModel mappingToClientModel(String clientName, ClientPart clientBody) {
+        return newClientModel(clientName, clientBody);
     }
 
     private ClientModel newClientModel(String projectName, ClientPart clientBody) {
@@ -110,8 +110,8 @@ public class SettingsAction extends IntroBaseAction {
         return clientModel;
     }
 
-    private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
-        return new ProjectInfra(projectName, clientBody.dbfluteVersion, null);
+    private ProjectInfra prepareProjectInfra(String clientName, ClientPart clientBody) {
+        return new ProjectInfra(clientName, clientBody.dbfluteVersion, null);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {

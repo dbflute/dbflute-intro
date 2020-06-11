@@ -12,68 +12,8 @@
     <!-- Step 1 -->
     <section if="{ !isEditing() }">
       <h3>Step1. Prepare alter sql</h3>
-
-      <h5 if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
-      <div class="ui list" if="{ existsCheckedFiles() }">
-        <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
-
-      <h5 if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
-      <div class="ui list" if="{ existsUnreleasedFiles() }">
-        <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
-
-      <div class="ui placeholder segment">
-        <div class="ui two column very relaxed stackable grid">
-          <div class="column">
-            <h4>Begin New AlterCheck!!</h4>
-            <form class="ui form">
-              <div class="fields">
-                <div class="inline field error{!validated}">
-                  <label>alter-schema-</label>
-                  <input type="text" ref="alterNameInput" placeholder="input ticket name">
-                  <label>.sql</label>
-                </div>
-                <div class="inline field">
-                  <button class="ui primary button" onclick="{ createAlterSql }">Begin</button>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="column">
-            <h4>Fix existing Alter SQL</h4>
-            <form class="ui form">
-              <div class="fields">
-                <div class="field">
-                  <button class="ui button" onclick="{ prepareAlterCheck }">Fix</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="ui vertical divider">
-          Or
-        </div>
-      </div>
-
+      <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
+      <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
     </section>
 
     <!-- Step 2 -->
@@ -152,6 +92,10 @@
     }
     self.preparedFileName = ''
     self.validated = false
+
+    self.state = {
+      inputFileName : ''
+    }
 
     // ===================================================================================
     //                                                                          Initialize
@@ -312,15 +256,6 @@
       })
     }
 
-    this.prepareAlterCheck = () => {
-      ApiFactory.prepareAlterSql(self.opts.projectName)
-        .then(() => {
-          ApiFactory.openAlterDir(self.opts.projectName)
-        }).finally(() => {
-          self.updateContents()
-        })
-    }
-
     this.createAlterSql = () => {
       const ticketName = self.refs.alterNameInput.value
       if (!ticketName || ticketName === '') {
@@ -336,7 +271,16 @@
     }
 
     this.nowPrepared = (fileName) => {
-      return self.preparedFileName != null && self.preparedFileName === fileName
+      const inputFileName = self.state.inputFileName
+      const alterFileName = 'alter-schema-' + inputFileName + '.sql'
+      return alterFileName === fileName
+    }
+
+    this.updateBegin = () => {
+      self.state = {
+        inputFileName : self.refs.altercheckform.refs.beginform.refs.alterNameInput.value
+      }
+      self.updateContents()
     }
 
     this.updateContents = () => {

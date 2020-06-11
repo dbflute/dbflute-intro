@@ -70,17 +70,17 @@ public class IntroPhysicalLogic {
      *  buildClientPath("maihamadb"): ./dbflute_maihamadb
      *  buildClientPath("maihamadb", "dfprop"): ./dbflute_maihamadb/dfprop
      * </pre>
-     * @param clientProject The project name of DBFlute client. (NotNull)
+     * @param clientName The project name of DBFlute client. (NotNull)
      * @param resources The varying array of resources in DBFlute client. (NotNull, EmptyAllowed)
      * @return The path to the DBFlute client. (NotNull)
      */
-    public String buildClientPath(String clientProject, String... resources) {
+    public String buildClientPath(String clientName, String... resources) {
         final String suffix = resources.length > 0 ? Srl.connectByDelimiter(Arrays.asList(resources), "/") : null;
-        return buildBasicPath("dbflute_" + clientProject) + (suffix != null ? "/" + suffix : "");
+        return buildBasicPath("dbflute_" + clientName) + (suffix != null ? "/" + suffix : "");
     }
 
-    public File findClientDir(String clientProject) {
-        return new File(buildClientPath(clientProject));
+    public File findClientDir(String clientName) {
+        return new File(buildClientPath(clientName));
     }
 
     // ===================================================================================

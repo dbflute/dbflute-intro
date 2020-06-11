@@ -69,8 +69,8 @@ public class LogAction extends IntroBaseAction {
 
     // TODO cabos implements all log (2019-10-20)
     @Execute(urlPattern = "{}/{}/@word")
-    public JsonResponse<LogBean> latest(String project, String task) {
-        return logPhysicalLogic.findLatestResultFile(project, task).map((file) -> {
+    public JsonResponse<LogBean> latest(String clientName, String task) {
+        return logPhysicalLogic.findLatestResultFile(clientName, task).map((file) -> {
             return asJson(new LogBean(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
         }).orElseGet(() -> {
             return JsonResponse.asEmptyBody();
@@ -88,8 +88,8 @@ public class LogAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<List<LogBean>> list(String project) {
-        List<File> logFileList = logPhysicalLogic.findLogFileAllList(project);
+    public JsonResponse<List<LogBean>> list(String clientName) {
+        List<File> logFileList = logPhysicalLogic.findLogFileAllList(clientName);
         List<LogBean> beans = logFileList.stream()
                 .map(logFile -> new LogBean(logFile.getName(), flutyFileLogic.readFile(logFile)))
                 .collect(Collectors.toList());

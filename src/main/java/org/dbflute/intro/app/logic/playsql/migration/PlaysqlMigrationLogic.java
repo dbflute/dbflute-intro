@@ -76,13 +76,13 @@ public class PlaysqlMigrationLogic {
      * Load migration directory.
      * @return dbflute_client/playsql/migration directory information (NotNull)
      */
-    public PlaysqlMigrationDirReturn loadPlaysqlMigrationDir(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
+    public PlaysqlMigrationDirReturn loadPlaysqlMigrationDir(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
         return new PlaysqlMigrationDirReturn(                                  //
-                loadAlterCheckNgMarkFile(clientProject).orElse(null), //
-                loadAlterSqlFiles(clientProject),                            //
-                loadCheckedZip(clientProject).orElse(null),           //
-                loadUnreleasedDir(clientProject).orElse(null)         //
+                loadAlterCheckNgMarkFile(clientName).orElse(null), //
+                loadAlterSqlFiles(clientName),                            //
+                loadCheckedZip(clientName).orElse(null),           //
+                loadUnreleasedDir(clientName).orElse(null)         //
         );
 
     }
@@ -93,12 +93,12 @@ public class PlaysqlMigrationLogic {
     /**
      * Load sql files in alter directory.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @return list of alter files in alter directory. (NotNull)
      */
-    private List<PlaysqlMigrationAlterSqlReturn> loadAlterSqlFiles(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
-        return OptionalThing.ofNullable(new File(buildAlterDirectoryPath(clientProject)).listFiles(), () -> {})
+    private List<PlaysqlMigrationAlterSqlReturn> loadAlterSqlFiles(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
+        return OptionalThing.ofNullable(new File(buildAlterDirectoryPath(clientName)).listFiles(), () -> {})
                 .map(files -> Arrays.stream(files))
                 .orElse(Stream.empty())
                 .filter(file -> DfStringUtil.endsWith(file.getName(), ".sql"))
@@ -112,12 +112,12 @@ public class PlaysqlMigrationLogic {
     /**
      * Load unreleased directory info.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @return unreleased directory bean (Maybe empty). (NotNull)
      */
-    private OptionalThing<PlaysqlMigrationUnreleasedDirReturn> loadUnreleasedDir(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
-        String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
+    private OptionalThing<PlaysqlMigrationUnreleasedDirReturn> loadUnreleasedDir(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
+        String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientName);
         final File alterDir = new File(unreleasedAlterDirPath);
         if (!alterDir.exists() || alterDir.isFile()) {
             return OptionalThing.empty();
@@ -143,13 +143,13 @@ public class PlaysqlMigrationLogic {
     /**
      * Load alter ng mark if exists.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @return Ng mark file (Maybe empty)
      */
-    private OptionalThing<PlaysqlMigrationNgMarkFileReturn> loadAlterCheckNgMarkFile(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
+    private OptionalThing<PlaysqlMigrationNgMarkFileReturn> loadAlterCheckNgMarkFile(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
         for (CDef.NgMark ngMark : CDef.NgMark.listAll()) {
-            File file = new File(buildMigrationPath(clientProject, ngMark.code() + ".dfmark"));
+            File file = new File(buildMigrationPath(clientName, ngMark.code() + ".dfmark"));
             if (file.exists()) {
                 return OptionalThing.of(new PlaysqlMigrationNgMarkFileReturn(ngMark, flutyFileLogic.readFile(file)));
             }
@@ -163,12 +163,12 @@ public class PlaysqlMigrationLogic {
     /**
      * Load newest checked zip file info.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @return checked zip file bean (Maybe empty)
      */
-    public OptionalThing<PlaysqlMigrationCheckedZipReturn> loadCheckedZip(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
-        return loadNewestCheckedZipFile(clientProject).map(checkedZip -> {
+    public OptionalThing<PlaysqlMigrationCheckedZipReturn> loadCheckedZip(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
+        return loadNewestCheckedZipFile(clientName).map(checkedZip -> {
             return new PlaysqlMigrationCheckedZipReturn(checkedZip.getName(), loadCheckedSqlList(checkedZip));
         });
     }
@@ -227,16 +227,16 @@ public class PlaysqlMigrationLogic {
      * Open alter directory by filer. (e.g. finder if mac, explorer if windows)
      * Use OS command.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      */
-    public void openAlterDir(String clientProject) {
-        File alterDir = new File(buildAlterDirectoryPath(clientProject));
+    public void openAlterDir(String clientName) {
+        File alterDir = new File(buildAlterDirectoryPath(clientName));
         if (alterDir.exists()) {
             try {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.open(alterDir);
             } catch (IOException e) {
-                throw new UncheckedIOException("fail to open alter directory of" + clientProject, e);
+                throw new UncheckedIOException("fail to open alter directory of" + clientName, e);
             }
         }
     }
@@ -246,51 +246,51 @@ public class PlaysqlMigrationLogic {
     //                                                      ==============================
     /**
      * Check to exist same name alter SQL file before release.
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @param sqlFileName checked sql file name (NotEmpty)
      * @return true if exists same name file.
      */
-    public boolean existsSameNameAlterSqlFile(String clientProject, String sqlFileName) {
-        IntroAssertUtil.assertNotEmpty(clientProject, sqlFileName);
-        return existsSameNameFileInAlterDir(clientProject, sqlFileName)           // exists editing sql
-                || existsSameNameFileInUnreleasedDir(clientProject, sqlFileName)  // exists sql in unreleased directory
-                || existsSameNameFileInCheckedZip(clientProject, sqlFileName);    // exists sql in checked zip
+    public boolean existsSameNameAlterSqlFile(String clientName, String sqlFileName) {
+        IntroAssertUtil.assertNotEmpty(clientName, sqlFileName);
+        return existsSameNameFileInAlterDir(clientName, sqlFileName)           // exists editing sql
+                || existsSameNameFileInUnreleasedDir(clientName, sqlFileName)  // exists sql in unreleased directory
+                || existsSameNameFileInCheckedZip(clientName, sqlFileName);    // exists sql in checked zip
     }
 
     /**
      * Check to exist same name alter SQL file in alter directory.
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @param alterFileName checked sql file name (NotEmpty)
      * @return true if exists same name file in alter directory.
      */
-    private boolean existsSameNameFileInAlterDir(String clientProject, String alterFileName) {
-        final String alterPath = buildMigrationPath(clientProject, "alter");
+    private boolean existsSameNameFileInAlterDir(String clientName, String alterFileName) {
+        final String alterPath = buildMigrationPath(clientName, "alter");
         return Files.exists(Paths.get(alterPath, alterFileName));
     }
 
     /**
      * Check to exist same name alter SQL file in unreleased directory.
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @param alterFileName checked sql file name (NotEmpty)
      * @return true if exists same name file in unreleased directory.
      */
-    private boolean existsSameNameFileInUnreleasedDir(String clientProject, String alterFileName) {
-        final String unreleasedDIrPath = buildUnreleasedAlterDirPath(clientProject);
+    private boolean existsSameNameFileInUnreleasedDir(String clientName, String alterFileName) {
+        final String unreleasedDIrPath = buildUnreleasedAlterDirPath(clientName);
         return Files.exists(Paths.get(unreleasedDIrPath, alterFileName));
     }
 
     /**
      * Check to exist same name alter SQL file in checked zip.
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @param alterFileName checked sql file name (NotEmpty)
      * @return true if exists same name file in checked zip.
      */
-    private boolean existsSameNameFileInCheckedZip(String clientProject, String alterFileName) {
-        final String historyPath = buildMigrationPath(clientProject, "history");
+    private boolean existsSameNameFileInCheckedZip(String clientName, String alterFileName) {
+        final String historyPath = buildMigrationPath(clientName, "history");
         if (Files.notExists(Paths.get(historyPath))) {
             return false;
         }
-        return loadNewestCheckedZipFile(clientProject).map(zipFile -> {
+        return loadNewestCheckedZipFile(clientName).map(zipFile -> {
             String zipPath = zipFile.getPath();
             try {
                 final List<String> alterSqlNames = loadFileNamesFromCheckedZip(zipPath);
@@ -311,8 +311,8 @@ public class PlaysqlMigrationLogic {
         }
     }
 
-    private OptionalThing<File> loadNewestCheckedZipFile(String clientProject) {
-        final Path historyPath = new File(buildMigrationPath(clientProject, "history")).toPath();
+    private OptionalThing<File> loadNewestCheckedZipFile(String clientName) {
+        final Path historyPath = new File(buildMigrationPath(clientName, "history")).toPath();
         if (Files.notExists(historyPath)) {
             return OptionalThing.empty();
         }
@@ -342,13 +342,13 @@ public class PlaysqlMigrationLogic {
     //                                                                              ======
     /**
      * Create sql file in alter directory.
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @param alterFileName file name (NotEmpry)
      */
-    public void createAlterSql(String clientProject, String alterFileName) {
-        IntroAssertUtil.assertNotEmpty(clientProject, alterFileName);
-        createAlterDirIfNotExists(clientProject);
-        File file = new File(introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", "alter", alterFileName));
+    public void createAlterSql(String clientName, String alterFileName) {
+        IntroAssertUtil.assertNotEmpty(clientName, alterFileName);
+        createAlterDirIfNotExists(clientName);
+        File file = new File(introPhysicalLogic.buildClientPath(clientName, "playsql", "migration", "alter", alterFileName));
         try {
             if (!file.createNewFile()) {
                 throw new IOException("Failure to create alter file, file.createNewFile() returns false"); // catch immediately
@@ -363,12 +363,12 @@ public class PlaysqlMigrationLogic {
      * Create alter directory if not exists alter directory.
      * Do nothing if already alter directory exists.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      * @return alter directory path (NotEmpty)
      */
-    private String createAlterDirIfNotExists(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
-        final File alterDir = new File(buildAlterDirectoryPath(clientProject));
+    private String createAlterDirIfNotExists(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
+        final File alterDir = new File(buildAlterDirectoryPath(clientName));
         if (alterDir.exists()) {
             return alterDir.getPath(); // do nothing
         }
@@ -386,18 +386,18 @@ public class PlaysqlMigrationLogic {
      * Unzip checked file and copy sql files to alter directory.
      * Do nothing if checked zip not exists.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      */
-    public void unzipCheckedAlterZip(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
-        createAlterDirIfNotExists(clientProject);
-        final String historyPath = buildMigrationPath(clientProject, "history");
+    public void unzipCheckedAlterZip(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
+        createAlterDirIfNotExists(clientName);
+        final String historyPath = buildMigrationPath(clientName, "history");
         if (Files.notExists(Paths.get(historyPath))) {
             return;
         }
-        loadNewestCheckedZipFile(clientProject).ifPresent(zipFile -> {
+        loadNewestCheckedZipFile(clientName).ifPresent(zipFile -> {
             final String zipPath = zipFile.getPath();
-            final String alterDirPath = buildAlterDirectoryPath(clientProject);
+            final String alterDirPath = buildAlterDirectoryPath(clientName);
             try {
                 unzipAlterSqlZipIfNeeds(zipPath, alterDirPath);
             } catch (IOException e) {
@@ -429,12 +429,12 @@ public class PlaysqlMigrationLogic {
      * Copy from unreleased directory to alter directory only unreleased sql files.
      * Do nothing if unreleased directory is not exists.
      *
-     * @param clientProject dbflute client project name (NotEmpty)
+     * @param clientName dbflute client project name (NotEmpty)
      */
-    public void copyUnreleasedAlterDir(String clientProject) {
-        IntroAssertUtil.assertNotEmpty(clientProject);
-        final String alterDirPath = createAlterDirIfNotExists(clientProject);
-        final String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientProject);
+    public void copyUnreleasedAlterDir(String clientName) {
+        IntroAssertUtil.assertNotEmpty(clientName);
+        final String alterDirPath = createAlterDirIfNotExists(clientName);
+        final String unreleasedAlterDirPath = buildUnreleasedAlterDirPath(clientName);
         final File unreleasedDir = new File(unreleasedAlterDirPath);
         if (!unreleasedDir.exists()) {
             return;
@@ -509,19 +509,19 @@ public class PlaysqlMigrationLogic {
     // -----------------------------------------------------
     //                                  Build Directory Path
     //                                  --------------------
-    private String buildAlterDirectoryPath(String clientProject) {
-        return buildMigrationPath(clientProject, "alter");
+    private String buildAlterDirectoryPath(String clientName) {
+        return buildMigrationPath(clientName, "alter");
     }
 
-    private String buildUnreleasedAlterDirPath(String clientProject) {
-        return buildMigrationPath(clientProject, "history", "unreleased-checked-alter");
+    private String buildUnreleasedAlterDirPath(String clientName) {
+        return buildMigrationPath(clientName, "history", "unreleased-checked-alter");
     }
 
-    private String buildMigrationPath(String clientProject, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", pureName);
+    private String buildMigrationPath(String clientName, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientName, "playsql", "migration", pureName);
     }
 
-    private String buildMigrationPath(String clientProject, String type, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
+    private String buildMigrationPath(String clientName, String type, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientName, "playsql", "migration", type, pureName);
     }
 }
