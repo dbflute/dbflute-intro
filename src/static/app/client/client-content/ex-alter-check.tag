@@ -13,7 +13,7 @@
     <section if="{ !isEditing() }">
       <h3>Step1. Prepare alter sql</h3>
 
-      <h4 if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h4>
+      <h5 if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
       <div class="ui list" if="{ existsCheckedFiles() }">
         <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <h4 if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h4>
+      <h5 if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
       <div class="ui list" if="{ existsUnreleasedFiles() }">
         <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
@@ -80,7 +80,7 @@
     <section show="{ isEditing() }">
       <h3>Step2. Execute AlterCheck</h3>
 
-      <h4>Open Editing Alter SQL Files</h4>
+      <h5>Open Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
@@ -96,10 +96,10 @@
 
       <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
 
-      <h4>Executor</h4>
+      <h5>Executor</h5>
       <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
 
-      <h4 show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h4>
+      <h5 show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h5>
       <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
       <div class="latest-result">
         <latest-result></latest-result>
