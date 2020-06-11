@@ -17,30 +17,14 @@
     </section>
 
     <!-- Step 2 -->
-    <section show="{ isEditing() }">
-      <h3>Step2. Execute AlterCheck</h3>
-
-      <alter-check-editting-files editingsqls="{ editingSqls }" preparedfilename="{ preparedFileName }" projectname="{ projectName }" />
-
-      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
-
-        <div class="item altercheck-execution">
-          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
-          <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
-        </div>
-      </div>
-      <div class="latest-result">
-        <latest-result></latest-result>
-      </div>
-    </section>
-
+    <alter-check-step2
+      if="{ isEditing() }"
+      editingsqls="{ editingSqls }"
+      preparedfilename="{ preparedFileName }"
+      projectname="{ projectName }"
+      hasAlterCheckResultHtml="{ client.hasAlterCheckResultHtml }"
+    />
   </div>
-
-  <su-modal modal="{ executeModal }" class="large" ref="executeModal">
-    <div class="description">
-      Executing...
-    </div>
-  </su-modal>
 
   <result-modal ref="resultModal"></result-modal>
 
@@ -222,11 +206,6 @@
 
     this.openAlterDir = () => {
       ApiFactory.openAlterDir(self.opts.projectName)
-    }
-
-    this.alterItemClick = (alterItem) => {
-      alterItem.show = !(alterItem.show)
-      return false
     }
 
     // ===================================================================================
