@@ -26,13 +26,7 @@
     />
   </div>
 
-  <result-modal ref="resultModal"></result-modal>
-
-  <style>
-    .latest-result {
-      margin-top: 1em;
-    }
-  </style>
+  <result-modal ref="resultModal" />
 
   <script>
     let riot = require('riot')
@@ -43,7 +37,6 @@
     import 'prismjs/themes/prism.css'
 
     const ApiFactory = new _ApiFactory()
-    const DbfluteTask = new _DbfluteTask()
     let self = this
 
     self.client = opts.client
@@ -179,14 +172,6 @@
       return self.editingSqls !== undefined && self.editingSqls.length > 0
     }
 
-    this.existsCheckedFiles = () => {
-      return self.checkedZip !== undefined && self.checkedZip.checkedFiles !== undefined && self.checkedZip.checkedFiles.length > 0
-    }
-
-    this.existsUnreleasedFiles = () => {
-      return self.unreleasedDir !== undefined && self.unreleasedDir.checkedFiles !== undefined && self.unreleasedDir.checkedFiles.length > 0
-    }
-
     // ===================================================================================
     //                                                                               Modal
     //                                                                               =====
@@ -198,52 +183,8 @@
     }
 
     // ===================================================================================
-    //                                                                       Open Document
-    //                                                                       =============
-    this.openAlterCheckResultHTML = () => {
-      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/altercheckresulthtml/')
-    }
-
-    this.openAlterDir = () => {
-      ApiFactory.openAlterDir(self.opts.projectName)
-    }
-
-    // ===================================================================================
-    //                                                                        Execute Task
-    //                                                                        ============
-    this.alterCheckTask = () => {
-      this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
-        self.refs.executeModal.show()
-        DbfluteTask.task('alterCheck', self.opts.projectName, (message) => {
-          self.refs.resultModal.show(message)
-        }).finally(() => {
-          self.updateContents()
-          self.refs.executeModal.hide()
-        })
-      })
-    }
-
-    this.createAlterSql = () => {
-      const ticketName = self.refs.alterNameInput.value
-      if (!ticketName || ticketName === '') {
-        self.validated = true
-        return
-      }
-      const alterFileName = 'alter-schema-' + ticketName + '.sql'
-      self.preparedFileName = alterFileName
-      ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
-        .then(() => {
-          self.prepareAlterCheck()
-        })
-      riot.mount('alter-check-editting-files', {}, 'alter-check-editting-files')
-    }
-
-    this.nowPrepared = (fileName) => {
-      const inputFileName = self.state.inputFileName
-      const alterFileName = 'alter-schema-' + inputFileName + '.sql'
-      return alterFileName === fileName
-    }
-
+    //                                                                              Update
+    //                                                                              ======
     this.updateBegin = () => {
       self.state = {
         inputFileName : self.refs.altercheckform.refs.beginform.refs.alterNameInput.value
