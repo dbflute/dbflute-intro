@@ -1,6 +1,6 @@
 <ex-schema-sync-check>
   <div class="ui container">
-    <h3>Schema Sync Check</h3>
+    <h2>Schema Sync Check</h2>
     <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
       show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
     <div class="ui list">

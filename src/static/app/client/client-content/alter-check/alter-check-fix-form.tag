@@ -1,5 +1,5 @@
 <alter-check-fix-form>
-  <h5 class="header">Fix existing Alter SQL</h5>
+  <h4>Fix existing Alter SQL</h4>
   <form class="ui form">
     <div class="fields">
       <div class="field">

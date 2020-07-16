@@ -1,6 +1,6 @@
 <ex-documents>
   <div class="ui container">
-    <h3>Documents</h3>
+    <h2>Documents</h2>
     <div class="ui list">
       <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
       <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>

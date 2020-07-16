@@ -7,7 +7,7 @@
           <div class="column">
             <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h3 class="">Theme</h3>
+                <h3>Theme</h3>
                 <div class="ui divided items" if="{opts.schemapolicy.wholeMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
                     <div class="ui left floated">
@@ -24,7 +24,7 @@
                 <button class="ui primary button" onclick="{ parent.parent.schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
               </su-tab>
               <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h3 >Theme</h3>
+                <h3>Theme</h3>
                 <div class="ui divided items" if="{opts.schemapolicy.tableMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
                     <div class="ui left floated">

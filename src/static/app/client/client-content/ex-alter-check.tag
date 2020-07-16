@@ -1,6 +1,6 @@
 <ex-alter-check>
   <div class="ui container">
-    <h3>AlterCheck</h3>
+    <h2>AlterCheck</h2>
 
     <section class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/intro/alterbyintro.html" target="_blank">"AlterCheck"?</a></div>
@@ -11,16 +11,15 @@
 
     <!-- Step 1 -->
     <section if="{ !isEditing() }">
-      <h4 class="ui header">Step1. Prepare alter sql</h4>
+      <h3>Step1. Prepare alter sql</h3>
       <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
       <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
     </section>
 
     <!-- Step 2 -->
     <section show="{ isEditing() }">
-      <h4 class="ui header">Step2. Execute AlterCheck</h4>
+      <h3>Step2. Execute AlterCheck</h3>
 
-      <h5 class="ui header">Open Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
@@ -34,13 +33,16 @@
         </div>
       </div>
 
-      <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+      <div class="ui list">
+        <div class="item">
+          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+        </div>
 
-      <h5 class="ui header">Executor</h5>
-      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
-
-      <h5 class="ui header" show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h5>
-      <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+        <div class="item altercheck-execution">
+          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
+          <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+        </div>
+      </div>
       <div class="latest-result">
         <latest-result></latest-result>
       </div>

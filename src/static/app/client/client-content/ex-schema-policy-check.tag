@@ -1,6 +1,6 @@
 <ex-schema-policy-check>
   <div class="ui container">
-    <h3>Schema Policy Check</h3>
+    <h2>Schema Policy Check</h2>
     <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"Check Policy"?</a></div>
@@ -9,14 +9,14 @@
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
-    <h4>Settings</h4>
+    <h3>Settings</h3>
     <div class="ui segment" title="SchemaPolicy">
       <div class="ui form">
         <div class="row">
           <div class="column">
             <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h5>Theme</h5>
+                <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
                     <div class="ui left floated">
@@ -32,7 +32,7 @@
                 </div>
               </su-tab>
               <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h5>Theme</h5>
+                <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
                     <div class="ui left floated">
@@ -46,7 +46,7 @@
                     </div>
                   </div>
                 </div>
-                <h5>Statement</h5>
+                <h5 class="spolicy-category">Statement</h5>
                 <button class="ui button" onclick="{ parent.parent.showTableMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
@@ -66,7 +66,7 @@
                 </div>
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h5>Theme</h5>
+                <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
                     <div class="ui left floated">
@@ -80,7 +80,7 @@
                     </div>
                   </div>
                 </div>
-                <h5>Statement</h5>
+                <h5 class="spolicy-category">Statement</h5>
                 <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">

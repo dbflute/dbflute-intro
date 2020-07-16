@@ -1,6 +1,6 @@
 <ex-replace-schema>
   <div class="ui container">
-    <h3>Replace Schema</h3>
+    <h2>Replace Schema</h2>
     <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Replace Schema"?</a></div>
@@ -9,7 +9,7 @@
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
-    <h4 class="ui header">Play SQL</h4>
+    <h3>Play SQL</h3>
     <div class="ui segment" title="PlaySQL">
       <su-dropdown items="{ playsqlDropDownItems }" ref="dropdown"></su-dropdown>
       <div class="ui message message-area">

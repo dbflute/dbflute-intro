@@ -1,5 +1,5 @@
 <alter-check-begin-form>
-  <h5 class="header">Begin New AlterCheck!!</h5>
+  <h4>Begin New AlterCheck!!</h4>
   <form class="ui form">
     <div class="fields">
       <div class="inline field error{!state.invalidFileName}">
