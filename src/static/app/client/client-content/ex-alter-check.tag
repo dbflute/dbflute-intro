@@ -20,7 +20,6 @@
     <section show="{ isEditing() }">
       <h3>Step2. Execute AlterCheck</h3>
 
-      <h5>Open Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
@@ -34,13 +33,16 @@
         </div>
       </div>
 
-      <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+      <div class="ui list">
+        <div class="item">
+          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+        </div>
 
-      <h5>Executor</h5>
-      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
-
-      <h5 show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h5>
-      <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+        <div class="item altercheck-execution">
+          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
+          <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+        </div>
+      </div>
       <div class="latest-result">
         <latest-result></latest-result>
       </div>
