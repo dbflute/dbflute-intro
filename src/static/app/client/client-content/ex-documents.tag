@@ -2,8 +2,8 @@
   <div class="ui container">
     <h2>Documents</h2>
     <div class="ui list">
-      <div show="{ client.hasSchemaHtml }" class="item"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
-      <div show="{ client.hasHistoryHtml }" class="item"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
+      <div show="{ client.hasSchemaHtml }" class="item doc-schemahtml-link"><a onclick="{ openSchemaHTML }">SchemaHTML</a></div>
+      <div show="{ client.hasHistoryHtml }" class="item doc-historyhtml-link"><a onclick="{ openHistoryHTML }">HistoryHTML</a></div>
     </div>
     <button class="ui positive button" onclick="{ showDocumentSettingModal }">Edit Document Settings</button>
     <button class="ui primary button" onclick="{ generateTask }">Generate Documents (jdbc, doc)</button>
