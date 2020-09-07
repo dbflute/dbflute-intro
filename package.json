@@ -16,7 +16,7 @@
     "eslint-loader": "^2.0.0",
     "eslint-plugin-html": "^3.1.1",
     "ffetch": "^0.1.1",
-    "prismjs": "^1.15.0",
+    "prismjs": "^1.21.0",
     "q": "^1.5.1",
     "riot": "^3.13.2",
     "riot-i18nlet": "^0.2.5",
