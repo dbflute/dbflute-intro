@@ -11,7 +11,7 @@ The GUI Application for DBFlute Management
 
 http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
-# For committers or contributers
+# For committers or contributors
 ## How to compile (for committer)
 
 1. git clone https://github.com/dbflute/dbflute-intro.git
