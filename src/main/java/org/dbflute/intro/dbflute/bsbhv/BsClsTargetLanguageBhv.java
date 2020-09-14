@@ -45,25 +45,25 @@ import org.dbflute.intro.dbflute.cbean.*;
  *     LANGUAGE_CODE, LANGUAGE_NAME, DISPLAY_ORDER
  *
  * [sequence]
- *
+ *     
  *
  * [identity]
- *
+ *     
  *
  * [version-no]
- *
+ *     
  *
  * [foreign table]
- *
+ *     
  *
  * [referrer table]
- *
+ *     
  *
  * [foreign property]
- *
+ *     
  *
  * [referrer property]
- *
+ *     
  * </pre>
  * @author DBFlute(AutoGenerator)
  */
