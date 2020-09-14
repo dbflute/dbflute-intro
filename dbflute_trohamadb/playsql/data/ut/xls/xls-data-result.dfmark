@@ -21,7 +21,7 @@ data-directory: playsql/data/ut/xls
   PURCHASE_PAYMENT (100)
 
 [90-vendor.xls]
-  venDor_Check (5)
+  VENDOR_CHECK (5)
 
 [92-whitebox-basic.xls]
   WHITE_QUOTED (3)
