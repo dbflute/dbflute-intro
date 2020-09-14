@@ -290,7 +290,7 @@ public class DBMetaInstanceHandler implements DBMetaProvider {
 
     protected static Entity newEntity(Class<?> entityType) {
         try {
-            return (Entity)entityType.newInstance();
+            return (Entity)entityType.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             String msg = "Failed to new the instance: " + entityType;
             throw new IllegalStateException(msg, e);
