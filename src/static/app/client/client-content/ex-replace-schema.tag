@@ -1,10 +1,10 @@
 <ex-replace-schema>
   <div class="ui container">
     <h2>Replace Schema</h2>
-    <button class="ui red button" onclick="{ replaceSchemaTask }">Replace Schema (replace-schema)</button>
+    <button class="ui red button" onclick="{ replaceSchemaTask }">Execute ReplaceSchema</button>
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Replace Schema"?</a></div>
-      <p>Automates (re) building DB schemas.</p>
+      <p>A mechanism to automates (re) building your DB schema.</p>
     </div>
     <div class="latest-result">
       <latest-result></latest-result>

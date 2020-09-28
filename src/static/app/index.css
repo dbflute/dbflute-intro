@@ -87,7 +87,11 @@ content {
 =======================================================*/
 
 div.latest-result {
-	padding-top: 2em;
+  padding-top: 2em;
+}
+
+h4.latest-result-title {
+  border-bottom: none; /* to be simple look */
 }
 
 /* ======================================================

@@ -1,15 +1,15 @@
 <ex-schema-policy-check>
   <div class="ui container">
     <h2>Schema Policy Check</h2>
-    <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Check Policy (schema-policy-check)</button>
+    <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Execute SchemaPolicyCheck ( doc task )</button>
     <div class="ui info message">
-      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"Check Policy"?</a></div>
-      <p>The doc task is executed, because there is no SchemaPolicyCheck task.</p>
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"SchemaPolicyCheck"?</a></div>
+      <p>A checking tool for DB design, embedded with <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/index.html" target="_blank">Doc task</a>.</p>
     </div>
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
-    <h3>Settings</h3>
+    <h3>Policy Settings</h3>
     <div class="ui segment" title="SchemaPolicy">
       <div class="ui form">
         <div class="row">
@@ -208,7 +208,7 @@
         self.latestResult.failure = {
           title: 'Result: Failure',
           link: {
-            message: 'Check Schema Policy Violation (from DBFluteEngine 1.2.0).',
+            message: 'Open your SchemaPolicyCheck result (HTML)',
             clickAction: self.openSchemaHTML
           }
         }
