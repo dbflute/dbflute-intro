@@ -1,6 +1,8 @@
 <client>
   <h1>DBFlute Client { opts.projectName }</h1>
-  <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
+    <!-- hide for_now, not important and should be designed more by jflute (2020/09/28)
+    <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
+     -->
   <client-content></client-content>
 
   <script>
