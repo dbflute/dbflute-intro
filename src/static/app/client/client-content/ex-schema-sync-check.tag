@@ -1,8 +1,9 @@
 <ex-schema-sync-check>
   <div class="ui container">
     <h2>Schema Sync Check</h2>
-    <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span>
-      show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+    <p show="{ canCheckSchemaSetting() }">
+      for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }
+    </p>
     <div class="ui list">
       <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
     </div>
