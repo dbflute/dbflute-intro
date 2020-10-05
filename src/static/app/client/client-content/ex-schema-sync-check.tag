@@ -1,18 +1,19 @@
 <ex-schema-sync-check>
   <div class="ui container">
     <h2>Schema Sync Check</h2>
-    <p show="{ canCheckSchemaSetting() }">for { syncSetting.url }<span
-      show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }</p>
+    <p show="{ canCheckSchemaSetting() }">
+      for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }
+    </p>
     <div class="ui list">
-      <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">SyncCheckResultHTML</a></div>
+      <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
     </div>
-    <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit Sync Check</button>
+    <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
-      Check Schema (schema-sync-check)
+      Execute SchemaSyncCheck
     </button>
     <div class="ui info message">
-      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Schema Sync Check"?</a></div>
-      <p>Check there is a difference between the two schema structures.</p>
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"SchemaSyncCheck"?</a></div>
+      <p>A checking tool for differences between the two schemas.</p>
     </div>
     <div class="latest-result">
       <latest-result></latest-result>
