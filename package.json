@@ -8,6 +8,7 @@
     "build": "webpack --mode production"
   },
   "devDependencies": {
+    "acorn": "^8.0.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-es2015-riot": "^1.1.0",
