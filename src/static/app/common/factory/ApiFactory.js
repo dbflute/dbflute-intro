@@ -126,7 +126,7 @@ export default class ApiFactory {
     })
   }
   openDataDir(projectName) {
-    return ffetch.get(`api/playsql/data/${projectName}/data/`)
+    return ffetch.get(`api/playsql/data/${projectName}`)
   }
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/${projectName}/list`);
