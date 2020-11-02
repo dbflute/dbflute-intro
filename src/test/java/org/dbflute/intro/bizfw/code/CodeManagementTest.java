@@ -68,7 +68,6 @@ public class CodeManagementTest extends PlainTestCase {
                 if (!Srl.endsWith(clazz.getName(), "Logic", "Return", "Param", "Exception")) {
                     String msg = "Class in logic package should ends with \"Logic\", \"Return\", \"Param\" or \"Exception\" .\n"
                             + "class name : " + clazz.getName();
-                    // TODO cabos create class of code management test (2019-10-15)
                     throw new IllegalStateException(msg);
                 }
             }
