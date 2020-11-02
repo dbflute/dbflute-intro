@@ -35,25 +35,25 @@ import org.dbflute.intro.dbflute.exentity.*;
  *     DATABASE_CODE, DATABASE_NAME, JDBC_DRIVER_FQCN, URL_TEMPLATE, DEFAULT_SCHEMA, SCHEMA_REQUIRED_FLG, SCHEMA_UPPER_CASE_FLG, USER_INPUT_ASSIST_FLG, EMBEDDED_JAR_FLG, DISPLAY_ORDER
  *
  * [sequence]
- *
+ *     
  *
  * [identity]
- *
+ *     
  *
  * [version-no]
- *
+ *     
  *
  * [foreign table]
- *
+ *     
  *
  * [referrer table]
- *
+ *     
  *
  * [foreign property]
- *
+ *     
  *
  * [referrer property]
- *
+ *     
  *
  * [get/set template]
  * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
