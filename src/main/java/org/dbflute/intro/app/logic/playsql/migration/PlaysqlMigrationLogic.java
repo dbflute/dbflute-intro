@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.app.logic.playsql.migration;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -78,11 +77,11 @@ public class PlaysqlMigrationLogic {
      */
     public PlaysqlMigrationDirReturn loadPlaysqlMigrationDir(String clientName) {
         IntroAssertUtil.assertNotEmpty(clientName);
-        return new PlaysqlMigrationDirReturn(                                  //
+        return new PlaysqlMigrationDirReturn( //
                 loadAlterCheckNgMarkFile(clientName).orElse(null), //
-                loadAlterSqlFiles(clientName),                            //
-                loadCheckedZip(clientName).orElse(null),           //
-                loadUnreleasedDir(clientName).orElse(null)         //
+                loadAlterSqlFiles(clientName), //
+                loadCheckedZip(clientName).orElse(null), //
+                loadUnreleasedDir(clientName).orElse(null) //
         );
 
     }
@@ -221,27 +220,6 @@ public class PlaysqlMigrationLogic {
     }
 
     // ===================================================================================
-    //                                                                Open alter directory
-    //                                                                ====================
-    /**
-     * Open alter directory by filer. (e.g. finder if mac, explorer if windows)
-     * Use OS command.
-     *
-     * @param clientName dbflute client project name (NotEmpty)
-     */
-    public void openAlterDir(String clientName) {
-        File alterDir = new File(buildAlterDirectoryPath(clientName));
-        if (alterDir.exists()) {
-            try {
-                Desktop desktop = Desktop.getDesktop();
-                desktop.open(alterDir);
-            } catch (IOException e) {
-                throw new UncheckedIOException("fail to open alter directory of" + clientName, e);
-            }
-        }
-    }
-
-    // ===================================================================================
     //                                                      Check to exists Same Name file
     //                                                      ==============================
     /**
@@ -252,9 +230,9 @@ public class PlaysqlMigrationLogic {
      */
     public boolean existsSameNameAlterSqlFile(String clientName, String sqlFileName) {
         IntroAssertUtil.assertNotEmpty(clientName, sqlFileName);
-        return existsSameNameFileInAlterDir(clientName, sqlFileName)           // exists editing sql
-                || existsSameNameFileInUnreleasedDir(clientName, sqlFileName)  // exists sql in unreleased directory
-                || existsSameNameFileInCheckedZip(clientName, sqlFileName);    // exists sql in checked zip
+        return existsSameNameFileInAlterDir(clientName, sqlFileName) // exists editing sql
+                || existsSameNameFileInUnreleasedDir(clientName, sqlFileName) // exists sql in unreleased directory
+                || existsSameNameFileInCheckedZip(clientName, sqlFileName); // exists sql in checked zip
     }
 
     /**
