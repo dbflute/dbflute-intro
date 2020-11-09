@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.logic.core;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -24,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 /**
  * @author jflute
  * @author deco
+ * @author prprmurakami
  */
 public class FlutyFileLogic {
 
@@ -42,6 +44,23 @@ public class FlutyFileLogic {
             FileUtils.write(textFile, content, BASIC_ENCODING);
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot write the text file: " + textFile, e);
+        }
+    }
+
+    /**
+     * Open directory by filer. (e.g. finder if mac, explorer if windows)
+     * Use OS command.
+     *
+     * @param clientName dbflute client project name (NotEmpty)
+     */
+    public void openDir(String clientName, File dir) {
+        if (dir.exists()) {
+            try {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(dir);
+            } catch (IOException e) {
+                throw new UncheckedIOException("fail to open directory of" + clientName + ", directory path: " + dir.getAbsolutePath(), e);
+            }
         }
     }
 }
