@@ -51,7 +51,7 @@ public class PlaysqlDataLogic {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.open(dataDir);
             } catch (IOException e) {
-                throw new UncheckedIOException("fail to open alter directory of" + clientName, e);
+                throw new UncheckedIOException("fail to open test data directory of " + clientName, e);
             }
         }
     }
