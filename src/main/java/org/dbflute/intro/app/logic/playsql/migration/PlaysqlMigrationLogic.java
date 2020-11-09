@@ -195,7 +195,8 @@ public class PlaysqlMigrationLogic {
      * @return sql files in checkedZipFile (NotNull)
      */
     private List<PlaysqlMigrationAlterSqlReturn> loadAlterSqlFilesInCheckedZip(File checkedZipFile) {
-        // TODO cabos resolve duplicate unzip load (2019-10-08)
+        // done cabos resolve duplicate unzip load (2019-10-08)
+        // fix this issue https://github.com/dbflute/dbflute-intro/issues/257
         IntroAssertUtil.assertNotNull(checkedZipFile);
         if (!checkedZipFile.exists()) {
             return Collections.emptyList();
@@ -381,7 +382,8 @@ public class PlaysqlMigrationLogic {
     // ===================================================================================
     //                                                                               Unzip
     //                                                                               =====
-    // TODO cabos use zip util (2019-10-08)
+    // done cabos use zip util (2019-10-08)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/257
     /**
      * Unzip checked file and copy sql files to alter directory.
      * Do nothing if checked zip not exists.
