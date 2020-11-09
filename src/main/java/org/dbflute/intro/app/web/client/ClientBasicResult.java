@@ -42,7 +42,8 @@ public class ClientBasicResult {
     // ===================================================================================
     //                                                                        Client State
     //                                                                        ============
-    // TODO cabos move own logic place (2019-10-19)
+    // done cabos move own logic place (2019-10-19)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/260
     @Required
     public Boolean hasSchemaHtml;
     @Required
