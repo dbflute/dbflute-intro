@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -26,11 +27,13 @@ import javax.annotation.Resource;
 
 import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.document.DocumentAuthorLogic;
+import org.dbflute.intro.app.web.document.hacomment.HacommentPickupResult.DiffPart;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author hakiba
+ * @author jflute
  */
 public class DocumentHacommentActionTest extends UnitIntroTestCase {
 
@@ -106,7 +109,12 @@ public class DocumentHacommentActionTest extends UnitIntroTestCase {
         // ## Assert ##
         showJson(response);
         validateJsonData(response);
-        // TODO hakiba add Assertions by hakiba (2018/02/21)
+        HacommentPickupResult result = response.getJsonResult();
+        // done (by jflute) hakiba add Assertions by hakiba (2018/02/21)
+        // sample assertion for now (it's enough) by jflute (2020/11/02)
+        log(result);
+        List<DiffPart> diffList = result.diffList;
+        assertHasAnyElement(diffList);
+        assertTrue(diffList.stream().anyMatch(diff -> "20180110160922".equals(diff.diffCode)));
     }
-
 }

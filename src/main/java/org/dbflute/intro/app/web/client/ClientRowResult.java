@@ -52,7 +52,9 @@ public class ClientRowResult {
     @Valid
     public DatabaseSettingsPart systemUserSettings;
 
-    // TODO hakiba implement another DatabaseSettingsPart with the main user and system user, but we do not seriously consider implementing AdditionalUserMap yet.
+    // done (by jflute) hakiba implement another DatabaseSettingsPart with the main user and system user,
+    //  but we do not seriously consider implementing AdditionalUserMap yet.
+    // no plan for AdditionalUserMap now, so pending here by jflute (2020/11/02)
     public static class DatabaseSettingsPart {
         // url property is mandatory for main user, but not for system user
         public String url;

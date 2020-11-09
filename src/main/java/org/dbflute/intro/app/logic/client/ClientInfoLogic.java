@@ -161,7 +161,9 @@ public class ClientInfoLogic {
         }
     }
 
-    // TODO hakiba confirm allow findFirst by hakiba (2018/04/11)
+    // done (by jflute) hakiba confirm allow findFirst by hakiba (2018/04/11)
+    // big problem so make ticket by jflute (2020/11/02)
+    // https://github.com/dbflute/dbflute-intro/issues/258
     private ExtlibFile prepareJdbcDriverExtlibFile(String clientName) {
         final File extlibDir = clientPhysicalLogic.findExtlibDir(clientName);
         if (!extlibDir.exists()) {
