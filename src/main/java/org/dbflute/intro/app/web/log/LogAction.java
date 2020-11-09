@@ -77,7 +77,8 @@ public class LogAction extends IntroBaseAction {
         });
     }
 
-    // TODO cabos create log logic and move this method (2019-10-20)
+    // done cabos create log logic and move this method (2019-10-20)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/264
     private String cutOffErrorLogIfNeeds(String content) {
         final String delimiter = "Look! Read the message below.";
         if (DfStringUtil.contains(content, delimiter)) {
