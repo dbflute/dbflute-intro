@@ -67,7 +67,8 @@ public class LogAction extends IntroBaseAction {
         });
     }
 
-    // TODO cabos implements all log (2019-10-20)
+    // done cabos implements all log (2019-10-20)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/263
     @Execute(urlPattern = "{}/{}/@word")
     public JsonResponse<LogBean> latest(String clientName, String task) {
         return logPhysicalLogic.findLatestResultFile(clientName, task).map((file) -> {
