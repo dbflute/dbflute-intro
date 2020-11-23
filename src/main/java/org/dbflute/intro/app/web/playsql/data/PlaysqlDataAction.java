@@ -15,12 +15,9 @@
  */
 package org.dbflute.intro.app.web.playsql.data;
 
-import java.io.File;
-
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.logic.playsql.data.PlaysqlDataLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -34,16 +31,14 @@ public class PlaysqlDataAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private FlutyFileLogic flutyFileLogic;
-    @Resource
-    private IntroPhysicalLogic introPhysicalLogic;
+    private PlaysqlDataLogic playsqlDataLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute
     public JsonResponse<Void> index(String clientName) {
-        flutyFileLogic.openDir(clientName, new File(introPhysicalLogic.buildClientPath(clientName, "playsql", "data")));
+        playsqlDataLogic.openDataDir(clientName);
         return JsonResponse.asEmptyBody();
     }
 }

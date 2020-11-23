@@ -15,12 +15,9 @@
  */
 package org.dbflute.intro.app.web.playsql.migration;
 
-import java.io.File;
-
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -34,16 +31,11 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private FlutyFileLogic flutyFileLogic;
-    @Resource
-    private IntroPhysicalLogic introPhysicalLogic;
+    private PlaysqlMigrationLogic playsqlMigrationLogic;
 
-    // ===================================================================================
-    //                                                                             Execute
-    //                                                                             =======
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> alter(String clientName) {
-        flutyFileLogic.openDir(clientName, new File(introPhysicalLogic.buildClientPath(clientName, "playsql", "migration")));
+        playsqlMigrationLogic.openAlterDir(clientName);
         return JsonResponse.asEmptyBody();
     }
 }
