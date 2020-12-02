@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.exception.DirectoryDoesNotExsistException;
 
 /**
  * @author jflute
@@ -51,16 +52,19 @@ public class FlutyFileLogic {
      * Open directory by filer. (e.g. finder if mac, explorer if windows)
      * Use OS command.
      *
-     * @param clientName dbflute client project name (NotEmpty)
+     * @param dir open directory name (NotEmpty)
+     * @throws DirectoryDoesNotExsistException 
      */
-    public void openDir(String clientName, File dir) {
+    public void openDir(File dir) throws DirectoryDoesNotExsistException {
         if (dir.exists()) {
             try {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.open(dir);
             } catch (IOException e) {
-                throw new UncheckedIOException("fail to open directory of" + clientName + ", directory path: " + dir.getAbsolutePath(), e);
+                throw new UncheckedIOException("fail to open directory." + " directory path: " + dir.getAbsolutePath(), e);
             }
+        } else {
+            throw new DirectoryDoesNotExsistException("directory dose not exsist." + " directory path: " + dir.getAbsolutePath());
         }
     }
 }

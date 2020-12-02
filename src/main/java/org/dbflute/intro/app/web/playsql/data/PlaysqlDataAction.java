@@ -17,10 +17,12 @@ package org.dbflute.intro.app.web.playsql.data;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.exception.DirectoryDoesNotExsistException;
 import org.dbflute.intro.app.logic.playsql.data.PlaysqlDataLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.servlet.request.ResponseManager;
 
 /**
  * @author prprmurakami
@@ -32,13 +34,19 @@ public class PlaysqlDataAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private PlaysqlDataLogic playsqlDataLogic;
+    @Resource
+    private ResponseManager responseManager;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute
     public JsonResponse<Void> index(String clientName) {
-        playsqlDataLogic.openDataDir(clientName);
+        try {
+            playsqlDataLogic.openDataDir(clientName);
+        } catch (DirectoryDoesNotExsistException e) {
+            throw responseManager.new400("fail to open directory.");
+        }
         return JsonResponse.asEmptyBody();
     }
 }

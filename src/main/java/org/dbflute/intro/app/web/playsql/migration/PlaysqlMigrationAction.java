@@ -17,10 +17,12 @@ package org.dbflute.intro.app.web.playsql.migration;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.exception.DirectoryDoesNotExsistException;
 import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.servlet.request.ResponseManager;
 
 /**
  * @author cabos
@@ -32,10 +34,19 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private PlaysqlMigrationLogic playsqlMigrationLogic;
+    @Resource
+    private ResponseManager responseManager;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     @Execute(urlPattern = "{}/@word")
     public JsonResponse<Void> alter(String clientName) {
-        playsqlMigrationLogic.openAlterDir(clientName);
+        try {
+            playsqlMigrationLogic.openAlterDir(clientName);
+        } catch (DirectoryDoesNotExsistException e) {
+            throw responseManager.new400("fail to open directory.");
+        }
         return JsonResponse.asEmptyBody();
     }
 }
