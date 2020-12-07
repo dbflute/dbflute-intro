@@ -189,6 +189,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: submitted file type is invalid */
     public static final String ERRORS_INVALID_FILE_EXTENSION = "{errors.invalid.file.extension}";
 
+    /** The key of the message: the dfprop directory is not found */
+    public static final String ERRORS_PLAYSQL_DATA_DIR_NOT_FOUND = "{errors.playsql.data.dir.notFound}";
+
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
      * <pre>
@@ -981,6 +984,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsInvalidFileExtension(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_INVALID_FILE_EXTENSION));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.playsql.data.dir.notFound' with parameters.
+     * <pre>
+     * message: the dfprop directory is not found
+     * comment: ----------------
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsPlaysqlDataDirNotFound(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_PLAYSQL_DATA_DIR_NOT_FOUND));
         return this;
     }
 }
