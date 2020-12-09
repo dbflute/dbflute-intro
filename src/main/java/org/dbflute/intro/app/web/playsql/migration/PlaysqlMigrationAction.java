@@ -17,15 +17,17 @@ package org.dbflute.intro.app.web.playsql.migration;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.exception.DirectoryDoesNotExsistException;
+import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.tellfailure.OpenDirNotFoundException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.ResponseManager;
 
 /**
  * @author cabos
+ * @author prprmurakami
  */
 public class PlaysqlMigrationAction extends IntroBaseAction {
 
@@ -44,8 +46,9 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
     public JsonResponse<Void> alter(String clientName) {
         try {
             playsqlMigrationLogic.openAlterDir(clientName);
-        } catch (DirectoryDoesNotExsistException e) {
-            throw responseManager.new400("fail to open directory.");
+        } catch (DirNotFoundException e) {
+            String alterDirPath = playsqlMigrationLogic.buildAlterDirectoryPath(clientName);
+            throw new OpenDirNotFoundException("alter directory is not found. dirPath: " + alterDirPath, alterDirPath);
         }
         return JsonResponse.asEmptyBody();
     }

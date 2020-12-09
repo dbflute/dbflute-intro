@@ -17,9 +17,10 @@ package org.dbflute.intro.app.web.playsql.data;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.playsql.data.PlaysqlDataLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.lastaflute.core.message.UserMessages;
+import org.dbflute.intro.bizfw.tellfailure.OpenDirNotFoundException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.servlet.request.ResponseManager;
@@ -42,13 +43,12 @@ public class PlaysqlDataAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<Void> index(String clientName) {
-        //        try {
-        //            playsqlDataLogic.openDataDir(clientName);
-        //        } catch (DirectoryDoesNotExsistException e) {
-        throw responseManager.new400("fail to open directory.", op -> {
-            op.messages(createMessages().addErrorsPlaysqlDataDirNotFound(UserMessages.GLOBAL));
-        });
-        //        }
-        //        return JsonResponse.asEmptyBody();
+        try {
+            playsqlDataLogic.openDataDir(clientName);
+        } catch (DirNotFoundException e) {
+            String playsqlDataDirPath = playsqlDataLogic.buildDataDirectoryPath(clientName);
+            throw new OpenDirNotFoundException("playsql data directory is not found. dirPath: " + playsqlDataDirPath, playsqlDataDirPath);
+        }
+        return JsonResponse.asEmptyBody();
     }
 }

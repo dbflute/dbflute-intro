@@ -1,10 +1,10 @@
 package org.dbflute.intro.app.logic.exception;
 
-public class DirectoryDoesNotExsistException extends Exception {
+public class DirNotFoundException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public DirectoryDoesNotExsistException(String msg) {
+    public DirNotFoundException(String msg) {
         super(msg);
     }
 }

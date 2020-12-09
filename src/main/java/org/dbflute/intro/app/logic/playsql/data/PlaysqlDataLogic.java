@@ -20,7 +20,7 @@ import java.io.File;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.exception.DirectoryDoesNotExsistException;
+import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
@@ -44,9 +44,9 @@ public class PlaysqlDataLogic {
      * Use OS command.
      *
      * @param clientName dbflute client project name (NotEmpty)
-     * @throws DirectoryDoesNotExsistException 
+     * @throws DirNotFoundException 
      */
-    public void openDataDir(String clientName) throws DirectoryDoesNotExsistException {
+    public void openDataDir(String clientName) throws DirNotFoundException {
         File dataDir = new File(buildDataDirectoryPath(clientName));
         flutyFileLogic.openDir(dataDir);
     }
@@ -57,7 +57,7 @@ public class PlaysqlDataLogic {
     // -----------------------------------------------------
     //                                  Build Directory Path
     //                                  --------------------
-    private String buildDataDirectoryPath(String clientName) {
+    public String buildDataDirectoryPath(String clientName) {
         return introPhysicalLogic.buildClientPath(clientName, "playsql", "data");
     }
 }

@@ -38,7 +38,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.exception.DirectoryDoesNotExsistException;
+import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
@@ -228,9 +228,9 @@ public class PlaysqlMigrationLogic {
      * Use OS command.
      *
      * @param clientName dbflute client project name (NotEmpty)
-     * @throws DirectoryDoesNotExsistException 
+     * @throws DirNotFoundException 
      */
-    public void openAlterDir(String clientName) throws DirectoryDoesNotExsistException {
+    public void openAlterDir(String clientName) throws DirNotFoundException {
         File alterDir = new File(buildAlterDirectoryPath(clientName));
         flutyFileLogic.openDir(alterDir);
     }
@@ -503,7 +503,7 @@ public class PlaysqlMigrationLogic {
     // -----------------------------------------------------
     //                                  Build Directory Path
     //                                  --------------------
-    private String buildAlterDirectoryPath(String clientName) {
+    public String buildAlterDirectoryPath(String clientName) {
         return buildMigrationPath(clientName, "alter");
     }
 
