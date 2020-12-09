@@ -41,8 +41,8 @@ public class PlaysqlDataAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    @Execute
-    public JsonResponse<Void> index(String clientName) {
+    @Execute(urlPattern = "{}/@word")
+    public JsonResponse<Void> open(String clientName) {
         try {
             playsqlDataLogic.openDataDir(clientName);
         } catch (DirNotFoundException e) {

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.playsql.migration;
+package org.dbflute.intro.app.web.playsql.migration.alter;
 
 import javax.annotation.Resource;
 
@@ -29,7 +29,7 @@ import org.lastaflute.web.servlet.request.ResponseManager;
  * @author cabos
  * @author prprmurakami
  */
-public class PlaysqlMigrationAction extends IntroBaseAction {
+public class PlaysqlMigrationAlterAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -43,7 +43,7 @@ public class PlaysqlMigrationAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> alter(String clientName) {
+    public JsonResponse<Void> open(String clientName) {
         try {
             playsqlMigrationLogic.openAlterDir(clientName);
         } catch (DirNotFoundException e) {

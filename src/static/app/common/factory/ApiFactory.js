@@ -110,7 +110,7 @@ export default class ApiFactory {
       });
   }
   openAlterDir(projectName) {
-    return ffetch.get(`api/playsql/migration/${projectName}/alter/`)
+    return ffetch.get(`api/playsql/migration/alter/${projectName}/open/`)
   }
   alter(projectName) {
     return ffetch.get(`api/alter/${projectName}/`);
@@ -126,7 +126,7 @@ export default class ApiFactory {
     })
   }
   openDataDir(projectName) {
-    return ffetch.get(`api/playsql/data/${projectName}`)
+    return ffetch.get(`api/playsql/data/${projectName}/open`)
   }
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/${projectName}/list`);
