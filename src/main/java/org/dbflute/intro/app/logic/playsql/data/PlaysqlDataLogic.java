@@ -57,7 +57,7 @@ public class PlaysqlDataLogic {
     // -----------------------------------------------------
     //                                  Build Directory Path
     //                                  --------------------
-    public String buildDataDirectoryPath(String clientName) {
+    private String buildDataDirectoryPath(String clientName) {
         return introPhysicalLogic.buildClientPath(clientName, "playsql", "data");
     }
 }

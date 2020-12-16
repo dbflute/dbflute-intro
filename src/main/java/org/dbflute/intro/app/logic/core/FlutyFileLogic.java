@@ -52,8 +52,8 @@ public class FlutyFileLogic {
      * Open directory by filer. (e.g. finder if mac, explorer if windows)
      * Use OS command.
      *
-     * @param dir open directory name (NotEmpty)
-     * @throws DirNotFoundException 
+     * @param dir File object for opened directory. (NotEmpty)
+     * @throws DirNotFoundException When the directory does not exist.
      */
     public void openDir(File dir) throws DirNotFoundException {
         if (dir.exists()) {
@@ -64,7 +64,8 @@ public class FlutyFileLogic {
                 throw new UncheckedIOException("fail to open directory." + " directory path: " + dir.getAbsolutePath(), e);
             }
         } else {
-            throw new DirNotFoundException("directory dose not exsist." + " directory path: " + dir.getAbsolutePath());
+            throw new DirNotFoundException("directory dose not exsist." + " directory path: " + dir.getAbsolutePath(),
+                    dir.getAbsolutePath());
         }
     }
 }

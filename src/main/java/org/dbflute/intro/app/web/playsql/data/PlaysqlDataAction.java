@@ -46,8 +46,7 @@ public class PlaysqlDataAction extends IntroBaseAction {
         try {
             playsqlDataLogic.openDataDir(clientName);
         } catch (DirNotFoundException e) {
-            String playsqlDataDirPath = playsqlDataLogic.buildDataDirectoryPath(clientName);
-            throw new OpenDirNotFoundException("playsql data directory is not found. dirPath: " + playsqlDataDirPath, playsqlDataDirPath);
+            throw new OpenDirNotFoundException("playsql data directory is not found. dirPath: " + e.getDirPath(), e.getDirPath());
         }
         return JsonResponse.asEmptyBody();
     }

@@ -32,6 +32,6 @@ public class OpenDirNotFoundException extends IntroApplicationException {
     }
 
     private static Consumer<IntroMessages> prepareMessages(String failureHint) {
-        return messages -> messages.addErrorsAppPlaysqlDataDirNotFound(GLOBAL, failureHint);
+        return messages -> messages.addErrorsAppDirNotFound(GLOBAL, failureHint);
     }
 }

@@ -47,8 +47,7 @@ public class PlaysqlMigrationAlterAction extends IntroBaseAction {
         try {
             playsqlMigrationLogic.openAlterDir(clientName);
         } catch (DirNotFoundException e) {
-            String alterDirPath = playsqlMigrationLogic.buildAlterDirectoryPath(clientName);
-            throw new OpenDirNotFoundException("alter directory is not found. dirPath: " + alterDirPath, alterDirPath);
+            throw new OpenDirNotFoundException("alter directory is not found. dirPath: " + e.getDirPath(), e.getDirPath());
         }
         return JsonResponse.asEmptyBody();
     }

@@ -169,7 +169,7 @@ public class IntroMessages extends IntroLabels {
     public static final String ERRORS_APP_DECO_MAP_PHYSICAL_ERROR = "{errors.app.deco.map.physical.error}";
 
     /** The key of the message: {0} directory is not found. please create directory and run again. */
-    public static final String ERRORS_APP_PLAYSQL_DATA_DIR_NOT_FOUND = "{errors.app.playsql.data.dir.notFound}";
+    public static final String ERRORS_APP_DIR_NOT_FOUND = "{errors.app.dir.notFound}";
 
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
@@ -887,7 +887,7 @@ public class IntroMessages extends IntroLabels {
     }
 
     /**
-     * Add the created action message for the key 'errors.app.playsql.data.dir.notFound' with parameters.
+     * Add the created action message for the key 'errors.app.dir.notFound' with parameters.
      * <pre>
      * message: {0} directory is not found. please create directory and run again.
      * </pre>
@@ -895,9 +895,9 @@ public class IntroMessages extends IntroLabels {
      * @param arg0 The parameter arg0 for message. (NotNull)
      * @return this. (NotNull)
      */
-    public IntroMessages addErrorsAppPlaysqlDataDirNotFound(String property, String arg0) {
+    public IntroMessages addErrorsAppDirNotFound(String property, String arg0) {
         assertPropertyNotNull(property);
-        add(property, new UserMessage(ERRORS_APP_PLAYSQL_DATA_DIR_NOT_FOUND, arg0));
+        add(property, new UserMessage(ERRORS_APP_DIR_NOT_FOUND, arg0));
         return this;
     }
 

@@ -504,7 +504,7 @@ public class PlaysqlMigrationLogic {
     // -----------------------------------------------------
     //                                  Build Directory Path
     //                                  --------------------
-    public String buildAlterDirectoryPath(String clientName) {
+    private String buildAlterDirectoryPath(String clientName) {
         return buildMigrationPath(clientName, "alter");
     }
 
