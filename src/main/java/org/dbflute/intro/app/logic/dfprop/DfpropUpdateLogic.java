@@ -200,20 +200,20 @@ public class DfpropUpdateLogic {
                         }
 
                         @Override
-                        protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
-                                String currentIndent, int index, String key, Object value) {
+                        protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent, String currentIndent,
+                                boolean withoutDisplaySideSpace, int index, String key, Object value) {
                             if (SCOPE_LIST.contains(key)) {
                                 scope = key;
                             }
                             doBuildCommentStringCurrentElement(sb, currentIndent, key);
-                            super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, index, key, value);
+                            super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace, index, key, value);
                         }
 
                         @Override
-                        protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent,
-                                String currentIndent, int index, Object value) {
+                        protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent, String currentIndent,
+                                boolean withoutDisplaySideSpace, int index, Object value) {
                             doBuildCommentStringCurrentElement(sb, currentIndent, (String) value);
-                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, index, value);
+                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace, index, value);
                         }
 
                         @SuppressWarnings("unchecked")
