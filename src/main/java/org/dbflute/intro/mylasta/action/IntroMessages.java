@@ -153,7 +153,7 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: the dfprop file is not found: {0} */
     public static final String ERRORS_APP_DFPROP_FILE_NOT_FOUND = "{errors.app.dfprop.file.notFound}";
 
-    /** The key of the message: the playsql file is not found: {0} */
+    /** The key of the message: the playsql directory is not found: {0} */
     public static final String ERRORS_APP_PLAYSQL_DIR_NOT_FOUND = "{errors.app.playsql.dir.notFound}";
 
     /** The key of the message: the playsql file is not found: {0} */
@@ -167,6 +167,9 @@ public class IntroMessages extends IntroLabels {
 
     /** The key of the message: the decomap physical error occurred : {0} */
     public static final String ERRORS_APP_DECO_MAP_PHYSICAL_ERROR = "{errors.app.deco.map.physical.error}";
+
+    /** The key of the message: {0} directory is not found. please create directory and run again. */
+    public static final String ERRORS_APP_DIR_NOT_FOUND = "{errors.app.dir.notFound}";
 
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
@@ -812,7 +815,7 @@ public class IntroMessages extends IntroLabels {
     /**
      * Add the created action message for the key 'errors.app.playsql.dir.notFound' with parameters.
      * <pre>
-     * message: the playsql file is not found: {0}
+     * message: the playsql directory is not found: {0}
      * </pre>
      * @param property The property name for the message. (NotNull)
      * @param arg0 The parameter arg0 for message. (NotNull)
@@ -880,6 +883,21 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppDecoMapPhysicalError(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_DECO_MAP_PHYSICAL_ERROR, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.dir.notFound' with parameters.
+     * <pre>
+     * message: {0} directory is not found. please create directory and run again.
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppDirNotFound(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_DIR_NOT_FOUND, arg0));
         return this;
     }
 

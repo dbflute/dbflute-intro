@@ -2,6 +2,7 @@
   <div class="ui container">
     <h2>Replace Schema</h2>
     <button class="ui red button" onclick="{ replaceSchemaTask }">Execute ReplaceSchema</button>
+    <button class="ui button" onclick="{ openDataDir }"><i class="folder open icon"></i>TestData Directory</button>
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Replace Schema"?</a></div>
       <p>A mechanism to automates (re) building your DB schema.</p>
@@ -90,6 +91,14 @@
     this.executeModal = {
       closable: false
     }
+    
+    // ===================================================================================
+    //                                                                       Open Document
+    //                                                                       =============
+    this.openDataDir = () => {
+      ApiFactory.openDataDir(self.opts.projectName)
+    }
+    
 
     // ===================================================================================
     //                                                                        Execute Task

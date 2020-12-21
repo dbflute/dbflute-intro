@@ -13,29 +13,42 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.playsql.migration;
+package org.dbflute.intro.app.web.playsql.migration.alter;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.bizfw.tellfailure.OpenDirNotFoundException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.servlet.request.ResponseManager;
 
 /**
  * @author cabos
+ * @author prprmurakami
  */
-public class PlaysqlMigrationAction extends IntroBaseAction {
+public class PlaysqlMigrationAlterAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
     private PlaysqlMigrationLogic playsqlMigrationLogic;
+    @Resource
+    private ResponseManager responseManager;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> alter(String clientName) {
-        playsqlMigrationLogic.openAlterDir(clientName);
+    public JsonResponse<Void> open(String clientName) {
+        try {
+            playsqlMigrationLogic.openAlterDir(clientName);
+        } catch (DirNotFoundException e) {
+            throw new OpenDirNotFoundException("alter directory is not found. dirPath: " + e.getDirPath(), e.getDirPath());
+        }
         return JsonResponse.asEmptyBody();
     }
 }
