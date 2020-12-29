@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,6 @@ public class CodeManagementTest extends PlainTestCase {
                 if (!Srl.endsWith(clazz.getName(), "Logic", "Return", "Param", "Exception")) {
                     String msg = "Class in logic package should ends with \"Logic\", \"Return\", \"Param\" or \"Exception\" .\n"
                             + "class name : " + clazz.getName();
-                    // TODO cabos create class of code management test (2019-10-15)
                     throw new IllegalStateException(msg);
                 }
             }

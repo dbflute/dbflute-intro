@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,19 +30,19 @@ public class ProjectInfra {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String clientProject; // not null, torque.project
+    protected final String clientName; // not null, torque.project
     protected final String dbfluteVersion; // not null, e.g. 1.1.1 (at _project.sh)
     protected final ExtlibFile jdbcDriverExtlibFile; // extlib file
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public ProjectInfra(String clientProject, String dbfluteVersion) {
-        this(clientProject, dbfluteVersion, null);
+    public ProjectInfra(String clientName, String dbfluteVersion) {
+        this(clientName, dbfluteVersion, null);
     }
 
-    public ProjectInfra(String clientProject, String dbfluteVersion, ExtlibFile jdbcDriverFile) {
-        this.clientProject = clientProject;
+    public ProjectInfra(String clientName, String dbfluteVersion, ExtlibFile jdbcDriverFile) {
+        this.clientName = clientName;
         this.dbfluteVersion = dbfluteVersion;
         this.jdbcDriverExtlibFile = jdbcDriverFile;
         ContainerUtil.injectSimply(this);
@@ -53,7 +53,7 @@ public class ProjectInfra {
     //                                                                         ===========
     public Map<String, Object> prepareInitReplaceMap() {
         final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-        replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientProject);
+        replaceMap.put("MY_PROJECT_NAME=dfclient", "MY_PROJECT_NAME=" + clientName);
         return replaceMap;
     }
 
@@ -61,7 +61,7 @@ public class ProjectInfra {
     //                                                                            Accessor
     //                                                                            ========
     public String getClientProject() {
-        return clientProject;
+        return clientName;
     }
 
     public String getDbfluteVersion() {

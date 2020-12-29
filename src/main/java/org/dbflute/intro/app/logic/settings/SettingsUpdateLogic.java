@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public class SettingsUpdateLogic {
         replaceDfpropDatabaseInfoMap(clientModel, clientModel.getProjectInfra().getClientProject());
     }
 
-    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientProject) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientProject);
+    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientName) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
         final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class DocumentDisplayLogic {
     @Resource
     private IntroSystemLogic introSystemLogic;
 
-    public String modifyHtmlForIntroOpening(String clientProject, File file) {
+    public String modifyHtmlForIntroOpening(String clientName, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             boolean addedIntroExecuteTag = false;
             boolean addedIntroServerTag = false;
@@ -57,20 +57,20 @@ public class DocumentDisplayLogic {
                     line = "<input id=\"decomment_server\" type=\"hidden\" />" + line;
                     addedIntroServerTag = true;
                 }
-                if (line.contains("<a href=\"./history-" + clientProject + ".html\">to HistoryHTML</a>")) {
-                    line = "<a href=\"/api/document/" + clientProject + "/historyhtml\">to HistoryHTML</a>";
+                if (line.contains("<a href=\"./history-" + clientName + ".html\">to HistoryHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientName + "/historyhtml\">to HistoryHTML</a>";
                 }
-                if (line.contains("<a href=\"./schema-" + clientProject + ".html\">to SchemaHTML</a>")) {
-                    line = "<a href=\"/api/document/" + clientProject + "/schemahtml\">to SchemaHTML</a>";
+                if (line.contains("<a href=\"./schema-" + clientName + ".html\">to SchemaHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientName + "/schemahtml\">to SchemaHTML</a>";
                 }
-                if (line.contains("<a href=\"./properties-" + clientProject + ".html\">to PropertiesHTML</a>")) {
-                    line = "<a href=\"/api/document/" + clientProject + "/propertieshtml\">to PropertiesHTML</a>";
+                if (line.contains("<a href=\"./properties-" + clientName + ".html\">to PropertiesHTML</a>")) {
+                    line = "<a href=\"/api/document/" + clientName + "/propertieshtml\">to PropertiesHTML</a>";
                 }
                 Matcher lastadocUrlMatcher = LASTADOC_FILENAME_PATTERN.matcher(line);
                 if (lastadocUrlMatcher.find()) {
                     String moduleName = lastadocUrlMatcher.group(1);
                     String prefix = line.contains("|") ? "| " : "";
-                    line = prefix + "<a href=\"/api/document/" + clientProject + "/lastadochtml/" + moduleName + "\">to " + moduleName
+                    line = prefix + "<a href=\"/api/document/" + clientName + "/lastadochtml/" + moduleName + "\">to " + moduleName
                             + "</a>";
                 }
                 sb.append(line).append("\n");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,9 @@ public class ClientRowResult {
     @Valid
     public DatabaseSettingsPart systemUserSettings;
 
-    // TODO hakiba implement another DatabaseSettingsPart with the main user and system user, but we do not seriously consider implementing AdditionalUserMap yet.
+    // done (by jflute) hakiba implement another DatabaseSettingsPart with the main user and system user,
+    //  but we do not seriously consider implementing AdditionalUserMap yet.
+    // no plan for AdditionalUserMap now, so pending here by jflute (2020/11/02)
     public static class DatabaseSettingsPart {
         // url property is mandatory for main user, but not for system user
         public String url;

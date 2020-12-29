@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,38 +47,38 @@ public class DocumentAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse schemahtml(String clientProject) {
-        File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientProject);
+    public StreamResponse schemahtml(String clientName) {
+        File schemaHtml = documentPhysicalLogic.findSchemaHtml(clientName);
         if (!schemaHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String schemaHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, schemaHtml);
+        String schemaHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, schemaHtml);
         return createStringSteamResponse(schemaHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse historyhtml(String clientProject) {
-        File historyHtml = documentPhysicalLogic.findHistoryHtml(clientProject);
+    public StreamResponse historyhtml(String clientName) {
+        File historyHtml = documentPhysicalLogic.findHistoryHtml(clientName);
         if (!historyHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, historyHtml);
+        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, historyHtml);
         return createStringSteamResponse(historyHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse propertieshtml(String clientProject) {
-        File historyHtml = documentPhysicalLogic.findPropertiesHtml(clientProject);
+    public StreamResponse propertieshtml(String clientName) {
+        File historyHtml = documentPhysicalLogic.findPropertiesHtml(clientName);
         if (!historyHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, historyHtml);
+        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, historyHtml);
         return createStringSteamResponse(historyHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse synccheckresulthtml(String clientProject) {
-        File syncCheckResultHtml = documentPhysicalLogic.findSyncCheckResultHtml(clientProject);
+    public StreamResponse synccheckresulthtml(String clientName) {
+        File syncCheckResultHtml = documentPhysicalLogic.findSyncCheckResultHtml(clientName);
         if (!syncCheckResultHtml.exists()) {
             return null;
         }
@@ -86,8 +86,8 @@ public class DocumentAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
-    public StreamResponse altercheckresulthtml(String clientProject) {
-        File AlterCheckResultHtml = documentPhysicalLogic.findAlterCheckResultHtml(clientProject);
+    public StreamResponse altercheckresulthtml(String clientName) {
+        File AlterCheckResultHtml = documentPhysicalLogic.findAlterCheckResultHtml(clientName);
         if (!AlterCheckResultHtml.exists()) {
             return null;
         }
@@ -95,12 +95,12 @@ public class DocumentAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word/{}")
-    public StreamResponse lastadochtml(String clientProject, String moduleName) {
-        File lastaDocHtml = documentPhysicalLogic.findLastaDocHtml(clientProject, moduleName);
+    public StreamResponse lastadochtml(String clientName, String moduleName) {
+        File lastaDocHtml = documentPhysicalLogic.findLastaDocHtml(clientName, moduleName);
         if (!lastaDocHtml.exists()) {
             return null;
         }
-        String lastaDocHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientProject, lastaDocHtml);
+        String lastaDocHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, lastaDocHtml);
         return createStringSteamResponse(lastaDocHtmlContent);
     }
 

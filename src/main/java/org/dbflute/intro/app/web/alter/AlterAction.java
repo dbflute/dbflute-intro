@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,12 +49,12 @@ public class AlterAction extends IntroBaseAction {
     //                                                                               =====
     /**
      * Respond migration directory information of dbflute_client/playsql/migration.
-     * @param clientProject client project (NotNull)
+     * @param clientName client project (NotNull)
      * @return migration directory information (NotNull)
      */
     @Execute
-    public JsonResponse<AlterSQLResult> index(String clientProject) {
-        return asJson(mappingAlterSQLResult(playsqlMigrationLogic.loadPlaysqlMigrationDir(clientProject)));
+    public JsonResponse<AlterSQLResult> index(String clientName) {
+        return asJson(mappingAlterSQLResult(playsqlMigrationLogic.loadPlaysqlMigrationDir(clientName)));
     }
 
     // -----------------------------------------------------
@@ -118,9 +118,9 @@ public class AlterAction extends IntroBaseAction {
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
     @NotAvailableDecommentServer
-    public JsonResponse<Void> prepare(String clientProject) {
-        playsqlMigrationLogic.unzipCheckedAlterZip(clientProject);
-        playsqlMigrationLogic.copyUnreleasedAlterDir(clientProject);
+    public JsonResponse<Void> prepare(String clientName) {
+        playsqlMigrationLogic.unzipCheckedAlterZip(clientName);
+        playsqlMigrationLogic.copyUnreleasedAlterDir(clientName);
         return JsonResponse.asEmptyBody();
     }
 
@@ -129,16 +129,16 @@ public class AlterAction extends IntroBaseAction {
     //                                                                              ======
     @Execute(urlPattern = "{}/@word")
     @NotAvailableDecommentServer
-    public JsonResponse<Void> create(String clientProject, AlterCreateBody body) {
-        validate(body, messages -> moreValidate(clientProject, body, messages));
-        playsqlMigrationLogic.createAlterSql(clientProject, body.alterFileName);
+    public JsonResponse<Void> create(String clientName, AlterCreateBody body) {
+        validate(body, messages -> moreValidate(clientName, body, messages));
+        playsqlMigrationLogic.createAlterSql(clientName, body.alterFileName);
         return JsonResponse.asEmptyBody();
     }
 
     // ===================================================================================
     //                                                                          Validation
     //                                                                          ==========
-    private void moreValidate(String clientProject, AlterCreateBody body, IntroMessages messages) {
+    private void moreValidate(String clientName, AlterCreateBody body, IntroMessages messages) {
         final String alterFileName = body.alterFileName;
         if (alterFileName != null && !alterFileName.endsWith(".sql")) {
             messages.addErrorsInvalidFileExtension(alterFileName);
@@ -150,7 +150,7 @@ public class AlterAction extends IntroBaseAction {
         if (containsInvalidCharacter) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (!containsInvalidCharacter && playsqlMigrationLogic.existsSameNameAlterSqlFile(clientProject, body.alterFileName)) {
+        if (!containsInvalidCharacter && playsqlMigrationLogic.existsSameNameAlterSqlFile(clientName, body.alterFileName)) {
             messages.addErrorsDuplicateFileName(alterFileName);
         }
     }

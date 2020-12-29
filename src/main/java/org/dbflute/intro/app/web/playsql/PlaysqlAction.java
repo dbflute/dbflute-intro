@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,8 @@ public class PlaysqlAction extends IntroBaseAction {
     //                                                  ----
     // #forgot deco pri.C with directory? by jflute (2016/07/26)
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<List<PlaysqlBean>> list(String project) {
-        List<File> playsqlFileList = playsqlPhysicalLogic.findPlaysqlFileAllList(project);
+    public JsonResponse<List<PlaysqlBean>> list(String clientName) {
+        List<File> playsqlFileList = playsqlPhysicalLogic.findPlaysqlFileAllList(clientName);
         List<PlaysqlBean> beans = playsqlFileList.stream()
                 .map(playsqlFile -> new PlaysqlBean(playsqlFile.getName(), flutyFileLogic.readFile(playsqlFile)))
                 .collect(Collectors.toList());
@@ -64,10 +64,10 @@ public class PlaysqlAction extends IntroBaseAction {
     // #forgot jflute pri.C intro: needs adjustment? (2016/07/26)
     @NotAvailableDecommentServer
     @Execute(urlPattern = "{}/@word/{}")
-    public JsonResponse<Void> update(String project, String fileName, PlaysqlUpdateBody body) {
+    public JsonResponse<Void> update(String clientName, String fileName, PlaysqlUpdateBody body) {
         validate(body, messages -> {});
 
-        File playsqlFile = playsqlPhysicalLogic.findPlaysqlFile(project, fileName);
+        File playsqlFile = playsqlPhysicalLogic.findPlaysqlFile(clientName, fileName);
         flutyFileLogic.writeFile(playsqlFile, body.content);
 
         return JsonResponse.asEmptyBody();

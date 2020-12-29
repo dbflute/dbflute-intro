@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,9 +93,9 @@ public class ClientInfoLogic {
     // ===================================================================================
     //                                                                       ReplaceSchema
     //                                                                       =============
-    public boolean existsReplaceSchema(String clientProject) {
+    public boolean existsReplaceSchema(String clientName) {
         boolean exists = false;
-        final File playsqlDir = clientPhysicalLogic.findPlaysqlDir(clientProject);
+        final File playsqlDir = clientPhysicalLogic.findPlaysqlDir(clientName);
         for (File file : playsqlDir.listFiles()) {
             if (file.isFile() && file.getName().startsWith("replace-schema") && file.getName().endsWith(".sql")) {
                 try {
@@ -113,30 +113,30 @@ public class ClientInfoLogic {
     // ===================================================================================
     //                                                                        Client Model
     //                                                                        ============
-    public OptionalThing<ClientModel> findClient(String clientProject) {
+    public OptionalThing<ClientModel> findClient(String clientName) {
         try {
-            return doFindClient(clientProject);
+            return doFindClient(clientName);
         } catch (RuntimeException e) {
-            throw new ClientReadFailureException("Failed to find DBFlute client: " + clientProject, e);
+            throw new ClientReadFailureException("Failed to find DBFlute client: " + clientName, e);
         }
     }
 
-    private OptionalThing<ClientModel> doFindClient(String clientProject) {
-        if (!existsClientProject(clientProject)) {
+    private OptionalThing<ClientModel> doFindClient(String clientName) {
+        if (!existsClientProject(clientName)) {
             return OptionalThing.ofNullable(null, () -> {
-                throw new IllegalStateException("Not found the client project: " + clientProject);
+                throw new IllegalStateException("Not found the client project: " + clientName);
             });
         }
-        final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.findDfpropMap(clientProject);
-        final ClientModel clientModel = newClientModel(clientProject, dfpropMap);
+        final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.findDfpropMap(clientName);
+        final ClientModel clientModel = newClientModel(clientName, dfpropMap);
         clientModel.setDocumentMap(prepareDocumentMap(dfpropMap));
         clientModel.setOutsideSqlMap(prepareOutsideSqlMap(dfpropMap));
         clientModel.setReplaceSchemaMap(prepareReplaceSchemaMap(dfpropMap));
         return OptionalThing.of(clientModel);
     }
 
-    private ClientModel newClientModel(String clientProject, Map<String, Map<String, Object>> dfpropMap) {
-        final ProjectInfra projectInfra = prepareProjectMeta(clientProject);
+    private ClientModel newClientModel(String clientName, Map<String, Map<String, Object>> dfpropMap) {
+        final ProjectInfra projectInfra = prepareProjectMeta(clientName);
         final BasicInfoMap basicInfoMap = prepareBasicInfoMap(dfpropMap);
         final DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(dfpropMap);
         return new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
@@ -145,12 +145,12 @@ public class ClientInfoLogic {
     // -----------------------------------------------------
     //                                          Project Core
     //                                          ------------
-    private ProjectInfra prepareProjectMeta(String clientProject) {
-        return new ProjectInfra(clientProject, prepareDBFluteVersion(clientProject), prepareJdbcDriverExtlibFile(clientProject));
+    private ProjectInfra prepareProjectMeta(String clientName) {
+        return new ProjectInfra(clientName, prepareDBFluteVersion(clientName), prepareJdbcDriverExtlibFile(clientName));
     }
 
-    private String prepareDBFluteVersion(String clientProject) {
-        final File projectFile = new File(introPhysicalLogic.buildClientPath(clientProject, "_project.sh"));
+    private String prepareDBFluteVersion(String clientName) {
+        final File projectFile = new File(introPhysicalLogic.buildClientPath(clientName, "_project.sh"));
         final String data = flutyFileLogic.readFile(projectFile);
         final Pattern pattern = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
         final Matcher matcher = pattern.matcher(data);
@@ -161,9 +161,11 @@ public class ClientInfoLogic {
         }
     }
 
-    // TODO hakiba confirm allow findFirst by hakiba (2018/04/11)
-    private ExtlibFile prepareJdbcDriverExtlibFile(String clientProject) {
-        final File extlibDir = clientPhysicalLogic.findExtlibDir(clientProject);
+    // done (by jflute) hakiba confirm allow findFirst by hakiba (2018/04/11)
+    // big problem so make ticket by jflute (2020/11/02)
+    // https://github.com/dbflute/dbflute-intro/issues/258
+    private ExtlibFile prepareJdbcDriverExtlibFile(String clientName) {
+        final File extlibDir = clientPhysicalLogic.findExtlibDir(clientName);
         if (!extlibDir.exists()) {
             return null;
         }

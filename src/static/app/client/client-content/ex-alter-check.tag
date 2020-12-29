@@ -1,6 +1,6 @@
 <ex-alter-check>
   <div class="ui container">
-    <h3>AlterCheck</h3>
+    <h2>AlterCheck</h2>
 
     <section class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/intro/alterbyintro.html" target="_blank">"AlterCheck"?</a></div>
@@ -11,76 +11,15 @@
 
     <!-- Step 1 -->
     <section if="{ !isEditing() }">
-      <h4 class="ui header">Step1. Prepare alter sql</h4>
-
-      <h5 class="ui header" if="{ existsCheckedFiles() }">Checked Alter SQL Files ( {checkedZip.fileName} )</h5>
-      <div class="ui list" if="{ existsCheckedFiles() }">
-        <div class="item" each="{ alterItem in checkedZip.checkedFiles }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
-
-      <h5 class="ui header" if="{ existsUnreleasedFiles() }">Unreleased Alter SQL Files</h5>
-      <div class="ui list" if="{ existsUnreleasedFiles() }">
-        <div class="item" each="{ alterItem in unreleasedDir.checkedFiles }">
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName }</a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
-          </div>
-        </div>
-      </div>
-
-      <div class="ui placeholder segment">
-        <div class="ui two column very relaxed stackable grid">
-          <div class="column">
-            <h5 class="header">Begin New AlterCheck!!</h5>
-            <form class="ui form">
-              <div class="fields">
-                <div class="inline field error{!validated}">
-                  <label>alter-schema-</label>
-                  <input type="text" ref="alterNameInput" placeholder="input ticket name">
-                  <label>.sql</label>
-                </div>
-                <div class="inline field">
-                  <button class="ui primary button" onclick="{ createAlterSql }">Begin</button>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="column">
-            <h5 class="header">Fix existing Alter SQL</h5>
-            <form class="ui form">
-              <div class="fields">
-                <div class="field">
-                  <button class="ui button" onclick="{ prepareAlterCheck }">Fix</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="ui vertical divider">
-          Or
-        </div>
-      </div>
-
+      <h3>Step1. Prepare alter sql</h3>
+      <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
+      <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
     </section>
 
     <!-- Step 2 -->
     <section show="{ isEditing() }">
-      <h4 class="ui header">Step2. Execute AlterCheck</h4>
+      <h3>Step2. Execute AlterCheck</h3>
 
-      <h5 class="ui header">Open Editing Alter SQL Files</h5>
       <div class="ui list">
         <div class="item" each="{ alterItem in editingSqls }">
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
@@ -94,13 +33,16 @@
         </div>
       </div>
 
-      <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+      <div class="ui list">
+        <div class="item">
+          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+        </div>
 
-      <h5 class="ui header">Executor</h5>
-      <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
-
-      <h5 class="ui header" show="{ client.hasAlterCheckResultHtml || (self.latestResult != null && self.latestResult.loaded) }">Latest AlterCheck Result</h5>
-      <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+        <div class="item altercheck-execution">
+          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
+          <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+        </div>
+      </div>
       <div class="latest-result">
         <latest-result></latest-result>
       </div>
@@ -153,6 +95,10 @@
     self.preparedFileName = ''
     self.validated = false
 
+    self.state = {
+      inputFileName : ''
+    }
+
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
@@ -160,7 +106,8 @@
       self.updateContents()
     })
 
-    // TODO cabos remove this because this method replace parent object
+    // done cabos remove this because this method replace parent object
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/260
     this.prepareClient = () => {
       return ApiFactory.clientOperation(self.projectName).then(resp => {
         self.client = resp
@@ -312,15 +259,6 @@
       })
     }
 
-    this.prepareAlterCheck = () => {
-      ApiFactory.prepareAlterSql(self.opts.projectName)
-        .then(() => {
-          ApiFactory.openAlterDir(self.opts.projectName)
-        }).finally(() => {
-          self.updateContents()
-        })
-    }
-
     this.createAlterSql = () => {
       const ticketName = self.refs.alterNameInput.value
       if (!ticketName || ticketName === '') {
@@ -336,7 +274,16 @@
     }
 
     this.nowPrepared = (fileName) => {
-      return self.preparedFileName != null && self.preparedFileName === fileName
+      const inputFileName = self.state.inputFileName
+      const alterFileName = 'alter-schema-' + inputFileName + '.sql'
+      return alterFileName === fileName
+    }
+
+    this.updateBegin = () => {
+      self.state = {
+        inputFileName : self.refs.altercheckform.refs.beginform.refs.alterNameInput.value
+      }
+      self.updateContents()
     }
 
     this.updateContents = () => {

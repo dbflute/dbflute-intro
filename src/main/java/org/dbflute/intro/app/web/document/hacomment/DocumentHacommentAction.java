@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ public class DocumentHacommentAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<Void> save(String projectName, HacommentSaveBody body) {
+    public JsonResponse<Void> save(String clientName, HacommentSaveBody body) {
         validate(body, messages -> moreValidate(body, messages));
-        hacommentPhysicalLogic.savePiece(projectName, mappingToHacoMapPiece(body));
+        hacommentPhysicalLogic.savePiece(clientName, mappingToHacoMapPiece(body));
         return JsonResponse.asEmptyBody();
     }
 
@@ -83,8 +83,8 @@ public class DocumentHacommentAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<HacommentPickupResult> pickup(String projectName) {
-        DfHacoMapPickup hacoMapPickup = hacommentPhysicalLogic.readMergedPickup(projectName);
+    public JsonResponse<HacommentPickupResult> pickup(String clientName) {
+        DfHacoMapPickup hacoMapPickup = hacommentPhysicalLogic.readMergedPickup(clientName);
         return asJson(new HacommentPickupResult(hacoMapPickup));
     }
 }

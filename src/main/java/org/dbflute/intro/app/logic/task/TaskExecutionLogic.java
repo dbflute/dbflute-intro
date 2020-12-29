@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,9 +52,9 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    public String execute(String clientProject, List<CDef.TaskType> taskTypeList, OptionalThing<String> env)
+    public String execute(String clientName, List<CDef.TaskType> taskTypeList, OptionalThing<String> env)
             throws TaskErrorResultException {
-        logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientProject, taskTypeList);
+        logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientName, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         final StringBuilder logSb = new StringBuilder();
         for (ProcessBuilder processBuilder : dbfluteTaskList) {
@@ -64,7 +64,7 @@ public class TaskExecutionLogic {
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            final String clientPath = introPhysicalLogic.buildClientPath(clientProject);
+            final String clientPath = introPhysicalLogic.buildClientPath(clientName);
             processBuilder.directory(new File(clientPath));
             logSb.append(executeCommand(processBuilder));
         }

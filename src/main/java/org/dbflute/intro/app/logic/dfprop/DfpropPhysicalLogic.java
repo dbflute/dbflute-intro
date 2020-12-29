@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,27 +41,27 @@ public class DfpropPhysicalLogic {
     // ===================================================================================
     //                                                                               Path
     //                                                                              ======
-    public String buildDfpropDirPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject, "dfprop");
+    public String buildDfpropDirPath(String clientName) {
+        return introPhysicalLogic.buildClientPath(clientName, "dfprop");
     }
 
-    public String buildDfpropFilePath(String clientProject, String fileName) {
-        return buildDfpropDirPath(clientProject) + "/" + fileName;
+    public String buildDfpropFilePath(String clientName, String fileName) {
+        return buildDfpropDirPath(clientName) + "/" + fileName;
     }
 
     // ===================================================================================
     //                                                                                Find
     //                                                                                ====
-    public File findDfpropFile(String clientProject, String fileName) {
-        final File dfpropFile = new File(buildDfpropFilePath(clientProject, fileName));
+    public File findDfpropFile(String clientName, String fileName) {
+        final File dfpropFile = new File(buildDfpropFilePath(clientName, fileName));
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath(), fileName);
         }
         return dfpropFile;
     }
 
-    public List<File> findDfpropFileAllList(String clientProject) {
-        final File dfpropDir = new File(buildDfpropDirPath(clientProject));
+    public List<File> findDfpropFileAllList(String clientName) {
+        final File dfpropDir = new File(buildDfpropDirPath(clientName));
         final File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
             throw new DfpropDirNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath(), dfpropDir.getName());

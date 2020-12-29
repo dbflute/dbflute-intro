@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,9 +67,9 @@ public class DfpropInfoLogic {
     // -----------------------------------------------------
     //                                                Dfprop
     //                                                ------
-    public Map<String, Map<String, Object>> findDfpropMap(String clientProject) {
+    public Map<String, Map<String, Object>> findDfpropMap(String clientName) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientProject + "/dfprop");
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) {
             return dfpropMap;
@@ -106,8 +106,8 @@ public class DfpropInfoLogic {
     // -----------------------------------------------------
     //                                       SchemaSyncCheck
     //                                       ---------------
-    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String clientName) {
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) {
             return Optional.empty();

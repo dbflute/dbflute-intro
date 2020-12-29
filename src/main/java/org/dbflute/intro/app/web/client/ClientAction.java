@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,10 +127,10 @@ public class ClientAction extends IntroBaseAction {
         //        });
         //    }
 
-        String clientProject = clientModel.getProjectInfra().getClientProject();
-        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
-        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
-        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientProject);
+        String clientName = clientModel.getProjectInfra().getClientProject();
+        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
+        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
+        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientName);
         return rowBean;
     }
 
@@ -177,9 +177,9 @@ public class ClientAction extends IntroBaseAction {
     //                                             Operation
     //                                             ---------
     @Execute
-    public JsonResponse<ClientBasicResult> operation(String clientProject) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientProject).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientProject, clientProject);
+    public JsonResponse<ClientBasicResult> operation(String clientName) {
+        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
         ClientBasicResult detailBean = mappingToOperationResult(clientModel);
         return asJson(detailBean);
@@ -188,14 +188,14 @@ public class ClientAction extends IntroBaseAction {
     private ClientBasicResult mappingToOperationResult(ClientModel clientModel) {
         ClientBasicResult operation = new ClientBasicResult();
         prepareBasic(operation, clientModel);
-        String clientProject = clientModel.getProjectInfra().getClientProject();
-        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientProject);
-        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientProject);
-        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientProject);
-        operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientProject);
+        String clientName = clientModel.getProjectInfra().getClientProject();
+        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
+        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
+        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientName);
+        operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientName);
         boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
         if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
-            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientProject);
+            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientName);
         }
         return operation;
     }
@@ -216,11 +216,11 @@ public class ClientAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
-        String projectName = clientCreateBody.client.projectName;
+        String clientName = clientCreateBody.client.projectName;
         validate(clientCreateBody, messages -> {
             ClientPart client = clientCreateBody.client;
-            if (clientInfoLogic.getProjectList().contains(projectName)) {
-                messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
+            if (clientInfoLogic.getProjectList().contains(clientName)) {
+                messages.addErrorsWelcomeClientAlreadyExists("projectName", clientName);
             }
             TargetDatabase databaseCd = client.databaseCode;
             if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
@@ -231,7 +231,7 @@ public class ClientAction extends IntroBaseAction {
                     .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
                     .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
         });
-        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(clientName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -241,9 +241,9 @@ public class ClientAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> edit(String clientName, ClientCreateBody clientCreateBody) {
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(projectName, clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(clientName, clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -251,25 +251,25 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(String projectName, ClientPart clientBody) {
-        return newClientModel(projectName, clientBody);
+    private ClientModel mappingToClientModel(String clientName, ClientPart clientBody) {
+        return newClientModel(clientName, clientBody);
     }
 
-    private ClientModel newClientModel(String projectName, ClientPart clientBody) {
-        ProjectInfra projectInfra = prepareProjectInfra(projectName, clientBody);
+    private ClientModel newClientModel(String clientName, ClientPart clientBody) {
+        ProjectInfra projectInfra = prepareProjectInfra(clientName, clientBody);
         BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
         DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
         ClientModel clientModel = new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
         return clientModel;
     }
 
-    private ProjectInfra prepareProjectInfra(String projectName, ClientPart clientBody) {
+    private ProjectInfra prepareProjectInfra(String clientName, ClientPart clientBody) {
         if (Objects.isNull(clientBody.jdbcDriver)) {
-            return new ProjectInfra(projectName, clientBody.dbfluteVersion);
+            return new ProjectInfra(clientName, clientBody.dbfluteVersion);
         }
         ExtlibFile extlibFile =
-                clientPhysicalLogic.createExtlibFile(projectName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
-        return new ProjectInfra(projectName, clientBody.dbfluteVersion, extlibFile);
+                clientPhysicalLogic.createExtlibFile(clientName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
+        return new ProjectInfra(clientName, clientBody.dbfluteVersion, extlibFile);
     }
 
     private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
@@ -296,8 +296,8 @@ public class ClientAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> delete(String clientProject) {
-        clientUpdateLogic.deleteClient(clientProject);
+    public JsonResponse<Void> delete(String clientName) {
+        clientUpdateLogic.deleteClient(clientName);
         return JsonResponse.asEmptyBody();
     }
 }

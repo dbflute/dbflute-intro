@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,20 +64,20 @@ public class TaskAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<TaskExecutionResult> execute(String project, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
+    public JsonResponse<TaskExecutionResult> execute(String clientName, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         try {
-            String log = taskExecutionLogic.execute(project, taskTypeList, env);
-            loggingLastSuccess(project, instruction, log);
+            String log = taskExecutionLogic.execute(clientName, taskTypeList, env);
+            loggingLastSuccess(clientName, instruction, log);
         } catch (SchemaNotSynchronizedException | SchemaPolicyViolatedException e) {
-            loggingLastFailure(project, instruction, e.getProcessLog());
+            loggingLastFailure(clientName, instruction, e.getProcessLog());
             return asJson(new TaskExecutionResult(false));
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
             String processLog = e.getProcessLog();
-            loggingLastFailure(project, instruction, processLog);
-            String debugMsg =
-                    "Failed to execute the tasks: project=" + project + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
+            loggingLastFailure(clientName, instruction, processLog);
+            String debugMsg = "Failed to execute the tasks: client name=" + clientName + ", taskTypeList=" + taskTypeList + ", resultCode="
+                    + resultCode;
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
         }
         return asJson(new TaskExecutionResult(true));

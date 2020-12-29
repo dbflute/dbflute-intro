@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,8 @@ public class ClientBasicResult {
     // ===================================================================================
     //                                                                        Client State
     //                                                                        ============
-    // TODO cabos move own logic place (2019-10-19)
+    // done cabos move own logic place (2019-10-19)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/260
     @Required
     public Boolean hasSchemaHtml;
     @Required

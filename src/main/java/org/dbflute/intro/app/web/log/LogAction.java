@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,17 +67,19 @@ public class LogAction extends IntroBaseAction {
         });
     }
 
-    // TODO cabos implements all log (2019-10-20)
+    // done cabos implements all log (2019-10-20)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/263
     @Execute(urlPattern = "{}/{}/@word")
-    public JsonResponse<LogBean> latest(String project, String task) {
-        return logPhysicalLogic.findLatestResultFile(project, task).map((file) -> {
+    public JsonResponse<LogBean> latest(String clientName, String task) {
+        return logPhysicalLogic.findLatestResultFile(clientName, task).map((file) -> {
             return asJson(new LogBean(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
         }).orElseGet(() -> {
             return JsonResponse.asEmptyBody();
         });
     }
 
-    // TODO cabos create log logic and move this method (2019-10-20)
+    // done cabos create log logic and move this method (2019-10-20)
+    // fix this issue https://github.com/dbflute/dbflute-intro/issues/264
     private String cutOffErrorLogIfNeeds(String content) {
         final String delimiter = "Look! Read the message below.";
         if (DfStringUtil.contains(content, delimiter)) {
@@ -88,8 +90,8 @@ public class LogAction extends IntroBaseAction {
     }
 
     @Execute(urlPattern = "{}/@word")
-    public JsonResponse<List<LogBean>> list(String project) {
-        List<File> logFileList = logPhysicalLogic.findLogFileAllList(project);
+    public JsonResponse<List<LogBean>> list(String clientName) {
+        List<File> logFileList = logPhysicalLogic.findLogFileAllList(clientName);
         List<LogBean> beans = logFileList.stream()
                 .map(logFile -> new LogBean(logFile.getName(), flutyFileLogic.readFile(logFile)))
                 .collect(Collectors.toList());

@@ -1,8 +1,8 @@
 <latest-result>
   <div show="{ latestResult.loaded }">
-    <h4 if="{ latestResult.header.show }" class="ui header">{ latestResult.header.text }</h4>
+    <h3 if="{ latestResult.header.show }">{ latestResult.header.text }</h3>
     <div class="ui { latestResult.success ? 'positive' : 'negative' } message">
-      <h4>{ latestResult.success ? success.title : failure.title }</h4>
+      <h4 class="latest-result-title">{ latestResult.success ? success.title : failure.title }</h4>
       <p if="{ latestResult.success && success.message }">{ success.message }</p>
       <p if="{ !latestResult.success && failure.message }">{ failure.message }</p>
       <p if="{ !latestResult.success && failure.link && failure.link.message }" >
@@ -32,7 +32,7 @@
     self.latestResult = {
       loaded: false,
       header: {
-        text: 'Latest Manage Task Execution Log',
+        text: 'Execution Result',
         show: true
       }
     }

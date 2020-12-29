@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,64 +38,64 @@ public class DocumentPhysicalLogic {
     // ===================================================================================
     //                                                                         Find/Exists
     //                                                                         ===========
-    public boolean existsSchemaHtml(String clientProject) {
-        return findSchemaHtml(clientProject).exists();
+    public boolean existsSchemaHtml(String clientName) {
+        return findSchemaHtml(clientName).exists();
     }
 
-    public boolean existsHistoryHtml(String clientProject) {
-        return findHistoryHtml(clientProject).exists();
+    public boolean existsHistoryHtml(String clientName) {
+        return findHistoryHtml(clientName).exists();
     }
 
-    public boolean existsSyncCheckResultHtml(String clientProject) {
-        return findSyncCheckResultHtml(clientProject).exists();
+    public boolean existsSyncCheckResultHtml(String clientName) {
+        return findSyncCheckResultHtml(clientName).exists();
     }
 
-    public boolean existsAlterCheckResultHtml(String clientProject) {
-        return findAlterCheckResultHtml(clientProject).exists();
+    public boolean existsAlterCheckResultHtml(String clientName) {
+        return findAlterCheckResultHtml(clientName).exists();
     }
 
-    public File findSchemaHtml(String clientProject) {
-        return toProjectNamedDocumentFile(clientProject, "schema");
+    public File findSchemaHtml(String clientName) {
+        return toProjectNamedDocumentFile(clientName, "schema");
     }
 
-    public File findHistoryHtml(String clientProject) {
-        return toProjectNamedDocumentFile(clientProject, "history");
+    public File findHistoryHtml(String clientName) {
+        return toProjectNamedDocumentFile(clientName, "history");
     }
 
-    public File findPropertiesHtml(String clientProject) {
-        return toProjectNamedDocumentFile(clientProject, "properties");
+    public File findPropertiesHtml(String clientName) {
+        return toProjectNamedDocumentFile(clientName, "properties");
     }
 
-    public File findSyncCheckResultHtml(String clientProject) {
-        return toFixedNamedDocumentFile(clientProject, "sync-check-result.html");
+    public File findSyncCheckResultHtml(String clientName) {
+        return toFixedNamedDocumentFile(clientName, "sync-check-result.html");
     }
 
-    public File findAlterCheckResultHtml(String clientProject) {
-        return toProjectNamedMigrationFile(clientProject, "schema");
+    public File findAlterCheckResultHtml(String clientName) {
+        return toProjectNamedMigrationFile(clientName, "schema");
     }
 
-    public File findLastaDocHtml(String clientProject, String moduleName) {
-        return toProjectNamedDocumentFile(clientProject, moduleName, "lastadoc");
+    public File findLastaDocHtml(String clientName, String moduleName) {
+        return toProjectNamedDocumentFile(clientName, moduleName, "lastadoc");
     }
 
     // ===================================================================================
     //                                                                                Path
     //                                                                                ====
-    private File toProjectNamedDocumentFile(String clientProject, String module, String type) {
+    private File toProjectNamedDocumentFile(String clientName, String module, String type) {
         String pureName = type + "-" + module + ".html";
-        return toFixedNamedDocumentFile(clientProject, pureName);
+        return toFixedNamedDocumentFile(clientName, pureName);
     }
 
-    private File toProjectNamedDocumentFile(String clientProject, String type) { // e.g. SchemaHtml
-        final String pureName = type + "-" + clientProject + ".html";
-        return toFixedNamedDocumentFile(clientProject, pureName);
+    private File toProjectNamedDocumentFile(String clientName, String type) { // e.g. SchemaHtml
+        final String pureName = type + "-" + clientName + ".html";
+        return toFixedNamedDocumentFile(clientName, pureName);
     }
 
-    private File toFixedNamedDocumentFile(String clientProject, String pureName) { // e.g. SchemaSyncCheck
-        return new File(buildDocumentPath(clientProject, pureName));
+    private File toFixedNamedDocumentFile(String clientName, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildDocumentPath(clientName, pureName));
     }
 
-    private File toProjectNamedMigrationFile(String clientProject, String type) { // e.g. AlterCheck
+    private File toProjectNamedMigrationFile(String clientName, String type) { // e.g. AlterCheck
         final String pureName;
 
         switch (type) {
@@ -105,18 +105,18 @@ public class DocumentPhysicalLogic {
         default:
             return null;
         }
-        return toFixedNamedMigrationFile(clientProject, type, pureName);
+        return toFixedNamedMigrationFile(clientName, type, pureName);
     }
 
-    private File toFixedNamedMigrationFile(String clientProject, String type, String pureName) { // e.g. SchemaSyncCheck
-        return new File(buildMigrationPath(clientProject, type, pureName));
+    private File toFixedNamedMigrationFile(String clientName, String type, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildMigrationPath(clientName, type, pureName));
     }
 
-    private String buildDocumentPath(String clientProject, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientProject, "output", "doc", pureName);
+    private String buildDocumentPath(String clientName, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientName, "output", "doc", pureName);
     }
 
-    private String buildMigrationPath(String clientProject, String type, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientProject, "playsql", "migration", type, pureName);
+    private String buildMigrationPath(String clientName, String type, String pureName) {
+        return introPhysicalLogic.buildClientPath(clientName, "playsql", "migration", type, pureName);
     }
 }

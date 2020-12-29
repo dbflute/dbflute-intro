@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,8 @@ public class LogPhysicalLogic {
     // ===================================================================================
     //                                                                                Read
     //                                                                                ====
-    public boolean existsViolationSchemaPolicyCheck(String clientProject) {
-        return findLatestResultFile(clientProject, "doc").map(file -> fileLogic.readFile(file))
+    public boolean existsViolationSchemaPolicyCheck(String clientName) {
+        return findLatestResultFile(clientName, "doc").map(file -> fileLogic.readFile(file))
                 .map(s -> s.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException"))
                 .orElse(false);
     }

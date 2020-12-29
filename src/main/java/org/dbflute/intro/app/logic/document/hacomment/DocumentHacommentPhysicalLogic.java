@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,29 +44,29 @@ public class DocumentHacommentPhysicalLogic {
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
-    public void savePiece(String clientProject, DfHacoMapPiece hacoMapPiece) {
-        _hacoMapFile.writePiece(buildClientPath(clientProject), hacoMapPiece);
+    public void savePiece(String clientName, DfHacoMapPiece hacoMapPiece) {
+        _hacoMapFile.writePiece(buildClientPath(clientName), hacoMapPiece);
     }
 
     // ===================================================================================
     //                                                                          Pickup Map
     //                                                                          ==========
-    public DfHacoMapPickup readMergedPickup(String clientProject) {
-        List<DfHacoMapPiece> pieces = readHacommentPiece(clientProject);
-        OptionalThing<DfHacoMapPickup> pickupOpt = readHacommentPickup(clientProject);
+    public DfHacoMapPickup readMergedPickup(String clientName) {
+        List<DfHacoMapPiece> pieces = readHacommentPiece(clientName);
+        OptionalThing<DfHacoMapPickup> pickupOpt = readHacommentPickup(clientName);
         return _hacoMapFile.merge(pickupOpt, pieces);
     }
 
-    private List<DfHacoMapPiece> readHacommentPiece(String clientProject) {
-        return _hacoMapFile.readPieceList(buildClientPath(clientProject));
+    private List<DfHacoMapPiece> readHacommentPiece(String clientName) {
+        return _hacoMapFile.readPieceList(buildClientPath(clientName));
     }
 
-    private OptionalThing<DfHacoMapPickup> readHacommentPickup(String clientProject) {
-        return _hacoMapFile.readPickup(buildClientPath(clientProject));
+    private OptionalThing<DfHacoMapPickup> readHacommentPickup(String clientName) {
+        return _hacoMapFile.readPickup(buildClientPath(clientName));
     }
 
-    private String buildClientPath(String clientProject) {
-        return introPhysicalLogic.buildClientPath(clientProject);
+    private String buildClientPath(String clientName) {
+        return introPhysicalLogic.buildClientPath(clientName);
     }
 
     // ===================================================================================

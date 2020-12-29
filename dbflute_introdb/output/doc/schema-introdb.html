@@ -44,9 +44,9 @@ h3 {
 h4 {
 	padding: 0 0 0 10px;
 	margin: 1em 10% 0 1em;
-	border-top: solid 1px #af0000;
-	border-bottom: solid 1px #af0000;
-	font-size: 1.4em;
+	border-top: none;
+	border-bottom: solid 1px #663333;
+	font-size: 1.3em;
 	color: #333333;
 }
 
@@ -219,6 +219,46 @@ span.tablefirstdatetitle {
 }
 
 /* -------------------------------------------------
+                                    Arrange Query
+------------------------------------------------- */
+span.arrqycount {
+	font-size: 0.5em;
+}
+dl.arrqylist {
+	margin-top: 0.7em;
+	padding-left: 3em;
+}
+dl.arrqylist dt {
+	display: list-item;
+	list-style-type: circle;
+	font-size: 1.3em;
+	margin-top: 0.3em;
+}
+dl.arrqylist dd {
+	padding-left: 1em;
+}
+dl.arrqylist dd pre {
+	font-size: 1.1em;
+}
+dl.arrqylist dd.subinfo {
+	padding-left: 2em;
+}
+dl.arrqylist dd.subinfo span.sqlap {
+	font-style: italic;
+	color: #002266;
+}
+dl.arrqylist dd.subinfo span.file {
+	font-style: italic;
+	color: #002266;
+}
+dl.arrqylist dd.subinfo span.ctet {
+	color: green;
+}
+dl.arrqylist dd.subinfo span.pmb {
+	color: green;
+}
+
+/* -------------------------------------------------
                              Behavior Query Path
 ------------------------------------------------- */
 span.bqpcount {
@@ -294,6 +334,19 @@ dl.procedurelist dd.column pre {
 }
 
 /* -------------------------------------------------
+                                    Schema Policy
+------------------------------------------------- */
+pre.spolicydisp {
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+}
+pre.spolicyviodisp {
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+	color: #994747;
+}
+
+/* -------------------------------------------------
                                   Decomment Modal
 ------------------------------------------------- */
 .decommentmodal {
@@ -314,11 +367,12 @@ dl.procedurelist dd.column pre {
 	margin: 0 auto;
 	border: 1px solid #999999;
 	padding: 15px;
-	background-color: #ffffff;
+	background-color: #fff8f8;
 	border-radius: 4px;
 }
 .decommentmodalcontent p {
 	font-size: 14px;
+	color: #222277;
 }
 .decommentinput {
 	display: block;
@@ -326,10 +380,26 @@ dl.procedurelist dd.column pre {
 	margin-top: 10px;
 	font-size: 12px;
 }
+.decommentmodal-ok-area {
+	text-align: right;
+	margin: 0em 1em 0em 0em
+}
 .decommentmodal-ok-btn {
-	margin: 10px 5px 0 0;
-	padding: 5px 10px;
-	border-radius: 4px;
+	display: inline-block;
+	margin: 0.5em 0em;
+	padding: 0.5em 1.5em 0.5em 1.5em;
+	text-decoration: none;
+	border-radius: 3px;
+	font-weight: bold;
+	color: #FFF;
+	text-align: right;
+	background-image: -webkit-linear-gradient(45deg, #709dff 0%, #b0c9ff 100%);
+	background-image: linear-gradient(45deg, #709dff 0%, #b0c9ff 100%);
+	transition: .4s;
+}
+.decommentmodal-ok-btn:hover{
+	background-image: -webkit-linear-gradient(45deg, #709dff 50%, #b0c9ff 100%);
+	background-image: linear-gradient(45deg, #709dff 50%, #b0c9ff 100%);
 }
 .decommentmodal-close-btn {
 	position: absolute;
@@ -351,9 +421,17 @@ dl.procedurelist dd.column pre {
 .decommentmodal-close-btn:hover {
 	background-color: #eed;
 }
-.decomment-user-name {
+.decomment-user-input {
 	display: none;
+}
+.decomment-user-name {
+	margin-top: 0.5em;
 	padding: 5px;
+	border: thin solid #aa3344;
+}
+.decomment-user-name-desc {
+	margin-left: 0.5em;
+	color: #222277;
 }
 	</style>
 </head>
@@ -365,6 +443,7 @@ dl.procedurelist dd.column pre {
 <p class="sublink">
  <a href="#cdef">Classification Definition</a>
 | <a href="#procedure">Procedure List</a>
+| <a href="#schemapolicy">Schema Policy</a>
 </p>
 <p class="sisterlink"><a href="./history-introdb.html">to HistoryHTML</a></p>
 <p class="sistersublink">
@@ -1155,6 +1234,29 @@ CLS_TARGET_LANGUAGE
 
 <h2 id="procedure">Procedure</h2>
 
+<h2 id="schemapolicy">Schema Policy</h2>
+<pre class="spolicydisp">
+
+[Schema Policy]
+ tableExceptList: []
+ tableTargetList: []
+ columnExceptMap: {}
+ isMainSchemaOnly: false
+ wholeMap:
+   themeList: [uniqueTableAlias, sameColumnAliasIfSameColumnName]
+   statementList:
+ tableMap:
+   themeList: [hasPK, upperCaseBasis, identityIfPureIDPK]
+   statementList:
+    {if:{tableName is $$ALL$$}} {then:{fkName is prefix:FK_$$table$$}}
+ columnMap:
+   themeList: [upperCaseBasis]
+   statementList:
+    {if:{columnName is suffix:_FLAG}} {then bad =&gt; should be _FLG}
+    {if:{columnName is suffix:_FLG}} {then notNull}
+    {if:{columnName is suffix:_FLG}} {then classification}
+</pre>
+
 <h2 id="thanks">Thanks</h2>
 <p>
 	Created by <a href="http://dbflute.org/">DBFlute(AutoGenerator)</a>
@@ -1166,8 +1268,8 @@ CLS_TARGET_LANGUAGE
 		<div id="decomment-close" class="decommentmodal-close-btn"><span>x</span></div>
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
 		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
-		<input type="text" id="decomment-user-name" class="decomment-user-name" placeholder="User name"/>
-		<button id="decomment-ok" class="decommentmodal-ok-btn">OK</button>
+		<div id="decomment-user-input" class="decomment-user-input"><input type="text" id="decomment-user-name" class="decomment-user-name" placeholder="User name"/><span class="decomment-user-name-desc">*required (saved in cookie)</span></div>
+		<div class="decommentmodal-ok-area"><button id="decomment-ok" class="decommentmodal-ok-btn">OK</button></div>
 	</div>
 </div>
 <script>
@@ -1812,6 +1914,7 @@ StoreClient.prototype = {
 			}
 			var decomment = {
 				"body": property["decomment"],
+				"pieceOwner": property["pieceOwner"],
 				"pieceGitBranch": property["pieceGitBranch"]
 			}
 			decomments.push(decomment);
@@ -1875,6 +1978,7 @@ StoreClient.prototype = {
 			}
 			var decomment = {
 				"body": property["decomment"],
+				"pieceOwner": property["pieceOwner"],
 				"pieceGitBranch": property["pieceGitBranch"]
 			}
 			decomments.push(decomment);
@@ -1941,6 +2045,7 @@ function PickupTableProperty(tableDbName, json) {
 		this.decomments = json.decomments || [];
 		this.previousPieces = json.previousPieces;
 		this.authors = json.authors;
+		this.pieceOwner = json.pieceOwner;
 		this.commentVersion = json.commentVersion;
 		this.columns = {};
 		var columns = json.columns || {};
@@ -2001,7 +2106,7 @@ PickupTableProperty.prototype = {
 			var decomment = this.decomments[key];
 			displayComment += decomment.body
 			if (this.isConflict() && decomment.pieceGitBranch) {
-				displayComment += '\n=======' + decomment.pieceGitBranch;
+				displayComment += '\n=======' + decomment.pieceGitBranch + ' (' + decomment.pieceOwner + ')';
 				if (key < commentCount - 1) {
 					displayComment += '\n\n'; // show between comments
 				}
@@ -2090,6 +2195,7 @@ function PickupColumnProperty(tableDbName, columnName, json) {
 		this.decomments = json['decomments'] || [];
 		this.previousPieces = json['previousPieces'];
 		this.authors = json['authors'];
+		this.pieceOwner = json['pieceOwner'];
 		this.commentVersion = json['commentVersion'];
 		this.previousWholeComment = json['previousWholeComment'];
 	}
@@ -2148,7 +2254,7 @@ PickupColumnProperty.prototype = {
 			var decomment = this.decomments[key];
 			displayComment += decomment.body
 			if (this.isConflict() && decomment.pieceGitBranch) {
-				displayComment += '\n=======' + decomment.pieceGitBranch;
+				displayComment += '\n=======' + decomment.pieceGitBranch + ' (' + decomment.pieceOwner + ')';
 				if (key < commentCount - 1) {
 					displayComment += '\n\n'; // show between comments
 				}
@@ -2263,12 +2369,12 @@ Decomment.prototype = {
 	 */
 	showUserNameInputIfNeed: function() {
 		if (DecommentUtil.isDecommentServer() && this.isUserNameEmpty()) {
-			document.querySelector('#decomment-user-name').style.display = 'block';
+			document.querySelector('#decomment-user-input').style.display = 'block';
 		}
 	},
 
 	hideUserNameInput: function() {
-		document.querySelector('#decomment-user-name').style.display = 'none';
+		document.querySelector('#decomment-user-input').style.display = 'none';
 	},
 
 	/**
@@ -2351,7 +2457,7 @@ Decomment.prototype = {
 
 				var commentElement = column.querySelector('.commentcell');
 				var tableName = that.getTableNameFromElement(table);
-				var columnName = column.querySelector('.columnnamecell').innerText;
+				var columnName = column.querySelector('.columnnamecell').innerText.trim();
 				var columnProperty = that.storeClient.getColumnPickup(tableName, columnName) || new PickupTableProperty(tableName, columnName)
 				commentElement.onclick = that.createSaveDecommentFunction(columnProperty);
 			});
