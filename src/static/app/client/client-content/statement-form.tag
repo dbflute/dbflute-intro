@@ -36,7 +36,7 @@
         <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
     </toggle-help>
       <div class="ui input field">
-        <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
+        <su-dropdown items="{ dropdownItems }" ref="subject"></su-dropdown>
       </div>
     </div>
     <div class="grouped fields required">
@@ -163,6 +163,42 @@
   </div>
 
   <script>
+    this.dropdownItems = [
+      {
+        value: null,
+        default: true
+      },
+      {
+        label: 'tableName',
+        value: 'tableName'
+      },
+      {
+        label: 'alias',
+        value: 'alias'
+      },
+      {
+        label: 'firstDate',
+        value: 'firstDate'
+      },
+      {
+        label: 'pk_columnName',
+        value: 'pk_columnName'
+      },
+      {
+        label: 'pk_dbType',
+        value: 'pk_dbType'
+      },
+      {
+        label: 'pk_size',
+        value: 'pk_size'
+      },
+      {
+        label: 'pk_dbType_with_size',
+        value: 'pk_dbType_with_size'
+      },
+    ]
+
+
     import _ApiFactory from '../../common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
