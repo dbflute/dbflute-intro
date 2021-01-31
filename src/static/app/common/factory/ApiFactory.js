@@ -87,8 +87,8 @@ export default class ApiFactory {
         body: schemaPolicyData
       });
   }
-  getSubject(projectName) {
-    return ffetch.post(`api/dfprop/${projectName}/schemapolicy/statement/subject`)
+  getSubject() {
+    return ffetch.post(`api/dfprop/schemapolicy/statement/subject`)
   }
   deleteSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(`api/dfprop/${projectName}/schemapolicy/statement/delete`,
