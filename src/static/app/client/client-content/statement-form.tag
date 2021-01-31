@@ -180,7 +180,7 @@
     })
 
     this.getSubject = () => {
-      ApiFactory.getSubject().then(json => {
+      ApiFactory.getSchemapolicyStatementSubject().then(json => {
         const defaultItems = [{label: 'Select subject', value: null, default: true}]
         const items = json.map(obj => ({
           label: obj,
