@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -52,6 +53,7 @@ import org.dbflute.util.Srl;
  * @author deco
  * @author cabos
  * @author subaru
+ * @author prprmurakami
  */
 public class DfpropInfoLogic {
 
@@ -127,6 +129,7 @@ public class DfpropInfoLogic {
             return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
         });
     }
+
     // -----------------------------------------------------
     //                                          SchemaPolicy
     //                                          ------------
@@ -241,6 +244,24 @@ public class DfpropInfoLogic {
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
+    public List<String> getStateMentSubjectList() {
+        // 頻繁に変わる内容ではないのでベタ書き実装している。
+        ArrayList<String> subjectList = new ArrayList<String>();
+        subjectList.add("tableName");
+        subjectList.add("alias");
+        subjectList.add("firstDate");
+        subjectList.add("pk_columnName");
+        subjectList.add("pk_dbType");
+        subjectList.add("pk_size");
+        subjectList.add("pk_dbType_with_size");
+        subjectList.add("column");
+        subjectList.add("columnName");
+        subjectList.add("tableColumnName");
+        subjectList.add("dbType_with_size");
+        subjectList.add("firstDate");
+        return subjectList;
+    }
+
     // -----------------------------------------------------
     //                                      LittleAdjustment
     //                                      ----------------
@@ -288,9 +309,8 @@ public class DfpropInfoLogic {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
             return new DfMapFile() {
-                private final List<String> SCOPE_LIST =
-                        Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap", "tableMap",
-                                "columnMap");
+                private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
+                        "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
                 private final String OTHER_SCOPE = "other";
                 private final String BEGINNING_KEY = "beginningComments";
                 private final String END_KEY = "endComments";
@@ -333,8 +353,7 @@ public class DfpropInfoLogic {
                     }
                     try {
                         br.close();
-                    } catch (IOException ignored) {
-                    }
+                    } catch (IOException ignored) {}
                     return keyCommentMap;
                 }
 

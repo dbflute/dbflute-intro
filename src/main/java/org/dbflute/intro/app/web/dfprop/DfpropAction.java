@@ -16,7 +16,6 @@
 package org.dbflute.intro.app.web.dfprop;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +46,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  * @author cabos
  * @author subaru
+ * @author prprmurakami
  */
 public class DfpropAction extends IntroBaseAction {
 
@@ -174,22 +174,9 @@ public class DfpropAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                       GetschemapolicyStatementSubject
     //                       -------------------------------
-    @Execute(urlPattern = "{}/@word/@word/@word")
-    public JsonResponse<List<String>> schemapolicyStatementSubject(String clientName) {
-        ArrayList<String> tablemapSubjectList = new ArrayList<String>();
-        tablemapSubjectList.add("tableName");
-        tablemapSubjectList.add("alias");
-        tablemapSubjectList.add("firstDate");
-        tablemapSubjectList.add("pk_columnName");
-        tablemapSubjectList.add("pk_dbType");
-        tablemapSubjectList.add("pk_size");
-        tablemapSubjectList.add("pk_dbType_with_size");
-        tablemapSubjectList.add("column");
-        tablemapSubjectList.add("columnName");
-        tablemapSubjectList.add("tableColumnName");
-        tablemapSubjectList.add("dbType_with_size");
-        tablemapSubjectList.add("firstDate");
-        return asJson(tablemapSubjectList);
+    @Execute(urlPattern = "@word/@word/@word")
+    public JsonResponse<List<String>> schemapolicyStatementSubject() {
+        return asJson(dfpropInfoLogic.getStateMentSubjectList());
     }
 
     // -----------------------------------------------------
