@@ -64,6 +64,7 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
                   </div>
                 </div>
+                <statement-form />
               </su-tab>
               <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5 class="spolicy-category">Theme</h5>
@@ -81,7 +82,7 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
+                <!-- button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</--button -->
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
@@ -98,6 +99,13 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </div>
                 </div>
+
+                <a onclick="{ parent.parent.showStatementForm }" show="{ !parent.parent.showable }">Edit Statement</a>
+                <div class="ui divided items segment" show="{ parent.parent.showable }">
+                  <statement-form />
+                </div>
+                <a onclick="{ parent.parent.hideStatementForm }" show="{ parent.parent.showable }">Hide Form</a>
+
               </su-tab>
             </su-tabset>
           </div>
@@ -152,6 +160,7 @@
     self.client = opts.client
     this.schemaPolicy = {}
     this.projectName = ''
+    this.showable = false
 
     // ===================================================================================
     //                                                                          Initialize
@@ -198,6 +207,14 @@
 
     this.showColumnMapModal = () => {
       self.refs.columnMapStatementModal.show()
+    }
+
+    this.showStatementForm = () => {
+      self.showable = true
+    }
+
+    this.hideStatementForm = () => {
+      self.showable = false
     }
 
     this.updateLatestResult = (client) => {

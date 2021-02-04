@@ -34,7 +34,7 @@
             </div>
           </div>
         <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
-    </toggle-help>
+      </toggle-help>
       <div class="ui input field">
         <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
       </div>
@@ -161,6 +161,7 @@
       </div>
     </div>
   </div>
+  <button class="ui button">Add</button>
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory'
