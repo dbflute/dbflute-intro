@@ -14,7 +14,7 @@
       <div class="ui form">
         <div class="row">
           <div class="column">
-            <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
+            <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }" myscript="{ showStatementForm }">
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
@@ -66,7 +66,7 @@
                 </div>
                 <statement-form />
               </su-tab>
-              <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
+              <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" myscript="{ opts.myscript }">
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
@@ -100,7 +100,7 @@
                   </div>
                 </div>
 
-                <a onclick="{ parent.parent.showStatementForm }" show="{ !parent.parent.showable }">Edit Statement</a>
+                <a onclick="{ opts.myscript }" show="{ !parent.parent.showable }">Edit Statement</a>
                 <div class="ui divided items segment" show="{ parent.parent.showable }">
                   <statement-form />
                 </div>
