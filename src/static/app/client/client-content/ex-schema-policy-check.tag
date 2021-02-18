@@ -81,7 +81,6 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
@@ -98,6 +97,12 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </div>
                 </div>
+                <shema-policy-check-statement-form-wrapper />
+                <!-- a onclick="{ console.log('toggle') }" show="{ true }">Edit Statement</a>
+                <div class="ui divided items segment" show="{ false }">
+                  <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
+                </div -->
+
               </su-tab>
             </su-tabset>
           </div>
