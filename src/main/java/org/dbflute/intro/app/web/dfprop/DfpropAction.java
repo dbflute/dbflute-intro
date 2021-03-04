@@ -176,7 +176,7 @@ public class DfpropAction extends IntroBaseAction {
     //                       -------------------------------
     @Execute(urlPattern = "@word/@word/@word")
     public JsonResponse<List<String>> schemapolicyStatementSubject() {
-        return asJson(dfpropInfoLogic.getStateMentSubjectList());
+        return asJson(dfpropInfoLogic.getStatementSubjectList());
     }
 
     // -----------------------------------------------------

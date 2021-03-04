@@ -244,22 +244,45 @@ public class DfpropInfoLogic {
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
-    public List<String> getStateMentSubjectList() {
-        // 頻繁に変わる内容ではないのでベタ書き実装している。
+    public List<String> getStatementSubjectList() {
+        // Create subject list here because contents does not change frequently
         ArrayList<String> subjectList = new ArrayList<String>();
-        subjectList.add("tableName");
-        subjectList.add("alias");
-        subjectList.add("firstDate");
-        subjectList.add("pk_columnName");
-        subjectList.add("pk_dbType");
-        subjectList.add("pk_size");
-        subjectList.add("pk_dbType_with_size");
-        subjectList.add("column");
-        subjectList.add("columnName");
-        subjectList.add("tableColumnName");
-        subjectList.add("dbType_with_size");
-        subjectList.add("firstDate");
+        subjectList.add(Subject.TABLE_NAME.getTitle());
+        subjectList.add(Subject.ALIAS.getTitle());
+        subjectList.add(Subject.FIRST_DATE.getTitle());
+        subjectList.add(Subject.PK_COLUM_NAME.getTitle());
+        subjectList.add(Subject.PK_DB_TYPE.getTitle());
+        subjectList.add(Subject.PK_SIZE.getTitle());
+        subjectList.add(Subject.PK_DB_TYPE_WITH_SIZE.getTitle());
+        subjectList.add(Subject.COLUMN.getTitle());
+        subjectList.add(Subject.COLUMN_NAME.getTitle());
+        subjectList.add(Subject.TABLE_COLUMN_NAME.getTitle());
+        subjectList.add(Subject.DB_TYPE_WITH_SIZE.getTitle());
         return subjectList;
+    }
+
+    public enum Subject {
+        TABLE_NAME("tableName"), //
+        ALIAS("alias"), //
+        FIRST_DATE("firstDate"), //
+        PK_COLUM_NAME("pk_columnName"), //
+        PK_DB_TYPE("pk_dbType"), //
+        PK_SIZE("pk_size"), //
+        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"), //
+        COLUMN("column"), //
+        COLUMN_NAME("columnName"), //
+        TABLE_COLUMN_NAME("tableColumnName"), //
+        DB_TYPE_WITH_SIZE("dbType_with_size");
+
+        private String title;
+
+        private Subject(String title) { //コンストラクタはprivateで宣言
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
     }
 
     // -----------------------------------------------------
