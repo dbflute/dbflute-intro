@@ -9,6 +9,7 @@
     <statement-form
       projectName="{ props.projectName }"
       type="{ props.formType }"
+      onRegisterSuccess="{ props.onRegisterSuccess }"
     />
   </div>
 
@@ -16,8 +17,9 @@
     const self = this
 
     self.props = {
-      projectName: self.opts.projeectname,
-      formType: self.opts.formtype
+      projectName: self.opts.projectname,
+      formType: self.opts.formtype,
+      onRegisterSuccess: self.opts.onregistersuccess
     }
 
     self.state = {

@@ -14,7 +14,13 @@
       <div class="ui form">
         <div class="row">
           <div class="column">
-            <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
+            <su-tabset
+              class="three column item"
+              schemapolicy="{ schemaPolicy }"
+              tabtitles="{ tabTitles }"
+              projectname="{ projectName }"
+              onregistersuccess="{ onRegisterSuccess }"
+            >
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
@@ -65,7 +71,12 @@
                   </div>
                 </div>
               </su-tab>
-              <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
+              <su-tab
+                label="{ opts.tabtitles['columnMap']}"
+                schemapolicy="{ opts.schemapolicy }"
+                projectname="{ opts.projectname }"
+                onregistersuccess="{ opts.onregistersuccess }"
+              >
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
@@ -97,12 +108,16 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </div>
                 </div>
-                <shema-policy-check-statement-form-wrapper />
+                <!-- TODO parent, parent パターンを避けてここまで値を渡さないとねー -->
+                <shema-policy-check-statement-form-wrapper
+                  formtype="columnMap"
+                  projectname="{ opts.projectname }"
+                  onregistersuccess="{ opts.onregistersuccess }"
+                />
                 <!-- a onclick="{ console.log('toggle') }" show="{ true }">Edit Statement</a>
                 <div class="ui divided items segment" show="{ false }">
                   <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
                 </div -->
-
               </su-tab>
             </su-tabset>
           </div>
@@ -195,6 +210,10 @@
           self.update()
         })
       })
+    }
+
+    this.onRegisterSuccess = () => {
+      self.fetchSchemaPolicy(opts.projectName)
     }
 
     this.showTableMapModal = () => {

@@ -159,6 +159,7 @@
           <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
         </div>
       </div>
+      <button onclick="{ registerStatement }">Add</button>
     </div>
   </div>
 
@@ -313,6 +314,14 @@
         callback(statement)
         self.cleanInput()
       })
+    }
+
+    self.registerStatement = () => {
+      ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody())
+        .then(() => {
+          self.cleanInput()
+          self.opts.onregistersuccess()
+        })
     }
   </script>
 </statement-form>
