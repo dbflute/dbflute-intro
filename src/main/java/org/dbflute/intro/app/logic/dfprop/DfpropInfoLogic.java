@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -246,18 +245,7 @@ public class DfpropInfoLogic {
 
     public List<String> getStatementSubjectList() {
         // Create subject list here because contents does not change frequently
-        ArrayList<String> subjectList = new ArrayList<String>();
-        subjectList.add(Subject.TABLE_NAME.getTitle());
-        subjectList.add(Subject.ALIAS.getTitle());
-        subjectList.add(Subject.FIRST_DATE.getTitle());
-        subjectList.add(Subject.PK_COLUM_NAME.getTitle());
-        subjectList.add(Subject.PK_DB_TYPE.getTitle());
-        subjectList.add(Subject.PK_SIZE.getTitle());
-        subjectList.add(Subject.PK_DB_TYPE_WITH_SIZE.getTitle());
-        subjectList.add(Subject.COLUMN.getTitle());
-        subjectList.add(Subject.COLUMN_NAME.getTitle());
-        subjectList.add(Subject.TABLE_COLUMN_NAME.getTitle());
-        subjectList.add(Subject.DB_TYPE_WITH_SIZE.getTitle());
+        List<String> subjectList = Stream.of(Subject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
         return subjectList;
     }
 
@@ -274,7 +262,7 @@ public class DfpropInfoLogic {
         TABLE_COLUMN_NAME("tableColumnName"), //
         DB_TYPE_WITH_SIZE("dbType_with_size");
 
-        private String title;
+        private final String title;
 
         private Subject(String title) { //コンストラクタはprivateで宣言
             this.title = title;
