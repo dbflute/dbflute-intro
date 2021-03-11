@@ -28,7 +28,15 @@ import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.dbflute.intro.app.model.client.document.*;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
@@ -38,6 +46,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  * @author cabos
  * @author subaru
+ * @author prprmurakami
  */
 public class DfpropAction extends IntroBaseAction {
 
@@ -155,10 +164,19 @@ public class DfpropAction extends IntroBaseAction {
         String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
         return asJson(builtStatement);
     }
+
     private SchemaPolicyStatement mappingToStatement(DfpropRegisterSchemaPolicyStatementBody body) {
         SchemaPolicyStatement.Condition condition = new SchemaPolicyStatement.Condition(body.condition.operator, body.condition.conditions);
         SchemaPolicyStatement.Expected expected = new SchemaPolicyStatement.Expected(body.expected.operator, body.expected.expected);
         return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.comment);
+    }
+
+    // -----------------------------------------------------
+    //                       GetschemapolicyStatementSubject
+    //                       -------------------------------
+    @Execute(urlPattern = "@word/@word/@word")
+    public JsonResponse<List<String>> schemapolicyStatementSubject() {
+        return asJson(dfpropInfoLogic.getStatementSubjectList());
     }
 
     // -----------------------------------------------------

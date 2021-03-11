@@ -36,7 +36,7 @@
         <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
     </toggle-help>
       <div class="ui input field">
-        <input class="ui search" type="text" name="subject" ref="subject" value="{ statement.subject }" onchange="{ handleChange }">
+        <su-dropdown items="{ subjectDropdownItems }" ref="subject"></su-dropdown>
       </div>
     </div>
     <div class="grouped fields required">
@@ -170,12 +170,26 @@
     self.mounted = false
     self.mapType = ''
     self.projectName = ''
+    self.subjectDropdownItems = {}
 
     self.on('mount', () => {
       self.mapType = self.opts.type
       self.projectName = self.opts.projectname
       self.mounted = true
+      self.getSubject()
     })
+
+    this.getSubject = () => {
+      ApiFactory.getSchemapolicyStatementSubject().then(json => {
+        const defaultItems = [{label: 'Select subject', value: null, default: true}]
+        const items = json.map(obj => ({
+          label: obj,
+          value: obj
+        }))
+        self.subjectDropdownItems = defaultItems.concat(items)
+        self.update()
+      })
+    }
 
     this.handleChange = () => {
       self.saveConditionField()
