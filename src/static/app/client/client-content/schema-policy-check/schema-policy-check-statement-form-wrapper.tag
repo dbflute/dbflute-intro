@@ -1,4 +1,4 @@
-<shema-policy-check-statement-form-wrapper>
+<schema-policy-check-statement-form-wrapper>
   <a onclick="{ toggleForm }" show="{ !state.showForm }">
     Edit Statement
   </a>
@@ -6,7 +6,7 @@
     Hide Form
   </a>
   <div class="ui divided items segment" show="{ state.showForm }">
-    <statement-form
+    <schema-policy-check-statement-form
       projectName="{ props.projectName }"
       type="{ props.formType }"
       onRegisterSuccess="{ props.onRegisterSuccess }"
@@ -35,4 +35,4 @@
       self.update()
     }
   </script>
-</shema-policy-check-statement-form-wrapper>
+</schema-policy-check-statement-form-wrapper>

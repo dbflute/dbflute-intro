@@ -73,7 +73,7 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
                   </div>
                 </div>
-                <shema-policy-check-statement-form-wrapper
+                <schema-policy-check-statement-form-wrapper
                   formtype="tableMap"
                   projectname="{ opts.projectname }"
                   onregistersuccess="{ opts.onregistersuccess }"
@@ -116,7 +116,7 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </div>
                 </div>
-                <shema-policy-check-statement-form-wrapper
+                <schema-policy-check-statement-form-wrapper
                   formtype="columnMap"
                   projectname="{ opts.projectname }"
                   onregistersuccess="{ opts.onregistersuccess }"

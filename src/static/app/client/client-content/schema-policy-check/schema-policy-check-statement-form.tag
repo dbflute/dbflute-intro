@@ -1,4 +1,4 @@
-<statement-form>
+<schema-policy-check-statement-form>
   <form class="ui large form">
     <div class="field">
       <label>Preview</label>
@@ -171,7 +171,7 @@
   </form>
 
   <script>
-    import _ApiFactory from '../../common/factory/ApiFactory'
+    import _ApiFactory from '../../../common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
     let self = this
@@ -315,14 +315,6 @@
       }
     }
 
-    this.register = (callback) => {
-      let statement = self.buildPreview()
-      ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody()).then(() => {
-        callback(statement)
-        self.cleanInput()
-      })
-    }
-
     self.registerStatement = () => {
       ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody())
         .then(() => {
@@ -331,7 +323,7 @@
         })
     }
   </script>
-</statement-form>
+</schema-policy-check-statement-form>
 
 <toggle-help>
   <div show="{ showed }">
