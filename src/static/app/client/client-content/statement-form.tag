@@ -1,5 +1,5 @@
 <statement-form>
-  <div class="ui large form">
+  <form class="ui large form">
     <div class="field">
       <label>Preview</label>
       <div class="ui inverted segment">
@@ -154,14 +154,21 @@
       </div>
       <div class="field required">
         <label>Supplementary Comment</label>
-        <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank">document</a>
+        <p>
+          <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank">document</a>
+        </p>
         <div class="ui input">
           <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
         </div>
       </div>
-      <button onclick="{ registerStatement }">Add</button>
     </div>
-  </div>
+    <button
+      class="ui primary button"
+      type="submit"
+      onclick="{ registerStatement }">
+      Add
+    </button>
+  </form>
 
   <script>
     import _ApiFactory from '../../common/factory/ApiFactory'
