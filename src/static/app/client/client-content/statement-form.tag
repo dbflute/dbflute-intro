@@ -6,7 +6,7 @@
         <p>{ statement.buildPreview() }</p>
       </div>
     </div>
-    <div class="ui divider"></div>
+    <div class="ui divider" />
     <div class="grouped fields required">
       <label>Subject</label>
       <p>
@@ -164,7 +164,7 @@
     </div>
     <button
       class="ui primary button"
-      type="submit"
+      type="button"
       onclick="{ registerStatement }">
       Add
     </button>
