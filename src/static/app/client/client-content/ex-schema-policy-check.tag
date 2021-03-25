@@ -37,7 +37,11 @@
                   </div>
                 </div>
               </su-tab>
-              <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
+              <su-tab
+                label="{ opts.tabtitles['tableMap']}"
+                schemapolicy="{ opts.schemapolicy }"
+                projectname="{ opts.projectname }"
+                onregistersuccess="{ opts.onregistersuccess }">
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
@@ -53,7 +57,6 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <button class="ui button" onclick="{ parent.parent.showTableMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
                     <div class="statement content">
@@ -70,6 +73,11 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
                   </div>
                 </div>
+                <shema-policy-check-statement-form-wrapper
+                  formtype="tableMap"
+                  projectname="{ opts.projectname }"
+                  onregistersuccess="{ opts.onregistersuccess }"
+                />
               </su-tab>
               <su-tab
                 label="{ opts.tabtitles['columnMap']}"
@@ -108,16 +116,11 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </div>
                 </div>
-                <!-- TODO parent, parent パターンを避けてここまで値を渡さないとねー -->
                 <shema-policy-check-statement-form-wrapper
                   formtype="columnMap"
                   projectname="{ opts.projectname }"
                   onregistersuccess="{ opts.onregistersuccess }"
                 />
-                <!-- a onclick="{ console.log('toggle') }" show="{ true }">Edit Statement</a>
-                <div class="ui divided items segment" show="{ false }">
-                  <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
-                </div -->
               </su-tab>
             </su-tabset>
           </div>
