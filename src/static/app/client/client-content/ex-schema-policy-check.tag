@@ -141,14 +141,6 @@
     </div>
   </su-modal>
 
-  <su-modal modal="{ tableMapStatementModal }" projectName="{ projectName }" class="large" ref="tableMapStatementModal">
-    <statement-form projectName="{ opts.projectname }" type="tableMap" ref="form"></statement-form>
-  </su-modal>
-
-  <su-modal modal="{ columnMapStatementModal }" projectName="{ projectName }" class="large" ref="columnMapStatementModal">
-    <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
-  </su-modal>
-
   <style>
     .latest-result {
       margin-top: 1em;
@@ -186,7 +178,6 @@
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
       this.prepareComponents(opts.projectName)
-      this.registerModalEvent()
     })
 
     this.prepareSchemaPolicy = (projectName) => {
@@ -198,33 +189,8 @@
       self.updateLatestResult(self.client)
     }
 
-    this.registerModalEvent = () => {
-      self.refs.tableMapStatementModal.on('submit', () => {
-        self.refs.tableMapStatementModal.refs.form.register((statement) => {
-          self.schemaPolicy.tableMap.statementList.push(statement)
-          self.refs.tableMapStatementModal.hide()
-          self.update()
-        })
-      })
-      self.refs.columnMapStatementModal.on('submit', () => {
-        self.refs.columnMapStatementModal.refs.form.register((statement) => {
-          self.schemaPolicy.columnMap.statementList.push(statement)
-          self.refs.columnMapStatementModal.hide()
-          self.update()
-        })
-      })
-    }
-
     this.onRegisterSuccess = () => {
       self.fetchSchemaPolicy(opts.projectName)
-    }
-
-    this.showTableMapModal = () => {
-      self.refs.tableMapStatementModal.show()
-    }
-
-    this.showColumnMapModal = () => {
-      self.refs.columnMapStatementModal.show()
     }
 
     this.updateLatestResult = (client) => {
@@ -288,32 +254,6 @@
         self.checkModal.message = 'Failure: You need check violation.'
         self.checkModal.closable = true
       }
-    }
-
-    this.tableMapStatementModal = {
-      header: 'Add TableMap Statement',
-      buttons: [{
-        text: 'Submit',
-        action: 'submit',
-        type: 'primary',
-        icon: 'checkmark',
-        closable: false
-      }, {
-        text: 'Cancel'
-      }],
-    }
-
-    this.columnMapStatementModal = {
-      header: 'Add ColumnMap Statement',
-      buttons: [{
-        text: 'Submit',
-        action: 'submit',
-        type: 'primary',
-        icon: 'checkmark',
-        closable: false
-      }, {
-        text: 'Cancel'
-      }],
     }
 
     this.tabTitles = {
