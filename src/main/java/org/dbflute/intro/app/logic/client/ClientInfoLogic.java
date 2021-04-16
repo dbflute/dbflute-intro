@@ -54,10 +54,13 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.util.LaClassificationUtil;
 
 /**
- * The logic for DBFlute client information.
+ * The logic for DBFlute client information. (e.g. version, dfprop)
  * @author p1us2er0
  * @author jflute
  * @author hakiba
+ * @author cabos
+ * @author deco
+ * @author subaru
  */
 public class ClientInfoLogic {
 

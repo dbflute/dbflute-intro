@@ -24,6 +24,9 @@ import org.lastaflute.core.util.ContainerUtil;
 /**
  * @author jflute
  * @author hakiba
+ * @author deco
+ * @author cabos
+ * @author subaru
  */
 public class ProjectInfra {
 
