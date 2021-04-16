@@ -68,9 +68,10 @@ public class DfpropInfoLogic {
     // -----------------------------------------------------
     //                                                Dfprop
     //                                                ------
-    public Map<String, Map<String, Object>> findDfpropMap(String clientName) {
+    public Map<String, Map<String, Object>> findDfpropMap(String projectName) {
+        // map:{ [file-name] = map:{ [dfprop key-values] } }
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientName + "/dfprop");
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) {
             return dfpropMap;
