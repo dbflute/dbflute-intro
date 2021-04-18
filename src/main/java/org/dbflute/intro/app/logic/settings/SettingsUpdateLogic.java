@@ -15,17 +15,19 @@
  */
 package org.dbflute.intro.app.logic.settings;
 
+import java.io.File;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 
-import javax.annotation.Resource;
-import java.io.File;
-
 /**
  * @author hakiba
+ * @author jflute
  */
 public class SettingsUpdateLogic {
 
@@ -38,10 +40,12 @@ public class SettingsUpdateLogic {
     // ===================================================================================
     //                                                                              Update
     //                                                                              ======
+    // #thinking jflute can move to DatabaseInfoLogic? (2021/04/18)
     public void updateDatabaseInfoMap(ClientModel clientModel) {
         replaceDfpropDatabaseInfoMap(clientModel, clientModel.getProjectInfra().getClientProject());
     }
 
+    // #thinking jflute maybe same as DfpropUpdateLogic's one. should be recycle (2021/04/18)
     private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientName) {
         final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
