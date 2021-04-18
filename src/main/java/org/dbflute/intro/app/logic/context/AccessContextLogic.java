@@ -22,6 +22,8 @@ import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.db.dbflute.accesscontext.AccessContextResource;
 
 /**
+ * The logic for access context for common column, provided by DBFlute. <br>
+ * This is a LastaFlute example default class. (almost no change)
  * @author jflute
  */
 public class AccessContextLogic {
