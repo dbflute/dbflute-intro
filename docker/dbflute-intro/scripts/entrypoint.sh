@@ -1,8 +1,6 @@
 #!/bin/sh
 
-VERSION=$(cat scripts/version.txt)
-
-cd /app
+VERSION=$(cat /scripts/version.txt)
 
 if [ ! -e dbflute-intro.jar ]; then
   echo "dbflute-intro.jar is not exists. start download dbflute-intro-${VERSION}.jar..."
