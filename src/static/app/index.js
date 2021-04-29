@@ -49,10 +49,11 @@ riot.mount('*')
  */
 global.ffetch = new FFetchWrapper();
 
-/**
- * Error Handling
- * (see IntroApiFailureHook.java for failure response)
- */
+
+//===================================================================================
+//                                                                     Error Handling
+//                                                                     ==============
+// see IntroApiFailureHook.java for failure response
 ffetch.errors.subscribe(response => {
   let header = null;
   let messages = null;
@@ -117,9 +118,10 @@ ffetch.errors.subscribe(response => {
   }
 });
 
-/**
- * URL mapping
- */
+
+// ===================================================================================
+//                                                               Routing (URL mapping)
+//                                                               =====================
 route(() => {
   riot.mount('side-menu', 'common-menu')
   riot.mount('content', 'main')
@@ -128,16 +130,23 @@ route('', () => {
   riot.mount('side-menu', 'common-menu')
   riot.mount('content', 'main')
 })
-route('operate/*', projectName => {
+
+// client entry URL from main page
+// e.g. #client/maihamadb/ to #client/maihamadb/execute/documents
+route('client/*', projectName => {
   const opts = { projectName, clientMenuType: 'execute', clientMenuName: 'documents' }
   riot.mount('side-menu', 'client-menu', opts)
   riot.mount('content', 'client', opts)
 })
-route('operate/*/*/*', (projectName, clientMenuType, clientMenuName) => {
+
+// client basic page as /{projectName}/{menuType}/{menuName}
+// e.g. #client/maihamadb/execute/documents
+route('client/*/*/*', (projectName, clientMenuType, clientMenuName) => {
   const opts = { projectName, clientMenuType, clientMenuName }
   riot.mount('side-menu', 'client-menu', opts)
   riot.mount('content', 'client', opts)
 })
+
 route('create', () => {
   riot.mount('side-menu', 'common-menu')
   riot.mount('content', 'create')
@@ -149,11 +158,13 @@ route('welcome', () => {
 route('/*', () => {
   riot.mount('content', 'error404')
 })
+
 route.start(true)
 
-/**
- * i18n
- */
+
+// ===================================================================================
+//                                                                Internationalization
+//                                                                ====================
 i18n.init({
   defaultLangage: 'ja'
 })
