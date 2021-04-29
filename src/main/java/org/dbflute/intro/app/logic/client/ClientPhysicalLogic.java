@@ -38,7 +38,7 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    // #thinking jflute should be public to use this in other logics (2021/04/16)
+    // #needs_fix anyone should be public to use this in other logics by jflute (2021/04/16)
     private static final String BASIC_INFO_MAP_DFPROP = "basicInfoMap.dfprop";
     private static final String DATABASE_INFO_MAP_DFPROP = "databaseInfoMap.dfprop";
 

@@ -88,7 +88,7 @@ public class ClientUpdateLogic {
         if (!clientDir.exists()) { // yes, new-create!
             clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
         } else { // no no no no, already exists
-            // #hope to be application excecption by jflute
+            // #needs_fix anyone use application excecption by jflute (2021/04/16)
             throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + clientName);
         }
     }
@@ -210,7 +210,7 @@ public class ClientUpdateLogic {
     private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String projectName) {
         final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
 
-        // #hope jflute switch toString() to getPath() (2021/04/16)
+        // #needs_fix anyone switch toString() to getPath() by jflute (2021/04/16)
         // File objects that are made in DBFlute intro uses slack as file separator
         // so you can getPath() here (no problem) however be careful with Windows headache
         // (while, FileTextIO should have rewrite methods that can accept File...?) 
@@ -245,7 +245,7 @@ public class ClientUpdateLogic {
         try {
             FileUtils.deleteDirectory(clientDir);
         } catch (IOException e) {
-            // #for_now should be application exception by jflute (2017/01/19)
+            // #needs_fix anyone should be application exception by jflute (2017/01/19)
             throw new IllegalStateException("Failed to delete the DBFlute client: " + clientDir);
         }
     }

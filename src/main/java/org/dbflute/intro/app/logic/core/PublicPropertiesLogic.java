@@ -51,7 +51,7 @@ public class PublicPropertiesLogic {
                 return cachedProps;
             }
         } catch (RuntimeException e) {
-            // #thinking jflute does is this class depend on engine download? should throw more general exception? (2021/04/18)
+            // #needs_fix anyone does is this class depend on engine download? should throw more general exception? by jflute (2021/04/18)
             throw new EngineDownloadErrorException("Cannot download dbflute engine", e);
         }
     }

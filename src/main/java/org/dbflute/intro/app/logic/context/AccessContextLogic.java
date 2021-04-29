@@ -53,7 +53,7 @@ public class AccessContextLogic {
     }
 
     private String buildAccessUserTrace(AccessContextResource resource, AppTypeSupplier appTypeSupplier) {
-        // #change_it you can customize the user trace for common column
+        // #changed_it you can customize the user trace for common column
         // example default style: "M:7,HBR,ProductListAction" or "_:-1,HBR,ProductListAction"
         final StringBuilder sb = new StringBuilder();
         sb.append("_:").append(-1); // no authentication in DBFlute Intro

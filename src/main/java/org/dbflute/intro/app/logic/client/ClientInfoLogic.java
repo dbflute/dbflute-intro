@@ -89,7 +89,7 @@ public class ClientInfoLogic {
         return new File(introPhysicalLogic.buildClientPath(projectName)).exists();
     }
 
-    // #thinking jflute should be getProjectNameList()??? (2021/04/16)
+    // #needs_fix anyone should be getProjectNameList()? by jflute (2021/04/29)
     public List<String> getProjectList() { // e.g. [maihamadb, trohamadb]
         final List<String> projectList = new ArrayList<String>();
         final File baseDir = new File(IntroPhysicalLogic.BASE_DIR_PATH);
@@ -267,7 +267,7 @@ public class ClientInfoLogic {
             Map<String, Object> additionalSchemaMap = ((Map<String, Object>) variousMap.get("additionalSchemaMap"));
             if (additionalSchemaMap != null) {
                 for (String additionalSchema : additionalSchemaMap.keySet()) {
-                    // #pending see the class code
+                    // #for_now see the class code
                     schemaBoxMap.put(additionalSchema, new AdditionalSchemaBox(additionalSchema));
                 }
             }

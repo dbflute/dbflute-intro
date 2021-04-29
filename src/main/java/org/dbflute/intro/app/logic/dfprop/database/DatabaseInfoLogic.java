@@ -21,18 +21,25 @@ import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
 
 /**
+ * The logic of database information.
  * @author ryohei
  * @author jflute
  */
 public class DatabaseInfoLogic {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private ClsTargetDatabaseBhv databaseBhv;
 
+    // ===================================================================================
+    //                                                                        Embedded Jar
+    //                                                                        ============
     public boolean isEmbeddedJar(CDef.TargetDatabase target) {
         // done hakiba pri.B orElseTranslatingThrow() is better by jflute (2017/04/27)
         if (target == null) {
-            // #thinking jflute can it be not null? (should be strict) (2021/04/18)
+            // #needs_fix anyone can it be not null? (should be strict) by jflute (2021/04/18)
             return false;
         }
         return databaseBhv.selectEntity(cb -> cb.query().setDatabaseCode_Equal_AsTargetDatabase(target))
