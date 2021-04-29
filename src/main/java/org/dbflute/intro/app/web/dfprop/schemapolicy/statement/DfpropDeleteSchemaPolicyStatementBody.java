@@ -13,22 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.dfprop;
+package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
-import org.lastaflute.web.validation.ClientError;
-import org.lastaflute.web.validation.Required;
+import javax.validation.constraints.NotNull;
 
 /**
- * @author deco
+ * @author hakiba
  */
-public class DfpropEditSyncSchemaBody {
-
-    @Required
-    public String url;
-    public String schema;
-    @Required
-    public String user;
-    public String password;
-    @Required(groups = ClientError.class)
-    public Boolean isSuppressCraftDiff;
+public class DfpropDeleteSchemaPolicyStatementBody {
+    @NotNull
+    public String mapType;
+    @NotNull
+    public String statement;
 }
