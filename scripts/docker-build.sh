@@ -20,10 +20,8 @@ cd $PROJECT_ROOT
 
 # build docker image
 cp build/libs/dbflute-intro.jar docker/dbflute-intro
-echo ${VERSION} > docker/dbflute-intro/version.txt
 docker build docker/dbflute-intro -f docker/dbflute-intro/Dockerfile -t dbflute-intro --no-cache
 rm docker/dbflute-intro/dbflute-intro.jar
-rm docker/dbflute-intro/version.txt
 
 # add tag and push docker hub
 docker tag dbflute-intro dbflute/dbflute-intro:${VERSION}
