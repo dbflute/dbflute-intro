@@ -1,7 +1,10 @@
 package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
@@ -16,6 +19,8 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                                                                           =========
     @Resource
     private DfpropUpdateLogic dfpropUpdateLogic;
+    @Resource
+    private DfpropInfoLogic dfpropInfoLogic;
 
     // -----------------------------------------------------
     //                         AddSchemaPolicyCheckStatement
@@ -33,6 +38,14 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
         SchemaPolicyStatement.Condition condition = new SchemaPolicyStatement.Condition(body.condition.operator, body.condition.conditions);
         SchemaPolicyStatement.Expected expected = new SchemaPolicyStatement.Expected(body.expected.operator, body.expected.expected);
         return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.comment);
+    }
+
+    // -----------------------------------------------------
+    //                       GetschemapolicyStatementSubject
+    //                       -------------------------------
+    @Execute
+    public JsonResponse<List<String>> subject() {
+        return asJson(dfpropInfoLogic.getStatementSubjectList());
     }
 
     // -----------------------------------------------------
