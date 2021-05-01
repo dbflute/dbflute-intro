@@ -76,7 +76,7 @@ dbflute-intro
 ## Release Engineering
 
 ### Github release
-1. Increment version at build.gradle
+1. Increment version at build.gradle and package.json
 2. Add tag on release commit
    1. Old tag name : https://github.com/dbflute/dbflute-intro/releases
 3. Edit tag and upload "intro.jar"
