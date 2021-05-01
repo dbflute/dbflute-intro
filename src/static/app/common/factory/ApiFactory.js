@@ -18,7 +18,7 @@ export default class ApiFactory {
 
   createWelcomeClient(client, testConnection) {
     return ffetch.post('api/welcome/create',
-      { body: { client: client, testConnection: testConnection } });
+      { body: { client: client, testConnection: testConnection } , timeout: 180000 }); // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
   }
 
   // ===============================================================================
