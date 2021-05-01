@@ -35,6 +35,7 @@ import org.lastaflute.web.response.JsonResponse;
  *
  * @author subaru
  * @author cabos
+ * @author prprmurakami
  */
 public class AlterAction extends IntroBaseAction {
 
@@ -116,7 +117,7 @@ public class AlterAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Prepare
     //                                                                             =======
-    @Execute(urlPattern = "{}/@word")
+    @Execute
     @NotAvailableDecommentServer
     public JsonResponse<Void> prepare(String clientName) {
         playsqlMigrationLogic.unzipCheckedAlterZip(clientName);
@@ -127,7 +128,7 @@ public class AlterAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                              Create
     //                                                                              ======
-    @Execute(urlPattern = "{}/@word")
+    @Execute
     @NotAvailableDecommentServer
     public JsonResponse<Void> create(String clientName, AlterCreateBody body) {
         validate(body, messages -> moreValidate(clientName, body, messages));
@@ -156,7 +157,7 @@ public class AlterAction extends IntroBaseAction {
     }
 
     private boolean containsInvalidCharacter(String alterFileName) {
-        return alterFileName != null && DfStringUtil.containsAny(alterFileName, "/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0",
-                " ");
+        return alterFileName != null
+                && DfStringUtil.containsAny(alterFileName, "/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0", " ");
     }
 }

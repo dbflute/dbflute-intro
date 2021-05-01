@@ -13,42 +13,42 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.playsql.migration.alter;
+package org.dbflute.intro.app.web.dfprop.syncschema;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.exception.DirNotFoundException;
-import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.bizfw.tellfailure.OpenDirNotFoundException;
+import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
-import org.lastaflute.web.servlet.request.ResponseManager;
 
 /**
- * @author cabos
  * @author prprmurakami
  */
-public class PlaysqlMigrationAlterAction extends IntroBaseAction {
+public class DfpropSyncschemaAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private PlaysqlMigrationLogic playsqlMigrationLogic;
-    @Resource
-    private ResponseManager responseManager;
+    private DfpropUpdateLogic dfpropUpdateLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    // -----------------------------------------------------
+    //                                        EditSyncSchema
+    //                                        --------------
+    @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> open(String clientName) {
-        try {
-            playsqlMigrationLogic.openAlterDir(clientName);
-        } catch (DirNotFoundException e) {
-            throw new OpenDirNotFoundException("alter directory is not found. dirPath: " + e.getDirPath(), e.getDirPath());
-        }
+    public JsonResponse<Void> edit(String clientName, DfpropEditSyncSchemaBody body) {
+        validate(body, messages -> {});
+        final DbConnectionBox dbConnectionBox = new DbConnectionBox(body.url, body.schema, body.user, body.password);
+        final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
+        dfpropUpdateLogic.replaceSchemaSyncCheckMap(clientName, schemaSyncCheckMap);
         return JsonResponse.asEmptyBody();
     }
 }
