@@ -3,13 +3,13 @@ export default class ApiFactory {
   //                                                                           Intro
   //                                                                           =====
   manifest() {
-    return ffetch.post('api/intro/manifest')
+    return ffetch.post("api/intro/manifest");
   }
   classifications() {
-    return ffetch.post('api/intro/classifications')
+    return ffetch.post("api/intro/classifications");
   }
   configuration() {
-    return ffetch.post('api/intro/configuration')
+    return ffetch.post("api/intro/configuration");
   }
 
   // ===============================================================================
@@ -17,46 +17,46 @@ export default class ApiFactory {
   //                                                                         =======
 
   createWelcomeClient(client, testConnection) {
-    return ffetch.post('api/welcome/create', {
+    return ffetch.post("api/welcome/create", {
       body: { client: client, testConnection: testConnection },
-    })
+    });
   }
 
   // ===============================================================================
   //                                                                          Client
   //                                                                          ======
   clientList() {
-    return ffetch.post('api/client/list')
+    return ffetch.post("api/client/list");
   }
   clientOperation(projectName) {
-    return ffetch.post(`api/client/operation/${projectName}`)
+    return ffetch.post(`api/client/operation/${projectName}`);
   }
   createClient(client, testConnection) {
-    return ffetch.post('api/client/create', {
+    return ffetch.post("api/client/create", {
       body: { client, testConnection },
-    })
+    });
   }
   updateClient(clientBody, testConnection) {
     return ffetch.post(`api/client/edit/${clientBody.projectName}`, {
       body: { clientBody: clientBody, testConnection: testConnection },
-    })
+    });
   }
   removeClient(clientBody) {
-    return ffetch.post(`api/client/delete/${clientBody.project}`)
+    return ffetch.post(`api/client/delete/${clientBody.project}`);
   }
   settings(projectName) {
-    return ffetch.post(`api/settings/${projectName}`)
+    return ffetch.post(`api/settings/${projectName}`);
   }
   updateSettings(clientBody) {
     return ffetch.post(`api/settings/edit/${clientBody.projectName}`, {
       body: { client: clientBody },
-    })
+    });
   }
   dfporpBeanList(clientBody) {
-    return ffetch.post(`api/dfprop/list/${clientBody.projectName}`)
+    return ffetch.post(`api/dfprop/list/${clientBody.projectName}`);
   }
   syncSchema(projectName) {
-    return ffetch.post(`api/dfprop/syncschema/${projectName}`)
+    return ffetch.post(`api/dfprop/syncschema/${projectName}`);
   }
   editSyncSchema(projectName, syncSchemaSettingData) {
     return ffetch.post(`api/dfprop/syncschema/edit/${projectName}/`, {
@@ -67,10 +67,10 @@ export default class ApiFactory {
         password: syncSchemaSettingData.password,
         isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false, // need not null
       },
-    })
+    });
   }
   schemaPolicy(projectName) {
-    return ffetch.post(`api/dfprop/schemapolicy/${projectName}`)
+    return ffetch.post(`api/dfprop/schemapolicy/${projectName}`);
   }
   editSchemaPolicy(projectName, schemaPolicyData) {
     return ffetch.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
@@ -79,7 +79,7 @@ export default class ApiFactory {
         tableMap: schemaPolicyData.tableMap,
         columnMap: schemaPolicyData.columnMap,
       },
-    })
+    });
   }
   registerSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(
@@ -87,10 +87,10 @@ export default class ApiFactory {
       {
         body: schemaPolicyData,
       }
-    )
+    );
   }
   getSchemapolicyStatementSubject() {
-    return ffetch.post('api/dfprop/schemapolicy/statement/subject')
+    return ffetch.post("api/dfprop/schemapolicy/statement/subject");
   }
   deleteSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(
@@ -98,10 +98,10 @@ export default class ApiFactory {
       {
         body: schemaPolicyData,
       }
-    )
+    );
   }
   document(projectName) {
-    return ffetch.post(`api/dfprop/document/${projectName}`)
+    return ffetch.post(`api/dfprop/document/${projectName}`);
   }
   editDocument(projectName, documentSetting) {
     return ffetch.post(`api/dfprop/document/edit/${projectName}`, {
@@ -113,80 +113,80 @@ export default class ApiFactory {
         checkDbCommentDiff: documentSetting.checkDbCommentDiff,
         checkProcedureDiff: documentSetting.checkProcedureDiff,
       },
-    })
+    });
   }
   openAlterDir(projectName) {
-    return ffetch.get(`api/playsql/migration/alter/open/${projectName}`)
+    return ffetch.get(`api/playsql/migration/alter/open/${projectName}`);
   }
   alter(projectName) {
-    return ffetch.get(`api/alter/${projectName}/`)
+    return ffetch.get(`api/alter/${projectName}/`);
   }
   prepareAlterSql(projectName) {
-    return ffetch.post(`api/alter/prepare/${projectName}/`)
+    return ffetch.post(`api/alter/prepare/${projectName}/`);
   }
   createAlterSql(projectName, alterFileName) {
     return ffetch.post(`api/alter/create/${projectName}/`, {
       body: {
         alterFileName,
       },
-    })
+    });
   }
   openDataDir(projectName) {
-    return ffetch.get(`api/playsql/data/${projectName}/open`)
+    return ffetch.get(`api/playsql/data/open/${projectName}`);
   }
   playsqlBeanList(projectName) {
-    return ffetch.post(`api/playsql/${projectName}/list`)
+    return ffetch.post(`api/playsql/list/${projectName}`);
   }
   logBeanList(projectName) {
-    return ffetch.post(`api/log/${projectName}/list`)
+    return ffetch.post(`api/log/list/${projectName}`);
   }
 
   getLog(projectName, fileName) {
-    return ffetch.post('api/log', {
+    return ffetch.post("api/log", {
       body: {
         project: projectName,
         fileName: fileName,
       },
-    })
+    });
   }
 
   latestResult(projectName, task) {
-    return ffetch.get(`api/log/${projectName}/${task}/latest`)
+    return ffetch.get(`api/log/latest/${projectName}/${task}`);
   }
 
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======
   engineLatest() {
-    return ffetch.post('api/engine/latest')
+    return ffetch.post("api/engine/latest");
   }
   engineVersions() {
-    return ffetch.post('api/engine/versions')
+    return ffetch.post("api/engine/versions");
   }
   // needs trailing slash if URL parameter contains dot
   downloadEngine(params) {
-    return ffetch.post(`api/engine/download/${params.version}/`)
+    return ffetch.post(`api/engine/download/${params.version}/`);
   }
   removeEngine(params) {
-    return ffetch.post(`api/engine/remove/${params.version}/`)
+    return ffetch.post(`api/engine/remove/${params.version}/`);
   }
 
   // ===============================================================================
   //                                                                            Task
   //                                                                            ====
   task(projectName, task) {
-    return ffetch.post(`api/task/execute/${projectName}/${task}`)
+    return ffetch.post(`api/task/execute/${projectName}/${task}`);
   }
   // ===============================================================================
   //                                                                           Retry
   //                                                                           =====
   retry(method, url, data, useSystemProxies) {
-    data = data || {}
-    data['useSystemProxies'] = useSystemProxies
+    data = data || {};
+    data["useSystemProxies"] = useSystemProxies;
     return http({
       method: method,
       url: url,
       data: data,
-    })
+    });
   }
 }
