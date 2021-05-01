@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class AdditionalSchemaMap {
         return new AdditionalSchemaMap(Collections.emptyMap());
     }
 
-    // #waiting_for function of additional schema implementation by jflute (2016/08/13)
+    // #for_now waiting for function of additional schema implementation by jflute (2016/08/13)
     public static class AdditionalSchemaBox {
 
         protected final String schema;

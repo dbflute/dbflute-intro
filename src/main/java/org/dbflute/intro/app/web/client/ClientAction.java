@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
-import org.dbflute.intro.app.logic.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
+import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;

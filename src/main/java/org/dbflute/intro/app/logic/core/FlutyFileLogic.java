@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,27 @@ import java.io.UncheckedIOException;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.exception.DirNotFoundException;
+import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
+ * The general logic for file. (e.g. read, write)
  * @author jflute
  * @author deco
+ * @author cabos
  * @author prprmurakami
  */
 public class FlutyFileLogic {
 
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
     private static final String BASIC_ENCODING = "UTF-8"; // all DBFlute resources are UTF-8
 
+    // ===================================================================================
+    //                                                                          Read/Write
+    //                                                                          ==========
     public String readFile(File textFile) {
+        IntroAssertUtil.assertNotNull(textFile);
         try {
             return FileUtils.readFileToString(textFile, BASIC_ENCODING);
         } catch (IOException e) {
@@ -41,21 +51,27 @@ public class FlutyFileLogic {
     }
 
     public void writeFile(File textFile, String content) {
+        IntroAssertUtil.assertNotNull(textFile);
+        // #thinking jflute is content null allowed? (2021/04/17)
         try {
-            FileUtils.write(textFile, content, BASIC_ENCODING);
+            FileUtils.write(textFile, content, BASIC_ENCODING); // if content is null, no operation
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot write the text file: " + textFile, e);
         }
     }
 
+    // ===================================================================================
+    //                                                                           Directory
+    //                                                                           =========
     /**
-     * Open directory by filer. (e.g. finder if mac, explorer if windows)
-     * Use OS command.
+     * Open directory of file object. (e.g. finder if mac, explorer if windows) <br>
+     * Using OS command.
      *
-     * @param dir File object for opened directory. (NotEmpty)
+     * @param dir File object for opened directory. (NotNull)
      * @throws DirNotFoundException When the directory does not exist.
      */
     public void openDir(File dir) throws DirNotFoundException {
+        IntroAssertUtil.assertNotNull(dir);
         if (dir.exists()) {
             try {
                 Desktop desktop = Desktop.getDesktop();
@@ -64,8 +80,9 @@ public class FlutyFileLogic {
                 throw new UncheckedIOException("fail to open directory." + " directory path: " + dir.getAbsolutePath(), e);
             }
         } else {
-            throw new DirNotFoundException("directory dose not exsist." + " directory path: " + dir.getAbsolutePath(),
-                    dir.getAbsolutePath());
+            // cannot determine the handling here in case of no directory so checked exception
+            String dirPath = dir.getAbsolutePath();
+            throw new DirNotFoundException("directory does not exist." + " directory path: " + dirPath, dirPath);
         }
     }
 }

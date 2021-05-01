@@ -55,7 +55,7 @@
       return menuType === this.opts.clientMenuType && menuName === this.opts.clientMenuName
     }
     this.goToMenuItem = (menuType, menuName) => {
-      route(`operate/${this.opts.projectName}/${menuType}/${menuName}`)
+      route(`client/${this.opts.projectName}/${menuType}/${menuName}`)
     }
   </script>
 </client-menu>

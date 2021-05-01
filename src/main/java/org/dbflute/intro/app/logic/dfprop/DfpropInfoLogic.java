@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,10 +48,12 @@ import org.dbflute.util.DfCollectionUtil;
 import org.dbflute.util.Srl;
 
 /**
+ * The logic for DBFlute property (dfprop) information.
  * @author jflute
  * @author deco
  * @author cabos
  * @author subaru
+ * @author prprmurakami
  */
 public class DfpropInfoLogic {
 
@@ -67,11 +69,16 @@ public class DfpropInfoLogic {
     // -----------------------------------------------------
     //                                                Dfprop
     //                                                ------
-    public Map<String, Map<String, Object>> findDfpropMap(String clientName) {
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The map of dfprop contents. map:{ [file-name] = map:{ [dfprop key-values] } } (NotNull)
+     */
+    public Map<String, Map<String, Object>> findDfpropMap(String projectName) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientName + "/dfprop");
+        // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
-        if (dfpropFiles == null) {
+        if (dfpropFiles == null) { // basically no way, what happens by returning empty?
             return dfpropMap;
         }
         Stream.of(dfpropFiles).forEach(file -> {
@@ -82,7 +89,7 @@ public class DfpropInfoLogic {
             final String fileNameKey;
             if (file.getName().equals("classificationDefinitionMap.dfprop")) {
                 fileNameKey = file.getName();
-            } else {
+            } else { // supporting DBFlute old naming style
                 fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
             }
             dfpropMap.put(fileNameKey, readMap(file));
@@ -94,6 +101,7 @@ public class DfpropInfoLogic {
         });
         final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
         if (basicInfoMap == null) {
+            // #needs_fix anyone message use DfpropFileNotFoundException by jflute (2021/04/29)
             throw new RuntimeException("Not found the basicInfoMap.dfprop: " + dfpropMap.keySet());
         }
         final Map<String, Object> databaseInfoMap = dfpropMap.get("databaseInfoMap.dfprop");
@@ -106,17 +114,22 @@ public class DfpropInfoLogic {
     // -----------------------------------------------------
     //                                       SchemaSyncCheck
     //                                       ---------------
-    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String clientName) {
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + clientName + "/dfprop");
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The optional for the map of schema-sync-check. (NotNull)
+     */
+    public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
+        // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
+        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) {
             return Optional.empty();
         }
         return Arrays.stream(dfpropFiles).filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop")).findAny().map(file -> {
-            Map<String, Object> readMap = readMap(file);
+            Map<String, Object> documentMap = readMap(file);
             @SuppressWarnings("unchecked")
-            Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) readMap.get("schemaSyncCheckMap");
-            return schemaSyncCheckMap;
+            Map<String, Object> schemaSyncCheckMap = (Map<String, Object>) documentMap.get("schemaSyncCheckMap");
+            return schemaSyncCheckMap; // null allowed
         }).map(schemaSyncCheckMap -> {
             final String url = convertSettingToString(schemaSyncCheckMap.get("url"));
             final String schema = convertSettingToString(schemaSyncCheckMap.get("schema"));
@@ -127,10 +140,17 @@ public class DfpropInfoLogic {
             return new SchemaSyncCheckMap(dbConnectionBox, isSuppressCraftDiff);
         });
     }
+
     // -----------------------------------------------------
     //                                          SchemaPolicy
     //                                          ------------
+    // #needs_fix anyone make SchemaPolicyInfoLogic? by jflute (2021/04/29)
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The map of schema-policy. (NotNull, NoSettingsInstance if not found)
+     */
     public SchemaPolicyMap findSchemaPolicyMap(String projectName) {
+        // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
         File schemaPolicyMapFile = new File(dfpropPhysicalLogic.buildDfpropFilePath(projectName, "schemaPolicyMap.dfprop"));
         return parseSchemePolicyMap(schemaPolicyMapFile);
     }
@@ -156,6 +176,7 @@ public class DfpropInfoLogic {
             return SchemaPolicyTargetSetting.noSettingInstance();
         }
 
+        // #needs_fix anyone resolve ofNullable() headache by jflute (2021/04/29)
         @SuppressWarnings("unchecked")
         List<String> tableExceptList =
                 Optional.ofNullable((List<String>) schemaPolicyMap.get("tableExceptList")).orElse(Collections.emptyList());
@@ -241,6 +262,37 @@ public class DfpropInfoLogic {
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
+    public List<String> getStatementSubjectList() {
+        // Create subject list here because contents does not change frequently
+        List<String> subjectList = Stream.of(Subject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
+        return subjectList;
+    }
+
+    public enum Subject {
+        TABLE_NAME("tableName"), //
+        ALIAS("alias"), //
+        FIRST_DATE("firstDate"), //
+        PK_COLUM_NAME("pk_columnName"), //
+        PK_DB_TYPE("pk_dbType"), //
+        PK_SIZE("pk_size"), //
+        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"), //
+        COLUMN("column"), //
+        COLUMN_NAME("columnName"), //
+        TABLE_COLUMN_NAME("tableColumnName"), //
+        DB_TYPE_WITH_SIZE("dbType_with_size");
+
+        private final String title;
+
+        // #needs_fix anyone remove mirror comment by jflute (2021/04/29)
+        private Subject(String title) { //コンストラクタはprivateで宣言
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
     // -----------------------------------------------------
     //                                      LittleAdjustment
     //                                      ----------------
@@ -284,13 +336,13 @@ public class DfpropInfoLogic {
         }
     }
 
+    // #needs_fix anyone Small Helper? SchemaPolicy deep logic? by jflute (2021/04/29)
     private Map<String, Object> readComments(File targetFile) {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
             return new DfMapFile() {
-                private final List<String> SCOPE_LIST =
-                        Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap", "tableMap",
-                                "columnMap");
+                private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
+                        "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
                 private final String OTHER_SCOPE = "other";
                 private final String BEGINNING_KEY = "beginningComments";
                 private final String END_KEY = "endComments";
@@ -333,8 +385,7 @@ public class DfpropInfoLogic {
                     }
                     try {
                         br.close();
-                    } catch (IOException ignored) {
-                    }
+                    } catch (IOException ignored) {}
                     return keyCommentMap;
                 }
 

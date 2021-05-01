@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import org.lastaflute.core.time.TimeManager;
 import org.lastaflute.db.dbflute.accesscontext.AccessContextResource;
 
 /**
+ * The logic for access context for common column, provided by DBFlute. <br>
+ * This is a LastaFlute example default class. (almost no change)
  * @author jflute
  */
 public class AccessContextLogic {
@@ -51,7 +53,7 @@ public class AccessContextLogic {
     }
 
     private String buildAccessUserTrace(AccessContextResource resource, AppTypeSupplier appTypeSupplier) {
-        // #change_it you can customize the user trace for common column
+        // #changed_it you can customize the user trace for common column
         // example default style: "M:7,HBR,ProductListAction" or "_:-1,HBR,ProductListAction"
         final StringBuilder sb = new StringBuilder();
         sb.append("_:").append(-1); // no authentication in DBFlute Intro

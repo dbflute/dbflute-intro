@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.dbflute.intro.app.logic.dfprop;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -27,6 +26,7 @@ import org.dbflute.intro.bizfw.tellfailure.DfpropDirNotFoundException;
 import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 
 /**
+ * The logic for DBFlute property (dfprop) physical operation.
  * @author deco
  * @author jflute
  */
@@ -41,31 +41,52 @@ public class DfpropPhysicalLogic {
     // ===================================================================================
     //                                                                               Path
     //                                                                              ======
-    public String buildDfpropDirPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName, "dfprop");
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The path to dfprop directory, basically relative. (NotNull)
+     */
+    public String buildDfpropDirPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, "dfprop");
     }
 
-    public String buildDfpropFilePath(String clientName, String fileName) {
-        return buildDfpropDirPath(clientName) + "/" + fileName;
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @param fileName The pure file name for dfprop. (NotNull)
+     * @return The path to the dfprop file, basically relative. (NotNull)
+     */
+    public String buildDfpropFilePath(String projectName, String fileName) {
+        return buildDfpropDirPath(projectName) + "/" + fileName;
     }
 
     // ===================================================================================
-    //                                                                                Find
-    //                                                                                ====
-    public File findDfpropFile(String clientName, String fileName) {
-        final File dfpropFile = new File(buildDfpropFilePath(clientName, fileName));
+    //                                                                               Find
+    //                                                                              ======
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @param fileName The pure file name for dfprop. (NotNull)
+     * @return The file object to the dfprop file. (NotNull)
+     * @throws DfpropFileNotFoundException When the file is not found.
+     */
+    public File findDfpropFile(String projectName, String fileName) {
+        final File dfpropFile = new File(buildDfpropFilePath(projectName, fileName));
         if (!dfpropFile.isFile()) {
             throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath(), fileName);
         }
         return dfpropFile;
     }
 
-    public List<File> findDfpropFileAllList(String clientName) {
-        final File dfpropDir = new File(buildDfpropDirPath(clientName));
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The list of file object to the dfprop files. (NotNull, NotEmpty)
+     * @throws DfpropDirNotFoundException When the directory or file is not found.
+     */
+    public List<File> findDfpropFileAllList(String projectName) {
+        final File dfpropDir = new File(buildDfpropDirPath(projectName));
         final File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
         if (dfpropFiles == null || dfpropFiles.length == 0) {
-            throw new DfpropDirNotFoundException("Not found dfprop files. file dir: " + dfpropDir.getPath(), dfpropDir.getName());
+            throw new DfpropDirNotFoundException("Not found dfprop directory of files. dfprop dir: " + dfpropDir.getPath(),
+                    dfpropDir.getName());
         }
-        return Collections.unmodifiableList(Arrays.asList(dfpropFiles));
+        return Arrays.asList(dfpropFiles);
     }
 }

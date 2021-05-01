@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
+ * The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)
  * @author deco
  * @author jflute
  * @author cabos
@@ -36,68 +37,70 @@ public class DocumentPhysicalLogic {
     private IntroPhysicalLogic introPhysicalLogic;
 
     // ===================================================================================
-    //                                                                         Find/Exists
-    //                                                                         ===========
-    public boolean existsSchemaHtml(String clientName) {
-        return findSchemaHtml(clientName).exists();
+    //                                                                              Exists
+    //                                                                              ======
+    public boolean existsSchemaHtml(String projectName) {
+        return findSchemaHtml(projectName).exists();
     }
 
-    public boolean existsHistoryHtml(String clientName) {
-        return findHistoryHtml(clientName).exists();
+    public boolean existsHistoryHtml(String projectName) {
+        return findHistoryHtml(projectName).exists();
     }
 
-    public boolean existsSyncCheckResultHtml(String clientName) {
-        return findSyncCheckResultHtml(clientName).exists();
+    public boolean existsSyncCheckResultHtml(String projectName) {
+        return findSyncCheckResultHtml(projectName).exists();
     }
 
-    public boolean existsAlterCheckResultHtml(String clientName) {
-        return findAlterCheckResultHtml(clientName).exists();
-    }
-
-    public File findSchemaHtml(String clientName) {
-        return toProjectNamedDocumentFile(clientName, "schema");
-    }
-
-    public File findHistoryHtml(String clientName) {
-        return toProjectNamedDocumentFile(clientName, "history");
-    }
-
-    public File findPropertiesHtml(String clientName) {
-        return toProjectNamedDocumentFile(clientName, "properties");
-    }
-
-    public File findSyncCheckResultHtml(String clientName) {
-        return toFixedNamedDocumentFile(clientName, "sync-check-result.html");
-    }
-
-    public File findAlterCheckResultHtml(String clientName) {
-        return toProjectNamedMigrationFile(clientName, "schema");
-    }
-
-    public File findLastaDocHtml(String clientName, String moduleName) {
-        return toProjectNamedDocumentFile(clientName, moduleName, "lastadoc");
+    public boolean existsAlterCheckResultHtml(String projectName) {
+        return findAlterCheckResultHtml(projectName).exists();
     }
 
     // ===================================================================================
-    //                                                                                Path
-    //                                                                                ====
-    private File toProjectNamedDocumentFile(String clientName, String module, String type) {
+    //                                                                               Find
+    //                                                                              ======
+    public File findSchemaHtml(String projectName) {
+        return toProjectNamedDocumentFile(projectName, "schema");
+    }
+
+    public File findHistoryHtml(String projectName) {
+        return toProjectNamedDocumentFile(projectName, "history");
+    }
+
+    public File findPropertiesHtml(String projectName) {
+        return toProjectNamedDocumentFile(projectName, "properties");
+    }
+
+    public File findSyncCheckResultHtml(String projectName) {
+        return toFixedNamedDocumentFile(projectName, "sync-check-result.html");
+    }
+
+    public File findAlterCheckResultHtml(String projectName) {
+        return toProjectNamedMigrationFile(projectName, "schema");
+    }
+
+    public File findLastaDocHtml(String projectName, String moduleName) {
+        return toProjectNamedDocumentFile(projectName, moduleName, "lastadoc");
+    }
+
+    // ===================================================================================
+    //                                                                        Path to File
+    //                                                                        ============
+    // -----------------------------------------------------
+    //                                         Project Named
+    //                                         -------------
+    private File toProjectNamedDocumentFile(String projectName, String module, String type) {
         String pureName = type + "-" + module + ".html";
-        return toFixedNamedDocumentFile(clientName, pureName);
+        return toFixedNamedDocumentFile(projectName, pureName);
     }
 
-    private File toProjectNamedDocumentFile(String clientName, String type) { // e.g. SchemaHtml
-        final String pureName = type + "-" + clientName + ".html";
-        return toFixedNamedDocumentFile(clientName, pureName);
+    private File toProjectNamedDocumentFile(String projectName, String type) { // e.g. SchemaHtml
+        final String pureName = type + "-" + projectName + ".html";
+        return toFixedNamedDocumentFile(projectName, pureName);
     }
 
-    private File toFixedNamedDocumentFile(String clientName, String pureName) { // e.g. SchemaSyncCheck
-        return new File(buildDocumentPath(clientName, pureName));
-    }
-
-    private File toProjectNamedMigrationFile(String clientName, String type) { // e.g. AlterCheck
+    private File toProjectNamedMigrationFile(String projectName, String type) { // e.g. AlterCheck
+        // #needs_fix jflute basically only one file so you can remove switch case (2021/05/01)
         final String pureName;
-
         switch (type) {
         case "schema":
             pureName = "alter-check-result.html";
@@ -105,18 +108,28 @@ public class DocumentPhysicalLogic {
         default:
             return null;
         }
-        return toFixedNamedMigrationFile(clientName, type, pureName);
+        return toFixedNamedMigrationFile(projectName, type, pureName);
     }
 
-    private File toFixedNamedMigrationFile(String clientName, String type, String pureName) { // e.g. SchemaSyncCheck
-        return new File(buildMigrationPath(clientName, type, pureName));
+    // -----------------------------------------------------
+    //                                           Fixed Named
+    //                                           -----------
+    private File toFixedNamedDocumentFile(String projectName, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildDocumentPath(projectName, pureName));
     }
 
-    private String buildDocumentPath(String clientName, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientName, "output", "doc", pureName);
+    private File toFixedNamedMigrationFile(String projectName, String type, String pureName) { // e.g. SchemaSyncCheck
+        return new File(buildMigrationPath(projectName, type, pureName));
     }
 
-    private String buildMigrationPath(String clientName, String type, String pureName) {
-        return introPhysicalLogic.buildClientPath(clientName, "playsql", "migration", type, pureName);
+    // -----------------------------------------------------
+    //                                            Build Path
+    //                                            ----------
+    private String buildDocumentPath(String projectName, String pureName) {
+        return introPhysicalLogic.buildClientPath(projectName, "output", "doc", pureName);
+    }
+
+    private String buildMigrationPath(String projectName, String type, String pureName) {
+        return introPhysicalLogic.buildClientPath(projectName, "playsql", "migration", type, pureName);
     }
 }

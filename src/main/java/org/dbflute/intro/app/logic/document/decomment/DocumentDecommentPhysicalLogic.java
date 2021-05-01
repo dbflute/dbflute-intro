@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 
 /**
+ * The logic for decomment physical operation. <br>
+ * Decomment is a function to add comment for SchemaHTML. <br>
+ * You can handle e.g. decomment-pickup.dfmap, decomment-piece-...dfmap by this logic.
  * @author cabos
  * @author hakiba
  * @author jflute
@@ -50,11 +53,21 @@ public class DocumentDecommentPhysicalLogic {
     // done cabos why package scope? by jflute (2017/11/19)
     // done cabos add private modifier to _decoMapFile by jflute (2017/11/21)
     // done cabos instance variable should be under Attribute tag comment by jflute (2017/11/19)
+    /**
+     * The file handler of deco map files. (NotNull) <br>
+     * e.g. decomment-pickup.dfmap, decomment-piece-...dfmap. <br>
+     * The handling logic is embedded in DBFlute runtime.
+     */
     private final DfDecoMapFile _decoMapFile = new DfDecoMapFile(() -> timeManager.currentDateTime());
 
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // piece file:
+    //  o Intro creates when decomment input
+    //  o DBFlute Engine reads when creating pickup
+    // _/_/_/_/_/_/_/_/_/_/
     public void saveDecommentPiece(String clientName, DfDecoMapPiece decoMapPiece) {
         _decoMapFile.writePiece(buildClientPath(clientName), decoMapPiece);
     }
@@ -62,6 +75,11 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                          Pickup Map
     //                                                                          ==========
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // pickup file:
+    //  o DBFlute Engine creates when Doc task
+    //  o Intro reads 
+    // _/_/_/_/_/_/_/_/_/_/
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
     public DfDecoMapPickup readMergedPickup(String clientName) {
         List<DfDecoMapPiece> pieces = readDecommentPiece(clientName);
@@ -105,6 +123,9 @@ public class DocumentDecommentPhysicalLogic {
         return documentAuthorLogic.getGitBranch();
     }
 
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
     private String buildClientPath(String clientName) {
         return introPhysicalLogic.buildClientPath(clientName);
     }

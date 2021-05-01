@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The logic for DBFlute task execution. (e.g. you can actually execute it)
  * @author p1us2er0
  * @author jflute
  * @author deco
@@ -52,9 +53,9 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    public String execute(String clientName, List<CDef.TaskType> taskTypeList, OptionalThing<String> env)
-            throws TaskErrorResultException {
-        logger.debug("...Executing the DBFlute task: client={}, tasks={}", clientName, taskTypeList);
+    // #needs_fix jflute the env is only for SchemaSyncCheck however is it used now? can be removed? (2021/05/01)
+    public String execute(String projectName, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
+        logger.debug("...Executing the DBFlute task: client={}, tasks={}", projectName, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         final StringBuilder logSb = new StringBuilder();
         for (ProcessBuilder processBuilder : dbfluteTaskList) {
@@ -64,9 +65,10 @@ public class TaskExecutionLogic {
             env.ifPresent(value -> {
                 environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
             });
-            final String clientPath = introPhysicalLogic.buildClientPath(clientName);
-            processBuilder.directory(new File(clientPath));
-            logSb.append(executeCommand(processBuilder));
+            final String clientPath = introPhysicalLogic.buildClientPath(projectName);
+            processBuilder.directory(new File(clientPath)); // change current directory
+            final String commandResult = executeCommand(processBuilder);
+            logSb.append(commandResult);
         }
         return logSb.toString();
     }
@@ -109,11 +111,11 @@ public class TaskExecutionLogic {
     //                                                                             =======
     private String executeCommand(ProcessBuilder processBuilder) throws TaskErrorResultException {
         processBuilder.redirectErrorStream(true);
-        Process process;
+        final Process process;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Failed to start the process: builder=" + processBuilder, e);
         }
         int resultCode = 0;
         boolean schemaNotSynchronized = false;
@@ -190,6 +192,9 @@ public class TaskExecutionLogic {
         }
     }
 
+    // -----------------------------------------------------
+    //                                        Error Handling
+    //                                        --------------
     private void throwIfSchemaNotSynchronized(boolean schemaNotSynchronized, int resultCode, StringBuilder logSb)
             throws SchemaNotSynchronizedException {
         if (schemaNotSynchronized) {

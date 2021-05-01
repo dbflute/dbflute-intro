@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.dfprop;
+package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
-import org.lastaflute.web.validation.Required;
+import javax.validation.constraints.NotNull;
 
 /**
- * @author deco
- * @author subaru
+ * @author hakiba
  */
-public class DfpropDocumentEditBody {
-
-    @Required
-    public Boolean upperCaseBasic;
-    public String aliasDelimiterInDbComment;
-    @Required
-    public Boolean dbCommentOnAliasBasis;
-    @Required
-    public Boolean checkColumnDefOrderDiff;
-    @Required
-    public Boolean checkDbCommentDiff;
-    @Required
-    public Boolean checkProcedureDiff;
+public class DfpropDeleteSchemaPolicyStatementBody {
+    @NotNull
+    public String mapType;
+    @NotNull
+    public String statement;
 }

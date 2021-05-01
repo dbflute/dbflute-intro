@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
+ * The logic for playsql.data (in DBFlute Client).
  * @author prprmurakami
  */
 public class PlaysqlDataLogic {
@@ -43,11 +44,11 @@ public class PlaysqlDataLogic {
      * Open data directory by filer. (e.g. finder if mac, explorer if windows)
      * Use OS command.
      *
-     * @param clientName dbflute client project name (NotEmpty)
+     * @param projectName dbflute client project name (NotNull, NotEmpty)
      * @throws DirNotFoundException 
      */
-    public void openDataDir(String clientName) throws DirNotFoundException {
-        File dataDir = new File(buildDataDirectoryPath(clientName));
+    public void openDataDir(String projectName) throws DirNotFoundException {
+        File dataDir = new File(buildDataDirectoryPath(projectName));
         flutyFileLogic.openDir(dataDir);
     }
 
@@ -57,7 +58,7 @@ public class PlaysqlDataLogic {
     // -----------------------------------------------------
     //                                  Build Directory Path
     //                                  --------------------
-    private String buildDataDirectoryPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName, "playsql", "data");
+    private String buildDataDirectoryPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, "playsql", "data");
     }
 }

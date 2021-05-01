@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
+ * The logic for document display on intro. (e.g. SchemaHTML) <br>
+ * For example, it needs to adjust links to other HTMLs in intro-managed HTML.
  * @author deco
  * @author jflute
  */
@@ -38,7 +40,7 @@ public class DocumentDisplayLogic {
     @Resource
     private IntroSystemLogic introSystemLogic;
 
-    public String modifyHtmlForIntroOpening(String clientName, File file) {
+    public String modifyHtmlForIntroOpening(String projectName, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             boolean addedIntroExecuteTag = false;
             boolean addedIntroServerTag = false;
@@ -49,6 +51,8 @@ public class DocumentDisplayLogic {
                 if (line == null) {
                     break;
                 }
+
+                // add intro-managed mark used in SchemaHTML JavaScript
                 if (!addedIntroExecuteTag && line.contains("<script>")) {
                     line = "<input id=\"intro_opening\" type=\"hidden\" />" + line;
                     addedIntroExecuteTag = true;
@@ -57,22 +61,26 @@ public class DocumentDisplayLogic {
                     line = "<input id=\"decomment_server\" type=\"hidden\" />" + line;
                     addedIntroServerTag = true;
                 }
-                if (line.contains("<a href=\"./history-" + clientName + ".html\">to HistoryHTML</a>")) {
-                    line = "<a href=\"/api/document/" + clientName + "/historyhtml\">to HistoryHTML</a>";
+
+                // enable links in intro-managed HTML
+                // attention, it depends on SchemaHTML coding
+                if (line.contains("<a href=\"./history-" + projectName + ".html\">to HistoryHTML</a>")) {
+                    line = "<a href=\"/api/document/" + projectName + "/historyhtml\">to HistoryHTML</a>";
                 }
-                if (line.contains("<a href=\"./schema-" + clientName + ".html\">to SchemaHTML</a>")) {
-                    line = "<a href=\"/api/document/" + clientName + "/schemahtml\">to SchemaHTML</a>";
+                if (line.contains("<a href=\"./schema-" + projectName + ".html\">to SchemaHTML</a>")) {
+                    line = "<a href=\"/api/document/" + projectName + "/schemahtml\">to SchemaHTML</a>";
                 }
-                if (line.contains("<a href=\"./properties-" + clientName + ".html\">to PropertiesHTML</a>")) {
-                    line = "<a href=\"/api/document/" + clientName + "/propertieshtml\">to PropertiesHTML</a>";
+                if (line.contains("<a href=\"./properties-" + projectName + ".html\">to PropertiesHTML</a>")) {
+                    line = "<a href=\"/api/document/" + projectName + "/propertieshtml\">to PropertiesHTML</a>";
                 }
                 Matcher lastadocUrlMatcher = LASTADOC_FILENAME_PATTERN.matcher(line);
                 if (lastadocUrlMatcher.find()) {
                     String moduleName = lastadocUrlMatcher.group(1);
                     String prefix = line.contains("|") ? "| " : "";
-                    line = prefix + "<a href=\"/api/document/" + clientName + "/lastadochtml/" + moduleName + "\">to " + moduleName
+                    line = prefix + "<a href=\"/api/document/" + projectName + "/lastadochtml/" + moduleName + "\">to " + moduleName
                             + "</a>";
                 }
+
                 sb.append(line).append("\n");
             }
             return sb.toString();

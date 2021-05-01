@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,14 @@ import java.util.Map;
 
 /**
  * @author hakiba
+ * @author jflute
  */
 public class SchemaPolicyTargetSetting {
-    public List<String> tableExceptList;
-    public List<String> tableTargetList;
-    public Map<String, List<String>> columnExceptMap;
-    public boolean isMainSchemaOnly;
+
+    public final List<String> tableExceptList; // not null
+    public final List<String> tableTargetList; // not null
+    public final Map<String, List<String>> columnExceptMap; // not null
+    public final boolean isMainSchemaOnly;
 
     public static SchemaPolicyTargetSetting noSettingInstance() {
         return new SchemaPolicyTargetSetting(Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), false);

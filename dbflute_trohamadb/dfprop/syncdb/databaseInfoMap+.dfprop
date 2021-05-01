@@ -1,5 +1,5 @@
 map:{
-	; url			= jdbc:mysql://localhost:43306/maihamasyncdb?characterEncoding=UTF-8
-	; user			= maihamasyncdb
-	; password		= maihamasyncdb
+	; url			= jdbc:mysql://localhost:3306/trohamasyncdb?characterEncoding=UTF-8
+	; user			= trohamasyncdb
+	; password		= trohamasyncdb
 }

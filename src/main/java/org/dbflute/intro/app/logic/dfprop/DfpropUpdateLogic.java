@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,26 @@ import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.helper.dfmap.DfMapStyle;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.model.client.document.*;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
+import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author deco
  * @author subaru
+ * @author jflute
  */
 public class DfpropUpdateLogic {
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
@@ -50,8 +61,11 @@ public class DfpropUpdateLogic {
     @Resource
     private FlutyFileLogic flutyFileLogic;
 
-    public void replaceSchemaSyncCheckMap(String project, SchemaSyncCheckMap schemaSyncCheckMap) {
-        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
+    // ===================================================================================
+    //                                                                     SchemaSyncCheck
+    //                                                                     ===============
+    public void replaceSchemaSyncCheckMap(String projectName, SchemaSyncCheckMap schemaSyncCheckMap) {
+        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "documentMap.dfprop");
         try (BufferedReader br = Files.newBufferedReader(documentMapFile.toPath())) {
             boolean inSetting = false;
             boolean inSyncSchemeSetting = false;
@@ -86,6 +100,9 @@ public class DfpropUpdateLogic {
         }
     }
 
+    // ===================================================================================
+    //                                                                         DocumentMap
+    //                                                                         ===========
     public void replaceDocumentMap(String project, DocumentMap documentMap) {
         final Function<String, String> lineReplacer = line -> {
             if (line.contains("; aliasDelimiterInDbComment") && line.contains("=")) {
@@ -110,6 +127,9 @@ public class DfpropUpdateLogic {
         flutyFileLogic.writeFile(documentMapFile, fileContent);
     }
 
+    // ===================================================================================
+    //                                                                 LittleAdjustmentMap
+    //                                                                 ===================
     public void replaceLittleAdjustmentMap(String project, LittleAdjustmentMap littleAdjustmentMap) {
         final Function<String, String> lineReplacer = line -> {
             final Boolean isTableDispNameUpperCase = littleAdjustmentMap.isTableDispNameUpperCase;
@@ -150,10 +170,14 @@ public class DfpropUpdateLogic {
             }
             return sb.toString();
         } catch (IOException e) {
-            throw new LaSystemException("Cannot replace dfprop", e);
+            throw new LaSystemException("Cannot replace dfprop: " + file, e);
         }
     }
 
+    // ===================================================================================
+    //                                                                     SchemaPolicyMap
+    //                                                                     ===============
+    // #needs_fix anyone make SchemaPolicyUpdateLogic? by jflute (2021/04/29)
     public void replaceSchemaPolicyMap(String project, SchemaPolicyMap inputSchemaPolicyMap) {
         File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
         doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, inputSchemaPolicyMap);
@@ -170,9 +194,8 @@ public class DfpropUpdateLogic {
             new DfMapFile() {
                 protected DfMapStyle newMapStyle() {
                     return new DfMapStyle() {
-                        private final List<String> SCOPE_LIST =
-                                Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap", "isMainSchemaOnly", "wholeMap",
-                                        "tableMap", "columnMap");
+                        private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
+                                "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
 
                         private String scope = "";
 
@@ -193,27 +216,29 @@ public class DfpropUpdateLogic {
                         @SuppressWarnings("unchecked")
                         private void doBuildOtherCommentString(StringBuilder sb, String key) {
                             final String scope = "other";
-                            if (schemaPolicyMap.comments.containsKey(scope) && ((Map<String, Object>) schemaPolicyMap.comments.get(
-                                    scope)).containsKey(key)) {
+                            if (schemaPolicyMap.comments.containsKey(scope)
+                                    && ((Map<String, Object>) schemaPolicyMap.comments.get(scope)).containsKey(key)) {
                                 sb.append(((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key));
                             }
                         }
 
                         @Override
-                        protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent, String currentIndent,
-                                boolean withoutDisplaySideSpace, int index, String key, Object value) {
+                        protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
+                                String currentIndent, boolean withoutDisplaySideSpace, int index, String key, Object value) {
                             if (SCOPE_LIST.contains(key)) {
                                 scope = key;
                             }
                             doBuildCommentStringCurrentElement(sb, currentIndent, key);
-                            super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace, index, key, value);
+                            super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace,
+                                    index, key, value);
                         }
 
                         @Override
-                        protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent, String currentIndent,
-                                boolean withoutDisplaySideSpace, int index, Object value) {
+                        protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent,
+                                String currentIndent, boolean withoutDisplaySideSpace, int index, Object value) {
                             doBuildCommentStringCurrentElement(sb, currentIndent, (String) value);
-                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace, index, value);
+                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace,
+                                    index, value);
                         }
 
                         @SuppressWarnings("unchecked")
@@ -274,6 +299,9 @@ public class DfpropUpdateLogic {
         return new SchemaPolicyColumnMap(themeList, base.statementList);
     }
 
+    // -----------------------------------------------------
+    //                                SchemaPolicy Statement
+    //                                ----------------------
     public String registerSchemaPolicyStatement(String project, SchemaPolicyStatement statement) {
         File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
         SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(schemaPolicyMapFile);

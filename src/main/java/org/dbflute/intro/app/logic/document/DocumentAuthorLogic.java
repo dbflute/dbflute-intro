@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,17 +26,28 @@ import org.dbflute.intro.app.logic.exception.GitBranchGetFailureException;
 import org.dbflute.optional.OptionalThing;
 
 /**
+ * The logic for author (and git branch) used in documents.
  * @author cabos
  * @author deco
  * @author jflute
  */
 public class DocumentAuthorLogic {
 
-    protected static final String USER_NAME_KEY = "user.name";
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    protected static final String USER_NAME_KEY = "user.name"; // for system property
+
+    // ===================================================================================
+    //                                                                              Author
+    //                                                                              ======
+    public String getAuthor() { // for e.g. decomment, hacomment
+        return _authorSupplier.get();
+    }
 
     private static final Supplier<String> _authorSupplier = new Supplier<String>() {
 
-        private String _author;
+        private String _author; // cached
 
         @Override
         public synchronized String get() {
@@ -48,16 +59,31 @@ public class DocumentAuthorLogic {
 
         private void loadAuthor() {
             String author = System.getProperty(USER_NAME_KEY);
-            if (StringUtils.isEmpty(author)) {
+            if (StringUtils.isEmpty(author)) { // basically no way, just in case
                 throw new IllegalStateException("cannot load user name: " + author);
             }
             this._author = author;
         }
     };
 
+    // ===================================================================================
+    //                                                                          Git Branch
+    //                                                                          ==========
+    public OptionalThing<String> getGitBranch() { // for e.g. decomment, hacomment
+        try {
+            return OptionalThing.ofNullable(_gitBranchSupplier.get(), () -> {
+                throw new IllegalStateException("Cannot get branch name.");
+            });
+        } catch (GitBranchGetFailureException e) {
+            return OptionalThing.ofNullable(null, () -> {
+                throw e;
+            });
+        }
+    }
+
     private static final Supplier<String> _gitBranchSupplier = new Supplier<String>() {
 
-        private String _gitBranch;
+        private String _gitBranch; // cached
 
         @Override
         public synchronized String get() {
@@ -86,18 +112,4 @@ public class DocumentAuthorLogic {
             }
         }
     };
-
-    public String getAuthor() {
-        return _authorSupplier.get();
-    }
-
-    public OptionalThing<String> getGitBranch() {
-        try {
-            return OptionalThing.ofNullable(_gitBranchSupplier.get(), () -> {
-                throw new IllegalStateException("Cannot get branch name.");
-            });
-        } catch (GitBranchGetFailureException e) {
-            return OptionalThing.ofNullable(null, () -> { throw e; });
-        }
-    }
 }

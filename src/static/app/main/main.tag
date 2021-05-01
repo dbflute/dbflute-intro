@@ -162,7 +162,7 @@
     }
 
     this.goToClient = (client) => {
-      route('operate/' + client.projectName + '/execute/documents')
+      route('client/' + client.projectName) // default page of client
     }
 
     this.goToClientCreate = () => {

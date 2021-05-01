@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author deco
  * @author jflute
+ * @author prprmurakami
  */
 public class PlaysqlAction extends IntroBaseAction {
 
@@ -49,7 +50,7 @@ public class PlaysqlAction extends IntroBaseAction {
     //                                                  list
     //                                                  ----
     // #forgot deco pri.C with directory? by jflute (2016/07/26)
-    @Execute(urlPattern = "{}/@word")
+    @Execute
     public JsonResponse<List<PlaysqlBean>> list(String clientName) {
         List<File> playsqlFileList = playsqlPhysicalLogic.findPlaysqlFileAllList(clientName);
         List<PlaysqlBean> beans = playsqlFileList.stream()
@@ -62,8 +63,9 @@ public class PlaysqlAction extends IntroBaseAction {
     //                                                update
     //                                                ------
     // #forgot jflute pri.C intro: needs adjustment? (2016/07/26)
+    // prprmurakami 今は使われていない。将来機能追加した時に使う。 (2021/05/01)
     @NotAvailableDecommentServer
-    @Execute(urlPattern = "{}/@word/{}")
+    @Execute
     public JsonResponse<Void> update(String clientName, String fileName, PlaysqlUpdateBody body) {
         validate(body, messages -> {});
 

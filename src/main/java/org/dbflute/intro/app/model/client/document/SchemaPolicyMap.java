@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.dbflute.util.DfCollectionUtil;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class SchemaPolicyMap {
     public SchemaPolicyTargetSetting targetSetting;
@@ -60,20 +61,23 @@ public class SchemaPolicyMap {
 
     private Map<String, Object> convertWholeMapToMap() {
         LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
-        map.put("themeList", wholeMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("themeList",
+                wholeMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         return map;
     }
 
     private Map<String, Object> convertTableMapToMap() {
         LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
-        map.put("themeList", tableMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("themeList",
+                tableMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         map.put("statementList", tableMap.statementList);
         return map;
     }
 
     private Map<String, Object> convertColumnMapToMap() {
         LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
-        map.put("themeList", columnMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("themeList",
+                columnMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         map.put("statementList", columnMap.statementList);
         return map;
     }

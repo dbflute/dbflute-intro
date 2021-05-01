@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,11 @@ public class TestConnectionLogic {
     // ===================================================================================
     //                                                                     Test Connection
     //                                                                     ===============
+    /**
+     * @param dbfluteVersion The version of DBFlute engine. e.g. "1.2.4" (NotNull)
+     * @param jdbcDriverJarPath The optional for the path to JDBC driver path to be test target. (NotNull, EmptyAllowed)
+     * @param databaseInfoMap The map of database information. (NotNull)
+     */
     public void testConnection(String dbfluteVersion, OptionalThing<String> jdbcDriverJarPath, DatabaseInfoMap databaseInfoMap) {
         final ProxySelector proxySelector = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
@@ -83,8 +88,7 @@ public class TestConnectionLogic {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException ignored) {
-                }
+                } catch (SQLException ignored) {}
             }
         }
     }

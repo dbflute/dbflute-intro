@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,18 +31,26 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
+ * The logic for DBFlute Engine information. (e.g. version)
  * @author p1us2er0
  * @author jflute
  */
 public class EngineInfoLogic {
+
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
     private final static String SPLIT_DELIMITER = "\\.";
 
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
 
+    // ===================================================================================
+    //                                                                            Existing
+    //                                                                            ========
     public List<String> getExistingVersionList() {
         String mydbflutePath = introPhysicalLogic.buildMydbflutePath();
         try {
@@ -62,6 +70,9 @@ public class EngineInfoLogic {
         }
     }
 
+    // ===================================================================================
+    //                                                                               Newer
+    //                                                                               =====
     public boolean existsNewerVersionThan(String compareVersion) {
         try {
             String[] splitCompareVersion = compareVersion.split(SPLIT_DELIMITER);
