@@ -97,7 +97,7 @@ intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/
 1. Execute this command
 ```
 $ cd path/to/dbflute-intro
-$ sh scripts/docker-build.sh ${release version} # input release version as argument
+$ sh docker-build.sh && sh docker-push.sh ${release version} # input release version as argument
 ```
 
 ### Document
