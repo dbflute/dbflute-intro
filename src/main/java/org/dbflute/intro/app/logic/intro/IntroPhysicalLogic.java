@@ -21,6 +21,7 @@ import java.util.Arrays;
 import org.dbflute.util.Srl;
 
 /**
+ * The logic for DBFlute Intro physical operation.
  * @author p1us2er0
  * @author jflute
  */
@@ -32,6 +33,7 @@ public class IntroPhysicalLogic {
     private static final String MYDBFLUTE_PATH = "mydbflute";
     private static final String ENGINE_TEMPLATE_PATH = MYDBFLUTE_PATH + "/dbflute-%1$s";
 
+    // #needs_fix anyone make this private and use buildIntroPath() instead by jflute (2021/05/01)
     /**
      * <pre>
      * e.g. "."
@@ -70,17 +72,17 @@ public class IntroPhysicalLogic {
      *  buildClientPath("maihamadb"): ./dbflute_maihamadb
      *  buildClientPath("maihamadb", "dfprop"): ./dbflute_maihamadb/dfprop
      * </pre>
-     * @param clientName The project name of DBFlute client. (NotNull)
+     * @param projectName The project name of DBFlute client. (NotNull)
      * @param resources The varying array of resources in DBFlute client. (NotNull, EmptyAllowed)
      * @return The path to the DBFlute client. (NotNull)
      */
-    public String buildClientPath(String clientName, String... resources) {
+    public String buildClientPath(String projectName, String... resources) {
         final String suffix = resources.length > 0 ? Srl.connectByDelimiter(Arrays.asList(resources), "/") : null;
-        return buildBasicPath("dbflute_" + clientName) + (suffix != null ? "/" + suffix : "");
+        return buildBasicPath("dbflute_" + projectName) + (suffix != null ? "/" + suffix : "");
     }
 
-    public File findClientDir(String clientName) {
-        return new File(buildClientPath(clientName));
+    public File findClientDir(String projectName) {
+        return new File(buildClientPath(projectName));
     }
 
     // ===================================================================================

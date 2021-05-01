@@ -47,6 +47,7 @@ import org.dbflute.optional.OptionalThing;
 import org.dbflute.util.DfStringUtil;
 
 /**
+ * The logic for playsql.migration (in DBFlute Client).
  * @author cabos
  * @author subaru
  * @author prprmurakami

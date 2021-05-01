@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
+ * The logic for DBFlute Engine physical operation.
  * @author jflute
  */
 public class EnginePhysicalLogic {

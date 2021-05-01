@@ -16,7 +16,10 @@
 package org.dbflute.intro.app.logic.exception;
 
 /**
+ * The exception when it cannot get Git branch from system. <br>
+ * It cannot be a checked exception because of use in callback. 
  * @author akifumi.tominaga
+ * @author jflute
  */
 public class GitBranchGetFailureException extends RuntimeException {
 

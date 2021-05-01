@@ -22,16 +22,23 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ExtlibFile;
+import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 
 /**
+ * The logic for DBFlute Client physical operation.
  * @author jflute
+ * @author deco
+ * @author hakiba
+ * @author cabos
+ * @author subaru
  */
 public class ClientPhysicalLogic {
 
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    // #needs_fix anyone should be public to use this in other logics by jflute (2021/04/16)
     private static final String BASIC_INFO_MAP_DFPROP = "basicInfoMap.dfprop";
     private static final String DATABASE_INFO_MAP_DFPROP = "databaseInfoMap.dfprop";
 
@@ -51,69 +58,80 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
-    private String buildDfpropDirPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName, "dfprop");
+    public File findDfpropBasicInfoMap(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(buildDfpropFilePath(projectName, BASIC_INFO_MAP_DFPROP));
     }
 
-    private String buildDfpropFilePath(String clientName, String fileName) {
-        return buildDfpropDirPath(clientName) + "/" + fileName;
+    public File findDfpropDatabaseInfoMap(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(buildDfpropFilePath(projectName, DATABASE_INFO_MAP_DFPROP));
     }
 
-    public File findDfpropBasicInfoMap(String clientName) {
-        return new File(buildDfpropFilePath(clientName, BASIC_INFO_MAP_DFPROP));
+    private String buildDfpropDirPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, "dfprop");
     }
 
-    public File findDfpropDatabaseInfoMap(String clientName) {
-        return new File(buildDfpropFilePath(clientName, DATABASE_INFO_MAP_DFPROP));
+    private String buildDfpropFilePath(String projectName, String fileName) {
+        return buildDfpropDirPath(projectName) + "/" + fileName;
     }
 
     // ===================================================================================
     //                                                                              extlib
     //                                                                              ======
-    public ExtlibFile createExtlibFile(String clientName, String fileName, String jdbcDriverFileDataBase64) {
-        String filePath = buildExtlibDirPath(clientName) + "/" + fileName;
+    public ExtlibFile createExtlibFile(String projectName, String fileName, String jdbcDriverFileDataBase64) {
+        // no used if DBMS that uses embedded JDBC driver, so all variables are required
+        IntroAssertUtil.assertNotEmpty(projectName, fileName, jdbcDriverFileDataBase64);
+        String filePath = buildExtlibDirPath(projectName) + "/" + fileName;
         return new ExtlibFile(filePath, jdbcDriverFileDataBase64);
     }
 
-    private String buildExtlibDirPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName, "extlib");
+    public File findExtlibDir(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(buildExtlibDirPath(projectName));
     }
 
-    public File findExtlibDir(String clientName) {
-        return new File(buildExtlibDirPath(clientName));
+    private String buildExtlibDirPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, "extlib");
     }
 
     // ===================================================================================
     //                                                                             playsql
     //                                                                             =======
-    private String buildPlaysqlDirPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName, "playsql");
+    public File findPlaysqlDir(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(buildPlaysqlDirPath(projectName));
     }
 
-    public File findPlaysqlDir(String clientName) {
-        return new File(buildPlaysqlDirPath(clientName));
+    private String buildPlaysqlDirPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, "playsql");
     }
 
     // ===================================================================================
     //                                                                               Meta
     //                                                                              ======
-    public File findProjectBat(String clientName) {
-        return new File(introPhysicalLogic.buildClientPath(clientName, "_project.bat"));
+    public File findProjectBat(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(introPhysicalLogic.buildClientPath(projectName, "_project.bat"));
     }
 
-    public File findProjectSh(String clientName) {
-        return new File(introPhysicalLogic.buildClientPath(clientName, "_project.sh"));
+    public File findProjectSh(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(introPhysicalLogic.buildClientPath(projectName, "_project.sh"));
     }
 
-    public File findBuildProperties(String clientName) {
-        return new File(introPhysicalLogic.buildClientPath(clientName, "build.properties"));
+    public File findBuildProperties(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(introPhysicalLogic.buildClientPath(projectName, "build.properties"));
     }
 
     // ===================================================================================
     //                                                                        Unzip Client
     //                                                                        ============
     public void locateUnzippedClient(String dbfluteVersion, File clientDir) {
+        IntroAssertUtil.assertNotEmpty(dbfluteVersion);
+        IntroAssertUtil.assertNotNull(clientDir);
         ZipUtil.decrypt(enginePhysicalLogic.buildDfClientZipPath(dbfluteVersion), introPhysicalLogic.buildIntroPath());
-        introPhysicalLogic.findClientDir("dfclient").renameTo(clientDir);
+        introPhysicalLogic.findClientDir("dfclient").renameTo(clientDir); // e.g. dbflute_dfclient to dbflute_maihamadb
     }
 }

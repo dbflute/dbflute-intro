@@ -28,8 +28,10 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.optional.OptionalThing;
 
 /**
+ * The logic for log (in DBFlute Client) physical operation.
  * @author deco
  * @author cabos
+ * @author jflute
  */
 public class LogPhysicalLogic {
 
@@ -47,23 +49,17 @@ public class LogPhysicalLogic {
     private FlutyFileLogic fileLogic;
 
     // ===================================================================================
-    //                                                                                Path
-    //                                                                                ====
-    public String buildLogPath(String project) {
-        return introPhysicalLogic.buildClientPath(project, LOG_DIR_PATH);
+    //                                                                            Log Path
+    //                                                                            ========
+    public String buildLogPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, LOG_DIR_PATH);
     }
 
     // ===================================================================================
-    //                                                                                Read
-    //                                                                                ====
-    public boolean existsViolationSchemaPolicyCheck(String clientName) {
-        return findLatestResultFile(clientName, "doc").map(file -> fileLogic.readFile(file))
-                .map(s -> s.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException"))
-                .orElse(false);
-    }
-
-    public List<File> findLogFileAllList(String project) {
-        final File logDir = new File(buildLogPath(project));
+    //                                                                           Find File
+    //                                                                           =========
+    public List<File> findLogFileAllList(String projectName) {
+        final File logDir = new File(buildLogPath(projectName));
         final File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));
         if (logFiles == null || logFiles.length == 0) {
             return Collections.unmodifiableList(new ArrayList<>());
@@ -71,8 +67,8 @@ public class LogPhysicalLogic {
         return Collections.unmodifiableList(Arrays.asList(logFiles));
     }
 
-    public OptionalThing<File> findLogFile(String project, String fileName) {
-        final File logDir = new File(buildLogPath(project));
+    public OptionalThing<File> findLogFile(String projectName, String fileName) {
+        final File logDir = new File(buildLogPath(projectName));
         final File[] logFiles = logDir.listFiles((dir, name) -> name.equals(fileName));
         if (logFiles == null || logFiles.length == 0) {
             return OptionalThing.empty();
@@ -80,8 +76,8 @@ public class LogPhysicalLogic {
         return OptionalThing.of(logFiles[0]);
     }
 
-    public OptionalThing<File> findLatestResultFile(String project, String task) {
-        final File logDir = new File(buildLogPath(project));
+    public OptionalThing<File> findLatestResultFile(String projectName, String task) {
+        final File logDir = new File(buildLogPath(projectName));
         final File[] logFiles = logDir.listFiles((dir, name) -> name.startsWith("intro-last-execute-") && name.endsWith(task + ".log"));
         if (logFiles == null || logFiles.length == 0) {
             return OptionalThing.empty();
@@ -93,9 +89,18 @@ public class LogPhysicalLogic {
     // ===================================================================================
     //                                                                               Write
     //                                                                               =====
-    public void logging(String project, String fileName, String log) {
-        File file = new File(buildLogPath(project) + "/" + fileName);
+    public void logging(String projectName, String fileName, String log) {
+        File file = new File(buildLogPath(projectName) + "/" + fileName);
         fileLogic.writeFile(file, log);
     }
 
+    // ===================================================================================
+    //                                                                       Schema Policy
+    //                                                                       =============
+    public boolean existsViolationSchemaPolicyCheck(String projectName) {
+        // the exception is in DBFlute Engine so string expression here
+        return findLatestResultFile(projectName, "doc").map(file -> fileLogic.readFile(file))
+                .map(s -> s.contains("org.dbflute.exception.DfSchemaPolicyCheckViolationException"))
+                .orElse(false);
+    }
 }

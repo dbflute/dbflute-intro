@@ -21,12 +21,14 @@ import java.util.Map;
 
 /**
  * @author hakiba
+ * @author jflute
  */
 public class SchemaPolicyTargetSetting {
-    public List<String> tableExceptList;
-    public List<String> tableTargetList;
-    public Map<String, List<String>> columnExceptMap;
-    public boolean isMainSchemaOnly;
+
+    public final List<String> tableExceptList; // not null
+    public final List<String> tableTargetList; // not null
+    public final Map<String, List<String>> columnExceptMap; // not null
+    public final boolean isMainSchemaOnly;
 
     public static SchemaPolicyTargetSetting noSettingInstance() {
         return new SchemaPolicyTargetSetting(Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), false);

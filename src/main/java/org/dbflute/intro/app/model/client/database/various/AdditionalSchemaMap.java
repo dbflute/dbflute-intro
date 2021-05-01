@@ -39,7 +39,7 @@ public class AdditionalSchemaMap {
         return new AdditionalSchemaMap(Collections.emptyMap());
     }
 
-    // #waiting_for function of additional schema implementation by jflute (2016/08/13)
+    // #for_now waiting for function of additional schema implementation by jflute (2016/08/13)
     public static class AdditionalSchemaBox {
 
         protected final String schema;

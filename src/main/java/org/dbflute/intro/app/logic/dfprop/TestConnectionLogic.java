@@ -57,6 +57,11 @@ public class TestConnectionLogic {
     // ===================================================================================
     //                                                                     Test Connection
     //                                                                     ===============
+    /**
+     * @param dbfluteVersion The version of DBFlute engine. e.g. "1.2.4" (NotNull)
+     * @param jdbcDriverJarPath The optional for the path to JDBC driver path to be test target. (NotNull, EmptyAllowed)
+     * @param databaseInfoMap The map of database information. (NotNull)
+     */
     public void testConnection(String dbfluteVersion, OptionalThing<String> jdbcDriverJarPath, DatabaseInfoMap databaseInfoMap) {
         final ProxySelector proxySelector = ProxySelector.getDefault();
         ProxySelector.setDefault(null);
@@ -83,8 +88,7 @@ public class TestConnectionLogic {
             if (connection != null) {
                 try {
                     connection.close();
-                } catch (SQLException ignored) {
-                }
+                } catch (SQLException ignored) {}
             }
         }
     }

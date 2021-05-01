@@ -22,33 +22,36 @@ import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
 
 /**
+ * The logic for public.properties, which is DBFlute public file to provide e.g. current version. <br>
+ * See the actual file: http://dbflute.org/meta/public.properties for details.
  * @author p1us2er0
  * @author jflute
  * @author deco
  */
 public class PublicPropertiesLogic {
 
-    private static DfPublicProperties publicProperties; // cached
+    private static DfPublicProperties cachedProps; // cached
 
     @Resource
     private IntroInfoLogic introInfoLogic;
 
     public DfPublicProperties findProperties(boolean useSystemProxies) throws EngineDownloadErrorException {
-        if (publicProperties != null) {
-            return publicProperties;
+        if (cachedProps != null) {
+            return cachedProps;
         }
         try {
             introInfoLogic.setProxy(useSystemProxies);
             synchronized (PublicPropertiesLogic.class) {
-                if (publicProperties != null) {
-                    return publicProperties;
+                if (cachedProps != null) {
+                    return cachedProps;
                 }
                 DfPublicProperties prop = new DfPublicProperties();
                 prop.load();
-                publicProperties = prop; // should be set after loading for thread-safe
-                return publicProperties;
+                cachedProps = prop; // should be set after loading for thread-safe
+                return cachedProps;
             }
         } catch (RuntimeException e) {
+            // #needs_fix anyone does is this class depend on engine download? should throw more general exception? by jflute (2021/04/18)
             throw new EngineDownloadErrorException("Cannot download dbflute engine", e);
         }
     }
