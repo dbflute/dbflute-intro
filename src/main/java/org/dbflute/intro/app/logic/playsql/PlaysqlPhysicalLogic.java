@@ -26,7 +26,9 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.tellfailure.PlaysqlFileNotFoundException;
 
 /**
+ * The logic for playsql (in DBFlute Client) physical operation.
  * @author deco
+ * @author jflute
  */
 public class PlaysqlPhysicalLogic {
 
@@ -42,34 +44,38 @@ public class PlaysqlPhysicalLogic {
     private IntroPhysicalLogic introPhysicalLogic;
 
     // ===================================================================================
-    //                                                                                Path
-    //                                                                                ====
-    public String buildPlaysqlDirPath(String project) {
-        return introPhysicalLogic.buildClientPath(project, PLAYSQL_DIR_PATH);
+    //                                                                        Playsql Path
+    //                                                                        ============
+    public String buildPlaysqlDirPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, PLAYSQL_DIR_PATH);
     }
 
-    public String buildPlaysqlFilePath(String project, String fileName) {
-        String dfpropDirPath = buildPlaysqlDirPath(project);
-        return dfpropDirPath + "/" + fileName;
+    public String buildPlaysqlFilePath(String projectName, String fileName) {
+        return buildPlaysqlDirPath(projectName) + "/" + fileName;
     }
 
     // ===================================================================================
-    //                                                                                Find
-    //                                                                                ====
-    public File findPlaysqlFile(String project, String fileName) {
-        final File playsqlFile = new File(buildPlaysqlFilePath(project, fileName));
+    //                                                                           Find File
+    //                                                                           =========
+    public File findPlaysqlFile(String projectName, String fileName) {
+        final File playsqlFile = new File(buildPlaysqlFilePath(projectName, fileName));
         if (!playsqlFile.isFile()) {
             throw new PlaysqlFileNotFoundException("Not found dfprop file: " + playsqlFile.getPath(), playsqlFile.getName());
         }
         return playsqlFile;
     }
 
-    public List<File> findPlaysqlFileAllList(String project) {
-        final File playsqlDir = new File(buildPlaysqlDirPath(project));
+    public List<File> findPlaysqlFileAllList(String projectName) {
+        final File playsqlDir = new File(buildPlaysqlDirPath(projectName));
         final File[] playsqlFiles = playsqlDir.listFiles((dir, name) -> name.endsWith(".sql"));
         if (playsqlFiles == null || playsqlFiles.length == 0) {
             throw new PlaysqlFileNotFoundException("Not found playsql files or dir: " + playsqlDir.getPath(), playsqlDir.getName());
         }
         return Collections.unmodifiableList(Arrays.asList(playsqlFiles));
     }
+
+    // ===================================================================================
+    //                                                                        Playsql Data
+    //                                                                        ============
+    // *logics for playsql.data directory are in PlaysqlDataLogic
 }

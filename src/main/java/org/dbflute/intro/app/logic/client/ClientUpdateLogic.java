@@ -39,7 +39,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
- * The logic to update DBFlute client. (e.g. create, update, delete)
+ * The logic to update DBFlute Client. (e.g. create, update, delete)
  * @author p1us2er0
  * @author jflute
  * @author hakiba

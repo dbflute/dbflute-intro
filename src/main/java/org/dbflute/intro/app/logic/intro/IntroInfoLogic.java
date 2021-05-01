@@ -20,26 +20,18 @@ import java.util.Map;
 import org.dbflute.intro.IntroBoot;
 
 /**
+ * The logic for DBFlute Intro information. (e.g. manifest)
  * @author p1us2er0
  * @author jflute
  */
 public class IntroInfoLogic {
 
-    /**
-     * <pre>
-     * e.g. "."
-     *  dbflute-intro
-     *   |-dbflute_exampledb // DBFlute client
-     *   |-mydbflute         // DBFlute module
-     *   |-dbflute-intro.jar
-     * </pre>
-     */
-    public static final String BASE_DIR_PATH = ".";
-
     public Map<String, Object> getManifestMap() {
+        // manifest logic is also used in IntroBoot, it should be one way reference so use it here
         return IntroBoot.getManifestMap();
     }
 
+    // #needs_fix anyone move to physical logic? or to caller class by jflute (2021/05/01)
     public void setProxy(boolean useSystemProxies) {
         System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
     }

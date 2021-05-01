@@ -16,7 +16,9 @@
 package org.dbflute.intro.app.logic.intro;
 
 /**
+ * The logic for DBFlute Intro system operation. (e.g. decomment server)
  * @author cabos
+ * @author jflute
  */
 public class IntroSystemLogic {
 

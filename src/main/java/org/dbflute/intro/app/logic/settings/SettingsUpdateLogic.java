@@ -26,6 +26,7 @@ import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 
 /**
+ * The logic for update of settings. (e.g. databaseInfoMap)
  * @author hakiba
  * @author jflute
  */
@@ -40,12 +41,12 @@ public class SettingsUpdateLogic {
     // ===================================================================================
     //                                                                              Update
     //                                                                              ======
-    // #thinking jflute can move to DatabaseInfoLogic? (2021/04/18)
+    // #needs_fix anyone can move to DatabaseInfoLogic? by jflute (2021/05/01)
     public void updateDatabaseInfoMap(ClientModel clientModel) {
         replaceDfpropDatabaseInfoMap(clientModel, clientModel.getProjectInfra().getClientProject());
     }
 
-    // #thinking jflute maybe same as DfpropUpdateLogic's one. should be recycle (2021/04/18)
+    // #needs_fix anyone maybe same as DfpropUpdateLogic's one. should be recycle by jflute (2021/05/01)
     private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientName) {
         final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();

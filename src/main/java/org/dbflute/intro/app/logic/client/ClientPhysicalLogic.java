@@ -26,7 +26,7 @@ import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 
 /**
- * The logic for DBFlute client physical operation.
+ * The logic for DBFlute Client physical operation.
  * @author jflute
  * @author deco
  * @author hakiba

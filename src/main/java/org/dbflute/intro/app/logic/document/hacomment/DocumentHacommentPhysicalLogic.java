@@ -27,7 +27,11 @@ import org.dbflute.optional.OptionalThing;
 import org.lastaflute.core.time.TimeManager;
 
 /**
+ * The logic for hacomment physical operation. <br>
+ * Hacomment is a function to add comment for SchemaHTML. <br>
+ * You can handle e.g. hacomment-pickup.dfmap, hacomment-piece-...dfmap by this logic.
  * @author hakiba
+ * @author jflute
  */
 public class DocumentHacommentPhysicalLogic {
 
@@ -44,29 +48,39 @@ public class DocumentHacommentPhysicalLogic {
     // ===================================================================================
     //                                                                           Piece Map
     //                                                                           =========
-    public void savePiece(String clientName, DfHacoMapPiece hacoMapPiece) {
-        _hacoMapFile.writePiece(buildClientPath(clientName), hacoMapPiece);
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // piece file:
+    //  o Intro creates when hacomment input
+    //  o DBFlute Engine reads when creating pickup
+    // _/_/_/_/_/_/_/_/_/_/
+    public void savePiece(String projectName, DfHacoMapPiece hacoMapPiece) {
+        _hacoMapFile.writePiece(buildClientPath(projectName), hacoMapPiece);
     }
 
     // ===================================================================================
     //                                                                          Pickup Map
     //                                                                          ==========
-    public DfHacoMapPickup readMergedPickup(String clientName) {
-        List<DfHacoMapPiece> pieces = readHacommentPiece(clientName);
-        OptionalThing<DfHacoMapPickup> pickupOpt = readHacommentPickup(clientName);
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // pickup file:
+    //  o DBFlute Engine creates when Doc task
+    //  o Intro reads 
+    // _/_/_/_/_/_/_/_/_/_/
+    public DfHacoMapPickup readMergedPickup(String projectName) {
+        List<DfHacoMapPiece> pieces = readHacommentPiece(projectName);
+        OptionalThing<DfHacoMapPickup> pickupOpt = readHacommentPickup(projectName);
         return _hacoMapFile.merge(pickupOpt, pieces);
     }
 
-    private List<DfHacoMapPiece> readHacommentPiece(String clientName) {
-        return _hacoMapFile.readPieceList(buildClientPath(clientName));
+    private List<DfHacoMapPiece> readHacommentPiece(String projectName) {
+        return _hacoMapFile.readPieceList(buildClientPath(projectName));
     }
 
-    private OptionalThing<DfHacoMapPickup> readHacommentPickup(String clientName) {
-        return _hacoMapFile.readPickup(buildClientPath(clientName));
+    private OptionalThing<DfHacoMapPickup> readHacommentPickup(String projectName) {
+        return _hacoMapFile.readPickup(buildClientPath(projectName));
     }
 
-    private String buildClientPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName);
+    private String buildClientPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName);
     }
 
     // ===================================================================================
