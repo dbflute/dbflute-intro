@@ -1,4 +1,4 @@
-package org.dbflute.intro.app.web.dfprop.dcument;
+package org.dbflute.intro.app.web.dfprop.document;
 
 import javax.annotation.Resource;
 
@@ -18,6 +18,9 @@ public class DfpropDocumentAction extends IntroBaseAction {
     @Resource
     private DfpropUpdateLogic dfpropUpdateLogic;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     // -----------------------------------------------------
     //                                          EditDocument
     //                                          ------------

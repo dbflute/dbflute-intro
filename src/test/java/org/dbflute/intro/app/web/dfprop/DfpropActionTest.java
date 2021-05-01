@@ -28,6 +28,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author deco
  * @author hakiba
+ * @author prprmurakami
  */
 public class DfpropActionTest extends UnitIntroTestCase {
 

@@ -27,7 +27,6 @@ import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
@@ -38,6 +37,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  * @author cabos
  * @author subaru
+ * @author prprmurakami
  */
 public class DfpropAction extends IntroBaseAction {
 
@@ -70,6 +70,7 @@ public class DfpropAction extends IntroBaseAction {
     //                                                update
     //                                                ------
     @NotAvailableDecommentServer
+    @Execute
     public JsonResponse<Void> update(String clientName, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
 
@@ -88,15 +89,6 @@ public class DfpropAction extends IntroBaseAction {
         final DfpropSchemaSyncCheckResult bean =
                 schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElseGet(() -> new DfpropSchemaSyncCheckResult());
         return asJson(bean);
-    }
-
-    // -----------------------------------------------------
-    //                                       GetSchemaPolicy
-    //                                       ---------------
-    @Execute
-    public JsonResponse<DfpropSchemaPolicyResult> schemapolicy(String clientName) {
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(clientName);
-        return asJson(new DfpropSchemaPolicyResult(schemaPolicyMap));
     }
 
     // -----------------------------------------------------
