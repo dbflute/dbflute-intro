@@ -131,13 +131,13 @@ export default class ApiFactory {
     })
   }
   openDataDir(projectName) {
-    return ffetch.get(`api/playsql/data/${projectName}/open`)
+    return ffetch.get(`api/playsql/data/open/${projectName}`)
   }
   playsqlBeanList(projectName) {
-    return ffetch.post(`api/playsql/${projectName}/list`)
+    return ffetch.post(`api/playsql/list/${projectName}`)
   }
   logBeanList(projectName) {
-    return ffetch.post(`api/log/${projectName}/list`)
+    return ffetch.post(`api/log/list/${projectName}`)
   }
 
   getLog(projectName, fileName) {
@@ -150,7 +150,7 @@ export default class ApiFactory {
   }
 
   latestResult(projectName, task) {
-    return ffetch.get(`api/log/${projectName}/${task}/latest`)
+    return ffetch.get(`api/log/latest/${projectName}/${task}`)
   }
 
   // ===============================================================================

@@ -36,6 +36,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  * @author jflute
  * @author cabos
+ * @author prprmurakami
  */
 public class LogAction extends IntroBaseAction {
 
@@ -69,7 +70,7 @@ public class LogAction extends IntroBaseAction {
 
     // done cabos implements all log (2019-10-20)
     // fix this issue https://github.com/dbflute/dbflute-intro/issues/263
-    @Execute(urlPattern = "{}/{}/@word")
+    @Execute
     public JsonResponse<LogBean> latest(String clientName, String task) {
         return logPhysicalLogic.findLatestResultFile(clientName, task).map((file) -> {
             return asJson(new LogBean(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
@@ -89,7 +90,7 @@ public class LogAction extends IntroBaseAction {
         }
     }
 
-    @Execute(urlPattern = "{}/@word")
+    @Execute
     public JsonResponse<List<LogBean>> list(String clientName) {
         List<File> logFileList = logPhysicalLogic.findLogFileAllList(clientName);
         List<LogBean> beans = logFileList.stream()
