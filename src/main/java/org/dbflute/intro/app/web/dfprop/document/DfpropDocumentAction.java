@@ -25,6 +25,9 @@ import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
+/**
+ * @author prprmurakami
+ */
 public class DfpropDocumentAction extends IntroBaseAction {
 
     // ===================================================================================
