@@ -35,6 +35,7 @@ import org.lastaflute.web.response.JsonResponse;
  *
  * @author subaru
  * @author cabos
+ * @author prprmurakami
  */
 public class AlterAction extends IntroBaseAction {
 
