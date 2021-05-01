@@ -25,7 +25,7 @@ import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
  * The logic for public.properties, which is DBFlute public file to provide e.g. current version. <br>
  * See the actual file: http://dbflute.org/meta/public.properties for details.
  * @author p1us2er0
- * @author jflutes
+ * @author jflute
  * @author deco
  */
 public class PublicPropertiesLogic {
