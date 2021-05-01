@@ -36,6 +36,9 @@ public class DfpropSyncschemaAction extends IntroBaseAction {
     @Resource
     private DfpropUpdateLogic dfpropUpdateLogic;
 
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
     // -----------------------------------------------------
     //                                        EditSyncSchema
     //                                        --------------
