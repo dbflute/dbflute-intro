@@ -1,3 +1,10 @@
 map:{
     ; playSqlDirectory = playsql/syncdb
+
+    # remove no-data check
+    # becausee syncdb is schema only (no data)
+    ; conventionalTakeAssertMap = map:{
+        ; emptyTableMap = map:{
+        }
+    }
 }
