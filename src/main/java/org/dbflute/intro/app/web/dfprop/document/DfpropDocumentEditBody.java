@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.dfprop;
+package org.dbflute.intro.app.web.dfprop.document;
 
-import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
 
 /**
  * @author deco
+ * @author subaru
  */
-public class DfpropEditSyncSchemaBody {
+public class DfpropDocumentEditBody {
 
     @Required
-    public String url;
-    public String schema;
+    public Boolean upperCaseBasic;
+    public String aliasDelimiterInDbComment;
     @Required
-    public String user;
-    public String password;
-    @Required(groups = ClientError.class)
-    public Boolean isSuppressCraftDiff;
+    public Boolean dbCommentOnAliasBasis;
+    @Required
+    public Boolean checkColumnDefOrderDiff;
+    @Required
+    public Boolean checkDbCommentDiff;
+    @Required
+    public Boolean checkProcedureDiff;
 }
