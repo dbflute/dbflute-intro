@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.logic.exception;
 
 /**
+ * The exception when it fails to download DBFlute Engine. 
  * @author deco
  * @author jflute
  */

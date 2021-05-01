@@ -16,13 +16,15 @@
 package org.dbflute.intro.app.logic.exception;
 
 /**
+ * The exception when the directory is not found.
  * @author prprmurakami
+ * @author jflute
  */
 public class DirNotFoundException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    private String dirPath;
+    private final String dirPath; // basically not null
 
     public DirNotFoundException(String msg, String dirPath) {
         super(msg);
