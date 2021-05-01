@@ -14,7 +14,13 @@
       <div class="ui form">
         <div class="row">
           <div class="column">
-            <su-tabset class="three column item" schemapolicy="{ schemaPolicy }" tabtitles="{ tabTitles }">
+            <su-tabset
+              class="three column item"
+              schemapolicy="{ schemaPolicy }"
+              tabtitles="{ tabTitles }"
+              projectname="{ projectName }"
+              onregistersuccess="{ onRegisterSuccess }"
+            >
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
@@ -31,7 +37,11 @@
                   </div>
                 </div>
               </su-tab>
-              <su-tab label="{ opts.tabtitles['tableMap']}" schemapolicy="{ opts.schemapolicy }" >
+              <su-tab
+                label="{ opts.tabtitles['tableMap']}"
+                schemapolicy="{ opts.schemapolicy }"
+                projectname="{ opts.projectname }"
+                onregistersuccess="{ opts.onregistersuccess }">
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
@@ -47,7 +57,6 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <button class="ui button" onclick="{ parent.parent.showTableMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
                     <div class="statement content">
@@ -64,8 +73,18 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
                   </div>
                 </div>
+                <schema-policy-check-statement-form-wrapper
+                  formtype="tableMap"
+                  projectname="{ opts.projectname }"
+                  onregistersuccess="{ opts.onregistersuccess }"
+                />
               </su-tab>
-              <su-tab label="{ opts.tabtitles['columnMap']}" schemapolicy="{ opts.schemapolicy }" >
+              <su-tab
+                label="{ opts.tabtitles['columnMap']}"
+                schemapolicy="{ opts.schemapolicy }"
+                projectname="{ opts.projectname }"
+                onregistersuccess="{ opts.onregistersuccess }"
+              >
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
@@ -81,7 +100,6 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <button class="ui button" onclick="{ parent.parent.showColumnMapModal }">Add</button>
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
@@ -98,6 +116,11 @@
                     <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
                   </div>
                 </div>
+                <schema-policy-check-statement-form-wrapper
+                  formtype="columnMap"
+                  projectname="{ opts.projectname }"
+                  onregistersuccess="{ opts.onregistersuccess }"
+                />
               </su-tab>
             </su-tabset>
           </div>
@@ -116,14 +139,6 @@
     <div class="ui negative message" if="{opts.modal.status === 'Failure'}">
       <h4>{ opts.modal.message }</h4>
     </div>
-  </su-modal>
-
-  <su-modal modal="{ tableMapStatementModal }" projectName="{ projectName }" class="large" ref="tableMapStatementModal">
-    <statement-form projectName="{ opts.projectname }" type="tableMap" ref="form"></statement-form>
-  </su-modal>
-
-  <su-modal modal="{ columnMapStatementModal }" projectName="{ projectName }" class="large" ref="columnMapStatementModal">
-    <statement-form projectName="{ opts.projectname }" type="columnMap" ref="form"></statement-form>
   </su-modal>
 
   <style>
@@ -163,7 +178,6 @@
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
       this.prepareComponents(opts.projectName)
-      this.registerModalEvent()
     })
 
     this.prepareSchemaPolicy = (projectName) => {
@@ -175,29 +189,8 @@
       self.updateLatestResult(self.client)
     }
 
-    this.registerModalEvent = () => {
-      self.refs.tableMapStatementModal.on('submit', () => {
-        self.refs.tableMapStatementModal.refs.form.register((statement) => {
-          self.schemaPolicy.tableMap.statementList.push(statement)
-          self.refs.tableMapStatementModal.hide()
-          self.update()
-        })
-      })
-      self.refs.columnMapStatementModal.on('submit', () => {
-        self.refs.columnMapStatementModal.refs.form.register((statement) => {
-          self.schemaPolicy.columnMap.statementList.push(statement)
-          self.refs.columnMapStatementModal.hide()
-          self.update()
-        })
-      })
-    }
-
-    this.showTableMapModal = () => {
-      self.refs.tableMapStatementModal.show()
-    }
-
-    this.showColumnMapModal = () => {
-      self.refs.columnMapStatementModal.show()
+    this.onRegisterSuccess = () => {
+      self.fetchSchemaPolicy(opts.projectName)
     }
 
     this.updateLatestResult = (client) => {
@@ -261,32 +254,6 @@
         self.checkModal.message = 'Failure: You need check violation.'
         self.checkModal.closable = true
       }
-    }
-
-    this.tableMapStatementModal = {
-      header: 'Add TableMap Statement',
-      buttons: [{
-        text: 'Submit',
-        action: 'submit',
-        type: 'primary',
-        icon: 'checkmark',
-        closable: false
-      }, {
-        text: 'Cancel'
-      }],
-    }
-
-    this.columnMapStatementModal = {
-      header: 'Add ColumnMap Statement',
-      buttons: [{
-        text: 'Submit',
-        action: 'submit',
-        type: 'primary',
-        icon: 'checkmark',
-        closable: false
-      }, {
-        text: 'Cancel'
-      }],
     }
 
     this.tabTitles = {

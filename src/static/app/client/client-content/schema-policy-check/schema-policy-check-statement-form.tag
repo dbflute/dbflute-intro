@@ -1,12 +1,12 @@
-<statement-form>
-  <div class="ui large form">
+<schema-policy-check-statement-form>
+  <form class="ui large form">
     <div class="field">
       <label>Preview</label>
       <div class="ui inverted segment">
         <p>{ statement.buildPreview() }</p>
       </div>
     </div>
-    <div class="ui divider"></div>
+    <div class="ui divider" />
     <div class="grouped fields required">
       <label>Subject</label>
       <p>
@@ -154,16 +154,24 @@
       </div>
       <div class="field required">
         <label>Supplementary Comment</label>
-        <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank">document</a>
+        <p>
+          <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank">document</a>
+        </p>
         <div class="ui input">
           <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
         </div>
       </div>
     </div>
-  </div>
+    <button
+      class="ui primary button"
+      type="button"
+      onclick="{ registerStatement }">
+      Add
+    </button>
+  </form>
 
   <script>
-    import _ApiFactory from '../../common/factory/ApiFactory'
+    import _ApiFactory from '../../../common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
     let self = this
@@ -321,15 +329,15 @@
       }
     }
 
-    this.register = (callback) => {
-      let statement = self.buildPreview()
-      ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody()).then(() => {
-        callback(statement)
-        self.cleanInput()
-      })
+    self.registerStatement = () => {
+      ApiFactory.registerSchemapolicyStatement(self.projectName, self.buildBody())
+        .then(() => {
+          self.cleanInput()
+          self.opts.onregistersuccess()
+        })
     }
   </script>
-</statement-form>
+</schema-policy-check-statement-form>
 
 <toggle-help>
   <div show="{ showed }">
