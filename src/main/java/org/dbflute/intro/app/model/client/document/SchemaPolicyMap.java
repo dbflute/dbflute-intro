@@ -24,6 +24,7 @@ import org.dbflute.util.DfCollectionUtil;
 
 /**
  * @author hakiba
+ * @author cabos
  */
 public class SchemaPolicyMap {
     public SchemaPolicyTargetSetting targetSetting;
@@ -66,14 +67,16 @@ public class SchemaPolicyMap {
 
     private Map<String, Object> convertTableMapToMap() {
         LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
-        map.put("themeList", tableMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("themeList",
+                tableMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         map.put("statementList", tableMap.statementList);
         return map;
     }
 
     private Map<String, Object> convertColumnMapToMap() {
         LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
-        map.put("themeList", columnMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("themeList",
+                columnMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         map.put("statementList", columnMap.statementList);
         return map;
     }
