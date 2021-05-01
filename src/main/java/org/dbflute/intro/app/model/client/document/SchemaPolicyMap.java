@@ -61,7 +61,8 @@ public class SchemaPolicyMap {
 
     private Map<String, Object> convertWholeMapToMap() {
         LinkedHashMap<String, Object> map = DfCollectionUtil.newLinkedHashMap();
-        map.put("themeList", wholeMap.themeList.stream().map(theme -> theme.type.code).collect(Collectors.toList()));
+        map.put("themeList",
+                wholeMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         return map;
     }
 
