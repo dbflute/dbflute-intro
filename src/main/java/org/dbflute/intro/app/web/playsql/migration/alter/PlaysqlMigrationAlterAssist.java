@@ -38,6 +38,31 @@ public class PlaysqlMigrationAlterAssist {
     private PlaysqlMigrationInfoLogic playsqlMigrationInfoLogic;
 
     // ===================================================================================
+    //                                                                          Validation
+    //                                                                          ==========
+    public void moreValidateCreate(String projectName, AlterCreateBody body, IntroMessages messages) {
+        final String alterFileName = body.alterFileName;
+        if (alterFileName != null && !alterFileName.endsWith(".sql")) {
+            messages.addErrorsInvalidFileExtension(alterFileName);
+        }
+        if (alterFileName != null && !alterFileName.startsWith("alter-schema")) {
+            messages.addErrorsInvalidFileName(alterFileName);
+        }
+        boolean containsInvalidCharacter = containsInvalidCharacter(alterFileName);
+        if (containsInvalidCharacter) {
+            messages.addErrorsInvalidFileName(alterFileName);
+        }
+        if (!containsInvalidCharacter && playsqlMigrationInfoLogic.existsSameNameAlterSqlFile(projectName, body.alterFileName)) {
+            messages.addErrorsDuplicateFileName(alterFileName);
+        }
+    }
+
+    private boolean containsInvalidCharacter(String alterFileName) {
+        return alterFileName != null
+                && DfStringUtil.containsAny(alterFileName, "/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0", " ");
+    }
+
+    // ===================================================================================
     //                                                                             Mapping
     //                                                                             =======
     // -----------------------------------------------------
@@ -94,30 +119,5 @@ public class PlaysqlMigrationAlterAssist {
             filePart.content = playsqlMigrateAlterSqlBean.content;
             return filePart;
         }).collect(Collectors.toList());
-    }
-
-    // ===================================================================================
-    //                                                                          Validation
-    //                                                                          ==========
-    public void moreValidateCreate(String projectName, AlterCreateBody body, IntroMessages messages) {
-        final String alterFileName = body.alterFileName;
-        if (alterFileName != null && !alterFileName.endsWith(".sql")) {
-            messages.addErrorsInvalidFileExtension(alterFileName);
-        }
-        if (alterFileName != null && !alterFileName.startsWith("alter-schema")) {
-            messages.addErrorsInvalidFileName(alterFileName);
-        }
-        boolean containsInvalidCharacter = containsInvalidCharacter(alterFileName);
-        if (containsInvalidCharacter) {
-            messages.addErrorsInvalidFileName(alterFileName);
-        }
-        if (!containsInvalidCharacter && playsqlMigrationInfoLogic.existsSameNameAlterSqlFile(projectName, body.alterFileName)) {
-            messages.addErrorsDuplicateFileName(alterFileName);
-        }
-    }
-
-    private boolean containsInvalidCharacter(String alterFileName) {
-        return alterFileName != null
-                && DfStringUtil.containsAny(alterFileName, "/", "\\", "<", ">", "*", "?", "\"", "|", ":", ";", "\0", " ");
     }
 }

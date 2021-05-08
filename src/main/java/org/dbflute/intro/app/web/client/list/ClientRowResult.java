@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.client.list;
 
 import java.util.Map;
 
@@ -32,6 +32,7 @@ public class ClientRowResult {
     // ===================================================================================
     //                                                                         Client Info
     //                                                                         ===========
+    // #needs_fix many unneeded items are here by jflute (2021/05/08)
     @Required
     public String projectName;
     @Required

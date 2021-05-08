@@ -13,21 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.client.propbase;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.web.validation.Required;
 
 /**
+ * The result of client basic information for shared with functions of one client.
  * @author deco at rinshi-no-mori
  * @author subaru
  * @author cabos
+ * @author jflute
  */
-public class ClientBasicResult {
+public class ClientPropbaseResult {
 
     // ===================================================================================
     //                                                                         Client Info
     //                                                                         ===========
+    // basically for header information
     @Required
     public String projectName;
     @Required
@@ -42,7 +45,7 @@ public class ClientBasicResult {
     // ===================================================================================
     //                                                                        Client State
     //                                                                        ============
-    // done cabos move own logic place (2019-10-19)
+    // #needs_fix anyone move own logic place by jflute (2021/05/08) :: first (2019-10-19)
     // fix this issue https://github.com/dbflute/dbflute-intro/issues/260
     @Required
     public Boolean hasSchemaHtml;

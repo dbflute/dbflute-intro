@@ -167,7 +167,7 @@
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
         self.refs.resultModal.show(message)
       }).finally(() => {
-        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+        ApiFactory.clientPropbase(self.opts.projectName).then((response) => {
           self.client = response
           self.update()
         })

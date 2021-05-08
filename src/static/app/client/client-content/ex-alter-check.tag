@@ -109,7 +109,7 @@
     // done cabos remove this because this method replace parent object
     // fix this issue https://github.com/dbflute/dbflute-intro/issues/260
     this.prepareClient = () => {
-      return ApiFactory.clientOperation(self.projectName).then(resp => {
+      return ApiFactory.clientPropbase(self.projectName).then(resp => {
         self.client = resp
       })
     }

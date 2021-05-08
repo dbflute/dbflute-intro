@@ -13,19 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.web.client.list;
 
-import java.io.File;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
+import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
+import org.lastaflute.web.response.JsonResponse;
 
 /**
- * @author jflute
+ * @author jflute (split from large action) (at roppongi japanese)
  */
-public class ClientActionTest extends UnitIntroTestCase {
+public class ClientListActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
     //                                                                           Attribute
@@ -34,19 +36,20 @@ public class ClientActionTest extends UnitIntroTestCase {
     private IntroPhysicalLogic introPhysicalLogic;
 
     // ===================================================================================
-    //                                                                              Delete
-    //                                                                              ======
-    public void test_delete_basic() throws Exception {
+    //                                                                               Basic
+    //                                                                               =====
+    public void test_list_success() throws Exception {
         // ## Arrange ##
-        ClientAction action = new ClientAction();
+        ClientListAction action = new ClientListAction();
         inject(action);
-        File client = introPhysicalLogic.findClientDir(UnitIntroTestCase.TEST_CLIENT_PROJECT);
-        assertTrue(client.exists());
 
         // ## Act ##
-        action.delete(UnitIntroTestCase.TEST_CLIENT_PROJECT);
+        JsonResponse<List<ClientRowResult>> response = action.index();
 
         // ## Assert ##
-        assertFalse(client.exists());
+        showJson(response);
+        TestingJsonData<List<ClientRowResult>> jsonData = validateJsonData(response);
+        List<ClientRowResult> detailBeanList = jsonData.getJsonResult();
+        assertHasAnyElement(detailBeanList);
     }
 }

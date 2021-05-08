@@ -15,37 +15,18 @@
  */
 package org.dbflute.intro.app.web.client;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
-import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
-import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
-import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.app.model.client.ExtlibFile;
-import org.dbflute.intro.app.model.client.ProjectInfra;
-import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
-import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
-import org.dbflute.intro.app.model.client.database.DbConnectionBox;
-import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
-import org.dbflute.intro.app.web.client.ClientRowResult.OptionPart;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
-import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
-import org.dbflute.intro.dbflute.allcommon.CDef.TargetDatabase;
-import org.dbflute.optional.OptionalThing;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -71,167 +52,20 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private TestConnectionLogic testConnectionLogic;
     @Resource
-    private DocumentPhysicalLogic documentLogic;
-    @Resource
     private DatabaseInfoLogic databaseInfoLogic;
     @Resource
-    private LogPhysicalLogic logPhysicalLogic;
-    @Resource
-    private EngineInfoLogic engineInfoLogic;
+    private ClientUpdateAssist clientAssist;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    // -----------------------------------------------------
-    //                                                 List
-    //                                                ------
-    @Execute
-    public JsonResponse<List<ClientRowResult>> list() {
-        List<String> projectList = clientInfoLogic.getProjectList();
-        List<ClientRowResult> beans = projectList.stream().map(project -> {
-            return mappingToRowBean(clientInfoLogic.findClient(project).get());
-        }).collect(Collectors.toList());
-        return asJson(beans);
-    }
-
-    private ClientRowResult mappingToRowBean(ClientModel clientModel) {
-        ClientRowResult rowBean = new ClientRowResult();
-        prepareBasic(rowBean, clientModel);
-        prepareDatabase(rowBean, clientModel);
-        rowBean.systemUserSettings = (ClientRowResult.DatabaseSettingsPart) clientModel.getReplaceSchemaMap().flatMap(replaceSchemaMap -> {
-            return replaceSchemaMap.getAdditionalUserMap().flatMap(additionalUserMap -> {
-                return additionalUserMap.getSystemUserMap().map(systemUserMap -> {
-                    ClientRowResult.DatabaseSettingsPart databaseBean = new ClientRowResult.DatabaseSettingsPart();
-                    databaseBean.url = systemUserMap.getDbConnectionBox().getUrl();
-                    databaseBean.schema = systemUserMap.getDbConnectionBox().getSchema();
-                    databaseBean.user = systemUserMap.getDbConnectionBox().getUser();
-                    databaseBean.password = systemUserMap.getDbConnectionBox().getPassword();
-                    return databaseBean;
-                });
-            });
-        }).orElse(null);
-        rowBean.optionBean = prepareOption(clientModel);
-        rowBean.schemaSyncCheckMap = new LinkedHashMap<>();
-        // #pending by jflute
-        //    Map<String, DatabaseInfoMap> schemaSyncCheckMap = clientModel.getSchemaSyncCheckMap();
-        //    if (schemaSyncCheckMap != null) {
-        //        clientBean.schemaSyncCheckMap = new LinkedHashMap<>();
-        //        schemaSyncCheckMap.entrySet().forEach(schemaSyncCheck -> {
-        //            DatabaseInfoMap schemaSyncCheckModel = schemaSyncCheck.getValue();
-        //            DatabaseBean schemaSyncCheckBean = new DatabaseBean();
-        //            schemaSyncCheckBean.url = schemaSyncCheckModel.getUrl();
-        //            schemaSyncCheckBean.schema = schemaSyncCheckModel.getSchema();
-        //            schemaSyncCheckBean.user = schemaSyncCheckModel.getUser();
-        //            schemaSyncCheckBean.password = schemaSyncCheckModel.getPassword();
-        //            clientBean.schemaSyncCheckMap.put(schemaSyncCheck.getKey(), schemaSyncCheckBean);
-        //        });
-        //    }
-
-        String clientName = clientModel.getProjectInfra().getClientProject();
-        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
-        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
-        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientName);
-        return rowBean;
-    }
-
-    private void prepareBasic(ClientRowResult client, ClientModel clientModel) {
-        ProjectInfra projectInfra = clientModel.getProjectInfra();
-        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        client.projectName = projectInfra.getClientProject();
-        client.databaseCode = basicInfoMap.getDatabase();
-        client.languageCode = basicInfoMap.getTargetLanguage();
-        client.containerCode = basicInfoMap.getTargetContainer();
-        client.packageBase = basicInfoMap.getPackageBase();
-        client.jdbcDriverFqcn = clientModel.getDatabaseInfoMap().getDriver();
-        client.dbfluteVersion = projectInfra.getDbfluteVersion();
-        client.jdbcDriverJarPath = projectInfra.getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath).orElse(null);
-    }
-
-    private void prepareDatabase(ClientRowResult client, ClientModel clientModel) {
-        DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-        ClientRowResult.DatabaseSettingsPart databaseBean = new ClientRowResult.DatabaseSettingsPart();
-        databaseBean.url = databaseInfoMap.getDbConnectionBox().getUrl();
-        databaseBean.schema = databaseInfoMap.getDbConnectionBox().getSchema();
-        databaseBean.user = databaseInfoMap.getDbConnectionBox().getUser();
-        databaseBean.password = databaseInfoMap.getDbConnectionBox().getPassword();
-        client.mainSchemaSettings = databaseBean;
-    }
-
-    private OptionPart prepareOption(ClientModel clientModel) {
-        OptionPart optionBean = new OptionPart();
-        clientModel.getDocumentMap().ifPresent(documentMap -> {
-            optionBean.dbCommentOnAliasBasis = documentMap.isDbCommentOnAliasBasis();
-            optionBean.aliasDelimiterInDbComment = documentMap.getAliasDelimiterInDbComment().orElse(null);
-            optionBean.checkColumnDefOrderDiff = documentMap.isCheckColumnDefOrderDiff();
-            optionBean.checkDbCommentDiff = documentMap.isCheckDbCommentDiff();
-            optionBean.checkProcedureDiff = documentMap.isCheckProcedureDiff();
-        });
-        clientModel.getOutsideSqlMap().ifPresent(outsideSqlMap -> {
-            optionBean.generateProcedureParameterBean = outsideSqlMap.isGenerateProcedureParameterBean();
-            optionBean.procedureSynonymHandlingType = outsideSqlMap.getProcedureSynonymHandlingType();
-        });
-        return optionBean;
-    }
-
-    // -----------------------------------------------------
-    //                                             Operation
-    //                                             ---------
-    @Execute
-    public JsonResponse<ClientBasicResult> operation(String clientName) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
-        });
-        ClientBasicResult detailBean = mappingToOperationResult(clientModel);
-        return asJson(detailBean);
-    }
-
-    private ClientBasicResult mappingToOperationResult(ClientModel clientModel) {
-        ClientBasicResult operation = new ClientBasicResult();
-        prepareBasic(operation, clientModel);
-        String clientName = clientModel.getProjectInfra().getClientProject();
-        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
-        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
-        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientName);
-        operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientName);
-        boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
-        if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
-            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientName);
-        }
-        return operation;
-    }
-
-    private void prepareBasic(ClientBasicResult client, ClientModel clientModel) {
-        ProjectInfra projectInfra = clientModel.getProjectInfra();
-        BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        client.projectName = projectInfra.getClientProject();
-        client.databaseCode = basicInfoMap.getDatabase();
-        client.languageCode = basicInfoMap.getTargetLanguage();
-        client.containerCode = basicInfoMap.getTargetContainer();
-        client.dbfluteVersion = projectInfra.getDbfluteVersion();
-    }
-
-    // -----------------------------------------------------
-    //                                                Update
-    //                                                ------
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
-        String clientName = clientCreateBody.client.projectName;
         validate(clientCreateBody, messages -> {
-            ClientPart client = clientCreateBody.client;
-            if (clientInfoLogic.getProjectList().contains(clientName)) {
-                messages.addErrorsWelcomeClientAlreadyExists("projectName", clientName);
-            }
-            TargetDatabase databaseCd = client.databaseCode;
-            if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
-                messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
-            }
-            Optional.ofNullable(client.jdbcDriver)
-                    .map(driverPart -> driverPart.fileName)
-                    .filter(s -> StringUtils.isNotEmpty(s) && !s.endsWith(".jar"))
-                    .ifPresent(fileName -> messages.addErrorsDatabaseNeedsJar("jdbcDriver", fileName));
+            moreValidateCreate(messages, clientCreateBody);
         });
-        ClientModel clientModel = mappingToClientModel(clientName, clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -239,11 +73,14 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    // #needs_fix anyone ClientCreateBody in edit()? should be ClientUpdateBody? by jflute (2021/05/08)
+    // #needs_fix anyone path parameter "projectName" is unused...needed? or should validate anything? by jflute (2021/05/08)
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String clientName, ClientCreateBody clientCreateBody) {
+    public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
+        // #needs_fix anyone should more-validate? (like create()) by jflute (2021/05/08)
         validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(clientName, clientCreateBody.client);
+        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
         if (clientCreateBody.testConnection) {
             testConnectionIfPossible(clientModel);
         }
@@ -251,53 +88,31 @@ public class ClientAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
-    private ClientModel mappingToClientModel(String clientName, ClientPart clientBody) {
-        return newClientModel(clientName, clientBody);
-    }
-
-    private ClientModel newClientModel(String clientName, ClientPart clientBody) {
-        ProjectInfra projectInfra = prepareProjectInfra(clientName, clientBody);
-        BasicInfoMap basicInfoMap = prepareBasicInfoMap(clientBody);
-        DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(clientBody);
-        ClientModel clientModel = new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
-        return clientModel;
-    }
-
-    private ProjectInfra prepareProjectInfra(String clientName, ClientPart clientBody) {
-        if (Objects.isNull(clientBody.jdbcDriver)) {
-            return new ProjectInfra(clientName, clientBody.dbfluteVersion);
-        }
-        ExtlibFile extlibFile =
-                clientPhysicalLogic.createExtlibFile(clientName, clientBody.jdbcDriver.fileName, clientBody.jdbcDriver.data);
-        return new ProjectInfra(clientName, clientBody.dbfluteVersion, extlibFile);
-    }
-
-    private BasicInfoMap prepareBasicInfoMap(ClientPart clientBody) {
-        return new BasicInfoMap(clientBody.databaseCode, clientBody.languageCode, clientBody.containerCode, clientBody.packageBase);
-    }
-
-    private DatabaseInfoMap prepareDatabaseInfoMap(ClientPart clientBody) {
-        return OptionalThing.ofNullable(clientBody.mainSchemaSettings, () -> {}).map(databaseBody -> {
-            DbConnectionBox connectionBox =
-                    new DbConnectionBox(databaseBody.url, databaseBody.schema, databaseBody.user, databaseBody.password);
-            AdditionalSchemaMap additionalSchemaMap = new AdditionalSchemaMap(new LinkedHashMap<>()); // #pending see the class code
-            return new DatabaseInfoMap(clientBody.jdbcDriverFqcn, connectionBox, additionalSchemaMap);
-        }).orElseThrow(() -> {
-            return new IllegalStateException("Not found the database body: " + clientBody);
-        });
-    }
-
-    private void testConnectionIfPossible(ClientModel clientModel) {
-        String dbfluteVersion = clientModel.getProjectInfra().getDbfluteVersion();
-        OptionalThing<String> jdbcDriverJarPath = clientModel.getProjectInfra().getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath);
-        DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-        testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
-    }
-
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> delete(String clientName) {
-        clientUpdateLogic.deleteClient(clientName);
+    public JsonResponse<Void> delete(String projectName) {
+        clientUpdateLogic.deleteClient(projectName);
         return JsonResponse.asEmptyBody();
+    }
+
+    // ===================================================================================
+    //                                                                          Validation
+    //                                                                          ==========
+    private void moreValidateCreate(IntroMessages messages, ClientCreateBody clientCreateBody) {
+        clientAssist.moreValidateCreate(messages, clientCreateBody);
+    }
+
+    // ===================================================================================
+    //                                                                             Mapping
+    //                                                                             =======
+    private ClientModel mappingToClientModel(ClientPart clientBody) {
+        return clientAssist.mappingToClientModel(clientBody);
+    }
+
+    // ===================================================================================
+    //                                                                        Assist Logic
+    //                                                                        ============
+    private void testConnectionIfPossible(ClientModel clientModel) {
+        clientAssist.testConnectionIfPossible(clientModel);
     }
 }
