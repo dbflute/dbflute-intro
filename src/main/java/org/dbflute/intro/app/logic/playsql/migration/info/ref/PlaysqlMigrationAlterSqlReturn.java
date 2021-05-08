@@ -13,37 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration;
+package org.dbflute.intro.app.logic.playsql.migration.info.ref;
 
-import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.web.validation.Required;
 
 /**
- * @author cabos
+ * @author subaru
+ * @author cabos (add copy right)
  */
-public class PlaysqlMigrationNgMarkFileReturn {
+public class PlaysqlMigrationAlterSqlReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private CDef.NgMark ngMark;
-    private String content;
+    @Required
+    public final String fileName;
+    public final String content; // may be empty file
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationNgMarkFileReturn(CDef.NgMark ngMark, String content) {
-        this.ngMark = ngMark;
+    public PlaysqlMigrationAlterSqlReturn(String fileName, String content) {
+        this.fileName = fileName;
         this.content = content;
-    }
-
-    // ===================================================================================
-    //                                                                            Accessor
-    //                                                                            ========
-    public CDef.NgMark getNgMark() {
-        return ngMark;
-    }
-
-    public String getContent() {
-        return content;
     }
 }

@@ -13,37 +13,37 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration;
+package org.dbflute.intro.app.logic.playsql.migration.info.ref;
 
-import java.util.List;
+import org.dbflute.intro.dbflute.allcommon.CDef;
 
 /**
  * @author cabos
  */
-public class PlaysqlMigrationCheckedZipReturn {
+public class PlaysqlMigrationNgMarkFileReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    private String fileName;
-    private List<PlaysqlMigrationAlterSqlReturn> checkedSqlList;
+    private CDef.NgMark ngMark;
+    private String content;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationCheckedZipReturn(String fileName, List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
-        this.fileName = fileName;
-        this.checkedSqlList = checkedSqlList;
+    public PlaysqlMigrationNgMarkFileReturn(CDef.NgMark ngMark, String content) {
+        this.ngMark = ngMark;
+        this.content = content;
     }
 
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getFileName() {
-        return fileName;
+    public CDef.NgMark getNgMark() {
+        return ngMark;
     }
 
-    public List<PlaysqlMigrationAlterSqlReturn> getCheckedSqlList() {
-        return checkedSqlList;
+    public String getContent() {
+        return content;
     }
 }

@@ -13,9 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.alter;
-
-import static org.dbflute.intro.app.web.alter.AlterSQLResult.*;
+package org.dbflute.intro.app.web.playsql.migration.alter;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +23,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult.CheckedZipPart;
+import org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult.SQLFilePart;
+import org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult.UnreleasedDirPart;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.dbflute.optional.OptionalThing;
@@ -32,8 +33,9 @@ import org.lastaflute.web.validation.exception.ValidationErrorException;
 
 /**
  * @author cabos
+ * @author jflute
  */
-public class AlterActionTest extends UnitIntroTestCase {
+public class PlaysqlMigrationAlterActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
     //                                                                          Definition
@@ -60,7 +62,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     //                                                 -----
     public void test_index_afterCreateClientOnly() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
         removeMigrationDir();
 
@@ -76,7 +78,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_index_editingState() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
         removeHistoryDir();
 
@@ -101,7 +103,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_index_checkedZipState() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
         removeAlterDir();
         removeUnreleasedDir();
@@ -135,7 +137,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_index_checkedUnreleasedState() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
         removeAlterDir();
 
@@ -168,7 +170,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     //                                               -------
     public void test_prepare_existsAlterDir() {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         // ## Act ##
@@ -183,7 +185,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_notExistsAlterDir() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         removeAlterDir();
@@ -200,7 +202,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_notExistsHistoryDir() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         removeHistoryDir();
@@ -219,7 +221,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_notExistsMigrationDir() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         removeMigrationDir();
@@ -237,7 +239,7 @@ public class AlterActionTest extends UnitIntroTestCase {
     //                                                ------
     public void test_prepare_success() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         removeAlterDir();
@@ -259,7 +261,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_alreadyExistsAlterDir() throws IOException {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
@@ -277,7 +279,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_validateInvalidPrefix() {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
@@ -291,7 +293,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_validateNotSQLFile() {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
@@ -305,7 +307,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_create_validateSameFileName() {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();
@@ -319,7 +321,7 @@ public class AlterActionTest extends UnitIntroTestCase {
 
     public void test_prepare_validateInvalidChar() {
         // ## Arrange ##
-        AlterAction alterAction = new AlterAction();
+        PlaysqlMigrationAlterAction alterAction = new PlaysqlMigrationAlterAction();
         inject(alterAction);
 
         AlterCreateBody body = new AlterCreateBody();

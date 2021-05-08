@@ -48,6 +48,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     private static final String TEST_RESOURCE_PICKUP_PATH = TEST_RESOURCE_BASE + "/schema/decomment/piece";
     private static final String PICKUP_FILE_PATH = "/schema/decomment/pickup/decomment-pickup.dfmap";
     private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
+
     // -----------------------------------------------------
     //                                             Hacomment
     //                                             ---------
@@ -56,6 +57,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = TEST_RESOURCE_BASE + "/schema/hacomment/piece";
     private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/hacomment-pickup.dfmap";
     private static final String HACOMMENT_PIECE_DIR_PATH = "/schema/hacomment/piece";
+
     // -----------------------------------------------------
     //                                               Playsql
     //                                               -------

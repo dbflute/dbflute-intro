@@ -13,28 +13,37 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration;
+package org.dbflute.intro.app.logic.playsql.migration.info.ref;
 
-import org.lastaflute.web.validation.Required;
+import java.util.List;
 
 /**
- * @author subaru
- * @author cabos (add copy right)
+ * @author cabos
  */
-public class PlaysqlMigrationAlterSqlReturn {
+public class PlaysqlMigrationCheckedZipReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Required
-    public final String fileName;
-    public final String content; // may be empty file
+    private String fileName;
+    private List<PlaysqlMigrationAlterSqlReturn> checkedSqlList;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public PlaysqlMigrationAlterSqlReturn(String fileName, String content) {
+    public PlaysqlMigrationCheckedZipReturn(String fileName, List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
         this.fileName = fileName;
-        this.content = content;
+        this.checkedSqlList = checkedSqlList;
+    }
+
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
+    public String getFileName() {
+        return fileName;
+    }
+
+    public List<PlaysqlMigrationAlterSqlReturn> getCheckedSqlList() {
+        return checkedSqlList;
     }
 }

@@ -13,55 +13,37 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.alter;
+package org.dbflute.intro.app.web.playsql.migration.alter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationAlterSqlReturn;
-import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationDirReturn;
-import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic;
-import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
+import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationInfoLogic;
+import org.dbflute.intro.app.logic.playsql.migration.info.ref.PlaysqlMigrationAlterSqlReturn;
+import org.dbflute.intro.app.logic.playsql.migration.info.ref.PlaysqlMigrationDirReturn;
 import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.util.DfStringUtil;
-import org.lastaflute.web.Execute;
-import org.lastaflute.web.response.JsonResponse;
 
 /**
- * Api for alter check support.
- *
- * @author subaru
- * @author cabos
- * @author prprmurakami
+ * @author jflute (split it from action) (at shin-urayasu)
  */
-public class AlterAction extends IntroBaseAction {
+public class PlaysqlMigrationAlterAssist {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private PlaysqlMigrationLogic playsqlMigrationLogic;
+    private PlaysqlMigrationInfoLogic playsqlMigrationInfoLogic;
 
     // ===================================================================================
-    //                                                                               Index
-    //                                                                               =====
-    /**
-     * Respond migration directory information of dbflute_client/playsql/migration.
-     * @param clientName client project (NotNull)
-     * @return migration directory information (NotNull)
-     */
-    @Execute
-    public JsonResponse<AlterSQLResult> index(String clientName) {
-        return asJson(mappingAlterSQLResult(playsqlMigrationLogic.loadPlaysqlMigrationDir(clientName)));
-    }
-
+    //                                                                             Mapping
+    //                                                                             =======
     // -----------------------------------------------------
-    //                                               mapping
-    //                                               -------
-    private AlterSQLResult mappingAlterSQLResult(PlaysqlMigrationDirReturn bean) {
+    //                                       AlterSQL Result
+    //                                       ---------------
+    public AlterSQLResult mappingAlterSQLResult(PlaysqlMigrationDirReturn bean) {
         AlterSQLResult result = new AlterSQLResult();
         result.ngMarkFile = mappingNgMarkFileResult(bean);
         result.editingFiles = mappingAlterEditingFilePart(bean);
@@ -115,31 +97,9 @@ public class AlterAction extends IntroBaseAction {
     }
 
     // ===================================================================================
-    //                                                                             Prepare
-    //                                                                             =======
-    @Execute
-    @NotAvailableDecommentServer
-    public JsonResponse<Void> prepare(String clientName) {
-        playsqlMigrationLogic.unzipCheckedAlterZip(clientName);
-        playsqlMigrationLogic.copyUnreleasedAlterDir(clientName);
-        return JsonResponse.asEmptyBody();
-    }
-
-    // ===================================================================================
-    //                                                                              Create
-    //                                                                              ======
-    @Execute
-    @NotAvailableDecommentServer
-    public JsonResponse<Void> create(String clientName, AlterCreateBody body) {
-        validate(body, messages -> moreValidate(clientName, body, messages));
-        playsqlMigrationLogic.createAlterSql(clientName, body.alterFileName);
-        return JsonResponse.asEmptyBody();
-    }
-
-    // ===================================================================================
     //                                                                          Validation
     //                                                                          ==========
-    private void moreValidate(String clientName, AlterCreateBody body, IntroMessages messages) {
+    public void moreValidateCreate(String projectName, AlterCreateBody body, IntroMessages messages) {
         final String alterFileName = body.alterFileName;
         if (alterFileName != null && !alterFileName.endsWith(".sql")) {
             messages.addErrorsInvalidFileExtension(alterFileName);
@@ -151,7 +111,7 @@ public class AlterAction extends IntroBaseAction {
         if (containsInvalidCharacter) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (!containsInvalidCharacter && playsqlMigrationLogic.existsSameNameAlterSqlFile(clientName, body.alterFileName)) {
+        if (!containsInvalidCharacter && playsqlMigrationInfoLogic.existsSameNameAlterSqlFile(projectName, body.alterFileName)) {
             messages.addErrorsDuplicateFileName(alterFileName);
         }
     }

@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.logic.playsql.migration;
+package org.dbflute.intro.app.logic.playsql.migration.info.ref;
 
 import java.util.List;
 
