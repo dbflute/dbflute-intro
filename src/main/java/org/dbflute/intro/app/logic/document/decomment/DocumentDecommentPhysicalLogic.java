@@ -68,8 +68,8 @@ public class DocumentDecommentPhysicalLogic {
     //  o Intro creates when decomment input
     //  o DBFlute Engine reads when creating pickup
     // _/_/_/_/_/_/_/_/_/_/
-    public void saveDecommentPiece(String clientName, DfDecoMapPiece decoMapPiece) {
-        _decoMapFile.writePiece(buildClientPath(clientName), decoMapPiece);
+    public void saveDecommentPiece(String projectName, DfDecoMapPiece decoMapPiece) {
+        _decoMapFile.writePiece(buildClientPath(projectName), decoMapPiece);
     }
 
     // ===================================================================================
@@ -81,34 +81,34 @@ public class DocumentDecommentPhysicalLogic {
     //  o Intro reads 
     // _/_/_/_/_/_/_/_/_/_/
     // done hakiba tag comment: Pickup Map by jflute (2017/08/17)
-    public DfDecoMapPickup readMergedPickup(String clientName) {
-        List<DfDecoMapPiece> pieces = readDecommentPiece(clientName);
-        OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickup(clientName);
-        List<DfDecoMapMapping> mappings = readDecommentMapping(clientName);
+    public DfDecoMapPickup readMergedPickup(String projectName) {
+        List<DfDecoMapPiece> pieces = readDecommentPiece(projectName);
+        OptionalThing<DfDecoMapPickup> pickupOpt = readDecommentPickup(projectName);
+        List<DfDecoMapMapping> mappings = readDecommentMapping(projectName);
         return _decoMapFile.merge(pickupOpt, pieces, mappings);
     }
 
     // done hakoba public on demand, so private now by jflute (2017/08/17)
-    private List<DfDecoMapPiece> readDecommentPiece(String clientName) {
+    private List<DfDecoMapPiece> readDecommentPiece(String projectName) {
         // done hakiba support no-existing directory by jflute (2017/09/28)
-        return _decoMapFile.readPieceList(buildClientPath(clientName));
+        return _decoMapFile.readPieceList(buildClientPath(projectName));
     }
 
-    private List<DfDecoMapMapping> readDecommentMapping(String clientName) {
-        return _decoMapFile.readMappingList(buildClientPath(clientName));
+    private List<DfDecoMapMapping> readDecommentMapping(String projectName) {
+        return _decoMapFile.readMappingList(buildClientPath(projectName));
     }
 
-    private OptionalThing<DfDecoMapPickup> readDecommentPickup(String clientName) {
+    private OptionalThing<DfDecoMapPickup> readDecommentPickup(String projectName) {
         // done hakiba support no-existing directory or file by jflute (2017/09/28)
-        return _decoMapFile.readPickup(buildClientPath(clientName));
+        return _decoMapFile.readPickup(buildClientPath(projectName));
     }
 
     // ===================================================================================
     //                                                                         Mapping Map
     //                                                                         ===========
-    public void saveDecommentMapping(String clientName, List<DfDecoMapMapping> mappingList) {
+    public void saveDecommentMapping(String projectName, List<DfDecoMapMapping> mappingList) {
         mappingList.forEach(mapping -> {
-            _decoMapFile.writeMapping(buildClientPath(clientName), mapping);
+            _decoMapFile.writeMapping(buildClientPath(projectName), mapping);
         });
     }
 
@@ -126,7 +126,7 @@ public class DocumentDecommentPhysicalLogic {
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
-    private String buildClientPath(String clientName) {
-        return introPhysicalLogic.buildClientPath(clientName);
+    private String buildClientPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName);
     }
 }

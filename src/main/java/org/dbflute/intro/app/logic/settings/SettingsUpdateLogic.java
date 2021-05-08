@@ -47,8 +47,8 @@ public class SettingsUpdateLogic {
     }
 
     // #needs_fix anyone maybe same as DfpropUpdateLogic's one. should be recycle by jflute (2021/05/01)
-    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String clientName) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(clientName);
+    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String projectName) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
         final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
         final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
 

@@ -84,32 +84,32 @@ public class ClientUpdateLogic {
     // -----------------------------------------------------
     //                                   Ready from Template
     //                                   -------------------
-    private void readyCreateClient(ClientModel clientModel, String clientName, File clientDir) {
+    private void readyCreateClient(ClientModel clientModel, String projectName, File clientDir) {
         if (!clientDir.exists()) { // yes, new-create!
             clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
         } else { // no no no no, already exists
             // #needs_fix anyone use application excecption by jflute (2021/04/16)
-            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + clientName);
+            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + projectName);
         }
     }
 
     // -----------------------------------------------------
     //                                      Replace Settings
     //                                      ----------------
-    private void replaceClientFilePlainly(ClientModel clientModel, String clientName) {
+    private void replaceClientFilePlainly(ClientModel clientModel, String projectName) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         {
             // _project.sh, _project.bat
             final ProjectInfra projectInfra = clientModel.getProjectInfra();
             final Map<String, Object> replaceMap = projectInfra.prepareInitReplaceMap();
-            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientName), replaceMap);
-            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(projectName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(projectName), replaceMap);
         }
         {
             // build.properties (which is Apache Torque's setting file, defines only one property)
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("torque.project = dfclient", "torque.project = " + clientName);
-            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(clientName), replaceMap);
+            replaceMap.put("torque.project = dfclient", "torque.project = " + projectName);
+            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(projectName), replaceMap);
         }
         {
             // basicInfoMap.dfprop
@@ -119,22 +119,22 @@ public class ClientUpdateLogic {
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
             replaceMap.put("@packageBase@", basicInfoMap.getPackageBase());
-            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(clientName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(projectName), replaceMap);
         }
         {
             // databaseInfoMap.dfprop
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            fileReplaceMap.put(databaseInfoMap.findDfpropFile(clientName), databaseInfoMap.prepareInitReplaceMap());
+            fileReplaceMap.put(databaseInfoMap.findDfpropFile(projectName), databaseInfoMap.prepareInitReplaceMap());
         }
         doReplaceClientFile(fileReplaceMap, /*regularExpression*/false);
     }
 
-    private void replaceClientFileRegex(ClientModel clientModel, final String clientName) {
+    private void replaceClientFileRegex(ClientModel clientModel, final String projectName) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
         replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getProjectInfra().getDbfluteVersion());
-        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientName), replaceMap);
-        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientName), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(projectName), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(projectName), replaceMap);
         doReplaceClientFile(fileReplaceMap, /*regularExpression*/true);
     }
 
@@ -157,9 +157,9 @@ public class ClientUpdateLogic {
     // -----------------------------------------------------
     //                                       Extlib Handling
     //                                       ---------------
-    private void copyJarFileToExtlib(ClientModel clientModel, String clientName) {
+    private void copyJarFileToExtlib(ClientModel clientModel, String projectName) {
         clientModel.getProjectInfra().getJdbcDriverExtlibFile().ifPresent(jarFile -> {
-            final File extlibDir = clientPhysicalLogic.findExtlibDir(clientName);
+            final File extlibDir = clientPhysicalLogic.findExtlibDir(projectName);
             final String fileName = jarFile.getFile().getName();
             final File previousJar = new File(extlibDir, fileName);
             try {
@@ -203,7 +203,7 @@ public class ClientUpdateLogic {
 
     private void readyUpdateClient(ClientModel clientModel, String projectName, File clientDir) {
         if (!clientDir.exists()) { // no no no no, new-create
-            throw new IllegalStateException("The DBFlute client has already been deleted: clientName=" + projectName);
+            throw new IllegalStateException("The DBFlute client has already been deleted: projectName=" + projectName);
         }
     }
 
