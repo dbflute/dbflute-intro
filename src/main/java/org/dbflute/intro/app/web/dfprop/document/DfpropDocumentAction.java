@@ -22,7 +22,6 @@ import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.dfprop.DfpropDocumentResult;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;

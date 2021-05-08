@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.dfprop;
+package org.dbflute.intro.app.web.dfprop.schemasync;
 
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;

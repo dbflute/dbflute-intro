@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author hakiba
  */
-public class DfpropEditSchemaPolicyBody {
+public class DfpropSchemaPolicyEditBody {
 
     public static class WholeMap {
         @Valid

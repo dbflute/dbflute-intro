@@ -24,7 +24,6 @@ import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.dfprop.DfpropSchemaSyncCheckResult;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
