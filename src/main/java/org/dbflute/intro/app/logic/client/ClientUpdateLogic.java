@@ -26,16 +26,14 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
-import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
@@ -60,6 +58,8 @@ public class ClientUpdateLogic {
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private EnginePhysicalLogic enginePhysicalLogic;
+    @Resource
+    private DatabaseInfoLogic databaseInfoLogic;
 
     // ===================================================================================
     //                                                                       Create Client
@@ -198,7 +198,7 @@ public class ClientUpdateLogic {
         readyUpdateClient(clientModel, projectName, clientDir);
 
         // #for_now hakiba update only minimum database items here (for settings), may increase at future (2017/01/19)
-        replaceDfpropDatabaseInfoMap(clientModel, projectName);
+        replaceDfpropDatabaseInfoMap(clientModel.getDatabaseInfoMap(), projectName);
     }
 
     private void readyUpdateClient(ClientModel clientModel, String projectName, File clientDir) {
@@ -207,33 +207,11 @@ public class ClientUpdateLogic {
         }
     }
 
-    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String projectName) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
-
-        // #needs_fix anyone switch toString() to getPath() by jflute (2021/04/16)
-        // File objects that are made in DBFlute intro uses slack as file separator
-        // so you can getPath() here (no problem) however be careful with Windows headache
-        // (while, FileTextIO should have rewrite methods that can accept File...?) 
-        final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
-        final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
-
-        // depends on the format of the dbflute_dfclient template (basically no change so almost no problem)
-        new FileTextIO().encodeAsUTF8().rewriteFilteringLine(databaseInfoMapPath, line -> {
-            String trimmedLine = line.trim(); // for determination
-            if (trimmedLine.startsWith("; url") && line.contains("=")) {
-                return "    ; url      = " + StringUtils.defaultString(box.getUrl());
-            }
-            if (trimmedLine.startsWith("; schema") && line.contains("=")) {
-                return "    ; schema   = " + StringUtils.defaultString(box.getSchema());
-            }
-            if (trimmedLine.startsWith("; user") && line.contains("=")) {
-                return "    ; user     = " + StringUtils.defaultString(box.getUser());
-            }
-            if (trimmedLine.startsWith("; password") && line.contains("=")) {
-                return "    ; password = " + StringUtils.defaultString(box.getPassword());
-            }
-            return line;
-        });
+    // -----------------------------------------------------
+    //                                         Database Info
+    //                                         -------------
+    private void replaceDfpropDatabaseInfoMap(DatabaseInfoMap databaseInfoMap, String projectName) {
+        databaseInfoLogic.replaceDfpropDatabaseInfoMap(databaseInfoMap, projectName);
     }
 
     // ===================================================================================

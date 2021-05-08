@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.dfprop.syncschema;
+package org.dbflute.intro.app.web.dfprop.schemasync;
 
 import org.lastaflute.web.validation.ClientError;
 import org.lastaflute.web.validation.Required;
@@ -21,7 +21,7 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author deco
  */
-public class DfpropEditSyncSchemaBody {
+public class DfpropSchemaSyncEditBody {
 
     @Required
     public String url;

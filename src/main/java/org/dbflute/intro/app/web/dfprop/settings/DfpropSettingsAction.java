@@ -13,15 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.settings;
-
-import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart;
-import static org.dbflute.intro.app.web.settings.SettingsUpdateBody.ClientPart.DatabaseSettingsPart;
+package org.dbflute.intro.app.web.dfprop.settings;
 
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.client.ClientInfoLogic;
-import org.dbflute.intro.app.logic.settings.SettingsUpdateLogic;
+import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -29,6 +26,8 @@ import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
+import org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsUpdateBody.ClientPart;
+import org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsUpdateBody.ClientPart.DatabaseSettingsPart;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.lastaflute.web.Execute;
@@ -39,13 +38,13 @@ import org.lastaflute.web.response.JsonResponse;
  * @author jflute
  * @author cabos
  */
-public class SettingsAction extends IntroBaseAction {
+public class DfpropSettingsAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private SettingsUpdateLogic settingsUpdateLogic;
+    private DatabaseInfoLogic databaseInfoLogic;
     @Resource
     private ClientInfoLogic clientInfoLogic;
 
@@ -56,16 +55,16 @@ public class SettingsAction extends IntroBaseAction {
     //                                              Settings
     //                                              --------
     @Execute
-    public JsonResponse<SettingsResult> index(String clientName) {
+    public JsonResponse<DfpropSettingsResult> index(String clientName) {
         ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
-        SettingsResult result = mappingToSettingsResult(clientModel);
+        DfpropSettingsResult result = mappingToSettingsResult(clientModel);
         return asJson(result);
     }
 
-    private SettingsResult mappingToSettingsResult(ClientModel clientModel) {
-        SettingsResult result = new SettingsResult();
+    private DfpropSettingsResult mappingToSettingsResult(ClientModel clientModel) {
+        DfpropSettingsResult result = new DfpropSettingsResult();
         ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
         result.projectName = projectInfra.getClientProject();
@@ -77,7 +76,7 @@ public class SettingsAction extends IntroBaseAction {
         result.dbfluteVersion = projectInfra.getDbfluteVersion();
         result.jdbcDriverJarPath = projectInfra.getJdbcDriverExtlibFile().map(ExtlibFile::getCanonicalPath).orElse(null);
         DbConnectionBox dbConnectionBox = clientModel.getDatabaseInfoMap().getDbConnectionBox();
-        result.mainSchemaSettings = new SettingsResult.DatabaseSettingsPart();
+        result.mainSchemaSettings = new DfpropSettingsResult.DatabaseSettingsPart();
         result.mainSchemaSettings.url = dbConnectionBox.getUrl();
         result.mainSchemaSettings.schema = dbConnectionBox.getSchema();
         result.mainSchemaSettings.user = dbConnectionBox.getUser();
@@ -91,10 +90,10 @@ public class SettingsAction extends IntroBaseAction {
     //                                                  ----
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String clientName, SettingsUpdateBody settingsBody) {
+    public JsonResponse<Void> edit(String clientName, DfpropSettingsUpdateBody settingsBody) {
         validate(settingsBody, messages -> {});
         ClientModel clientModel = mappingToClientModel(clientName, settingsBody.client);
-        settingsUpdateLogic.updateDatabaseInfoMap(clientModel);
+        databaseInfoLogic.updateDatabaseInfoMap(clientModel);
         return JsonResponse.asEmptyBody();
     }
 

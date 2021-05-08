@@ -47,18 +47,6 @@ export default class ApiFactory {
     return ffetch.post(`api/client/delete/${clientBody.project}`)
   }
 
-  // -----------------------------------------------------
-  //                                              Settings
-  //                                              --------
-  settings(projectName) {
-    return ffetch.post(`api/settings/${projectName}`)
-  }
-  updateSettings(clientBody) {
-    return ffetch.post(`api/settings/edit/${clientBody.projectName}`, {
-      body: { client: clientBody },
-    })
-  }
-
   // ===============================================================================
   //                                                                  Client::dfprop
   //                                                                  ==============
@@ -73,10 +61,10 @@ export default class ApiFactory {
   //                                       SchemaSyncCheck
   //                                       ---------------
   syncSchema(projectName) {
-    return ffetch.post(`api/dfprop/syncschema/${projectName}`)
+    return ffetch.post(`api/dfprop/schemasync/${projectName}`)
   }
   editSyncSchema(projectName, syncSchemaSettingData) {
-    return ffetch.post(`api/dfprop/syncschema/edit/${projectName}/`, {
+    return ffetch.post(`api/dfprop/schemasync/edit/${projectName}/`, {
       body: {
         url: syncSchemaSettingData.url,
         schema: syncSchemaSettingData.schema,
@@ -138,6 +126,18 @@ export default class ApiFactory {
         checkDbCommentDiff: documentSetting.checkDbCommentDiff,
         checkProcedureDiff: documentSetting.checkProcedureDiff,
       },
+    })
+  }
+
+  // -----------------------------------------------------
+  //                                              Settings
+  //                                              --------
+  settings(projectName) {
+    return ffetch.post(`api/dfprop/settings/${projectName}`)
+  }
+  updateSettings(clientBody) {
+    return ffetch.post(`api/dfprop/settings/edit/${clientBody.projectName}`, {
+      body: { client: clientBody },
     })
   }
 

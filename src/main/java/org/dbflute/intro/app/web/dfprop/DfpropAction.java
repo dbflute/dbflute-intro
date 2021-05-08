@@ -17,7 +17,6 @@ package org.dbflute.intro.app.web.dfprop;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -25,9 +24,6 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
-import org.dbflute.intro.app.model.client.document.DocumentMap;
-import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
-import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
@@ -38,6 +34,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author cabos
  * @author subaru
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropAction extends IntroBaseAction {
 
@@ -54,51 +51,23 @@ public class DfpropAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    // -----------------------------------------------------
-    //                                                  list
-    //                                                  ----
     @Execute
-    public JsonResponse<List<DfpropBean>> list(String clientName) {
-        List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(clientName);
+    public JsonResponse<List<DfpropBean>> list(String projectName) {
+        List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(projectName);
         List<DfpropBean> beans = dfpropFileList.stream()
                 .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), flutyFileLogic.readFile(dfpropFile)))
                 .collect(Collectors.toList());
         return asJson(beans);
     }
 
-    // -----------------------------------------------------
-    //                                                update
-    //                                                ------
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> update(String clientName, String fileName, DfpropUpdateBody body) {
+    public JsonResponse<Void> update(String projectName, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
 
-        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(clientName, fileName);
+        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(projectName, fileName);
         flutyFileLogic.writeFile(dfpropFile, body.content);
 
         return JsonResponse.asEmptyBody();
     }
-
-    // -----------------------------------------------------
-    //                                         GetSyncSchema
-    //                                         -------------
-    @Execute
-    public JsonResponse<DfpropSchemaSyncCheckResult> syncschema(String clientName) {
-        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(clientName);
-        final DfpropSchemaSyncCheckResult bean =
-                schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElseGet(() -> new DfpropSchemaSyncCheckResult());
-        return asJson(bean);
-    }
-
-    // -----------------------------------------------------
-    //                                           GetDocument
-    //                                           -----------
-    @Execute
-    public JsonResponse<DfpropDocumentResult> document(String clientName) {
-        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(clientName);
-        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(clientName);
-        return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
-    }
-
 }
