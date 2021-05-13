@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.logic.exception.NotExsistMapTypeException;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
@@ -65,8 +66,39 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                       GetschemapolicyStatementSubject
     //                       -------------------------------
     @Execute
-    public JsonResponse<List<String>> subject() {
-        return asJson(dfpropInfoLogic.getStatementSubjectList());
+    public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
+        validate(form, message -> {});
+        if (MapType.codeOf(form.mapType) == MapType.TABLE) {
+            return asJson(dfpropInfoLogic.getStatementTableMapSubjectList());
+        } else if (MapType.codeOf(form.mapType) == MapType.COLUMN) {
+            return asJson(dfpropInfoLogic.getStatementColumnMapSubjectList());
+        } else {
+            throw new NotExsistMapTypeException("存在しないMapTypeです。MapType: " + form.mapType);
+        }
+    }
+
+    public enum MapType {
+        TABLE("tableMap"), //
+        COLUMN("columnMap");
+
+        private final String code;
+
+        private MapType(String code) {
+            this.code = code;
+        }
+
+        public String getName() {
+            return code;
+        }
+
+        public static MapType codeOf(String code) {
+            for (MapType type : values()) {
+                if (type.getName().equals(code)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("指定された名前のenumは見つかりませんでした。name: " + code);
+        }
     }
 
     // -----------------------------------------------------
@@ -79,5 +111,4 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
         dfpropUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
-
 }

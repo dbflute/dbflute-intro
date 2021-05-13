@@ -262,34 +262,55 @@ public class DfpropInfoLogic {
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
-    public List<String> getStatementSubjectList() {
+    public List<String> getStatementTableMapSubjectList() {
         // Create subject list here because contents does not change frequently
-        List<String> subjectList = Stream.of(Subject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
+        List<String> subjectList =
+                Stream.of(Subject.values()).filter(ject -> ject.getIsTableMap()).map(ject -> ject.getTitle()).collect(Collectors.toList());
+        return subjectList;
+    }
+
+    public List<String> getStatementColumnMapSubjectList() {
+        // Create subject list here because contents does not change frequently
+        List<String> subjectList =
+                Stream.of(Subject.values()).filter(ject -> ject.getIsColumnMap()).map(ject -> ject.getTitle()).collect(Collectors.toList());
         return subjectList;
     }
 
     public enum Subject {
-        TABLE_NAME("tableName"), //
-        ALIAS("alias"), //
-        FIRST_DATE("firstDate"), //
-        PK_COLUM_NAME("pk_columnName"), //
-        PK_DB_TYPE("pk_dbType"), //
-        PK_SIZE("pk_size"), //
-        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"), //
-        COLUMN("column"), //
-        COLUMN_NAME("columnName"), //
-        TABLE_COLUMN_NAME("tableColumnName"), //
-        DB_TYPE_WITH_SIZE("dbType_with_size");
+        TABLE_NAME("tableName", true, true), //
+        ALIAS("alias", true, true), //
+        FIRST_DATE("firstDate", true, true), //
+        PK_COLUM_NAME("pk_columnName", true, false), //
+        PK_DB_TYPE("pk_dbType", true, false), //
+        PK_SIZE("pk_size", true, false), //
+        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size", true, false), //
+        COLUMN("column", false, true), //
+        COLUMN_NAME("columnName", false, true), //
+        TABLE_COLUMN_NAME("tableColumnName", false, true), //
+        DB_TYPE_WITH_SIZE("dbType_with_size", false, true), //
+        SIZE("size", false, true), //
+        DB_TYPE("dbType", false, true);
 
         private final String title;
+        private final boolean isTableMap;
+        private final boolean isColumnMap;
 
-        // #needs_fix anyone remove mirror comment by jflute (2021/04/29)
-        private Subject(String title) { //コンストラクタはprivateで宣言
+        private Subject(String title, boolean isTableMap, boolean isColumnMap) {
             this.title = title;
+            this.isTableMap = isTableMap;
+            this.isColumnMap = isColumnMap;
         }
 
         public String getTitle() {
             return title;
+        }
+
+        public boolean getIsTableMap() {
+            return isTableMap;
+        }
+
+        public boolean getIsColumnMap() {
+            return isColumnMap;
         }
     }
 
