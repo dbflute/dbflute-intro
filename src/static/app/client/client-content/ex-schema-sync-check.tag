@@ -5,7 +5,7 @@
       for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }
     </p>
     <div class="ui list">
-      <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
+      <div show="{ client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
     </div>
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
@@ -69,6 +69,7 @@
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
     let self = this
+    this.client = self.opts.client
     this.syncSetting = {}
 
     this.checkModal = {
@@ -158,6 +159,11 @@
     this.schemaSyncCheckTask = () => {
       self.refs.checkModal.show()
       DbfluteTask.task('schemaSyncCheck', self.opts.projectName, (message) => {
+        ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+          self.update({
+            client: response
+          })
+        })
         self.refs.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
