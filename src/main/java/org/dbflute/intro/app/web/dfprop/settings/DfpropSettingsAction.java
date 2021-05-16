@@ -67,7 +67,7 @@ public class DfpropSettingsAction extends IntroBaseAction {
         DfpropSettingsResult result = new DfpropSettingsResult();
         ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        result.projectName = projectInfra.getClientProject();
+        result.projectName = projectInfra.getProjectName();
         result.databaseCode = basicInfoMap.getDatabase();
         result.languageCode = basicInfoMap.getTargetLanguage();
         result.containerCode = basicInfoMap.getTargetContainer();

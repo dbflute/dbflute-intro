@@ -61,7 +61,7 @@ public class ClientPropbaseAction extends IntroBaseAction {
     private ClientPropbaseResult mappingToOperationResult(ClientModel clientModel) {
         ClientPropbaseResult operation = new ClientPropbaseResult();
         prepareBasic(operation, clientModel);
-        String clientName = clientModel.getProjectInfra().getClientProject();
+        String clientName = clientModel.getProjectInfra().getProjectName();
         operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
         operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
         operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientName);
@@ -76,7 +76,7 @@ public class ClientPropbaseAction extends IntroBaseAction {
     private void prepareBasic(ClientPropbaseResult client, ClientModel clientModel) {
         ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        client.projectName = projectInfra.getClientProject();
+        client.projectName = projectInfra.getProjectName();
         client.databaseCode = basicInfoMap.getDatabase();
         client.languageCode = basicInfoMap.getTargetLanguage();
         client.containerCode = basicInfoMap.getTargetContainer();

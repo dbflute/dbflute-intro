@@ -66,7 +66,7 @@ public class ClientUpdateLogic {
     //                                                                       =============
     public void createClient(ClientModel clientModel) { // actually makes e.g. dbflute_maihamadb on filesystem
         IntroAssertUtil.assertNotNull(clientModel);
-        final String projectName = clientModel.getProjectInfra().getClientProject();
+        final String projectName = clientModel.getProjectInfra().getProjectName();
         final File clientDir = introPhysicalLogic.findClientDir(projectName);
         readyCreateClient(clientModel, projectName, clientDir);
         try {
@@ -192,7 +192,7 @@ public class ClientUpdateLogic {
     }
 
     private void doUpdateClient(ClientModel clientModel) {
-        final String projectName = clientModel.getProjectInfra().getClientProject();
+        final String projectName = clientModel.getProjectInfra().getProjectName();
         final File clientDir = introPhysicalLogic.findClientDir(projectName);
         // done hakiba 2016/12/27 make readyClient for update
         readyUpdateClient(clientModel, projectName, clientDir);

@@ -62,7 +62,7 @@ public class DatabaseInfoLogic {
     //                                                                              ======
     public void updateDatabaseInfoMap(ClientModel clientModel) {
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-        replaceDfpropDatabaseInfoMap(databaseInfoMap, clientModel.getProjectInfra().getClientProject());
+        replaceDfpropDatabaseInfoMap(databaseInfoMap, clientModel.getProjectInfra().getProjectName());
     }
 
     public void replaceDfpropDatabaseInfoMap(DatabaseInfoMap databaseInfoMap, String projectName) {

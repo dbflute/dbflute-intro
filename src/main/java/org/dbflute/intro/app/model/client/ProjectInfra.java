@@ -63,7 +63,7 @@ public class ProjectInfra {
     // ===================================================================================
     //                                                                            Accessor
     //                                                                            ========
-    public String getClientProject() {
+    public String getProjectName() {
         return projectName;
     }
 

@@ -95,7 +95,7 @@ public class ClientListAction extends IntroBaseAction {
         //        });
         //    }
 
-        String clientName = clientModel.getProjectInfra().getClientProject();
+        String clientName = clientModel.getProjectInfra().getProjectName();
         rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
         rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
         rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientName);
@@ -108,7 +108,7 @@ public class ClientListAction extends IntroBaseAction {
     private void prepareBasic(ClientRowResult client, ClientModel clientModel) {
         ProjectInfra projectInfra = clientModel.getProjectInfra();
         BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-        client.projectName = projectInfra.getClientProject();
+        client.projectName = projectInfra.getProjectName();
         client.databaseCode = basicInfoMap.getDatabase();
         client.languageCode = basicInfoMap.getTargetLanguage();
         client.containerCode = basicInfoMap.getTargetContainer();
