@@ -170,8 +170,8 @@ public class ClientInfoLogic {
         return OptionalThing.of(clientModel);
     }
 
-    private ClientModel newClientModel(String clientName, Map<String, Map<String, Object>> dfpropMap) {
-        final ProjectInfra projectInfra = prepareProjectMeta(clientName);
+    private ClientModel newClientModel(String projectName, Map<String, Map<String, Object>> dfpropMap) {
+        final ProjectInfra projectInfra = prepareProjectMeta(projectName);
         final BasicInfoMap basicInfoMap = prepareBasicInfoMap(dfpropMap);
         final DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(dfpropMap);
         return new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);

@@ -13,40 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.logic.playsql.migration.info.ref;
 
-import java.io.File;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.unit.UnitIntroTestCase;
+import java.util.List;
 
 /**
- * @author jflute
+ * @author cabos
  */
-public class ClientActionTest extends UnitIntroTestCase {
+public class PlaysqlMigrationUnreleasedDirReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Resource
-    private IntroPhysicalLogic introPhysicalLogic;
+    private List<PlaysqlMigrationAlterSqlReturn> checkedSqlList;
 
     // ===================================================================================
-    //                                                                              Delete
-    //                                                                              ======
-    public void test_delete_basic() throws Exception {
-        // ## Arrange ##
-        ClientAction action = new ClientAction();
-        inject(action);
-        File client = introPhysicalLogic.findClientDir(UnitIntroTestCase.TEST_CLIENT_PROJECT);
-        assertTrue(client.exists());
+    //                                                                         Constructor
+    //                                                                         ===========
+    public PlaysqlMigrationUnreleasedDirReturn(List<PlaysqlMigrationAlterSqlReturn> checkedSqlList) {
+        this.checkedSqlList = checkedSqlList;
+    }
 
-        // ## Act ##
-        action.delete(UnitIntroTestCase.TEST_CLIENT_PROJECT);
-
-        // ## Assert ##
-        assertFalse(client.exists());
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
+    public List<PlaysqlMigrationAlterSqlReturn> getCheckedSqlList() {
+        return checkedSqlList;
     }
 }
