@@ -21,10 +21,12 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
-import org.dbflute.intro.app.logic.exception.NotExsistMapTypeException;
+import org.dbflute.intro.app.logic.exception.NotExistMapTypeException;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
+import org.dbflute.intro.mylasta.appcls.AppCDef;
+import org.dbflute.intro.mylasta.appcls.AppCDef.SubjectableMapType;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
@@ -68,36 +70,12 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     @Execute
     public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
         validate(form, message -> {});
-        if (MapType.codeOf(form.mapType) == MapType.TABLE) {
+        if (AppCDef.SubjectableMapType.codeOf(form.mapType) == SubjectableMapType.Table) {
             return asJson(dfpropInfoLogic.getStatementTableMapSubjectList());
-        } else if (MapType.codeOf(form.mapType) == MapType.COLUMN) {
+        } else if (AppCDef.SubjectableMapType.codeOf(form.mapType) == SubjectableMapType.Column) {
             return asJson(dfpropInfoLogic.getStatementColumnMapSubjectList());
         } else {
-            throw new NotExsistMapTypeException("存在しないMapTypeです。MapType: " + form.mapType);
-        }
-    }
-
-    public enum MapType {
-        TABLE("tableMap"), //
-        COLUMN("columnMap");
-
-        private final String code;
-
-        private MapType(String code) {
-            this.code = code;
-        }
-
-        public String getName() {
-            return code;
-        }
-
-        public static MapType codeOf(String code) {
-            for (MapType type : values()) {
-                if (type.getName().equals(code)) {
-                    return type;
-                }
-            }
-            throw new IllegalArgumentException("指定された名前のenumは見つかりませんでした。name: " + code);
+            throw new NotExistMapTypeException("存在しないSubjectableMapType: " + form.mapType);
         }
     }
 

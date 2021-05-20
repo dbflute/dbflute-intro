@@ -1,5 +1,6 @@
 package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
+import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.lastaflute.web.validation.Required;
 
 /**
@@ -8,5 +9,5 @@ import org.lastaflute.web.validation.Required;
 public class DfpropSchemapolicyStatementSubjectForm {
 
     @Required
-    public String mapType;
+    public AppCDef.SubjectableMapType mapType;
 }

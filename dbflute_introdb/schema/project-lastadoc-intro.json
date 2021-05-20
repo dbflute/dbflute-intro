@@ -145,8 +145,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic",
           "simpleTypeName": "PlaysqlMigrationLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for playsql.migration (in DBFlute Client).",
+          "comment": "The logic for playsql.migration (in DBFlute Client).\n\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -401,8 +401,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic",
           "simpleTypeName": "PlaysqlMigrationLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for playsql.migration (in DBFlute Client).",
+          "comment": "The logic for playsql.migration (in DBFlute Client).\n\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -456,8 +456,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic",
           "simpleTypeName": "PlaysqlMigrationLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for playsql.migration (in DBFlute Client).",
+          "comment": "The logic for playsql.migration (in DBFlute Client).\n\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -535,8 +535,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientUpdateLogic",
           "simpleTypeName": "ClientUpdateLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic to update DBFlute Client. (e.g. create, update, delete)",
+          "comment": "The logic to update DBFlute Client. (e.g. create, update, delete)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author deco\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -548,8 +548,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -561,8 +561,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientPhysicalLogic",
           "simpleTypeName": "ClientPhysicalLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute",
+          "description": "The logic for DBFlute Client physical operation.",
+          "comment": "The logic for DBFlute Client physical operation.\n\n@author jflute\n@author deco\n@author hakiba\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -587,8 +587,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -597,11 +597,11 @@
         {
           "name": "databaseInfoLogic",
           "publicName": "databaseInfoLogic",
-          "typeName": "org.dbflute.intro.app.logic.database.DatabaseInfoLogic",
+          "typeName": "org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic",
           "simpleTypeName": "DatabaseInfoLogic",
           "value": null,
-          "description": "@author ryohei",
-          "comment": "@author ryohei",
+          "description": "The logic of database information.",
+          "comment": "The logic of database information.\n\n@author ryohei\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -613,8 +613,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -626,8 +626,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1058,8 +1058,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientUpdateLogic",
           "simpleTypeName": "ClientUpdateLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic to update DBFlute Client. (e.g. create, update, delete)",
+          "comment": "The logic to update DBFlute Client. (e.g. create, update, delete)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author deco\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1071,8 +1071,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1084,8 +1084,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientPhysicalLogic",
           "simpleTypeName": "ClientPhysicalLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute",
+          "description": "The logic for DBFlute Client physical operation.",
+          "comment": "The logic for DBFlute Client physical operation.\n\n@author jflute\n@author deco\n@author hakiba\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1110,8 +1110,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1120,11 +1120,11 @@
         {
           "name": "databaseInfoLogic",
           "publicName": "databaseInfoLogic",
-          "typeName": "org.dbflute.intro.app.logic.database.DatabaseInfoLogic",
+          "typeName": "org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic",
           "simpleTypeName": "DatabaseInfoLogic",
           "value": null,
-          "description": "@author ryohei",
-          "comment": "@author ryohei",
+          "description": "The logic of database information.",
+          "comment": "The logic of database information.\n\n@author ryohei\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1136,8 +1136,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1149,8 +1149,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1332,8 +1332,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientUpdateLogic",
           "simpleTypeName": "ClientUpdateLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic to update DBFlute Client. (e.g. create, update, delete)",
+          "comment": "The logic to update DBFlute Client. (e.g. create, update, delete)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author deco\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1345,8 +1345,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1358,8 +1358,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientPhysicalLogic",
           "simpleTypeName": "ClientPhysicalLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute",
+          "description": "The logic for DBFlute Client physical operation.",
+          "comment": "The logic for DBFlute Client physical operation.\n\n@author jflute\n@author deco\n@author hakiba\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1384,8 +1384,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1394,11 +1394,11 @@
         {
           "name": "databaseInfoLogic",
           "publicName": "databaseInfoLogic",
-          "typeName": "org.dbflute.intro.app.logic.database.DatabaseInfoLogic",
+          "typeName": "org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic",
           "simpleTypeName": "DatabaseInfoLogic",
           "value": null,
-          "description": "@author ryohei",
-          "comment": "@author ryohei",
+          "description": "The logic of database information.",
+          "comment": "The logic of database information.\n\n@author ryohei\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1410,8 +1410,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1423,8 +1423,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1884,8 +1884,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientUpdateLogic",
           "simpleTypeName": "ClientUpdateLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic to update DBFlute Client. (e.g. create, update, delete)",
+          "comment": "The logic to update DBFlute Client. (e.g. create, update, delete)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author deco\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1897,8 +1897,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1910,8 +1910,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientPhysicalLogic",
           "simpleTypeName": "ClientPhysicalLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute",
+          "description": "The logic for DBFlute Client physical operation.",
+          "comment": "The logic for DBFlute Client physical operation.\n\n@author jflute\n@author deco\n@author hakiba\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1936,8 +1936,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -1946,11 +1946,11 @@
         {
           "name": "databaseInfoLogic",
           "publicName": "databaseInfoLogic",
-          "typeName": "org.dbflute.intro.app.logic.database.DatabaseInfoLogic",
+          "typeName": "org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic",
           "simpleTypeName": "DatabaseInfoLogic",
           "value": null,
-          "description": "@author ryohei",
-          "comment": "@author ryohei",
+          "description": "The logic of database information.",
+          "comment": "The logic of database information.\n\n@author ryohei\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1962,8 +1962,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -1975,8 +1975,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2448,8 +2448,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientUpdateLogic",
           "simpleTypeName": "ClientUpdateLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic to update DBFlute Client. (e.g. create, update, delete)",
+          "comment": "The logic to update DBFlute Client. (e.g. create, update, delete)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author deco\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -2461,8 +2461,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -2474,8 +2474,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientPhysicalLogic",
           "simpleTypeName": "ClientPhysicalLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute",
+          "description": "The logic for DBFlute Client physical operation.",
+          "comment": "The logic for DBFlute Client physical operation.\n\n@author jflute\n@author deco\n@author hakiba\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -2500,8 +2500,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -2510,11 +2510,11 @@
         {
           "name": "databaseInfoLogic",
           "publicName": "databaseInfoLogic",
-          "typeName": "org.dbflute.intro.app.logic.database.DatabaseInfoLogic",
+          "typeName": "org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic",
           "simpleTypeName": "DatabaseInfoLogic",
           "value": null,
-          "description": "@author ryohei",
-          "comment": "@author ryohei",
+          "description": "The logic of database information.",
+          "comment": "The logic of database information.\n\n@author ryohei\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2526,8 +2526,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2539,8 +2539,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2594,8 +2594,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic",
           "simpleTypeName": "DfpropPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for DBFlute property (dfprop) physical operation.",
+          "comment": "The logic for DBFlute property (dfprop) physical operation.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2607,8 +2607,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2620,8 +2620,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2701,8 +2701,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic",
           "simpleTypeName": "DfpropPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for DBFlute property (dfprop) physical operation.",
+          "comment": "The logic for DBFlute property (dfprop) physical operation.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2714,8 +2714,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2727,8 +2727,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2817,8 +2817,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic",
           "simpleTypeName": "DfpropPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for DBFlute property (dfprop) physical operation.",
+          "comment": "The logic for DBFlute property (dfprop) physical operation.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2830,8 +2830,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2843,8 +2843,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2953,8 +2953,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic",
           "simpleTypeName": "DfpropPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for DBFlute property (dfprop) physical operation.",
+          "comment": "The logic for DBFlute property (dfprop) physical operation.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -2966,8 +2966,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -2979,8 +2979,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -3101,7 +3101,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -3243,7 +3243,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -3255,8 +3255,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -3537,7 +3537,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -3549,8 +3549,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -3778,7 +3778,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -3790,8 +3790,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -3976,7 +3976,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -3988,8 +3988,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -4031,7 +4031,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4043,8 +4043,8 @@
           "typeName": "org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic",
           "simpleTypeName": "DfpropInfoLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for DBFlute property (dfprop) information.",
+          "comment": "The logic for DBFlute property (dfprop) information.\n\n@author jflute\n@author deco\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -4136,7 +4136,7 @@
           "simpleTypeName": "DfpropUpdateLogic",
           "value": null,
           "description": "@author deco",
-          "comment": "@author deco\n@author subaru",
+          "comment": "@author deco\n@author subaru\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4262,8 +4262,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -4275,8 +4275,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentDisplayLogic",
           "simpleTypeName": "DocumentDisplayLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e",
+          "comment": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e\nFor example, it needs to adjust links to other HTMLs in intro-managed HTML.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4329,8 +4329,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -4342,8 +4342,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentDisplayLogic",
           "simpleTypeName": "DocumentDisplayLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e",
+          "comment": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e\nFor example, it needs to adjust links to other HTMLs in intro-managed HTML.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4396,8 +4396,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -4409,8 +4409,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentDisplayLogic",
           "simpleTypeName": "DocumentDisplayLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e",
+          "comment": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e\nFor example, it needs to adjust links to other HTMLs in intro-managed HTML.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4463,8 +4463,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -4476,8 +4476,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentDisplayLogic",
           "simpleTypeName": "DocumentDisplayLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e",
+          "comment": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e\nFor example, it needs to adjust links to other HTMLs in intro-managed HTML.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4530,8 +4530,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -4543,8 +4543,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentDisplayLogic",
           "simpleTypeName": "DocumentDisplayLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e",
+          "comment": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e\nFor example, it needs to adjust links to other HTMLs in intro-managed HTML.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4597,8 +4597,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentPhysicalLogic",
           "simpleTypeName": "DocumentPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute\n@author cabos\n@author subaru",
+          "description": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)",
+          "comment": "The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)\n\n@author deco\n@author jflute\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -4610,8 +4610,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentDisplayLogic",
           "simpleTypeName": "DocumentDisplayLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author jflute",
+          "description": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e",
+          "comment": "The logic for document display on intro. (e.g. SchemaHTML) \u003cbr\u003e\nFor example, it needs to adjust links to other HTMLs in intro-managed HTML.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4699,8 +4699,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic",
           "simpleTypeName": "DocumentDecommentPhysicalLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author hakiba\n@author jflute",
+          "description": "The logic for decomment physical operation. \u003cbr\u003e",
+          "comment": "The logic for decomment physical operation. \u003cbr\u003e\nDecomment is a function to add comment for SchemaHTML. \u003cbr\u003e\nYou can handle e.g. decomment-pickup.dfmap, decomment-piece-...dfmap by this logic.\n\n@author cabos\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4712,8 +4712,8 @@
           "typeName": "org.dbflute.intro.app.logic.intro.IntroSystemLogic",
           "simpleTypeName": "IntroSystemLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos",
+          "description": "The logic for DBFlute Intro system operation. (e.g. decomment server)",
+          "comment": "The logic for DBFlute Intro system operation. (e.g. decomment server)\n\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4912,8 +4912,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic",
           "simpleTypeName": "DocumentDecommentPhysicalLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author hakiba\n@author jflute",
+          "description": "The logic for decomment physical operation. \u003cbr\u003e",
+          "comment": "The logic for decomment physical operation. \u003cbr\u003e\nDecomment is a function to add comment for SchemaHTML. \u003cbr\u003e\nYou can handle e.g. decomment-pickup.dfmap, decomment-piece-...dfmap by this logic.\n\n@author cabos\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -4925,8 +4925,8 @@
           "typeName": "org.dbflute.intro.app.logic.intro.IntroSystemLogic",
           "simpleTypeName": "IntroSystemLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos",
+          "description": "The logic for DBFlute Intro system operation. (e.g. decomment server)",
+          "comment": "The logic for DBFlute Intro system operation. (e.g. decomment server)\n\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -5527,8 +5527,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.decomment.DocumentDecommentPhysicalLogic",
           "simpleTypeName": "DocumentDecommentPhysicalLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author hakiba\n@author jflute",
+          "description": "The logic for decomment physical operation. \u003cbr\u003e",
+          "comment": "The logic for decomment physical operation. \u003cbr\u003e\nDecomment is a function to add comment for SchemaHTML. \u003cbr\u003e\nYou can handle e.g. decomment-pickup.dfmap, decomment-piece-...dfmap by this logic.\n\n@author cabos\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -5540,8 +5540,8 @@
           "typeName": "org.dbflute.intro.app.logic.intro.IntroSystemLogic",
           "simpleTypeName": "IntroSystemLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos",
+          "description": "The logic for DBFlute Intro system operation. (e.g. decomment server)",
+          "comment": "The logic for DBFlute Intro system operation. (e.g. decomment server)\n\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -5742,8 +5742,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.hacomment.DocumentHacommentPhysicalLogic",
           "simpleTypeName": "DocumentHacommentPhysicalLogic",
           "value": null,
-          "description": "@author hakiba",
-          "comment": "@author hakiba",
+          "description": "The logic for hacomment physical operation. \u003cbr\u003e",
+          "comment": "The logic for hacomment physical operation. \u003cbr\u003e\nHacomment is a function to add comment for SchemaHTML. \u003cbr\u003e\nYou can handle e.g. hacomment-pickup.dfmap, hacomment-piece-...dfmap by this logic.\n\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -5755,8 +5755,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentAuthorLogic",
           "simpleTypeName": "DocumentAuthorLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author deco\n@author jflute",
+          "description": "The logic for author (and git branch) used in documents.",
+          "comment": "The logic for author (and git branch) used in documents.\n\n@author cabos\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -5907,8 +5907,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.hacomment.DocumentHacommentPhysicalLogic",
           "simpleTypeName": "DocumentHacommentPhysicalLogic",
           "value": null,
-          "description": "@author hakiba",
-          "comment": "@author hakiba",
+          "description": "The logic for hacomment physical operation. \u003cbr\u003e",
+          "comment": "The logic for hacomment physical operation. \u003cbr\u003e\nHacomment is a function to add comment for SchemaHTML. \u003cbr\u003e\nYou can handle e.g. hacomment-pickup.dfmap, hacomment-piece-...dfmap by this logic.\n\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -5920,8 +5920,8 @@
           "typeName": "org.dbflute.intro.app.logic.document.DocumentAuthorLogic",
           "simpleTypeName": "DocumentAuthorLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author deco\n@author jflute",
+          "description": "The logic for author (and git branch) used in documents.",
+          "comment": "The logic for author (and git branch) used in documents.\n\n@author cabos\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6122,8 +6122,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.PublicPropertiesLogic",
           "simpleTypeName": "PublicPropertiesLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author deco",
+          "description": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e",
+          "comment": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e\nSee the actual file: http://dbflute.org/meta/public.properties for details.\n\n@author p1us2er0\n@author jflute\n@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -6135,8 +6135,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInstallLogic",
           "simpleTypeName": "EngineInstallLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine install.",
+          "comment": "The logic for DBFlute Engine install.\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6148,8 +6148,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6239,8 +6239,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.PublicPropertiesLogic",
           "simpleTypeName": "PublicPropertiesLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author deco",
+          "description": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e",
+          "comment": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e\nSee the actual file: http://dbflute.org/meta/public.properties for details.\n\n@author p1us2er0\n@author jflute\n@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -6252,8 +6252,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInstallLogic",
           "simpleTypeName": "EngineInstallLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine install.",
+          "comment": "The logic for DBFlute Engine install.\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6265,8 +6265,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6307,8 +6307,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.PublicPropertiesLogic",
           "simpleTypeName": "PublicPropertiesLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author deco",
+          "description": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e",
+          "comment": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e\nSee the actual file: http://dbflute.org/meta/public.properties for details.\n\n@author p1us2er0\n@author jflute\n@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -6320,8 +6320,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInstallLogic",
           "simpleTypeName": "EngineInstallLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine install.",
+          "comment": "The logic for DBFlute Engine install.\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6333,8 +6333,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6410,8 +6410,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.PublicPropertiesLogic",
           "simpleTypeName": "PublicPropertiesLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author deco",
+          "description": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e",
+          "comment": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e\nSee the actual file: http://dbflute.org/meta/public.properties for details.\n\n@author p1us2er0\n@author jflute\n@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -6423,8 +6423,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInstallLogic",
           "simpleTypeName": "EngineInstallLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine install.",
+          "comment": "The logic for DBFlute Engine install.\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6436,8 +6436,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInfoLogic",
           "simpleTypeName": "EngineInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine information. (e.g. version)",
+          "comment": "The logic for DBFlute Engine information. (e.g. version)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6491,8 +6491,8 @@
           "typeName": "org.dbflute.intro.app.logic.intro.IntroInfoLogic",
           "simpleTypeName": "IntroInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Intro information. (e.g. manifest)",
+          "comment": "The logic for DBFlute Intro information. (e.g. manifest)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6546,8 +6546,8 @@
           "typeName": "org.dbflute.intro.app.logic.intro.IntroInfoLogic",
           "simpleTypeName": "IntroInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Intro information. (e.g. manifest)",
+          "comment": "The logic for DBFlute Intro information. (e.g. manifest)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6601,8 +6601,8 @@
           "typeName": "org.dbflute.intro.app.logic.intro.IntroInfoLogic",
           "simpleTypeName": "IntroInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Intro information. (e.g. manifest)",
+          "comment": "The logic for DBFlute Intro information. (e.g. manifest)\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6656,8 +6656,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6669,8 +6669,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -6775,8 +6775,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6788,8 +6788,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -6880,8 +6880,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6893,8 +6893,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -6974,8 +6974,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.PlaysqlPhysicalLogic",
           "simpleTypeName": "PlaysqlPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco",
+          "description": "The logic for playsql (in DBFlute Client) physical operation.",
+          "comment": "The logic for playsql (in DBFlute Client) physical operation.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -6987,8 +6987,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -7066,8 +7066,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.PlaysqlPhysicalLogic",
           "simpleTypeName": "PlaysqlPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco",
+          "description": "The logic for playsql (in DBFlute Client) physical operation.",
+          "comment": "The logic for playsql (in DBFlute Client) physical operation.\n\n@author deco\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -7079,8 +7079,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.FlutyFileLogic",
           "simpleTypeName": "FlutyFileLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute\n@author deco\n@author prprmurakami",
+          "description": "The general logic for file. (e.g. read, write)",
+          "comment": "The general logic for file. (e.g. read, write)\n\n@author jflute\n@author deco\n@author cabos\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -7169,8 +7169,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.data.PlaysqlDataLogic",
           "simpleTypeName": "PlaysqlDataLogic",
           "value": null,
-          "description": "@author prprmurakami",
-          "comment": "@author prprmurakami",
+          "description": "The logic for playsql.data (in DBFlute Client).",
+          "comment": "The logic for playsql.data (in DBFlute Client).\n\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -7236,8 +7236,8 @@
           "typeName": "org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationLogic",
           "simpleTypeName": "PlaysqlMigrationLogic",
           "value": null,
-          "description": "@author cabos",
-          "comment": "@author cabos\n@author subaru\n@author prprmurakami",
+          "description": "The logic for playsql.migration (in DBFlute Client).",
+          "comment": "The logic for playsql.migration (in DBFlute Client).\n\n@author cabos\n@author subaru\n@author prprmurakami",
           "annotationList": [
             "Resource"
           ],
@@ -7303,8 +7303,8 @@
           "typeName": "org.dbflute.intro.app.logic.settings.SettingsUpdateLogic",
           "simpleTypeName": "SettingsUpdateLogic",
           "value": null,
-          "description": "@author hakiba",
-          "comment": "@author hakiba",
+          "description": "The logic for update of settings. (e.g. databaseInfoMap)",
+          "comment": "The logic for update of settings. (e.g. databaseInfoMap)\n\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -7316,8 +7316,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -7536,8 +7536,8 @@
           "typeName": "org.dbflute.intro.app.logic.settings.SettingsUpdateLogic",
           "simpleTypeName": "SettingsUpdateLogic",
           "value": null,
-          "description": "@author hakiba",
-          "comment": "@author hakiba",
+          "description": "The logic for update of settings. (e.g. databaseInfoMap)",
+          "comment": "The logic for update of settings. (e.g. databaseInfoMap)\n\n@author hakiba\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -7549,8 +7549,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -7782,8 +7782,8 @@
           "typeName": "org.dbflute.intro.app.logic.task.TaskExecutionLogic",
           "simpleTypeName": "TaskExecutionLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author deco",
+          "description": "The logic for DBFlute task execution. (e.g. you can actually execute it)",
+          "comment": "The logic for DBFlute task execution. (e.g. you can actually execute it)\n\n@author p1us2er0\n@author jflute\n@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -7808,8 +7808,8 @@
           "typeName": "org.dbflute.intro.app.logic.log.LogPhysicalLogic",
           "simpleTypeName": "LogPhysicalLogic",
           "value": null,
-          "description": "@author deco",
-          "comment": "@author deco\n@author cabos",
+          "description": "The logic for log (in DBFlute Client) physical operation.",
+          "comment": "The logic for log (in DBFlute Client) physical operation.\n\n@author deco\n@author cabos\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -7897,8 +7897,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientInfoLogic",
           "simpleTypeName": "ClientInfoLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic for DBFlute Client information. (e.g. version, dfprop)",
+          "comment": "The logic for DBFlute Client information. (e.g. version, dfprop)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author cabos\n@author deco\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -7910,8 +7910,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientUpdateLogic",
           "simpleTypeName": "ClientUpdateLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author hakiba",
+          "description": "The logic to update DBFlute Client. (e.g. create, update, delete)",
+          "comment": "The logic to update DBFlute Client. (e.g. create, update, delete)\n\n@author p1us2er0\n@author jflute\n@author hakiba\n@author deco\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -7923,8 +7923,8 @@
           "typeName": "org.dbflute.intro.app.logic.client.ClientPhysicalLogic",
           "simpleTypeName": "ClientPhysicalLogic",
           "value": null,
-          "description": "@author jflute",
-          "comment": "@author jflute",
+          "description": "The logic for DBFlute Client physical operation.",
+          "comment": "The logic for DBFlute Client physical operation.\n\n@author jflute\n@author deco\n@author hakiba\n@author cabos\n@author subaru",
           "annotationList": [
             "Resource"
           ],
@@ -7949,8 +7949,8 @@
           "typeName": "org.dbflute.intro.app.logic.engine.EngineInstallLogic",
           "simpleTypeName": "EngineInstallLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute",
+          "description": "The logic for DBFlute Engine install.",
+          "comment": "The logic for DBFlute Engine install.\n\n@author p1us2er0\n@author jflute",
           "annotationList": [
             "Resource"
           ],
@@ -7962,8 +7962,8 @@
           "typeName": "org.dbflute.intro.app.logic.core.PublicPropertiesLogic",
           "simpleTypeName": "PublicPropertiesLogic",
           "value": null,
-          "description": "@author p1us2er0",
-          "comment": "@author p1us2er0\n@author jflute\n@author deco",
+          "description": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e",
+          "comment": "The logic for public.properties, which is DBFlute public file to provide e.g. current version. \u003cbr\u003e\nSee the actual file: http://dbflute.org/meta/public.properties for details.\n\n@author p1us2er0\n@author jflute\n@author deco",
           "annotationList": [
             "Resource"
           ],
@@ -7972,11 +7972,11 @@
         {
           "name": "databaseInfoLogic",
           "publicName": "databaseInfoLogic",
-          "typeName": "org.dbflute.intro.app.logic.database.DatabaseInfoLogic",
+          "typeName": "org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic",
           "simpleTypeName": "DatabaseInfoLogic",
           "value": null,
-          "description": "@author ryohei",
-          "comment": "@author ryohei",
+          "description": "The logic of database information.",
+          "comment": "The logic of database information.\n\n@author ryohei\n@author jflute",
           "annotationList": [
             "Resource"
           ],
