@@ -264,53 +264,53 @@ public class DfpropInfoLogic {
 
     public List<String> getStatementTableMapSubjectList() {
         // Create subject list here because contents does not change frequently
-        List<String> subjectList =
-                Stream.of(Subject.values()).filter(ject -> ject.getIsTableMap()).map(ject -> ject.getTitle()).collect(Collectors.toList());
-        return subjectList;
+        return Stream.of(TableMapSubject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
     }
 
     public List<String> getStatementColumnMapSubjectList() {
         // Create subject list here because contents does not change frequently
-        List<String> subjectList =
-                Stream.of(Subject.values()).filter(ject -> ject.getIsColumnMap()).map(ject -> ject.getTitle()).collect(Collectors.toList());
-        return subjectList;
+        return Stream.of(ColumnMapSubject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
     }
 
-    public enum Subject {
-        TABLE_NAME("tableName", true, true), //
-        ALIAS("alias", true, true), //
-        FIRST_DATE("firstDate", true, true), //
-        PK_COLUM_NAME("pk_columnName", true, false), //
-        PK_DB_TYPE("pk_dbType", true, false), //
-        PK_SIZE("pk_size", true, false), //
-        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size", true, false), //
-        COLUMN("column", false, true), //
-        COLUMN_NAME("columnName", false, true), //
-        TABLE_COLUMN_NAME("tableColumnName", false, true), //
-        DB_TYPE_WITH_SIZE("dbType_with_size", false, true), //
-        SIZE("size", false, true), //
-        DB_TYPE("dbType", false, true);
+    public enum TableMapSubject {
+        TABLE_NAME("tableName"), //
+        ALIAS("alias"), //
+        FIRST_DATE("firstDate"), //
+        PK_COLUM_NAME("pk_columnName"), //
+        PK_DB_TYPE("pk_dbType"), //
+        PK_SIZE("pk_size"), //
+        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"); //
 
         private final String title;
-        private final boolean isTableMap;
-        private final boolean isColumnMap;
 
-        private Subject(String title, boolean isTableMap, boolean isColumnMap) {
+        private TableMapSubject(String title) {
             this.title = title;
-            this.isTableMap = isTableMap;
-            this.isColumnMap = isColumnMap;
         }
 
         public String getTitle() {
             return title;
         }
+    }
 
-        public boolean getIsTableMap() {
-            return isTableMap;
+    public enum ColumnMapSubject {
+        TABLE_NAME("tableName"), //
+        ALIAS("alias"), //
+        FIRST_DATE("firstDate"), //
+        COLUMN("column"), //
+        COLUMN_NAME("columnName"), //
+        TABLE_COLUMN_NAME("tableColumnName"), //
+        DB_TYPE_WITH_SIZE("dbType_with_size"), //
+        SIZE("size"), //
+        DB_TYPE("dbType");
+
+        private final String title;
+
+        private ColumnMapSubject(String title) {
+            this.title = title;
         }
 
-        public boolean getIsColumnMap() {
-            return isColumnMap;
+        public String getTitle() {
+            return title;
         }
     }
 
