@@ -26,16 +26,14 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
-import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
@@ -60,13 +58,15 @@ public class ClientUpdateLogic {
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private EnginePhysicalLogic enginePhysicalLogic;
+    @Resource
+    private DatabaseInfoLogic databaseInfoLogic;
 
     // ===================================================================================
     //                                                                       Create Client
     //                                                                       =============
     public void createClient(ClientModel clientModel) { // actually makes e.g. dbflute_maihamadb on filesystem
         IntroAssertUtil.assertNotNull(clientModel);
-        final String projectName = clientModel.getProjectInfra().getClientProject();
+        final String projectName = clientModel.getProjectInfra().getProjectName();
         final File clientDir = introPhysicalLogic.findClientDir(projectName);
         readyCreateClient(clientModel, projectName, clientDir);
         try {
@@ -84,32 +84,32 @@ public class ClientUpdateLogic {
     // -----------------------------------------------------
     //                                   Ready from Template
     //                                   -------------------
-    private void readyCreateClient(ClientModel clientModel, String clientName, File clientDir) {
+    private void readyCreateClient(ClientModel clientModel, String projectName, File clientDir) {
         if (!clientDir.exists()) { // yes, new-create!
             clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
         } else { // no no no no, already exists
             // #needs_fix anyone use application excecption by jflute (2021/04/16)
-            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + clientName);
+            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + projectName);
         }
     }
 
     // -----------------------------------------------------
     //                                      Replace Settings
     //                                      ----------------
-    private void replaceClientFilePlainly(ClientModel clientModel, String clientName) {
+    private void replaceClientFilePlainly(ClientModel clientModel, String projectName) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         {
             // _project.sh, _project.bat
             final ProjectInfra projectInfra = clientModel.getProjectInfra();
             final Map<String, Object> replaceMap = projectInfra.prepareInitReplaceMap();
-            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientName), replaceMap);
-            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectBat(projectName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findProjectSh(projectName), replaceMap);
         }
         {
             // build.properties (which is Apache Torque's setting file, defines only one property)
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-            replaceMap.put("torque.project = dfclient", "torque.project = " + clientName);
-            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(clientName), replaceMap);
+            replaceMap.put("torque.project = dfclient", "torque.project = " + projectName);
+            fileReplaceMap.put(clientPhysicalLogic.findBuildProperties(projectName), replaceMap);
         }
         {
             // basicInfoMap.dfprop
@@ -119,22 +119,22 @@ public class ClientUpdateLogic {
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
             replaceMap.put("@packageBase@", basicInfoMap.getPackageBase());
-            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(clientName), replaceMap);
+            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(projectName), replaceMap);
         }
         {
             // databaseInfoMap.dfprop
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            fileReplaceMap.put(databaseInfoMap.findDfpropFile(clientName), databaseInfoMap.prepareInitReplaceMap());
+            fileReplaceMap.put(databaseInfoMap.findDfpropFile(projectName), databaseInfoMap.prepareInitReplaceMap());
         }
         doReplaceClientFile(fileReplaceMap, /*regularExpression*/false);
     }
 
-    private void replaceClientFileRegex(ClientModel clientModel, final String clientName) {
+    private void replaceClientFileRegex(ClientModel clientModel, final String projectName) {
         final Map<File, Map<String, Object>> fileReplaceMap = new LinkedHashMap<File, Map<String, Object>>();
         final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
         replaceMap.put("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)", "$1" + clientModel.getProjectInfra().getDbfluteVersion());
-        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(clientName), replaceMap);
-        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(clientName), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectBat(projectName), replaceMap);
+        fileReplaceMap.put(clientPhysicalLogic.findProjectSh(projectName), replaceMap);
         doReplaceClientFile(fileReplaceMap, /*regularExpression*/true);
     }
 
@@ -157,9 +157,9 @@ public class ClientUpdateLogic {
     // -----------------------------------------------------
     //                                       Extlib Handling
     //                                       ---------------
-    private void copyJarFileToExtlib(ClientModel clientModel, String clientName) {
+    private void copyJarFileToExtlib(ClientModel clientModel, String projectName) {
         clientModel.getProjectInfra().getJdbcDriverExtlibFile().ifPresent(jarFile -> {
-            final File extlibDir = clientPhysicalLogic.findExtlibDir(clientName);
+            final File extlibDir = clientPhysicalLogic.findExtlibDir(projectName);
             final String fileName = jarFile.getFile().getName();
             final File previousJar = new File(extlibDir, fileName);
             try {
@@ -192,48 +192,26 @@ public class ClientUpdateLogic {
     }
 
     private void doUpdateClient(ClientModel clientModel) {
-        final String projectName = clientModel.getProjectInfra().getClientProject();
+        final String projectName = clientModel.getProjectInfra().getProjectName();
         final File clientDir = introPhysicalLogic.findClientDir(projectName);
         // done hakiba 2016/12/27 make readyClient for update
         readyUpdateClient(clientModel, projectName, clientDir);
 
         // #for_now hakiba update only minimum database items here (for settings), may increase at future (2017/01/19)
-        replaceDfpropDatabaseInfoMap(clientModel, projectName);
+        replaceDfpropDatabaseInfoMap(clientModel.getDatabaseInfoMap(), projectName);
     }
 
     private void readyUpdateClient(ClientModel clientModel, String projectName, File clientDir) {
         if (!clientDir.exists()) { // no no no no, new-create
-            throw new IllegalStateException("The DBFlute client has already been deleted: clientName=" + projectName);
+            throw new IllegalStateException("The DBFlute client has already been deleted: projectName=" + projectName);
         }
     }
 
-    private void replaceDfpropDatabaseInfoMap(ClientModel clientModel, String projectName) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
-
-        // #needs_fix anyone switch toString() to getPath() by jflute (2021/04/16)
-        // File objects that are made in DBFlute intro uses slack as file separator
-        // so you can getPath() here (no problem) however be careful with Windows headache
-        // (while, FileTextIO should have rewrite methods that can accept File...?) 
-        final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
-        final DbConnectionBox box = clientModel.getDatabaseInfoMap().getDbConnectionBox();
-
-        // depends on the format of the dbflute_dfclient template (basically no change so almost no problem)
-        new FileTextIO().encodeAsUTF8().rewriteFilteringLine(databaseInfoMapPath, line -> {
-            String trimmedLine = line.trim(); // for determination
-            if (trimmedLine.startsWith("; url") && line.contains("=")) {
-                return "    ; url      = " + StringUtils.defaultString(box.getUrl());
-            }
-            if (trimmedLine.startsWith("; schema") && line.contains("=")) {
-                return "    ; schema   = " + StringUtils.defaultString(box.getSchema());
-            }
-            if (trimmedLine.startsWith("; user") && line.contains("=")) {
-                return "    ; user     = " + StringUtils.defaultString(box.getUser());
-            }
-            if (trimmedLine.startsWith("; password") && line.contains("=")) {
-                return "    ; password = " + StringUtils.defaultString(box.getPassword());
-            }
-            return line;
-        });
+    // -----------------------------------------------------
+    //                                         Database Info
+    //                                         -------------
+    private void replaceDfpropDatabaseInfoMap(DatabaseInfoMap databaseInfoMap, String projectName) {
+        databaseInfoLogic.replaceDfpropDatabaseInfoMap(databaseInfoMap, projectName);
     }
 
     // ===================================================================================

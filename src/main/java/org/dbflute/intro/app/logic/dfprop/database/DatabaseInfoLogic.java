@@ -15,8 +15,16 @@
  */
 package org.dbflute.intro.app.logic.dfprop.database;
 
+import java.io.File;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.dbflute.helper.filesystem.FileTextIO;
+import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
+import org.dbflute.intro.app.model.client.ClientModel;
+import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
 
@@ -32,6 +40,8 @@ public class DatabaseInfoLogic {
     //                                                                           =========
     @Resource
     private ClsTargetDatabaseBhv databaseBhv;
+    @Resource
+    private ClientPhysicalLogic clientPhysicalLogic;
 
     // ===================================================================================
     //                                                                        Embedded Jar
@@ -45,5 +55,42 @@ public class DatabaseInfoLogic {
         return databaseBhv.selectEntity(cb -> cb.query().setDatabaseCode_Equal_AsTargetDatabase(target))
                 .map(database -> database.isEmbeddedJarFlgTrue())
                 .orElseTranslatingThrow(cause -> new IllegalStateException("not found target database:" + target.alias(), cause));
+    }
+
+    // ===================================================================================
+    //                                                                              Update
+    //                                                                              ======
+    public void updateDatabaseInfoMap(ClientModel clientModel) {
+        DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
+        replaceDfpropDatabaseInfoMap(databaseInfoMap, clientModel.getProjectInfra().getProjectName());
+    }
+
+    public void replaceDfpropDatabaseInfoMap(DatabaseInfoMap databaseInfoMap, String projectName) {
+        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
+
+        // #needs_fix anyone switch toString() to getPath() by jflute (2021/04/16)
+        // File objects that are made in DBFlute intro uses slack as file separator
+        // so you can getPath() here (no problem) however be careful with Windows headache
+        // (while, FileTextIO should have rewrite methods that can accept File...?) 
+        final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
+        final DbConnectionBox box = databaseInfoMap.getDbConnectionBox();
+
+        // depends on the format of the dbflute_dfclient template (basically no change so almost no problem)
+        new FileTextIO().encodeAsUTF8().rewriteFilteringLine(databaseInfoMapPath, line -> {
+            String trimmedLine = line.trim(); // for determination
+            if (trimmedLine.startsWith("; url") && line.contains("=")) {
+                return "    ; url      = " + StringUtils.defaultString(box.getUrl());
+            }
+            if (trimmedLine.startsWith("; schema") && line.contains("=")) {
+                return "    ; schema   = " + StringUtils.defaultString(box.getSchema());
+            }
+            if (trimmedLine.startsWith("; user") && line.contains("=")) {
+                return "    ; user     = " + StringUtils.defaultString(box.getUser());
+            }
+            if (trimmedLine.startsWith("; password") && line.contains("=")) {
+                return "    ; password = " + StringUtils.defaultString(box.getPassword());
+            }
+            return line;
+        });
     }
 }

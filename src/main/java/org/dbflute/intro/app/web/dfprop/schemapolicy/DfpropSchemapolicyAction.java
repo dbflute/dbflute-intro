@@ -29,7 +29,6 @@ import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.dfprop.DfpropSchemaPolicyResult;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -64,14 +63,14 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
     //                                      ----------------
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String clientName, DfpropEditSchemaPolicyBody body) {
+    public JsonResponse<Void> edit(String clientName, DfpropSchemaPolicyEditBody body) {
         validate(body, messages -> {});
         SchemaPolicyMap schemaPolicyMap = mappingToSchemaPolicyMap(body);
         dfpropUpdateLogic.replaceSchemaPolicyMap(clientName, schemaPolicyMap);
         return JsonResponse.asEmptyBody();
     }
 
-    private SchemaPolicyMap mappingToSchemaPolicyMap(DfpropEditSchemaPolicyBody body) {
+    private SchemaPolicyMap mappingToSchemaPolicyMap(DfpropSchemaPolicyEditBody body) {
         List<SchemaPolicyWholeMap.Theme> wholeMapThemeList = body.wholeMap.themeList.stream()
                 .map(theme -> new SchemaPolicyWholeMap.Theme(SchemaPolicyWholeMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());

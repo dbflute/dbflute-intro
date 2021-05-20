@@ -13,61 +13,54 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.dfprop;
+package org.dbflute.intro.app.web.dfprop.schemasync;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
-import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
- * @author deco
- * @author cabos
- * @author subaru
  * @author prprmurakami
  * @author jflute
  */
-public class DfpropAction extends IntroBaseAction {
+public class DfpropSchemasyncAction extends IntroBaseAction {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropPhysicalLogic dfpropPhysicalLogic;
-    @Resource
     private DfpropInfoLogic dfpropInfoLogic;
     @Resource
-    private FlutyFileLogic flutyFileLogic;
+    private DfpropUpdateLogic dfpropUpdateLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<List<DfpropBean>> list(String projectName) {
-        List<File> dfpropFileList = dfpropPhysicalLogic.findDfpropFileAllList(projectName);
-        List<DfpropBean> beans = dfpropFileList.stream()
-                .map(dfpropFile -> new DfpropBean(dfpropFile.getName(), flutyFileLogic.readFile(dfpropFile)))
-                .collect(Collectors.toList());
-        return asJson(beans);
+    public JsonResponse<DfpropSchemaSyncCheckResult> index(String clientName) {
+        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(clientName);
+        final DfpropSchemaSyncCheckResult bean = schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElseGet(() -> {
+            return new DfpropSchemaSyncCheckResult(); // as empty result
+        });
+        return asJson(bean);
     }
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> update(String projectName, String fileName, DfpropUpdateBody body) {
+    public JsonResponse<Void> edit(String clientName, DfpropSchemaSyncEditBody body) {
         validate(body, messages -> {});
-
-        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(projectName, fileName);
-        flutyFileLogic.writeFile(dfpropFile, body.content);
-
+        final DbConnectionBox dbConnectionBox = new DbConnectionBox(body.url, body.schema, body.user, body.password);
+        final SchemaSyncCheckMap schemaSyncCheckMap = new SchemaSyncCheckMap(dbConnectionBox, body.isSuppressCraftDiff);
+        dfpropUpdateLogic.replaceSchemaSyncCheckMap(clientName, schemaSyncCheckMap);
         return JsonResponse.asEmptyBody();
     }
 }

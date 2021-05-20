@@ -1,4 +1,5 @@
 export default class ApiFactory {
+
   // ===============================================================================
   //                                                                           Intro
   //                                                                           =====
@@ -15,7 +16,6 @@ export default class ApiFactory {
   // ===============================================================================
   //                                                                         Welcome
   //                                                                         =======
-
   createWelcomeClient(client, testConnection) {
     return ffetch.post('api/welcome/create',
       { body: { client: client, testConnection: testConnection } , timeout: 180000 }); // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
@@ -24,11 +24,14 @@ export default class ApiFactory {
   // ===============================================================================
   //                                                                          Client
   //                                                                          ======
+  // -----------------------------------------------------
+  //                                                 Basic
+  //                                                 -----
   clientList() {
     return ffetch.post('api/client/list')
   }
-  clientOperation(projectName) {
-    return ffetch.post(`api/client/operation/${projectName}`)
+  clientPropbase(projectName) {
+    return ffetch.post(`api/client/propbase/${projectName}`)
   }
   createClient(client, testConnection) {
     return ffetch.post('api/client/create', {
@@ -43,22 +46,25 @@ export default class ApiFactory {
   removeClient(clientBody) {
     return ffetch.post(`api/client/delete/${clientBody.project}`)
   }
-  settings(projectName) {
-    return ffetch.post(`api/settings/${projectName}`)
-  }
-  updateSettings(clientBody) {
-    return ffetch.post(`api/settings/edit/${clientBody.projectName}`, {
-      body: { client: clientBody },
-    })
-  }
+
+  // ===============================================================================
+  //                                                                  Client::dfprop
+  //                                                                  ==============
+  // -----------------------------------------------------
+  //                                                 Basic
+  //                                                 -----
   dfporpBeanList(clientBody) {
     return ffetch.post(`api/dfprop/list/${clientBody.projectName}`)
   }
+
+  // -----------------------------------------------------
+  //                                       SchemaSyncCheck
+  //                                       ---------------
   syncSchema(projectName) {
-    return ffetch.post(`api/dfprop/syncschema/${projectName}`)
+    return ffetch.post(`api/dfprop/schemasync/${projectName}`)
   }
   editSyncSchema(projectName, syncSchemaSettingData) {
-    return ffetch.post(`api/dfprop/syncschema/edit/${projectName}/`, {
+    return ffetch.post(`api/dfprop/schemasync/edit/${projectName}/`, {
       body: {
         url: syncSchemaSettingData.url,
         schema: syncSchemaSettingData.schema,
@@ -68,6 +74,10 @@ export default class ApiFactory {
       },
     })
   }
+
+  // -----------------------------------------------------
+  //                                     SchemaPolicyCheck
+  //                                     -----------------
   schemaPolicy(projectName) {
     return ffetch.post(`api/dfprop/schemapolicy/${projectName}`)
   }
@@ -99,6 +109,10 @@ export default class ApiFactory {
       }
     )
   }
+
+  // -----------------------------------------------------
+  //                                              Document
+  //                                              --------
   document(projectName) {
     return ffetch.post(`api/dfprop/document/${projectName}`)
   }
@@ -114,17 +128,33 @@ export default class ApiFactory {
       },
     })
   }
+
+  // -----------------------------------------------------
+  //                                              Settings
+  //                                              --------
+  settings(projectName) {
+    return ffetch.post(`api/dfprop/settings/${projectName}`)
+  }
+  updateSettings(clientBody) {
+    return ffetch.post(`api/dfprop/settings/edit/${clientBody.projectName}`, {
+      body: { client: clientBody },
+    })
+  }
+
+  // ===============================================================================
+  //                                                               Client :: playsql
+  //                                                               =================
   openAlterDir(projectName) {
     return ffetch.get(`api/playsql/migration/alter/open/${projectName}`)
   }
   alter(projectName) {
-    return ffetch.get(`api/alter/${projectName}/`)
+    return ffetch.get(`api/playsql/migration/alter/${projectName}/`)
   }
   prepareAlterSql(projectName) {
-    return ffetch.post(`api/alter/prepare/${projectName}/`)
+    return ffetch.post(`api/playsql/migration/alter/prepare/${projectName}/`)
   }
   createAlterSql(projectName, alterFileName) {
-    return ffetch.post(`api/alter/create/${projectName}/`, {
+    return ffetch.post(`api/playsql/migration/alter/create/${projectName}/`, {
       body: {
         alterFileName,
       },
@@ -136,6 +166,10 @@ export default class ApiFactory {
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/list/${projectName}`)
   }
+
+  // ===============================================================================
+  //                                                                   Client :: log
+  //                                                                   =============
   logBeanList(projectName) {
     return ffetch.post(`api/log/list/${projectName}`)
   }
@@ -171,11 +205,12 @@ export default class ApiFactory {
   }
 
   // ===============================================================================
-  //                                                                            Task
-  //                                                                            ====
+  //                                                                           Task
+  //                                                                          ======
   task(projectName, task) {
     return ffetch.post(`api/task/execute/${projectName}/${task}`)
   }
+
   // ===============================================================================
   //                                                                           Retry
   //                                                                           =====

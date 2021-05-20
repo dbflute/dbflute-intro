@@ -13,40 +13,37 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.client;
+package org.dbflute.intro.app.logic.playsql.migration.info.ref;
 
-import java.io.File;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.unit.UnitIntroTestCase;
+import org.dbflute.intro.dbflute.allcommon.CDef;
 
 /**
- * @author jflute
+ * @author cabos
  */
-public class ClientActionTest extends UnitIntroTestCase {
+public class PlaysqlMigrationNgMarkFileReturn {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Resource
-    private IntroPhysicalLogic introPhysicalLogic;
+    private CDef.NgMark ngMark;
+    private String content;
 
     // ===================================================================================
-    //                                                                              Delete
-    //                                                                              ======
-    public void test_delete_basic() throws Exception {
-        // ## Arrange ##
-        ClientAction action = new ClientAction();
-        inject(action);
-        File client = introPhysicalLogic.findClientDir(UnitIntroTestCase.TEST_CLIENT_PROJECT);
-        assertTrue(client.exists());
+    //                                                                         Constructor
+    //                                                                         ===========
+    public PlaysqlMigrationNgMarkFileReturn(CDef.NgMark ngMark, String content) {
+        this.ngMark = ngMark;
+        this.content = content;
+    }
 
-        // ## Act ##
-        action.delete(UnitIntroTestCase.TEST_CLIENT_PROJECT);
+    // ===================================================================================
+    //                                                                            Accessor
+    //                                                                            ========
+    public CDef.NgMark getNgMark() {
+        return ngMark;
+    }
 
-        // ## Assert ##
-        assertFalse(client.exists());
+    public String getContent() {
+        return content;
     }
 }
