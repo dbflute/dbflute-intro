@@ -197,10 +197,10 @@ public interface AppCDef extends Classification {
      * Subjectable map type of schema policy check
      */
     public enum SubjectableMapType implements AppCDef {
-        /** Table: tableMap */
+        /** Table */
         Table("tableMap", "Table", emptyStrings())
         ,
-        /** Column: columnMap */
+        /** Column */
         Column("columnMap", "Column", emptyStrings())
         ;
         private static final Map<String, SubjectableMapType> _codeClsMap = new HashMap<String, SubjectableMapType>();

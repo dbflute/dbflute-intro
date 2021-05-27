@@ -272,11 +272,13 @@ public class DfpropInfoLogic {
         return Stream.of(ColumnMapSubject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
     }
 
+    // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
+    // http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatement
     public enum TableMapSubject {
         TABLE_NAME("tableName"), //
         ALIAS("alias"), //
         FIRST_DATE("firstDate"), //
-        PK_COLUM_NAME("pk_columnName"), //
+        PK_COLUMN_NAME("pk_columnName"), //
         PK_DB_TYPE("pk_dbType"), //
         PK_SIZE("pk_size"), //
         PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"); //
@@ -292,6 +294,8 @@ public class DfpropInfoLogic {
         }
     }
 
+    // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
+    // http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatement
     public enum ColumnMapSubject {
         TABLE_NAME("tableName"), //
         ALIAS("alias"), //

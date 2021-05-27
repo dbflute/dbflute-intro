@@ -41,8 +41,8 @@ map:{
     }
     ; SubjectableMapType = list:{
         ; map:{ topComment=Subjectable map type of schema policy check; codeType=String }
-        ; map:{code=tableMap; name=Table; comment=tableMap}
-        ; map:{code=columnMap; name=Column; comment=columnMap}
+        ; map:{code=tableMap; name=Table }
+        ; map:{code=columnMap; name=Column }
     }
 }
 # ----------------/
