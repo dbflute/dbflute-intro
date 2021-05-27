@@ -71,11 +71,15 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
         validate(form, message -> {});
         if (form.mapType == SubjectableMapType.Table) {
-            return asJson(
-                    dfpropInfoLogic.getStatementTableMapSubjectList().stream().map(ject -> ject.getTitle()).collect(Collectors.toList()));
+            return asJson(dfpropInfoLogic.getStatementTableMapSubjectList() // 
+                    .stream()
+                    .map(ject -> ject.getTitle())
+                    .collect(Collectors.toList()));
         } else if (form.mapType == SubjectableMapType.Column) {
-            return asJson(
-                    dfpropInfoLogic.getStatementColumnMapSubjectList().stream().map(ject -> ject.getTitle()).collect(Collectors.toList()));
+            return asJson(dfpropInfoLogic.getStatementColumnMapSubjectList() //
+                    .stream()
+                    .map(ject -> ject.getTitle())
+                    .collect(Collectors.toList()));
         } else {
             throw new SubjectableMapTypeNotExistException("There is no matching SubjectableMapType. mapType: " + form.mapType);
         }
