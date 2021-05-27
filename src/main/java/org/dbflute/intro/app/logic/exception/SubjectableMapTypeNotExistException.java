@@ -19,15 +19,15 @@ package org.dbflute.intro.app.logic.exception;
  * The exception when subjectable map type of schemapolicycheck statement does not exist.
  * @author prprmurakami
  */
-public class NotExistSubjectableMapTypeException extends RuntimeException {
+public class SubjectableMapTypeNotExistException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public NotExistSubjectableMapTypeException(String msg) {
+    public SubjectableMapTypeNotExistException(String msg) {
         super(msg);
     }
 
-    public NotExistSubjectableMapTypeException(String msg, Throwable cause) {
+    public SubjectableMapTypeNotExistException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }

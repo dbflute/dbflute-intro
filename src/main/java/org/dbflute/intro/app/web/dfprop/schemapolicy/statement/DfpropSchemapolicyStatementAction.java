@@ -16,16 +16,16 @@
 package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
-import org.dbflute.intro.app.logic.exception.NotExistMapTypeException;
+import org.dbflute.intro.app.logic.exception.SubjectableMapTypeNotExistException;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
-import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.mylasta.appcls.AppCDef.SubjectableMapType;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -70,12 +70,14 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     @Execute
     public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
         validate(form, message -> {});
-        if (AppCDef.SubjectableMapType.codeOf(form.mapType) == SubjectableMapType.Table) {
-            return asJson(dfpropInfoLogic.getStatementTableMapSubjectList());
-        } else if (AppCDef.SubjectableMapType.codeOf(form.mapType) == SubjectableMapType.Column) {
-            return asJson(dfpropInfoLogic.getStatementColumnMapSubjectList());
+        if (form.mapType == SubjectableMapType.Table) {
+            return asJson(
+                    dfpropInfoLogic.getStatementTableMapSubjectList().stream().map(ject -> ject.getTitle()).collect(Collectors.toList()));
+        } else if (form.mapType == SubjectableMapType.Column) {
+            return asJson(
+                    dfpropInfoLogic.getStatementColumnMapSubjectList().stream().map(ject -> ject.getTitle()).collect(Collectors.toList()));
         } else {
-            throw new NotExistMapTypeException("存在しないSubjectableMapType: " + form.mapType);
+            throw new SubjectableMapTypeNotExistException("There is no matching SubjectableMapType. mapType: " + form.mapType);
         }
     }
 

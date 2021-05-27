@@ -262,14 +262,14 @@ public class DfpropInfoLogic {
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
-    public List<String> getStatementTableMapSubjectList() {
+    public List<TableMapSubject> getStatementTableMapSubjectList() {
         // Create subject list here because contents does not change frequently
-        return Stream.of(TableMapSubject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
+        return Arrays.asList(TableMapSubject.values());
     }
 
-    public List<String> getStatementColumnMapSubjectList() {
+    public List<ColumnMapSubject> getStatementColumnMapSubjectList() {
         // Create subject list here because contents does not change frequently
-        return Stream.of(ColumnMapSubject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
+        return Arrays.asList(ColumnMapSubject.values());
     }
 
     // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
