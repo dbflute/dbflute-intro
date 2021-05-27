@@ -262,29 +262,54 @@ public class DfpropInfoLogic {
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
 
-    public List<String> getStatementSubjectList() {
+    public List<TableMapSubject> getStatementTableMapSubjectList() {
         // Create subject list here because contents does not change frequently
-        List<String> subjectList = Stream.of(Subject.values()).map(ject -> ject.getTitle()).collect(Collectors.toList());
-        return subjectList;
+        return Arrays.asList(TableMapSubject.values());
     }
 
-    public enum Subject {
+    public List<ColumnMapSubject> getStatementColumnMapSubjectList() {
+        // Create subject list here because contents does not change frequently
+        return Arrays.asList(ColumnMapSubject.values());
+    }
+
+    // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
+    // http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatement
+    public enum TableMapSubject {
         TABLE_NAME("tableName"), //
         ALIAS("alias"), //
         FIRST_DATE("firstDate"), //
-        PK_COLUM_NAME("pk_columnName"), //
+        PK_COLUMN_NAME("pk_columnName"), //
         PK_DB_TYPE("pk_dbType"), //
         PK_SIZE("pk_size"), //
-        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"), //
-        COLUMN("column"), //
-        COLUMN_NAME("columnName"), //
-        TABLE_COLUMN_NAME("tableColumnName"), //
-        DB_TYPE_WITH_SIZE("dbType_with_size");
+        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"); //
 
         private final String title;
 
-        // #needs_fix anyone remove mirror comment by jflute (2021/04/29)
-        private Subject(String title) { //コンストラクタはprivateで宣言
+        private TableMapSubject(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
+    // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
+    // http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatement
+    public enum ColumnMapSubject {
+        TABLE_NAME("tableName"), //
+        ALIAS("alias"), //
+        FIRST_DATE("firstDate"), //
+        COLUMN("column"), //
+        COLUMN_NAME("columnName"), //
+        TABLE_COLUMN_NAME("tableColumnName"), //
+        DB_TYPE_WITH_SIZE("dbType_with_size"), //
+        SIZE("size"), //
+        DB_TYPE("dbType");
+
+        private final String title;
+
+        private ColumnMapSubject(String title) {
             this.title = title;
         }
 

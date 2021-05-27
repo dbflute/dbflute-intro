@@ -184,11 +184,11 @@
       self.mapType = self.opts.type
       self.projectName = self.opts.projectname
       self.mounted = true
-      self.getSubject()
+      self.getSubject(self.opts.type)
     })
 
-    this.getSubject = () => {
-      ApiFactory.getSchemapolicyStatementSubject().then(json => {
+    this.getSubject = (mapType) => {
+      ApiFactory.getSchemapolicyStatementSubject(mapType).then(json => {
         const defaultItems = [{label: 'Select subject', value: null, default: true}]
         const items = json.map(obj => ({
           label: obj,

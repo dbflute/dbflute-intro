@@ -39,5 +39,10 @@ map:{
             ; subItemMap = map:{ relatedTasks = alter_check }
         }
     }
+    ; SubjectableMapType = list:{
+        ; map:{ topComment=Subjectable map type of schema policy check; codeType=String }
+        ; map:{code=tableMap; name=Table }
+        ; map:{code=columnMap; name=Column }
+    }
 }
 # ----------------/
