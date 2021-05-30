@@ -7,11 +7,6 @@ export default class DbfluteTask {
     return ApiFactory.task(projectName, task).then((response) => {
       const message = response.success ? 'success' : 'failure'
       callback(message)
-      ApiFactory.clientPropbase(projectName).then((response) => {
-        self.update({
-          client: response
-        })
-      })
     })
   }
 }

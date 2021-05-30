@@ -5,7 +5,7 @@
       for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }
     </p>
     <div class="ui list">
-      <div show="{ opts.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
+      <div show="{ state.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
     </div>
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
     <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
@@ -68,11 +68,22 @@
 
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
-    let self = this
-    this.syncSetting = {}
 
-    this.checkModal = {
-      header : 'SchemaPolicyCheck',
+    const self = this
+
+    self.props = {
+      projectName: self.opts.projectName,
+      client: self.opts.client
+    }
+
+    self.state = {
+      client: self.props.client
+    }
+
+    self.syncSetting = {}
+
+    self.checkModal = {
+      header: 'SchemaPolicyCheck',
       closable: false
     }
 
@@ -86,7 +97,7 @@
     })
 
     this.initSyncSchemaSetting = () => {
-      ApiFactory.syncSchema(self.opts.projectName).then((response) => {
+      ApiFactory.syncSchema(self.props.projectName).then((response) => {
         self.syncSettingModal.syncSetting = response
         self.update({
           syncSetting: response
@@ -95,7 +106,7 @@
     }
 
     this.prepareComponents = () => {
-      self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'schemaSyncCheck' })[0]
+      self.latestResult = riot.mount('latest-result', { projectName: self.props.projectName, task: 'schemaSyncCheck' })[0]
     }
 
     this.registerModalEvent = () => {
@@ -108,7 +119,7 @@
           password: syncSettingModalRefs.password.value,
           isSuppressCraftDiff: syncSettingModalRefs.isSuppressCraftDiff.checked
         }
-        ApiFactory.editSyncSchema(self.opts.projectName, syncSetting).then(() => {
+        ApiFactory.editSyncSchema(self.props.projectName, syncSetting).then(() => {
           self.refs.syncSettingModal.hide()
           self.initSyncSchemaSetting()
         })
@@ -123,7 +134,7 @@
     }
 
     this.openSyncCheckResultHTML = () => {
-      window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/synccheckresulthtml/')
+      window.open(global.ffetch.baseUrl + 'api/document/' + self.props.projectName + '/synccheckresulthtml/')
     }
 
     // ===================================================================================
@@ -157,7 +168,12 @@
     //                                                                        ============
     this.schemaSyncCheckTask = () => {
       self.refs.checkModal.show()
-      DbfluteTask.task('schemaSyncCheck', self.opts.projectName, (message) => {
+      DbfluteTask.task('schemaSyncCheck', self.props.projectName, (message) => {
+        // hasSyncCheckResultHtmlの最新状態を取得するため、clientをfetchし、componentに反映
+        ApiFactory.clientOperation(self.props.projectName).then((response) => {
+          self.state.client = response
+          self.update()
+        })
         self.refs.resultModal.show(message)
       }).finally(() => {
         self.refs.checkModal.hide()
