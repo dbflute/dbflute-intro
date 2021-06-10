@@ -129,6 +129,9 @@
           </div>
         </div>
       </toggle-help>
+
+
+      <!-- もともと (ラベルは上の方) -->
       <div class="ui icon input field" each="{ expected, index in statement.expecteds }">
         <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.expecteds.length > 1} onclick="{ statement.deleteExpectedField.bind(this, index) }"></i>
@@ -152,6 +155,141 @@
           </div>
         </div>
       </div>
+
+      <!-- ①-1 -->
+      <div class="grouped fields required">
+        <label>Expected</label>
+        <p>
+          <a if="{ mapType === 'tableMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
+          <a if="{ mapType === 'columnMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
+          /
+          <a onclick="{ toggleExpectedHelp }">sample</a>
+        </p>
+        <div class="fields">
+          <div class="six wide right floated column field">
+            <select>
+              <option value=""></option>
+              <option value="1">bad</option>
+              <option value="0">hasPK</option>
+            </select>
+          </div>
+        </div>
+        <div class="right floated">
+          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
+        </div>
+      </div>
+
+      <!-- ①-2 -->
+      <div class="grouped fields required">
+        <label>Expected</label>
+        <p>
+          <a if="{ mapType === 'tableMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
+          <a if="{ mapType === 'columnMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
+          /
+          <a onclick="{ toggleExpectedHelp }">sample</a>
+        </p>
+        <div class="fields">
+          <div class="six wide field">
+            <select>
+              <option value=""></option>
+              <option value="1">bad</option>
+              <option value="0">hasPK</option>
+              <option value="0">tableName</option>
+            </select>
+          </div>
+          <div class="ten wide field">
+            <input type="text" name="expected" onchange="{ handleChange }">
+          </div>
+        </div>
+        <div class="right floated">
+          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
+        </div>
+      </div>
+
+      <!-- ①-3 -->
+      <div class="grouped fields required">
+        <label>Expected</label>
+        <p>
+          <a if="{ mapType === 'tableMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
+          <a if="{ mapType === 'columnMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
+          /
+          <a onclick="{ toggleExpectedHelp }">sample</a>
+        </p>
+        <div class="fields">
+          <div class="six wide field">
+            <select>
+              <option value=""></option>
+              <option value="1">bad</option>
+              <option value="0">hasPK</option>
+            </select>
+          </div>
+          <div class="ten wide field">
+            <input type="text" name="expected" onchange="{ handleChange }">
+          </div>
+        </div>
+        <div class="fields">
+          <div class="six wide field">
+            <select>
+              <option value=""></option>
+              <option value="1">bad</option>
+              <option value="0">hasPK</option>
+              <option value="0">tableName</option>
+            </select>
+          </div>
+          <div class="ten wide field">
+            <input type="text" name="expected" onchange="{ handleChange }">
+          </div>
+        </div>
+        <div class="right floated">
+          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
+          <div class="inline fields" style="float: right">
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked" onchange="{ handleChange }">
+                <label>and</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="expected-mode" onchange="{ handleChange }">
+                <label>or</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② -->
+      <div class="grouped fields required">
+        <label>Expected</label>
+        <p>
+          <a if="{ mapType === 'tableMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
+          <a if="{ mapType === 'columnMap' }" class="help link"
+             href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
+          /
+          <a onclick="{ toggleExpectedHelp }">sample</a>
+        </p>
+        <div class="field">
+          <select>
+            <option value=""></option>
+            <option value="1">bad</option>
+            <option value="0">hasPK</option>
+            <option value="0">tableName</option>
+          </select>
+        </div>
+        <div class="field">
+          <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
+        </div>
+      </div>
+
+
       <div class="field required">
         <label>Supplementary Comment</label>
         <p>
