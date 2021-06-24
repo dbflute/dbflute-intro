@@ -1,19 +1,4 @@
-/*
- * Copyright 2014-2021 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-package org.dbflute.intro.app.logic.dfprop;
+package org.dbflute.intro.app.logic.dfprop.schemapolicy;
 
 import java.io.File;
 import java.util.Arrays;
@@ -23,14 +8,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.dbflute.infra.dfprop.DfPropFile;
-import org.dbflute.intro.app.model.client.document.*;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
+import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 
 /**
  * @author hakiba
+ * @author jflute
+ * @since 0.5.0 split from DfpropInfoLogicTest (2021/06/24 Thursday at roppongi japanese)
  */
-public class DfpropInfoLogicTest extends UnitIntroTestCase {
+public class DfpropSchemaPolicyReadLogicTest extends UnitIntroTestCase {
 
     // ===================================================================================
     //                                                                     SchemaPolicyMap
@@ -38,7 +29,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_NotExistDfpropFile() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
         File notExistFile = new File("not/exist/SchemaPolicyMap.dfprop");
 
@@ -68,7 +59,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_WholeMap_containsAllThemeType() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -83,7 +74,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_WholeMap_correctThemeStatus() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -109,7 +100,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_TableMap_containsAllProperty() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -127,7 +118,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_TableMap_correctThemeStatus() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -151,7 +142,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_ColumnMap_containsAllThemeType() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -168,7 +159,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_findSchemaPolicyMap_ColumnMap_correctThemeStatus() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -189,7 +180,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_parseSchemePolicyMap_TargetSetting() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##
@@ -211,7 +202,7 @@ public class DfpropInfoLogicTest extends UnitIntroTestCase {
     @Test
     public void test_parseSchemaPolicyMap_noSettingSchemaPolicyMapFile() throws Exception {
         // ## Arrange ##
-        DfpropInfoLogic logic = new DfpropInfoLogic();
+        DfpropSchemaPolicyReadLogic logic = new DfpropSchemaPolicyReadLogic();
         inject(logic);
 
         // ## Act ##

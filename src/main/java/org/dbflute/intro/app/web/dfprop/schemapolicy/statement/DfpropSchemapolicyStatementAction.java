@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
-import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyUpdateLogic;
 import org.dbflute.intro.app.logic.exception.SubjectableMapTypeNotExistException;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
@@ -32,6 +32,7 @@ import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
 
@@ -39,9 +40,9 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropUpdateLogic dfpropUpdateLogic;
+    private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropSchemaPolicyUpdateLogic dfpropSchemaPolicyUpdateLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -54,7 +55,7 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     public JsonResponse<String> register(String clientName, DfpropRegisterSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
         SchemaPolicyStatement statement = mappingToStatement(body);
-        String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
+        String builtStatement = dfpropSchemaPolicyUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
         return asJson(builtStatement);
     }
 
@@ -71,12 +72,12 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
         validate(form, message -> {});
         if (form.mapType == SubjectableMapType.Table) {
-            return asJson(dfpropInfoLogic.getStatementTableMapSubjectList() // 
+            return asJson(dfpropSchemaPolicyReadLogic.getStatementTableMapSubjectList() // 
                     .stream()
                     .map(ject -> ject.getTitle())
                     .collect(Collectors.toList()));
         } else if (form.mapType == SubjectableMapType.Column) {
-            return asJson(dfpropInfoLogic.getStatementColumnMapSubjectList() //
+            return asJson(dfpropSchemaPolicyReadLogic.getStatementColumnMapSubjectList() //
                     .stream()
                     .map(ject -> ject.getTitle())
                     .collect(Collectors.toList()));
@@ -92,7 +93,7 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> delete(String clientName, DfpropDeleteSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        dfpropUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
+        dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
 }

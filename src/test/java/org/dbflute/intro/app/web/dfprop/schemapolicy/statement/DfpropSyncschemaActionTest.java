@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.lastaflute.web.response.JsonResponse;
@@ -39,6 +40,8 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
 
     @Resource
     private DfpropInfoLogic dfpropInfoLogic;
+    @Resource
+    private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
 
     // ===================================================================================
     //                                                                                Test
@@ -105,7 +108,7 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
     //                                                                        ============
     private List<String> findStatementsOf(String mapType) {
         List<String> statementList = Collections.emptyList();
-        SchemaPolicyMap policyMap = dfpropInfoLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT);
+        SchemaPolicyMap policyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT);
         if (mapType.equals("tableMap")) {
             statementList = policyMap.tableMap.statementList;
         } else if (mapType.equals("columnMap")) {
