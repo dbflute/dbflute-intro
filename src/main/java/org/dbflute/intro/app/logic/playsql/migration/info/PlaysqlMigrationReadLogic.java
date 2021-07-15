@@ -54,7 +54,7 @@ import org.dbflute.util.DfStringUtil;
  * @author prprmurakami
  * @author jflute
  */
-public class PlaysqlMigrationInfoLogic {
+public class PlaysqlMigrationReadLogic {
 
     // ===================================================================================
     //                                                                          Definition

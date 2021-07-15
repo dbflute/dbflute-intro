@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.exception.DirNotFoundException;
 import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationPhysicalLogic;
 import org.dbflute.intro.app.logic.playsql.migration.PlaysqlMigrationUpdateLogic;
-import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationInfoLogic;
+import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationReadLogic;
 import org.dbflute.intro.app.logic.playsql.migration.info.ref.PlaysqlMigrationDirReturn;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
@@ -40,7 +40,7 @@ public class PlaysqlMigrationAlterAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private PlaysqlMigrationInfoLogic playsqlMigrationInfoLogic;
+    private PlaysqlMigrationReadLogic playsqlMigrationReadLogic;
     @Resource
     private PlaysqlMigrationUpdateLogic playsqlMigrationUpdateLogic;
     @Resource
@@ -58,7 +58,7 @@ public class PlaysqlMigrationAlterAction extends IntroBaseAction {
      */
     @Execute
     public JsonResponse<AlterSQLResult> index(String projectName) {
-        PlaysqlMigrationDirReturn migrationDirReturn = playsqlMigrationInfoLogic.loadPlaysqlMigrationDir(projectName);
+        PlaysqlMigrationDirReturn migrationDirReturn = playsqlMigrationReadLogic.loadPlaysqlMigrationDir(projectName);
         AlterSQLResult alterSQLResult = playsqlMigrationAlterAssist.mappingAlterSQLResult(migrationDirReturn);
         return asJson(alterSQLResult);
     }

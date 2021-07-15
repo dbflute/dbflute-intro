@@ -22,8 +22,8 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
@@ -56,7 +56,7 @@ public class WelcomeAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
@@ -79,7 +79,7 @@ public class WelcomeAction extends IntroBaseAction {
         validate(welcomeCreateBody, messages -> {
             ClientPart client = welcomeCreateBody.client;
             String projectName = client.projectName;
-            if (clientInfoLogic.getProjectList().contains(projectName)) {
+            if (clientReadLogic.getProjectList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
             }
             // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
@@ -162,5 +162,4 @@ public class WelcomeAction extends IntroBaseAction {
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
         testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
     }
-
 }

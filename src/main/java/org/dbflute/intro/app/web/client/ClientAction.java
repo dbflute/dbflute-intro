@@ -17,8 +17,8 @@ package org.dbflute.intro.app.web.client;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
@@ -46,7 +46,7 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
     @Resource
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource

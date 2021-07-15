@@ -24,7 +24,7 @@ import org.dbflute.intro.IntroBoot;
  * @author p1us2er0
  * @author jflute
  */
-public class IntroInfoLogic {
+public class IntroReadLogic {
 
     public Map<String, Object> getManifestMap() {
         // manifest logic is also used in IntroBoot, it should be one way reference so use it here

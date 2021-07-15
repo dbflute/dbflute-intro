@@ -27,7 +27,7 @@ public class PlaysqlMigrationInfoLogicTest extends UnitIntroTestCase {
 
     public void test_compareFileCreationTime() throws Exception {
         // ## Arrange ##
-        final PlaysqlMigrationInfoLogic logic = new PlaysqlMigrationInfoLogic();
+        final PlaysqlMigrationReadLogic logic = new PlaysqlMigrationReadLogic();
         inject(logic);
 
         String basePath = TEST_RESOURCE_PLAYSQL_DIR_PATH;

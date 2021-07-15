@@ -17,9 +17,9 @@ package org.dbflute.intro.app.web.client.propbase;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
-import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
+import org.dbflute.intro.app.logic.engine.EngineReadLogic;
 import org.dbflute.intro.app.logic.log.LogPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -32,26 +32,26 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author jflute (split from large action) (at roppongi japanese)
  */
-public class ClientPropbaseAction extends IntroBaseAction {
+public class ClientPropbaseAction extends IntroBaseAction { // prop-base means basic properties of client
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
     @Resource
-    private DocumentPhysicalLogic documentLogic;
+    private DocumentPhysicalLogic documentPhysicalLogic;
     @Resource
     private LogPhysicalLogic logPhysicalLogic;
     @Resource
-    private EngineInfoLogic engineInfoLogic;
+    private EngineReadLogic engineReadLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute
     public JsonResponse<ClientPropbaseResult> index(String clientName) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
+        ClientModel clientModel = clientReadLogic.findClient(clientName).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
         ClientPropbaseResult detailBean = mappingToOperationResult(clientModel);
@@ -62,12 +62,12 @@ public class ClientPropbaseAction extends IntroBaseAction {
         ClientPropbaseResult operation = new ClientPropbaseResult();
         prepareBasic(operation, clientModel);
         String clientName = clientModel.getProjectInfra().getProjectName();
-        operation.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
-        operation.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
-        operation.hasSyncCheckResultHtml = documentLogic.existsSyncCheckResultHtml(clientName);
-        operation.hasAlterCheckResultHtml = documentLogic.existsAlterCheckResultHtml(clientName);
-        boolean isDebugEngineVersion = engineInfoLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
-        if (engineInfoLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
+        operation.hasSchemaHtml = documentPhysicalLogic.existsSchemaHtml(clientName);
+        operation.hasHistoryHtml = documentPhysicalLogic.existsHistoryHtml(clientName);
+        operation.hasSyncCheckResultHtml = documentPhysicalLogic.existsSyncCheckResultHtml(clientName);
+        operation.hasAlterCheckResultHtml = documentPhysicalLogic.existsAlterCheckResultHtml(clientName);
+        boolean isDebugEngineVersion = engineReadLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
+        if (engineReadLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
             operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientName);
         }
         return operation;

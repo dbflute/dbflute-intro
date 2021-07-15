@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
@@ -38,7 +38,7 @@ public class DfpropSchemasyncAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropReadLogic dfpropReadLogic;
     @Resource
     private DfpropUpdateLogic dfpropUpdateLogic;
 
@@ -47,7 +47,7 @@ public class DfpropSchemasyncAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<DfpropSchemaSyncCheckResult> index(String clientName) {
-        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropInfoLogic.findSchemaSyncCheckMap(clientName);
+        final Optional<SchemaSyncCheckMap> schemaSyncCheckMap = dfpropReadLogic.findSchemaSyncCheckMap(clientName);
         final DfpropSchemaSyncCheckResult bean = schemaSyncCheckMap.map(DfpropSchemaSyncCheckResult::new).orElseGet(() -> {
             return new DfpropSchemaSyncCheckResult(); // as empty result
         });

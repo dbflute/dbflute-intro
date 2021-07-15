@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationInfoLogic;
+import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationReadLogic;
 import org.dbflute.intro.app.logic.playsql.migration.info.ref.PlaysqlMigrationAlterSqlReturn;
 import org.dbflute.intro.app.logic.playsql.migration.info.ref.PlaysqlMigrationDirReturn;
 import org.dbflute.intro.mylasta.action.IntroMessages;
@@ -35,7 +35,7 @@ public class PlaysqlMigrationAlterAssist {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private PlaysqlMigrationInfoLogic playsqlMigrationInfoLogic;
+    private PlaysqlMigrationReadLogic playsqlMigrationReadLogic;
 
     // ===================================================================================
     //                                                                          Validation
@@ -52,7 +52,7 @@ public class PlaysqlMigrationAlterAssist {
         if (containsInvalidCharacter) {
             messages.addErrorsInvalidFileName(alterFileName);
         }
-        if (!containsInvalidCharacter && playsqlMigrationInfoLogic.existsSameNameAlterSqlFile(projectName, body.alterFileName)) {
+        if (!containsInvalidCharacter && playsqlMigrationReadLogic.existsSameNameAlterSqlFile(projectName, body.alterFileName)) {
             messages.addErrorsDuplicateFileName(alterFileName);
         }
     }

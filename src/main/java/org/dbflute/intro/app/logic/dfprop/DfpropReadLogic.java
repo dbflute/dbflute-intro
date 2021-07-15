@@ -35,7 +35,7 @@ import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 
 /**
- * The logic for DBFlute property (dfprop) information.
+ * The logic for reading DBFlute property (dfprop) information.
  * @author jflute
  * @author deco
  * @author cabos
@@ -43,7 +43,7 @@ import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
  * @author subaru
  * @author prprmurakami
  */
-public class DfpropInfoLogic {
+public class DfpropReadLogic {
 
     // ===================================================================================
     //                                                                           Attribute

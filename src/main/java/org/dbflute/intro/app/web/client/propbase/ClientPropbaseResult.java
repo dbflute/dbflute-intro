@@ -25,7 +25,7 @@ import org.lastaflute.web.validation.Required;
  * @author cabos
  * @author jflute
  */
-public class ClientPropbaseResult {
+public class ClientPropbaseResult { // prop-base means basic properties of client
 
     // ===================================================================================
     //                                                                         Client Info
