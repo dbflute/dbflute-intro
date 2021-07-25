@@ -24,7 +24,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
@@ -35,11 +34,10 @@ import org.lastaflute.web.validation.exception.ValidationErrorException;
  * @author deco
  * @author hakiba
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
 
-    @Resource
-    private DfpropReadLogic dfpropInfoLogic;
     @Resource
     private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
 

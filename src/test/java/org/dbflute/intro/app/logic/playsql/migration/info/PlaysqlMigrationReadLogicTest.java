@@ -23,7 +23,7 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  * @author cabos
  * @author jflute
  */
-public class PlaysqlMigrationInfoLogicTest extends UnitIntroTestCase {
+public class PlaysqlMigrationReadLogicTest extends UnitIntroTestCase {
 
     public void test_compareFileCreationTime() throws Exception {
         // ## Arrange ##
