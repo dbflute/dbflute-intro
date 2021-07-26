@@ -17,7 +17,7 @@ package org.dbflute.intro.app.web.dfprop.document;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
@@ -36,7 +36,7 @@ public class DfpropDocumentAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropReadLogic dfpropReadLogic;
     @Resource
     private DfpropUpdateLogic dfpropUpdateLogic;
 
@@ -45,8 +45,8 @@ public class DfpropDocumentAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<DfpropDocumentResult> index(String projectName) {
-        final LittleAdjustmentMap littleAdjustmentMap = dfpropInfoLogic.findLittleAdjustmentMap(projectName);
-        final DocumentMap documentMap = dfpropInfoLogic.findDocumentMap(projectName);
+        final LittleAdjustmentMap littleAdjustmentMap = dfpropReadLogic.findLittleAdjustmentMap(projectName);
+        final DocumentMap documentMap = dfpropReadLogic.findDocumentMap(projectName);
         return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
     }
 

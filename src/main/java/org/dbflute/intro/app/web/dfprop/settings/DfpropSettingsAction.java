@@ -17,7 +17,7 @@ package org.dbflute.intro.app.web.dfprop.settings;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
@@ -46,7 +46,7 @@ public class DfpropSettingsAction extends IntroBaseAction {
     @Resource
     private DatabaseInfoLogic databaseInfoLogic;
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -56,7 +56,7 @@ public class DfpropSettingsAction extends IntroBaseAction {
     //                                              --------
     @Execute
     public JsonResponse<DfpropSettingsResult> index(String clientName) {
-        ClientModel clientModel = clientInfoLogic.findClient(clientName).orElseThrow(() -> {
+        ClientModel clientModel = clientReadLogic.findClient(clientName).orElseThrow(() -> {
             return new ClientNotFoundException("Not found the project: " + clientName, clientName);
         });
         DfpropSettingsResult result = mappingToSettingsResult(clientModel);

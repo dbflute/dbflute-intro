@@ -23,11 +23,11 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  * @author cabos
  * @author jflute
  */
-public class PlaysqlMigrationInfoLogicTest extends UnitIntroTestCase {
+public class PlaysqlMigrationReadLogicTest extends UnitIntroTestCase {
 
     public void test_compareFileCreationTime() throws Exception {
         // ## Arrange ##
-        final PlaysqlMigrationInfoLogic logic = new PlaysqlMigrationInfoLogic();
+        final PlaysqlMigrationReadLogic logic = new PlaysqlMigrationReadLogic();
         inject(logic);
 
         String basePath = TEST_RESOURCE_PLAYSQL_DIR_PATH;

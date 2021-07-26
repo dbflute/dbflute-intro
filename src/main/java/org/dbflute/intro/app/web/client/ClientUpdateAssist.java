@@ -22,8 +22,8 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
@@ -47,7 +47,7 @@ public class ClientUpdateAssist {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
     @Resource
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
@@ -61,7 +61,7 @@ public class ClientUpdateAssist {
     public void moreValidateCreate(IntroMessages messages, ClientCreateBody clientCreateBody) {
         String clientName = clientCreateBody.client.projectName;
         ClientPart client = clientCreateBody.client;
-        if (clientInfoLogic.getProjectList().contains(clientName)) {
+        if (clientReadLogic.getProjectList().contains(clientName)) {
             messages.addErrorsWelcomeClientAlreadyExists("projectName", clientName);
         }
         TargetDatabase databaseCd = client.databaseCode;

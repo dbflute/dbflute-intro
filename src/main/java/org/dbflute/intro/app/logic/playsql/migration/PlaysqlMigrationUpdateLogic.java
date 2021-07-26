@@ -32,7 +32,7 @@ import javax.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationInfoLogic;
+import org.dbflute.intro.app.logic.playsql.migration.info.PlaysqlMigrationReadLogic;
 import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.util.DfStringUtil;
@@ -54,7 +54,7 @@ public class PlaysqlMigrationUpdateLogic {
     @Resource
     private IntroPhysicalLogic introPhysicalLogic;
     @Resource
-    private PlaysqlMigrationInfoLogic playsqlMigrationInfoLogic;
+    private PlaysqlMigrationReadLogic playsqlMigrationReadLogic;
     @Resource
     private PlaysqlMigrationPhysicalLogic playsqlMigrationPhysicalLogic;
 
@@ -117,7 +117,7 @@ public class PlaysqlMigrationUpdateLogic {
         if (Files.notExists(Paths.get(historyPath))) {
             return;
         }
-        playsqlMigrationInfoLogic.loadNewestCheckedZipFile(projectName).ifPresent(zipFile -> {
+        playsqlMigrationReadLogic.loadNewestCheckedZipFile(projectName).ifPresent(zipFile -> {
             final String zipPath = zipFile.getPath();
             final String alterDirPath = buildAlterDirectoryPath(projectName);
             try {

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
@@ -42,18 +42,18 @@ public class ClientListAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
     @Resource
-    private DocumentPhysicalLogic documentLogic;
+    private DocumentPhysicalLogic documentPhysicalLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     @Execute
     public JsonResponse<List<ClientRowResult>> index() {
-        List<String> projectList = clientInfoLogic.getProjectList();
+        List<String> projectList = clientReadLogic.getProjectList();
         List<ClientRowResult> beans = projectList.stream().map(project -> {
-            ClientModel clientModel = clientInfoLogic.findClient(project).get();
+            ClientModel clientModel = clientReadLogic.findClient(project).get();
             return mappingToRowBean(clientModel);
         }).collect(Collectors.toList());
         return asJson(beans);
@@ -96,9 +96,9 @@ public class ClientListAction extends IntroBaseAction {
         //    }
 
         String clientName = clientModel.getProjectInfra().getProjectName();
-        rowBean.hasSchemaHtml = documentLogic.existsSchemaHtml(clientName);
-        rowBean.hasHistoryHtml = documentLogic.existsHistoryHtml(clientName);
-        rowBean.hasReplaceSchema = clientInfoLogic.existsReplaceSchema(clientName);
+        rowBean.hasSchemaHtml = documentPhysicalLogic.existsSchemaHtml(clientName);
+        rowBean.hasHistoryHtml = documentPhysicalLogic.existsHistoryHtml(clientName);
+        rowBean.hasReplaceSchema = clientReadLogic.existsReplaceSchema(clientName);
         return rowBean;
     }
 

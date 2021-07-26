@@ -31,11 +31,11 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
- * The logic for DBFlute Engine information. (e.g. version)
+ * The logic for reading DBFlute Engine information. (e.g. version)
  * @author p1us2er0
  * @author jflute
  */
-public class EngineInfoLogic {
+public class EngineReadLogic {
 
     // ===================================================================================
     //                                                                          Definition

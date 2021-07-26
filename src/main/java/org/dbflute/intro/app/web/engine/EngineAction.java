@@ -21,8 +21,8 @@ import javax.annotation.Resource;
 
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
-import org.dbflute.intro.app.logic.engine.EngineInfoLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
+import org.dbflute.intro.app.logic.engine.EngineReadLogic;
 import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
@@ -44,7 +44,7 @@ public class EngineAction extends IntroBaseAction {
     @Resource
     private EngineInstallLogic engineInstallLogic;
     @Resource
-    private EngineInfoLogic engineInfoLogic;
+    private EngineReadLogic engineReadLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -66,7 +66,7 @@ public class EngineAction extends IntroBaseAction {
 
     @Execute
     public JsonResponse<List<String>> versions() {
-        List<String> dbFluteVersionList = engineInfoLogic.getExistingVersionList();
+        List<String> dbFluteVersionList = engineReadLogic.getExistingVersionList();
         return asJson(dbFluteVersionList);
     }
 

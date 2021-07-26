@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
@@ -44,7 +44,7 @@ public class DfpropAction extends IntroBaseAction {
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropReadLogic dfpropReadLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
 

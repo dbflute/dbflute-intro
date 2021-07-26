@@ -29,7 +29,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
@@ -62,7 +62,7 @@ import org.lastaflute.core.util.LaClassificationUtil;
  * @author deco
  * @author subaru
  */
-public class ClientInfoLogic {
+public class ClientReadLogic {
 
     // ===================================================================================
     //                                                                          Definition
@@ -79,7 +79,7 @@ public class ClientInfoLogic {
     @Resource
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropReadLogic dfpropReadLogic;
 
     // ===================================================================================
     //                                                                        Project Info
@@ -162,7 +162,7 @@ public class ClientInfoLogic {
             });
         }
         // // map:{ [file-name] = map:{ [dfprop key-values] } }
-        final Map<String, Map<String, Object>> dfpropMap = dfpropInfoLogic.findDfpropMap(projectName);
+        final Map<String, Map<String, Object>> dfpropMap = dfpropReadLogic.findDfpropMap(projectName);
         final ClientModel clientModel = newClientModel(projectName, dfpropMap);
         clientModel.setDocumentMap(prepareDocumentMap(dfpropMap));
         clientModel.setOutsideSqlMap(prepareOutsideSqlMap(dfpropMap));
