@@ -34,7 +34,7 @@ import org.junit.Test;
 /**
  * @author hakiba
  * @author jflute
- * @since 0.5.0 split from DfpropInfoLogicTest (2021/06/24 Thursday at roppongi japanese)
+ * @since 0.5.0 split from DfpropReadLogicTest (2021/06/24 Thursday at roppongi japanese)
  */
 public class DfpropSchemaPolicyReadLogicTest extends UnitIntroTestCase {
 
