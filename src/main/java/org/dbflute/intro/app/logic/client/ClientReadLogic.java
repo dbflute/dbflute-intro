@@ -22,17 +22,14 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.FileUtils;
+import org.dbflute.intro.app.logic.client.projectinfra.ClientProjectInfraReadLogic;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
-import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
@@ -65,11 +62,6 @@ import org.lastaflute.core.util.LaClassificationUtil;
 public class ClientReadLogic {
 
     // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static final Pattern PROJECT_FILE_VERSION_PATTERN = Pattern.compile("((?:set|export) DBFLUTE_HOME=[^-]*-)(.*)");
-
-    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
@@ -80,6 +72,8 @@ public class ClientReadLogic {
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private DfpropReadLogic dfpropReadLogic;
+    @Resource
+    private ClientProjectInfraReadLogic projectInfraReadLogic;
 
     // ===================================================================================
     //                                                                        Project Info
@@ -171,46 +165,18 @@ public class ClientReadLogic {
     }
 
     private ClientModel newClientModel(String projectName, Map<String, Map<String, Object>> dfpropMap) {
-        final ProjectInfra projectInfra = prepareProjectMeta(projectName);
+        final ProjectInfra projectInfra = prepareProjectInfra(projectName);
         final BasicInfoMap basicInfoMap = prepareBasicInfoMap(dfpropMap);
         final DatabaseInfoMap databaseInfoMap = prepareDatabaseInfoMap(dfpropMap);
         return new ClientModel(projectInfra, basicInfoMap, databaseInfoMap);
     }
 
     // -----------------------------------------------------
-    //                                          Project Core
-    //                                          ------------
-    private ProjectInfra prepareProjectMeta(String projectName) {
+    //                                         Project Infra
+    //                                         -------------
+    private ProjectInfra prepareProjectInfra(String projectName) {
         IntroAssertUtil.assertNotEmpty(projectName);
-        return new ProjectInfra(projectName, prepareDBFluteVersion(projectName), prepareJdbcDriverExtlibFile(projectName));
-    }
-
-    private String prepareDBFluteVersion(String projectName) {
-        // written version in both .sh and .bat should be same
-        final File projectFile = new File(introPhysicalLogic.buildClientPath(projectName, "_project.sh"));
-        final String data = flutyFileLogic.readFile(projectFile);
-        final Matcher matcher = PROJECT_FILE_VERSION_PATTERN.matcher(data);
-        if (matcher.find()) {
-            return matcher.group(2);
-        } else { // almost no way, broken project file
-            throw new IllegalStateException("Not found the DBFlute version in _project.sh: " + projectFile);
-        }
-    }
-
-    // done (by jflute) hakiba confirm allow findFirst by hakiba (2018/04/11)
-    // #thinking jflute big problem so make ticket (2020/11/02)
-    // https://github.com/dbflute/dbflute-intro/issues/258
-    private ExtlibFile prepareJdbcDriverExtlibFile(String projectName) {
-        final File extlibDir = clientPhysicalLogic.findExtlibDir(projectName);
-        if (!extlibDir.exists()) {
-            return null;
-        }
-        return FileUtils.listFiles(extlibDir, new String[] { ".jar" }, false)
-                .stream()
-                .filter(file -> file.getName().endsWith(".jar"))
-                .findFirst()
-                .map(ExtlibFile::new)
-                .orElse(null);
+        return projectInfraReadLogic.prepareProjectInfra(projectName);
     }
 
     // -----------------------------------------------------
