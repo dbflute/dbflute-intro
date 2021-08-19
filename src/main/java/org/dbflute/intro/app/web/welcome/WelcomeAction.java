@@ -103,6 +103,7 @@ public class WelcomeAction extends IntroBaseAction {
                 engineInstallLogic.downloadUnzipping(latestVersion, welcomeCreateBody.useSystemProxies);
             }
         } catch (EngineDownloadErrorException e) {
+            // #needs_fix jflute use exception wrapping (2021/08/12)
             throw new NetworkErrorException(e.getMessage());
         }
 

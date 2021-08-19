@@ -21,9 +21,11 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 import org.apache.commons.io.IOUtils;
+import org.dbflute.util.DfTypeUtil;
 
 /**
  * @author ryohei
+ * @author jflute
  */
 public class ExtlibFile {
 
@@ -37,8 +39,8 @@ public class ExtlibFile {
     //                                                                         Constructor
     //                                                                         ===========
     public ExtlibFile(String filePath, String fileDataBase64) {
-        this.fileData = Base64.getDecoder().decode(fileDataBase64);
         this.file = new File(filePath);
+        this.fileData = Base64.getDecoder().decode(fileDataBase64);
     }
 
     public ExtlibFile(File file) {
@@ -48,6 +50,14 @@ public class ExtlibFile {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to copy the jar file to extlib: " + file.getName(), e);
         }
+    }
+
+    // ===================================================================================
+    //                                                                      Basic Override
+    //                                                                      ==============
+    @Override
+    public String toString() {
+        return DfTypeUtil.toClassTitle(this) + ":{file=" + file + ", fileData.length=" + fileData.length + "}";
     }
 
     // ===================================================================================
