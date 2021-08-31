@@ -170,7 +170,7 @@
       self.refs.checkModal.show()
       DbfluteTask.task('schemaSyncCheck', self.props.projectName, (message) => {
         // hasSyncCheckResultHtmlの最新状態を取得するため、clientをfetchし、componentに反映
-        ApiFactory.clientOperation(self.props.projectName).then((response) => {
+        ApiFactory.clientPropbase(self.props.projectName).then((response) => {
           self.state.client = response
           self.update()
         })
