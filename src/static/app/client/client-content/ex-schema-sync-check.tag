@@ -2,7 +2,7 @@
   <div class="ui container">
     <h2>Schema Sync Check</h2>
     <p show="{ canCheckSchemaSetting() }">
-      for { syncSetting.url }<span show="{ syncSetting.schema != null }">, { syncSetting.schema }</span>, { syncSetting.user }
+      for { state.syncSetting.url }<span show="{ state.syncSetting.schema != null }">, { state.syncSetting.schema }</span>, { state.syncSetting.user }
     </p>
     <div class="ui list">
       <div show="{ state.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
@@ -77,10 +77,9 @@
     }
 
     self.state = {
-      client: self.props.client
+      client: self.props.client,
+      syncSetting: {}
     }
-
-    self.syncSetting = {}
 
     self.checkModal = {
       header: 'SchemaPolicyCheck',
@@ -99,9 +98,8 @@
     this.initSyncSchemaSetting = () => {
       ApiFactory.syncSchema(self.props.projectName).then((response) => {
         self.syncSettingModal.syncSetting = response
-        self.update({
-          syncSetting: response
-        })
+        self.state.syncSetting = response
+        self.update()
       })
     }
 
@@ -112,14 +110,14 @@
     this.registerModalEvent = () => {
       this.refs.syncSettingModal.on('editSyncSettings', () => {
         const syncSettingModalRefs = self.refs.syncSettingModal.refs
-        const syncSetting = {
+        const input = {
           url: syncSettingModalRefs.url.value,
           schema: syncSettingModalRefs.schema.value,
           user: syncSettingModalRefs.user.value,
           password: syncSettingModalRefs.password.value,
           isSuppressCraftDiff: syncSettingModalRefs.isSuppressCraftDiff.checked
         }
-        ApiFactory.editSyncSchema(self.props.projectName, syncSetting).then(() => {
+        ApiFactory.editSyncSchema(self.props.projectName, input).then(() => {
           self.refs.syncSettingModal.hide()
           self.initSyncSchemaSetting()
         })
@@ -130,7 +128,7 @@
     //                                                                       Open Document
     //                                                                       =============
     this.canCheckSchemaSetting = () => {
-      return self.syncSetting.url != null && self.syncSetting.user != null
+      return self.state.syncSetting.url != null && self.state.syncSetting.user != null
     }
 
     this.openSyncCheckResultHTML = () => {
