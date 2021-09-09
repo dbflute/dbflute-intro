@@ -27,6 +27,11 @@ import org.lastaflute.core.util.ContainerUtil;
 public class BasicInfoMap {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DFPROP_NAME = "basicInfoMap.dfprop";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     private final CDef.TargetDatabase database;
@@ -34,6 +39,7 @@ public class BasicInfoMap {
     private final CDef.TargetContainer targetContainer;
     private final String packageBase;
 
+    // #needs_fix jflute needs discussion about logic use in model (2021/09/09)
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
 

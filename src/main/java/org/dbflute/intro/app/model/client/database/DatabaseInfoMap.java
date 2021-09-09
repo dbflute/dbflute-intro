@@ -32,6 +32,11 @@ import org.lastaflute.core.util.ContainerUtil;
 public class DatabaseInfoMap {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DFPROP_NAME = "databaseInfoMap.dfprop";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     protected final String driver;
