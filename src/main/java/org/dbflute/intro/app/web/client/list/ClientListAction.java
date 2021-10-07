@@ -51,7 +51,7 @@ public class ClientListAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<List<ClientRowResult>> index() {
-        List<String> projectList = clientReadLogic.getProjectList();
+        List<String> projectList = clientReadLogic.getProjectNameList();
         List<ClientRowResult> beans = projectList.stream().map(project -> {
             ClientModel clientModel = clientReadLogic.findClient(project).get();
             return mappingToRowBean(clientModel);

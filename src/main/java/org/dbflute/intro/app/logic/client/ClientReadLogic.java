@@ -83,8 +83,8 @@ public class ClientReadLogic {
         return new File(introPhysicalLogic.buildClientPath(projectName)).exists();
     }
 
-    // #needs_fix anyone should be getProjectNameList()? by jflute (2021/04/29)
-    public List<String> getProjectList() { // e.g. [maihamadb, trohamadb]
+    // done anyone should be getProjectNameList()? by jflute (2021/04/29)
+    public List<String> getProjectNameList() { // e.g. [maihamadb, trohamadb], not null
         final List<String> projectList = new ArrayList<String>();
         final File baseDir = new File(IntroPhysicalLogic.BASE_DIR_PATH);
         if (baseDir.exists()) {
