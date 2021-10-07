@@ -34,6 +34,7 @@ import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
+import org.dbflute.intro.bizfw.tellfailure.ClientAlreadyExistsException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
@@ -88,8 +89,9 @@ public class ClientUpdateLogic {
         if (!clientDir.exists()) { // yes, new-create!
             clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
         } else { // no no no no, already exists
-            // #needs_fix anyone use application excecption by jflute (2021/04/16)
-            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + projectName);
+            // done anyone use application excecption by jflute (2021/04/16)
+            final String debugMsg = "The DBFlute client already exists (but new-create): projectName=" + projectName;
+            throw new ClientAlreadyExistsException(debugMsg, projectName);
         }
     }
 
