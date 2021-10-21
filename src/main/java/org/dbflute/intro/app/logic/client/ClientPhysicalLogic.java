@@ -53,6 +53,7 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
+    // #needs_fix jflute move to their own logics in dfprop (2021/10/21)
     public File findDfpropBasicInfoMap(String projectName) {
         IntroAssertUtil.assertNotEmpty(projectName);
         return new File(buildDfpropFilePath(projectName, BasicInfoMap.DFPROP_NAME));

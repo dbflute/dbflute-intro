@@ -117,6 +117,7 @@ public class ClientUpdateLogic {
             // basicInfoMap.dfprop
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             final BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+            // #needs_fix jflute move to BasicInfoLogic like DatabaseInfoLogic (2021/10/21)
             replaceMap.put("@database@", basicInfoMap.getDatabase().code());
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
@@ -126,7 +127,9 @@ public class ClientUpdateLogic {
         {
             // databaseInfoMap.dfprop
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            fileReplaceMap.put(databaseInfoMap.findDfpropFile(projectName), databaseInfoMap.prepareInitReplaceMap());
+            final File databaseInfoFile = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
+            final Map<String, Object> initReplaceMap = databaseInfoLogic.prepareInitReplaceMap(databaseInfoMap);
+            fileReplaceMap.put(databaseInfoFile, initReplaceMap);
         }
         doReplaceClientFile(fileReplaceMap, /*regularExpression*/false);
     }
