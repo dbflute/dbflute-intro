@@ -29,7 +29,7 @@ import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
-import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
+import org.dbflute.intro.app.logic.exception.PublicPropertiesLoadingFailureException;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -49,6 +49,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author hakiba
  * @author cabos
+ * @author jflute
  */
 public class WelcomeAction extends IntroBaseAction {
 
@@ -102,9 +103,9 @@ public class WelcomeAction extends IntroBaseAction {
             if (!engineInstallLogic.isDownloaded(latestVersion)) {
                 engineInstallLogic.downloadUnzipping(latestVersion, welcomeCreateBody.useSystemProxies);
             }
-        } catch (EngineDownloadErrorException e) {
-            // #needs_fix jflute use exception wrapping (2021/08/12)
-            throw new NetworkErrorException(e.getMessage());
+        } catch (PublicPropertiesLoadingFailureException e) {
+            String debugMsg = "Failed to get the latest version from public.properties: body=" + welcomeCreateBody;
+            throw new NetworkErrorException(debugMsg, e);
         }
 
         // connect test if need

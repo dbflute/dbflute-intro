@@ -22,13 +22,14 @@ import org.dbflute.intro.mylasta.action.IntroMessages;
 
 /**
  * @author deco
+ * @author jflute
  */
 public class NetworkErrorException extends IntroApplicationException {
 
     private static final long serialVersionUID = 1L;
 
-    public NetworkErrorException(String debugMsg) {
-        super(debugMsg, prepareMessages());
+    public NetworkErrorException(String debugMsg, Throwable cause) {
+        super(debugMsg, prepareMessages(), cause);
     }
 
     private static Consumer<IntroMessages> prepareMessages() {

@@ -23,7 +23,7 @@ import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
 import org.dbflute.intro.app.logic.engine.EngineReadLogic;
-import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
+import org.dbflute.intro.app.logic.exception.PublicPropertiesLoadingFailureException;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.NetworkErrorException;
@@ -55,8 +55,9 @@ public class EngineAction extends IntroBaseAction {
             DfPublicProperties prop = publicPropertiesLogic.findProperties(engineLatestBody.useSystemProxies);
             EngineLatestBean bean = mappingToLatestVersion(prop);
             return asJson(bean);
-        } catch (EngineDownloadErrorException e) {
-            throw new NetworkErrorException(e.getMessage());
+        } catch (PublicPropertiesLoadingFailureException e) {
+            String debugMsg = "Failed to get the latest version from public.properties: body=" + engineLatestBody;
+            throw new NetworkErrorException(debugMsg, e);
         }
     }
 
@@ -76,8 +77,9 @@ public class EngineAction extends IntroBaseAction {
         try {
             engineInstallLogic.downloadUnzipping(dbfluteVersion, engineDownloadBody.useSystemProxies);
             return JsonResponse.asEmptyBody();
-        } catch (EngineDownloadErrorException e) {
-            throw new NetworkErrorException(e.getMessage());
+        } catch (PublicPropertiesLoadingFailureException e) {
+            String debugMsg = "Failed to download DBFlute Engine: body=" + engineDownloadBody;
+            throw new NetworkErrorException(debugMsg, e);
         }
 
     }

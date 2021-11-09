@@ -28,7 +28,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
-import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
+import org.dbflute.intro.app.logic.exception.PublicPropertiesLoadingFailureException;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 import org.dbflute.util.DfStringUtil;
@@ -63,7 +63,7 @@ public class EngineInstallLogic {
         return engineDir.exists();
     }
 
-    public void downloadUnzipping(String dbfluteVersion, boolean useSystemProxies) throws EngineDownloadErrorException { // overriding if already exists
+    public void downloadUnzipping(String dbfluteVersion, boolean useSystemProxies) throws PublicPropertiesLoadingFailureException { // overriding if already exists
         if (DfStringUtil.is_Null_or_TrimmedEmpty(dbfluteVersion)) {
             throw new IllegalArgumentException("dbfluteVersion is null or empty: " + dbfluteVersion);
         }
