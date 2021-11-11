@@ -7,91 +7,100 @@
       </div>
     </div>
     <div class="ui divider" />
-    <div class="grouped fields required">
-      <label>Subject</label>
-      <p>
-        <a if="{ mapType === 'tableMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank">document</a>
-        <a if="{ mapType === 'columnMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank">document</a>
-        /
-        <a onclick="{ toggleSubjectHelp }">sample</a></p>
-      <toggle-help ref="subjecthelp">
-        <h5>Sample</h5>
-          <div class="ui two column grid">
-            <div class="column">
-              <div class="ui inverted segment">
-                <div><span class="variable">tableName</span> <span class="comment">// table name on DB</span></div>
-                <div><span class="variable">columnName</span> <span class="comment">// column name on DB (only for column)</span></div>
-                <div><span class="variable">alias</span> <span class="comment">// table/column alias name e.g. Japanese name</span></div>
+      <div class="grouped fields required">
+        <label>Sentence</label>
+        <p>
+          <a if="{ mapType === 'tableMap' }" class="help link"
+            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementifsubject" target="_blank">document</a>
+          <a if="{ mapType === 'columnMap' }" class="help link"
+            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementifsubject" target="_blank">document</a>
+          <a onclick="{ toggleSubjectHelp }">sample</a>
+        </p>
+        <toggle-help ref="subjecthelp">
+          <h5>Sample</h5>
+            <div class="ui two column grid">
+              <div class="column">
+                <div class="ui inverted segment">
+                  <div><span class="variable">tableName</span> <span class="comment">// table name on DB</span></div>
+                  <div><span class="variable">columnName</span> <span class="comment">// column name on DB (only for column)</span></div>
+                  <div><span class="variable">alias</span> <span class="comment">// table/column alias name e.g. Japanese name</span></div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="ui inverted segment">
+                  <div><span class="variable">dbType</span> <span class="comment">// column's DB type (only for column)</span></div>
+                  <div><span class="variable">firstDate</span> <span class="comment">// table/column registration date</span></div>
+                </div>
               </div>
             </div>
-            <div class="column">
-              <div class="ui inverted segment">
-                <div><span class="variable">dbType</span> <span class="comment">// column's DB type (only for column)</span></div>
-                <div><span class="variable">firstDate</span> <span class="comment">// table/column registration date</span></div>
+          <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
+        </toggle-help>
+        <div class="ui grid">
+            <div class="seven wide column">
+              <su-dropdown items="{ dropdownItemsFluid }" class="fluid" ></su-dropdown>
+            </div>
+            <div class="center aligned one wide column">
+              <div class="ui center aligned basic segment">
+                is
               </div>
             </div>
-          </div>
-        <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
-    </toggle-help>
-      <div class="ui input field">
-        <su-dropdown items="{ subjectDropdownItems }" ref="subject"></su-dropdown>
-      </div>
-    </div>
-    <div class="grouped fields required">
-      <label>Condition</label>
-      <p>
-        <a if="{ mapType === 'tableMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank">document</a>
-        <a if="{ mapType === 'columnMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank">document</a>
-        /
-        <a onclick="{ toggleConditionHelp }">sample</a>
-      </p>
-      <toggle-help ref="conditionhelp">
-        <h5>Sample</h5>
-        <div class="ui two column grid">
-          <div class="column">
-            <div class="ui inverted segment">
-              <div><span class="variable">$$ALL$$</span> <span class="comment">// all tables/columns are target</span></div>
-              <div><span class="variable">prefix:MST_</span> <span class="comment">// that starts with "MST_" are target</span></div>
-              <div><span class="variable">suffix:_DAT</span> <span class="comment">// that ends with "_DATE" are target</span></div>
+            <div class="eight wide column">
+              <input type="text"></input>
             </div>
-          </div>
-          <div class="column">
-            <div class="ui inverted segment">
-              <div><span class="variable">not ABC_DATE</span> <span class="comment">// "ABC_DATE" are NOT target</span></div>
-              <div><span class="variable">after:2018/05/03</span> <spab class="comment">// only for "firstDate" subject</spab></div>
-            </div>
-          </div>
         </div>
-        <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
-      </toggle-help>
-      <div class="ui icon input field" each="{ condition, index in statement.conditions }">
-        <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
-        <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
-      </div>
-      <div class="ui grid">
-        <div class="four wide right floated column">
-          <i class="plus link icon" style="float: right" onclick="{ statement.addConditionField }"></i>
-          <div class="inline fields" style="float: right" show={statement.conditions.length > 1}>
+      <!--  <div class="grouped fields required">
+        <label>Condition</label>
+        <div>
+          <a if="{ mapType === 'tableMap' }" class="help link"
+            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementnot" target="_blank">document</a>
+          <a if="{ mapType === 'columnMap' }" class="help link"
+            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementcolumnis" target="_blank">document</a>
+          <a onclick="{ toggleConditionHelp }">sample</a>
+          <div class="inline fields" style="float: right">
             <div class="field">
               <div class="ui radio checkbox">
-                <input type="radio" name="condition-mode" ref="isAndCondition" checked="checked" onchange="{ handleChange }">
+                <input type="radio" name="condition-mode" ref="isAndCondition" checked="checked" onchange="{ handleChange }" disabled={statement.conditions.length > 1 ? '' : 'disabled'}>
                 <label>and</label>
               </div>
             </div>
             <div class="field">
               <div class="ui radio checkbox">
-                <input type="radio" name="condition-mode" onchange="{ handleChange }">
+                <input type="radio" name="condition-mode" onchange="{ handleChange }" disabled={statement.conditions.length > 1 ? '' : 'disabled'}>
                 <label>or</label>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+        <toggle-help ref="conditionhelp">
+          <h5>Sample</h5>
+          <div class="ui two column grid">
+            <div class="column">
+              <div class="ui inverted segment">
+                <div><span class="variable">$$ALL$$</span> <span class="comment">// all tables/columns are target</span></div>
+                <div><span class="variable">prefix:MST_</span> <span class="comment">// that starts with "MST_" are target</span></div>
+                <div><span class="variable">suffix:_DAT</span> <span class="comment">// that ends with "_DATE" are target</span></div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="ui inverted segment">
+                <div><span class="variable">not ABC_DATE</span> <span class="comment">// "ABC_DATE" are NOT target</span></div>
+                <div><span class="variable">after:2018/05/03</span> <spab class="comment">// only for "firstDate" subject</spab></div>
+              </div>
+            </div>
+          </div>
+          <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
+        </toggle-help>
+        <div class="ui icon input field" each="{ condition, index in statement.conditions }">
+          <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
+          <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
+        </div>
+        <div class="ui grid">
+          <div class="four wide right floated column">
+            <i class="plus link icon" style="float: right" onclick="{ statement.addConditionField }"></i>
+          </div>
+        </div>
+      </div>  -->
+      <br>
     <div class="grouped fields required">
       <label>Expected</label>
       <p>
@@ -99,7 +108,6 @@
            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
         <a if="{ mapType === 'columnMap' }" class="help link"
            href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
-        /
         <a onclick="{ toggleExpectedHelp }">sample</a>
       </p>
       <toggle-help ref="expectedhelp">
@@ -133,21 +141,19 @@
         <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.expecteds.length > 1} onclick="{ statement.deleteExpectedField.bind(this, index) }"></i>
       </div>
-      <div class="ui grid">
-        <div class="four wide right floated column">
-          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
-          <div class="inline fields" style="float: right" show={statement.expecteds.length > 1}>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked" onchange="{ handleChange }">
-                <label>and</label>
-              </div>
+      <div class="four wide right floated column">
+        <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
+        <div class="inline fields" style="float: right" show={statement.expecteds.length > 1}>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked" onchange="{ handleChange }">
+              <label>and</label>
             </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="expected-mode" onchange="{ handleChange }">
-                <label>or</label>
-              </div>
+          </div>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" name="expected-mode" onchange="{ handleChange }">
+              <label>or</label>
             </div>
           </div>
         </div>
