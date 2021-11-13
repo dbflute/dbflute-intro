@@ -1,6 +1,6 @@
 <schema-policy-check-statement-form-wrapper>
   <a onclick="{ toggleForm }" show="{ !state.showForm }">
-    Edit Statement
+    Add Statement
   </a>
   <a onclick="{ toggleForm }" show="{ state.showForm }">
     Hide Form
