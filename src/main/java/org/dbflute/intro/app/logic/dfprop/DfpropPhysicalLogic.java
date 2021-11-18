@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.tellfailure.DfpropDirNotFoundException;
 import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
+import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
  * The logic for DBFlute property (dfprop) physical operation.
@@ -46,6 +47,7 @@ public class DfpropPhysicalLogic {
      * @return The path to dfprop directory, basically relative. (NotNull)
      */
     public String buildDfpropDirPath(String projectName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
         return introPhysicalLogic.buildClientPath(projectName, "dfprop");
     }
 
@@ -55,6 +57,8 @@ public class DfpropPhysicalLogic {
      * @return The path to the dfprop file, basically relative. (NotNull)
      */
     public String buildDfpropFilePath(String projectName, String fileName) {
+        IntroAssertUtil.assertNotEmpty(projectName);
+        IntroAssertUtil.assertNotEmpty(fileName);
         return buildDfpropDirPath(projectName) + "/" + fileName;
     }
 

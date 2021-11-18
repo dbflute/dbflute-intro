@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.basic.BasicInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
@@ -59,6 +60,8 @@ public class ClientUpdateLogic {
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private EnginePhysicalLogic enginePhysicalLogic;
+    @Resource
+    private BasicInfoLogic basicInfoLogic;
     @Resource
     private DatabaseInfoLogic databaseInfoLogic;
 
@@ -117,17 +120,16 @@ public class ClientUpdateLogic {
             // basicInfoMap.dfprop
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             final BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-            // #needs_fix jflute move to BasicInfoLogic like DatabaseInfoLogic (2021/10/21)
             replaceMap.put("@database@", basicInfoMap.getDatabase().code());
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
             replaceMap.put("@packageBase@", basicInfoMap.getPackageBase());
-            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(projectName), replaceMap);
+            fileReplaceMap.put(basicInfoLogic.findDfpropFile(projectName), replaceMap);
         }
         {
             // databaseInfoMap.dfprop
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            final File databaseInfoFile = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
+            final File databaseInfoFile = databaseInfoLogic.findDfpropFile(projectName);
             final Map<String, Object> initReplaceMap = databaseInfoLogic.prepareInitReplaceMap(databaseInfoMap);
             fileReplaceMap.put(databaseInfoFile, initReplaceMap);
         }

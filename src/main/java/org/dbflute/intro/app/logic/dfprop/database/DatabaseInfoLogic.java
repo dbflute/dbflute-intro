@@ -23,16 +23,17 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.filesystem.FileTextIO;
-import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
 import org.dbflute.intro.app.logic.core.MapStringLogic;
+import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
+import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
 
 /**
- * The logic of database information.
+ * The logic of database information. (databaseInfoMap.dfprop)
  * @author ryohei
  * @author jflute
  */
@@ -44,9 +45,17 @@ public class DatabaseInfoLogic {
     @Resource
     private ClsTargetDatabaseBhv databaseBhv;
     @Resource
-    private ClientPhysicalLogic clientPhysicalLogic;
+    private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
     private MapStringLogic mapStringLogic;
+
+    // ===================================================================================
+    //                                                                           Find File
+    //                                                                           =========
+    public File findDfpropFile(String projectName) { // moved from ClientPhysicalLogic (2021/11/18)
+        IntroAssertUtil.assertNotEmpty(projectName);
+        return new File(dfpropPhysicalLogic.buildDfpropFilePath(projectName, DatabaseInfoMap.DFPROP_NAME));
+    }
 
     // ===================================================================================
     //                                                                        Embedded Jar
@@ -89,13 +98,13 @@ public class DatabaseInfoLogic {
     }
 
     public void replaceDfpropDatabaseInfoMap(DatabaseInfoMap databaseInfoMap, String projectName) {
-        final File dfpropDatabaseInfoMap = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
+        final File dfpropFile = findDfpropFile(projectName);
 
         // #needs_fix anyone switch toString() to getPath() by jflute (2021/04/16)
         // File objects that are made in DBFlute intro uses slack as file separator
         // so you can getPath() here (no problem) however be careful with Windows headache
         // (while, FileTextIO should have rewrite methods that can accept File...?) 
-        final String databaseInfoMapPath = dfpropDatabaseInfoMap.toString();
+        final String databaseInfoMapPath = dfpropFile.toString();
         final DbConnectionBox box = databaseInfoMap.getDbConnectionBox();
 
         // depends on the format of the dbflute_dfclient template (basically no change so almost no problem)
