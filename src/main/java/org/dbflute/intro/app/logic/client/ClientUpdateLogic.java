@@ -36,6 +36,8 @@ import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.bizfw.tellfailure.ClientAlreadyExistsException;
+import org.dbflute.intro.bizfw.tellfailure.ClientCannotDeleteException;
+import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
@@ -210,7 +212,9 @@ public class ClientUpdateLogic {
 
     private void readyUpdateClient(ClientModel clientModel, String projectName, File clientDir) {
         if (!clientDir.exists()) { // no no no no, new-create
-            throw new IllegalStateException("The DBFlute client has already been deleted: projectName=" + projectName);
+            final String debugMsg = "The DBFlute client has already been deleted: projectName=" + projectName;
+            final String failureHint = clientDir.getPath();
+            throw new ClientNotFoundException(debugMsg, failureHint);
         }
     }
 
@@ -228,10 +232,12 @@ public class ClientUpdateLogic {
         IntroAssertUtil.assertNotEmpty(projectName);
         final File clientDir = introPhysicalLogic.findClientDir(projectName);
         try {
-            FileUtils.deleteDirectory(clientDir);
-        } catch (IOException e) {
-            // #needs_fix anyone should be application exception by jflute (2017/01/19)
-            throw new IllegalStateException("Failed to delete the DBFlute client: " + clientDir);
+            FileUtils.deleteDirectory(clientDir); // do nothing if not found
+        } catch (IOException e) { // found but cannot delete for some reason
+            // done anyone should be application exception by jflute (2017/01/19)
+            final String debugMsg = "Failed to delete the DBFlute client: projectName=" + projectName;
+            final String failureHint = clientDir.getPath();
+            throw new ClientCannotDeleteException(debugMsg, failureHint);
         }
     }
 }
