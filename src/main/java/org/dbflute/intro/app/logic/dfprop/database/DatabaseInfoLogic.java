@@ -98,11 +98,12 @@ public class DatabaseInfoLogic {
     public void replaceDfpropDatabaseInfoMap(DatabaseInfoMap databaseInfoMap, String projectName) {
         final File dfpropFile = findDfpropFile(projectName);
 
-        // #needs_fix anyone switch toString() to getPath() by jflute (2021/04/16)
+        // done anyone switch toString() to getPath() by jflute (2021/04/16)
         // File objects that are made in DBFlute intro uses slack as file separator
         // so you can getPath() here (no problem) however be careful with Windows headache
         // (while, FileTextIO should have rewrite methods that can accept File...?) 
-        final String databaseInfoMapPath = dfpropFile.toString();
+        //  => no problem if no Windows case because of no filtering path (e.g. replace, split) by jflute (2021/11/25)
+        final String databaseInfoMapPath = dfpropFile.getPath();
         final DbConnectionBox box = databaseInfoMap.getDbConnectionBox();
 
         // depends on the format of the dbflute_dfclient template (basically no change so almost no problem)
