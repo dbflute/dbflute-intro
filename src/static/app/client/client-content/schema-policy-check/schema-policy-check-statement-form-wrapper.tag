@@ -7,6 +7,7 @@
   </a>
   <div class="ui divided items segment" show="{ state.showForm }">
     <schema-policy-check-statement-form
+      ref="statementForm"
       projectName="{ props.projectName }"
       type="{ props.formType }"
       onRegisterSuccess="{ props.onRegisterSuccess }"
@@ -33,6 +34,9 @@
     self.toggleForm = () => {
       self.state.showForm = !self.state.showForm
       self.update()
+      if (self.state.showForm) {
+        self.refs.statementForm.scrollToTop()
+      }
     }
   </script>
 </schema-policy-check-statement-form-wrapper>
