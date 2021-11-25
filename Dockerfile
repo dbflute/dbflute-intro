@@ -1,4 +1,4 @@
-FROM amazoncorretto:8
+FROM openjdk:17.0.1-jdk-oraclelinux7
 
 COPY entrypoint.sh /entrypoint.sh
 COPY build/libs/dbflute-intro.jar /dbflute-intro.jar
