@@ -1,5 +1,5 @@
 <schema-policy-check-statement-form>
-  <form class="ui large form">
+  <form ref="statementForm" class="ui large form">
     <div class="field">
       <label>Preview</label>
       <div class="ui inverted segment">
@@ -94,7 +94,7 @@
     </div>
 
     <div class="grouped fields required">
-      
+
       <schema-policy-check-statement-form-expected
         formtype="{ opts.type }"
         handlefieldadd="{ handleExpectedFieldAdd }"
@@ -180,6 +180,14 @@
 
     this.toggleExpectedHelp = () => {
       self.refs.expectedhelp.toggle()
+    }
+
+    /**
+     * フォームを入力しやすい位置に画面をスクロールする
+     */
+    this.scrollToTop = () => {
+      // statementFormは標準のformタグなので, 標準APIのscrollIntoViewを呼び出せる
+      self.refs.statementForm.scrollIntoView({ behavior: 'smooth' })
     }
 
     self.statement = {
