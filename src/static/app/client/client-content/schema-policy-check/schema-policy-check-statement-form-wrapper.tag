@@ -7,7 +7,7 @@
   </a>
   <div class="ui divided items segment" show="{ state.showForm }">
     <schema-policy-check-statement-form
-      ref="statementForm"
+      ref="statementFormComponent"
       projectName="{ props.projectName }"
       type="{ props.formType }"
       onRegisterSuccess="{ props.onRegisterSuccess }"
@@ -34,8 +34,10 @@
     self.toggleForm = () => {
       self.state.showForm = !self.state.showForm
       self.update()
+      // フォームが表示されていればスクロールする
+      // DOM要素を参照する必要があるため、画面更新(self.update())の完了を待ってから行う必要があることに注意
       if (self.state.showForm) {
-        self.refs.statementForm.scrollToTop()
+        self.refs.statementFormComponent.scrollToTop()
       }
     }
   </script>

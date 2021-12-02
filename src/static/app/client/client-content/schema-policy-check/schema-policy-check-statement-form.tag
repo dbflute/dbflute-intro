@@ -182,7 +182,11 @@
       self.refs.expectedhelp.toggle()
     }
 
+    /**
+     * フォームを入力しやすい位置に画面をスクロールする
+     */
     this.scrollToTop = () => {
+      // statementFormは標準のformタグなので, 標準APIのscrollIntoViewを呼び出せる
       self.refs.statementForm.scrollIntoView({ behavior: 'smooth' })
     }
 
