@@ -76,6 +76,7 @@ public class DfpropSchemaPolicyReadLogic {
     // -----------------------------------------------------
     //                                           Entry Point
     //                                           -----------
+    // #needs_fix jflute need to be public? Can the UpdateLogic use findSchemaPolicyMap() instead of this? (2021/12/02)
     public SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) { // called by e.g. update logic
         if (!schemaPolicyMapFile.exists()) {
             return SchemaPolicyMap.noSettingsInstance();
@@ -100,18 +101,11 @@ public class DfpropSchemaPolicyReadLogic {
             return SchemaPolicyTargetSetting.noSettingInstance();
         }
 
-        // #needs_fix anyone resolve ofNullable() headache by jflute (2021/04/29)
-        @SuppressWarnings("unchecked")
-        List<String> tableExceptList =
-                Optional.ofNullable((List<String>) schemaPolicyMap.get("tableExceptList")).orElse(Collections.emptyList());
-        @SuppressWarnings("unchecked")
-        List<String> tableTargetList =
-                Optional.ofNullable((List<String>) schemaPolicyMap.get("tableTargetList")).orElse(Collections.emptyList());
-        @SuppressWarnings("unchecked")
-        Map<String, List<String>> columnExceptMap =
-                Optional.ofNullable((Map<String, List<String>>) schemaPolicyMap.get("columnExceptMap")).orElse(Collections.emptyMap());
-        boolean isMainSchemaOnly =
-                Optional.ofNullable((String) schemaPolicyMap.get("isMainSchemaOnly")).map(value -> Boolean.valueOf(value)).orElse(false);
+        // done anyone resolve ofNullable() headache by jflute (2021/04/29)
+        final List<String> tableExceptList = extractListFromDfpropMap(schemaPolicyMap, "tableExceptList");
+        final List<String> tableTargetList = extractListFromDfpropMap(schemaPolicyMap, "tableTargetList");
+        final Map<String, List<String>> columnExceptMap = extractListMapFromDfpropMap(schemaPolicyMap, "columnExceptMap");
+        final boolean isMainSchemaOnly = extractBooleanFromDfpropMap(schemaPolicyMap, "isMainSchemaOnly");
 
         return new SchemaPolicyTargetSetting(tableExceptList, tableTargetList, columnExceptMap, isMainSchemaOnly);
     }
@@ -120,14 +114,12 @@ public class DfpropSchemaPolicyReadLogic {
     //                                             Whole Map
     //                                             ---------
     private SchemaPolicyWholeMap parseWholeMap(Map<String, Object> schemaPolicyMap) {
-        if (schemaPolicyMap.get("wholeMap") == null) {
-            return SchemaPolicyWholeMap.noSettingInstance();
-        }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalWholeMap = (Map<String, Object>) schemaPolicyMap.get("wholeMap");
-        @SuppressWarnings("unchecked")
-        List<String> originalThemeList =
-                Optional.ofNullable((List<String>) originalWholeMap.get("themeList")).orElse(Collections.emptyList());
+        if (originalWholeMap == null) {
+            return SchemaPolicyWholeMap.noSettingInstance();
+        }
+        List<String> originalThemeList = extractListFromDfpropMap(originalWholeMap, "themeList");
         List<SchemaPolicyWholeMap.Theme> themeList = originalThemeList.stream()
                 .map(code -> new SchemaPolicyWholeMap.Theme(SchemaPolicyWholeMap.ThemeType.valueByCode(code), true))
                 .collect(Collectors.toList());
@@ -144,14 +136,12 @@ public class DfpropSchemaPolicyReadLogic {
     //                                             Table Map
     //                                             ---------
     private SchemaPolicyTableMap parseTableMap(Map<String, Object> schemaPolicyMap) {
-        if (schemaPolicyMap.get("tableMap") == null) {
-            return SchemaPolicyTableMap.noSettingInstance();
-        }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalTableMap = (Map<String, Object>) schemaPolicyMap.get("tableMap");
-        @SuppressWarnings("unchecked")
-        List<String> originalThemeList =
-                Optional.ofNullable((List<String>) originalTableMap.get("themeList")).orElse(Collections.emptyList());
+        if (originalTableMap == null) {
+            return SchemaPolicyTableMap.noSettingInstance();
+        }
+        List<String> originalThemeList = extractListFromDfpropMap(originalTableMap, "themeList");
         List<SchemaPolicyTableMap.Theme> themeList = originalThemeList.stream()
                 .map(code -> new SchemaPolicyTableMap.Theme(SchemaPolicyTableMap.ThemeType.valueByCode(code), true))
                 .collect(Collectors.toList());
@@ -160,9 +150,7 @@ public class DfpropSchemaPolicyReadLogic {
                 .map(themeType -> new SchemaPolicyTableMap.Theme(themeType, false))
                 .collect(Collectors.toList());
         themeList.addAll(notExistsThemeList);
-        @SuppressWarnings("unchecked")
-        List<String> originalStatementList =
-                Optional.ofNullable((List<String>) originalTableMap.get("statementList")).orElse(Collections.emptyList());
+        List<String> originalStatementList = extractListFromDfpropMap(originalTableMap, "statementList");
 
         return new SchemaPolicyTableMap(themeList, originalStatementList);
     }
@@ -171,14 +159,12 @@ public class DfpropSchemaPolicyReadLogic {
     //                                            Column Map
     //                                            ----------
     private SchemaPolicyColumnMap parseColumnMap(Map<String, Object> schemaPolicyMap) {
-        if (schemaPolicyMap.get("columnMap") == null) {
-            return SchemaPolicyColumnMap.noSettingInstance();
-        }
         @SuppressWarnings("unchecked")
         Map<String, Object> originalColumnMap = (Map<String, Object>) schemaPolicyMap.get("columnMap");
-        @SuppressWarnings("unchecked")
-        List<String> originalThemeList =
-                Optional.ofNullable((List<String>) originalColumnMap.get("themeList")).orElse(Collections.emptyList());
+        if (originalColumnMap == null) {
+            return SchemaPolicyColumnMap.noSettingInstance();
+        }
+        List<String> originalThemeList = extractListFromDfpropMap(originalColumnMap, "themeList");
         List<SchemaPolicyColumnMap.Theme> themeList = originalThemeList.stream()
                 .map(code -> new SchemaPolicyColumnMap.Theme(SchemaPolicyColumnMap.ThemeType.valueByCode(code), true))
                 .collect(Collectors.toList());
@@ -187,9 +173,7 @@ public class DfpropSchemaPolicyReadLogic {
                 .map(themeType -> new SchemaPolicyColumnMap.Theme(themeType, false))
                 .collect(Collectors.toList());
         themeList.addAll(notExistsThemeList);
-        @SuppressWarnings("unchecked")
-        List<String> originalStatementList =
-                Optional.ofNullable((List<String>) originalColumnMap.get("statementList")).orElse(Collections.emptyList());
+        List<String> originalStatementList = extractListFromDfpropMap(originalColumnMap, "statementList");
 
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
     }
@@ -197,6 +181,7 @@ public class DfpropSchemaPolicyReadLogic {
     // ===================================================================================
     //                                                                        Subject List
     //                                                                        ============
+    // #needs_fix jflute not ReadLogic, so move this to DefLogic? (2021/12/02)
     public List<TableMapSubject> getStatementTableMapSubjectList() {
         // Create subject list here because contents does not change frequently
         return Arrays.asList(TableMapSubject.values());
@@ -259,6 +244,7 @@ public class DfpropSchemaPolicyReadLogic {
     private Map<String, Object> readComments(File targetFile) {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
+            // #needs_fix jflute big read so move to independent file e.g. SchemaPolicyCommentDfMapFile.java (2021/12/02)
             return new DfMapFile() {
                 private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
                         "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
@@ -348,5 +334,26 @@ public class DfpropSchemaPolicyReadLogic {
         } catch (IOException | RuntimeException e) {
             throw new IllegalStateException("Cannot read the dfprop as map: " + absolutePath, e);
         }
+    }
+
+    // -----------------------------------------------------
+    //                                      Extract from Map
+    //                                      ----------------
+    // with default value as empty, false
+    private List<String> extractListFromDfpropMap(Map<String, Object> dfpropMap, String key) {
+        @SuppressWarnings("unchecked")
+        final List<String> plainList = (List<String>) dfpropMap.get(key);
+        return Optional.ofNullable(plainList).orElse(Collections.emptyList());
+    }
+
+    private Map<String, List<String>> extractListMapFromDfpropMap(Map<String, Object> dfpropMap, String key) {
+        @SuppressWarnings("unchecked")
+        final Map<String, List<String>> plainMap = (Map<String, List<String>>) dfpropMap.get(key);
+        return Optional.ofNullable(plainMap).orElse(Collections.emptyMap());
+    }
+
+    private boolean extractBooleanFromDfpropMap(Map<String, Object> dfpropMap, String key) {
+        final String plainValue = (String) dfpropMap.get(key);
+        return Optional.ofNullable(plainValue).map(value -> Boolean.valueOf(value)).orElse(false);
     }
 }
