@@ -36,7 +36,6 @@ import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.unit.UnitIntroTestCase;
-import org.junit.Test;
 
 /**
  * @author jflute
@@ -45,8 +44,7 @@ import org.junit.Test;
  */
 public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
 
-    @Test
-    public void test_replaceSchemaPolicyMap_NotExistDfpropFile() throws Exception {
+    public void test_doUpdateSchemaPolicyMap_NotExistDfpropFile() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -58,7 +56,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         assertFalse(notExistFile.exists());
 
         // ## Act ##
-        logic.doReplaceSchemaPolicyMapWithInput(notExistFile, createInputWholeMap(targetType, true));
+        logic.doUpdateSchemaPolicyMap(notExistFile, createInputWholeMap(targetType, true));
 
         // ## Assert ##
         File schemaPolicyMapFile = prepareFileForTestClient("not/exist/schemaPolicyMap.dfprop");
@@ -67,8 +65,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         assertTrue(afterTheme.isActive);
     }
 
-    @Test
-    public void test_doReplaceSchemaPolicyMap_noChange() throws Exception {
+    public void test_doUpdateSchemaPolicyMap_noChange() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -82,7 +79,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
 
         // ## Act ##
         SchemaPolicyMap inputMap = readLogic.parseSchemePolicyMap(inputFile);
-        logic.doReplaceSchemaPolicyMapWithInput(outputFile, inputMap);
+        logic.doUpdateSchemaPolicyMap(outputFile, inputMap);
 
         // ## Assert ##
         BufferedReader inputReader = new BufferedReader(new FileReader(inputFile));
@@ -104,8 +101,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                             Whole Map
     //                                             ---------
-    @Test
-    public void test_replaceWholeMapTheme_ChangeToActive() throws Exception {
+    public void test_updateWholeMapTheme_ChangeToActive() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -119,7 +115,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         final List<SchemaPolicyWholeMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
         // ## Act ##
-        logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(targetType, true));
+        logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(targetType, true));
 
         // ## Assert ##
         SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapThemeByTestClient(targetType, readLogic);
@@ -127,8 +123,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         assertWholeMapNotChangeOtherThemeType(readLogic, targetType, beforeThemeList);
     }
 
-    @Test
-    public void test_replaceWholeMapTheme_ChangeToNotActive() throws Exception {
+    public void test_updateWholeMapTheme_ChangeToNotActive() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -142,7 +137,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         final List<SchemaPolicyWholeMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
         // ## Act ##
-        logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(targetType, false));
+        logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(targetType, false));
 
         // ## Assert ##
         SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapThemeByTestClient(targetType, readLogic);
@@ -150,8 +145,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         assertWholeMapNotChangeOtherThemeType(readLogic, targetType, beforeThemeList);
     }
 
-    @Test
-    public void test_replaceWholeMapTheme_ChangeToActiveAllType() throws Exception {
+    public void test_updateWholeMapTheme_ChangeToActiveAllType() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -165,7 +159,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(themeType, true));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(themeType, true));
 
             // ## Assert ##
             SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapThemeByTestClient(themeType, readLogic);
@@ -174,8 +168,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         }
     }
 
-    @Test
-    public void test_replaceWholeMapTheme_ChangeToNotActiveAllType() throws Exception {
+    public void test_updateWholeMapTheme_ChangeToNotActiveAllType() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -189,7 +182,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(themeType, false));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(themeType, false));
             log(themeType.code + " was replaced.");
 
             // ## Assert ##
@@ -199,8 +192,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         }
     }
 
-    @Test
-    public void test_replaceWholeMapThemeList_ChangeToActiveAllType_In_NoSettingFile() throws Exception {
+    public void test_updateWholeMapThemeList_ChangeToActiveAllType_In_NoSettingFile() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -216,7 +208,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputWholeMap(themeType, true));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputWholeMap(themeType, true));
 
             // ## Assert ##
             SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapTheme(schemaPolicyMapFile, themeType, readLogic);
@@ -228,8 +220,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                             Table Map
     //                                             ---------
-    @Test
-    public void test_replaceTableMapThemeList_ChangeToActiveAllType() throws Exception {
+    public void test_updateTableMapThemeList_ChangeToActiveAllType() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -243,7 +234,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyTableMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputTableMap(themeType, true));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputTableMap(themeType, true));
 
             // ## Assert ##
             SchemaPolicyTableMap.Theme afterTheme = fetchTableMapTheme(schemaPolicyMapFile, themeType, readLogic);
@@ -252,8 +243,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         }
     }
 
-    @Test
-    public void test_replaceTableMapThemeList_ChangeToNotActiveAllType() throws Exception {
+    public void test_updateTableMapThemeList_ChangeToNotActiveAllType() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -267,7 +257,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
             final List<SchemaPolicyTableMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).tableMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputTableMap(themeType, false));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputTableMap(themeType, false));
 
             // ## Assert ##
             SchemaPolicyTableMap.Theme afterTheme = fetchTableMapTheme(schemaPolicyMapFile, themeType, readLogic);
@@ -279,8 +269,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
     // -----------------------------------------------------
     //                                            Column Map
     //                                            ----------
-    @Test
-    public void test_replaceColumnMapThemeList_ChangeToActiveAllType() throws Exception {
+    public void test_updateColumnMapThemeList_ChangeToActiveAllType() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -295,7 +284,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
                     readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).columnMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputColumnMap(themeType, true));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputColumnMap(themeType, true));
             log(themeType + "was replaced to true.");
 
             // ## Assert ##
@@ -305,8 +294,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         }
     }
 
-    @Test
-    public void test_replaceColumnMapThemeList_ChangeToNotActiveAllType() throws Exception {
+    public void test_updateColumnMapThemeList_ChangeToNotActiveAllType() throws Exception {
         // ## Arrange ##
         DfpropSchemaPolicyUpdateLogic logic = new DfpropSchemaPolicyUpdateLogic();
         inject(logic);
@@ -321,7 +309,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
                     readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).columnMap.themeList;
 
             // ## Act ##
-            logic.doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, createInputColumnMap(themeType, false));
+            logic.doUpdateSchemaPolicyMap(schemaPolicyMapFile, createInputColumnMap(themeType, false));
             log(themeType + "was replaced to false.");
 
             // ## Assert ##

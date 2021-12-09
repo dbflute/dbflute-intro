@@ -34,6 +34,8 @@ import org.lastaflute.core.exception.LaSystemException;
 /**
  * @author deco
  * @author subaru
+ * @author hakiba
+ * @author cabos
  * @author jflute
  */
 public class DfpropUpdateLogic {

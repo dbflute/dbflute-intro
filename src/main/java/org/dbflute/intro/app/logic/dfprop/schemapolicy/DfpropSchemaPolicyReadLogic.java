@@ -59,6 +59,17 @@ public class DfpropSchemaPolicyReadLogic {
     private DfpropPhysicalLogic dfpropPhysicalLogic;
 
     // ===================================================================================
+    //                                                                           Find File
+    //                                                                           =========
+    /**
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The file object of schema-policy. (NotNull)
+     */
+    public File findSchemaPolicyFile(String projectName) {
+        return dfpropPhysicalLogic.findDfpropFile(projectName, SchemaPolicyMap.DFPROP_NAME);
+    }
+
+    // ===================================================================================
     //                                                                            Find Map
     //                                                                            ========
     /**
@@ -66,8 +77,7 @@ public class DfpropSchemaPolicyReadLogic {
      * @return The map of schema-policy. (NotNull, NoSettingsInstance if not found)
      */
     public SchemaPolicyMap findSchemaPolicyMap(String projectName) {
-        File schemaPolicyMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "schemaPolicyMap.dfprop");
-        return parseSchemePolicyMap(schemaPolicyMapFile);
+        return parseSchemePolicyMap(findSchemaPolicyFile(projectName));
     }
 
     // ===================================================================================

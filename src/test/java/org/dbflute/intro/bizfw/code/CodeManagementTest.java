@@ -26,6 +26,7 @@ import org.lastaflute.web.Execute;
 
 /**
  * @author cabos
+ * @author deco
  * @author jflute
  */
 public class CodeManagementTest extends PlainTestCase {
