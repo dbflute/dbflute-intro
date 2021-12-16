@@ -23,6 +23,7 @@ import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author deco at garden-place-plaza
+ * @author jflute
  */
 public class TaskActionTest extends UnitIntroTestCase {
 
@@ -39,5 +40,4 @@ public class TaskActionTest extends UnitIntroTestCase {
         TestingJsonData<TaskExecutionResult> jsonData = validateJsonData(response);
         assertTrue(jsonData.getJsonResult().success);
     }
-
 }
