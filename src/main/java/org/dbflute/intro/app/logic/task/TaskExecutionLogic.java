@@ -30,7 +30,6 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.bizfw.util.ProcessUtil;
 import org.dbflute.intro.dbflute.allcommon.CDef;
-import org.dbflute.optional.OptionalThing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +52,7 @@ public class TaskExecutionLogic {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    // #needs_fix jflute the env is only for SchemaSyncCheck however is it used now? can be removed? (2021/05/01)
-    public String execute(String projectName, List<CDef.TaskType> taskTypeList, OptionalThing<String> env) throws TaskErrorResultException {
+    public String execute(String projectName, List<CDef.TaskType> taskTypeList) throws TaskErrorResultException {
         logger.debug("...Executing the DBFlute task: client={}, tasks={}", projectName, taskTypeList);
         final List<ProcessBuilder> dbfluteTaskList = prepareTaskList(taskTypeList);
         final StringBuilder logSb = new StringBuilder();
@@ -62,9 +60,10 @@ public class TaskExecutionLogic {
             final Map<String, String> environment = processBuilder.environment();
             environment.put("pause_at_end", "n");
             environment.put("answer", "y");
-            env.ifPresent(value -> {
-                environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
-            });
+            // done jflute the env is only for SchemaSyncCheck however is it used now? can be removed? (2021/05/01)
+            //env.ifPresent(value -> {
+            //    environment.put("DBFLUTE_ENVIRONMENT_TYPE", "schemaSyncCheck_" + value);
+            //});
             final String clientPath = introPhysicalLogic.buildClientPath(projectName);
             processBuilder.directory(new File(clientPath)); // change current directory
             final String commandResult = executeCommand(processBuilder);

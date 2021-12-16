@@ -17,7 +17,6 @@ package org.dbflute.intro.app.web.task;
 
 import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.unit.UnitIntroTestCase;
-import org.dbflute.optional.OptionalThing;
 import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
 import org.junit.Test;
 import org.lastaflute.web.response.JsonResponse;
@@ -34,8 +33,7 @@ public class TaskActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<TaskExecutionResult> response =
-                action.execute(TEST_CLIENT_PROJECT, AppCDef.TaskInstruction.ReplaceSchema, OptionalThing.empty());
+        JsonResponse<TaskExecutionResult> response = action.execute(TEST_CLIENT_PROJECT, AppCDef.TaskInstruction.ReplaceSchema);
 
         // ## Assert ##
         TestingJsonData<TaskExecutionResult> jsonData = validateJsonData(response);
