@@ -52,7 +52,7 @@
         <div class="inline fields" style="float: right" show="{ needsCondition() }">
           <div class="field">
             <div class="ui radio checkbox">
-              <input type="radio" name="expected-mode" ref="isAnd" checked="checked" onchange="{ handleConditionChange }">
+              <input type="radio" name="expected-mode" ref="isAnd" onchange="{ handleConditionChange }">
               <label>and</label>
             </div>
           </div>
@@ -81,7 +81,8 @@
 
     self.state = {
       showSample: false,
-      fields: self.opts.fields
+      fields: self.opts.fields,
+      condition: self.opts.condition
     }
 
     self.handleFieldAdd = () => {
@@ -125,6 +126,17 @@
       self.state.showSample = !self.state.showSample
       self.update()
     }
+
+    self.on('mount', () => {
+      const condition = self.state.condition
+      if ('and' === condition) {
+        self.refs.isAnd.checked = true
+      } else if ('or' === condition) {
+        self.refs.isOr.checked = true
+      } else {
+        self.refs.isAnd.checked = true // as default
+      }
+    })
   </script>
 
   <style>
