@@ -47,8 +47,8 @@ import './error/404.tag'
 
 global.route = route;
 global.observable = riot.observable();
-riot.mount('*')
 riot.mixin(ToastMixin);
+riot.mount('*')
 
 /**
  * ffetch for API access
