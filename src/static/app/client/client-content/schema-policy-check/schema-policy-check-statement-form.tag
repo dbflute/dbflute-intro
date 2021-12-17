@@ -126,6 +126,7 @@
   <script>
     import { v4 as uuid } from 'uuid'
     import _ApiFactory from '../../../common/factory/ApiFactory'
+    const riot = require('riot')
 
     const ApiFactory = new _ApiFactory()
     let self = this
@@ -241,6 +242,8 @@
         subjectVerb: null,
         complement: ''
       })
+      self.refrectExpectedField()
+      self.update()
     }
 
     this.handleExpectedFieldDelete = (id) => {
@@ -254,6 +257,24 @@
       self.update()
     }
 
+    /**
+     * Expected の入力フォームをこの tag の state の値で反映させる
+     */
+    self.refrectExpectedField = () => {
+      riot.mount('schema-policy-check-statement-form-expected', {
+        formtype: self.opts.type,
+        handlefieldadd: self.handleExpectedFieldAdd,
+        handlefieldchange: self.handleExpectedFieldChange,
+        handlefielddelete: self.handleExpectedFieldDelete,
+        handleconditionchange: self.handleExpectedConditionChange,
+        fields: self.state.expected.fields,
+        condition: self.state.expected.condition,
+      })
+    }
+
+    /**
+    * Add Statement フォームの各フィールドの値を初期表示に戻す
+    */
     this.cleanInput = () => {
       self.statement.clean()
       self.refs.subject.value = ''
@@ -266,6 +287,7 @@
         }],
         condition: 'and' // or 'or'
       }
+      self.refrectExpectedField()
       self.update()
     }
 
