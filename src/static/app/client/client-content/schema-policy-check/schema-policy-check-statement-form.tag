@@ -242,7 +242,7 @@
         subjectVerb: null,
         complement: ''
       })
-      self.refrectExpectedField()
+      self.reflectExpectedField()
       self.update()
     }
 
@@ -260,7 +260,7 @@
     /**
      * Expected の入力フォームをこの tag の state の値で反映させる
      */
-    self.refrectExpectedField = () => {
+    self.reflectExpectedField = () => {
       riot.mount('schema-policy-check-statement-form-expected', {
         formtype: self.opts.type,
         handlefieldadd: self.handleExpectedFieldAdd,
@@ -287,7 +287,7 @@
         }],
         condition: 'and' // or 'or'
       }
-      self.refrectExpectedField()
+      self.reflectExpectedField()
       self.update()
     }
 
