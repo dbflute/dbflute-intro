@@ -273,8 +273,8 @@
     }
 
     /**
-    * Add Statement フォームの各フィールドの値を初期表示に戻す
-    */
+     * Add Statement フォームの各フィールドの値を初期表示に戻す
+     */
     this.cleanInput = () => {
       self.statement.clean()
       self.refs.subject.value = ''
