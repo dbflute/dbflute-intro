@@ -52,12 +52,14 @@
         <div class="inline fields" style="float: right" show="{ needsCondition() }">
           <div class="field">
             <div class="ui radio checkbox">
+              <!-- checkedの制御はすべて関数側で行うので、ここでは定義しない -->
               <input type="radio" name="expected-mode" ref="isAnd" onchange="{ handleConditionChange }">
               <label>and</label>
             </div>
           </div>
           <div class="field">
             <div class="ui radio checkbox">
+              <!-- checkedの制御はすべて関数側で行うので、ここでは定義しない -->
               <input type="radio" name="expected-mode" ref="isOr" onchange="{ handleConditionChange }">
               <label>or</label>
             </div>
