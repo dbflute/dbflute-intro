@@ -35,15 +35,15 @@ ext {
             node : '8.7.0',
 
             // Main Framework
-            dbflute : '1.2.3',
+            dbflute : '1.2.5',
             h2 : '1.4.199',
-            lastaflute : '1.2.0',
+            lastaflute : '1.2.3',
 
             // Partner Library
             slf4j : '1.7.30',
             logback : '1.2.3',
-            jettyboot : '0.5.0',
-            lastadoc : '0.3.7',
+            jettyboot : '0.5.1',
+            lastameta : '0.5.2',
             swaggerui : '3.22.1',
 
             // GoodNeighbor Library
@@ -52,7 +52,7 @@ ext {
 
             // Testing
             junit : '4.13.1',
-            utflute : '0.9.1'
+            utflute : '1.5.1'
         ]
 }
 
@@ -98,7 +98,7 @@ dependencies {
     runtime "ch.qos.logback:logback-classic:${versions.logback}"
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
-    compile "org.lastaflute.doc:lasta-doc:${versions.lastadoc}"
+    compile "org.lastaflute.meta:lasta-meta:${versions.lastameta}"
     runtime "org.webjars:swagger-ui:${versions.swaggerui}"
 
     // GoodNeighbor Library
