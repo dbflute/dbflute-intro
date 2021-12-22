@@ -139,6 +139,12 @@
         self.refs.isAnd.checked = true // as default
       }
     })
+    self.on('update', () => {
+      self.state = {
+        fields: self.opts.fields,
+        condition: self.opts.condition
+      }
+    })
   </script>
 
   <style>

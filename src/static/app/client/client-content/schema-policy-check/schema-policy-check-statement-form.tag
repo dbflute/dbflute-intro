@@ -242,7 +242,6 @@
         subjectVerb: null,
         complement: ''
       })
-      self.reflectExpectedField()
       self.update()
     }
 
@@ -255,23 +254,6 @@
     this.handleExpectedConditionChange = (condition) => {
       self.state.expected.condition = condition
       self.update()
-    }
-
-    /**
-     * Expected の入力フォームをこの tag の state の値で反映させる
-     */
-    self.reflectExpectedField = () => {
-      // 改めてマウントしなおさなければ、親タグにある "self.state" の値が変更されても、
-      // 子タグが追従して画面に表示しているコンポーネントを更新されなくなってしまう
-      riot.mount('schema-policy-check-statement-form-expected', {
-        formtype: self.opts.type,
-        handlefieldadd: self.handleExpectedFieldAdd,
-        handlefieldchange: self.handleExpectedFieldChange,
-        handlefielddelete: self.handleExpectedFieldDelete,
-        handleconditionchange: self.handleExpectedConditionChange,
-        fields: self.state.expected.fields,
-        condition: self.state.expected.condition,
-      })
     }
 
     /**
@@ -289,7 +271,6 @@
         }],
         condition: 'and' // or 'or'
       }
-      self.reflectExpectedField()
       self.update()
     }
 
