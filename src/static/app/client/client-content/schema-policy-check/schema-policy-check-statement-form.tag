@@ -126,7 +126,6 @@
   <script>
     import { v4 as uuid } from 'uuid'
     import _ApiFactory from '../../../common/factory/ApiFactory'
-    const riot = require('riot')
 
     const ApiFactory = new _ApiFactory()
     let self = this
