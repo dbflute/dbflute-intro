@@ -47,6 +47,11 @@ import './error/404.tag'
 
 global.route = route;
 global.observable = riot.observable();
+/*
+ * グローバルミックスインの登録
+ * https://v3.riotjs.vercel.app/ja/api/#ミックスイン
+ * mixinはriotのmountより前に実施する必要あり
+ */
 riot.mixin(ToastMixin);
 riot.mount('*')
 

@@ -59,7 +59,7 @@
     }
 
     /**
-     * フォームを閉じる
+     * フォームを閉じる (現在の開閉状態に関わらず非表示にする)
      */
     self.closeForm = () => {
       self.state.showForm = false
