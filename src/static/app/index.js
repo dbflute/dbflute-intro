@@ -9,6 +9,8 @@ import i18n from 'riot-i18nlet'
 import i18n_ja from '../assets/i18n/locale-ja.json'
 import i18n_en from '../assets/i18n/locale-en.json'
 
+import ToastMixin from './mixin/ToastMixin';
+
 import './main/main.tag'
 import './client/create.tag'
 import './client/client.tag'
@@ -45,6 +47,12 @@ import './error/404.tag'
 
 global.route = route;
 global.observable = riot.observable();
+/*
+ * グローバルミックスインの登録
+ * https://v3.riotjs.vercel.app/ja/api/#ミックスイン
+ * mixinはriotのmountより前に実施する必要あり
+ */
+riot.mixin(ToastMixin);
 riot.mount('*')
 
 /**

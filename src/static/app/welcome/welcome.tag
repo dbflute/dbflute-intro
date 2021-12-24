@@ -38,7 +38,7 @@
             <input type="text" ref="packageBase" value="org.docksidestage.dbflute" />
           </div>
         </div>
-      </div>        
+      </div>
       <div class="row">
         <div class="column">
           <div class="required field">
@@ -181,10 +181,9 @@
       }
     }
     this.showToast = (projectName) => {
-      this.suToast({
+      this.successToast({
         title: 'Create task completed',
         message: 'Client for project \'' + projectName + '\', was successfully created!!',
-        class: 'pink positive'
       })
     }
 
