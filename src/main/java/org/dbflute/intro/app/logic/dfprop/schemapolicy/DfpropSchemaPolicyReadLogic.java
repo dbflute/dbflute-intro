@@ -41,7 +41,7 @@ import org.dbflute.util.DfCollectionUtil;
 import org.dbflute.util.Srl;
 
 /**
- * The logic for reading DBFlute property (dfprop).
+ * The logic for reading Schema Policy (dfprop).
  * @author jflute
  * @author deco
  * @author cabos
@@ -187,66 +187,6 @@ public class DfpropSchemaPolicyReadLogic {
         List<String> originalStatementList = extractListFromDfpropMap(originalColumnMap, "statementList");
 
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
-    }
-
-    // ===================================================================================
-    //                                                                        Subject List
-    //                                                                        ============
-    // #needs_fix jflute not ReadLogic, so move this to DefLogic? (2021/12/02)
-    public List<TableMapSubject> getStatementTableMapSubjectList() {
-        // Create subject list here because contents does not change frequently
-        return Arrays.asList(TableMapSubject.values());
-    }
-
-    public List<ColumnMapSubject> getStatementColumnMapSubjectList() {
-        // Create subject list here because contents does not change frequently
-        return Arrays.asList(ColumnMapSubject.values());
-    }
-
-    // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
-    // http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatement
-    public enum TableMapSubject {
-        TABLE_NAME("tableName"), //
-        ALIAS("alias"), //
-        FIRST_DATE("firstDate"), //
-        PK_COLUMN_NAME("pk_columnName"), //
-        PK_DB_TYPE("pk_dbType"), //
-        PK_SIZE("pk_size"), //
-        PK_DB_TYPE_WITH_SIZE("pk_dbType_with_size"); //
-
-        private final String title;
-
-        private TableMapSubject(String title) {
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-    }
-
-    // 以下のページの内容と一致しており、項目が増えた場合は追加する。 by prprmurakami (2021/05/27)
-    // http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatement
-    public enum ColumnMapSubject {
-        TABLE_NAME("tableName"), //
-        ALIAS("alias"), //
-        FIRST_DATE("firstDate"), //
-        COLUMN("column"), //
-        COLUMN_NAME("columnName"), //
-        TABLE_COLUMN_NAME("tableColumnName"), //
-        DB_TYPE_WITH_SIZE("dbType_with_size"), //
-        SIZE("size"), //
-        DB_TYPE("dbType");
-
-        private final String title;
-
-        private ColumnMapSubject(String title) {
-            this.title = title;
-        }
-
-        public String getTitle() {
-            return title;
-        }
     }
 
     // ===================================================================================

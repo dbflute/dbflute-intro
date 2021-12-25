@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyDefLogic;
 import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyUpdateLogic;
 import org.dbflute.intro.app.logic.exception.SubjectableMapTypeNotExistException;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
@@ -40,7 +40,7 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
+    private DfpropSchemaPolicyDefLogic dfpropSchemaPolicyDefLogic;
     @Resource
     private DfpropSchemaPolicyUpdateLogic dfpropSchemaPolicyUpdateLogic;
 
@@ -48,8 +48,8 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     // -----------------------------------------------------
-    //                         AddSchemaPolicyCheckStatement
-    //                         -----------------------------
+    //                                                Update
+    //                                                ------
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<String> register(String clientName, DfpropRegisterSchemaPolicyStatementBody body) {
@@ -65,35 +65,32 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
         return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.comment);
     }
 
-    // -----------------------------------------------------
-    //                       GetschemapolicyStatementSubject
-    //                       -------------------------------
-    @Execute
-    public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
-        validate(form, message -> {});
-        if (form.mapType == SubjectableMapType.Table) {
-            return asJson(dfpropSchemaPolicyReadLogic.getStatementTableMapSubjectList() // 
-                    .stream()
-                    .map(ject -> ject.getTitle())
-                    .collect(Collectors.toList()));
-        } else if (form.mapType == SubjectableMapType.Column) {
-            return asJson(dfpropSchemaPolicyReadLogic.getStatementColumnMapSubjectList() //
-                    .stream()
-                    .map(ject -> ject.getTitle())
-                    .collect(Collectors.toList()));
-        } else {
-            throw new SubjectableMapTypeNotExistException("There is no matching SubjectableMapType. mapType: " + form.mapType);
-        }
-    }
-
-    // -----------------------------------------------------
-    //                      DeleteSchemaPolicyCheckStatement
-    //                      --------------------------------
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> delete(String clientName, DfpropDeleteSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
         dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
+    }
+
+    // -----------------------------------------------------
+    //                                            Definition
+    //                                            ----------
+    @Execute
+    public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
+        validate(form, message -> {});
+        if (form.mapType == SubjectableMapType.Table) {
+            return asJson(dfpropSchemaPolicyDefLogic.getStatementTableMapSubjectList() // 
+                    .stream()
+                    .map(ject -> ject.getTitle())
+                    .collect(Collectors.toList()));
+        } else if (form.mapType == SubjectableMapType.Column) {
+            return asJson(dfpropSchemaPolicyDefLogic.getStatementColumnMapSubjectList() //
+                    .stream()
+                    .map(ject -> ject.getTitle())
+                    .collect(Collectors.toList()));
+        } else {
+            throw new SubjectableMapTypeNotExistException("There is no matching SubjectableMapType. mapType: " + form.mapType);
+        }
     }
 }
