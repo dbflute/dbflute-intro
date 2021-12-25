@@ -81,13 +81,14 @@ public class DfpropSchemaPolicyReadLogic {
     }
 
     // ===================================================================================
-    //                                                                               Parse
-    //                                                                               =====
+    //                                                                           Parse Map
+    //                                                                           =========
     // -----------------------------------------------------
     //                                           Entry Point
     //                                           -----------
-    // #needs_fix jflute need to be public? Can the UpdateLogic use findSchemaPolicyMap() instead of this? (2021/12/02)
-    public SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) { // called by e.g. update logic
+    // done jflute need to be public? Can the UpdateLogic use findSchemaPolicyMap() instead of this? (2021/12/02)
+    //  => for general use as file so no problem (2021/12/25)
+    public SchemaPolicyMap parseSchemePolicyMap(File schemaPolicyMapFile) { // called by e.g. replace logic
         if (!schemaPolicyMapFile.exists()) {
             return SchemaPolicyMap.noSettingsInstance();
         }
