@@ -52,14 +52,14 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         inject(readLogic);
 
         final SchemaPolicyWholeMap.ThemeType targetType = SchemaPolicyWholeMap.ThemeType.SameColumnDbTypeIfSameColumnName;
-        File notExistFile = prepareFileForTestClient("not/exist/schemaPolicyMap.dfprop");
+        File notExistFile = findTestClientFile("not/exist/schemaPolicyMap.dfprop");
         assertFalse(notExistFile.exists());
 
         // ## Act ##
         logic.doUpdateSchemaPolicyMap(notExistFile, createInputWholeMap(targetType, true));
 
         // ## Assert ##
-        File schemaPolicyMapFile = prepareFileForTestClient("not/exist/schemaPolicyMap.dfprop");
+        File schemaPolicyMapFile = findTestClientFile("not/exist/schemaPolicyMap.dfprop");
         assertTrue(schemaPolicyMapFile.exists());
         SchemaPolicyWholeMap.Theme afterTheme = fetchWholeMapTheme(schemaPolicyMapFile, targetType, readLogic);
         assertTrue(afterTheme.isActive);
@@ -72,8 +72,8 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         DfpropSchemaPolicyReadLogic readLogic = new DfpropSchemaPolicyReadLogic();
         inject(readLogic);
 
-        File inputFile = prepareFileForTestClient("dfprop/unittest/schemaPolicyMap.dfprop");
-        File outputFile = prepareFileForTestClient("dfprop/unittest/schemaPolicyMap_output.dfprop");
+        File inputFile = findTestClientFile("dfprop/unittest/schemaPolicyMap.dfprop");
+        File outputFile = findTestClientFile("dfprop/unittest/schemaPolicyMap_output.dfprop");
 
         Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -204,7 +204,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         copyNoSettingSchemaPolicyMap();
 
         for (SchemaPolicyWholeMap.ThemeType themeType : SchemaPolicyWholeMap.ThemeType.values()) {
-            final File schemaPolicyMapFile = prepareFileForTestClient("/dfprop/noSetting_schemaPolicyMap.dfprop");
+            final File schemaPolicyMapFile = findTestClientFile("/dfprop/noSetting_schemaPolicyMap.dfprop");
             final List<SchemaPolicyWholeMap.Theme> beforeThemeList = readLogic.findSchemaPolicyMap(TEST_CLIENT_PROJECT).wholeMap.themeList;
 
             // ## Act ##

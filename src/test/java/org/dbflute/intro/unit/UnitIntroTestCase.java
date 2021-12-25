@@ -20,12 +20,17 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.utflute.lastaflute.WebContainerTestCase;
+import org.dbflute.util.Srl;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
+ * DIコンテナ利用のUnitTestクラスは、このクラスを継承する。<br>
+ * 自動的にテスト用DBFluteクライアントが作成される。(不要な場合はsuppress可能) <br>
  * @author t-awane
  * @author deco
  * @author jflute
+ * @author hakiba
+ * @author cabos
  */
 public abstract class UnitIntroTestCase extends WebContainerTestCase {
 
@@ -35,9 +40,13 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // -----------------------------------------------------
     //                                        DBFlute CLient
     //                                        --------------
+    // Intro自体で使っているDBFluteクライアントがテスト用クライアントの元になる
     protected static final String SRC_CLIENT_PATH = "dbflute_introdb";
+
+    // テスト用の設定ファイルなどを置く場所、dbflute_introdbそのままだとテストしづらいため
     protected static final String TEST_RESOURCE_BASE = "/src/test/resources/default";
 
+    // dbflute_introdbがこの名前でコピーされて、テストで自由に使えるようになる
     protected static final String TEST_CLIENT_PATH = "dbflute_testdb";
     protected static final String TEST_CLIENT_PROJECT = "testdb";
 
@@ -95,7 +104,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
      * Use in setUp of test class. <br>
      * Don't forget to delete files in tearDown!!
      */
-    protected void createTestClient() {
+    protected void createTestClient() { // setUp()から呼ばれる想定
         File srcDir = new File(getProjectDir(), SRC_CLIENT_PATH);
         File destDir = new File(getProjectDir(), TEST_CLIENT_PATH);
         try {
@@ -110,13 +119,29 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
      * Use in tearDown of test class. <br>
      * Don't forget to create files in setUp!!
      */
-    protected void deleteTestClient() {
+    protected void deleteTestClient() { // tearDown()から呼ばれる想定
         File clientDir = new File(getProjectDir(), TEST_CLIENT_PATH);
         try {
             FileUtils.deleteDirectory(clientDir);
         } catch (IOException e) {
             throw new LaSystemException("Cannot delete dir:" + clientDir, e);
         }
+    }
+
+    // -----------------------------------------------------
+    //                                          Prepare File
+    //                                          ------------
+    // #needs_fix jflute more use prepareFileForTestClient() (2021/12/25)
+    /**
+     * テスト用のDBFluteクライアント内のファイルを探す。<br>
+     * @param filePath DBFluteクライアントからの相対パス e.g. dfprop/schemaPolicyMap.dfprop (NotNull)
+     * @return 指定されたパスを示すファイルオブジェクト、存在チェックはされない (NotNull)
+     */
+    protected File findTestClientFile(String filePath) { // UnitTestの中で好きなときに呼んでね
+        // 元々のprepare...というメソッド名だったんだけど、prepareって補完ノイズが多いので変更した by jflute (2021/12/25)
+        // (他のprepareと意味も違うし。例えば prepareTestDecommentFiles() と比べると)
+        // 引数のパスは、一応JavaDoc的には先頭スラッシュなし想定だが、テストのメソッドだし吸収しておく by jflute (2021/12/25)
+        return new File(getProjectDir(), TEST_CLIENT_PATH + "/" + Srl.ltrim(filePath, "/"));
     }
 
     // ===================================================================================
@@ -133,11 +158,11 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     protected File getTestDecommentPickupFile() {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + PICKUP_FILE_PATH);
+        return findTestClientFile(PICKUP_FILE_PATH);
     }
 
     protected File getTestDecommentPieceDir() {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + PIECE_DIR_PATH);
+        return findTestClientFile(PIECE_DIR_PATH);
     }
 
     // ===================================================================================
@@ -152,6 +177,14 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         FileUtils.copyDirectory(srcPieceDir, destPieceDir, file -> file.isDirectory() || file.getName().endsWith(".dfmap"));
     }
 
+    protected File getTestHacommentPickupFile() {
+        return findTestClientFile(HACOMMENT_PICKUP_FILE_PATH);
+    }
+
+    protected File getTestHacommentPieceDir() {
+        return findTestClientFile(HACOMMENT_PIECE_DIR_PATH);
+    }
+
     // ===================================================================================
     //                                                                        Test PlaySQL
     //                                                                        ============
@@ -161,19 +194,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         FileUtils.copyDirectory(srcPlaysqlDir, destPlaysqlDir);
     }
 
-    protected File getTestHacommentPickupFile() {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PICKUP_FILE_PATH);
-    }
-
-    protected File getTestHacommentPieceDir() {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + HACOMMENT_PIECE_DIR_PATH);
-    }
-
     protected File getTestPlaysqlDir() {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + PLAYSQL_DIR_PATH);
-    }
-
-    protected File prepareFileForTestClient(String filePath) {
-        return new File(getProjectDir(), TEST_CLIENT_PATH + "/" + filePath);
+        return findTestClientFile(PLAYSQL_DIR_PATH);
     }
 }

@@ -15,12 +15,9 @@
  */
 package org.dbflute.intro.app.logic.dfprop.schemapolicy;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,13 +29,12 @@ import javax.annotation.Resource;
 
 import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.file.DfpropSchemaPolicyFileCommentLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
-import org.dbflute.util.DfCollectionUtil;
-import org.dbflute.util.Srl;
 
 /**
  * The logic for reading Schema Policy (dfprop).
@@ -57,6 +53,8 @@ public class DfpropSchemaPolicyReadLogic {
     //                                                                           =========
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
+    @Resource
+    private DfpropSchemaPolicyFileCommentLogic schemaPolicyFileCommentLogic;
 
     // ===================================================================================
     //                                                                           Find File
@@ -102,6 +100,10 @@ public class DfpropSchemaPolicyReadLogic {
         SchemaPolicyColumnMap columnMap = parseColumnMap(schemaPolicyMap);
 
         return new SchemaPolicyMap(targetSetting, wholeMap, tableMap, columnMap, comments);
+    }
+
+    private Map<String, Object> readComments(File targetFile) {
+        return schemaPolicyFileCommentLogic.readComments(targetFile);
     }
 
     // -----------------------------------------------------
@@ -187,92 +189,6 @@ public class DfpropSchemaPolicyReadLogic {
         List<String> originalStatementList = extractListFromDfpropMap(originalColumnMap, "statementList");
 
         return new SchemaPolicyColumnMap(themeList, originalStatementList);
-    }
-
-    // ===================================================================================
-    //                                                                            Comments
-    //                                                                            ========
-    private Map<String, Object> readComments(File targetFile) {
-        final String absolutePath = targetFile.getAbsolutePath();
-        try {
-            // #needs_fix jflute big read so move to independent file e.g. SchemaPolicyCommentDfMapFile.java (2021/12/02)
-            return new DfMapFile() {
-                private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
-                        "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
-                private final String OTHER_SCOPE = "other";
-                private final String BEGINNING_KEY = "beginningComments";
-                private final String END_KEY = "endComments";
-
-                public Map<String, Object> readComments(InputStream ins) throws IOException {
-                    assertObjectNotNull("ins", ins);
-                    final Map<String, Object> keyCommentMap = DfCollectionUtil.newLinkedHashMap();
-                    final String encoding = "UTF-8";
-                    BufferedReader br = new BufferedReader(new InputStreamReader(ins, encoding));
-                    String previousComment = "";
-                    String scope = null;
-                    while (true) {
-                        final String line = br.readLine();
-                        if (line == null) {
-                            if (!previousComment.isEmpty()) {
-                                addComments(keyCommentMap, OTHER_SCOPE, END_KEY, previousComment);
-                            }
-                            break;
-                        }
-                        final String ltrimmedLine = Srl.ltrim(line);
-                        if (ltrimmedLine.startsWith(_lineCommentMark) || "".equals(ltrimmedLine)) {
-                            previousComment += ltrimmedLine + "\n";
-                            continue;
-                        }
-                        // key value here
-                        String key = extractKey(ltrimmedLine);
-                        if (SCOPE_LIST.contains(key)) {
-                            scope = key;
-                        }
-                        if ("".equals(previousComment)) {
-                            continue;
-                        }
-
-                        if (scope == null && key.startsWith("map:{")) {
-                            scope = OTHER_SCOPE;
-                            key = BEGINNING_KEY;
-                        }
-                        addComments(keyCommentMap, scope, key, previousComment);
-                        previousComment = "";
-                    }
-                    try {
-                        br.close();
-                    } catch (IOException ignored) {}
-                    return keyCommentMap;
-                }
-
-                private String extractKey(String line) {
-                    String key;
-                    if (line.contains("=>")) {
-                        key = line.trim();
-                    } else if (line.contains("=")) {
-                        key = Srl.substringFirstFront(line, "=").trim();
-                    } else {
-                        key = line.trim();
-                    }
-
-                    if (key.startsWith(";")) {
-                        return Srl.substringFirstRear(key, ";").trim();
-                    }
-                    return key;
-                }
-
-                @SuppressWarnings("unchecked")
-                private void addComments(Map<String, Object> map, String scope, String key, String comments) {
-                    if (map.containsKey(scope)) {
-                        ((Map<String, Object>) map.get(scope)).put(key, comments);
-                    } else {
-                        map.put(scope, DfCollectionUtil.newLinkedHashMap(key, comments));
-                    }
-                }
-            }.readComments(new FileInputStream(targetFile));
-        } catch (IOException | RuntimeException e) {
-            throw new IllegalStateException("Cannot read the dfprop comments: " + absolutePath, e);
-        }
     }
 
     // ===================================================================================
