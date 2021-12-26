@@ -50,19 +50,67 @@ public class DfpropSchemaPolicyFileCommentLogic {
      *  # フラグのカラムでNotNull付いてなかったらビックリしません？
      *  ; if columnName is suffix:_FLG then notNull
      * </pre>
+     * 
+     * <p>コメントの定義位置を保持するために、コメントの直下のポリシー定義との関連させた構造を構築している。
+     * 例えば以下のようなdfpropがあったとして...</p>
+     * <pre>
+     * # へっだーこめんとよん
+     * map:{
+     *     # ほーるまっぷよん
+     *     ; wholeMap = map:{
+     *         ; themeList = list:{
+     *             # ゆにーくよん
+     *             ; uniqueTableAlias
+     *         }
+     *     }
+     *
+     *     ; tableMap = map:{
+     *         ; statementList = map:{
+     *             # すてーとめんとよん
+     *             ; if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$
+     *         }
+     *     }
+     *     
+     *     # ほそくてきなこめんとよん
+     * }
+     * # ふったーこめんとよん
+     * </pre>
+     * <p>すると以下のようなmap構造になる。(厳密には前後の改行が入ったりする)</p>
+     * <pre>
+     * map:{
+     *     ; other = map:{
+     *         ; beginningComments = # へっだーこめんとよん
+     *         ; endComments = # ふったーこめんとよん
+     *     }
+     *     ; wholeMap = map:{
+     *         ; wholeMap = # ほーるまっぷよん
+     *         ; uniqueTableAlias = # ゆにーくよん
+     *     }
+     *     ; tableMap = map:{
+     *         ; if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$ = # すてーとめんとよん
+     *         ; } = # ほそくてきなこめんとよん
+     *     }
+     * }
+     * </pre>
+     * <p>完璧なロジックは難しいので、運用に耐えられるくらいであればOK。
+     * 気付いた時点で少しずつ改善していければGoodだが、更新時のロジックと整合性ズレないように注意。</p>
+     * 
      * @param targetFile SchemaPolicyのdfpropファイル (NotNull)
      * @return コメントの入ったMap, map:{ scope = map:{ key : comment } } (NotNull, EmptyAllowed)
      */
     public Map<String, Object> readComments(File targetFile) {
         final String absolutePath = targetFile.getAbsolutePath();
         try {
+            // #needs_fix jflute Is DfMapFile unneeded? maybe enough to be simple method (2021/12/25)
             return new DfMapFile() {
                 // #needs_fix jflute move this to DefLogic (2021/12/25)
                 private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
                         "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
+
+                // #needs_fix jflute define static constant in this Logic (2021/12/25)
                 private final String OTHER_SCOPE = "other";
                 private final String BEGINNING_KEY = "beginningComments";
-                private final String END_KEY = "endComments";
+                private final String END_KEY = "endComments"; // beginningなのに、ここはendingじゃない!? by jflute
 
                 public Map<String, Object> readComments(InputStream ins) throws IOException {
                     assertObjectNotNull("ins", ins);

@@ -27,11 +27,10 @@ import org.dbflute.intro.unit.UnitIntroTestCase;
  */
 public class DfpropSchemaPolicyFileCommentLogicTest extends UnitIntroTestCase {
 
-    // #for_now jflute readComments()の中身を見るために、とりあえずログだけ出すテスト書いた (2021/12/25)
-    // もう少し挙動を整理できたら、簡単でもいいのでアサートを書きたいところ
+    // #for_now jflute readComments()の中身を見るために、とりあえず簡易なテスト書いた (2021/12/25)
     public void test_readComments_show() {
         // ## Arrange ##
-        File dfpropFile = findTestClientFile("dfprop/schemaPolicyMap.dfprop");
+        File dfpropFile = findTestResourceFile("dfprop/javadoc_eg_schemaPolicyMap.dfprop");
         DfpropSchemaPolicyFileCommentLogic logic = new DfpropSchemaPolicyFileCommentLogic();
         inject(logic);
 
@@ -42,8 +41,29 @@ public class DfpropSchemaPolicyFileCommentLogicTest extends UnitIntroTestCase {
         assertFalse(commentMap.isEmpty());
         for (Entry<String, Object> entry : commentMap.entrySet()) {
             String key = entry.getKey();
-            Object value = entry.getValue();
-            log(key + " :: " + value.getClass());
+            log(key);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> valueMap = (Map<String, Object>) entry.getValue();
+            valueMap.forEach((first, second) -> {
+                log("  " + first + " :: " + filterComment(second)); // ここは見るだけ
+            });
         }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> otherMap = (Map<String, Object>) commentMap.get("other");
+        assertEquals("# へっだーこめんとよん", filterComment(otherMap.get("beginningComments")));
+        assertEquals("# ふったーこめんとよん", filterComment(otherMap.get("endComments")));
+        @SuppressWarnings("unchecked")
+        Map<String, Object> wholeMap = (Map<String, Object>) commentMap.get("wholeMap");
+        assertEquals("# ほーるまっぷよん", filterComment(wholeMap.get("wholeMap")));
+        assertEquals("# ゆにーくよん", filterComment(wholeMap.get("uniqueTableAlias")));
+        @SuppressWarnings("unchecked")
+        Map<String, Object> tableMap = (Map<String, Object>) commentMap.get("tableMap");
+        assertEquals("# すてーとめんとよん", filterComment(tableMap.get("if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$")));
+        assertEquals("# ほそくてきなこめんとよん", filterComment(tableMap.get("}"))); // これは本来tableMapではない!?
+    }
+
+    private String filterComment(Object obj) {
+        // 改行が前後に入ったりしているが、ここではそれは無視してトリム (更新時に改行はどう使われているだろうか？)
+        return obj != null ? obj.toString().trim() : null;
     }
 }
