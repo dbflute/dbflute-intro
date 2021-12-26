@@ -26,6 +26,11 @@ import org.lastaflute.core.exception.LaSystemException;
 /**
  * DIコンテナ利用のUnitTestクラスは、このクラスを継承する。<br>
  * 自動的にテスト用DBFluteクライアントが作成される。(不要な場合はsuppress可能) <br>
+ * 
+ * <p>テスト用クライアントのディレクトリ構造などの定義やFileオブジェクト取得などを定義する。
+ * ディレクトリ構造などは色々なクラスで利用する可能性があるので、できるだけ共有する。
+ * (クラスが大きくなってきたら、構造を定義するだけのクラスに切り出して利用してもいいかも) </p>
+ * 
  * @author t-awane
  * @author deco
  * @author jflute
@@ -37,41 +42,57 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // パス定義の命名ポリシー:
+    // o プロジェクトルートからの相対パスであれば: 定数名に何も付けず最後は単なる _PATH
+    // o 他の場所、例えばDBFluteクライアントからの相対パスであれば: 定数名は CLIENT_XXX_PATH
+    // o 相対パスには先頭にスラッシュを付けない
+    //
+    // ※このへんだんだん合わなくなってきたら変えてOK (ひとまず整理しただけなので)
+    // _/_/_/_/_/_/_/_/_/_/
     // -----------------------------------------------------
-    //                                        DBFlute CLient
+    //                                        DBFlute Client
     //                                        --------------
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // プロジェクトルートからの想定パス
+    // _/_/_/_/_/_/_/_/_/_/
     // Intro自体で使っているDBFluteクライアントがテスト用クライアントの元になる
-    protected static final String SRC_CLIENT_PATH = "dbflute_introdb";
+    private static final String SRC_CLIENT_PATH = "dbflute_introdb"; // 単なるディレクトリ名に見えるけど相対パス扱い
+
+    // それ↑がこの名前でコピーされて、テストで自由に使えるようになる
+    private static final String TEST_CLIENT_PATH = "dbflute_testdb"; // こっちも
 
     // テスト用の設定ファイルなどを置く場所、dbflute_introdbそのままだとテストしづらいため
-    protected static final String TEST_RESOURCE_BASE = "/src/test/resources/default";
+    private static final String TEST_RESOURCE_PATH = "src/test/resources/default"; // #thinking jflute what "default" means? (2021/12/26)
 
-    // dbflute_introdbがこの名前でコピーされて、テストで自由に使えるようになる
-    protected static final String TEST_CLIENT_PATH = "dbflute_testdb";
-    protected static final String TEST_CLIENT_PROJECT = "testdb";
+    // 大抵のロジックにて、これを引数に特定クライアントの処理ができるのでよく使う
+    // (テストコードの中ではこちらをよく使うのでprotected: メソッドで取得する方が融通利くのでちょと変えたいかも!?)
+    protected static final String TEST_CLIENT_PROJECT = "testdb"; // これは名前
 
     // -----------------------------------------------------
     //                                             Decomment
     //                                             ---------
-    private static final String TEST_RESOURCE_PICKUP_FILE_PATH = TEST_RESOURCE_BASE + "/schema/decomment/pickup/decomment-pickup.dfmap";
-    private static final String TEST_RESOURCE_PICKUP_PATH = TEST_RESOURCE_BASE + "/schema/decomment/piece";
-    private static final String PICKUP_FILE_PATH = "/schema/decomment/pickup/decomment-pickup.dfmap";
-    private static final String PIECE_DIR_PATH = "/schema/decomment/piece";
+    // DBFluteクライアントからの相対パス
+    private static final String CLIENT_DECOMMENT_PICKUP_FILE_PATH = "schema/decomment/pickup/decomment-pickup.dfmap";
+    private static final String CLIENT_DECOMMENT_PIECE_DIR_PATH = "schema/decomment/piece";
 
     // -----------------------------------------------------
     //                                             Hacomment
     //                                             ---------
-    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH =
-            TEST_RESOURCE_BASE + "/schema/hacomment/pickup/hacomment-pickup.dfmap";
-    private static final String TEST_RESOURCE_HACOMMENT_PICKUP_PATH = TEST_RESOURCE_BASE + "/schema/hacomment/piece";
-    private static final String HACOMMENT_PICKUP_FILE_PATH = "/schema/hacomment/pickup/hacomment-pickup.dfmap";
-    private static final String HACOMMENT_PIECE_DIR_PATH = "/schema/hacomment/piece";
+    // DBFluteクライアントからの相対パス
+    private static final String CLIENT_HACOMMENT_PICKUP_FILE_PATH = "schema/hacomment/pickup/hacomment-pickup.dfmap";
+    private static final String CLIENT_HACOMMENT_PIECE_DIR_PATH = "schema/hacomment/piece";
 
     // -----------------------------------------------------
     //                                               Playsql
     //                                               -------
-    protected static final String TEST_RESOURCE_PLAYSQL_DIR_PATH = TEST_RESOURCE_BASE + "/playsql";
-    protected static final String PLAYSQL_DIR_PATH = "/playsql";
+    // DBFluteクライアントからの相対パス
+    private static final String CLIENT_PLAYSQL_PATH = "playsql";
+    private static final String CLIENT_PLAYSQL_MIGRATION_PATH = CLIENT_PLAYSQL_PATH + "/migration";
+    private static final String CLIENT_PLAYSQL_MIGRATION_ALTER_PATH = CLIENT_PLAYSQL_MIGRATION_PATH + "/alter";
+    private static final String CLIENT_PLAYSQL_MIGRATION_HISTORY_PATH = CLIENT_PLAYSQL_MIGRATION_PATH + "/history";
+    private static final String CLIENT_PLAYSQL_MIGRATION_UNRELEASED_PATH =
+            CLIENT_PLAYSQL_MIGRATION_HISTORY_PATH + "/unreleased-checked-alter";
 
     // ===================================================================================
     //                                                                            Settings
@@ -93,7 +114,7 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     protected boolean isSuppressTestClient() { // you can override
-        return false;
+        return false; // もしテスト用クライアントを使いたくない場合は、オーバーライドしてtrueを戻せばOK
     }
 
     // ===================================================================================
@@ -129,9 +150,8 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     // -----------------------------------------------------
-    //                                          Prepare File
-    //                                          ------------
-    // #needs_fix jflute more use prepareFileForTestClient() (2021/12/25)
+    //                                             Find File
+    //                                             ---------
     /**
      * テスト用のDBFluteクライアント内のファイルを探す。<br>
      * @param filePath DBFluteクライアントからの相対パス e.g. dfprop/schemaPolicyMap.dfprop (NotNull)
@@ -144,13 +164,23 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         return new File(getProjectDir(), TEST_CLIENT_PATH + "/" + Srl.ltrim(filePath, "/"));
     }
 
+    /**
+     * テスト用に用意してあるリソースファイルを探す。<br>
+     * @param filePath DBFluteクライアントからの相対パス e.g. dfprop/schemaPolicyMap.dfprop (NotNull)
+     * @return 指定されたパスを示すファイルオブジェクト、存在チェックはされない (NotNull)
+     */
+    protected File findTestResourceFile(String filePath) { // UnitTestの中で好きなときに呼んでね
+        return new File(getProjectDir(), TEST_RESOURCE_PATH + "/" + Srl.ltrim(filePath, "/"));
+    }
+
     // ===================================================================================
     //                                                                      Test Decomment
     //                                                                      ==============
     protected void prepareTestDecommentFiles() throws IOException {
         // done hakiba change to call way to test plain state by jflute (2017/09/28)
-        File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_PICKUP_FILE_PATH);
-        File srcPieceDir = new File(getProjectDir(), TEST_RESOURCE_PICKUP_PATH);
+        // テスト用リソースのパスもDBFluteクライアントでの構造と同じようにする
+        File srcPickupFile = findTestResourceFile(CLIENT_DECOMMENT_PICKUP_FILE_PATH);
+        File srcPieceDir = findTestResourceFile(CLIENT_DECOMMENT_PIECE_DIR_PATH);
         File destPickupFile = getTestDecommentPickupFile();
         File destPieceDir = getTestDecommentPieceDir();
         FileUtils.copyFile(srcPickupFile, destPickupFile);
@@ -158,19 +188,20 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     protected File getTestDecommentPickupFile() {
-        return findTestClientFile(PICKUP_FILE_PATH);
+        return findTestClientFile(CLIENT_DECOMMENT_PICKUP_FILE_PATH);
     }
 
     protected File getTestDecommentPieceDir() {
-        return findTestClientFile(PIECE_DIR_PATH);
+        return findTestClientFile(CLIENT_DECOMMENT_PIECE_DIR_PATH);
     }
 
     // ===================================================================================
     //                                                                      Test Hacomment
     //                                                                      ==============
     protected void prepareTestHacommentFiles() throws IOException {
-        File srcPickupFile = new File(getProjectDir(), TEST_RESOURCE_HACOMMENT_PICKUP_FILE_PATH);
-        File srcPieceDir = new File(getProjectDir(), TEST_RESOURCE_HACOMMENT_PICKUP_PATH);
+        // テスト用リソースのパスもDBFluteクライアントでの構造と同じようにする
+        File srcPickupFile = findTestResourceFile(CLIENT_HACOMMENT_PICKUP_FILE_PATH);
+        File srcPieceDir = findTestResourceFile(CLIENT_HACOMMENT_PIECE_DIR_PATH);
         File destPickupFile = getTestHacommentPickupFile();
         File destPieceDir = getTestHacommentPieceDir();
         FileUtils.copyFile(srcPickupFile, destPickupFile);
@@ -178,23 +209,38 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     }
 
     protected File getTestHacommentPickupFile() {
-        return findTestClientFile(HACOMMENT_PICKUP_FILE_PATH);
+        return findTestClientFile(CLIENT_HACOMMENT_PICKUP_FILE_PATH);
     }
 
     protected File getTestHacommentPieceDir() {
-        return findTestClientFile(HACOMMENT_PIECE_DIR_PATH);
+        return findTestClientFile(CLIENT_HACOMMENT_PIECE_DIR_PATH);
     }
 
     // ===================================================================================
     //                                                                        Test PlaySQL
     //                                                                        ============
     protected void preparePlaysqlFiles() throws IOException {
-        File srcPlaysqlDir = new File(getProjectDir(), TEST_RESOURCE_PLAYSQL_DIR_PATH);
-        File destPlaysqlDir = getTestPlaysqlDir();
-        FileUtils.copyDirectory(srcPlaysqlDir, destPlaysqlDir);
+        File testResourcePlaysqlDir = findTestResourceFile(CLIENT_PLAYSQL_PATH); // テスト用リソースでも同じ構造で定義
+        FileUtils.copyDirectory(testResourcePlaysqlDir, getTestPlaysqlDir());
     }
 
     protected File getTestPlaysqlDir() {
-        return findTestClientFile(PLAYSQL_DIR_PATH);
+        return findTestClientFile(CLIENT_PLAYSQL_PATH);
+    }
+
+    protected File getTestPlaysqlMigrationDir() {
+        return findTestClientFile(CLIENT_PLAYSQL_MIGRATION_PATH);
+    }
+
+    protected File getTestPlaysqlMigrationAlterDir() {
+        return findTestClientFile(CLIENT_PLAYSQL_MIGRATION_ALTER_PATH);
+    }
+
+    protected File getTestPlaysqlMigrationHistoryDir() {
+        return findTestClientFile(CLIENT_PLAYSQL_MIGRATION_HISTORY_PATH);
+    }
+
+    protected File getTestPlaysqlMigrationUnreleasedDir() {
+        return findTestClientFile(CLIENT_PLAYSQL_MIGRATION_UNRELEASED_PATH);
     }
 }

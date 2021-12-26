@@ -72,6 +72,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
         DfpropSchemaPolicyReadLogic readLogic = new DfpropSchemaPolicyReadLogic();
         inject(readLogic);
 
+        // #needs_fix jflute Can you move this to src/test/resources/default/dfprop? (2021/12/26)
         File inputFile = findTestClientFile("dfprop/unittest/schemaPolicyMap.dfprop");
         File outputFile = findTestClientFile("dfprop/unittest/schemaPolicyMap_output.dfprop");
 
@@ -446,12 +447,12 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
 
     private void copyFile(String fileName) throws IOException {
         File srcFile = prepareFileForTestResource(fileName);
-        File destFile = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/" + fileName);
+        File destFile = findTestClientFile("dfprop/" + fileName);
         FileUtils.copyFile(srcFile, destFile);
     }
 
     private File prepareFileForTestResource(String fileName) {
-        return new File(getProjectDir(), TEST_RESOURCE_BASE + "/dfprop/" + fileName);
+        return findTestResourceFile("dfprop/" + fileName);
     }
 
     private SchemaPolicyMap createInputWholeMap(SchemaPolicyWholeMap.ThemeType themeType, boolean isActive) {

@@ -319,7 +319,7 @@ public class DfpropSchemaPolicyReadLogicTest extends UnitIntroTestCase {
     }
 
     private Map<String, Object> fetchSchemaPolicyMap() {
-        final File dfpropFile = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/schemaPolicyMap.dfprop");
+        final File dfpropFile = findTestClientFile("dfprop/schemaPolicyMap.dfprop");
         return new DfPropFile().readMap(dfpropFile.getAbsolutePath(), null);
     }
 
@@ -328,6 +328,6 @@ public class DfpropSchemaPolicyReadLogicTest extends UnitIntroTestCase {
     }
 
     private File prepareFileForTestResource(String fileName) {
-        return new File(getProjectDir(), TEST_RESOURCE_BASE + "/dfprop/" + fileName);
+        return findTestResourceFile("dfprop/" + fileName);
     }
 }

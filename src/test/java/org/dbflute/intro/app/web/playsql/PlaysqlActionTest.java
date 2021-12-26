@@ -64,7 +64,7 @@ public class PlaysqlActionTest extends UnitIntroTestCase {
         inject(action);
 
         PlaysqlUpdateBody body = new PlaysqlUpdateBody();
-        File playsqlDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/playsql/");
+        File playsqlDir = findTestClientFile("playsql");
         File playsqlBefore = playsqlDir.listFiles((dir, name) -> name.endsWith(".sql"))[0];
         String fileName = playsqlBefore.getName();
         body.content = "content";
@@ -73,7 +73,7 @@ public class PlaysqlActionTest extends UnitIntroTestCase {
         action.update(TEST_CLIENT_PROJECT, fileName, body);
 
         // ## Assert ##
-        File playsqlAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/playsql/" + fileName);
+        File playsqlAfter = findTestClientFile("playsql/" + fileName);
         String content = flutyFileLogic.readFile(playsqlAfter);
         log(fileName, content);
         assertEquals(body.content, content);
