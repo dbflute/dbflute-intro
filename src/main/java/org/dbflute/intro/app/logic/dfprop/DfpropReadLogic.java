@@ -29,6 +29,8 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.dfmap.DfMapFile;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
+import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
@@ -84,12 +86,12 @@ public class DfpropReadLogic {
                 dfpropMap.get(fileNameKey).putAll(readMap(plusFile));
             }
         });
-        final Map<String, Object> basicInfoMap = dfpropMap.get("basicInfoMap.dfprop");
+        final Map<String, Object> basicInfoMap = dfpropMap.get(BasicInfoMap.DFPROP_NAME);
         if (basicInfoMap == null) {
             // #needs_fix anyone message use DfpropFileNotFoundException by jflute (2021/04/29)
             throw new RuntimeException("Not found the basicInfoMap.dfprop: " + dfpropMap.keySet());
         }
-        final Map<String, Object> databaseInfoMap = dfpropMap.get("databaseInfoMap.dfprop");
+        final Map<String, Object> databaseInfoMap = dfpropMap.get(DatabaseInfoMap.DFPROP_NAME);
         if (databaseInfoMap == null) {
             throw new RuntimeException("Not found the databaseInfoMap.dfprop: " + dfpropMap.keySet());
         }

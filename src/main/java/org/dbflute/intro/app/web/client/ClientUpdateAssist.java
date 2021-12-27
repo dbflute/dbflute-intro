@@ -61,7 +61,7 @@ public class ClientUpdateAssist {
     public void moreValidateCreate(IntroMessages messages, ClientCreateBody clientCreateBody) {
         String clientName = clientCreateBody.client.projectName;
         ClientPart client = clientCreateBody.client;
-        if (clientReadLogic.getProjectList().contains(clientName)) {
+        if (clientReadLogic.getProjectNameList().contains(clientName)) {
             messages.addErrorsWelcomeClientAlreadyExists("projectName", clientName);
         }
         TargetDatabase databaseCd = client.databaseCode;

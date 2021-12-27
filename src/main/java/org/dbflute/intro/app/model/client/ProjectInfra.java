@@ -19,7 +19,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.dbflute.optional.OptionalThing;
-import org.lastaflute.core.util.ContainerUtil;
 
 /**
  * @author jflute
@@ -48,7 +47,6 @@ public class ProjectInfra {
         this.projectName = projectName;
         this.dbfluteVersion = dbfluteVersion;
         this.jdbcDriverExtlibFile = jdbcDriverFile;
-        ContainerUtil.injectSimply(this);
     }
 
     // ===================================================================================

@@ -34,6 +34,7 @@ import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
+import org.dbflute.intro.bizfw.tellfailure.ClientAlreadyExistsException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
@@ -88,8 +89,9 @@ public class ClientUpdateLogic {
         if (!clientDir.exists()) { // yes, new-create!
             clientPhysicalLogic.locateUnzippedClient(clientModel.getProjectInfra().getDbfluteVersion(), clientDir);
         } else { // no no no no, already exists
-            // #needs_fix anyone use application excecption by jflute (2021/04/16)
-            throw new IllegalStateException("The DBFlute client already exists (but new-create): clientName=" + projectName);
+            // done anyone use application excecption by jflute (2021/04/16)
+            final String debugMsg = "The DBFlute client already exists (but new-create): projectName=" + projectName;
+            throw new ClientAlreadyExistsException(debugMsg, projectName);
         }
     }
 
@@ -115,6 +117,7 @@ public class ClientUpdateLogic {
             // basicInfoMap.dfprop
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             final BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
+            // #needs_fix jflute move to BasicInfoLogic like DatabaseInfoLogic (2021/10/21)
             replaceMap.put("@database@", basicInfoMap.getDatabase().code());
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
@@ -124,7 +127,9 @@ public class ClientUpdateLogic {
         {
             // databaseInfoMap.dfprop
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            fileReplaceMap.put(databaseInfoMap.findDfpropFile(projectName), databaseInfoMap.prepareInitReplaceMap());
+            final File databaseInfoFile = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
+            final Map<String, Object> initReplaceMap = databaseInfoLogic.prepareInitReplaceMap(databaseInfoMap);
+            fileReplaceMap.put(databaseInfoFile, initReplaceMap);
         }
         doReplaceClientFile(fileReplaceMap, /*regularExpression*/false);
     }

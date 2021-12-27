@@ -21,18 +21,21 @@ import org.dbflute.intro.bizfw.tellfailure.base.IntroApplicationException;
 import org.dbflute.intro.mylasta.action.IntroMessages;
 
 /**
- * @author deco
  * @author jflute
  */
-public class NetworkErrorException extends IntroApplicationException {
+public class ClientAlreadyExistsException extends IntroApplicationException {
 
     private static final long serialVersionUID = 1L;
 
-    public NetworkErrorException(String debugMsg, Throwable cause) {
-        super(debugMsg, prepareMessages(), cause);
+    public ClientAlreadyExistsException(String debugMsg, String failureHint) {
+        super(debugMsg, prepareMessages(failureHint));
     }
 
-    private static Consumer<IntroMessages> prepareMessages() {
-        return messages -> messages.addErrorsAppNetworkError(GLOBAL);
+    public ClientAlreadyExistsException(String debugMsg, String failureHint, Throwable cause) {
+        super(debugMsg, prepareMessages(failureHint), cause);
+    }
+
+    private static Consumer<IntroMessages> prepareMessages(String failureHint) {
+        return messages -> messages.addErrorsAppClientAlreadyExists(GLOBAL, failureHint);
     }
 }

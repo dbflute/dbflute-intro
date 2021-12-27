@@ -83,8 +83,8 @@ public class ClientReadLogic {
         return new File(introPhysicalLogic.buildClientPath(projectName)).exists();
     }
 
-    // #needs_fix anyone should be getProjectNameList()? by jflute (2021/04/29)
-    public List<String> getProjectList() { // e.g. [maihamadb, trohamadb]
+    // done anyone should be getProjectNameList()? by jflute (2021/04/29)
+    public List<String> getProjectNameList() { // e.g. [maihamadb, trohamadb], not null
         final List<String> projectList = new ArrayList<String>();
         final File baseDir = new File(IntroPhysicalLogic.BASE_DIR_PATH);
         if (baseDir.exists()) {
@@ -183,7 +183,7 @@ public class ClientReadLogic {
     //                                            Basic Info
     //                                            ----------
     private BasicInfoMap prepareBasicInfoMap(Map<String, Map<String, Object>> dfpropMap) {
-        final Map<String, Object> dataMap = dfpropMap.get("basicInfoMap.dfprop");
+        final Map<String, Object> dataMap = dfpropMap.get(BasicInfoMap.DFPROP_NAME);
 
         final CDef.TargetDatabase databaseType = toClsTargetDatabase(dataMap);
         final CDef.TargetLanguage languageType = toClsTargetLanguage(dataMap);
@@ -214,7 +214,7 @@ public class ClientReadLogic {
     private DatabaseInfoMap prepareDatabaseInfoMap(Map<String, Map<String, Object>> dfpropMap) {
         // according to DBFlute specification
         // http://dbflute.seasar.org/ja/manual/reference/dfprop/databaseinfo/index.html
-        final Map<String, Object> dataMap = dfpropMap.get("databaseInfoMap.dfprop");
+        final Map<String, Object> dataMap = dfpropMap.get(DatabaseInfoMap.DFPROP_NAME);
         final String jdbcDriverFqcn = required(dataMap, "driver");
         final String url = required(dataMap, "url");
         final String schema = (String) dataMap.get("schema");

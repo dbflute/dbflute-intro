@@ -16,12 +16,15 @@
 package org.dbflute.intro.app.logic.dfprop.database;
 
 import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.filesystem.FileTextIO;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
+import org.dbflute.intro.app.logic.core.MapStringLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
@@ -42,6 +45,8 @@ public class DatabaseInfoLogic {
     private ClsTargetDatabaseBhv databaseBhv;
     @Resource
     private ClientPhysicalLogic clientPhysicalLogic;
+    @Resource
+    private MapStringLogic mapStringLogic;
 
     // ===================================================================================
     //                                                                        Embedded Jar
@@ -55,6 +60,24 @@ public class DatabaseInfoLogic {
         return databaseBhv.selectEntity(cb -> cb.query().setDatabaseCode_Equal_AsTargetDatabase(target))
                 .map(database -> database.isEmbeddedJarFlgTrue())
                 .orElseTranslatingThrow(cause -> new IllegalStateException("not found target database:" + target.alias(), cause));
+    }
+
+    // ===================================================================================
+    //                                                                        Init Replace
+    //                                                                        ============
+    public Map<String, Object> prepareInitReplaceMap(DatabaseInfoMap databaseInfoMap) {
+        final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
+        final DbConnectionBox dbConnectionBox = databaseInfoMap.getDbConnectionBox();
+        replaceMap.put("@driver@", escapeControlMark(databaseInfoMap.getDriver()));
+        replaceMap.put("@url@", escapeControlMark(dbConnectionBox.getUrl()));
+        replaceMap.put("@schema@", escapeControlMark(dbConnectionBox.getSchema()));
+        replaceMap.put("@user@", escapeControlMark(dbConnectionBox.getUser()));
+        replaceMap.put("@password@", escapeControlMark(dbConnectionBox.getPassword()));
+        return replaceMap;
+    }
+
+    private String escapeControlMark(Object value) {
+        return mapStringLogic.escapeControlMark(value);
     }
 
     // ===================================================================================

@@ -15,16 +15,7 @@
  */
 package org.dbflute.intro.app.model.client.database;
 
-import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
-import org.dbflute.intro.app.logic.core.MapStringLogic;
 import org.dbflute.intro.app.model.client.database.various.AdditionalSchemaMap;
-import org.lastaflute.core.util.ContainerUtil;
 
 /**
  * @author jflute
@@ -32,19 +23,16 @@ import org.lastaflute.core.util.ContainerUtil;
 public class DatabaseInfoMap {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DFPROP_NAME = "databaseInfoMap.dfprop";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    protected final String driver;
-    protected final DbConnectionBox dbConnectionInfo;
+    protected final String driver; // not null
+    protected final DbConnectionBox dbConnectionInfo; // not null
     protected final AdditionalSchemaMap additionalSchemaMap; // not null, empty allowed
-
-    // -----------------------------------------------------
-    //                                          DI Component
-    //                                          ------------
-    @Resource
-    private ClientPhysicalLogic clientPhysicalLogic;
-    @Resource
-    private MapStringLogic mapStringLogic;
 
     // ===================================================================================
     //                                                                         Constructor
@@ -62,7 +50,6 @@ public class DatabaseInfoMap {
         this.driver = driver;
         this.dbConnectionInfo = dbConnectionInfo;
         this.additionalSchemaMap = additionalSchemaMap;
-        ContainerUtil.injectSimply(this);
     }
 
     public static DatabaseInfoMap createWithoutAdditional(String driver, DbConnectionBox dbConnectionInfo) {
@@ -71,33 +58,6 @@ public class DatabaseInfoMap {
 
     protected DatabaseInfoMap(String driver, DbConnectionBox dbConnectionInfo) {
         this(driver, dbConnectionInfo, AdditionalSchemaMap.empty());
-    }
-
-    // ===================================================================================
-    //                                                                             Replace
-    //                                                                             =======
-    public Map<String, Object> prepareInitReplaceMap() {
-        final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
-        replaceMap.put("@driver@", escapeControlMark(driver));
-        replaceMap.put("@url@", escapeControlMark(dbConnectionInfo.getUrl()));
-        replaceMap.put("@schema@", escapeControlMark(dbConnectionInfo.getSchema()));
-        replaceMap.put("@user@", escapeControlMark(dbConnectionInfo.getUser()));
-        replaceMap.put("@password@", escapeControlMark(dbConnectionInfo.getPassword()));
-        return replaceMap;
-    }
-
-    // ===================================================================================
-    //                                                                            Physical
-    //                                                                            ========
-    public File findDfpropFile(String projectName) {
-        return clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
-    }
-
-    // ===================================================================================
-    //                                                                        Small Helper
-    //                                                                        ============
-    private String escapeControlMark(Object value) {
-        return mapStringLogic.escapeControlMark(value);
     }
 
     // ===================================================================================

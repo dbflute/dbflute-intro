@@ -22,6 +22,8 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.app.model.client.ExtlibFile;
+import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
+import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 import org.dbflute.intro.bizfw.util.ZipUtil;
 
@@ -34,13 +36,6 @@ import org.dbflute.intro.bizfw.util.ZipUtil;
  * @author subaru
  */
 public class ClientPhysicalLogic {
-
-    // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    // #needs_fix anyone should be public to use this in other logics by jflute (2021/04/16)
-    private static final String BASIC_INFO_MAP_DFPROP = "basicInfoMap.dfprop";
-    private static final String DATABASE_INFO_MAP_DFPROP = "databaseInfoMap.dfprop";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -58,14 +53,15 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
+    // #needs_fix jflute move to their own logics in dfprop (2021/10/21)
     public File findDfpropBasicInfoMap(String projectName) {
         IntroAssertUtil.assertNotEmpty(projectName);
-        return new File(buildDfpropFilePath(projectName, BASIC_INFO_MAP_DFPROP));
+        return new File(buildDfpropFilePath(projectName, BasicInfoMap.DFPROP_NAME));
     }
 
     public File findDfpropDatabaseInfoMap(String projectName) {
         IntroAssertUtil.assertNotEmpty(projectName);
-        return new File(buildDfpropFilePath(projectName, DATABASE_INFO_MAP_DFPROP));
+        return new File(buildDfpropFilePath(projectName, DatabaseInfoMap.DFPROP_NAME));
     }
 
     private String buildDfpropDirPath(String projectName) {

@@ -16,19 +16,19 @@
 package org.dbflute.intro.app.logic.exception;
 
 /**
- * The exception when it fails to download DBFlute Engine. 
+ * The exception when it fails to load public.properties. (e.g. downloading DBFlute Engine) 
  * @author deco
  * @author jflute
  */
-public class EngineDownloadErrorException extends Exception {
+public class PublicPropertiesLoadingFailureException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public EngineDownloadErrorException(String msg) {
+    public PublicPropertiesLoadingFailureException(String msg) {
         super(msg);
     }
 
-    public EngineDownloadErrorException(String msg, Throwable cause) {
+    public PublicPropertiesLoadingFailureException(String msg, Throwable cause) {
         super(msg, cause);
     }
 }
