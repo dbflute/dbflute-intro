@@ -241,6 +241,7 @@
         subjectVerb: null,
         complement: ''
       })
+      self.update()
     }
 
     this.handleExpectedFieldDelete = (id) => {
@@ -254,6 +255,9 @@
       self.update()
     }
 
+    /**
+     * Add Statement フォームの各フィールドの値を初期表示に戻す
+     */
     this.cleanInput = () => {
       self.statement.clean()
       self.refs.subject.value = ''
