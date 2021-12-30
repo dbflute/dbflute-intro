@@ -112,7 +112,6 @@ $ sh docker-build.sh && sh docker-push.sh ${release version} # input release ver
 ## Upgrade DBFlute
 
 1. `sh ./dbflute_introdb/manage.sh upgrade`
-2. set `DBFLUTE_HOME ../mydbflute/dbflute-1.x` in changed `_project.sh` and `_project.bat`
-3. mv downloaded dbflute to `./mydbflute/dbflute-1.x`
-4. copy template files to `./dbflute_introdb`
-5. `sh ./dbflute_introdb/manage.sh 1`
+2. `set DBFLUTE_HOME=../mydbflute/dbflute-${latest}` in changed `./dbflute_trohamadb/_project.sh` and `./dbflute_trohamadb/_project.bat`
+3. copy template files to `./dbflute_introdb`
+4. `sh ./dbflute_introdb/manage.sh 1`
