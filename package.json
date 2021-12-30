@@ -1,6 +1,6 @@
 {
   "name": "dbflute-intro",
-  "version": "0.3.11",
+  "version": "0.5.0",
   "dependencies": {
     "uuid": "^8.3.2"
   },
