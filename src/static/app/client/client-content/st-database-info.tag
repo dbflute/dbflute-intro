@@ -60,9 +60,8 @@
     }
 
     this.showToast = () => {
-      this.suToast({
+      this.successToast({
         title: 'Setting updated',
-        class: 'positive'
       })
     }
   </script>
