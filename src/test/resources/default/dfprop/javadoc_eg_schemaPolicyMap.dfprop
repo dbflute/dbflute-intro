@@ -1,0 +1,21 @@
+# へっだーこめんとよん
+map:{
+    # ほーるまっぷよん
+    ; wholeMap = map:{
+        ; themeList = list:{
+            # ゆにーくよん
+            ; uniqueTableAlias
+        }
+    }
+    ; tableMap = map:{
+        ; themeList = list:{
+        }
+        ; statementList = list:{
+            # すてーとめんとよん
+            ; if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$
+        }
+    }
+    
+    # ほそくてきなこめんとよん
+}
+# ふったーこめんとよん

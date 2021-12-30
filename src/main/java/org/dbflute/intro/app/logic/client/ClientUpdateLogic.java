@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.basic.BasicInfoLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.engine.EnginePhysicalLogic;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
@@ -35,6 +36,8 @@ import org.dbflute.intro.app.model.client.ProjectInfra;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.bizfw.tellfailure.ClientAlreadyExistsException;
+import org.dbflute.intro.bizfw.tellfailure.ClientCannotDeleteException;
+import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.bizfw.util.IntroAssertUtil;
 
 /**
@@ -59,6 +62,8 @@ public class ClientUpdateLogic {
     private ClientPhysicalLogic clientPhysicalLogic;
     @Resource
     private EnginePhysicalLogic enginePhysicalLogic;
+    @Resource
+    private BasicInfoLogic basicInfoLogic;
     @Resource
     private DatabaseInfoLogic databaseInfoLogic;
 
@@ -117,17 +122,16 @@ public class ClientUpdateLogic {
             // basicInfoMap.dfprop
             final Map<String, Object> replaceMap = new LinkedHashMap<String, Object>();
             final BasicInfoMap basicInfoMap = clientModel.getBasicInfoMap();
-            // #needs_fix jflute move to BasicInfoLogic like DatabaseInfoLogic (2021/10/21)
             replaceMap.put("@database@", basicInfoMap.getDatabase().code());
             replaceMap.put("@targetLanguage@", basicInfoMap.getTargetLanguage().code());
             replaceMap.put("@targetContainer@", basicInfoMap.getTargetContainer().code());
             replaceMap.put("@packageBase@", basicInfoMap.getPackageBase());
-            fileReplaceMap.put(clientPhysicalLogic.findDfpropBasicInfoMap(projectName), replaceMap);
+            fileReplaceMap.put(basicInfoLogic.findDfpropFile(projectName), replaceMap);
         }
         {
             // databaseInfoMap.dfprop
             final DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
-            final File databaseInfoFile = clientPhysicalLogic.findDfpropDatabaseInfoMap(projectName);
+            final File databaseInfoFile = databaseInfoLogic.findDfpropFile(projectName);
             final Map<String, Object> initReplaceMap = databaseInfoLogic.prepareInitReplaceMap(databaseInfoMap);
             fileReplaceMap.put(databaseInfoFile, initReplaceMap);
         }
@@ -208,7 +212,9 @@ public class ClientUpdateLogic {
 
     private void readyUpdateClient(ClientModel clientModel, String projectName, File clientDir) {
         if (!clientDir.exists()) { // no no no no, new-create
-            throw new IllegalStateException("The DBFlute client has already been deleted: projectName=" + projectName);
+            final String debugMsg = "The DBFlute client has already been deleted: projectName=" + projectName;
+            final String failureHint = clientDir.getPath();
+            throw new ClientNotFoundException(debugMsg, failureHint);
         }
     }
 
@@ -226,10 +232,12 @@ public class ClientUpdateLogic {
         IntroAssertUtil.assertNotEmpty(projectName);
         final File clientDir = introPhysicalLogic.findClientDir(projectName);
         try {
-            FileUtils.deleteDirectory(clientDir);
-        } catch (IOException e) {
-            // #needs_fix anyone should be application exception by jflute (2017/01/19)
-            throw new IllegalStateException("Failed to delete the DBFlute client: " + clientDir);
+            FileUtils.deleteDirectory(clientDir); // do nothing if not found
+        } catch (IOException e) { // found but cannot delete for some reason
+            // done anyone should be application exception by jflute (2017/01/19)
+            final String debugMsg = "Failed to delete the DBFlute client: projectName=" + projectName;
+            final String failureHint = clientDir.getPath();
+            throw new ClientCannotDeleteException(debugMsg, failureHint);
         }
     }
 }

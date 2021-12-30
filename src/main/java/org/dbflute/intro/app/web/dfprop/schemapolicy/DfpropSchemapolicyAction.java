@@ -67,7 +67,7 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
     public JsonResponse<Void> edit(String clientName, DfpropSchemaPolicyEditBody body) {
         validate(body, messages -> {});
         SchemaPolicyMap schemaPolicyMap = mappingToSchemaPolicyMap(body);
-        dfpropSchemaPolicyUpdateLogic.replaceSchemaPolicyMap(clientName, schemaPolicyMap);
+        dfpropSchemaPolicyUpdateLogic.updateSchemaPolicyMap(clientName, schemaPolicyMap);
         return JsonResponse.asEmptyBody();
     }
 

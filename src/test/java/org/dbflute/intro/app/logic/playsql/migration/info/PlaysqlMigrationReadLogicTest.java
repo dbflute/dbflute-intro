@@ -30,7 +30,7 @@ public class PlaysqlMigrationReadLogicTest extends UnitIntroTestCase {
         final PlaysqlMigrationReadLogic logic = new PlaysqlMigrationReadLogic();
         inject(logic);
 
-        String basePath = TEST_RESOURCE_PLAYSQL_DIR_PATH;
+        String basePath = getTestPlaysqlMigrationDir().getPath();
         final File f1 = new File(basePath + "/migration/history/201910/20191020_1207/checked-alter-to20190422-2332.zip");
         final File f2 = new File(basePath + "/migration/history/201910/20191021_1207/checked-alter-to20190422-2332.zip");
 

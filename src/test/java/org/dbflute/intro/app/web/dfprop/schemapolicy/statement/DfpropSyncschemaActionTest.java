@@ -132,12 +132,12 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
     }
 
     private void prepareEmptySchemaPolicyMap() {
-        File srcFile = new File(getProjectDir(), TEST_RESOURCE_BASE + "/dfprop/" + "noSetting_schemaPolicyMap.dfprop");
-        File destFile = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/schemaPolicyMap.dfprop");
+        File srcFile = findTestResourceFile("dfprop/noSetting_schemaPolicyMap.dfprop");
+        File destFile = findTestClientFile("dfprop/schemaPolicyMap.dfprop");
         try {
             FileUtils.copyFile(srcFile, destFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Failed to copy file: src=" + srcFile + ", dest=" + destFile, e);
         }
     }
 

@@ -22,7 +22,8 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
- * The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML)
+ * The logic for document physical operation. (e.g. SchemaHTML, HistoryHTML) <br>
+ * ドキュメントファイルの存在を判定したり、Fileオブジェクトを取得したりできる。
  * @author deco
  * @author jflute
  * @author cabos
@@ -39,6 +40,10 @@ public class DocumentPhysicalLogic {
     // ===================================================================================
     //                                                                              Exists
     //                                                                              ======
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // 該当のファイルが存在するかどうか？
+    // ファイルの場所はそれぞれ決まっているので、クライアントプロジェクト名を入れれば特定できる。
+    // _/_/_/_/_/_/_/_/_/_/
     public boolean existsSchemaHtml(String projectName) {
         return findSchemaHtml(projectName).exists();
     }
@@ -56,8 +61,12 @@ public class DocumentPhysicalLogic {
     }
 
     // ===================================================================================
-    //                                                                               Find
-    //                                                                              ======
+    //                                                                           Find File
+    //                                                                           =========
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // 該当のファイルのFileオブジェクトを探す。
+    // ファイル自体が存在しなくても、想定されるパスのFileオブジェクトが戻る。(NotNull)
+    // _/_/_/_/_/_/_/_/_/_/
     public File findSchemaHtml(String projectName) {
         return toProjectNamedDocumentFile(projectName, "schema");
     }
@@ -75,7 +84,7 @@ public class DocumentPhysicalLogic {
     }
 
     public File findAlterCheckResultHtml(String projectName) {
-        return toProjectNamedMigrationFile(projectName, "schema");
+        return toFixedNamedMigrationFile(projectName, "schema", "alter-check-result.html");
     }
 
     public File findLastaDocHtml(String projectName, String moduleName) {
@@ -88,38 +97,34 @@ public class DocumentPhysicalLogic {
     // -----------------------------------------------------
     //                                         Project Named
     //                                         -------------
-    private File toProjectNamedDocumentFile(String projectName, String module, String type) {
-        String pureName = type + "-" + module + ".html";
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // クライアントプロジェクト名が付いてるファイルのFileオブジェクトを探す。
+    // 例えば、SchemaHTMLであれば schema-[プロジェクト名].html となる。
+    // _/_/_/_/_/_/_/_/_/_/
+    private File toProjectNamedDocumentFile(String projectName, String docType) { // e.g. SchemaHtml
+        final String pureName = docType + "-" + projectName + ".html";
         return toFixedNamedDocumentFile(projectName, pureName);
     }
 
-    private File toProjectNamedDocumentFile(String projectName, String type) { // e.g. SchemaHtml
-        final String pureName = type + "-" + projectName + ".html";
+    private File toProjectNamedDocumentFile(String projectName, String moduleName, String docType) { // LastaDoc
+        // #for_now jflute not project name but module name (2021/12/11)
+        String pureName = docType + "-" + moduleName + ".html";
         return toFixedNamedDocumentFile(projectName, pureName);
-    }
-
-    private File toProjectNamedMigrationFile(String projectName, String type) { // e.g. AlterCheck
-        // #needs_fix jflute basically only one file so you can remove switch case (2021/05/01)
-        final String pureName;
-        switch (type) {
-        case "schema":
-            pureName = "alter-check-result.html";
-            break;
-        default:
-            return null;
-        }
-        return toFixedNamedMigrationFile(projectName, type, pureName);
     }
 
     // -----------------------------------------------------
     //                                           Fixed Named
     //                                           -----------
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // 固定ファイル名のFileオブジェクトを探す。
+    // 例えば、SchemaSyncCheckであれば sync-check-result.html となる。
+    // _/_/_/_/_/_/_/_/_/_/
     private File toFixedNamedDocumentFile(String projectName, String pureName) { // e.g. SchemaSyncCheck
         return new File(buildDocumentPath(projectName, pureName));
     }
 
-    private File toFixedNamedMigrationFile(String projectName, String type, String pureName) { // e.g. SchemaSyncCheck
-        return new File(buildMigrationPath(projectName, type, pureName));
+    private File toFixedNamedMigrationFile(String projectName, String subDir, String pureName) { // e.g. AlterCheck
+        return new File(buildMigrationPath(projectName, subDir, pureName));
     }
 
     // -----------------------------------------------------
@@ -129,7 +134,7 @@ public class DocumentPhysicalLogic {
         return introPhysicalLogic.buildClientPath(projectName, "output", "doc", pureName);
     }
 
-    private String buildMigrationPath(String projectName, String type, String pureName) {
-        return introPhysicalLogic.buildClientPath(projectName, "playsql", "migration", type, pureName);
+    private String buildMigrationPath(String projectName, String subDir, String pureName) {
+        return introPhysicalLogic.buildClientPath(projectName, "playsql", "migration", subDir, pureName);
     }
 }

@@ -23,20 +23,37 @@ import java.util.stream.Collectors;
 import org.dbflute.util.DfCollectionUtil;
 
 /**
+ * SchemaPolicyのdfpropのmapデータを投影するモデル。
  * @author hakiba
  * @author cabos
+ * @author jflute
  */
 public class SchemaPolicyMap {
-    public SchemaPolicyTargetSetting targetSetting;
-    public SchemaPolicyWholeMap wholeMap;
-    public SchemaPolicyTableMap tableMap;
-    public SchemaPolicyColumnMap columnMap;
-    public Map<String, Object> comments;
 
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DFPROP_NAME = "schemaPolicyMap.dfprop";
+
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    public final SchemaPolicyTargetSetting targetSetting;
+    public final SchemaPolicyWholeMap wholeMap;
+    public final SchemaPolicyTableMap tableMap;
+    public final SchemaPolicyColumnMap columnMap;
+
+    // #hope jflute このMapオブジェクトの構成を説明するコメントを書きたい (2021/12/08)
+    public final Map<String, Object> comments; // dfprop内の行コメントを含む
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
     public SchemaPolicyMap(SchemaPolicyTargetSetting targetSetting, SchemaPolicyWholeMap wholeMap, SchemaPolicyTableMap tableMap,
             SchemaPolicyColumnMap columnMap) {
         this(targetSetting, wholeMap, tableMap, columnMap, Collections.emptyMap());
     }
+
     public SchemaPolicyMap(SchemaPolicyTargetSetting targetSetting, SchemaPolicyWholeMap wholeMap, SchemaPolicyTableMap tableMap,
             SchemaPolicyColumnMap columnMap, Map<String, Object> comments) {
         this.targetSetting = targetSetting;
@@ -46,6 +63,17 @@ public class SchemaPolicyMap {
         this.comments = comments;
     }
 
+    // -----------------------------------------------------
+    //                                      Special Instance
+    //                                      ----------------
+    public static SchemaPolicyMap noSettingsInstance() {
+        return new SchemaPolicyMap(SchemaPolicyTargetSetting.noSettingInstance(), SchemaPolicyWholeMap.noSettingInstance(),
+                SchemaPolicyTableMap.noSettingInstance(), SchemaPolicyColumnMap.noSettingInstance(), Collections.emptyMap());
+    }
+
+    // ===================================================================================
+    //                                                                      Convert to Map
+    //                                                                      ==============
     public Map<String, Object> convertToMap() {
         Map<String, Object> map = DfCollectionUtil.newLinkedHashMap();
         map.put("tableExceptList", targetSetting.tableExceptList);
@@ -80,10 +108,5 @@ public class SchemaPolicyMap {
                 columnMap.themeList.stream().filter(theme -> theme.isActive).map(theme -> theme.type.code).collect(Collectors.toList()));
         map.put("statementList", columnMap.statementList);
         return map;
-    }
-
-    public static SchemaPolicyMap noSettingsInstance() {
-        return new SchemaPolicyMap(SchemaPolicyTargetSetting.noSettingInstance(), SchemaPolicyWholeMap.noSettingInstance(),
-                SchemaPolicyTableMap.noSettingInstance(), SchemaPolicyColumnMap.noSettingInstance(), Collections.emptyMap());
     }
 }

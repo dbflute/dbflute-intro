@@ -38,14 +38,6 @@ import org.lastaflute.web.validation.exception.ValidationErrorException;
 public class PlaysqlMigrationAlterActionTest extends UnitIntroTestCase {
 
     // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    private static final String MIGRATION_DIR = TEST_CLIENT_PATH + PLAYSQL_DIR_PATH + "/migration";
-    private static final String ALTER_DIR = MIGRATION_DIR + "/alter";
-    private static final String HISTORY_DIR = MIGRATION_DIR + "/history";
-    private static final String UNRELEASED_DIR = HISTORY_DIR + "unreleased-checked-alter";
-
-    // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
     @Override
@@ -337,27 +329,26 @@ public class PlaysqlMigrationAlterActionTest extends UnitIntroTestCase {
     //                                                                       Client Adjust
     //                                                                       =============
     private void removeAlterDir() throws IOException {
-        FileUtils.deleteDirectory(new File(getProjectDir(), ALTER_DIR));
+        FileUtils.deleteDirectory(getTestPlaysqlMigrationAlterDir());
     }
 
     private void removeHistoryDir() throws IOException {
-        FileUtils.deleteDirectory(new File(getProjectDir(), HISTORY_DIR));
+        FileUtils.deleteDirectory(getTestPlaysqlMigrationHistoryDir());
     }
 
     private void removeUnreleasedDir() throws IOException {
-        FileUtils.deleteDirectory(new File(getProjectDir(), UNRELEASED_DIR));
+        FileUtils.deleteDirectory(getTestPlaysqlMigrationUnreleasedDir());
     }
 
     private void removeMigrationDir() throws IOException {
-        FileUtils.deleteDirectory(new File(getProjectDir(), MIGRATION_DIR));
+        FileUtils.deleteDirectory(getTestPlaysqlMigrationDir());
     }
 
     // ===================================================================================
     //                                                                         File Search
     //                                                                         ===========
     private List<File> loadAlterDir() {
-        return OptionalThing.ofNullable(new File(getProjectDir(), ALTER_DIR).listFiles(), () -> {})
-                .map(Arrays::asList)
-                .orElse(Collections.emptyList());
+        File alterDir = getTestPlaysqlMigrationAlterDir();
+        return OptionalThing.ofNullable(alterDir.listFiles(), () -> {}).map(Arrays::asList).orElse(Collections.emptyList());
     }
 }

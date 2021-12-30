@@ -29,6 +29,7 @@ import org.lastaflute.web.response.JsonResponse;
  * @author deco
  * @author hakiba
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropActionTest extends UnitIntroTestCase {
 
@@ -62,7 +63,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
         inject(action);
 
         DfpropUpdateBody body = new DfpropUpdateBody();
-        File dfpropDir = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/");
+        File dfpropDir = findTestClientFile("dfprop");
         File dfpropBefore = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"))[0];
         String fileName = dfpropBefore.getName();
         body.content = "content";
@@ -71,7 +72,7 @@ public class DfpropActionTest extends UnitIntroTestCase {
         action.update(TEST_CLIENT_PROJECT, fileName, body);
 
         // ## Assert ##
-        File dfpropAfter = new File(getProjectDir(), TEST_CLIENT_PATH + "/dfprop/" + fileName);
+        File dfpropAfter = findTestClientFile("dfprop/" + fileName);
         String content = flutyFileLogic.readFile(dfpropAfter);
         log(fileName, content);
         assertEquals(body.content, content);
