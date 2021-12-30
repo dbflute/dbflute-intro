@@ -1,5 +1,5 @@
 <schema-policy-check-statement-form>
-  <form class="ui large form">
+  <form ref="statementForm" class="ui large form">
     <div class="field">
       <label>Preview</label>
       <div class="ui inverted segment">
@@ -92,66 +92,19 @@
         </div>
       </div>
     </div>
+
     <div class="grouped fields required">
-      <label>Expected</label>
-      <p>
-        <a if="{ mapType === 'tableMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementthentheme" target="_blank">document</a>
-        <a if="{ mapType === 'columnMap' }" class="help link"
-           href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#columnstatementthentheme" target="_blank">document</a>
-        /
-        <a onclick="{ toggleExpectedHelp }">sample</a>
-      </p>
-      <toggle-help ref="expectedhelp">
-        <div class="ui two column grid">
-          <div class="column">
-            <h5>Format</h5>
-            <div class="ui segment">
-              <span class="variable">SUBJECT</span> is (not) <span class="variable">VALUE</span>
-            </div>
-            <p>or</p>
-            <div class="ui segment">
-              <span class="variable">THEME</span>
-            </div>
-          </div>
-          <div class="column">
-            <h5>Sample</h5>
-            <div class="ui inverted segment">
-              <div class="comment">// FK constraint name must be FK_[tableName]_...</div>
-              <div><span class="variable">fkName</span> is <span class="variable">prefix:FK_$$table$$</span></div>
-              <div class="comment">// column DB type must be VARCHAR (only for column)</div>
-              <div><span class="variable">dbType</span> is <span class="variable">VARCHAR</span></div>
-              <div class="ui divider"></div>
-              <div><span class="variable">hasPK</span> <span class="comment">// must has PK constraint</span></div>
-              <div><span class="variable">notNull</span> <span class="comment">// must has NotNull constraint</span></div>
-            </div>
-            <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
-          </div>
-        </div>
-      </toggle-help>
-      <div class="ui icon input field" each="{ expected, index in statement.expecteds }">
-        <input type="text" name="expected" ref="expected_{index}" value="{ expected }" onchange="{ handleChange }">
-        <i class="delete link icon" if={statement.expecteds.length > 1} onclick="{ statement.deleteExpectedField.bind(this, index) }"></i>
-      </div>
-      <div class="ui grid">
-        <div class="four wide right floated column">
-          <i class="plus link icon" style="float: right" onclick="{ statement.addExpectedField }"></i>
-          <div class="inline fields" style="float: right" show={statement.expecteds.length > 1}>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="expected-mode" ref="isAndExpected" checked="checked" onchange="{ handleChange }">
-                <label>and</label>
-              </div>
-            </div>
-            <div class="field">
-              <div class="ui radio checkbox">
-                <input type="radio" name="expected-mode" onchange="{ handleChange }">
-                <label>or</label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <schema-policy-check-statement-form-expected
+        formtype="{ opts.type }"
+        handlefieldadd="{ handleExpectedFieldAdd }"
+        handlefieldchange="{ handleExpectedFieldChange }"
+        handlefielddelete="{ handleExpectedFieldDelete }"
+        handleconditionchange="{ handleExpectedConditionChange }"
+        fields="{ state.expected.fields }"
+        condition="{ state.expected.condition }"
+      />
+
       <div class="field required">
         <label>Supplementary Comment</label>
         <p>
@@ -171,6 +124,7 @@
   </form>
 
   <script>
+    import { v4 as uuid } from 'uuid'
     import _ApiFactory from '../../../common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
@@ -179,6 +133,17 @@
     self.mapType = ''
     self.projectName = ''
     self.subjectDropdownItems = {}
+
+    self.state = {
+      expected: {
+        fields: [{
+          id: uuid(),
+          subjectVerb: null,
+          complement: ''
+        }],
+        condition: 'and' // or 'or'
+      }
+    }
 
     self.on('mount', () => {
       self.mapType = self.opts.type
@@ -201,7 +166,6 @@
 
     this.handleChange = () => {
       self.saveConditionField()
-      self.saveExpectedField()
       self.update()
     }
 
@@ -218,10 +182,17 @@
       self.refs.expectedhelp.toggle()
     }
 
+    /**
+     * フォームを入力しやすい位置に画面をスクロールする
+     */
+    this.scrollToTop = () => {
+      // statementFormは標準のformタグなので, 標準APIのscrollIntoViewを呼び出せる
+      self.refs.statementForm.scrollIntoView({ behavior: 'smooth' })
+    }
+
     self.statement = {
       subject: '',
       conditions: [''],
-      expecteds: [''],
       comment: '',
       buildPreview: () => {
         return self.buildPreview()
@@ -231,12 +202,6 @@
       },
       deleteConditionField: (index) => {
         self.statement.conditions.splice(index, 1)
-      },
-      addExpectedField: () => {
-        self.statement.expecteds.push('')
-      },
-      deleteExpectedField: (index) => {
-        self.statement.expecteds.splice(index, 1)
       },
       clean: () => {
         self.statement.subject = ''
@@ -252,16 +217,59 @@
       }
     }
 
-    this.saveExpectedField = () => {
+    self.saveExpectedField = () => {
       for (let i = 0; i < self.statement.expecteds.length; i++) {
         self.statement.expecteds[i] = self.refs['expected_' + i].value
       }
     }
 
+    self.handleExpectedFieldChange = (id, subjectVerb, complement) => {
+      const fields = self.state.expected.fields
+      self.state.expected.fields = fields.map(field => {
+        if (id === field.id) {
+          field.subjectVerb = subjectVerb
+          field.complement = complement
+        }
+        return field
+      })
+      self.update()
+    }
+
+    this.handleExpectedFieldAdd = () => {
+      self.state.expected.fields.push({
+        id: uuid(),
+        subjectVerb: null,
+        complement: ''
+      })
+      self.update()
+    }
+
+    this.handleExpectedFieldDelete = (id) => {
+      const fields = self.state.expected.fields
+      self.state.expected.fields = fields.filter(field => field.id !== id)
+      self.update()
+    }
+
+    this.handleExpectedConditionChange = (condition) => {
+      self.state.expected.condition = condition
+      self.update()
+    }
+
+    /**
+     * Add Statement フォームの各フィールドの値を初期表示に戻す
+     */
     this.cleanInput = () => {
       self.statement.clean()
       self.refs.subject.value = ''
       self.refs.comment.value = ''
+      self.state.expected = {
+        fields: [{
+          id: uuid(),
+          subjectVerb: null,
+          complement: ''
+        }],
+        condition: 'and' // or 'or'
+      }
       self.update()
     }
 
@@ -284,16 +292,12 @@
       let joinedConds = conditions.join(conditionOperator)
       let conditionsStr = joinedConds ? joinedConds : '<Condition>'
 
-      let expectedOperator = self.refs.isAndExpected.checked ? ' and ' : ' or '
-      let expecteds = []
-      for (let i = 0; i < self.statement.expecteds.length; i++) {
-        let expectedRef = self.refs['expected_' + i]
-        if (expectedRef && expectedRef.value) {
-          expecteds.push(expectedRef.value)
-        }
-      }
-      let joinedExps = expecteds.join(expectedOperator)
-      let expectedsStr = joinedExps ? joinedExps : '<Expected>'
+      const expecteds = self.state.expected.fields
+        .filter(field => field.subjectVerb)
+        .map(field => field.subjectVerb + (field.complement ? ` ${field.complement}` : ''))
+      const expectedOperator = self.state.expected.condition
+      const joinedExps = expecteds.join(` ${expectedOperator} `)
+      const expectedsStr = joinedExps ? joinedExps : '<Expected>'
 
       let comment = self.refs.comment.value ? ' => ' + self.refs.comment.value : ' => <Supplementary Comment>'
       return statementPrefix + conditionsStr + ' then ' + expectedsStr + comment
@@ -307,13 +311,11 @@
           conditions.push(self.refs['condition_' + i].value)
         }
       }
-      let expectedOperator = self.refs.isAndExpected.checked ? 'and' : 'or'
-      let expecteds = []
-      for (let i = 0; i < self.statement.expecteds.length; i++) {
-        if (self.refs['expected_' + i].value) {
-          expecteds.push(self.refs['expected_' + i].value)
-        }
-      }
+      const expecteds = self.state.expected.fields
+        .filter(field => field.subjectVerb)
+        .map(field => field.subjectVerb + (field.complement ? ` ${field.complement}` : ''))
+      const expectedOperator = self.state.expected.condition
+
       return {
         type: self.mapType,
         subject: self.refs.subject.value,
