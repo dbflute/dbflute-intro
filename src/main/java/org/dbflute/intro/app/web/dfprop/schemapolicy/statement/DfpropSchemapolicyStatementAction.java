@@ -67,6 +67,14 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
+    public JsonResponse<Void> sort(String clientName, DfpropSortSchemaPolicyStatementBody body) {
+        validate(body, messages -> {});
+        dfpropSchemaPolicyUpdateLogic.sortSchemaPolicyStatement(clientName, body.mapType, body.fromIndex, body.toIndex);
+        return JsonResponse.asEmptyBody();
+    }
+
+    @NotAvailableDecommentServer
+    @Execute
     public JsonResponse<Void> delete(String clientName, DfpropDeleteSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
         dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
@@ -80,7 +88,7 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
         validate(form, message -> {});
         if (form.mapType == SubjectableMapType.Table) {
-            return asJson(dfpropSchemaPolicyDefLogic.getStatementTableMapSubjectList() // 
+            return asJson(dfpropSchemaPolicyDefLogic.getStatementTableMapSubjectList() //
                     .stream()
                     .map(ject -> ject.getTitle())
                     .collect(Collectors.toList()));

@@ -18,6 +18,8 @@ package org.dbflute.intro.app.logic.dfprop.schemapolicy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -26,6 +28,7 @@ import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.logic.dfprop.schemapolicy.file.DfpropSchemaPolicyFileReplaceLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
+import org.dbflute.util.DfCollectionUtil;
 
 /**
  * The logic for updating SchemaPolicy dfprop.
@@ -113,5 +116,37 @@ public class DfpropSchemaPolicyUpdateLogic {
                     .filter(st -> !st.equals(removedStatement))
                     .collect(Collectors.toList());
         }
+    }
+
+    // ===================================================================================
+    //                                                                      Sort Statement
+    //                                                                      ==============
+    public void sortSchemaPolicyStatement(String project, String mapType, Integer fromIndex, Integer toIndex) {
+        File schemaPolicyMapFile = dfpropSchemaPolicyReadLogic.findSchemaPolicyFile(project);
+        SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.parseSchemePolicyMap(schemaPolicyMapFile);
+        if ("tableMap".equals(mapType)) {
+            schemaPolicyMap.tableMap.statementList = sortStatements(schemaPolicyMap.tableMap.statementList, fromIndex, toIndex);
+        } else if ("columnMap".equals(mapType)) {
+            schemaPolicyMap.columnMap.statementList =
+                    sortStatements(schemaPolicyMap.columnMap.statementList, fromIndex, toIndex);
+        }
+        dfpropSchemaPolicyFileReplaceLogic.replaceSchemaPolicyMapDirectly(schemaPolicyMapFile, schemaPolicyMap);
+    }
+
+    private List<String> sortStatements(List<String> baseStatements, Integer fromIndex, Integer toIndex) {
+        // 並び替え元、先のindexが一致 または 並び替え元 or 先のいずれかのindexが存在しない場合は何もしないで終了
+        if (Objects.equals(fromIndex, toIndex)
+                || !containsIndex(baseStatements, fromIndex)
+                || !containsIndex(baseStatements, toIndex)) {
+            return baseStatements;
+        }
+        return DfCollectionUtil.moveElementToIndex(baseStatements, fromIndex, toIndex);
+    }
+
+    private <T> boolean containsIndex(List<T> list, Integer index) {
+        if (index == null) {
+            return false;
+        }
+        return -1 < index && index < list.size();
     }
 }

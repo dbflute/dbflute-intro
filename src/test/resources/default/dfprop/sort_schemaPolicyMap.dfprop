@@ -1,0 +1,101 @@
+# /---------------------------------------------------------------------------
+# schemaPolicyMap: (Default map:{})
+#
+# The definition of schema policy.
+# You can check your schema as the policy.
+# The table and column names are treated as case insensitive.
+#
+# Example:
+# map:{
+#     ; tableExceptList = list:{}
+#     ; tableTargetList = list:{}
+#     ; columnExceptMap = map:{}
+#     ; isMainSchemaOnly = false
+#
+#     ; wholeMap = map:{
+#         ; themeList = list:{ uniqueTableAlias ; sameColumnAliasIfSameColumnName }
+#     }
+#     ; tableMap = map:{
+#         ; themeList = list:{ hasPK ; upperCaseBasis ; identityIfPureIDPK }
+#         ; statementList = list:{
+#             ; if tableName is $$ALL$$ then fkName is prefix:FK_$$table$$
+#         }
+#     }
+#     ; columnMap = map:{
+#         ; themeList = list:{ upperCaseBasis }
+#         ; statementList = list:{
+#             ; if columnName is suffix:_FLAG then bad
+#             ; if columnName is suffix:_FLG then notNull
+#             ; if columnName is suffix:_FLG then dbType is INTEGER
+#             ; if columnName is suffix:_FLG then classification
+#         }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # ドキュメントへのリンクとか、dfpropに書いておくといいんじゃないかと
+    # _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    # document is here:
+    # http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/
+    # _/_/_/_/_/_/_/_/_/_/
+
+    ; tableExceptList = list:{}
+    ; tableTargetList = list:{}
+    ; columnExceptMap = map:{}
+    ; isMainSchemaOnly = false
+
+    ; wholeMap = map:{
+        ; themeList = list:{
+            ; uniqueTableAlias
+            ; sameColumnAliasIfSameColumnName
+            ; sameColumnDbTypeIfSameColumnName
+            ; sameColumnSizeIfSameColumnName
+            ; sameColumnNameIfSameColumnAlias
+        }
+    }
+
+    ; tableMap = map:{
+        ; themeList = list:{
+            ; hasPK
+            ; hasAlias
+            ; hasComment
+            ; upperCaseBasis
+            ; identityIfPureIDPK
+        }
+        ; statementList = list:{
+            ## 共通カラム ##
+            # もし、"区分値テーブルは共通カラムがない" とかであれば、ALLじゃなくてprefixなどで絞り込み
+            ; if tableName is $$ALL$$ then hasCommonColumn => 区分値のテーブルも含めて共通カラムは必須
+
+            ## 区分値テーブル ##
+            # CLS_で始まるテーブルを区分値テーブルとしていることが前提。
+            # コード値をchar(3)だけにするか、色々なサイズも許すか、それによってチェックするかしないかも変わりそう。
+            # 限定できるなら、char(2) or char(3) というように or でつなげることもできる。
+            ; if tableName is prefix:CLS_ then pk_dbType_with_size is char(3)
+
+            ## コメント ##
+            ; if alias is $$tableName$$ then bad => 論理名がテーブル名と同じじゃダメ
+        }
+    }
+    ; columnMap = map:{
+        ; themeList = list:{
+            ; hasAlias
+            # 全カラムコメント必須はさすがにつらいと思うのでコメントアウト。
+            # いやいや、コメントは必ず入れよう！というのであれば、ぜひコメントアウト解除で！
+            #; hasComment
+            ; upperCaseBasis
+        }
+        ; statementList = list:{
+            ## IDカラム ##
+            ; if columnName is not suffix:_ID then alias is not suffix:ID => IDカラムじゃないのに、"なんとかID" という論理名なの？
+
+            ## NOカラム ##
+            ; if columnName is suffix:_NO then alias is suffix:番号 or suffix:NO => NOカラムなら論理名は "なんとか番号" とか "なんとかNO" にしよう
+
+            ## CODEカラム ##
+            ; if columnName is suffix:_CODE then alias is suffix:コード => CODEカラムなら論理名は "なんとかコード" にしよう
+        }
+    }
+}
