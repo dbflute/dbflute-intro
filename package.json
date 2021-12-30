@@ -1,7 +1,9 @@
 {
   "name": "dbflute-intro",
-  "version": "0.3.11",
-  "dependencies": {},
+  "version": "0.5.0",
+  "dependencies": {
+    "uuid": "^8.3.2"
+  },
   "scripts": {
     "start": "webpack-dev-server --mode development --inline --watch --hot --content-base ./src/static --port 3000 --open",
     "dev": "webpack --mode development",
@@ -17,7 +19,7 @@
     "eslint-loader": "^2.2.1",
     "eslint-plugin-html": "^3.1.1",
     "ffetch": "^0.1.1",
-    "prismjs": "^1.23.0",
+    "prismjs": "^1.25.0",
     "q": "^1.5.1",
     "riot": "^3.13.2",
     "riot-i18nlet": "^0.2.5",

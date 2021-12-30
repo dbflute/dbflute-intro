@@ -21,7 +21,7 @@
     })
 
     this.prepareCurrentProject = () => {
-      ApiFactory.clientOperation(self.opts.projectName).then((response) => {
+      ApiFactory.clientPropbase(self.opts.projectName).then((response) => {
         self.client = response
         self.mountClientContent()
         self.update()

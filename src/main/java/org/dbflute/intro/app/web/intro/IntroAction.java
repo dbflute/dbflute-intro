@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
+import org.dbflute.intro.app.logic.intro.IntroReadLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
 import org.dbflute.intro.bizfw.server.BootingInternetDomain;
@@ -39,7 +39,7 @@ public class IntroAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private IntroInfoLogic introInfoLogic;
+    private IntroReadLogic introReadLogic;
     @Resource
     private IntroClsAssist introClsAssist;
 
@@ -48,7 +48,7 @@ public class IntroAction extends IntroBaseAction {
     //                                                                             =======
     @Execute
     public JsonResponse<Map<String, Object>> manifest() {
-        return asJson(introInfoLogic.getManifestMap());
+        return asJson(introReadLogic.getManifestMap());
     }
 
     @Execute

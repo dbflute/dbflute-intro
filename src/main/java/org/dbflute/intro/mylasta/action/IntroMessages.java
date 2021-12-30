@@ -144,6 +144,12 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: Cannot connect to the database: {0} */
     public static final String ERRORS_APP_DATABASE_CONNECTION = "{errors.app.database.connection}";
 
+    /** The key of the message: the DBFlute Client already exists: {0} */
+    public static final String ERRORS_APP_CLIENT_ALREADY_EXISTS = "{errors.app.client.alreadyExists}";
+
+    /** The key of the message: Cannot delete the DBFlute Client for some reason: {0} */
+    public static final String ERRORS_APP_CLIENT_CANNOT_DELETE = "{errors.app.client.cannotDelete}";
+
     /** The key of the message: the DBFlute Client is not found: {0} */
     public static final String ERRORS_APP_CLIENT_NOT_FOUND = "{errors.app.client.notFound}";
 
@@ -764,6 +770,36 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsAppDatabaseConnection(String property, String arg0) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_APP_DATABASE_CONNECTION, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.client.alreadyExists' with parameters.
+     * <pre>
+     * message: the DBFlute Client already exists: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppClientAlreadyExists(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_CLIENT_ALREADY_EXISTS, arg0));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.app.client.cannotDelete' with parameters.
+     * <pre>
+     * message: Cannot delete the DBFlute Client for some reason: {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppClientCannotDelete(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_CLIENT_CANNOT_DELETE, arg0));
         return this;
     }
 

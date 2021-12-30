@@ -76,7 +76,7 @@ dbflute-intro
 ## Release Engineering
 
 ### Github release
-1. Increment version at build.gradle
+1. Increment version at build.gradle and package.json
 2. Add tag on release commit
    1. Old tag name : https://github.com/dbflute/dbflute-intro/releases
 3. Edit tag and upload "intro.jar"
@@ -99,6 +99,7 @@ intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/
 $ cd path/to/dbflute-intro
 $ sh docker-build.sh && sh docker-push.sh ${release version} # input release version as argument
 ```
+2. Update image version [here](https://hub.docker.com/repository/docker/dbflute/dbflute-intro).
 
 ### Document
 1. Write release information at [here](https://github.com/dbflute/dbflute-document/blob/f1e0aab6d2dbc882e2aa5e4e4143637a2b87b4d0/web/ja/manual/function/generator/intro/index.html#L49)
@@ -111,7 +112,6 @@ $ sh docker-build.sh && sh docker-push.sh ${release version} # input release ver
 ## Upgrade DBFlute
 
 1. `sh ./dbflute_introdb/manage.sh upgrade`
-2. set `DBFLUTE_HOME ../mydbflute/dbflute-1.x` in changed `_project.sh` and `_project.bat`
-3. mv downloaded dbflute to `./mydbflute/dbflute-1.x`
-4. copy template files to `./dbflute_introdb`
-5. `sh ./dbflute_introdb/manage.sh 1`
+2. `set DBFLUTE_HOME=../mydbflute/dbflute-${latest}` in changed `./dbflute_trohamadb/_project.sh` and `./dbflute_trohamadb/_project.bat`
+3. copy template files to `./dbflute_introdb`
+4. `sh ./dbflute_introdb/manage.sh 1`

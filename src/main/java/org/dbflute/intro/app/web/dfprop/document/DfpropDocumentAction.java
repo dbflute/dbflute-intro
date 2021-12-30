@@ -17,6 +17,7 @@ package org.dbflute.intro.app.web.dfprop.document;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
@@ -27,6 +28,7 @@ import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropDocumentAction extends IntroBaseAction {
 
@@ -34,27 +36,33 @@ public class DfpropDocumentAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
+    private DfpropReadLogic dfpropReadLogic;
+    @Resource
     private DfpropUpdateLogic dfpropUpdateLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
-    // -----------------------------------------------------
-    //                                          EditDocument
-    //                                          ------------
+    @Execute
+    public JsonResponse<DfpropDocumentResult> index(String projectName) {
+        final LittleAdjustmentMap littleAdjustmentMap = dfpropReadLogic.findLittleAdjustmentMap(projectName);
+        final DocumentMap documentMap = dfpropReadLogic.findDocumentMap(projectName);
+        return asJson(new DfpropDocumentResult(littleAdjustmentMap, documentMap));
+    }
+
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String clientName, DfpropDocumentEditBody body) {
+    public JsonResponse<Void> edit(String projectName, DfpropDocumentEditBody body) {
         validate(body, messages -> {});
         final LittleAdjustmentMap littleAdjustmentMap = LittleAdjustmentMap.createAsTableNameUpperCase(body.upperCaseBasic);
-        dfpropUpdateLogic.replaceLittleAdjustmentMap(clientName, littleAdjustmentMap);
+        dfpropUpdateLogic.replaceLittleAdjustmentMap(projectName, littleAdjustmentMap);
         final DocumentMap documentMap = new DocumentMap();
         documentMap.setAliasDelimiterInDbComment(body.aliasDelimiterInDbComment);
         documentMap.setDbCommentOnAliasBasis(body.dbCommentOnAliasBasis);
         documentMap.setCheckColumnDefOrderDiff(body.checkColumnDefOrderDiff);
         documentMap.setCheckDbCommentDiff(body.checkDbCommentDiff);
         documentMap.setCheckProcedureDiff(body.checkProcedureDiff);
-        dfpropUpdateLogic.replaceDocumentMap(clientName, documentMap);
+        dfpropUpdateLogic.replaceDocumentMap(projectName, documentMap);
         return JsonResponse.asEmptyBody();
     }
 }

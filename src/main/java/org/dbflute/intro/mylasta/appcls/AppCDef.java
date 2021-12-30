@@ -193,9 +193,133 @@ public interface AppCDef extends Classification {
         @Override public String toString() { return code(); }
     }
 
+    /**
+     * Subjectable map type of schema policy check
+     */
+    public enum SubjectableMapType implements AppCDef {
+        /** Table */
+        Table("tableMap", "Table", emptyStrings())
+        ,
+        /** Column */
+        Column("columnMap", "Column", emptyStrings())
+        ;
+        private static final Map<String, SubjectableMapType> _codeClsMap = new HashMap<String, SubjectableMapType>();
+        private static final Map<String, SubjectableMapType> _nameClsMap = new HashMap<String, SubjectableMapType>();
+        static {
+            for (SubjectableMapType value : values()) {
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
+            }
+        }
+        private String _code; private String _alias; private Set<String> _sisterSet;
+        private SubjectableMapType(String code, String alias, String[] sisters)
+        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        public String code() { return _code; } public String alias() { return _alias; }
+        public Set<String> sisterSet() { return _sisterSet; }
+        public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
+        public ClassificationMeta meta() { return AppCDef.DefMeta.SubjectableMapType; }
+
+        public boolean inGroup(String groupName) {
+            return false;
+        }
+
+        /**
+         * Get the classification of the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
+         * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<SubjectableMapType> of(Object code) {
+            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
+            if (code instanceof SubjectableMapType) { return OptionalThing.of((SubjectableMapType)code); }
+            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        /**
+         * Find the classification by the name. (CaseInsensitive)
+         * @param name The string of name, which is case-insensitive. (NotNull)
+         * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
+         */
+        public static OptionalThing<SubjectableMapType> byName(String name) {
+            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
+         * Get the classification by the code. (CaseInsensitive)
+         * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
+         * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
+         */
+        public static SubjectableMapType codeOf(Object code) {
+            if (code == null) { return null; }
+            if (code instanceof SubjectableMapType) { return (SubjectableMapType)code; }
+            return _codeClsMap.get(code.toString().toLowerCase());
+        }
+
+        /**
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
+         * Get the classification by the name (also called 'value' in ENUM world).
+         * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
+         * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         */
+        public static SubjectableMapType nameOf(String name) {
+            if (name == null) { return null; }
+            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
+        }
+
+        /**
+         * Get the list of all classification elements. (returns new copied list)
+         * @return The snapshot list of all classification elements. (NotNull)
+         */
+        public static List<SubjectableMapType> listAll() {
+            return new ArrayList<SubjectableMapType>(Arrays.asList(values()));
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         */
+        public static List<SubjectableMapType> listByGroup(String groupName) {
+            if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
+            throw new ClassificationNotFoundException("Unknown classification group: SubjectableMapType." + groupName);
+        }
+
+        /**
+         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * @param codeList The list of plain code, which is case-insensitive. (NotNull)
+         * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         */
+        public static List<SubjectableMapType> listOf(Collection<String> codeList) {
+            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
+            List<SubjectableMapType> clsList = new ArrayList<SubjectableMapType>(codeList.size());
+            for (String code : codeList) { clsList.add(of(code).get()); }
+            return clsList;
+        }
+
+        /**
+         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
+         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         */
+        public static List<SubjectableMapType> groupOf(String groupName) {
+            return new ArrayList<SubjectableMapType>(4);
+        }
+
+        @Override public String toString() { return code(); }
+    }
+
     public enum DefMeta implements ClassificationMeta {
         /** Instruction for DBFlute task */
         TaskInstruction
+        ,
+        /** Subjectable map type of schema policy check */
+        SubjectableMapType
         ;
         public String classificationName() {
             return name(); // same as definition name
@@ -203,41 +327,49 @@ public interface AppCDef extends Classification {
 
         public OptionalThing<? extends Classification> of(Object code) {
             if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.of(code); }
+            if (SubjectableMapType.name().equals(name())) { return AppCDef.SubjectableMapType.of(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public OptionalThing<? extends Classification> byName(String name) {
             if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.byName(name); }
+            if (SubjectableMapType.name().equals(name())) { return AppCDef.SubjectableMapType.byName(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public Classification codeOf(Object code) { // null if not found, old style so use of(code)
             if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.codeOf(code); }
+            if (SubjectableMapType.name().equals(name())) { return AppCDef.SubjectableMapType.codeOf(code); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public Classification nameOf(String name) { // null if not found, old style so use byName(name)
             if (TaskInstruction.name().equals(name())) { return AppCDef.TaskInstruction.valueOf(name); }
+            if (SubjectableMapType.name().equals(name())) { return AppCDef.SubjectableMapType.valueOf(name); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listAll() {
             if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.listAll()); }
+            if (SubjectableMapType.name().equals(name())) { return toClsList(AppCDef.SubjectableMapType.listAll()); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> listByGroup(String groupName) { // exception if not found
             if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.listByGroup(groupName)); }
+            if (SubjectableMapType.name().equals(name())) { return toClsList(AppCDef.SubjectableMapType.listByGroup(groupName)); }
             throw new IllegalStateException("Unknown groupName: " + groupName + ", " + this); // basically unreachable
         }
 
         public List<Classification> listOf(Collection<String> codeList) {
             if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.listOf(codeList)); }
+            if (SubjectableMapType.name().equals(name())) { return toClsList(AppCDef.SubjectableMapType.listOf(codeList)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
         public List<Classification> groupOf(String groupName) { // old style
             if (TaskInstruction.name().equals(name())) { return toClsList(AppCDef.TaskInstruction.groupOf(groupName)); }
+            if (SubjectableMapType.name().equals(name())) { return toClsList(AppCDef.SubjectableMapType.groupOf(groupName)); }
             throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
         }
 
@@ -248,17 +380,20 @@ public interface AppCDef extends Classification {
 
         public ClassificationCodeType codeType() {
             if (TaskInstruction.name().equals(name())) { return ClassificationCodeType.String; }
+            if (SubjectableMapType.name().equals(name())) { return ClassificationCodeType.String; }
             return ClassificationCodeType.String; // as default
         }
 
         public ClassificationUndefinedHandlingType undefinedHandlingType() {
             if (TaskInstruction.name().equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
+            if (SubjectableMapType.name().equals(name())) { return ClassificationUndefinedHandlingType.LOGGING; }
             return ClassificationUndefinedHandlingType.LOGGING; // as default
         }
 
         public static OptionalThing<AppCDef.DefMeta> find(String classificationName) { // instead of valueOf()
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
             if (TaskInstruction.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(AppCDef.DefMeta.TaskInstruction); }
+            if (SubjectableMapType.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(AppCDef.DefMeta.SubjectableMapType); }
             return OptionalThing.ofNullable(null, () -> {
                 throw new ClassificationNotFoundException("Unknown classification: " + classificationName);
             });
@@ -267,6 +402,7 @@ public interface AppCDef extends Classification {
         public static AppCDef.DefMeta meta(String classificationName) { // old style so use find(name)
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
             if (TaskInstruction.name().equalsIgnoreCase(classificationName)) { return AppCDef.DefMeta.TaskInstruction; }
+            if (SubjectableMapType.name().equalsIgnoreCase(classificationName)) { return AppCDef.DefMeta.SubjectableMapType; }
             throw new IllegalStateException("Unknown classification: " + classificationName);
         }
 

@@ -16,19 +16,23 @@
 package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
-import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyDefLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyUpdateLogic;
+import org.dbflute.intro.app.logic.exception.SubjectableMapTypeNotExistException;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
+import org.dbflute.intro.mylasta.appcls.AppCDef.SubjectableMapType;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
 
@@ -36,22 +40,22 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropUpdateLogic dfpropUpdateLogic;
+    private DfpropSchemaPolicyDefLogic dfpropSchemaPolicyDefLogic;
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropSchemaPolicyUpdateLogic dfpropSchemaPolicyUpdateLogic;
 
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
     // -----------------------------------------------------
-    //                         AddSchemaPolicyCheckStatement
-    //                         -----------------------------
+    //                                                Update
+    //                                                ------
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<String> register(String clientName, DfpropRegisterSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
         SchemaPolicyStatement statement = mappingToStatement(body);
-        String builtStatement = dfpropUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
+        String builtStatement = dfpropSchemaPolicyUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
         return asJson(builtStatement);
     }
 
@@ -61,23 +65,32 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
         return new SchemaPolicyStatement(body.type, body.subject, condition, expected, body.comment);
     }
 
-    // -----------------------------------------------------
-    //                       GetschemapolicyStatementSubject
-    //                       -------------------------------
-    @Execute
-    public JsonResponse<List<String>> subject() {
-        return asJson(dfpropInfoLogic.getStatementSubjectList());
-    }
-
-    // -----------------------------------------------------
-    //                      DeleteSchemaPolicyCheckStatement
-    //                      --------------------------------
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> delete(String clientName, DfpropDeleteSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        dfpropUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
+        dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
 
+    // -----------------------------------------------------
+    //                                            Definition
+    //                                            ----------
+    @Execute
+    public JsonResponse<List<String>> subject(DfpropSchemapolicyStatementSubjectForm form) {
+        validate(form, message -> {});
+        if (form.mapType == SubjectableMapType.Table) {
+            return asJson(dfpropSchemaPolicyDefLogic.getStatementTableMapSubjectList() // 
+                    .stream()
+                    .map(ject -> ject.getTitle())
+                    .collect(Collectors.toList()));
+        } else if (form.mapType == SubjectableMapType.Column) {
+            return asJson(dfpropSchemaPolicyDefLogic.getStatementColumnMapSubjectList() //
+                    .stream()
+                    .map(ject -> ject.getTitle())
+                    .collect(Collectors.toList()));
+        } else {
+            throw new SubjectableMapTypeNotExistException("There is no matching SubjectableMapType. mapType: " + form.mapType);
+        }
+    }
 }

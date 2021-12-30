@@ -18,8 +18,8 @@ package org.dbflute.intro.app.logic.core;
 import javax.annotation.Resource;
 
 import org.dbflute.infra.dfprop.DfPublicProperties;
-import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
-import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
+import org.dbflute.intro.app.logic.exception.PublicPropertiesLoadingFailureException;
+import org.dbflute.intro.app.logic.intro.IntroReadLogic;
 
 /**
  * The logic for public.properties, which is DBFlute public file to provide e.g. current version. <br>
@@ -30,29 +30,32 @@ import org.dbflute.intro.app.logic.intro.IntroInfoLogic;
  */
 public class PublicPropertiesLogic {
 
+    // #thinking jflute should it be no cache if server mode? cannot accept its change now (2021/11/09)
+    // however when server mode, almost as decomment server so no problem for now
     private static DfPublicProperties cachedProps; // cached
 
     @Resource
-    private IntroInfoLogic introInfoLogic;
+    private IntroReadLogic introReadLogic;
 
-    public DfPublicProperties findProperties(boolean useSystemProxies) throws EngineDownloadErrorException {
+    public DfPublicProperties findProperties(boolean useSystemProxies) throws PublicPropertiesLoadingFailureException {
         if (cachedProps != null) {
             return cachedProps;
         }
         try {
-            introInfoLogic.setProxy(useSystemProxies);
+            introReadLogic.setProxy(useSystemProxies);
             synchronized (PublicPropertiesLogic.class) {
                 if (cachedProps != null) {
                     return cachedProps;
                 }
                 DfPublicProperties prop = new DfPublicProperties();
-                prop.load();
+                prop.load(); // might throw if I/O failure
                 cachedProps = prop; // should be set after loading for thread-safe
                 return cachedProps;
             }
-        } catch (RuntimeException e) {
-            // #needs_fix anyone does is this class depend on engine download? should throw more general exception? by jflute (2021/04/18)
-            throw new EngineDownloadErrorException("Cannot download dbflute engine", e);
+        } catch (RuntimeException e) { // e.g. I/O failure
+            // done anyone does is this class depend on engine download? should throw more general exception? by jflute (2021/04/18)
+            String msg = "Cannot load the public.properties: useSystemProxies=" + useSystemProxies;
+            throw new PublicPropertiesLoadingFailureException(msg, e);
         }
     }
 }

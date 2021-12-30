@@ -30,7 +30,6 @@ import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.TaskExecuteFailureException;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
-import org.dbflute.optional.OptionalThing;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.slf4j.Logger;
@@ -64,23 +63,23 @@ public class TaskAction extends IntroBaseAction {
     //                                                                             Execute
     //                                                                             =======
     @Execute
-    public JsonResponse<TaskExecutionResult> execute(String clientName, AppCDef.TaskInstruction instruction, OptionalThing<String> env) {
+    public JsonResponse<TaskExecutionResult> execute(String projectName, AppCDef.TaskInstruction instruction) {
         List<TaskType> taskTypeList = introClsAssist.toTaskTypeList(instruction);
         try {
-            String log = taskExecutionLogic.execute(clientName, taskTypeList, env);
-            loggingLastSuccess(clientName, instruction, log);
+            String log = taskExecutionLogic.execute(projectName, taskTypeList);
+            loggingLastSuccess(projectName, instruction, log);
         } catch (SchemaNotSynchronizedException | SchemaPolicyViolatedException e) {
-            loggingLastFailure(clientName, instruction, e.getProcessLog());
-            return asJson(new TaskExecutionResult(false));
+            loggingLastFailure(projectName, instruction, e.getProcessLog());
+            return asJson(createFailureResult());
         } catch (TaskErrorResultException e) {
             int resultCode = e.getResultCode();
             String processLog = e.getProcessLog();
-            loggingLastFailure(clientName, instruction, processLog);
-            String debugMsg = "Failed to execute the tasks: client name=" + clientName + ", taskTypeList=" + taskTypeList + ", resultCode="
-                    + resultCode;
+            loggingLastFailure(projectName, instruction, processLog);
+            String debugMsg = "Failed to execute the tasks: projectName=" + projectName // format
+                    + ", taskTypeList=" + taskTypeList + ", resultCode=" + resultCode;
             throw new TaskExecuteFailureException(debugMsg, processLog, e);
         }
-        return asJson(new TaskExecutionResult(true));
+        return asJson(createSuccessResult());
     }
 
     private void loggingLastSuccess(String project, AppCDef.TaskInstruction instruction, String msg) {
@@ -97,5 +96,13 @@ public class TaskAction extends IntroBaseAction {
         } catch (RuntimeException e) {
             logger.error("logging is failure. file name : intro-last-execute-failure-" + instruction.code() + ".log", e);
         }
+    }
+
+    private TaskExecutionResult createFailureResult() {
+        return new TaskExecutionResult(/*success*/false);
+    }
+
+    private TaskExecutionResult createSuccessResult() {
+        return new TaskExecutionResult(/*success*/true);
     }
 }

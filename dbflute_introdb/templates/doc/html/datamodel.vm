@@ -18,11 +18,12 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>${database.projectName} schema</title>
-#if ($database.isSchemaHtmlStyleSheetEmbedded())
+#set ($isStyleSheetInheritable = $database.isSchemaHtmlStyleSheetInheritable())
+#if (!$isStyleSheetInheritable && $database.isSchemaHtmlStyleSheetEmbedded())
 	<style type="text/css">
 ${database.schemaHtmlStyleSheetEmbedded}
 	</style>
-#elseif ($database.isSchemaHtmlStyleSheetLink())
+#elseif (!$isStyleSheetInheritable && $database.isSchemaHtmlStyleSheetLink())
 	${database.schemaHtmlStyleSheetLink}
 #else
 	<style type="text/css">
@@ -66,9 +67,9 @@ h3 {
 h4 {
 	padding: 0 0 0 10px;
 	margin: 1em 10% 0 1em;
-	border-top: solid 1px #af0000;
-	border-bottom: solid 1px #af0000;
-	font-size: 1.4em;
+	border-top: none;
+	border-bottom: solid 1px #663333;
+	font-size: 1.3em;
 	color: #333333;
 }
 
@@ -241,6 +242,46 @@ span.tablefirstdatetitle {
 }
 
 /* -------------------------------------------------
+                                    Arrange Query
+------------------------------------------------- */
+span.arrqycount {
+	font-size: 0.5em;
+}
+dl.arrqylist {
+	margin-top: 0.7em;
+	padding-left: 3em;
+}
+dl.arrqylist dt {
+	display: list-item;
+	list-style-type: circle;
+	font-size: 1.3em;
+	margin-top: 0.3em;
+}
+dl.arrqylist dd {
+	padding-left: 1em;
+}
+dl.arrqylist dd pre {
+	font-size: 1.1em;
+}
+dl.arrqylist dd.subinfo {
+	padding-left: 2em;
+}
+dl.arrqylist dd.subinfo span.sqlap {
+	font-style: italic;
+	color: #002266;
+}
+dl.arrqylist dd.subinfo span.file {
+	font-style: italic;
+	color: #002266;
+}
+dl.arrqylist dd.subinfo span.ctet {
+	color: green;
+}
+dl.arrqylist dd.subinfo span.pmb {
+	color: green;
+}
+
+/* -------------------------------------------------
                              Behavior Query Path
 ------------------------------------------------- */
 span.bqpcount {
@@ -316,6 +357,19 @@ dl.procedurelist dd.column pre {
 }
 
 /* -------------------------------------------------
+                                    Schema Policy
+------------------------------------------------- */
+pre.spolicydisp {
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+}
+pre.spolicyviodisp {
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+	color: #994747;
+}
+
+/* -------------------------------------------------
                                   Decomment Modal
 ------------------------------------------------- */
 .decommentmodal {
@@ -336,11 +390,12 @@ dl.procedurelist dd.column pre {
 	margin: 0 auto;
 	border: 1px solid #999999;
 	padding: 15px;
-	background-color: #ffffff;
+	background-color: #fff8f8;
 	border-radius: 4px;
 }
 .decommentmodalcontent p {
 	font-size: 14px;
+	color: #222277;
 }
 .decommentinput {
 	display: block;
@@ -348,10 +403,26 @@ dl.procedurelist dd.column pre {
 	margin-top: 10px;
 	font-size: 12px;
 }
+.decommentmodal-ok-area {
+	text-align: right;
+	margin: 0em 1em 0em 0em
+}
 .decommentmodal-ok-btn {
-	margin: 10px 5px 0 0;
-	padding: 5px 10px;
-	border-radius: 4px;
+	display: inline-block;
+	margin: 0.5em 0em;
+	padding: 0.5em 1.5em 0.5em 1.5em;
+	text-decoration: none;
+	border-radius: 3px;
+	font-weight: bold;
+	color: #FFF;
+	text-align: right;
+	background-image: -webkit-linear-gradient(45deg, #709dff 0%, #b0c9ff 100%);
+	background-image: linear-gradient(45deg, #709dff 0%, #b0c9ff 100%);
+	transition: .4s;
+}
+.decommentmodal-ok-btn:hover{
+	background-image: -webkit-linear-gradient(45deg, #709dff 50%, #b0c9ff 100%);
+	background-image: linear-gradient(45deg, #709dff 50%, #b0c9ff 100%);
 }
 .decommentmodal-close-btn {
 	position: absolute;
@@ -373,11 +444,26 @@ dl.procedurelist dd.column pre {
 .decommentmodal-close-btn:hover {
 	background-color: #eed;
 }
-.decomment-user-name {
+.decomment-user-input {
 	display: none;
+}
+.decomment-user-name {
+	margin-top: 0.5em;
 	padding: 5px;
+	border: thin solid #aa3344;
+}
+.decomment-user-name-desc {
+	margin-left: 0.5em;
+	color: #222277;
 }
 	</style>
+#if ($isStyleSheetInheritable && $database.isSchemaHtmlStyleSheetEmbedded())
+	<style type="text/css">
+${database.schemaHtmlStyleSheetEmbedded}
+	</style>
+#elseif ($isStyleSheetInheritable && $database.isSchemaHtmlStyleSheetLink())
+	${database.schemaHtmlStyleSheetLink}
+#end
 #end
 #if ($database.isSchemaHtmlJavaScriptEmbedded())
 	<script type="text/javascript">
@@ -394,11 +480,15 @@ ${database.schemaHtmlJavaScriptEmbedded}
 <p class="mainschema">generated from <strong>${database.databaseSchema.catalogSchema}</strong></p>
 #end
 <div class="navilinkarea">
-#if ($database.hasClassificationDefinition() || $database.isSchemaHtmlOutsideSqlValid() || $database.isSchemaHtmlProcedureValid())
+#if ($database.hasClassificationDefinition() || $database.isSchemaHtmlArrangeQueryValid() || $database.isSchemaHtmlOutsideSqlValid() || $database.isSchemaHtmlProcedureValid())
 #set ($linkDelimiter = "")
 <p class="sublink">
 #if ($database.hasClassificationDefinition())
 ${linkDelimiter} <a href="#cdef">Classification Definition</a>
+#set ($linkDelimiter = "|")
+#end
+#if ($database.isSchemaHtmlArrangeQueryValid())
+${linkDelimiter} <a href="#arrangequery">ArrangeQuery List</a>
 #set ($linkDelimiter = "|")
 #end
 #if ($database.isSchemaHtmlOutsideSqlValid())
@@ -407,6 +497,9 @@ ${linkDelimiter} <a href="#outsidesql">OutsideSql List</a>
 #end
 #if ($database.isSchemaHtmlProcedureValid())
 ${linkDelimiter} <a href="#procedure">Procedure List</a>
+#end
+#if ($database.isSchemaHtmlSchemaPolicyValid())
+${linkDelimiter} <a href="#schemapolicy">Schema Policy</a>
 #end
 #if ($selector.hasSchemaDiagram())
 ${linkDelimiter} <a href="#diagram">Schema Diagram</a>
@@ -493,6 +586,16 @@ ${linkDelimiter} <a href="${selector.getNeighborhoodSchemaHtmlPath($schemaHtmlKe
 	</table>
 	<button id="column-mapping-submit-button">Mapping</button>
 </div>
+#if ($database.isSchemaHtmlSchemaPolicyValid())
+#set ($schemaPolicyDisplay = $database.schemaPolicyDisplay)
+#if ($schemaPolicyDisplay.hasViolation())
+
+<h2 id="schemapolicyvio">SchemaPolicy Violation</h2>
+<pre class="spolicyviodisp">
+${schemaPolicyDisplay.violationMessageHtmlPreText}
+</pre>
+#end
+#end
 
 #set ($hasAdditionalSchema = $database.hasAdditionalSchema())
 #set ($isAliasDelimiterInDbCommentValid = $database.isAliasDelimiterInDbCommentValid())
@@ -625,6 +728,34 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 </table>
 #end
 
+#if ($database.isSchemaHtmlArrangeQueryValid())
+<h2 id="arrangequery">ArrangeQuery List</h2>
+#foreach ($table in $database.tableDisplaySortedList)
+#if ($table.hasArrangeQuery())
+<h3 id="${table.tableIdForSchemaHtml}_arrqy"><a href="#${table.tableIdForSchemaHtml}">${table.tableDispName}</a></h3>
+#set ($beanMethodList = $table.arrangeQueryTable.beanMethodList)
+#if (!$beanMethodList.isEmpty())
+<h4 id="${table.tableIdForSchemaHtml}_arrqy_bean">${table.arrangeQueryTable.beanClassName}</h4>
+<dl class="arrqylist">
+#foreach ($beanMethod in $beanMethodList)
+	<dt>$beanMethod.buildTitleExpForSchemaHtml()</dt>
+	<dd>$beanMethod.buildDescriptionExpForSchemaHtml()</dd>
+#end
+</dl>
+#end
+#set ($queryMethodList = $table.arrangeQueryTable.queryMethodList)
+#if (!$queryMethodList.isEmpty())
+<h4 id="${table.tableIdForSchemaHtml}_arrqy_query">${table.arrangeQueryTable.queryClassName}</h4>
+<dl class="arrqylist">
+#foreach ($queryMethod in $queryMethodList)
+	<dt>$queryMethod.buildTitleExpForSchemaHtml()</dt>
+	<dd>$queryMethod.buildDescriptionExpForSchemaHtml()</dd>
+#end
+</dl>
+#end
+#end
+#end
+#end
 #if ($database.isSchemaHtmlOutsideSqlValid())
 <h2 id="outsidesql">OutsideSql List</h2>
 #foreach ($table in $database.tableDisplaySortedList)
@@ -688,6 +819,14 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 </dl>
 #end
 #end
+#if ($database.isSchemaHtmlSchemaPolicyValid())
+#set ($schemaPolicyDisplay = $database.schemaPolicyDisplay)
+
+<h2 id="schemapolicy">Schema Policy</h2>
+<pre class="spolicydisp">
+${schemaPolicyDisplay.policyMessageHtmlPreText}
+</pre>
+#end
 #if ($selector.hasSchemaDiagram())
 
 <h2 id="diagram">Schema Diagram</h2>
@@ -721,8 +860,8 @@ $generator.parse("doc/html/table.vm", null, "table", $table)
 		<div id="decomment-close" class="decommentmodal-close-btn"><span>x</span></div>
 		<p>Input the new column comment of <span id="decomment-modal-column-info"></span></p>
 		<textarea id="decomment-input" class="decommentinput" rows="5"></textarea>
-		<input type="text" id="decomment-user-name" class="decomment-user-name" placeholder="User name"/>
-		<button id="decomment-ok" class="decommentmodal-ok-btn">OK</button>
+		<div id="decomment-user-input" class="decomment-user-input"><input type="text" id="decomment-user-name" class="decomment-user-name" placeholder="User name"/><span class="decomment-user-name-desc">*required (saved in cookie)</span></div>
+		<div class="decommentmodal-ok-area"><button id="decomment-ok" class="decommentmodal-ok-btn">OK</button></div>
 	</div>
 </div>
 <script>
@@ -1589,7 +1728,7 @@ PickupTableProperty.prototype = {
 		for (key in this.decomments) {
 			var decomment = this.decomments[key];
 			displayComment += decomment.body
-			if (this.isConflict() && decomment.pieceGitBranch && decomment.pieceOwner) {
+			if (this.isConflict() && decomment.pieceGitBranch) {
 				displayComment += '\n=======' + decomment.pieceGitBranch + ' (' + decomment.pieceOwner + ')';
 				if (key < commentCount - 1) {
 					displayComment += '\n\n'; // show between comments
@@ -1682,8 +1821,8 @@ function PickupColumnProperty(tableDbName, columnName, json) {
 		this.decomments = json['decomments'] || [];
 		this.previousPieces = json['previousPieces'];
 		this.authors = json['authors'];
+		this.pieceOwner = json['pieceOwner'];
 		this.commentVersion = json['commentVersion'];
-		this.pieceOwner = json['pieceOwner;'];
 		this.previousWholeComment = json['previousWholeComment'];
 	}
 }
@@ -1740,7 +1879,7 @@ PickupColumnProperty.prototype = {
 		for (key in this.decomments) {
 			var decomment = this.decomments[key];
 			displayComment += decomment.body
-			if (this.isConflict() && decomment.pieceGitBranch && decomment.pieceOwner) {
+			if (this.isConflict() && decomment.pieceGitBranch) {
 				displayComment += '\n=======' + decomment.pieceGitBranch + ' (' + decomment.pieceOwner + ')';
 				if (key < commentCount - 1) {
 					displayComment += '\n\n'; // show between comments
@@ -1859,12 +1998,12 @@ Decomment.prototype = {
 	 */
 	showUserNameInputIfNeed: function() {
 		if (DecommentUtil.isDecommentServer() && this.isUserNameEmpty()) {
-			document.querySelector('#decomment-user-name').style.display = 'block';
+			document.querySelector('#decomment-user-input').style.display = 'block';
 		}
 	},
 
 	hideUserNameInput: function() {
-		document.querySelector('#decomment-user-name').style.display = 'none';
+		document.querySelector('#decomment-user-input').style.display = 'none';
 	},
 
 	/**
@@ -1947,7 +2086,7 @@ Decomment.prototype = {
 
 				var commentElement = column.querySelector('.commentcell');
 				var tableName = that.getTableNameFromElement(table);
-				var columnName = column.querySelector('.columnnamecell').innerText;
+				var columnName = column.querySelector('.columnnamecell').innerText.trim();
 				var columnProperty = that.storeClient.getColumnPickup(tableName, columnName) || new PickupTableProperty(tableName, columnName)
 				commentElement.onclick = that.createSaveDecommentFunction(columnProperty);
 			});

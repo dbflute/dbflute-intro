@@ -68,12 +68,12 @@ public class DocumentAction extends IntroBaseAction {
 
     @Execute(urlPattern = "{}/@word")
     public StreamResponse propertieshtml(String clientName) {
-        File historyHtml = documentPhysicalLogic.findPropertiesHtml(clientName);
-        if (!historyHtml.exists()) {
+        File propertiesHtml = documentPhysicalLogic.findPropertiesHtml(clientName);
+        if (!propertiesHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String historyHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, historyHtml);
-        return createStringSteamResponse(historyHtmlContent);
+        String propertiesHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, propertiesHtml);
+        return createStringSteamResponse(propertiesHtmlContent);
     }
 
     @Execute(urlPattern = "{}/@word")

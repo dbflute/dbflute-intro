@@ -16,15 +16,11 @@
 package org.dbflute.intro.app.web.client;
 
 import java.io.File;
-import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
-import org.dbflute.intro.bizfw.tellfailure.ClientNotFoundException;
 import org.dbflute.intro.unit.UnitIntroTestCase;
-import org.dbflute.utflute.lastaflute.mock.TestingJsonData;
-import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author jflute
@@ -38,54 +34,9 @@ public class ClientActionTest extends UnitIntroTestCase {
     private IntroPhysicalLogic introPhysicalLogic;
 
     // ===================================================================================
-    //                                                                               Test
+    //                                                                              Delete
     //                                                                              ======
-    public void test_list_success() throws Exception {
-        // ## Arrange ##
-        ClientAction action = new ClientAction();
-        inject(action);
-
-        // ## Act ##
-        JsonResponse<List<ClientRowResult>> response = action.list();
-
-        // ## Assert ##
-        showJson(response);
-        TestingJsonData<List<ClientRowResult>> jsonData = validateJsonData(response);
-        List<ClientRowResult> detailBeanList = jsonData.getJsonResult();
-        assertHasAnyElement(detailBeanList);
-    }
-
-    public void test_operation_success() throws Exception {
-        // ## Arrange ##
-        ClientAction action = new ClientAction();
-        inject(action);
-
-        // ## Act ##
-        JsonResponse<ClientBasicResult> response = action.operation(UnitIntroTestCase.TEST_CLIENT_PROJECT);
-
-        // ## Assert ##
-        showJson(response);
-        TestingJsonData<ClientBasicResult> jsonData = validateJsonData(response);
-        ClientBasicResult operation = jsonData.getJsonResult();
-        assertEquals(UnitIntroTestCase.TEST_CLIENT_PROJECT, operation.projectName);
-    }
-
-    public void test_operation_fail() throws Exception {
-        // ## Arrange ##
-        ClientAction action = new ClientAction();
-        inject(action);
-
-        // ## Act ##
-        try {
-            action.operation("akirakaniokasii_project_name");
-        } catch (ClientNotFoundException ignore) {
-            markHere("client_not_found");
-        }
-        // ## Assert ##
-        assertMarked("client_not_found");
-    }
-
-    public void test_delete_success() throws Exception {
+    public void test_delete_basic() throws Exception {
         // ## Arrange ##
         ClientAction action = new ClientAction();
         inject(action);

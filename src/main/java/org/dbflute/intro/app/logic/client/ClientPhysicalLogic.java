@@ -36,13 +36,6 @@ import org.dbflute.intro.bizfw.util.ZipUtil;
 public class ClientPhysicalLogic {
 
     // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    // #needs_fix anyone should be public to use this in other logics by jflute (2021/04/16)
-    private static final String BASIC_INFO_MAP_DFPROP = "basicInfoMap.dfprop";
-    private static final String DATABASE_INFO_MAP_DFPROP = "databaseInfoMap.dfprop";
-
-    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     @Resource
@@ -58,23 +51,9 @@ public class ClientPhysicalLogic {
     // ===================================================================================
     //                                                                              dfprop
     //                                                                              ======
-    public File findDfpropBasicInfoMap(String projectName) {
-        IntroAssertUtil.assertNotEmpty(projectName);
-        return new File(buildDfpropFilePath(projectName, BASIC_INFO_MAP_DFPROP));
-    }
-
-    public File findDfpropDatabaseInfoMap(String projectName) {
-        IntroAssertUtil.assertNotEmpty(projectName);
-        return new File(buildDfpropFilePath(projectName, DATABASE_INFO_MAP_DFPROP));
-    }
-
-    private String buildDfpropDirPath(String projectName) {
-        return introPhysicalLogic.buildClientPath(projectName, "dfprop");
-    }
-
-    private String buildDfpropFilePath(String projectName, String fileName) {
-        return buildDfpropDirPath(projectName) + "/" + fileName;
-    }
+    // *finding-map methods are moved to thier own logics e.g. BasicInfoLogic by jflute (2021/11/18)
+    // *building-path methods are moved to dfprop logic e.g. DfpropPhysicalLogic by jflute (2021/11/18)
+    // dfprop is big domain so basically you can make independent logic classes
 
     // ===================================================================================
     //                                                                              extlib

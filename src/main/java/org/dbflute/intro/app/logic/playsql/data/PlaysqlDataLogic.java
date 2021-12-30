@@ -26,6 +26,7 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 /**
  * The logic for playsql.data (in DBFlute Client).
  * @author prprmurakami
+ * @author jflute
  */
 public class PlaysqlDataLogic {
 
@@ -45,7 +46,7 @@ public class PlaysqlDataLogic {
      * Use OS command.
      *
      * @param projectName dbflute client project name (NotNull, NotEmpty)
-     * @throws DirNotFoundException 
+     * @throws DirNotFoundException playsqlのディレクトリが無かったとき
      */
     public void openDataDir(String projectName) throws DirNotFoundException {
         File dataDir = new File(buildDataDirectoryPath(projectName));

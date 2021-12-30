@@ -22,14 +22,14 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbflute.intro.app.logic.client.ClientInfoLogic;
 import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
+import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.core.PublicPropertiesLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
 import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.logic.engine.EngineInstallLogic;
-import org.dbflute.intro.app.logic.exception.EngineDownloadErrorException;
+import org.dbflute.intro.app.logic.exception.PublicPropertiesLoadingFailureException;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.model.client.ExtlibFile;
 import org.dbflute.intro.app.model.client.ProjectInfra;
@@ -49,6 +49,7 @@ import org.lastaflute.web.response.JsonResponse;
 /**
  * @author hakiba
  * @author cabos
+ * @author jflute
  */
 public class WelcomeAction extends IntroBaseAction {
 
@@ -56,7 +57,7 @@ public class WelcomeAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private ClientInfoLogic clientInfoLogic;
+    private ClientReadLogic clientReadLogic;
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
@@ -79,7 +80,7 @@ public class WelcomeAction extends IntroBaseAction {
         validate(welcomeCreateBody, messages -> {
             ClientPart client = welcomeCreateBody.client;
             String projectName = client.projectName;
-            if (clientInfoLogic.getProjectList().contains(projectName)) {
+            if (clientReadLogic.getProjectNameList().contains(projectName)) {
                 messages.addErrorsWelcomeClientAlreadyExists("projectName", projectName);
             }
             // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
@@ -102,8 +103,9 @@ public class WelcomeAction extends IntroBaseAction {
             if (!engineInstallLogic.isDownloaded(latestVersion)) {
                 engineInstallLogic.downloadUnzipping(latestVersion, welcomeCreateBody.useSystemProxies);
             }
-        } catch (EngineDownloadErrorException e) {
-            throw new NetworkErrorException(e.getMessage());
+        } catch (PublicPropertiesLoadingFailureException e) {
+            String debugMsg = "Failed to get the latest version from public.properties: body=" + welcomeCreateBody;
+            throw new NetworkErrorException(debugMsg, e);
         }
 
         // connect test if need
@@ -162,5 +164,4 @@ public class WelcomeAction extends IntroBaseAction {
         DatabaseInfoMap databaseInfoMap = clientModel.getDatabaseInfoMap();
         testConnectionLogic.testConnection(dbfluteVersion, jdbcDriverJarPath, databaseInfoMap);
     }
-
 }

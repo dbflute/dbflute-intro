@@ -184,10 +184,9 @@
       }
     }
     this.showToast = (projectName) => {
-      this.suToast({
+      this.successToast({
         title: 'Create task completed',
         message: 'Client for project \'' + projectName + '\', was successfully created!!',
-        class: 'pink positive'
       })
     }
 

@@ -21,21 +21,21 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.DfpropInfoLogic;
-import org.dbflute.intro.app.logic.dfprop.DfpropUpdateLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyUpdateLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyTargetSetting;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.dfprop.DfpropSchemaPolicyResult;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
  * @author prprmurakami
+ * @author jflute
  */
 public class DfpropSchemapolicyAction extends IntroBaseAction {
 
@@ -43,9 +43,9 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private DfpropUpdateLogic dfpropUpdateLogic;
+    private DfpropSchemaPolicyUpdateLogic dfpropSchemaPolicyUpdateLogic;
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
 
     // ===================================================================================
     //                                                                             Execute
@@ -55,7 +55,7 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
     //                                       ---------------
     @Execute
     public JsonResponse<DfpropSchemaPolicyResult> index(String clientName) {
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.findSchemaPolicyMap(clientName);
+        SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(clientName);
         return asJson(new DfpropSchemaPolicyResult(schemaPolicyMap));
     }
 
@@ -64,14 +64,14 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
     //                                      ----------------
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> edit(String clientName, DfpropEditSchemaPolicyBody body) {
+    public JsonResponse<Void> edit(String clientName, DfpropSchemaPolicyEditBody body) {
         validate(body, messages -> {});
         SchemaPolicyMap schemaPolicyMap = mappingToSchemaPolicyMap(body);
-        dfpropUpdateLogic.replaceSchemaPolicyMap(clientName, schemaPolicyMap);
+        dfpropSchemaPolicyUpdateLogic.updateSchemaPolicyMap(clientName, schemaPolicyMap);
         return JsonResponse.asEmptyBody();
     }
 
-    private SchemaPolicyMap mappingToSchemaPolicyMap(DfpropEditSchemaPolicyBody body) {
+    private SchemaPolicyMap mappingToSchemaPolicyMap(DfpropSchemaPolicyEditBody body) {
         List<SchemaPolicyWholeMap.Theme> wholeMapThemeList = body.wholeMap.themeList.stream()
                 .map(theme -> new SchemaPolicyWholeMap.Theme(SchemaPolicyWholeMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());

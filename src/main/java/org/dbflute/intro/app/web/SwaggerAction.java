@@ -21,9 +21,9 @@ import javax.annotation.Resource;
 
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
-import org.lastaflute.doc.SwaggerGenerator;
-import org.lastaflute.doc.agent.SwaggerAgent;
-import org.lastaflute.doc.web.LaActionSwaggerable;
+import org.lastaflute.meta.SwaggerGenerator;
+import org.lastaflute.meta.agent.SwaggerAgent;
+import org.lastaflute.meta.swagger.web.LaActionSwaggerable;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.HtmlResponse;
 import org.lastaflute.web.response.JsonResponse;

@@ -19,34 +19,23 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dbflute.helper.dfmap.DfMapFile;
-import org.dbflute.helper.dfmap.DfMapStyle;
 import org.dbflute.intro.app.logic.core.FlutyFileLogic;
+import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyColumnMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyTableMap;
-import org.dbflute.intro.app.model.client.document.SchemaPolicyWholeMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
  * @author deco
  * @author subaru
+ * @author hakiba
+ * @author cabos
  * @author jflute
  */
 public class DfpropUpdateLogic {
@@ -57,9 +46,14 @@ public class DfpropUpdateLogic {
     @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
-    private DfpropInfoLogic dfpropInfoLogic;
+    private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
     @Resource
     private FlutyFileLogic flutyFileLogic;
+
+    // ===================================================================================
+    //                                                                        SchemaPolicy
+    //                                                                        ============
+    // split it to DfpropSchemaPolicyUpdateLogic by jflute (2021/06/24)
 
     // ===================================================================================
     //                                                                     SchemaSyncCheck
@@ -172,167 +166,5 @@ public class DfpropUpdateLogic {
         } catch (IOException e) {
             throw new LaSystemException("Cannot replace dfprop: " + file, e);
         }
-    }
-
-    // ===================================================================================
-    //                                                                     SchemaPolicyMap
-    //                                                                     ===============
-    // #needs_fix anyone make SchemaPolicyUpdateLogic? by jflute (2021/04/29)
-    public void replaceSchemaPolicyMap(String project, SchemaPolicyMap inputSchemaPolicyMap) {
-        File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
-        doReplaceSchemaPolicyMapWithInput(schemaPolicyMapFile, inputSchemaPolicyMap);
-    }
-
-    protected void doReplaceSchemaPolicyMapWithInput(File file, SchemaPolicyMap input) {
-        SchemaPolicyMap base = dfpropInfoLogic.parseSchemePolicyMap(file);
-        SchemaPolicyMap merge = mergeSchemaPolicyMap(base, input);
-        doReplaceSchemaPolicyMap(file, merge);
-    }
-
-    private void doReplaceSchemaPolicyMap(File file, SchemaPolicyMap schemaPolicyMap) {
-        try {
-            new DfMapFile() {
-                protected DfMapStyle newMapStyle() {
-                    return new DfMapStyle() {
-                        private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
-                                "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
-
-                        private String scope = "";
-
-                        @Override
-                        protected boolean isIgnoreEqualAsEscapeControlMarkInList() {
-                            return true;
-                        }
-
-                        @Override
-                        public String toMapString(Map<String, ? extends Object> map) {
-                            final StringBuilder sb = new StringBuilder();
-                            doBuildOtherCommentString(sb, "beginningComments");
-                            sb.append(super.toMapString(map)).append("\n");
-                            doBuildOtherCommentString(sb, "endComments");
-                            return sb.toString();
-                        }
-
-                        @SuppressWarnings("unchecked")
-                        private void doBuildOtherCommentString(StringBuilder sb, String key) {
-                            final String scope = "other";
-                            if (schemaPolicyMap.comments.containsKey(scope)
-                                    && ((Map<String, Object>) schemaPolicyMap.comments.get(scope)).containsKey(key)) {
-                                sb.append(((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key));
-                            }
-                        }
-
-                        @Override
-                        protected void doBuildMapStringCurrentEntry(StringBuilder sb, boolean printOneLiner, String previousIndent,
-                                String currentIndent, boolean withoutDisplaySideSpace, int index, String key, Object value) {
-                            if (SCOPE_LIST.contains(key)) {
-                                scope = key;
-                            }
-                            doBuildCommentStringCurrentElement(sb, currentIndent, key);
-                            super.doBuildMapStringCurrentEntry(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace,
-                                    index, key, value);
-                        }
-
-                        @Override
-                        protected void doBuildListStringCurrentElement(StringBuilder sb, boolean printOneLiner, String previousIndent,
-                                String currentIndent, boolean withoutDisplaySideSpace, int index, Object value) {
-                            doBuildCommentStringCurrentElement(sb, currentIndent, (String) value);
-                            super.doBuildListStringCurrentElement(sb, printOneLiner, previousIndent, currentIndent, withoutDisplaySideSpace,
-                                    index, value);
-                        }
-
-                        @SuppressWarnings("unchecked")
-                        private void doBuildCommentStringCurrentElement(StringBuilder sb, String currentIndent, String key) {
-                            if (schemaPolicyMap.comments.get(scope) != null
-                                    && ((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key) != null) {
-                                String commentString = (String) ((Map<String, Object>) schemaPolicyMap.comments.get(scope)).get(key);
-                                String[] comments = commentString.split("\n");
-                                if (comments.length == 0) { // case of containing only '\n'
-                                    sb.append(commentString);
-                                    return;
-                                }
-                                for (String c : comments) {
-                                    sb.append(c.trim().isEmpty() ? "\n" + c : "\n" + currentIndent + c);
-                                }
-                            }
-                        }
-                    };
-                }
-            }.writeMap(FileUtils.openOutputStream(file), schemaPolicyMap.convertToMap());
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to write dfprop file: " + file.getAbsolutePath(), e);
-        }
-    }
-
-    protected SchemaPolicyMap mergeSchemaPolicyMap(SchemaPolicyMap base, SchemaPolicyMap input) {
-        SchemaPolicyWholeMap mergedWholeMap = mergeWholeMap(base.wholeMap, input.wholeMap);
-        SchemaPolicyTableMap mergedTableMap = mergeTableMap(base.tableMap, input.tableMap);
-        SchemaPolicyColumnMap mergedColumnMap = mergeColumnMap(base.columnMap, input.columnMap);
-
-        return new SchemaPolicyMap(base.targetSetting, mergedWholeMap, mergedTableMap, mergedColumnMap, base.comments);
-    }
-
-    private SchemaPolicyWholeMap mergeWholeMap(SchemaPolicyWholeMap base, SchemaPolicyWholeMap input) {
-        List<String> inputThemeTypeCode = input.themeList.stream().map(t -> t.type.code).collect(Collectors.toList());
-        Stream<SchemaPolicyWholeMap.Theme> filteredBaseStream =
-                base.themeList.stream().filter(theme -> !inputThemeTypeCode.contains(theme.type.code));
-        List<SchemaPolicyWholeMap.Theme> themeList =
-                Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
-        return new SchemaPolicyWholeMap(themeList);
-    }
-
-    private SchemaPolicyTableMap mergeTableMap(SchemaPolicyTableMap base, SchemaPolicyTableMap input) {
-        List<String> inputThemeTypeCode = input.themeList.stream().map(t -> t.type.code).collect(Collectors.toList());
-        Stream<SchemaPolicyTableMap.Theme> filteredBaseStream =
-                base.themeList.stream().filter(theme -> !inputThemeTypeCode.contains(theme.type.code));
-        List<SchemaPolicyTableMap.Theme> themeList =
-                Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
-        return new SchemaPolicyTableMap(themeList, base.statementList);
-    }
-
-    private SchemaPolicyColumnMap mergeColumnMap(SchemaPolicyColumnMap base, SchemaPolicyColumnMap input) {
-        List<String> inputThemeTypeCode = input.themeList.stream().map(t -> t.type.code).collect(Collectors.toList());
-        Stream<SchemaPolicyColumnMap.Theme> filteredBaseStream =
-                base.themeList.stream().filter(theme -> !inputThemeTypeCode.contains(theme.type.code));
-        List<SchemaPolicyColumnMap.Theme> themeList =
-                Stream.concat(filteredBaseStream, input.themeList.stream()).filter(theme -> theme.isActive).collect(Collectors.toList());
-        return new SchemaPolicyColumnMap(themeList, base.statementList);
-    }
-
-    // -----------------------------------------------------
-    //                                SchemaPolicy Statement
-    //                                ----------------------
-    public String registerSchemaPolicyStatement(String project, SchemaPolicyStatement statement) {
-        File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(schemaPolicyMapFile);
-        String builtStatement = statement.buildStatement();
-        if ("tableMap".equals(statement.mapType)) {
-            List<String> statements = new ArrayList<>(schemaPolicyMap.tableMap.statementList);
-            statements.add(builtStatement);
-            schemaPolicyMap.tableMap.statementList = statements;
-        } else if ("columnMap".equals(statement.mapType)) {
-            List<String> statements = new ArrayList<>(schemaPolicyMap.columnMap.statementList);
-            statements.add(builtStatement);
-            schemaPolicyMap.columnMap.statementList = statements;
-        }
-        doReplaceSchemaPolicyMap(schemaPolicyMapFile, schemaPolicyMap);
-        return builtStatement;
-    }
-
-    private File findSchemaPolicyMapFile(String project) {
-        return new File(dfpropPhysicalLogic.buildDfpropFilePath(project, "schemaPolicyMap.dfprop"));
-    }
-
-    public void deleteSchemaPolicyStatement(String project, String mapType, String statement) {
-        File schemaPolicyMapFile = findSchemaPolicyMapFile(project);
-        SchemaPolicyMap schemaPolicyMap = dfpropInfoLogic.parseSchemePolicyMap(schemaPolicyMapFile);
-        if ("tableMap".equals(mapType)) {
-            schemaPolicyMap.tableMap.statementList =
-                    schemaPolicyMap.tableMap.statementList.stream().filter(s -> !s.equals(statement)).collect(Collectors.toList());
-        } else if ("columnMap".equals(mapType)) {
-            schemaPolicyMap.columnMap.statementList =
-                    schemaPolicyMap.columnMap.statementList.stream().filter(s -> !s.equals(statement)).collect(Collectors.toList());
-        }
-        doReplaceSchemaPolicyMap(schemaPolicyMapFile, schemaPolicyMap);
     }
 }
