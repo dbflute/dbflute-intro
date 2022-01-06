@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 import org.dbflute.intro.unit.UnitIntroTestCase;
@@ -36,6 +38,12 @@ public class LogActionTest extends UnitIntroTestCase {
     //                                                                          Definition
     //                                                                          ==========
     private static final String LOG_FILE_PATH = "dbflute_" + TEST_CLIENT_PROJECT + "/log/";
+
+    // ===================================================================================
+    //                                                                           Attribute
+    //                                                                           =========
+    @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
 
     // ===================================================================================
     //                                                                                Test
@@ -87,7 +95,7 @@ public class LogActionTest extends UnitIntroTestCase {
     //                                                                         Test Helper
     //                                                                         ===========
     private void deleteLogFiles() {
-        File logDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, LOG_FILE_PATH);
+        File logDir = new File(introPhysicalLogic.buildIntroPath(), LOG_FILE_PATH);
         File[] logFiles = logDir.listFiles((dir, name) -> name.endsWith(".log"));
         if (logFiles != null) {
             for (File file : logFiles) {
@@ -97,7 +105,7 @@ public class LogActionTest extends UnitIntroTestCase {
     }
 
     private void createLogFile(String fileName, String content) throws IOException {
-        File logFile = new File(IntroPhysicalLogic.BASE_DIR_PATH, LOG_FILE_PATH + fileName);
+        File logFile = new File(introPhysicalLogic.buildIntroPath(), LOG_FILE_PATH + fileName);
         if (!logFile.getParentFile().exists()) {
             logFile.getParentFile().mkdirs();
         }

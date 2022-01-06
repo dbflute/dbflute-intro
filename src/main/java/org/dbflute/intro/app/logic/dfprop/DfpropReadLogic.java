@@ -51,6 +51,8 @@ public class DfpropReadLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
 
     // ===================================================================================
@@ -63,7 +65,7 @@ public class DfpropReadLogic {
     public Map<String, Map<String, Object>> findDfpropMap(String projectName) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
         // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+        final File dfpropDir = new File(introPhysicalLogic.buildIntroPath(), "dbflute_" + projectName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) { // basically no way, what happens by returning empty?
             return dfpropMap;
@@ -112,7 +114,7 @@ public class DfpropReadLogic {
      */
     public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
         // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+        final File dfpropDir = new File(introPhysicalLogic.buildIntroPath(), "dbflute_" + projectName + "/dfprop");
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) {
             return Optional.empty();
