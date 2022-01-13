@@ -35,6 +35,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 
 /**
  * The logic for reading DBFlute property (dfprop) information.
@@ -79,6 +80,7 @@ public class DfpropReadLogic {
             if (file.getName().equals("classificationDefinitionMap.dfprop")) {
                 fileNameKey = file.getName();
             } else { // supporting DBFlute old naming style
+                // e.g. replaceSchemaDefinitionMap.dfprop to replaceSchemaMap.dfprop
                 fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
             }
             dfpropMap.put(fileNameKey, readMap(file));
@@ -90,12 +92,13 @@ public class DfpropReadLogic {
         });
         final Map<String, Object> basicInfoMap = dfpropMap.get(BasicInfoMap.DFPROP_NAME);
         if (basicInfoMap == null) {
-            // #needs_fix anyone message use DfpropFileNotFoundException by jflute (2021/04/29)
-            throw new RuntimeException("Not found the basicInfoMap.dfprop: " + dfpropMap.keySet());
+            final String debugMsg = "Not found the basicInfoMap.dfprop in the dfprop: existings=" + dfpropMap.keySet();
+            throw new DfpropFileNotFoundException(debugMsg, BasicInfoMap.DFPROP_NAME);
         }
         final Map<String, Object> databaseInfoMap = dfpropMap.get(DatabaseInfoMap.DFPROP_NAME);
         if (databaseInfoMap == null) {
-            throw new RuntimeException("Not found the databaseInfoMap.dfprop: " + dfpropMap.keySet());
+            final String debugMsg = "Not found the databaseInfoMap.dfprop in the dfprop: existings=" + dfpropMap.keySet();
+            throw new DfpropFileNotFoundException(debugMsg, DatabaseInfoMap.DFPROP_NAME);
         }
         return dfpropMap;
     }
