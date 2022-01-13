@@ -59,7 +59,7 @@ public class DfpropUpdateLogic {
     //                                                                     SchemaSyncCheck
     //                                                                     ===============
     public void replaceSchemaSyncCheckMap(String projectName, SchemaSyncCheckMap schemaSyncCheckMap) {
-        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(projectName, "documentMap.dfprop");
+        final File documentMapFile = dfpropPhysicalLogic.findDfpropFileExisting(projectName, "documentMap.dfprop");
         try (BufferedReader br = Files.newBufferedReader(documentMapFile.toPath())) {
             boolean inSetting = false;
             boolean inSyncSchemeSetting = false;
@@ -116,7 +116,7 @@ public class DfpropUpdateLogic {
             }
             return line;
         };
-        final File documentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "documentMap.dfprop");
+        final File documentMapFile = dfpropPhysicalLogic.findDfpropFileExisting(project, "documentMap.dfprop");
         final String fileContent = replaceDfpropFileContent(documentMapFile, lineReplacer);
         flutyFileLogic.writeFile(documentMapFile, fileContent);
     }
@@ -140,7 +140,7 @@ public class DfpropUpdateLogic {
             }
             return line;
         };
-        final File littleAdjustmentMapFile = dfpropPhysicalLogic.findDfpropFile(project, "littleAdjustmentMap.dfprop");
+        final File littleAdjustmentMapFile = dfpropPhysicalLogic.findDfpropFileExisting(project, "littleAdjustmentMap.dfprop");
         final String fileContent = replaceDfpropFileContent(littleAdjustmentMapFile, lineReplacer);
         flutyFileLogic.writeFile(littleAdjustmentMapFile, fileContent);
     }

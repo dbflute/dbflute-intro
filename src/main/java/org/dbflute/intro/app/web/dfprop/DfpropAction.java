@@ -65,7 +65,7 @@ public class DfpropAction extends IntroBaseAction {
     public JsonResponse<Void> update(String projectName, String fileName, DfpropUpdateBody body) {
         validate(body, messages -> {});
 
-        File dfpropFile = dfpropPhysicalLogic.findDfpropFile(projectName, fileName);
+        File dfpropFile = dfpropPhysicalLogic.findDfpropFileExisting(projectName, fileName);
         flutyFileLogic.writeFile(dfpropFile, body.content);
 
         return JsonResponse.asEmptyBody();

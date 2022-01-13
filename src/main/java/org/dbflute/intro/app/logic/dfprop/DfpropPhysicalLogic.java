@@ -30,6 +30,7 @@ import org.dbflute.intro.bizfw.util.IntroAssertUtil;
  * The logic for DBFlute property (dfprop) physical operation.
  * @author deco
  * @author jflute
+ * @author subaru
  */
 public class DfpropPhysicalLogic {
 
@@ -43,6 +44,7 @@ public class DfpropPhysicalLogic {
     //                                                                               Path
     //                                                                              ======
     /**
+     * dfpropディレクトリのパスを生成する。
      * @param projectName The project name of DBFlute client. (NotNull)
      * @return The path to dfprop directory, basically relative. (NotNull)
      */
@@ -52,6 +54,7 @@ public class DfpropPhysicalLogic {
     }
 
     /**
+     * dfpropファイルのパスを生成する。
      * @param projectName The project name of DBFlute client. (NotNull)
      * @param fileName The pure file name for dfprop. (NotNull)
      * @return The path to the dfprop file, basically relative. (NotNull)
@@ -66,31 +69,47 @@ public class DfpropPhysicalLogic {
     //                                                                               Find
     //                                                                              ======
     /**
+     * dfpropディレクトリを探す。(存在しなかったら例外)
      * @param projectName The project name of DBFlute client. (NotNull)
-     * @param fileName The pure file name for dfprop. (NotNull)
-     * @return The file object to the dfprop file. (NotNull)
-     * @throws DfpropFileNotFoundException When the file is not found.
+     * @return The file object to the existing dfprop directory. (NotNull)
+     * @throws DfpropDirNotFoundException When the file is not found or not directory.
      */
-    public File findDfpropFile(String projectName, String fileName) {
-        final File dfpropFile = new File(buildDfpropFilePath(projectName, fileName));
-        if (!dfpropFile.isFile()) {
-            throw new DfpropFileNotFoundException("Not found dfprop file: " + dfpropFile.getPath(), fileName);
+    public File findDfpropDirExisting(String projectName) {
+        final File dfpropFile = new File(buildDfpropDirPath(projectName));
+        if (!dfpropFile.isDirectory()) { // means not found or not directory
+            throw new DfpropDirNotFoundException("Not found the dfprop directory: " + dfpropFile.getPath(), projectName);
         }
         return dfpropFile;
     }
 
     /**
+     * dfpropファイルのFileオブジェクトを探す。(存在しなかったら例外)
      * @param projectName The project name of DBFlute client. (NotNull)
-     * @return The list of file object to the dfprop files. (NotNull, NotEmpty)
+     * @param fileName The pure file name for dfprop. (NotNull)
+     * @return The file object to the existing dfprop file. (NotNull)
+     * @throws DfpropFileNotFoundException When the file is not found or not file.
+     */
+    public File findDfpropFileExisting(String projectName, String fileName) {
+        final File dfpropFile = new File(buildDfpropFilePath(projectName, fileName));
+        if (!dfpropFile.isFile()) { // means not found or not file
+            throw new DfpropFileNotFoundException("Not found the dfprop file: " + dfpropFile.getPath(), fileName);
+        }
+        return dfpropFile;
+    }
+
+    /**
+     * 存在するdfpropファイルをすべて探す。(一個もなければ例外)
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @return The read-only list of file object to the dfprop files. (NotNull, NotEmpty)
      * @throws DfpropDirNotFoundException When the directory or file is not found.
      */
     public List<File> findDfpropFileAllList(String projectName) {
         final File dfpropDir = new File(buildDfpropDirPath(projectName));
         final File[] dfpropFiles = dfpropDir.listFiles((dir, name) -> name.endsWith(".dfprop"));
-        if (dfpropFiles == null || dfpropFiles.length == 0) {
-            throw new DfpropDirNotFoundException("Not found dfprop directory of files. dfprop dir: " + dfpropDir.getPath(),
-                    dfpropDir.getName());
+        if (dfpropFiles == null || dfpropFiles.length == 0) { // directory not found or empty
+            final String debugMsg = "Not found the file on dfprop directory. dfprop dir: " + dfpropDir.getPath();
+            throw new DfpropDirNotFoundException(debugMsg, dfpropDir.getName());
         }
-        return Arrays.asList(dfpropFiles);
+        return Arrays.asList(dfpropFiles); // read-only
     }
 }

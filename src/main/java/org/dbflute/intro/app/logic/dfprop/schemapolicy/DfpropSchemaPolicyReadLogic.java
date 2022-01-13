@@ -64,7 +64,7 @@ public class DfpropSchemaPolicyReadLogic {
      * @return The file object of schema-policy. (NotNull)
      */
     public File findSchemaPolicyFile(String projectName) {
-        return dfpropPhysicalLogic.findDfpropFile(projectName, SchemaPolicyMap.DFPROP_NAME);
+        return dfpropPhysicalLogic.findDfpropFileExisting(projectName, SchemaPolicyMap.DFPROP_NAME);
     }
 
     // ===================================================================================
