@@ -112,6 +112,19 @@ public class IntroPhysicalLogic {
     }
 
     // ===================================================================================
+    //                                                                              System
+    //                                                                              ======
+    // done anyone move to physical logic? or to caller class by jflute (2021/05/01)
+    /**
+     * Javaシステムにおいて、プロキシサーバーを利用したネットワークアクセスを許すかどうか？を設定する。
+     * @param useSystemProxies the determination for system property "java.net.useSystemProxies".
+     */
+    public void setupSystemProxyUse(boolean useSystemProxies) {
+        // https://docs.oracle.com/javase/jp/8/docs/api/java/net/doc-files/net-properties.html
+        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
+    }
+
+    // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
     private String buildBasicPath(String path) {
