@@ -15,24 +15,23 @@
  */
 package org.dbflute.intro.app.web.client.list;
 
-import java.util.Map;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
 
 /**
+ * DBFluteクライアント一覧における一行のデータ。
  * @author p1us2er0
  * @author jflute
  */
 public class ClientRowResult {
 
     // ===================================================================================
-    //                                                                         Client Info
-    //                                                                         ===========
-    // #needs_fix many unneeded items are here by jflute (2021/05/08)
+    //                                                                           Attribute
+    //                                                                           =========
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // DBFluteクライアント一覧で必要な項目だけ定義、必要になった時に追加 by jflute (2022/01/15) 
+    // _/_/_/_/_/_/_/_/_/_/
     @Required
     public String projectName;
     @Required
@@ -41,62 +40,12 @@ public class ClientRowResult {
     public CDef.TargetLanguage languageCode;
     @Required
     public CDef.TargetContainer containerCode;
-    @Required
-    public String packageBase;
-    @Required
-    public String jdbcDriverFqcn;
-
-    @Required
-    @Valid
-    public DatabaseSettingsPart mainSchemaSettings;
-
-    @Valid
-    public DatabaseSettingsPart systemUserSettings;
-
-    // done (by jflute) hakiba implement another DatabaseSettingsPart with the main user and system user,
-    //  but we do not seriously consider implementing AdditionalUserMap yet.
-    // no plan for AdditionalUserMap now, so pending here by jflute (2020/11/02)
-    public static class DatabaseSettingsPart {
-        // url property is mandatory for main user, but not for system user
-        public String url;
-        public String schema;
-        @Required
-        public String user;
-        public String password;
-    }
-
-    @Required
-    public String dbfluteVersion;
-
-    public String jdbcDriverJarPath;
-
-    // #hope documentOption, outsideSqlOption by jflute
-    @Valid
-    public OptionPart optionBean;
-
-    public static class OptionPart {
-
-        // documentMap.dfprop is not required so may be null
-        // #thinking jflute however... can boolean property be false as default? (2019/10/24)
-        public Boolean dbCommentOnAliasBasis;
-        public String aliasDelimiterInDbComment;
-        public Boolean checkColumnDefOrderDiff;
-        public Boolean checkDbCommentDiff;
-        public Boolean checkProcedureDiff;
-        public Boolean generateProcedureParameterBean; // If outsideSqlMap.dfprop does not exist, this property is null.
-        public String procedureSynonymHandlingType;
-    }
-
-    @NotNull
-    public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
 
     // ===================================================================================
-    //                                                                        Client State
-    //                                                                        ============
-    @Required
-    public Boolean hasSchemaHtml;
-    @Required
-    public Boolean hasHistoryHtml;
-    @Required
-    public Boolean hasReplaceSchema;
+    //                                                                      Basic Override
+    //                                                                      ==============
+    @Override
+    public String toString() {
+        return Lato.string(this);
+    }
 }
