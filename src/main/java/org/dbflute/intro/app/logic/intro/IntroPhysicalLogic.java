@@ -22,7 +22,7 @@ import org.dbflute.util.Srl;
 
 /**
  * The logic for DBFlute Intro physical operation. <br>
- * Introの全体的な物理情報を扱う。DBFluteクライアント配下などは、それぞれ個別のLogicクラスにて。
+ * Introが起動しているディレクトリの情報を扱う。DBFluteクライアント配下などは、それぞれ個別のLogicクラスにて。
  * @author p1us2er0
  * @author jflute
  */
