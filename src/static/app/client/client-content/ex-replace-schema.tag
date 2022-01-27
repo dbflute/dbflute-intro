@@ -1,20 +1,43 @@
 <ex-replace-schema>
+  <!-- ClientのReplaceSchema画面 (written at 2022/01/28)
+   機能:
+    o ReplaceSchemaが実行できる
+    o テストデータのディレクトリをFinderなどで開ける
+    o playsql配下のSQLファイルの中身を表示できる (ハイライト付き)
+
+   作りの特徴:
+    o ReplaceSchemaのy/nの代わりにダイアログで「いいのやっちゃって？」の確認をさせている
+    o SQLファイルの一覧のためにドロップダウンを利用している
+    o prism.jsを使ってSQLのハイライトを実現している
+   -->
   <div class="ui container">
     <h2>Replace Schema</h2>
+
+    <!-- 実行ボタンの領域 -->
     <button class="ui red button" onclick="{ replaceSchemaTask }">Execute ReplaceSchema</button>
-    <button class="ui button" onclick="{ openDataDir }"><i class="folder open icon"></i>TestData Directory</button>
+    <button class="ui button" onclick="{ openDataDir }">
+      <!-- #thinking この folder open icon も semantic-ui なのかな？ by jflute (2022/01/28) -->
+      <i class="folder open icon"></i>TestData Directory
+    </button>
+
+    <!-- 固定メッセージの領域: 関連ページへのリンクなど -->
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"Replace Schema"?</a></div>
       <p>A mechanism to automates (re) building your DB schema.</p>
     </div>
+
+    <!-- 実行結果の領域: Introのログとかが表示される -->
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
+
+    <!-- playsqlの操作: DDLファイルを表示するなど -->
     <h3>Play SQL</h3>
     <div class="ui segment" title="PlaySQL">
       <su-dropdown items="{ playsqlDropDownItems }" ref="dropdown"></su-dropdown>
       <div class="ui message message-area">
         <pre>
+          <!-- codeタグのclass定義は、prism.jsで用意されているSQLのハイライト -->
           <code class="language-sql">
             <raw content="{ refs.dropdown.value }"></raw>
           </code>
@@ -23,12 +46,14 @@
     </div>
   </div>
 
+  <!-- タスク実行中の示すダイアログ -->
   <su-modal modal="{ executeModal }" class="large" ref="executeModal">
     <div class="description">
       Executing...
     </div>
   </su-modal>
 
+  <!-- タスク実行結果を表示するダイアログ -->
   <result-modal ref="resultModal"></result-modal>
 
   <style>
@@ -99,7 +124,6 @@
       ApiFactory.openDataDir(self.opts.projectName)
     }
     
-
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
