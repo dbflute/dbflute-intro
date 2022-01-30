@@ -15,6 +15,7 @@
  */
 package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -32,8 +33,10 @@ public class DfpropSortSchemaPolicyStatementBody {
 
     @NotNull
     public String mapType;
+    @Min(value = 0)
     @NotNull
     public Integer fromIndex;
+    @Min(value = 0)
     @NotNull
     public Integer toIndex;
 }

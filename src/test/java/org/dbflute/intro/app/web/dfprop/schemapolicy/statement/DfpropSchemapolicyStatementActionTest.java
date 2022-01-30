@@ -128,12 +128,14 @@ public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
                 new SortStatementTestCase(
                         "tableMap statement fromIndex is invalid",
                         new DfpropSortSchemaPolicyStatementBody("tableMap", -1, 2),
-                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2))
+                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2)),
+                        false
                 ),
                 new SortStatementTestCase(
                         "tableMap statement toIndex is invalid",
                         new DfpropSortSchemaPolicyStatementBody("tableMap", 0, -1),
-                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2))
+                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2)),
+                        false
                 ),
                 new SortStatementTestCase(
                         "columnMap statement move to head",
@@ -153,23 +155,32 @@ public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
                 new SortStatementTestCase(
                         "columnMap statement fromIndex is invalid",
                         new DfpropSortSchemaPolicyStatementBody("columnMap", -1, 2),
-                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2))
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
+                        false
                 ),
                 new SortStatementTestCase(
                         "columnMap statement toIndex is invalid",
                         new DfpropSortSchemaPolicyStatementBody("columnMap", 0, -1),
-                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2))
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
+                        false
                 )
         ).forEach(testCase -> {
-            // ## Act ##
-            action.sort(TEST_CLIENT_PROJECT, testCase.input);
+            if (testCase.isValid) {
+                // ## Act ##
+                action.sort(TEST_CLIENT_PROJECT, testCase.input);
 
-            // ## Assert ##
-            List<String> actual = findStatementsOf(testCase.input.mapType);
-            assertEquals(testCase.name, testCase.expected, actual);
+                // ## Assert ##
+                List<String> actual = findStatementsOf(testCase.input.mapType);
+                assertEquals(testCase.name, testCase.expected, actual);
 
-            // teardown by each
-            prepareSchemaPolicyMap(dfpropPath);
+                // teardown by each
+                prepareSchemaPolicyMap(dfpropPath);
+            } else {
+                // ## Act & Assert ##
+                assertException(ValidationErrorException.class, () -> {
+                    action.sort(TEST_CLIENT_PROJECT, testCase.input);
+                });
+            }
         });
     }
 
@@ -258,10 +269,15 @@ public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
         String name;
         DfpropSortSchemaPolicyStatementBody input;
         List<String> expected;
-        public SortStatementTestCase(String name, DfpropSortSchemaPolicyStatementBody input, List<String> expected) {
+        boolean isValid;
+        public SortStatementTestCase(String name, DfpropSortSchemaPolicyStatementBody input, List<String> expected, boolean isValid) {
             this.name = name;
             this.input = input;
             this.expected = expected;
+            this.isValid = isValid;
+        }
+        public SortStatementTestCase(String name, DfpropSortSchemaPolicyStatementBody input, List<String> expected) {
+            this(name, input, expected, true);
         }
     }
 

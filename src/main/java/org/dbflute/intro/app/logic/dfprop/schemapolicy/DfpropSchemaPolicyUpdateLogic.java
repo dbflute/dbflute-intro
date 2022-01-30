@@ -136,17 +136,10 @@ public class DfpropSchemaPolicyUpdateLogic {
     private List<String> sortStatements(List<String> baseStatements, Integer fromIndex, Integer toIndex) {
         // 並び替え元、先のindexが一致 または 並び替え元 or 先のいずれかのindexが存在しない場合は何もしないで終了
         if (Objects.equals(fromIndex, toIndex)
-                || !containsIndex(baseStatements, fromIndex)
-                || !containsIndex(baseStatements, toIndex)) {
+                || baseStatements.size() < fromIndex
+                || baseStatements.size() < toIndex) {
             return baseStatements;
         }
         return DfCollectionUtil.moveElementToIndex(baseStatements, fromIndex, toIndex);
-    }
-
-    private <T> boolean containsIndex(List<T> list, Integer index) {
-        if (index == null) {
-            return false;
-        }
-        return -1 < index && index < list.size();
     }
 }

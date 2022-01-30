@@ -61,6 +61,9 @@
      * @param toIndex {number} - 並び替え先のステートメントの並び順
      */
     this.sortStatement = (fromIndex, toIndex) => {
+      if (fromIndex === toIndex) {
+        return
+  }
       ApiFactory.sortSchemapolicyStatement(self.props.clientName, {
         mapType: self.props.mapType,
         fromIndex,
