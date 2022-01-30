@@ -127,12 +127,6 @@
     .latest-result {
       margin-top: 1em;
     }
-    .statement.delete.link.icon {
-      display: none;
-    }
-    .statement.item:hover .statement.delete.link.icon {
-      display: inline-block;
-    }
   </style>
 
   <script>
