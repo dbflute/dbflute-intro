@@ -22,9 +22,6 @@ import javax.validation.constraints.NotNull;
  * @author hakiba
  */
 public class DfpropSortSchemaPolicyStatementBody {
-    public DfpropSortSchemaPolicyStatementBody() {
-    }
-
     public DfpropSortSchemaPolicyStatementBody(String mapType, Integer fromIndex, Integer toIndex) {
         this.mapType = mapType;
         this.fromIndex = fromIndex;
