@@ -6,7 +6,8 @@
   </ul>
 
   <style>
-    ui-list[sortable=true] > .items > .item:hover {
+    /* sortable="{ true }" と指定した場合、タグに sortable という属性が付与されているので下記のstyleが反映される */
+    ui-list[sortable] > .items > .item:hover {
       cursor: grab;
     }
     ui-list > .items > .item.sorted {
@@ -26,7 +27,8 @@
     let self = this
 
     self.props = {
-      sortable: self.opts.sortable,
+      // sortable="{ true }" と指定した場合、opts.sortableに"sortable"という文字列が渡ってくるのでbooleanに変換しておく
+      sortable: !!self.opts.sortable,
       onSorted: self.opts.onsorted,
       options: self.opts.options
     }
@@ -39,7 +41,7 @@
     //                                                                              Life Cycle
     //                                                                              ==========
     self.on('mount', () => {
-      if (self.props.sortable === 'true') {
+      if (self.props.sortable) {
         // SortableJSによるソート機能を対象のDOM要素にbindする
         Sortable.create(self.refs.items, self.prepareSortableOptions())
       }

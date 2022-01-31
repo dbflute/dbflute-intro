@@ -1,5 +1,5 @@
 <schema-policy-check-statement-list>
-  <ui-list items="{ opts.statements }" onsorted="{ sortStatement }" sortable="true" options="{ prepareListOptions() }">
+  <ui-list items="{ opts.statements }" onsorted="{ sortStatement }" sortable="{ true }" options="{ prepareListOptions() }">
     <div class="content">
       <div class="header" if="{ !props.options.hasComment(item) }">
         { item }
