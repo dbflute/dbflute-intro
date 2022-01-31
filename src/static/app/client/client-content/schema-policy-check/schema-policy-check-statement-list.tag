@@ -5,7 +5,7 @@
         { item }
       </div>
       <div class="header" if="{ props.options.hasComment(item) }">
-        { props.options.extractStatement(item) }
+        { props.options.removeComment(item) }
       </div>
       <div if="{ props.options.hasComment(item) }">
         <span class="frm">&#61&gt;{ props.options.extractComment(item) }</span>
@@ -86,7 +86,7 @@
      * @param statement {string} ステートメント文
      * @return {string} コメントを除去したステートメント文
      */
-    this.extractStatement = (statement) => {
+    this.removeComment = (statement) => {
       if (!self.hasComment(statement)) {
         return statement
       }
@@ -114,7 +114,7 @@
     this.prepareListOptions = () => {
       return {
         hasComment: self.hasComment,
-        extractStatement: self.extractStatement,
+        removeComment: self.removeComment,
         extractComment: self.extractComment,
         deleteStatement: self.props.deleteStatement,
         mapType: self.props.mapType
