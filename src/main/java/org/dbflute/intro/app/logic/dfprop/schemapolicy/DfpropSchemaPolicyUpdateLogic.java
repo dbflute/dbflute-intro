@@ -121,15 +121,15 @@ public class DfpropSchemaPolicyUpdateLogic {
     // ===================================================================================
     //                                                                      Sort Statement
     //                                                                      ==============
-    public void sortSchemaPolicyStatement(String project, String mapType, Integer fromIndex, Integer toIndex) {
-        File schemaPolicyMapFile = dfpropSchemaPolicyReadLogic.findSchemaPolicyFile(project);
-        SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.parseSchemePolicyMap(schemaPolicyMapFile);
+    public void sortSchemaPolicyStatement(String projectName, String mapType, Integer fromIndex, Integer toIndex) {
+        SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(projectName);
         if ("tableMap".equals(mapType)) {
             schemaPolicyMap.tableMap.statementList = sortStatements(schemaPolicyMap.tableMap.statementList, fromIndex, toIndex);
         } else if ("columnMap".equals(mapType)) {
             schemaPolicyMap.columnMap.statementList =
                     sortStatements(schemaPolicyMap.columnMap.statementList, fromIndex, toIndex);
         }
+        File schemaPolicyMapFile = dfpropSchemaPolicyReadLogic.findSchemaPolicyFile(projectName);
         dfpropSchemaPolicyFileReplaceLogic.replaceSchemaPolicyMapDirectly(schemaPolicyMapFile, schemaPolicyMap);
     }
 

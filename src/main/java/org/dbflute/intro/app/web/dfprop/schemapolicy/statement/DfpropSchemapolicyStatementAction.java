@@ -52,10 +52,10 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     //                                                ------
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<String> register(String clientName, DfpropRegisterSchemaPolicyStatementBody body) {
+    public JsonResponse<String> register(String projectName, DfpropRegisterSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
         SchemaPolicyStatement statement = mappingToStatement(body);
-        String builtStatement = dfpropSchemaPolicyUpdateLogic.registerSchemaPolicyStatement(clientName, statement);
+        String builtStatement = dfpropSchemaPolicyUpdateLogic.registerSchemaPolicyStatement(projectName, statement);
         return asJson(builtStatement);
     }
 
@@ -67,17 +67,17 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> sort(String clientName, DfpropSortSchemaPolicyStatementBody body) {
+    public JsonResponse<Void> sort(String projectName, DfpropSortSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        dfpropSchemaPolicyUpdateLogic.sortSchemaPolicyStatement(clientName, body.mapType, body.fromIndex, body.toIndex);
+        dfpropSchemaPolicyUpdateLogic.sortSchemaPolicyStatement(projectName, body.mapType, body.fromIndex, body.toIndex);
         return JsonResponse.asEmptyBody();
     }
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> delete(String clientName, DfpropDeleteSchemaPolicyStatementBody body) {
+    public JsonResponse<Void> delete(String projectName, DfpropDeleteSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(clientName, body.mapType, body.statement);
+        dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(projectName, body.mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
 
