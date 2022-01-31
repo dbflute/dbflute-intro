@@ -1,13 +1,13 @@
 <schema-policy-check-statement-list>
   <ui-list items="{ opts.statements }" onsorted="{ sortStatement }" sortable="true" options="{ prepareListOptions() }">
     <div class="content">
-      <div class="header" if="{ !props.options.isIncludeComment(item) }">
+      <div class="header" if="{ !props.options.hasComment(item) }">
         { item }
       </div>
-      <div class="header" if="{ props.options.isIncludeComment(item) }">
+      <div class="header" if="{ props.options.hasComment(item) }">
         { props.options.extractStatement(item) }
       </div>
-      <div if="{ props.options.isIncludeComment(item) }">
+      <div if="{ props.options.hasComment(item) }">
         <span class="frm">&#61&gt;{ props.options.extractComment(item) }</span>
       </div>
     </div>
@@ -77,7 +77,7 @@
      * @param statement {string} ステートメント文
      * @return {boolean} true:コメントを含んでいる, false:含んでいない
      */
-    this.isIncludeComment = (statement) => {
+    this.hasComment = (statement) => {
       return statement.includes('=>')
     }
 
@@ -87,7 +87,7 @@
      * @return {string} コメントを除去したステートメント文
      */
     this.extractStatement = (statement) => {
-      if (!self.isIncludeComment(statement)) {
+      if (!self.hasComment(statement)) {
         return statement
       }
       const splitStatements = statement.split('=>')
@@ -100,7 +100,7 @@
      * @return {string} ステートメント文中のコメント
      */
     this.extractComment = (statement) => {
-      if (!self.isIncludeComment(statement)) {
+      if (!self.hasComment(statement)) {
         return ''
       }
       const splitStatements = statement.split('=>')
@@ -113,7 +113,7 @@
      */
     this.prepareListOptions = () => {
       return {
-        isIncludeComment: self.isIncludeComment,
+        hasComment: self.hasComment,
         extractStatement: self.extractStatement,
         extractComment: self.extractComment,
         deleteStatement: self.props.deleteStatement,
