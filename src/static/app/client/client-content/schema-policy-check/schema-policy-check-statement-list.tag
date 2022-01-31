@@ -97,14 +97,14 @@
     /**
      * ステートメント文からコメントを抽出します
      * @param statement {string} ステートメント文
-     * @return {string} ステートメント文中のコメント
+     * @return {string} ステートメント文中のコメント (NotNull, EmptyAllowed: コメント自体がなかったとき)
      */
     this.extractComment = (statement) => {
       if (!self.hasComment(statement)) {
         return ''
       }
       const splitStatements = statement.split('=>')
-      return splitStatements[1]
+      return splitStatements[1].trimStart()
     }
 
     /**
