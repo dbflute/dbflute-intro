@@ -18,6 +18,7 @@
     ui-list .delete.link.icon {
       display: none;
     }
+
     ui-list .item:hover .delete.link.icon {
       display: inline-block;
     }
@@ -63,7 +64,7 @@
     this.sortStatement = (fromIndex, toIndex) => {
       if (fromIndex === toIndex) {
         return
-  }
+      }
       ApiFactory.sortSchemapolicyStatement(self.props.clientName, {
         mapType: self.props.mapType,
         fromIndex,
