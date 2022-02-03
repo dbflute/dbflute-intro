@@ -22,8 +22,8 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author hakiba
  */
-public class DfpropSortSchemaPolicyStatementBody {
-    public DfpropSortSchemaPolicyStatementBody(String mapType, Integer fromIndex, Integer toIndex) {
+public class DfpropMoveSchemaPolicyStatementBody {
+    public DfpropMoveSchemaPolicyStatementBody(String mapType, Integer fromIndex, Integer toIndex) {
         this.mapType = mapType;
         this.fromIndex = fromIndex;
         this.toIndex = toIndex;

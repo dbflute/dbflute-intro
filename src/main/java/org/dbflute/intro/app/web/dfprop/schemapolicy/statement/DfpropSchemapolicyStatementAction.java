@@ -67,9 +67,9 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
 
     @NotAvailableDecommentServer
     @Execute
-    public JsonResponse<Void> sort(String projectName, DfpropSortSchemaPolicyStatementBody body) {
+    public JsonResponse<Void> move(String projectName, DfpropMoveSchemaPolicyStatementBody body) {
         validate(body, messages -> {});
-        dfpropSchemaPolicyUpdateLogic.sortSchemaPolicyStatement(projectName, body.mapType, body.fromIndex, body.toIndex);
+        dfpropSchemaPolicyUpdateLogic.moveSchemaPolicyStatement(projectName, body.mapType, body.fromIndex, body.toIndex);
         return JsonResponse.asEmptyBody();
     }
 

@@ -101,73 +101,73 @@ public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
         assertFalse(after.contains(deleteStatement));
     }
 
-    public void test_schemapolicy_statement_sort() throws Exception {
+    public void test_schemapolicy_statement_move() throws Exception {
         // ## Arrange ##
-        String dfpropPath = "dfprop/sort_schemaPolicyMap.dfprop";
+        String dfpropPath = "dfprop/move_schemaPolicyMap.dfprop";
         prepareSchemaPolicyMap(dfpropPath);
         List<String> beforeTableStates = findStatementsOf("tableMap");
         List<String> beforeColumnStates = findStatementsOf("columnMap");
         DfpropSchemapolicyStatementAction action = new DfpropSchemapolicyStatementAction();
         inject(action);
         Arrays.asList(
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "tableMap statement move to head",
-                        new DfpropSortSchemaPolicyStatementBody("tableMap", 2, 0),
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 2, 0),
                         Arrays.asList(beforeTableStates.get(2), beforeTableStates.get(0), beforeTableStates.get(1))
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "tableMap statement move to same",
-                        new DfpropSortSchemaPolicyStatementBody("tableMap", 2, 2),
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 2, 2),
                         Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2))
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "tableMap statement move to tail",
-                        new DfpropSortSchemaPolicyStatementBody("tableMap", 0, 2),
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 0, 2),
                         Arrays.asList(beforeTableStates.get(1), beforeTableStates.get(2), beforeTableStates.get(0))
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "tableMap statement fromIndex is invalid",
-                        new DfpropSortSchemaPolicyStatementBody("tableMap", -1, 2),
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", -1, 2),
                         Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2)),
                         false
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "tableMap statement toIndex is invalid",
-                        new DfpropSortSchemaPolicyStatementBody("tableMap", 0, -1),
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 0, -1),
                         Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2)),
                         false
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "columnMap statement move to head",
-                        new DfpropSortSchemaPolicyStatementBody("columnMap", 2, 0),
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 2, 0),
                         Arrays.asList(beforeColumnStates.get(2), beforeColumnStates.get(0), beforeColumnStates.get(1))
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "columnMap statement move to same",
-                        new DfpropSortSchemaPolicyStatementBody("columnMap", 2, 2),
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 2, 2),
                         Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2))
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "columnMap statement move to tail",
-                        new DfpropSortSchemaPolicyStatementBody("columnMap", 0, 2),
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 0, 2),
                         Arrays.asList(beforeColumnStates.get(1), beforeColumnStates.get(2), beforeColumnStates.get(0))
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "columnMap statement fromIndex is invalid",
-                        new DfpropSortSchemaPolicyStatementBody("columnMap", -1, 2),
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", -1, 2),
                         Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
                         false
                 ),
-                new SortStatementTestCase(
+                new MoveStatementTestCase(
                         "columnMap statement toIndex is invalid",
-                        new DfpropSortSchemaPolicyStatementBody("columnMap", 0, -1),
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 0, -1),
                         Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
                         false
                 )
         ).forEach(testCase -> {
             if (testCase.isValid) {
                 // ## Act ##
-                action.sort(TEST_CLIENT_PROJECT, testCase.input);
+                action.move(TEST_CLIENT_PROJECT, testCase.input);
 
                 // ## Assert ##
                 List<String> actual = findStatementsOf(testCase.input.mapType);
@@ -178,7 +178,7 @@ public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
             } else {
                 // ## Act & Assert ##
                 assertException(ValidationErrorException.class, () -> {
-                    action.sort(TEST_CLIENT_PROJECT, testCase.input);
+                    action.move(TEST_CLIENT_PROJECT, testCase.input);
                 });
             }
         });
@@ -265,18 +265,18 @@ public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
         }
     }
 
-    static class SortStatementTestCase {
+    static class MoveStatementTestCase {
         String name;
-        DfpropSortSchemaPolicyStatementBody input;
+        DfpropMoveSchemaPolicyStatementBody input;
         List<String> expected;
         boolean isValid;
-        public SortStatementTestCase(String name, DfpropSortSchemaPolicyStatementBody input, List<String> expected, boolean isValid) {
+        public MoveStatementTestCase(String name, DfpropMoveSchemaPolicyStatementBody input, List<String> expected, boolean isValid) {
             this.name = name;
             this.input = input;
             this.expected = expected;
             this.isValid = isValid;
         }
-        public SortStatementTestCase(String name, DfpropSortSchemaPolicyStatementBody input, List<String> expected) {
+        public MoveStatementTestCase(String name, DfpropMoveSchemaPolicyStatementBody input, List<String> expected) {
             this(name, input, expected, true);
         }
     }

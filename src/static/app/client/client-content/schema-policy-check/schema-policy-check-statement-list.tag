@@ -1,5 +1,5 @@
 <schema-policy-check-statement-list>
-  <ui-list items="{ opts.statements }" onsorted="{ sortStatement }" sortable="{ true }" options="{ prepareListOptions() }">
+  <ui-list items="{ opts.statements }" onsorted="{ moveStatement }" sortable="{ true }" options="{ prepareListOptions() }">
     <div class="content">
       <div class="header" if="{ !props.options.hasComment(item) }">
         { item }
@@ -61,11 +61,11 @@
      * @param fromIndex {number} - 並び替え元のステートメントの並び順
      * @param toIndex {number} - 並び替え先のステートメントの並び順
      */
-    this.sortStatement = (fromIndex, toIndex) => {
+    this.moveStatement = (fromIndex, toIndex) => {
       if (fromIndex === toIndex) {
         return
       }
-      ApiFactory.sortSchemapolicyStatement(self.props.clientName, {
+      ApiFactory.moveSchemapolicyStatement(self.props.clientName, {
         mapType: self.props.mapType,
         fromIndex,
         toIndex

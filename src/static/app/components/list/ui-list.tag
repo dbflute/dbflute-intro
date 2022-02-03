@@ -10,9 +10,11 @@
     ui-list[sortable] > .items > .item:hover {
       cursor: grab;
     }
+
     ui-list > .items > .item.sorted {
       background: #C8EBFB;
     }
+
     ui-list > .items > .item.dragging {
       background: #FFFFFF;
     }
@@ -73,6 +75,6 @@
           self.props.onSorted(event.oldIndex, event.newIndex)
         },
       }
-}
+    }
   </script>
 </ui-list>

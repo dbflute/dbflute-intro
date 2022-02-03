@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.dfprop.DfpropPhysicalLogic;
 import org.dbflute.intro.app.logic.dfprop.schemapolicy.file.DfpropSchemaPolicyFileReplaceLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
@@ -118,19 +117,19 @@ public class DfpropSchemaPolicyUpdateLogic {
     // ===================================================================================
     //                                                                      Sort Statement
     //                                                                      ==============
-    public void sortSchemaPolicyStatement(String projectName, String mapType, Integer fromIndex, Integer toIndex) {
+    public void moveSchemaPolicyStatement(String projectName, String mapType, Integer fromIndex, Integer toIndex) {
         SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(projectName);
         if ("tableMap".equals(mapType)) {
-            schemaPolicyMap.tableMap.statementList = sortStatements(schemaPolicyMap.tableMap.statementList, fromIndex, toIndex);
+            schemaPolicyMap.tableMap.statementList = moveStatements(schemaPolicyMap.tableMap.statementList, fromIndex, toIndex);
         } else if ("columnMap".equals(mapType)) {
             schemaPolicyMap.columnMap.statementList =
-                    sortStatements(schemaPolicyMap.columnMap.statementList, fromIndex, toIndex);
+                    moveStatements(schemaPolicyMap.columnMap.statementList, fromIndex, toIndex);
         }
         File schemaPolicyMapFile = dfpropSchemaPolicyReadLogic.findSchemaPolicyFile(projectName);
         dfpropSchemaPolicyFileReplaceLogic.replaceSchemaPolicyMapDirectly(schemaPolicyMapFile, schemaPolicyMap);
     }
 
-    private List<String> sortStatements(List<String> baseStatements, Integer fromIndex, Integer toIndex) {
+    private List<String> moveStatements(List<String> baseStatements, Integer fromIndex, Integer toIndex) {
         // 並び替え元、先のindexが一致 または 並び替え元 or 先のいずれかのindexが存在しない場合は何もしないで終了
         if (Objects.equals(fromIndex, toIndex)
                 || baseStatements.size() < fromIndex

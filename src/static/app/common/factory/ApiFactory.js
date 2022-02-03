@@ -109,9 +109,9 @@ export default class ApiFactory {
       }
     )
   }
-  sortSchemapolicyStatement(projectName, schemaPolicyData) {
+  moveSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(
-      `api/dfprop/schemapolicy/statement/sort/${projectName}`, { body: schemaPolicyData }
+      `api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData }
     )
   }
 
