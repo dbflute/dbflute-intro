@@ -18,7 +18,6 @@ package org.dbflute.intro.app.logic.dfprop.schemapolicy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -44,8 +43,6 @@ public class DfpropSchemaPolicyUpdateLogic {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    @Resource
-    private DfpropPhysicalLogic dfpropPhysicalLogic;
     @Resource
     private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
     @Resource
