@@ -15,6 +15,8 @@
  */
 package org.dbflute.intro.app.logic.dfprop.schemapolicy;
 
+import static org.dbflute.intro.mylasta.appcls.AppCDef.*;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,19 +73,19 @@ public class DfpropSchemaPolicyUpdateLogic {
 
         SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(projectName);
         String builtStatement = statement.buildStatement();
-        addStatementToMap(statement.mapType, builtStatement, schemaPolicyMap);
+        addStatementToMap(statement.mapTypeAsCls(), builtStatement, schemaPolicyMap);
 
         // こちらは自前マージしているようなものなので、Directlyの方を使う
         dfpropSchemaPolicyFileReplaceLogic.replaceSchemaPolicyMapDirectly(schemaPolicyFile, schemaPolicyMap);
         return builtStatement;
     }
 
-    private void addStatementToMap(String mapType, String addedStatement, SchemaPolicyMap schemaPolicyMap) {
-        if ("tableMap".equals(mapType)) {
+    private void addStatementToMap(SubjectableMapType mapType, String addedStatement, SchemaPolicyMap schemaPolicyMap) {
+        if (SubjectableMapType.Table.equals(mapType)) {
             List<String> statements = new ArrayList<>(schemaPolicyMap.tableMap.statementList);
             statements.add(addedStatement);
             schemaPolicyMap.tableMap.statementList = statements;
-        } else if ("columnMap".equals(mapType)) {
+        } else if (SubjectableMapType.Column.equals(mapType)) {
             List<String> statements = new ArrayList<>(schemaPolicyMap.columnMap.statementList);
             statements.add(addedStatement);
             schemaPolicyMap.columnMap.statementList = statements;
@@ -93,7 +95,7 @@ public class DfpropSchemaPolicyUpdateLogic {
     // -----------------------------------------------------
     //                                      Delete Statement
     //                                      ----------------
-    public void deleteSchemaPolicyStatement(String projectName, String mapType, String statement) {
+    public void deleteSchemaPolicyStatement(String projectName, SubjectableMapType mapType, String statement) {
         File schemaPolicyFile = dfpropSchemaPolicyReadLogic.findSchemaPolicyFile(projectName);
 
         SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(projectName);
@@ -103,11 +105,11 @@ public class DfpropSchemaPolicyUpdateLogic {
         dfpropSchemaPolicyFileReplaceLogic.replaceSchemaPolicyMapDirectly(schemaPolicyFile, schemaPolicyMap);
     }
 
-    private void removeStatementFromMap(String mapType, String removedStatement, SchemaPolicyMap schemaPolicyMap) {
-        if ("tableMap".equals(mapType)) {
+    private void removeStatementFromMap(SubjectableMapType mapType, String removedStatement, SchemaPolicyMap schemaPolicyMap) {
+        if (SubjectableMapType.Table.equals(mapType)) {
             schemaPolicyMap.tableMap.statementList =
                     schemaPolicyMap.tableMap.statementList.stream().filter(st -> !st.equals(removedStatement)).collect(Collectors.toList());
-        } else if ("columnMap".equals(mapType)) {
+        } else if (SubjectableMapType.Column.equals(mapType)) {
             schemaPolicyMap.columnMap.statementList = schemaPolicyMap.columnMap.statementList.stream()
                     .filter(st -> !st.equals(removedStatement))
                     .collect(Collectors.toList());
@@ -117,13 +119,12 @@ public class DfpropSchemaPolicyUpdateLogic {
     // ===================================================================================
     //                                                                      Sort Statement
     //                                                                      ==============
-    public void moveSchemaPolicyStatement(String projectName, String mapType, Integer fromIndex, Integer toIndex) {
+    public void moveSchemaPolicyStatement(String projectName, SubjectableMapType mapType, Integer fromIndex, Integer toIndex) {
         SchemaPolicyMap schemaPolicyMap = dfpropSchemaPolicyReadLogic.findSchemaPolicyMap(projectName);
-        if ("tableMap".equals(mapType)) {
+        if (SubjectableMapType.Table.equals(mapType)) {
             schemaPolicyMap.tableMap.statementList = moveStatements(schemaPolicyMap.tableMap.statementList, fromIndex, toIndex);
-        } else if ("columnMap".equals(mapType)) {
-            schemaPolicyMap.columnMap.statementList =
-                    moveStatements(schemaPolicyMap.columnMap.statementList, fromIndex, toIndex);
+        } else if (SubjectableMapType.Column.equals(mapType)) {
+            schemaPolicyMap.columnMap.statementList = moveStatements(schemaPolicyMap.columnMap.statementList, fromIndex, toIndex);
         }
         File schemaPolicyMapFile = dfpropSchemaPolicyReadLogic.findSchemaPolicyFile(projectName);
         dfpropSchemaPolicyFileReplaceLogic.replaceSchemaPolicyMapDirectly(schemaPolicyMapFile, schemaPolicyMap);
@@ -131,9 +132,7 @@ public class DfpropSchemaPolicyUpdateLogic {
 
     private List<String> moveStatements(List<String> baseStatements, Integer fromIndex, Integer toIndex) {
         // 並び替え元、先のindexが一致 または 並び替え元 or 先のいずれかのindexが存在しない場合は何もしないで終了
-        if (Objects.equals(fromIndex, toIndex)
-                || baseStatements.size() < fromIndex
-                || baseStatements.size() < toIndex) {
+        if (Objects.equals(fromIndex, toIndex) || baseStatements.size() < fromIndex || baseStatements.size() < toIndex) {
             return baseStatements;
         }
         return DfCollectionUtil.moveElementToIndex(baseStatements, fromIndex, toIndex);

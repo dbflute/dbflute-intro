@@ -16,6 +16,7 @@
 package org.dbflute.intro.app.web.dfprop.schemapolicy.statement;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -26,6 +27,7 @@ import org.dbflute.intro.app.logic.exception.SubjectableMapTypeNotExistException
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
+import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.dbflute.intro.mylasta.appcls.AppCDef.SubjectableMapType;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -53,7 +55,7 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<String> register(String projectName, DfpropRegisterSchemaPolicyStatementBody body) {
-        validate(body, messages -> {});
+        validate(body, messages -> moreValidate(messages, body.type));
         SchemaPolicyStatement statement = mappingToStatement(body);
         String builtStatement = dfpropSchemaPolicyUpdateLogic.registerSchemaPolicyStatement(projectName, statement);
         return asJson(builtStatement);
@@ -68,16 +70,18 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> move(String projectName, DfpropMoveSchemaPolicyStatementBody body) {
-        validate(body, messages -> {});
-        dfpropSchemaPolicyUpdateLogic.moveSchemaPolicyStatement(projectName, body.mapType, body.fromIndex, body.toIndex);
+        validate(body, messages -> moreValidate(messages, body.mapType));
+        SubjectableMapType mapType = SubjectableMapType.codeOf(body.mapType);
+        dfpropSchemaPolicyUpdateLogic.moveSchemaPolicyStatement(projectName, mapType, body.fromIndex, body.toIndex);
         return JsonResponse.asEmptyBody();
     }
 
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> delete(String projectName, DfpropDeleteSchemaPolicyStatementBody body) {
-        validate(body, messages -> {});
-        dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(projectName, body.mapType, body.statement);
+        validate(body, messages -> moreValidate(messages, body.mapType));
+        SubjectableMapType mapType = SubjectableMapType.codeOf(body.mapType);
+        dfpropSchemaPolicyUpdateLogic.deleteSchemaPolicyStatement(projectName, mapType, body.statement);
         return JsonResponse.asEmptyBody();
     }
 
@@ -99,6 +103,11 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
                     .collect(Collectors.toList()));
         } else {
             throw new SubjectableMapTypeNotExistException("There is no matching SubjectableMapType. mapType: " + form.mapType);
+        }
+    }
+    private void moreValidate(IntroMessages messages, String mapType) {
+        if (Objects.nonNull(mapType) && Objects.isNull(SubjectableMapType.codeOf(mapType))) {
+            messages.addErrorsSchemapolicyInvalidMapType(mapType);
         }
     }
 }
