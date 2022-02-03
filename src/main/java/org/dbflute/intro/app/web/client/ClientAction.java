@@ -17,20 +17,17 @@ package org.dbflute.intro.app.web.client;
 
 import javax.annotation.Resource;
 
-import org.dbflute.intro.app.logic.client.ClientPhysicalLogic;
-import org.dbflute.intro.app.logic.client.ClientReadLogic;
 import org.dbflute.intro.app.logic.client.ClientUpdateLogic;
 import org.dbflute.intro.app.logic.dfprop.TestConnectionLogic;
-import org.dbflute.intro.app.logic.dfprop.database.DatabaseInfoLogic;
 import org.dbflute.intro.app.model.client.ClientModel;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
-import org.dbflute.intro.app.web.client.ClientCreateBody.ClientPart;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
-import org.dbflute.intro.mylasta.action.IntroMessages;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
+ * DBFluteクライアントをまるごと制御するAction。(作成、削除など) <br>
+ * クライアント内の個々の機能の制御は個々のActionにて。ここではまるごと制御のみ。
  * @author p1us2er0
  * @author deco
  * @author jflute
@@ -46,13 +43,7 @@ public class ClientAction extends IntroBaseAction {
     @Resource
     private ClientUpdateLogic clientUpdateLogic;
     @Resource
-    private ClientReadLogic clientReadLogic;
-    @Resource
-    private ClientPhysicalLogic clientPhysicalLogic;
-    @Resource
     private TestConnectionLogic testConnectionLogic;
-    @Resource
-    private DatabaseInfoLogic databaseInfoLogic;
     @Resource
     private ClientUpdateAssist clientAssist;
 
@@ -62,57 +53,27 @@ public class ClientAction extends IntroBaseAction {
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(ClientCreateBody clientCreateBody) {
+        // 個々の処理、それぞれまあまあデカいのでAssistに切り出している
         validate(clientCreateBody, messages -> {
-            moreValidateCreate(messages, clientCreateBody);
+            clientAssist.moreValidateCreate(messages, clientCreateBody);
         });
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
+        ClientModel clientModel = clientAssist.mappingToClientModel(clientCreateBody.client);
         if (clientCreateBody.testConnection) {
-            testConnectionIfPossible(clientModel);
+            clientAssist.testConnectionIfPossible(clientModel);
         }
         clientUpdateLogic.createClient(clientModel);
         return JsonResponse.asEmptyBody();
     }
 
-    // #needs_fix anyone ClientCreateBody in edit()? should be ClientUpdateBody? by jflute (2021/05/08)
-    // #needs_fix anyone path parameter "projectName" is unused...needed? or should validate anything? by jflute (2021/05/08)
-    @NotAvailableDecommentServer
-    @Execute
-    public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
-        // #needs_fix anyone should more-validate? (like create()) by jflute (2021/05/08)
-        validate(clientCreateBody, messages -> {});
-        ClientModel clientModel = mappingToClientModel(clientCreateBody.client);
-        if (clientCreateBody.testConnection) {
-            testConnectionIfPossible(clientModel);
-        }
-        clientUpdateLogic.updateClient(clientModel);
-        return JsonResponse.asEmptyBody();
-    }
+    // the function of wholly updating client does not exist in Intro by jflute (2022/01/15)
+    //@NotAvailableDecommentServer
+    //@Execute
+    //public JsonResponse<Void> edit(String projectName, ClientCreateBody clientCreateBody) {
 
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> delete(String projectName) {
         clientUpdateLogic.deleteClient(projectName);
         return JsonResponse.asEmptyBody();
-    }
-
-    // ===================================================================================
-    //                                                                          Validation
-    //                                                                          ==========
-    private void moreValidateCreate(IntroMessages messages, ClientCreateBody clientCreateBody) {
-        clientAssist.moreValidateCreate(messages, clientCreateBody);
-    }
-
-    // ===================================================================================
-    //                                                                             Mapping
-    //                                                                             =======
-    private ClientModel mappingToClientModel(ClientPart clientBody) {
-        return clientAssist.mappingToClientModel(clientBody);
-    }
-
-    // ===================================================================================
-    //                                                                        Assist Logic
-    //                                                                        ============
-    private void testConnectionIfPossible(ClientModel clientModel) {
-        clientAssist.testConnectionIfPossible(clientModel);
     }
 }

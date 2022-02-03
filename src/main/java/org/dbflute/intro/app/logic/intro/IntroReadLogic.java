@@ -28,11 +28,8 @@ public class IntroReadLogic {
 
     public Map<String, Object> getManifestMap() {
         // manifest logic is also used in IntroBoot, it should be one way reference so use it here
+        // Introは組み込みjarファイルで提供され、起動時はまず IntroBoot が単体で動く。
+        // なので、IntroBootからLogicを参照することはできないので、LogicがIntroBootを参照するようにしている。
         return IntroBoot.getManifestMap();
-    }
-
-    // #needs_fix anyone move to physical logic? or to caller class by jflute (2021/05/01)
-    public void setProxy(boolean useSystemProxies) {
-        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
     }
 }

@@ -86,7 +86,7 @@ public class ClientReadLogic {
     // done anyone should be getProjectNameList()? by jflute (2021/04/29)
     public List<String> getProjectNameList() { // e.g. [maihamadb, trohamadb], not null
         final List<String> projectList = new ArrayList<String>();
-        final File baseDir = new File(IntroPhysicalLogic.BASE_DIR_PATH);
+        final File baseDir = introPhysicalLogic.findIntroDir();
         if (baseDir.exists()) {
             for (File file : baseDir.listFiles()) {
                 final String clientPrefix = "dbflute_";

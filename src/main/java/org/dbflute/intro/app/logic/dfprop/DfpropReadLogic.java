@@ -35,6 +35,7 @@ import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
+import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 
 /**
  * The logic for reading DBFlute property (dfprop) information.
@@ -51,6 +52,8 @@ public class DfpropReadLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
+    private IntroPhysicalLogic introPhysicalLogic;
+    @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
 
     // ===================================================================================
@@ -62,8 +65,8 @@ public class DfpropReadLogic {
      */
     public Map<String, Map<String, Object>> findDfpropMap(String projectName) {
         final Map<String, Map<String, Object>> dfpropMap = new LinkedHashMap<String, Map<String, Object>>();
-        // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+        // #thinking jflute dfpropPhysicalLogic.findDfpropFileAllList()を使ってもいいかも？ (2022/01/13)
+        final File dfpropDir = dfpropPhysicalLogic.findDfpropDirExisting(projectName);
         final File[] dfpropFiles = dfpropDir.listFiles();
         if (dfpropFiles == null) { // basically no way, what happens by returning empty?
             return dfpropMap;
@@ -77,6 +80,7 @@ public class DfpropReadLogic {
             if (file.getName().equals("classificationDefinitionMap.dfprop")) {
                 fileNameKey = file.getName();
             } else { // supporting DBFlute old naming style
+                // e.g. replaceSchemaDefinitionMap.dfprop to replaceSchemaMap.dfprop
                 fileNameKey = file.getName().replace("DefinitionMap.dfprop", "Map.dfprop");
             }
             dfpropMap.put(fileNameKey, readMap(file));
@@ -88,12 +92,13 @@ public class DfpropReadLogic {
         });
         final Map<String, Object> basicInfoMap = dfpropMap.get(BasicInfoMap.DFPROP_NAME);
         if (basicInfoMap == null) {
-            // #needs_fix anyone message use DfpropFileNotFoundException by jflute (2021/04/29)
-            throw new RuntimeException("Not found the basicInfoMap.dfprop: " + dfpropMap.keySet());
+            final String debugMsg = "Not found the basicInfoMap.dfprop in the dfprop: existings=" + dfpropMap.keySet();
+            throw new DfpropFileNotFoundException(debugMsg, BasicInfoMap.DFPROP_NAME);
         }
         final Map<String, Object> databaseInfoMap = dfpropMap.get(DatabaseInfoMap.DFPROP_NAME);
         if (databaseInfoMap == null) {
-            throw new RuntimeException("Not found the databaseInfoMap.dfprop: " + dfpropMap.keySet());
+            final String debugMsg = "Not found the databaseInfoMap.dfprop in the dfprop: existings=" + dfpropMap.keySet();
+            throw new DfpropFileNotFoundException(debugMsg, DatabaseInfoMap.DFPROP_NAME);
         }
         return dfpropMap;
     }
@@ -111,10 +116,9 @@ public class DfpropReadLogic {
      * @return The optional for the map of schema-sync-check. (NotNull)
      */
     public Optional<SchemaSyncCheckMap> findSchemaSyncCheckMap(String projectName) {
-        // #needs_fix anyone message use dfpropPhysicalLogic.findDfpropFile() by jflute (2021/04/29)
-        final File dfpropDir = new File(IntroPhysicalLogic.BASE_DIR_PATH, "dbflute_" + projectName + "/dfprop");
+        final File dfpropDir = dfpropPhysicalLogic.findDfpropDirExisting(projectName);
         final File[] dfpropFiles = dfpropDir.listFiles();
-        if (dfpropFiles == null) {
+        if (dfpropFiles == null) { // そのディレクトリがなかったとき、Existingでチェック済なのでありえない
             return Optional.empty();
         }
         return Arrays.stream(dfpropFiles).filter(file -> StringUtils.equals(file.getName(), "documentMap.dfprop")).findAny().map(file -> {
@@ -137,7 +141,7 @@ public class DfpropReadLogic {
     //                                                                    LittleAdjustment
     //                                                                    ================
     public LittleAdjustmentMap findLittleAdjustmentMap(String projectName) {
-        final File littleAdjustmentMap = dfpropPhysicalLogic.findDfpropFile(projectName, "littleAdjustmentMap.dfprop");
+        final File littleAdjustmentMap = dfpropPhysicalLogic.findDfpropFileExisting(projectName, "littleAdjustmentMap.dfprop");
         final Map<String, Object> readMap = readMap(littleAdjustmentMap);
         final boolean isTableDispNameUpperCase = convertSettingToBoolean(readMap.get("isTableDispNameUpperCase"));
         final boolean isTableSqlNameUpperCase = convertSettingToBoolean(readMap.get("isTableSqlNameUpperCase"));
@@ -149,7 +153,7 @@ public class DfpropReadLogic {
     //                                                                            Document
     //                                                                            ========
     public DocumentMap findDocumentMap(String projectName) {
-        final File documentDefinitionMap = dfpropPhysicalLogic.findDfpropFile(projectName, "documentMap.dfprop");
+        final File documentDefinitionMap = dfpropPhysicalLogic.findDfpropFileExisting(projectName, "documentMap.dfprop");
         final Map<String, Object> readMap = readMap(documentDefinitionMap);
         return prepareDocumentMapInner(readMap);
     }
