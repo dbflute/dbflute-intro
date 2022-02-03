@@ -63,71 +63,113 @@
   </style>
 
   <script>
+    // #thinking ここの定義順って何か決まりある？関連し合ってるもの同士をくっつけたいと思っちゃったけど by jflute (2022/01/28)
+    // 例えば、import _ApiFactory の直後に new _ApiFactory() を持って来たい
     let riot = require('riot')
     import _ApiFactory from '../../common/factory/ApiFactory.js'
     import _DbfluteTask from '../../common/DbfluteTask'
+
+    // playsql配下のSQLのハイライトのため
     import Prism from 'prismjs'
     import 'prismjs/components/prism-sql.min'
     import 'prismjs/themes/prism.css'
 
+    // #thinking アンダースコアでクラス定義を連れてきて、newした変数はクラス名そのままが慣習？ by jflute (2022/01/28)
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
+    
+    // ドロップダウンのデフォルト選択肢
+    // #thinking 後に簡単にconcat()するためにArrayになってるけど...defaultItemsって変数名じゃダメ？ by jflute (2022/01/28)
     const defaultItem = [{label: '-', value: null}]
+
+    // #thinking そもそもthisをselfとして保持する意味ってなんだっけ？(実装場所どこでも、ここのthisが参照できるように？) by jflute (2022/02/02)
     let self = this
     this.playsqlDropDownItems = {}
 
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    /**
+     * マウント時の処理。
+     */
     this.on('mount', () => {
       self.prepareSettings(self.opts.projectName)
       self.preparePlaysql(self.opts.projectName)
       self.prepareComponents()
     })
 
+    /**
+     * DBFluteクライアントの基本設定情報を準備する。
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
+     */
     this.prepareSettings = (projectName) => {
+      // #thinking これって、ReplaceSchema画面領域じゃなくて共通領域での表示のための処理でいいのかな？ by jflute (2022/01/28)
       ApiFactory.settings(projectName).then(json => {
         self.client = json
         self.update()
       })
     }
 
+    /**
+     * ReplaceSchemaのディレクトリであるplaysqlに関する表示領域を準備する。(SQLファイルのドロップダウンなど)
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
+     */
     this.preparePlaysql = (projectName) => {
+      // #thinking jsonって変数名でいいの？List<PlaysqlBean>がJSONになってるんだけど...業務的な名前を付けない？ by jflute
       ApiFactory.playsqlBeanList(projectName).then(json => {
+        // #thinking この value 何やってんの？SQL文字列自体を埋め込んでたりする？ by jflute
         const playsqlDropDownItems = json.map(obj => ({
           label: obj.fileName,
           value: `<span style="display: none;">${obj.fileName}</span>` + Prism.highlight(obj.content, Prism.languages.sql, 'sql')
         }))
+        // デフォルト選択肢(未選択)とガッチャンコしてItemsセット
         self.playsqlDropDownItems = defaultItem.concat(playsqlDropDownItems)
         self.update()
       })
     }
 
+    /**
+     * その他画面コンポーネントを準備する。(実行結果の領域など)
+     */
     this.prepareComponents = () => {
+      // self.latestResultがlatest-resultタグと関連付いてマウントされる
+      // #thinking riot.mount()後の[0]はなんだ？mountってArrayで戻ってくるの？ by jflute
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'replaceSchema' })[0]
     }
 
     // ===================================================================================
     //                                                                               Modal
     //                                                                               =====
-    // -----------------------------------------------------
-    //                                            Definition
-    //                                            ----------
+    /**
+     * 実行中のモーダルダイアログ用のオブジェクト。
+     * #thinking 指定できるプロパティを知るのにはソースコードを参照するでOK？ by jflute
+     * https://github.com/black-trooper/semantic-ui-riot/blob/master/tags/modal/su-modal.riot
+     */
     this.executeModal = {
+      // 実行が終わるまでは閉じれないようにする (ダイアログ外をクリックされてもダイアログが消えないように)
       closable: false
     }
-    
+
     // ===================================================================================
     //                                                                       Open Document
     //                                                                       =============
+    /**
+     * dataディレクトリのオープン処理。(例えばMacならFinderが開く)
+     * もうここはローカル起動してるJavaサーバーにお任せ。
+     */
     this.openDataDir = () => {
       ApiFactory.openDataDir(self.opts.projectName)
     }
-    
+
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
+    /**
+     * ReplaceSchemaタスクの実行。
+     * コマンドラインのときのy/nの代わりに確認ダイアログを出すようにしている。
+     */
     this.replaceSchemaTask = () => {
+	  // #thinking suConfirm()ってどこにも定義されていないけど、SemanticUIってこういう感じでいきなり使えるのかな？ by jflute (2022/02/02)
       this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('replaceSchema', self.opts.projectName, (message) => {
