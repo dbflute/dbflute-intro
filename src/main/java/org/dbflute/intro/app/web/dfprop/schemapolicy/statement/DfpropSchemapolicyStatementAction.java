@@ -71,6 +71,10 @@ public class DfpropSchemapolicyStatementAction extends IntroBaseAction {
     @Execute
     public JsonResponse<Void> move(String projectName, DfpropMoveSchemaPolicyStatementBody body) {
         validate(body, messages -> moreValidate(messages, body.mapType));
+        // 移動元と移動先のindexが一致する場合は何もせず200でレスポンスする
+        if (body.fromIndex.equals(body.toIndex)) {
+            return JsonResponse.asEmptyBody();
+        }
         SubjectableMapType mapType = SubjectableMapType.codeOf(body.mapType);
         dfpropSchemaPolicyUpdateLogic.moveSchemaPolicyStatement(projectName, mapType, body.fromIndex, body.toIndex);
         return JsonResponse.asEmptyBody();

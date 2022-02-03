@@ -15,12 +15,11 @@
  */
 package org.dbflute.intro.app.logic.dfprop.schemapolicy;
 
-import static org.dbflute.intro.mylasta.appcls.AppCDef.*;
+import static org.dbflute.intro.mylasta.appcls.AppCDef.SubjectableMapType;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -28,6 +27,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.dfprop.schemapolicy.file.DfpropSchemaPolicyFileReplaceLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyStatement;
+import org.dbflute.intro.bizfw.tellfailure.SchemaPolicyStatementOutOfIndexException;
 import org.dbflute.util.DfCollectionUtil;
 
 /**
@@ -131,9 +131,9 @@ public class DfpropSchemaPolicyUpdateLogic {
     }
 
     private List<String> moveStatements(List<String> baseStatements, Integer fromIndex, Integer toIndex) {
-        // 並び替え元、先のindexが一致 または 並び替え元 or 先のいずれかのindexが存在しない場合は何もしないで終了
-        if (Objects.equals(fromIndex, toIndex) || baseStatements.size() < fromIndex || baseStatements.size() < toIndex) {
-            return baseStatements;
+        if (baseStatements.size() < fromIndex || baseStatements.size() < toIndex) {
+            throw new SchemaPolicyStatementOutOfIndexException("The index of the statement is out of range",
+                    "statement size is " + baseStatements.size() + ", but fromIndex=" + fromIndex + ", toIndex=" + toIndex);
         }
         return DfCollectionUtil.moveElementToIndex(baseStatements, fromIndex, toIndex);
     }
