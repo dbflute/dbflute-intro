@@ -1,10 +1,21 @@
 <schema-policy-check-statement-form-wrapper>
+  <!-- ClientのSchemaPolicyCheckのStatement追加フォームのラッパー (written at 2022/02/10)
+   機能:
+    o フォームを出したり閉じたりする
+
+   作りの特徴:
+    o フォーム本体は別tagに切り出し、ここではフォームの開閉の役割のみ担う
+   -->
+
+  <!-- フォームを開閉するボタン -->
   <a onclick="{ toggleForm }" show="{ !state.showForm }">
     Add Statement
   </a>
   <a onclick="{ toggleForm }" show="{ state.showForm }">
     Hide Form
   </a>
+
+  <!-- Statement追加フォーム本体 -->
   <div class="ui divided items segment" show="{ state.showForm }">
     <schema-policy-check-statement-form
       ref="statementFormComponent"
@@ -27,6 +38,9 @@
       showForm: false
     }
 
+    /**
+     * マウント時の処理。
+     */
     self.on('mount', () => {
       self.update()
     })
