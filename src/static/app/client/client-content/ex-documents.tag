@@ -1,4 +1,20 @@
 <ex-documents>
+   <!-- ClientのSchemaPolicyCheckのStatement追加のExpected項目のdcumentリンク (written at 2022/02/10)
+   機能:
+    o SchemaHTML が存在する場合、リンクが表示されており、そこから開くことができる
+    o HistoryHTML が存在する場合、リンクが表示されており、そこから開くことができる
+    o documentMap.dfprop を編集することができる
+    o DBFlute Engine に Gererate Task を実行させることができる
+    o Generate Task の実行結果を確認することができる
+
+   作りの特徴:
+    o DBFlute Enginge が提供するドキュメント関連の機能のうち、DBFlute Introで操作可能なものは、全てこの tag の中に記述されている
+    o 「window.open」によって、SchemaHTML, HistoryHTML を開くようになっている
+    o Modal で documentMap.dfprop させる
+    o Generate Task の実行中は、別の操作を抑制するための Modal を表示している
+    o Generate Task の実行後は、結果を Modal で表示し、ログを改めて参照できるようにしている
+    o Generate Task は管理しているデータベースに変更を加えないので、実行前の確認は行わない
+   -->
   <div class="ui container">
     <h2>Documents</h2>
     <div class="ui list">
@@ -87,12 +103,18 @@
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    /**
+     * マウント時の処理
+     */
     this.on('mount', () => {
       self.prepareCurrentProject()
       self.prepareComponents()
       self.registerModalEvent()
     })
 
+    /**
+     * DBFluteクライアントの基本設定情報を準備する。
+     */
     this.prepareCurrentProject = () => {
       ApiFactory.document(self.opts.projectName).then((response) => {
         self.documentSettingModal.documentSetting = response
@@ -100,10 +122,19 @@
       })
     }
 
+    /**
+     * その他画面コンポーネントを準備する。(実行結果の領域など)
+     */
     this.prepareComponents = () => {
+      // self.latestResultがlatest-resultタグと関連付いてマウントされる
+      // #thinking riot.mount()後の[0]はなんだ？mountってArrayで戻ってくるの？ by cabos
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'doc' })[0]
     }
 
+    /**
+     * documentMap.dfprop が編集できる Modal の OK ボタンが押されたときの挙動を登録する
+     * 登録される挙動は「Modal 内にある form の input から value 等を抜き出し、バックエンドのAPIにリクエストを送信する」というもの
+     */
     this.registerModalEvent = () => {
       this.refs.documentSettingModal.on('editDocumentSettings', () => {
         const documentStringModalRefs = self.refs.documentSettingModal.refs
@@ -125,6 +156,9 @@
     // -----------------------------------------------------
     //                                            Definition
     //                                            ----------
+    /**
+     * documentMap.dfprop を編集するための Modal 初期設定
+     */
     this.documentSettingModal = {
       header: 'Document Settings (documentMap.dfprop, littleAdjustmentMap.dfprop)',
       closable: true,
@@ -137,6 +171,9 @@
       documentSetting: {}
     }
 
+    /**
+     * DBFlute が Generate Taks を実行している間に見せる Modal の初期設定
+     */
     this.generateModal = {
       closable: false
     }
@@ -144,6 +181,10 @@
     // -----------------------------------------------------
     //                                                  Show
     //                                                  ----
+    /**
+     * documentMap.dfprop を編集するための Modal を表示する
+     * ユーザが「Edit document settings」というボタンをクリックときに呼び出される
+     */
     this.showDocumentSettingModal = () => {
       self.refs.documentSettingModal.show()
     }
@@ -151,10 +192,18 @@
     // ===================================================================================
     //                                                                       Open Document
     //                                                                       =============
+    /**
+     * schemahtml のリンクを開く
+     * 「Open your SchemaHTML」というリンクをクリックすると呼び出される
+     */
     this.openSchemaHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
 
+    /**
+     * historyhtml のリンクを開く
+     * 「Open your historyHTML」というリンクをクリックすると呼び出される
+     */
     this.openHistoryHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
     }
@@ -162,6 +211,12 @@
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
+    /**
+     * DBFlute Engine に Generate Taks を実行させるためのリクエストをバックエンドに送信する
+     * Generate Task の処理中、他の操作を抑制するための Modal を表示させている
+     * Generate Task の処理後、Modal を処理結果のもとに差し替え、最終実行ログを画面に表示する
+     * 「Generate documents ( jdbc/doc task )」というボタンをクリックすると呼び出される
+     */
     this.generateTask = () => {
       self.refs.generateModal.show()
       DbfluteTask.task('doc', self.opts.projectName, (message) => {
