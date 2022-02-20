@@ -1,4 +1,13 @@
 <ex-schema-policy-check>
+  <!-- ClientのSchemaPolicyCheckの実行画面 (written at 2022/02/20)
+   機能:
+    o SchemaPolicyCheckを実行し、結果を表示する。
+    o PolicySettingsの状態を表示する。
+
+   作りの特徴:
+    o 実行中はモーダルを表示して他の操作をできなくしている。
+    o PolicySettingsのチェックボックスの状態を変化させることでSchemaPolicyMapを編集することができる。
+   -->
   <div class="ui container">
     <h2>Schema Policy Check</h2>
     <button class="ui primary button" onclick="{ schemaPolicyCheckTask }">Execute SchemaPolicyCheck ( doc task )</button>
@@ -6,9 +15,13 @@
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"SchemaPolicyCheck"?</a></div>
       <p>A checking tool for DB design, embedded with <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/index.html" target="_blank">Doc task</a>.</p>
     </div>
+
+    <!-- 最新の実行結果 -->
     <div class="latest-result">
-      <latest-result></latest-result>
+      <latest-result project-name ="{ projectName }" task="doc" ref="latestResult"></latest-result>
     </div>
+    
+    <!-- Policy Settings -->
     <h3>Policy Settings</h3>
     <div class="ui segment" title="SchemaPolicy">
       <div class="ui form">
@@ -21,6 +34,7 @@
               projectname="{ projectName }"
               onregistersuccess="{ onRegisterSuccess }"
             >
+              <!-- Whole Schema Policy -->
               <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
                 <h5 class="spolicy-category">Theme</h5>
                 <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
@@ -37,6 +51,8 @@
                   </div>
                 </div>
               </su-tab>
+
+              <!-- Table Schema Policy -->
               <su-tab
                 label="{ opts.tabtitles['tableMap']}"
                 schemapolicy="{ opts.schemapolicy }"
@@ -60,6 +76,7 @@
                 <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
                     <div class="statement content">
+                      <!-- statementにコメントが含まれていなければそのまま表示し、含まれていたら、statementとコメントをそれぞれ抜粋して表示する -->
                       <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
                         { statement }
                       </div>
@@ -79,6 +96,8 @@
                   onregistersuccess="{ opts.onregistersuccess }"
                 />
               </su-tab>
+
+              <!-- Column Schema Policy -->
               <su-tab
                 label="{ opts.tabtitles['columnMap']}"
                 schemapolicy="{ opts.schemapolicy }"
@@ -103,6 +122,7 @@
                 <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
                   <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
                     <div class="statement content">
+                      <!-- statementにコメントが含まれていなければそのまま表示し、含まれていたら、statementとコメントをそれぞれ抜粋して表示する -->
                       <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
                         { statement }
                       </div>
@@ -129,6 +149,7 @@
     </div>
   </div>
 
+  <!-- Executeボタンを押したときに表示されるモーダル -->
   <su-modal modal="{ checkModal }" class="large" ref="checkModal">
     <div class="content" if="{opts.modal.status === 'Check'}">
       <div class="header" >{ opts.modal.message }</div>
@@ -171,70 +192,47 @@
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    /**
+     * マウント処理
+     */
     this.on('before-mount', () => {
       self.projectName = opts.projectName
     })
 
+    /**
+     * マウント処理
+     */
     this.on('mount', () => {
       this.prepareSchemaPolicy(opts.projectName)
       this.prepareComponents(opts.projectName)
     })
 
+    /**
+     * schemaPolicyを初期化する。
+     * @param {string} projectName - プロジェクト名. (NotNull)
+     */
     this.prepareSchemaPolicy = (projectName) => {
       self.fetchSchemaPolicy(projectName)
     }
 
+    /**
+     * latestResultを初期化する。
+     * @param {string} projectName - プロジェクト名. (NotNull)
+     */
     this.prepareComponents = (projectName) => {
-      self.latestResult = riot.mount('latest-result', { projectName: projectName, task: 'doc' })[0]
+      self.latestResult = self.refs.latestResult
       self.updateLatestResult(self.client)
     }
 
-    this.onRegisterSuccess = () => {
-      self.fetchSchemaPolicy(opts.projectName)
-    }
-
-    this.updateLatestResult = (client) => {
-      if (!self.latestResult) {
-        return
-      }
-      if (client.violatesSchemaPolicy) {
-        self.latestResult.failure = {
-          title: 'Result: Failure',
-          link: {
-            message: 'Open your SchemaPolicyCheck result (HTML)',
-            clickAction: self.openSchemaHTML
-          }
-        }
-      }
-      self.latestResult.updateLatestResult()
-    }
-
-    this.isIncludeComment = (statement) => {
-      return statement.includes('=>')
-    }
-
-    this.extractStatement = (statement) => {
-      if (!self.isIncludeComment(statement)) {
-        return statement
-      }
-      const splitStatements = statement.split('=>')
-      return splitStatements[0]
-    }
-
-    this.extractComment = (statement) => {
-      if (!self.isIncludeComment(statement)) {
-        return ''
-      }
-      const splitStatements = statement.split('=>')
-      return splitStatements[1]
-    }
-
     // ===================================================================================
-    //                                                                               Modal
-    //                                                                               =====
+    //                                                                          Definition
+    //                                                                          ==========
     // -----------------------------------------------------
-    //                                            Definition
-    //                                            ----------
+    //                                                 Modal
+    //                                                 -----
+    /**
+     * モーダルに表示する情報の定義
+     */
     this.checkModal = {
       header : 'SchemaPolicyCheck',
       status : 'Check',
@@ -256,6 +254,12 @@
       }
     }
 
+    // -----------------------------------------------------
+    //                                       Policy Settings
+    //                                       ---------------
+    /**
+     * PolicySettingsに並べるタブの名前の定義
+     */
     this.tabTitles = {
       wholeMap : 'Whole Schema Policy',
       tableMap : 'Table Schema Policy',
@@ -265,6 +269,11 @@
     // ===================================================================================
     //                                                                     Client Handling
     //                                                                     ===============
+    /**
+     * SchemaPolicyMapを編集する。
+     * @param {string} targetMap - 編集対象となるマップ種別 (NotNull)
+     * @param {string} typeCode - themeを一意に特定するコード (NotNull)
+     */
     this.editSchemaPolicyMap = (targetMap, typeCode) => {
       const targetTheme = this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode)
       const toggledActiveStatus = !targetTheme.isActive
@@ -281,16 +290,61 @@
         self.update()
       })
     }
+
+    /**
+     * statementにコメントが含まれているかどうかを返す。
+     * @param {string} statement - statement文字列 (NotNull)
+     * @return {boolean} statementにコメントが含まれている場合はtrue (NotNull)
+     */
+    this.isIncludeComment = (statement) => {
+      return statement.includes('=>')
+    }
+
+    /**
+     * コメントが含まれるstatementからstatementを抜粋する。
+     * @param {string} statement - statement文字列 (NotNull)
+     * @return {string} statement文字列 (NotNull)
+     */
+    this.extractStatement = (statement) => {
+      if (!self.isIncludeComment(statement)) {
+        return statement
+      }
+      const splitStatements = statement.split('=>')
+      return splitStatements[0]
+    }
+
+    /**
+     * コメントが含まれるstatementからコメントを抜粋する
+     * @param {string} statement - statement文字列 (NotNull)
+     * @return {string} statement文字列 (NotNull)
+     */
+    this.extractComment = (statement) => {
+      if (!self.isIncludeComment(statement)) {
+        return ''
+      }
+      const splitStatements = statement.split('=>')
+      return splitStatements[1]
+    }
+
     // ===================================================================================
     //                                                                           Operation
     //                                                                           =========
+    /**
+     * SchemaPolicyを取得する。
+     * @param {string} projectName - プロジェクト名. (NotNull)
+     */
     this.fetchSchemaPolicy = (projectName) => {
       ApiFactory.schemaPolicy(projectName).then(json => {
         self.schemaPolicy = json
         self.update()
       })
     }
-
+    
+    /**
+     * SchemaPolicyを取得する。
+     * @param {string} mapType - 編集対象となるマップ種別 (NotNull)
+     * @param {string} statement - 削除対象のstatement
+     */
     this.deleteStatement = (mapType, statement) => {
       self.suConfirm('Are you sure to delete this statement?').then(() => {
         ApiFactory.deleteSchemapolicyStatement(opts.projectName, {mapType: mapType, statement: statement}).then(() => {
@@ -300,9 +354,42 @@
       })
     }
 
+    /**
+     * 登録完了時にSchemaPolicyを再取得し、更新する。
+     * @param {string} projectName - プロジェクト名. (NotNull)
+     */
+    this.onRegisterSuccess = () => {
+      self.fetchSchemaPolicy(opts.projectName)
+    }
+
+
+    /**
+     * 最新の実行結果を更新する。
+     * @param {string} client - クライアント名. (NotNull)
+     */
+    this.updateLatestResult = (client) => {
+      if (!self.latestResult) {
+        return
+      }
+      if (client.violatesSchemaPolicy) {
+        self.latestResult.failure = {
+          title: 'Result: Failure',
+          link: {
+            message: 'Open your SchemaPolicyCheck result (HTML)',
+            clickAction: self.openSchemaHTML
+          }
+        }
+      }
+      self.latestResult.updateLatestResult()
+    }
+
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
+    /**
+     * SchemaPolicyCheckを実行する。
+     * 進行状況にあわせてモーダルの文言を更新する。
+     */
     this.schemaPolicyCheckTask = () => {
       self.refs.checkModal.show()
       self.checkModal.check()
@@ -327,6 +414,9 @@
     // ===================================================================================
     //                                                                       Open Document
     //                                                                       =============
+    /**
+     * SchemaHTMLを開く。
+     */
     this.openSchemaHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
     }
