@@ -15,6 +15,10 @@
   </div>
 
   <script>
+    /**
+     * ファイルの表示・非表示を切り替えます
+     * @param file
+     */
     this.clickFileName = (file) => {
       file.show = !(file.show)
     }
