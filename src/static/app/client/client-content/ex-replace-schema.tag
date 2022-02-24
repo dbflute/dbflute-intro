@@ -118,6 +118,8 @@
      */
     this.preparePlaysql = (projectName) => {
       // #thinking jsonって変数名でいいの？List<PlaysqlBean>がJSONになってるんだけど...業務的な名前を付けない？ by jflute
+      // cabosから「ですね、 playsql とかそういう名前がいいんじゃないかなと思います」という意見を頂いた。
+      // https://github.com/dbflute/dbflute-intro/pull/357#discussion_r808981788
       ApiFactory.playsqlBeanList(projectName).then(json => {
         // #thinking この value 何やってんの？SQL文字列自体を埋め込んでたりする？ by jflute
         const playsqlDropDownItems = json.map(obj => ({
