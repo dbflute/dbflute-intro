@@ -20,8 +20,8 @@
   <style>
     .message-area {
       /*
-       ログはドデカ(too large)だから、収まらないときはスクロール
-       overflow | MDN :: https://developer.mozilla.org/ja/docs/Web/CSS/overflow
+       * ログはドデカ(too large)だから、収まらないときはスクロール
+       * overflow | MDN :: https://developer.mozilla.org/ja/docs/Web/CSS/overflow
        */
       overflow: scroll;
     }
