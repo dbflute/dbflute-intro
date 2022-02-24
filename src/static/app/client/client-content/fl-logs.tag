@@ -41,7 +41,7 @@
     const defaultItem = [{label: '-', value: null}]
     this.client = {} // existing clients
 
-    // labe:fileName, value:ログの中身
+    // label:fileName, value:ログの中身
     this.logDropDownItems = {}
 
     /**
