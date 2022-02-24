@@ -46,6 +46,7 @@
 
   <!-- documentMap.dfprop を編集するための Modal -->
   <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
+    <!-- documentMap.dfprop を編集するための form の実態 -->
     <form class="ui form">
       <div class="field">
         <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>
