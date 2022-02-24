@@ -104,6 +104,8 @@
      */
     this.prepareSettings = (projectName) => {
       // #thinking これって、ReplaceSchema画面領域じゃなくて共通領域での表示のための処理でいいのかな？ by jflute (2022/01/28)
+      // プルリクにて、そもそもシングルトンでいいんじゃないか？という話が出ている
+      // https://github.com/dbflute/dbflute-intro/pull/357#pullrequestreview-885860636
       ApiFactory.settings(projectName).then(json => {
         self.client = json
         self.update()
