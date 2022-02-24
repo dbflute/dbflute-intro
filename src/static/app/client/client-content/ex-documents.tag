@@ -1,5 +1,5 @@
 <ex-documents>
-   <!-- ClientのSchemaPolicyCheckのStatement追加のExpected項目のdcumentリンク (written at 2022/02/10)
+   <!-- ClientのSchemaPolicyCheckのStatement追加のExpected項目のdocumentリンク (written at 2022/02/10)
    機能:
     o SchemaHTML が存在する場合、リンクが表示されており、そこから開くことができる
     o HistoryHTML が存在する場合、リンクが表示されており、そこから開くことができる
