@@ -138,6 +138,8 @@
     this.prepareComponents = () => {
       // self.latestResultがlatest-resultタグと関連付いてマウントされる
       // #thinking riot.mount()後の[0]はなんだ？mountってArrayで戻ってくるの？ by jflute
+      // プルリクにて説明もらった。そして、そもそもmount自体が不要という話があって、ぷるぷるの話に期待したい。
+      // https://github.com/dbflute/dbflute-intro/pull/357#discussion_r810497067
       self.latestResult = riot.mount('latest-result', { projectName: self.opts.projectName, task: 'replaceSchema' })[0]
     }
 
