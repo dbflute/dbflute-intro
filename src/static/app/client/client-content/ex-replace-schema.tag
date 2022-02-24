@@ -150,6 +150,8 @@
      * 実行中のモーダルダイアログ用のオブジェクト。
      * #thinking 指定できるプロパティを知るのにはソースコードを参照するでOK？ by jflute
      * https://github.com/black-trooper/semantic-ui-riot/blob/master/tags/modal/su-modal.riot
+     * プルリクにてコメントもらった。プロパティを全体的に知りたいときはソースコード参照が早いかも？と。
+     * https://github.com/dbflute/dbflute-intro/pull/357#discussion_r810497513
      */
     this.executeModal = {
       // 実行が終わるまでは閉じれないようにする (ダイアログ外をクリックされてもダイアログが消えないように)
