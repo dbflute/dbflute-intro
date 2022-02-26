@@ -177,10 +177,10 @@
      * コマンドラインのときのy/nの代わりに確認ダイアログを出すようにしている。
      */
     this.replaceSchemaTask = () => {
-	  // done suConfirm()ってどこにも定義されていないけど、SemanticUIってこういう感じでいきなり使えるのかな？ by jflute (2022/02/02)
-	  // プルリクにてコメントもらった。mixinで宣言されているからだそうだ。
-	  // 「実は index.jsで読み込んでいる semantic-ui-riot.js の中でこの前話に出たmixinとして既に宣言されています」
-	  // https://github.com/dbflute/dbflute-intro/pull/357#discussion_r810500419
+    // done suConfirm()ってどこにも定義されていないけど、SemanticUIってこういう感じでいきなり使えるのかな？ by jflute (2022/02/02)
+    // プルリクにてコメントもらった。mixinで宣言されているからだそうだ。
+    // 「実は index.jsで読み込んでいる semantic-ui-riot.js の中でこの前話に出たmixinとして既に宣言されています」
+    // https://github.com/dbflute/dbflute-intro/pull/357#discussion_r810500419
       this.suConfirm('Are you sure to execute Replace Schema task?').then(() => {
         self.refs.executeModal.show()
         DbfluteTask.task('replaceSchema', self.opts.projectName, (message) => {
