@@ -87,6 +87,7 @@
      * 親から選択されている clientMenuType, clientMenuName を受け取り、メニューの行が、active かどうかを判断している
      * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
      * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
+     * @return {boolean} 現在選択されているメニューであれば true (NotNull)
      */
     this.isActiveItem = (menuType, menuName) => {
       return menuType === this.opts.clientMenuType && menuName === this.opts.clientMenuName
