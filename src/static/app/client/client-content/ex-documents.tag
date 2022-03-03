@@ -1,5 +1,5 @@
 <ex-documents>
-   <!-- ClientのSchemaPolicyCheckのStatement追加のExpected項目のdocumentリンク (written at 2022/02/10)
+   <!-- DBFlute の Document 機能をGUIで操作できるようにするタグ (written at 2022/03/03)
    機能:
     o SchemaHTML が存在する場合、リンクが表示されており、そこから開くことができる
     o HistoryHTML が存在する場合、リンクが表示されており、そこから開くことができる
@@ -10,7 +10,7 @@
    作りの特徴:
     o DBFlute Enginge が提供するドキュメント関連の機能のうち、DBFlute Introで操作可能なものは、全てこの tag の中に記述されている
     o 「window.open」によって、SchemaHTML, HistoryHTML を開くようになっている
-    o Modal で documentMap.dfprop させる
+    o Modal で documentMap.dfprop を編集させる
     o Generate Task の実行中は、別の操作を抑制するための Modal を表示している
     o Generate Task の実行後は、結果を Modal で表示し、ログを改めて参照できるようにしている
     o Generate Task は管理しているデータベースに変更を加えないので、実行前の確認は行わない
@@ -208,7 +208,7 @@
     /**
      * schemahtml のリンクを開く
      * 「Open your SchemaHTML」というリンクをクリックすると呼び出される
-     * ちなみに、「global.ffetch.baseUrl」の中身は空文字
+     * ちなみに、「global.ffetch.baseUrl」の中身は空文字（baseUrlをプロジェクト全体で統一的に設定できるっぽい）
      */
     this.openSchemaHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/schemahtml/')
@@ -217,7 +217,7 @@
     /**
      * historyhtml のリンクを開く
      * 「Open your historyHTML」というリンクをクリックすると呼び出される
-     * ちなみに、「global.ffetch.baseUrl」の中身は空文字
+     * ちなみに、「global.ffetch.baseUrl」の中身は空文字（baseUrlをプロジェクト全体で統一的に設定できるっぽい）
      */
     this.openHistoryHTML = () => {
       window.open(global.ffetch.baseUrl + 'api/document/' + self.opts.projectName + '/historyhtml/')
@@ -240,6 +240,8 @@
         self.refs.resultModal.show(message)
       }).finally(() => {
         // schemaHTML, historyHTML が存在するかどうかの情報をサーバから取得する
+        // 将来的には、存在するかどうかの情報を Propbase とは別のAPIに切り出すリファクタリングを行う予定
+        // https://github.com/dbflute/dbflute-intro/issues/260
         ApiFactory.clientPropbase(self.opts.projectName).then((response) => {
           self.client = response
           self.update()
