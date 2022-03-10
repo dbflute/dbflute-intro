@@ -1,8 +1,8 @@
 <client-menu>
-  <!--
+  <!-- DBFlute Intro のクライアント画面で表示される左側メニュー  (written at 2022/03/10)
     機能:
       o DBFlute Intro 画面全体の左側のメニュー
-        o のうち、クライアントが選択されているときに表示されるもの
+      o のうち、クライアントが選択されているときに表示されるもの
 
       作りの特徴:
       o 現在選択されているメニューの情報を親から受け取り、active かどうかを判断している
@@ -98,10 +98,10 @@
      * この変更に対応して、index.js の処理により、tagのマウントのされ方が変わる
      * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
      * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
-     * @see dbflute-intro/src/static/app/index.js@157
+     * @see dbflute-intro/src/static/app/index.js@157 (riot6移行時にコードが移動するかも！？)
      */
     this.goToMenuItem = (menuType, menuName) => {
-      // #thinking rooting に関する情報、探しやすいように切り出してあげたい by cabos (2022/02/26)
+      // #thinking routing に関する情報、探しやすいように切り出してあげたい by cabos (2022/02/26)
       // （ただし大規模な修正になるので今やることではない）
       route(`client/${this.opts.projectName}/${menuType}/${menuName}`)
     }

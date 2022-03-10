@@ -1,5 +1,5 @@
 <common-menu>
-  <!--
+  <!-- DBFlute Intro のクライアント選択画面のメニュー以外の部分 (written at 2022/03/10)
     機能:
       o DBFlute Intro 画面全体の左側のメニュー
         o のうち、クライアントが選択されて無いときに表示されるもの

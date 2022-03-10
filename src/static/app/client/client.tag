@@ -1,5 +1,5 @@
 <client>
-  <!--
+  <!-- DBFlute Intro のクライアント画面のメニュー以外の部分 (written at 2022/03/10)
     機能:
       o DBFluteのクライアント機能全般を提供する
       o この tag で実施しているのは、どの機能を表示するのか切り替えることだけ
@@ -60,7 +60,7 @@
       const menuType = this.opts.clientMenuType
       const menuName = this.opts.clientMenuName
 
-      // #thinking 実質 rooting に関する情報、探しやすいように切り出してあげたい  by cabos (2022/02/26)
+      // #thinking 実質 routing に関する情報、探しやすいように切り出してあげたい  by cabos (2022/02/26)
       // （ただし大規模な修正になるので今やることではない）
       if (menuType === 'execute' && menuName === 'documents') {
         // tagName に入れる文字列は、client-content ディレクトリ配下のtag名から拡張子を抜いたものと一致している
