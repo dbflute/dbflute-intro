@@ -288,7 +288,7 @@
     //                                                                     ===============
     /**
      * SchemaPolicyMapを編集する。
-     * @param {string} targetMap - 編集対象となるマップ種別 (NotNull)
+     * @param {string} targetMap - 編集対象となるマップ種別 (NotNull, only 'tableMap', 'columnMap')
      * @param {string} typeCode - themeを一意に特定するコード (NotNull)
      */
     this.editSchemaPolicyMap = (targetMap, typeCode) => {
@@ -319,6 +319,10 @@
 
     /**
      * コメントが含まれるstatementからstatementを抜粋する。
+     * e.g.
+     * [param] ; if columnName is suffix:_ID then alias is pattern:.+ID(\(.+\))?$ => IDカラムなら論理名は "なんとかID" にしよう
+     * [return] ; if columnName is suffix:_ID then alias is pattern:.+ID(\(.+\))?$
+     *
      * @param {string} statement - statement文字列 (NotNull)
      * @return {string} statement文字列 (NotNull)
      */
@@ -332,6 +336,10 @@
 
     /**
      * コメントが含まれるstatementからコメントを抜粋する
+     * e.g.
+     * [param] ; if columnName is suffix:_ID then alias is pattern:.+ID(\(.+\))?$ => IDカラムなら論理名は "なんとかID" にしよう
+     * [return] IDカラムなら論理名は "なんとかID" にしよう
+     *
      * @param {string} statement - statement文字列 (NotNull)
      * @return {string} statement文字列 (NotNull)
      */
