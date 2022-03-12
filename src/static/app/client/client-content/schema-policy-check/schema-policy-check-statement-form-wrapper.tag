@@ -38,6 +38,7 @@
       showForm: false
     }
 
+    // #thinking この空っぽのマウントは必要なのか？ by prprmurakami (2022/03/12)
     /**
      * マウント時の処理。
      */

@@ -7,6 +7,14 @@
    作りの特徴:
     o 実行中はモーダルを表示して他の操作をできなくしている。
     o PolicySettingsのチェックボックスの状態を変化させることでSchemaPolicyMapを編集することができる。
+
+   tagの階層
+    ex-schema-policy-check.tag
+    |- schema-policy-check-statement-form-wrapper
+       |- schema-policy-check-statement-form
+          |- schema-policy-check-statement-form-expected
+             |- schema-policy-check-statement-form-docuement-link
+             |- schema-policy-check-statement-form-expected-field
    -->
   <div class="ui container">
     <h2>Schema Policy Check</h2>
@@ -18,6 +26,9 @@
 
     <!-- 最新の実行結果 -->
     <div class="latest-result">
+      <!-- もともとjsの方でpropsを渡していたが、(this.prepareComponents)
+      projectName -> project-name というようにケバブケースを使用すれば
+      タグを書くところでpropsを渡せることが判明したので修正した。 by prprmurakami (2022/03/12) -->
       <latest-result project-name ="{ projectName }" task="doc" ref="latestResult"></latest-result>
     </div>
     
@@ -193,9 +204,12 @@
     //                                                                          Initialize
     //                                                                          ==========
     /**
-     * マウント処理
+     * マウント前に実行する処理
+     * 詳しくはこちら
+     * https://v3.riotjs.vercel.app/guide/#tag-lifecycle
      */
     this.on('before-mount', () => {
+      // # thinking どうしてこの処理はbeforemountじゃないといけないんだろう？ by prprmurakami (2022/03/12)
       self.projectName = opts.projectName
     })
 
@@ -220,6 +234,9 @@
      * @param {string} projectName - プロジェクト名. (NotNull)
      */
     this.prepareComponents = (projectName) => {
+      // もともと
+      // self.latestResult = riot.mount('latest-result', { projectName: projectName, task: 'doc' })[0]
+      // となっていたが、タグを書くところでprops渡せることがわかったので修正。by prprmurakami (2022/03/12)
       self.latestResult = self.refs.latestResult
       self.updateLatestResult(self.client)
     }
@@ -341,7 +358,7 @@
     }
     
     /**
-     * SchemaPolicyを取得する。
+     * SchemaPolicyを削除する。
      * @param {string} mapType - 編集対象となるマップ種別 (NotNull)
      * @param {string} statement - 削除対象のstatement
      */
