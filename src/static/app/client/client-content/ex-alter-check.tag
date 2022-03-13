@@ -139,7 +139,7 @@
 
     /**
      * AlterCheck関連の情報をAPIで取得します
-     * @param projectName プロジェクト名
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      * @return {Promise} AlterCheck関連の情報（存在しているファイルなど）
      */
     this.prepareAlterInfo = (projectName) => {
