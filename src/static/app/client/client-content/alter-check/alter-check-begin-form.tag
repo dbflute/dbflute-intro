@@ -1,4 +1,5 @@
 <alter-check-begin-form>
+  <!-- 新しいAlterDDLを作成するフォーム (written at 2022/03/13) -->
   <h4>Begin New AlterCheck!!</h4>
   <form class="ui form">
     <div class="fields">

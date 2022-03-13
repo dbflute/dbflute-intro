@@ -1,4 +1,15 @@
 <ex-alter-check>
+  <!-- ClientのAlterCheck画面 (written at 2022/03/13)
+  機能:
+   o AlterCheckが実行できる
+   o 2Stepに分けて処理を行える
+   o Step1ではAlterDDLの用意を行う。未リリースのAlterDDLがある場合はそれも表示される
+   o Step2ではAlterDDLの実行を行う。編集中のDDLが他にもあればそれも表示される
+  作りの特徴:
+   o Stepの切り替えは編集中のAlterDDLファイルが存在するかしないかによって切り替わる
+   o SQLファイルの一覧のためにドロップダウンを利用している
+   o prism.jsを使ってSQLのハイライトを実現している
+  -->
   <div class="ui container">
     <h2>AlterCheck</h2>
 
@@ -9,14 +20,14 @@
 
     <div class="ui divider"></div>
 
-    <!-- Step 1 -->
+    <!-- Step 1: AlterDDLの用意 -->
     <section if="{ !isEditing() }">
       <h3>Step1. Prepare alter sql</h3>
       <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
       <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
     </section>
 
-    <!-- Step 2 -->
+    <!-- Step 2: AlterCheckの実行 -->
     <section show="{ isEditing() }">
       <h3>Step2. Execute AlterCheck</h3>
 
@@ -25,12 +36,12 @@
           <!-- 押下された alter sql ファイルの表示・非表示を切り替える。また、STEP1で作成されたファイルには印をつけて表示する -->
           <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
           <div show="{ alterItem.show }" class="ui message message-area">
-          <!-- 改行などが反映されるようにpreタグを利用 -->
-          <pre>
-            <code>
-              <raw content="{ alterItem.content }"></raw>
-            </code>
-          </pre>
+            <!-- SQLの改行やインデントが反映されるようにpreタグを利用
+              <pre><code>...</code></pre> は一行で記述しないと余分な改行やインデントが入ってしまうので注意
+              cssのwhite-spaceを利用するとSQLの先頭に記述したインデントが効かなくなるのでこうするしかなさそう...
+              #thinking: <pre><code>...</code></pre>を含めて共通のコンポーネントにした方が良い by hakiba
+            -->
+            <pre><code><raw content="{ alterItem.content }"></raw></code></pre>
           </div>
         </div>
       </div>
@@ -108,10 +119,16 @@
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    /**
+     * マウント時の処理
+     */
     this.on('mount', () => {
       self.updateContents()
     })
 
+    /**
+     * クライアントの基本情報を取得します
+     */
     // done cabos remove this because this method replace parent object
     // fix this issue https://github.com/dbflute/dbflute-intro/issues/260
     this.prepareClient = () => {
@@ -146,8 +163,7 @@
       self.alter.editingFiles.forEach(file => {
         self.editingSqls.push({
           fileName: file.fileName,
-          // sqlファイル表示時に余白を用意するために改行(\n)を予め入れておく（多分そういう目的）
-          content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
+          content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })
       })
@@ -272,6 +288,9 @@
     // -----------------------------------------------------
     //                                            Definition
     //                                            ----------
+    /**
+     * AlterCheck実行時のモーダルの設定値
+     */
     this.executeModal = {
       closable: false
     }
