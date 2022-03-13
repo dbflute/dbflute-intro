@@ -354,7 +354,7 @@
       ApiFactory.createAlterSql(self.opts.projectName, alterFileName)
         .then(() => {
           self.preparedFileName = alterFileName
-          // thinking: この関数呼び出し多分デッドコードになっている。本当はalter-check-formのprepareAlterCheckを呼び出したい？
+          // #thinking: この関数呼び出し多分デッドコードになっている。本当はalter-check-formのprepareAlterCheckを呼び出したい？
           self.prepareAlterCheck()
         })
     }
