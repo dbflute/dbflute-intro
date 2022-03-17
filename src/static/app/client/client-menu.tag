@@ -2,6 +2,7 @@
   <!-- DBFlute Intro のクライアント画面で表示される左側メニュー  (written at 2022/03/10)
     機能:
       o DBFlute Intro 画面全体の左側のメニュー
+      o urlだと、「#client/${clientName}/*」に当たる画面
       o のうち、クライアントが選択されているときに表示されるもの
 
       作りの特徴:

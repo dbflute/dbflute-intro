@@ -1,8 +1,7 @@
 <common-menu>
-  <!-- DBFlute Intro のクライアント選択画面のメニュー以外の部分 (written at 2022/03/10)
+  <!-- 初期設定済み DBFlute Intro のトップ画面のメニュー部分 (written at 2022/03/10)
     機能:
-      o DBFlute Intro 画面全体の左側のメニュー
-        o のうち、クライアントが選択されて無いときに表示されるもの
+      o 初期設定済み DBFlute Intro のトップ画面の左側のメニュー
       o DBFlute のドキュメントへのリンクになっている
 
       作りの特徴:

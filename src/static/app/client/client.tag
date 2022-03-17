@@ -2,6 +2,7 @@
   <!-- DBFlute Intro のクライアント画面のメニュー以外の部分 (written at 2022/03/10)
     機能:
       o DBFluteのクライアント機能全般を提供する
+      o urlだと、「#client/${clientName}/*」に当たる画面
       o この tag で実施しているのは、どの機能を表示するのか切り替えることだけ
 
       作りの特徴:
@@ -82,7 +83,7 @@
         // まるっと、<client-content></client-content> の中身を差し替えている
         riot.mount('client-content', tagName, { projectName: this.opts.projectName, client: this.client })
       }
-      // #thinking 存在しない tagName が入っていた場合ってどうなるんだっけ？ by cabos (2022/02/26)
+      // #thinking 存在しない tagName が入っていた場合って静かに何も表示されなくなるけど、それでいいんだっけ？ by cabos (2022/02/26)
     }
   </script>
 </client>
