@@ -99,7 +99,7 @@
         <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
       </div>
 
-      <!-- radio button -->
+      <!-- radio button ( and / or ) -->
       <div class="ui grid">
         <div class="four wide right floated column">
           <i class="plus link icon" style="float: right" onclick="{ statement.addConditionField }"></i>
@@ -184,15 +184,29 @@
       subject: '',
       conditions: [''],
       comment: '',
+
+      /**
+       * プレビューを構築する。
+       */
       buildPreview: () => {
         return self.buildPreview()
       },
+
+      /**
+       * Conditionのinputフィールドを増やす処理
+       */
       addConditionField: () => {
         self.statement.conditions.push('')
       },
+
+      /**
+       * Conditionのinputフィールドを減らす処理
+       */
       deleteConditionField: (index) => {
         self.statement.conditions.splice(index, 1)
       },
+
+
       clean: () => {
         self.statement.subject = ''
         self.statement.conditions = ['']
@@ -282,7 +296,7 @@
     }
 
     /**
-     * Expectedが追加されたときの処理。
+     * Expectedのinputフィールドが追加されたときの処理。
      */
     this.handleExpectedFieldAdd = () => {
       self.state.expected.fields.push({
@@ -294,7 +308,7 @@
     }
 
     /**
-     * Expectedが削除されたときの処理。
+     * Expectedのinputフィールドが削除されたときの処理。
      */
     this.handleExpectedFieldDelete = (id) => {
       const fields = self.state.expected.fields
