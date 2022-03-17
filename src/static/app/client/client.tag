@@ -84,6 +84,7 @@
         riot.mount('client-content', tagName, { projectName: this.opts.projectName, client: this.client })
       }
       // #thinking 存在しない tagName が入っていた場合って静かに何も表示されなくなるけど、それでいいんだっけ？ by cabos (2022/02/26)
+      // https://github.com/dbflute/dbflute-intro/pull/377#discussion_r823736935
     }
   </script>
 </client>
