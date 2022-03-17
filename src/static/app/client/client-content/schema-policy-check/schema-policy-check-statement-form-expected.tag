@@ -1,13 +1,23 @@
 <schema-policy-check-statement-form-expected>
+  <!-- ClientのSchemaPolicyCheckのStatement追加フォームのExpectedの部分 (written at 2022/03/17)
+   機能:
+    o フォームを出したり閉じたりする
+
+   作りの特徴:
+    o フォーム本体は別tagに切り出し、ここではフォームの開閉の役割のみ担う
+   -->
+
   <div class="grouped fields required">
 
     <label>Expected</label>
+    <!-- document / sample -->
     <p>
       <schema-policy-check-statement-form-docuement-link formtype="{ props.formType }" />
       /
       <a onclick="{ showSample }">sample</a>
     </p>
 
+    <!-- sampleのtoggle -->
     <div if="{ state.showSample }" class="ui info message">
       <div class="ui two column grid">
         <div class="column">
@@ -36,6 +46,7 @@
       </div>
     </div>
 
+    <!-- imput部分は別tagに切り出し -->
     <schema-policy-check-statement-form-expected-field
       each="{ field, index in state.fields }" key="{ field.id }"
       id="{ field.id }"
@@ -46,6 +57,7 @@
       handlechange="{ props.handleFieldChange }"
     />
 
+    <!-- radio button ( and / or ) -->
     <div class="ui grid">
       <div class="four wide right floated column">
         <i class="plus link icon" style="float: right" onclick="{ handleFieldAdd }" />
@@ -87,11 +99,17 @@
       condition: self.opts.condition
     }
 
+    /**
+     * imputフィールドの追加処理。
+     */
     self.handleFieldAdd = () => {
       self.props.handleFieldAdd()
       self.state.fields = self.opts.fields
     }
 
+    /**
+     * imputフィールドの削除処理。
+     */
     self.handleFileldDelete = (id) => {
       self.props.handleFieldDelete(id)
       const fields = self.state.fields
@@ -99,18 +117,26 @@
       self.update()
     }
 
+    /**
+     * inputフィールドが削除可能かどうか。
+     */
     self.isDeletable = () => {
       return self.isMultipleFields()
     }
 
+    /**
+     * conditionが必要かどうか。
+     */
     self.needsCondition = () => {
       return self.isMultipleFields()
     }
 
+    // TODO ここのコメントなんて書いたらいいかわからない by prprmurakami (2021/03/17)
     self.isMultipleFields = () => {
       return self.state.fields.length > 1
     }
 
+    // TODO よくわかんなかったのでもう一度じっくり読む
     self.handleConditionChange = () => {
       const handler = self.props.handleConditionChange
       const isAnd = self.refs.isAnd.checked
@@ -124,11 +150,17 @@
       }
     }
 
+    /**
+     * sampleを開閉する。
+     */
     self.showSample = () => {
       self.state.showSample = !self.state.showSample
       self.update()
     }
 
+    /**
+     * マウント時の処理。
+     */
     self.on('mount', () => {
       const condition = self.state.condition
       if ('and' === condition) {
