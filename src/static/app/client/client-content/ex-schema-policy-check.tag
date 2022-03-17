@@ -367,7 +367,7 @@
     
     /**
      * SchemaPolicyを削除する。
-     * @param {string} mapType - 編集対象となるマップ種別 (NotNull)
+     * @param {string} mapType - 編集対象となるマップ種別 (NotNull, only 'tableMap', 'columnMap')
      * @param {string} statement - 削除対象のstatement
      */
     this.deleteStatement = (mapType, statement) => {
