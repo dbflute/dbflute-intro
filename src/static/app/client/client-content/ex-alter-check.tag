@@ -9,6 +9,7 @@
    o Stepの切り替えは編集中のAlterDDLファイルが存在するかしないかによって切り替わる
    o SQLファイルの一覧のためにドロップダウンを利用している
    o prism.jsを使ってSQLのハイライトを実現している
+   #thinking STEP1とSTEP2で利用しているtagをそれぞれ別ディレクトリに分けるなどした方が迷子になりづらそう by hakiba (2022/03/24)
   -->
   <div class="ui container">
     <h2>AlterCheck</h2>
@@ -23,7 +24,9 @@
     <!-- Step 1: AlterDDLの用意 -->
     <section if="{ !isEditing() }">
       <h3>Step1. Prepare alter sql</h3>
+      <!-- 未リリースの確認済みDDLの一覧 -->
       <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
+      <!-- 新しいDDLファイルを作成するためのフォーム -->
       <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
     </section>
 
@@ -48,11 +51,14 @@
 
       <div class="ui list">
         <div class="item">
+          <!-- AlterDDLディレクトリを開くボタン -->
           <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
         </div>
 
         <div class="item altercheck-execution">
+          <!-- AlterCheckを実行するボタン -->
           <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
+          <!-- AlterCheckの結果HTMLを表示するボタン -->
           <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
         </div>
       </div>
