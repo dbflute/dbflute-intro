@@ -133,9 +133,10 @@
         fields="{ state.expected.fields }"
         condition="{ state.expected.condition }"
       />
-    <!-- #thinking filed required　がここだけExpectedとSupplementary Commentがガッちゃんこになってるのはなんでだろう？ by prprmurakami (2022/03/17)-->
+    </div>
 
-      <!-- Supplementary Comment -->
+    <!-- Supplementary Comment -->
+    <div class="grouped fields required">
       <div class="field required">
         <label>Supplementary Comment</label>
         <!-- document -->
@@ -206,7 +207,9 @@
         self.statement.conditions.splice(index, 1)
       },
 
-
+      /**
+       * 各フィールドの値を空にする。
+       */
       clean: () => {
         self.statement.subject = ''
         self.statement.conditions = ['']
@@ -263,6 +266,7 @@
       self.refs.conditionhelp.toggle()
     }
 
+    // #thinking このtagの外から読んでる。publicメソッドとprivateメソッドの区別をなにかしたい。 by s-murakami (2022/03/24)
     /**
      * フォームを入力しやすい位置に画面をスクロールする。
      */
@@ -281,7 +285,7 @@
     }
 
     /**
-     * Expectedの値が変わったときの処理。
+     * Expectedの値が変わったときのイベントハンドラー
      */
     self.handleExpectedFieldChange = (id, subjectVerb, complement) => {
       const fields = self.state.expected.fields
@@ -292,11 +296,11 @@
         }
         return field
       })
-      self.update()
+      self.update() // updateを呼び出すのは画面の状態を書き換えるとき。
     }
 
     /**
-     * Expectedのinputフィールドが追加されたときの処理。
+     * Expectedのinputフィールドが追加されたときのイベントハンドラー
      */
     this.handleExpectedFieldAdd = () => {
       self.state.expected.fields.push({
@@ -308,7 +312,8 @@
     }
 
     /**
-     * Expectedのinputフィールドが削除されたときの処理。
+     * Expectedのinputフィールドが削除されたときのインベントハンドラー
+     * @param {String} id - expectedのフィールドを一意に特定するキー
      */
     this.handleExpectedFieldDelete = (id) => {
       const fields = self.state.expected.fields
@@ -317,7 +322,7 @@
     }
 
     /**
-     * Expectedのコンディションが変わったときの処理。
+     * Expectedのコンディションが変わったときのイベントハンドラー
      * @param {string} condition - コンディションの値. (NotNull)
      */
     this.handleExpectedConditionChange = (condition) => {
@@ -347,24 +352,28 @@
      * プレビューを構築する。
      */
     this.buildPreview = () => {
-      if (!self.mounted) {
+      if (!self.mounted) { // 何も値が反映されていない時はこれを表示
         return 'if <Subject> is <Condition> then <Expected> => <Supplementary Comment>'
       }
 
+      // subjectのパートを作成
       let subject = self.refs.subject.value ? self.refs.subject.value : '<Subject>'
       let statementPrefix = 'if ' + subject + ' is '
-      let conditionOperator = self.refs.isAndCondition.checked ? ' and ' : ' or '
 
+      // conditionのパートを作成
+      let conditionOperator = self.refs.isAndCondition.checked ? ' and ' : ' or '
       let conditions = []
+　　　
       for (let i = 0; i < self.statement.conditions.length; i++) {
         let conditionRef = self.refs['condition_' + i]
         if (conditionRef && conditionRef.value) {
-          conditions.push(conditionRef.value)
+          conditions.push(conditionRef.value) // conditionsに詰める
         }
       }
       let joinedConds = conditions.join(conditionOperator)
       let conditionsStr = joinedConds ? joinedConds : '<Condition>'
 
+      // expectedのパートを作成
       const expecteds = self.state.expected.fields
         .filter(field => field.subjectVerb)
         .map(field => field.subjectVerb + (field.complement ? ` ${field.complement}` : ''))
@@ -372,11 +381,18 @@
       const joinedExps = expecteds.join(` ${expectedOperator} `)
       const expectedsStr = joinedExps ? joinedExps : '<Expected>'
 
+      // commentのパートを作成
       let comment = self.refs.comment.value ? ' => ' + self.refs.comment.value : ' => <Supplementary Comment>'
+      
+      // ex. if tableName is not ABC_DATE then hasPK => カラムっぽいテーブル名ダメ
       return statementPrefix + conditionsStr + ' then ' + expectedsStr + comment
     }
 
+    /**
+     * registerSchemapolicyStatementを呼ぶ際のリクエストボディを作成する。
+     */
     this.buildBody = () => {
+      // conditionsを用意
       let conditionOperator = self.refs.isAndCondition.checked ? 'and' : 'or'
       let conditions = []
       for (let i = 0; i < self.statement.conditions.length; i++) {
@@ -384,6 +400,8 @@
           conditions.push(self.refs['condition_' + i].value)
         }
       }
+
+      // expectedを用意
       const expecteds = self.state.expected.fields
         .filter(field => field.subjectVerb)
         .map(field => field.subjectVerb + (field.complement ? ` ${field.complement}` : ''))

@@ -125,20 +125,24 @@
     }
 
     /**
-     * conditionが必要かどうか。
+     * and, orが必要かどうか。
+     * ここでいうconditionはand,orのことを指す。
      */
     self.needsCondition = () => {
       return self.isMultipleFields()
     }
 
-    // TODO ここのコメントなんて書いたらいいかわからない by prprmurakami (2021/03/17)
+    /**
+     * 複数フィールドがあるかどうか。
+     */
     self.isMultipleFields = () => {
       return self.state.fields.length > 1
     }
 
+    // 親からandかorが入っている情報がわたされてくる？
     // TODO よくわかんなかったのでもう一度じっくり読む
     self.handleConditionChange = () => {
-      const handler = self.props.handleConditionChange
+      const handler = self.props.handleConditionChange // 
       const isAnd = self.refs.isAnd.checked
       const isOr = self.refs.isOr.checked
       if (isAnd) {
@@ -150,6 +154,7 @@
       }
     }
 
+    // #thinking 名前、toggleSampleのほうがいい？showって開く方しかイメージない。 by prprmurakami (2022/03/24)
     /**
      * sampleを開閉する。
      */
@@ -171,6 +176,8 @@
         self.refs.isAnd.checked = true // as default
       }
     })
+
+    // self.updateのときに呼ばれるコールバック処理。画面を描画しなおすときに呼ばれる。
     self.on('update', () => {
       self.state = {
         fields: self.opts.fields,
