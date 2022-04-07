@@ -96,6 +96,7 @@
   <!-- Generate Task 実行結果を表示するための Modal -->
   <result-modal ref="resultModal"></result-modal>
 
+  <!-- #thinking ex-schema-sync-check.tag にも同じスタイル調整が入ってる、共通化してもいいかも？ by cabos (written at 2022/04/07) -->
   <style>
     .latest-result {
       margin-top: 1em;

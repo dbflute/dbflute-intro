@@ -1,26 +1,54 @@
 <ex-schema-sync-check>
+  <!-- DBFlute の SchemaSyncCheck 機能をGUIで操作できるようにするタグ (written at 2022/04/07)
+   機能:
+    o DBFlute Client が管理しているDBとは別に、スキーマの差分を確認したいデータベースへの接続情報を設定する
+    o 上記の設定をもとに、SchemaSyncChekcを実行する
+    o 実行結果として、「sync-check-result.html」が出力されている場合、実行結果確認用リンクが表示される
+
+   作りの特徴:
+    o DBFlute Enginge が提供するドキュメント関連の機能のうち、SchemaSyncCheckで操作可能なものは、全てこの tag の中に記述されている
+    o 「window.open」によって、「sync-check-result.html」 を開くようになっている
+    o Modal で documentDefinitionMap.dfprop の schemaSyncCheckMap を編集させる
+    o SchemaSyncCheck の実行中は、別の操作を抑制するための Modal を表示している
+    o SchemaSyncCheck の実行後は、結果を Modal で表示し、ログを改めて参照できるようにしている
+    o SchemaSyncCheck は管理しているデータベースに変更を加えないので、実行前の確認は行わない
+   -->
   <div class="ui container">
     <h2>Schema Sync Check</h2>
+
+    <!--  DBFlute Client が管理していない方のデータベースへの接続情報 -->
     <p show="{ canCheckSchemaSetting() }">
       for { state.syncSetting.url }<span show="{ state.syncSetting.schema != null }">, { state.syncSetting.schema }</span>, { state.syncSetting.user }
     </p>
+
+    <!-- 各HTMLのドキュメントリンク -->
+    <!-- #thinking ex-document.tag に合わせて list にしているのかな？要素は一つしか無いけど by cabos (written at 2022/04/07) -->
     <div class="ui list">
       <div show="{ state.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
     </div>
+
+    <!-- DBFlute Client が管理していない方のデータベースへの接続情報を編集するための modal を表示するボタン  -->
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
-    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">
-      Execute SchemaSyncCheck
-    </button>
+
+    <!-- SchemaSyncCheck実行ボタン  -->
+    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">Execute SchemaSyncCheck</button>
+    
+    <!-- "SchemaSyncCheck" ってそもそもなんやねん？の説明 -->
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"SchemaSyncCheck"?</a></div>
       <p>A checking tool for differences between the two schemas.</p>
     </div>
+
+    <!-- 最後に SchemaSyncCheck を実行したときのログを表示するところ -->
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
   </div>
 
+  <!-- documentDefinitionMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
   <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
+
+    <!-- documentDefinitionMap.dfprop の schemaSyncCheckMap を編集するための form の実態 -->
     <form class="ui form">
       <div class="required field">
         <label>URL</label>
@@ -45,16 +73,20 @@
         </div>
       </div>
     </form>
+
   </su-modal>
 
+  <!-- SchemaSyncCheck 実行時に他の操作を抑制するための Modal -->
   <su-modal modal="{ checkModal }" class="large" ref="checkModal">
     <div class="description">
       Checking...
     </div>
   </su-modal>
 
+   <!-- SchemaSyncCheck 実行結果を表示するための Modal -->
   <result-modal ref="resultModal"></result-modal>
 
+  <!-- #thinking ex-document.tag にも同じスタイル調整が入ってる、共通化してもいいかも？ by cabos (written at 2022/04/07) -->
   <style>
     .latest-result {
       margin-top: 1em;
