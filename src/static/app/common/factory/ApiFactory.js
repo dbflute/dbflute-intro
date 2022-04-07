@@ -104,6 +104,11 @@ export default class ApiFactory {
       }
     )
   }
+  moveSchemapolicyStatement(projectName, schemaPolicyData) {
+    return ffetch.post(
+      `api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData }
+    )
+  }
 
   // -----------------------------------------------------
   //                                              Document

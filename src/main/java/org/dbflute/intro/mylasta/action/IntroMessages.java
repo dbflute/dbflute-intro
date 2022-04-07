@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.mylasta.action;
 
-import org.dbflute.intro.mylasta.action.IntroLabels;
 import org.lastaflute.core.message.UserMessage;
 
 /**
@@ -177,6 +176,9 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: {0} directory is not found. please create directory and run again. */
     public static final String ERRORS_APP_DIR_NOT_FOUND = "{errors.app.dir.notFound}";
 
+    /** The key of the message: the schemapolicy statement out of index : {0} */
+    public static final String ERRORS_APP_SCHEMAPOLICY_STATEMENT_INDEX_ERROR = "{errors.app.schemapolicy.statement.index.error}";
+
     /** The key of the message: client already exists: {0} */
     public static final String ERRORS_WELCOME_CLIENT_ALREADY_EXISTS = "{errors.welcome.client.alreadyExists}";
 
@@ -198,11 +200,13 @@ public class IntroMessages extends IntroLabels {
     /** The key of the message: submitted file type is invalid */
     public static final String ERRORS_INVALID_FILE_EXTENSION = "{errors.invalid.file.extension}";
 
+    /** The key of the message: submitted map type is invalid */
+    public static final String ERRORS_SCHEMAPOLICY_INVALID_MAP_TYPE = "{errors.schemapolicy.invalid.mapType}";
+
     /**
      * Add the created action message for the key 'constraints.AssertFalse.message' with parameters.
      * <pre>
      * message: must be false
-     * comment: ---------------
      * </pre>
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
@@ -394,7 +398,6 @@ public class IntroMessages extends IntroLabels {
      * Add the created action message for the key 'constraints.CreditCardNumber.message' with parameters.
      * <pre>
      * message: invalid credit card number
-     * comment: -------------------
      * </pre>
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
@@ -646,7 +649,10 @@ public class IntroMessages extends IntroLabels {
      * Add the created action message for the key 'errors.login.failure' with parameters.
      * <pre>
      * message: could not login
-     * comment: - - - - - - - - - -/
+     * comment:
+     * /- - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+     * six framework-embedded messages (don't change key names)
+     * - - - - - - - - - -/
      * </pre>
      * @param property The property name for the message. (NotNull)
      * @return this. (NotNull)
@@ -731,7 +737,6 @@ public class IntroMessages extends IntroLabels {
      * Add the created action message for the key 'errors.app.intro.error' with parameters.
      * <pre>
      * message: Intro Error =&gt; {0}
-     * comment: ---------------------
      * </pre>
      * @param property The property name for the message. (NotNull)
      * @param arg0 The parameter arg0 for message. (NotNull)
@@ -938,10 +943,24 @@ public class IntroMessages extends IntroLabels {
     }
 
     /**
+     * Add the created action message for the key 'errors.app.schemapolicy.statement.index.error' with parameters.
+     * <pre>
+     * message: the schemapolicy statement out of index : {0}
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @param arg0 The parameter arg0 for message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsAppSchemapolicyStatementIndexError(String property, String arg0) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_APP_SCHEMAPOLICY_STATEMENT_INDEX_ERROR, arg0));
+        return this;
+    }
+
+    /**
      * Add the created action message for the key 'errors.welcome.client.alreadyExists' with parameters.
      * <pre>
      * message: client already exists: {0}
-     * comment: ---------------------
      * </pre>
      * @param property The property name for the message. (NotNull)
      * @param arg0 The parameter arg0 for message. (NotNull)
@@ -1035,6 +1054,20 @@ public class IntroMessages extends IntroLabels {
     public IntroMessages addErrorsInvalidFileExtension(String property) {
         assertPropertyNotNull(property);
         add(property, new UserMessage(ERRORS_INVALID_FILE_EXTENSION));
+        return this;
+    }
+
+    /**
+     * Add the created action message for the key 'errors.schemapolicy.invalid.mapType' with parameters.
+     * <pre>
+     * message: submitted map type is invalid
+     * </pre>
+     * @param property The property name for the message. (NotNull)
+     * @return this. (NotNull)
+     */
+    public IntroMessages addErrorsSchemapolicyInvalidMapType(String property) {
+        assertPropertyNotNull(property);
+        add(property, new UserMessage(ERRORS_SCHEMAPOLICY_INVALID_MAP_TYPE));
         return this;
     }
 }

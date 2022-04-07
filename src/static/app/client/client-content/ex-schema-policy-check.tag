@@ -84,23 +84,15 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
-                  <div class="statement item" each="{ statement in opts.schemapolicy.tableMap.statementList }">
-                    <div class="statement content">
-                      <!-- statementにコメントが含まれていなければそのまま表示し、含まれていたら、statementとコメントをそれぞれ抜粋して表示する -->
-                      <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
-                        { statement }
-                      </div>
-                      <div class="header" if="{parent.parent.parent.isIncludeComment(statement)}">
-                        { parent.parent.parent.extractStatement(statement) }
-                      </div>
-                      <div if="{parent.parent.parent.isIncludeComment(statement)}">
-                        <span class="frm">&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
-                      </div>
-                    </div>
-                    <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'tableMap', statement) }"></i>
-                  </div>
-                </div>
+
+                <schema-policy-check-statement-list
+                  if="{ opts.schemapolicy.tableMap }"
+                  maptype="tableMap"
+                  clientname="{ opts.projectname }"
+                  deletestatement="{ parent.parent.deleteStatement }"
+                  statements="{ opts.schemapolicy.tableMap.statementList }"
+                />
+
                 <schema-policy-check-statement-form-wrapper
                   formtype="tableMap"
                   projectname="{ opts.projectname }"
@@ -130,23 +122,15 @@
                   </div>
                 </div>
                 <h5 class="spolicy-category">Statement</h5>
-                <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
-                  <div class="statement item" each="{ statement in opts.schemapolicy.columnMap.statementList }">
-                    <div class="statement content">
-                      <!-- statementにコメントが含まれていなければそのまま表示し、含まれていたら、statementとコメントをそれぞれ抜粋して表示する -->
-                      <div class="header" if="{!parent.parent.parent.isIncludeComment(statement)}">
-                        { statement }
-                      </div>
-                      <div class="header" if="{parent.parent.parent.isIncludeComment(statement)}">
-                        { parent.parent.parent.extractStatement(statement) }
-                      </div>
-                      <div if="{parent.parent.parent.isIncludeComment(statement)}">
-                        <span class="frm">&#61&gt;{ parent.parent.parent.extractComment(statement) }</span>
-                      </div>
-                    </div>
-                    <i class="statement delete link icon" onclick="{ parent.parent.parent.deleteStatement.bind(this, 'columnMap', statement) }"></i>
-                  </div>
-                </div>
+
+                <schema-policy-check-statement-list
+                  if="{ opts.schemapolicy.columnMap }"
+                  maptype="columnMap"
+                  clientname="{ opts.projectname }"
+                  deletestatement="{ parent.parent.deleteStatement }"
+                  statements="{ opts.schemapolicy.columnMap.statementList }"
+                />
+
                 <schema-policy-check-statement-form-wrapper
                   formtype="columnMap"
                   projectname="{ opts.projectname }"
@@ -177,20 +161,12 @@
     .latest-result {
       margin-top: 1em;
     }
-    .statement.delete.link.icon {
-      display: none;
-    }
-    .statement.item:hover .statement.delete.link.icon {
-      display: inline-block;
-    }
   </style>
 
   <script>
     let riot = require('riot')
     import _ApiFactory from '../../common/factory/ApiFactory.js'
     import _DbfluteTask from '../../common/DbfluteTask'
-    import 'prismjs/components/prism-sql.min'
-    import 'prismjs/themes/prism.css'
 
     const ApiFactory = new _ApiFactory()
     const DbfluteTask = new _DbfluteTask()
@@ -239,6 +215,26 @@
       // となっていたが、タグを書くところでprops渡せることがわかったので修正。by prprmurakami (2022/03/12)
       self.latestResult = self.refs.latestResult
       self.updateLatestResult(self.client)
+    }
+
+    this.onRegisterSuccess = () => {
+      self.fetchSchemaPolicy(opts.projectName)
+    }
+
+    this.updateLatestResult = (client) => {
+      if (!self.latestResult) {
+        return
+      }
+      if (client.violatesSchemaPolicy) {
+        self.latestResult.failure = {
+          title: 'Result: Failure',
+          link: {
+            message: 'Open your SchemaPolicyCheck result (HTML)',
+            clickAction: self.openSchemaHTML
+          }
+        }
+      }
+      self.latestResult.updateLatestResult()
     }
 
     // ===================================================================================
