@@ -113,34 +113,48 @@
       syncSetting: {}
     }
 
-    self.checkModal = {
-      header: 'SchemaPolicyCheck',
-      closable: false
-    }
-
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    /**
+     * マウント時の処理
+     */
     this.on('mount', () => {
       self.initSyncSchemaSetting()
       self.prepareComponents()
       self.registerModalEvent()
     })
 
+    /**
+     * SchemaSyncCheck の設定を取得し、syncSettingを編集するための Modal 内に含まれる form を初期化する
+     */
+    // #thinking setting を初期化するって誰のなんのためなんだろうという違和感がある、画面としては state とか modal とかを初期化するなら意味はわかる、そういう関数名にしたい by cabos
     this.initSyncSchemaSetting = () => {
+      // #thinking "response" というのはやはり、意味のある名前にしたいな by cabos
       ApiFactory.syncSchema(self.props.projectName).then((response) => {
+        // #thinking サーバからデータを初期化して state を初期化する処理と、modalを初期化する処理は分けたほうが見通しがいいのかな？ by cabos
         self.syncSettingModal.syncSetting = response
         self.state.syncSetting = response
         self.update()
       })
     }
 
+    /**
+     * 最後の実行結果を表示するためのコンポーネントを初期化する
+     */
+    // #thinking prepaseLatestResult という名前の方が体を表している... by cabos
     this.prepareComponents = () => {
       self.latestResult = riot.mount('latest-result', { projectName: self.props.projectName, task: 'schemaSyncCheck' })[0]
     }
 
+    /**
+     * syncSettingを編集するための Modal で、「OK」ボタンが押されたときの挙動を登録する
+     * 具体的には、Modal内の form の値を取得し、サーバに設定更新のためのリクエストをPostする
+     */
     this.registerModalEvent = () => {
+      // this.syncSettingModal.action で 'editSyncSettings' で定義されている
       this.refs.syncSettingModal.on('editSyncSettings', () => {
+        // ref を利用して modal の中のformの値を参照している
         const syncSettingModalRefs = self.refs.syncSettingModal.refs
         const input = {
           url: syncSettingModalRefs.url.value,
@@ -159,11 +173,18 @@
     // ===================================================================================
     //                                                                       Open Document
     //                                                                       =============
+    /**
+     * SchemaSyncCheck の設定が確認可能化か、つまり SchemaSyncCheckの設定が存在するかを確認する
+     */
     this.canCheckSchemaSetting = () => {
       return self.state.syncSetting.url != null && self.state.syncSetting.user != null
     }
 
+    /**
+     * SchemaSyncCheck の設定が確認可能化か、つまり SchemaSyncCheckの設定が存在するかを確認する
+     */
     this.openSyncCheckResultHTML = () => {
+      // #thinking （すごく細かいけど、微妙に気になる） "api" ではないので、URLも "doc" 始まりとかにできないかな？ by cabos
       window.open(global.ffetch.baseUrl + 'api/document/' + self.props.projectName + '/synccheckresulthtml/')
     }
 
@@ -173,6 +194,9 @@
     // -----------------------------------------------------
     //                                            Definition
     //                                            ----------
+    /**
+     * SchemaSyncCheck の設定を変更するための Modal の画面読み込み時の初期値
+     */
     this.syncSettingModal = {
       header: 'Schema Sync Check Settings',
       closable: true,
@@ -183,12 +207,26 @@
           closable: false
         }
       ],
+      // #thinking null で初期化しておけば、canCheckSchemaSettingの処理の中でプロパティを参照しなくていいのでは？ by cabos
       syncSetting: {}
+    }
+
+    /**
+     * SchemaSyncCheck が実行中、その他の処理を抑制するための Modal
+     */
+    // #thinking 実行中の抑制に対して "check" という名前は適切か？ by cabos
+    self.checkModal = {
+      header: 'SchemaPolicyCheck',
+      closable: false
     }
 
     // -----------------------------------------------------
     //                                                  Show
     //                                                  ----
+    /**
+     * SchemaSyncCheckを設定するための Modal を表示する
+     * 「Edit check settings」というボタンを押したときに実行される
+     */
     this.showSyncSettingModal = () => {
       self.refs.syncSettingModal.show()
     }
@@ -196,16 +234,25 @@
     // ===================================================================================
     //                                                                        Execute Task
     //                                                                        ============
+    /**
+     * DBFlute Engine に SchemaSyncCheck を実行させるためのリクエストをバックエンドに送信する
+     * SchemaSyncCheck の処理中、他の操作を抑制するための Modal を表示させている
+     * SchemaSyncCheck の処理後、Modal を処理結果のもとに差し替え、最終実行ログを画面に表示する
+     * 「Execute SchemaSyncCheck」というボタンをクリックすると呼び出される
+     */
     this.schemaSyncCheckTask = () => {
       self.refs.checkModal.show()
       DbfluteTask.task('schemaSyncCheck', self.props.projectName, (message) => {
-        // hasSyncCheckResultHtmlの最新状態を取得するため、clientをfetchし、componentに反映
+        // SchemaSyncCheck の結果が確認できる sync-check-result.html が存在するかどうかの情報をサーバから取得する
+        // 将来的には、存在するかどうかの情報を Propbase とは別のAPIに切り出すリファクタリングを行う予定
+        // https://github.com/dbflute/dbflute-intro/issues/260
         ApiFactory.clientPropbase(self.props.projectName).then((response) => {
           self.state.client = response
           self.update()
         })
         self.refs.resultModal.show(message)
       }).finally(() => {
+        // 操作を抑制する Modal を隠す
         self.refs.checkModal.hide()
         self.latestResult.updateLatestResult()
       })
