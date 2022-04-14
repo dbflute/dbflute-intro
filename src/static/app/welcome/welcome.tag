@@ -1,7 +1,7 @@
 <welcome>
   <!-- Welcome画面 (DBFluteクライアントが何もない状態の起動時に表示される画面) (written at 2022/03/09)
    機能:
-    o DBFluteクライアントの最低限の情報を入力
+    o DBFluteクライアントの作成に必要な最低限の情報を入力
     o DBFluteクライアント作成前にテスト接続
     o DBFluteエンジンのダウンロード、DBFluteクライアント作成
 
