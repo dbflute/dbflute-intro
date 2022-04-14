@@ -1,7 +1,7 @@
 <welcome>
   <!-- Welcome画面 (DBFluteクライアントが何もない状態の起動時に表示される画面) (written at 2022/03/09)
    機能:
-    o DBFluteクライアントの最低限の情報を入力
+    o DBFluteクライアントの作成に必要な最低限の情報を入力
     o DBFluteクライアント作成前にテスト接続オプション (接続失敗は業務例外で作成処理が中断される)
     o DBFluteエンジンのダウンロード、DBFluteクライアント作成
 
@@ -9,7 +9,6 @@
     o O/Rマッパー関連設定を表示/非表示できる (最初は非表示: AltoDBFlute利用を想定して)
     o ファイルアップロードもあるよ
     o DBMSの選択によって他の項目の値が書き換わるよ
-   -->
   <h2 class="heading">Welcome to DBFlute</h2>
   <div class="ui form">
     <div class="ui stackable two column divided grid">
