@@ -139,8 +139,9 @@
       return self.state.fields.length > 1
     }
 
-    // 親からandかorが入っている情報がわたされてくる？
-    // TODO よくわかんなかったのでもう一度じっくり読む
+    /**
+     * expectedを繋ぐand/orの選択を変更する。
+     */
     self.handleConditionChange = () => {
       const handler = self.props.handleConditionChange // 
       const isAnd = self.refs.isAnd.checked
