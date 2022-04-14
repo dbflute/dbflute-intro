@@ -126,7 +126,7 @@
     })
 
     /**
-     * SchemaSyncCheck の設定を取得し、syncSettingを編集するための Modal 内に含まれる form を初期化する
+     * SchemaSyncCheck の設定を取得し、それを編集するための Modal 内に含まれる form を初期化する
      */
     // #thinking setting を初期化するって誰のなんのためなんだろうという違和感がある、画面としては state とか modal とかを初期化するなら意味はわかる、そういう関数名にしたい by cabos
     this.initSyncSchemaSetting = () => {
@@ -148,13 +148,13 @@
     }
 
     /**
-     * syncSettingを編集するための Modal で、「OK」ボタンが押されたときの挙動を登録する
-     * 具体的には、Modal内の form の値を取得し、サーバに設定更新のためのリクエストをPostする
+     * SchemaSyncCheck の設定を編集するための Modal の中にある、「OK」ボタンが押されたときの挙動を登録する
+     * 具体的には、Modal の中にある form の値を取得し、サーバに設定更新のためのリクエストをPostする
      */
     this.registerModalEvent = () => {
-      // this.syncSettingModal.action で 'editSyncSettings' で定義されている
+      // this.syncSettingModal.action に 'editSyncSettings' とあり、そこと紐付いている
       this.refs.syncSettingModal.on('editSyncSettings', () => {
-        // ref を利用して modal の中のformの値を参照している
+        // ref を利用して modal の中の form の値を参照している
         const syncSettingModalRefs = self.refs.syncSettingModal.refs
         const input = {
           url: syncSettingModalRefs.url.value,
@@ -174,14 +174,14 @@
     //                                                                       Open Document
     //                                                                       =============
     /**
-     * SchemaSyncCheck の設定が確認可能化か、つまり SchemaSyncCheckの設定が存在するかを確認する
+     * SchemaSyncCheck の設定が確認可能か、つまり SchemaSyncCheckの設定が存在するかを確認する
      */
     this.canCheckSchemaSetting = () => {
       return self.state.syncSetting.url != null && self.state.syncSetting.user != null
     }
 
     /**
-     * SchemaSyncCheck の設定が確認可能化か、つまり SchemaSyncCheckの設定が存在するかを確認する
+     * SchemaSyncCheck の結果を確認できる sync-check-result.html を開く
      */
     this.openSyncCheckResultHTML = () => {
       // #thinking （すごく細かいけど、微妙に気になる） "api" ではないので、URLも "doc" 始まりとかにできないかな？ by cabos
@@ -195,7 +195,7 @@
     //                                            Definition
     //                                            ----------
     /**
-     * SchemaSyncCheck の設定を変更するための Modal の画面読み込み時の初期値
+     * SchemaSyncCheck の設定を変更するための Modal の、画面読み込み時の初期値
      */
     this.syncSettingModal = {
       header: 'Schema Sync Check Settings',
@@ -212,7 +212,7 @@
     }
 
     /**
-     * SchemaSyncCheck が実行中、その他の処理を抑制するための Modal
+     * SchemaSyncCheck を実行しているあいだ、その他のユーザの操作を抑制するための Modal
      */
     // #thinking 実行中の抑制に対して "check" という名前は適切か？ by cabos
     self.checkModal = {
