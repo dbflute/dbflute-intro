@@ -1,6 +1,16 @@
 <schema-policy-check-statement-list>
+  <!-- ClientのSchemaPolicyCheckのTableSchemaPolicyとColumnSchemaPolicyののstatementの部分 (written at 2022/04/14)
+   機能:
+    o statementをドラッグアンドドロップで入れ替えられる
+
+   作りの特徴:
+    o statementにコメントがあるかどうかで表示の仕方を変えている
+    o 並び順が変えられるとdfpropも書き変わる
+   -->
   <ui-list items="{ opts.statements }" onsorted="{ moveStatement }" sortable="{ true }" options="{ prepareListOptions() }">
+    
     <div class="content">
+      <!-- statementにコメントがあるかどうかで表示の仕方を変える　-->
       <div class="header" if="{ !props.options.hasComment(item) }">
         { item }
       </div>
@@ -11,6 +21,7 @@
         <span class="frm">&#61&gt;{ props.options.extractComment(item) }</span>
       </div>
     </div>
+
     <i class="delete link icon" onclick="{ props.options.deleteStatement.bind(this, props.options.mapType, item) }"/>
   </ui-list>
 
@@ -47,6 +58,9 @@
     // =======================================================================================
     //                                                                              Life Cycle
     //                                                                              ==========
+    /**
+     * self.updateのときに呼ばれるコールバック処理。画面を描画しなおすときに呼ばれる。
+     */
     this.on('update', () => {
       this.state = {
         statements: self.opts.statements
