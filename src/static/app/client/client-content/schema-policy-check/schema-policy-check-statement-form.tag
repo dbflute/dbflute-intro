@@ -363,7 +363,7 @@
       // conditionのパートを作成
       let conditionOperator = self.refs.isAndCondition.checked ? ' and ' : ' or '
       let conditions = []
-　　　
+
       for (let i = 0; i < self.statement.conditions.length; i++) {
         let conditionRef = self.refs['condition_' + i]
         if (conditionRef && conditionRef.value) {

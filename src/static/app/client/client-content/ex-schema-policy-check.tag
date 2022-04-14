@@ -164,7 +164,6 @@
   </style>
 
   <script>
-    let riot = require('riot')
     import _ApiFactory from '../../common/factory/ApiFactory.js'
     import _DbfluteTask from '../../common/DbfluteTask'
 
@@ -209,7 +208,7 @@
      * latestResultを初期化する。
      * @param {string} projectName - プロジェクト名. (NotNull)
      */
-    this.prepareComponents = (projectName) => {
+    this.prepareComponents = () => {
       // もともと
       // self.latestResult = riot.mount('latest-result', { projectName: projectName, task: 'doc' })[0]
       // となっていたが、タグを書くところでprops渡せることがわかったので修正。by prprmurakami (2022/03/12)
