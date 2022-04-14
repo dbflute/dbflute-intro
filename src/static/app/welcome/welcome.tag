@@ -2,7 +2,7 @@
   <!-- Welcome画面 (DBFluteクライアントが何もない状態の起動時に表示される画面) (written at 2022/03/09)
    機能:
     o DBFluteクライアントの最低限の情報を入力
-    o DBFluteクライアント作成前にテスト接続
+    o DBFluteクライアント作成前にテスト接続オプション (接続失敗は業務例外で作成処理が中断される)
     o DBFluteエンジンのダウンロード、DBFluteクライアント作成
 
    作りの特徴:
@@ -103,8 +103,25 @@
 
     // JDBCドライバーのjarファイル情報を格納するオブジェクト
     // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
+    // [雑談]
+    // 多分 java の書き方に合わせただけなんじゃないですかね？
+    // 別にコメントのように書いても問題ないと思います
+    //
+    // [雑談]
+    // this.jdbcDriver という変数の使われ方的にファイルがある/ないを示したい気もするので、型をつけるとしたら Optional<{ fileName: String, data: String }> ってみたいな感じになって、案外適切な表現なのかもなって気もしました 笑
+    // （TypeScript的な型をつけるなら { fileName: String, data: String } | null という感じ）
+    //
+    // なるほど。このへんはriot6のときに方向性を統一したいね。
+    // _/_/_/_/_/_/_/_/_/_/
+    //
     // コメントで書いても定義先で変わったときに追従できない。(ついつい型定義したくなってしまうな...)
     // というか、この宣言要るのか？なければないでundefinedとかで落ちちゃうのかな？？？
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
+    // 使われ方的にはnullによる初期化はなくてもいいですね
+    // 話がそれますが、TypeScriptの界隈ではnullとundefinedのどちらを使うのか、使い分けるべきかみたいなところはいろいろ意見が分かれてるみたいです。
+    // _/_/_/_/_/_/_/_/_/_/
+    //
     this.jdbcDriver = null
 
     // JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
@@ -162,6 +179,12 @@
      */
     this.setDefaultLangAndDIContainer = () => {
       // #thiking jflute 本当はこういうのもサーバー側のロジックで決めたいかも？ (2022/03/17)
+      // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて
+      // [雑談] 個人的には、サーバサイドの区分値と、ここの文字列が常に一致していることを担保できるかどうかが気になります
+      //
+      // とある現場では、TypeScript用の区分値CDefクラスを自動生成して、フロントとサーバーで同期してる。
+      // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
+      // _/_/_/_/_/_/_/_/_/_/
       self.refs.languageCode.value = 'java'
       self.refs.containerCode.value = 'lasta_di'
       self.update()
@@ -175,9 +198,11 @@
      * @param {string} databaseCode - 選択されたDBMSのコード (NotNull)
      */
     const changeDatabase = (databaseCode) => {
-      // #thinking jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
+      // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
       // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
       // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
+      // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
+      // そっか、こっちは embeddedJar も使うかありがとう。
       let database = self.classificationMap['targetDatabaseMap'][databaseCode]
       // switch showing JDBCDriver select form
       self.needsJdbcDriver = !database.embeddedJar
@@ -229,6 +254,15 @@
      * @param {string} event - この関数を呼び出したイベントのオブジェクト (NotNull)
      */
     this.changeFile = (event) => {
+      /* thinking jflute プルリクより、こうでも大丈夫なんじゃないだろうか？ (2022/04/14)
+      reader.onload = function () {
+        // encode base64
+        let result = window.btoa(reader.result)
+        self.jdbcDriver = { fileName: null, data: null }
+        self.jdbcDriver.fileName = file.name
+        self.jdbcDriver.data = result
+      }
+      */
       let file = event.target.files[0] // event.targetはイベント発生元のオブジェクト
       let reader = new FileReader() // https://developer.mozilla.org/ja/docs/Web/API/FileReader
       reader.onload = (function() { // 読み込み処理が正常に完了したとき
