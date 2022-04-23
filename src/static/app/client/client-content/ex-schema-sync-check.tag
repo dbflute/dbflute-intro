@@ -133,6 +133,7 @@
       // #thinking "response" というのはやはり、意味のある名前にしたいな by cabos
       ApiFactory.syncSchema(self.props.projectName).then((response) => {
         // #thinking サーバからデータを初期化して state を初期化する処理と、modalを初期化する処理は分けたほうが見通しがいいのかな？ by cabos
+        // https://github.com/dbflute/dbflute-intro/pull/394#discussion_r850480927
         self.syncSettingModal.syncSetting = response
         self.state.syncSetting = response
         self.update()
@@ -207,7 +208,6 @@
           closable: false
         }
       ],
-      // #thinking null で初期化しておけば、canCheckSchemaSettingの処理の中でプロパティを参照しなくていいのでは？ by cabos
       syncSetting: {}
     }
 
