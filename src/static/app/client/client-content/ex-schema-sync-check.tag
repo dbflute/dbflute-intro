@@ -2,13 +2,13 @@
   <!-- DBFlute の SchemaSyncCheck 機能をGUIで操作できるようにするタグ (written at 2022/04/07)
    機能:
     o DBFlute Client が管理しているDBとは別に、スキーマの差分を確認したいデータベースへの接続情報を設定する
-    o 上記の設定をもとに、SchemaSyncChekcを実行する
+    o 上記の設定をもとに、SchemaSyncCheckを実行する
     o 実行結果として、「sync-check-result.html」が出力されている場合、実行結果確認用リンクが表示される
 
    作りの特徴:
     o DBFlute Enginge が提供するドキュメント関連の機能のうち、SchemaSyncCheckで操作可能なものは、全てこの tag の中に記述されている
     o 「window.open」によって、「sync-check-result.html」 を開くようになっている
-    o Modal で documentDefinitionMap.dfprop の schemaSyncCheckMap を編集させる
+    o Modal で documentMap.dfprop の schemaSyncCheckMap を編集させる
     o SchemaSyncCheck の実行中は、別の操作を抑制するための Modal を表示している
     o SchemaSyncCheck の実行後は、結果を Modal で表示し、ログを改めて参照できるようにしている
     o SchemaSyncCheck は管理しているデータベースに変更を加えないので、実行前の確認は行わない
@@ -45,10 +45,10 @@
     </div>
   </div>
 
-  <!-- documentDefinitionMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
+  <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
   <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">
 
-    <!-- documentDefinitionMap.dfprop の schemaSyncCheckMap を編集するための form の実態 -->
+    <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための form の実態 -->
     <form class="ui form">
       <div class="required field">
         <label>URL</label>
