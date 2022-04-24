@@ -1,0 +1,218 @@
+<welcome>
+  <h2 class="heading">Welcome to DBFlute</h2>
+  <div class="ui form">
+    <div class="ui stackable two column divided grid">
+      <div class="row">
+        <div class="column">
+          <div class="required field">
+            <label data-is="i18n">LABEL_projectName</label>
+            <input type="text" ref="projectName" placeholder="maihamadb"/>
+          </div>
+          <div class="required field">
+            <label data-is="i18n">LABEL_databaseCode</label>
+            <su-dropdown ref="databaseCode" items="{ state.targetDatabaseItems }" onchange="{ onChangeDatabase }"></su-dropdown>
+          </div>
+          <div class="required field">
+            <label data-is="i18n">LABEL_jdbcDriverFqcn</label>
+            <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver"/>
+          </div>
+          <div class="required field" if="{ state.needsJdbcDriver }">
+            <label data-is="i18n">LABEL_jdbcDriverFile</label>
+            <input type="file" onchange="{ changeFile }"/>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <button class="ui button mini" onclick="{ onToggleOrmSetting }">O/R Mapper settings</button>
+          </div>
+          <div class="required field" if="{ state.oRMapperOptionsFlg }">
+            <label data-is="i18n">LABEL_languageCode</label>
+            <su-dropdown ref="languageCode" items="{ state.targetLanguageItems }" value="{ defaultLanguageCode }"></su-dropdown>
+          </div>
+          <div class="required field" if="{ state.oRMapperOptionsFlg }">
+            <label data-is="i18n">LABEL_containerCode</label>
+            <su-dropdown ref="containerCode" items="{ state.targetContainerItems }" value="{ defaultContainerCode }"></su-dropdown>
+          </div>
+          <div class="required field" if="{ state.oRMapperOptionsFlg }">
+            <label data-is="i18n">LABEL_packageBase</label>
+            <input type="text" ref="packageBase" value="org.docksidestage.dbflute"/>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <div class="required field">
+            <label data-is="i18n">LABEL_url</label>
+            <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
+          </div>
+          <div class="field">
+            <label data-is="i18n">LABEL_schema</label>
+            <input type="text" ref="schema" placeholder="MAIHAMADB"/>
+          </div>
+          <div class="required field">
+            <label data-is="i18n">LABEL_user</label>
+            <input type="text" ref="user" placeholder="maihamadb"/>
+          </div>
+          <div class="field">
+            <label data-is="i18n">LABEL_password</label>
+            <input type="text" ref="password"/>
+          </div>
+        </div>
+        <div class="column bottom aligned">
+          <div class="field">
+            <su-checkbox ref="testConnection">Connect as test</su-checkbox>
+          </div>
+          <div class="field">
+            <button class="ui button primary" onclick="{ create }">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import _ApiFactory from '../common/factory/ApiFactory.js'
+    import _UiAssist from '../common/UiAssist'
+    import { loading$ } from '../common/loading.riot'
+    import { router } from '@riotjs/route'
+
+    const ApiFactory = new _ApiFactory()
+    const UiAssist = new _UiAssist()
+
+    export default {
+      // ===================================================================================
+      //                                                                           Attribute
+      //                                                                           =========
+      state: {
+        targetDatabaseItems: [],
+        targetLanguageItems: [],
+        targetContainerItems: [],
+        classificationMap: {}, // e.g. targetDatabase
+        jdbcDriver: null,
+        needsJdbcDriver: false,
+        oRMapperOptionsFlg: false,
+        latestVersion: null,
+      },
+
+      // ===================================================================================
+      //                                                                           Lifecycle
+      //                                                                           =========
+      onMounted() {
+        this.findClassifications()
+        this.setLatestEngineVersion()
+      },
+
+      // ===================================================================================
+      //                                                                      Initial Method
+      //                                                                      ==============
+      findClassifications() {
+        ApiFactory.classifications().then((json) => {
+          const targetDatabaseItems = Object.keys(json.targetDatabaseMap).map(key => {
+            return {value: key, label: json.targetDatabaseMap[key].databaseName}
+          })
+          const targetLanguageItems = Object.keys(json.targetLanguageMap).map(key => {
+            return {value: key, label: json.targetLanguageMap[key], default: key === 'java'}
+          })
+          const targetContainerItems = Object.keys(json.targetContainerMap).map(key => {
+            return {value: key, label: json.targetContainerMap[key], default: key === 'lasta_di'}
+          })
+          UiAssist.setBlankItem(targetDatabaseItems)
+          UiAssist.setBlankItem(targetLanguageItems)
+          UiAssist.setBlankItem(targetContainerItems)
+
+          this.update({
+            targetDatabaseItems,
+            targetLanguageItems,
+            targetContainerItems,
+            classificationMap: json
+          })
+        })
+      },
+      setLatestEngineVersion() {
+        ApiFactory.engineLatest().then((json) => {
+          this.update({
+            latestVersion: json.latestReleaseVersion
+          })
+        })
+      },
+
+      // ===================================================================================
+      //                                                                        Event Method
+      //                                                                        ============
+      onChangeDatabase(databaseCode) {
+        const database = this.state.classificationMap['targetDatabaseMap'][databaseCode.value]
+        this.jdbcDriver = null
+        this.$('[ref=jdbcDriverFqcn]').value = database.driverName
+        this.$('[ref=url]').value = database.urlTemplate
+        this.$('[ref=schema]').value = database.defaultSchema
+        this.update({
+          needsJdbcDriver: !database.embeddedJar,
+          jdbcDriver: null,
+        })
+      },
+      onToggleOrmSetting() {
+        this.update({
+          oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg
+        })
+        if (this.state.oRMapperOptionsFlg) {
+          // TODO: hakiba v4 su-dropdown で内部的な値は書き変わるがlabelが切り替わらないような気がするので直してもらう（または コントリビュートする） (2022/04/24)
+          this.$('[ref=languageCode]').setAttribute('value', 'java')
+          this.$('[ref=containerCode]').setAttribute('value', 'lasta_di')
+        }
+      },
+      create() {
+        const client = {
+          projectName: this.$('[ref=projectName]').value,
+          databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
+          create: true,
+          mainSchemaSettings: {
+            user: this.$('[ref=user]').value,
+            url: this.$('[ref=url]').value,
+            schema: this.$('[ref=schema]').value,
+            password: this.$('[ref=password]').value
+          },
+          schemaSyncCheckMap: {},
+          dbfluteVersion: this.state.latestVersion,
+          packageBase: this.$('[ref=packageBase]').value,
+          containerCode: this.$('[ref=containerCode]').getAttribute('value'),
+          languageCode: this.$('[ref=languageCode]').getAttribute('value'),
+          jdbcDriverFqcn: this.$('[ref=jdbcDriverFqcn]').value,
+        }
+        if (this.state.jdbcDriver) {
+          client.jdbcDriver = this.state.jdbcDriver
+        }
+        const testConnection = this.$('[ref=testConnection]').checked
+        loading$.trigger('loading', true)
+        ApiFactory.createWelcomeClient(client, testConnection).then(() => {
+          router.push('/')
+          this.showToast(client.projectName)
+        }).finally(() => {
+          loading$.trigger('loading', false)
+        })
+      }
+      // this.changeFile = (event) => {
+      //   let file = event.target.files[0]
+      //   let reader = new FileReader()
+      //   reader.onload = (function() {
+      //     return () => {
+      //       // encode base64
+      //       let result = window.btoa(reader.result)
+      //       self.jdbcDriver = { fileName: null, data: null }
+      //       self.jdbcDriver.fileName = file.name
+      //       self.jdbcDriver.data = result
+      //     }
+      //   }(file))
+      //
+      //   if (file) {
+      //     reader.readAsBinaryString(file)
+      //   }
+      // }
+      // this.showToast = (projectName) => {
+      //   this.successToast({
+      //     title: 'Create task completed',
+      //     message: 'Client for project \'' + projectName + '\', was successfully created!!',
+      //   })
+      // }
+    }
+  </script>
+</welcome>

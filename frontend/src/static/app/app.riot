@@ -1,0 +1,51 @@
+<app>
+  <router base="{state.base}">
+    <route each={ item in state.pages } path="{item.name}">
+      <div class="fixed-user-area">
+        <side-menu></side-menu>
+        <content is="{item.name}"></content>
+      </div>
+    </route>
+  </router>
+  <loading></loading>
+  <!--  <result-view></result-view>-->
+  <!--  <network-error-view></network-error-view>-->
+  <!--  <su-toast position="top right"></su-toast>-->
+  <!--  <su-confirm position="center"></su-confirm>-->
+
+  <script>
+    import * as riot from 'riot'
+    import CommonMenu from './common/common-menu.riot'
+    import Loading from './common/loading.riot'
+    import Welcome from './welcome/welcome.riot'
+    import Create from './client/create.riot'
+    import { Router, Route } from '@riotjs/route'
+
+    const pages = [
+      {
+        name: 'welcome',
+        component: Welcome
+      },
+      {
+        name: 'create',
+        component: Create
+      },
+    ]
+
+    export default {
+      components: {
+        Router,
+        Route,
+        Loading,
+        'side-menu': CommonMenu,
+      },
+      state: {
+        pages,
+        base: '/#'
+      },
+      onBeforeMount() {
+        pages.forEach(page => riot.register(page.name, page.component))
+      },
+    }
+  </script>
+</app>

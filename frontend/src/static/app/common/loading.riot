@@ -1,0 +1,41 @@
+<loading>
+  <div class="ui page dimmer inverted {getLoadingClasses()}">
+    <div class="ui huge text loader">Loading</div>
+  </div>
+
+  <style>
+    .ui.dimmer {
+      z-index: 20000
+    }
+  </style>
+
+  <script>
+    import observable from 'riot-observable'
+    import classNames from '../plugin/class-names'
+
+    let loadingCounter = 0
+    // TODO: hakiba mixinかpluginとして使えるようにしたい (2022/04/24)
+    export const loading$ = observable()
+
+    export default {
+      state: {
+        counter: loadingCounter
+      },
+      onMounted() {
+        loading$.on('loading', visible => {
+          if (visible) {
+            loadingCounter++
+          } else {
+            loadingCounter--
+          }
+          this.update({ counter: loadingCounter })
+        })
+      },
+      getLoadingClasses() {
+        return classNames({
+          active: this.state.counter > 0
+        })
+      }
+    }
+  </script>
+</loading>

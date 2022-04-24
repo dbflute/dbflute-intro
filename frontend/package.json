@@ -1,0 +1,42 @@
+{
+  "name": "dbflute-intro",
+  "version": "0.5.0",
+  "dependencies": {
+    "sortablejs": "^1.14.0",
+    "uuid": "^8.3.2"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode development --inline --watch --hot --content-base ./src/static --port 3001 --open",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "acorn": "^8.0.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-es2015-riot": "^1.1.0",
+    "css-loader": "^1.0.1",
+    "eslint": "^5.16.0",
+    "eslint-loader": "^2.2.1",
+    "eslint-plugin-html": "^3.1.1",
+    "ffetch": "^0.1.1",
+    "prismjs": "^1.27.0",
+    "q": "^1.5.1",
+    "riot": "^6.1.2",
+    "riot-i18nlet": "^0.2.5",
+    "@riotjs/route": "^8.0.1",
+    "@riotjs/hot-reload": "^6.0.0",
+    "@riotjs/webpack-loader": "^6.0.0",
+    "riot-observable": "^3.0.0",
+    "rxjs": "^6.6.3",
+    "semantic-ui-riot": "^2.2.4",
+    "style-loader": "^0.23.1",
+    "vinyl-source-stream": "^2.0.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=6.7.0"
+  }
+}
