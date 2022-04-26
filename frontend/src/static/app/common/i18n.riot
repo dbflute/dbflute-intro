@@ -1,0 +1,26 @@
+<i18n>
+  <span>{ message }</span>
+
+  <span ref="original" name="original" class="original">
+    <slot />
+  </span>
+
+  <style>
+    .original {
+      display: none;
+    }
+  </style>
+  <script>
+    import i18n from 'i18next'
+
+    export default {
+      onMounted() {
+        this.update()
+      },
+      onUpdated() {
+        const key = this.$('[ref=original]').innerText.trim()
+        this.message = i18n.t(key) || key
+      }
+    }
+  </script>
+</i18n>

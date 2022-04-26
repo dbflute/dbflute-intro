@@ -5,19 +5,19 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label data-is="i18n">LABEL_projectName</label>
+            <label is="i18n">LABEL_projectName</label>
             <input type="text" ref="projectName" placeholder="maihamadb"/>
           </div>
           <div class="required field">
-            <label data-is="i18n">LABEL_databaseCode</label>
+            <label is="i18n">LABEL_databaseCode</label>
             <su-dropdown ref="databaseCode" items="{ state.targetDatabaseItems }" onchange="{ onChangeDatabase }"></su-dropdown>
           </div>
           <div class="required field">
-            <label data-is="i18n">LABEL_jdbcDriverFqcn</label>
+            <label is="i18n">LABEL_jdbcDriverFqcn</label>
             <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver"/>
           </div>
           <div class="required field" if="{ state.needsJdbcDriver }">
-            <label data-is="i18n">LABEL_jdbcDriverFile</label>
+            <label is="i18n">LABEL_jdbcDriverFile</label>
             <input type="file" onchange="{ changeFile }"/>
           </div>
         </div>
@@ -27,15 +27,15 @@
           </div>
           <!-- ifを使用するとDOMが生成されずthis.$でアクセスできなくなるので、semantic-uiのhidden属性で表示切り替えする -->
           <div class="required field" hidden={!state.oRMapperOptionsFlg}>
-            <label data-is="i18n">LABEL_languageCode</label>
+            <label is="i18n">LABEL_languageCode</label>
             <su-dropdown ref="languageCode" items="{ state.targetLanguageItems }" value="{ defaultLanguageCode }"></su-dropdown>
           </div>
           <div class="required field" hidden={!state.oRMapperOptionsFlg}>
-            <label data-is="i18n">LABEL_containerCode</label>
+            <label is="i18n">LABEL_containerCode</label>
             <su-dropdown ref="containerCode" items="{ state.targetContainerItems }" value="{ defaultContainerCode }"></su-dropdown>
           </div>
           <div class="required field" hidden={!state.oRMapperOptionsFlg}>
-            <label data-is="i18n">LABEL_packageBase</label>
+            <label is="i18n">LABEL_packageBase</label>
             <input type="text" ref="packageBase" value="org.docksidestage.dbflute"/>
           </div>
         </div>
@@ -43,19 +43,19 @@
       <div class="row">
         <div class="column">
           <div class="required field">
-            <label data-is="i18n">LABEL_url</label>
+            <label is="i18n">LABEL_url</label>
             <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
           </div>
           <div class="field">
-            <label data-is="i18n">LABEL_schema</label>
+            <label is="i18n">LABEL_schema</label>
             <input type="text" ref="schema" placeholder="MAIHAMADB"/>
           </div>
           <div class="required field">
-            <label data-is="i18n">LABEL_user</label>
+            <label is="i18n">LABEL_user</label>
             <input type="text" ref="user" placeholder="maihamadb"/>
           </div>
           <div class="field">
-            <label data-is="i18n">LABEL_password</label>
+            <label is="i18n">LABEL_password</label>
             <input type="text" ref="password"/>
           </div>
         </div>
@@ -72,15 +72,20 @@
   </div>
 
   <script>
+    import * as riot from 'riot'
     import _ApiFactory from '../common/factory/ApiFactory.js'
     import _UiAssist from '../common/UiAssist'
     import { loading$ } from '../common/loading.riot'
+    import i18n from '../common/i18n.riot'
     import { router } from '@riotjs/route'
 
     const ApiFactory = new _ApiFactory()
     const UiAssist = new _UiAssist()
 
     export default {
+      components: {
+        i18n
+      },
       // ===================================================================================
       //                                                                           Attribute
       //                                                                           =========
