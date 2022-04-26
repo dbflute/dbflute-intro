@@ -1,6 +1,76 @@
 import FFetchWrapper from '../FFetchWrapper';
+import i18n from 'i18next';
+import { resultModal$ } from '../result-view.riot'
 
 const ffetch = new FFetchWrapper();
+
+//===================================================================================
+//                                                                     Error Handling
+//                                                                     ==============
+// see IntroApiFailureHook.java for failure response
+ffetch.errors.subscribe(response => {
+  let header = null;
+  let messages = null;
+  // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
+  //let reload = false;
+  let validationError = false;
+  if (response.status === 0) {
+    messages = ['Cannot access the server, retry later'];
+  }
+  // #hope refactor: extract to method
+  if (response.status === 400) {
+    header = '400 Bad Request';
+    // #hope improvement: formal validation error handling
+    if (response.data.failureType) { // basically here (unified JSON if 400)
+      header = header + ': ' + response.data.failureType;
+      validationError = response.data.failureType === 'VALIDATION_ERROR';
+    }
+    if (response.data.messages) { // basically here (unified JSON if 400)
+      var messageList = new Array();
+      for (var key in response.data.messages) {
+        for (var i in response.data.messages[key]) {
+          var message = response.data.messages[key][i];
+          if (key.match(/List/)) {
+            if (key.match(/[0-9]/)) {
+              var newKey = '';
+              var splitList = key.split(/[0-9]/);
+              for (var i in splitList) {
+                newKey += splitList[i].replace(/[0-9]/, '');
+              }
+              key = newKey;
+            } else {
+              key += '[]';
+            }
+          }
+          if (key.lastIndexOf('.')) {
+            key = key.substring(key.lastIndexOf('.') + 1);
+          }
+          if (key === '_global') { // don't use key if global
+            messageList.push(message + '\r\n');
+          } else {
+            const label = i18n.t(`LABEL_${key}`);
+            const symbol = (label === '') ? '' : '：';
+            messageList.push(`${label}${symbol}${message}\r\n`);
+          }
+        }
+      }
+      messages = messageList;
+    } else {
+      messages = Array.isArray(response.data) ? response.data : [response.data];
+    }
+  } else if (response.status === 401) {
+    header = '401 Not Authorized';
+  } else if (response.status === 403) {
+    header = '403 Forbidden';
+  } else if (response.status >= 500) {
+    header = '500 Server Error';
+    messages = Array.isArray(response.data) ? response.data : [response.data];
+  }
+  if (header != null || messages != null) {
+    const modalSize = validationError ? 'small' : 'large';
+    resultModal$.trigger('result', { header, messages, modalSize })
+  }
+});
 
 export default class ApiFactory {
 

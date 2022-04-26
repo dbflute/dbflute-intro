@@ -8,8 +8,7 @@
     </route>
   </router>
   <loading></loading>
-  <!--  <result-view></result-view>-->
-  <!--  <network-error-view></network-error-view>-->
+  <result-view></result-view>
   <!--  <su-toast position="top right"></su-toast>-->
   <!--  <su-confirm position="center"></su-confirm>-->
 
@@ -18,6 +17,7 @@
     import CommonMenu from './common/common-menu.riot'
     import Loading from './common/loading.riot'
     import Welcome from './welcome/welcome.riot'
+    import ResultView from './common/result-view.riot'
     import Create from './client/create.riot'
     import { Router, Route } from '@riotjs/route'
 
@@ -37,6 +37,7 @@
         Router,
         Route,
         Loading,
+        ResultView,
         'side-menu': CommonMenu,
       },
       state: {

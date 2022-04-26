@@ -1,0 +1,67 @@
+<result-view>
+  <su-modal class="{ state.sizeStyle } architrave" ref="modal" modal="{ state.option }" show="{ state.show }">
+    <div class="message-area">
+      <pre each="{ message in state.messages }">{ message }</pre>
+    </div>
+  </su-modal>
+
+  <style>
+    .ui.modal.architrave > .header,
+    .ui.modal.architrave > .actions {
+      background-color: #FFEEEE
+    }
+
+    .ui.modal.architrave > .header {
+      border-radius: 0px 0px 50px 0px / 0px 0px 50px 0px;
+      color: #AA4455
+    }
+    .ui.modal.architrave > .actions {
+      border-radius: 50px 0px 0px 0px / 50px 0px 0px 0px;
+    }
+
+    .message-area {
+      max-height: 500px;
+      overflow: scroll;
+      border-radius: 20px 0px 0px 0px / 20px 0px 0px 0px;
+      padding-left: 10px;
+    }
+
+    .message-area pre {
+      font-family: Monaco, "Courier New", serif;
+    }
+  </style>
+
+  <script>
+    import observable from 'riot-observable'
+    // TODO: hakiba mixinかpluginとして使えるようにしたい (2022/04/24)
+    export const resultModal$ = observable()
+
+    export default {
+      state: {
+        sizeStyle: '',
+        option: {
+          closable: true,
+          buttons: [{
+            text: 'Close',
+            default: true
+          }]
+        },
+        show: false,
+        messages: []
+      },
+      onMounted() {
+        resultModal$.on('result', content => {
+          this.update({
+            sizeStyle: content.modalSize,
+            option: {
+              ...this.state,
+              header: content.header
+            },
+            messages: content.messages,
+            show: true
+          })
+        })
+      }
+    }
+  </script>
+</result-view>
