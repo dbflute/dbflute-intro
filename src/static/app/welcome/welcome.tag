@@ -9,6 +9,7 @@
     o O/Rマッパー関連設定を表示/非表示できる (最初は非表示: AltoDBFlute利用を想定して)
     o ファイルアップロードもあるよ
     o DBMSの選択によって他の項目の値が書き換わるよ
+  -->
   <h2 class="heading">Welcome to DBFlute</h2>
   <div class="ui form">
     <div class="ui stackable two column divided grid">
