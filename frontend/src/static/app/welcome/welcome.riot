@@ -25,15 +25,16 @@
           <div class="field">
             <button class="ui button mini" onclick="{ onToggleOrmSetting }">O/R Mapper settings</button>
           </div>
-          <div class="required field" if="{ state.oRMapperOptionsFlg }">
+          <!-- ifを使用するとDOMが生成されずthis.$でアクセスできなくなるので、semantic-uiのhidden属性で表示切り替えする -->
+          <div class="required field" hidden={!state.oRMapperOptionsFlg}>
             <label data-is="i18n">LABEL_languageCode</label>
             <su-dropdown ref="languageCode" items="{ state.targetLanguageItems }" value="{ defaultLanguageCode }"></su-dropdown>
           </div>
-          <div class="required field" if="{ state.oRMapperOptionsFlg }">
+          <div class="required field" hidden={!state.oRMapperOptionsFlg}>
             <label data-is="i18n">LABEL_containerCode</label>
             <su-dropdown ref="containerCode" items="{ state.targetContainerItems }" value="{ defaultContainerCode }"></su-dropdown>
           </div>
-          <div class="required field" if="{ state.oRMapperOptionsFlg }">
+          <div class="required field" hidden={!state.oRMapperOptionsFlg}>
             <label data-is="i18n">LABEL_packageBase</label>
             <input type="text" ref="packageBase" value="org.docksidestage.dbflute"/>
           </div>
