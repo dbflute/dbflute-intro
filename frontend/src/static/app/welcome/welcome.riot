@@ -16,9 +16,9 @@
             <label is="i18n">LABEL_jdbcDriverFqcn</label>
             <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver"/>
           </div>
-          <div class="required field" if="{ state.needsJdbcDriver }">
+          <div class="required field" hidden="{ !state.needsJdbcDriver }">
             <label is="i18n">LABEL_jdbcDriverFile</label>
-            <input type="file" onchange="{ changeFile }"/>
+            <input type="file" accept=".jar" onchange="{ changeFile }"/>
           </div>
         </div>
         <div class="column">
@@ -72,7 +72,6 @@
   </div>
 
   <script>
-    import * as riot from 'riot'
     import _ApiFactory from '../common/factory/ApiFactory.js'
     import _UiAssist from '../common/UiAssist'
     import { loading$ } from '../common/loading.riot'
@@ -195,24 +194,20 @@
         }).finally(() => {
           loading$.trigger('loading', false)
         })
+      },
+      changeFile(event) {
+        const file = event.target.files[0]
+        const reader = new FileReader()
+        reader.onload = () => {
+          // encode base64
+          const result = window.btoa(reader.result)
+          this.state.jdbcDriver = { fileName: file.name, data: result }
+        }
+
+        if (file) {
+          reader.readAsBinaryString(file)
+        }
       }
-      // this.changeFile = (event) => {
-      //   let file = event.target.files[0]
-      //   let reader = new FileReader()
-      //   reader.onload = (function() {
-      //     return () => {
-      //       // encode base64
-      //       let result = window.btoa(reader.result)
-      //       self.jdbcDriver = { fileName: null, data: null }
-      //       self.jdbcDriver.fileName = file.name
-      //       self.jdbcDriver.data = result
-      //     }
-      //   }(file))
-      //
-      //   if (file) {
-      //     reader.readAsBinaryString(file)
-      //   }
-      // }
       // this.showToast = (projectName) => {
       //   this.successToast({
       //     title: 'Create task completed',
