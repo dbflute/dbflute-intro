@@ -10,11 +10,11 @@
 
    tagの階層
     ex-schema-policy-check.tag
-    |- schema-policy-check-statement-form-wrapper
-       |- schema-policy-check-statement-form
-          |- schema-policy-check-statement-form-expected
-             |- schema-policy-check-statement-form-docuement-link
-             |- schema-policy-check-statement-form-expected-field
+    |- schema-policy-check-statement-form-wrapper.tag
+       |- schema-policy-check-statement-form.tag
+          |- schema-policy-check-statement-form-expected.tag
+             |- schema-policy-check-statement-form-docuement-link.tag
+             |- schema-policy-check-statement-form-expected-field.tag
    -->
   <div class="ui container">
     <h2>Schema Policy Check</h2>
