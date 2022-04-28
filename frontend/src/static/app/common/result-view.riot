@@ -1,5 +1,5 @@
 <result-view>
-  <su-modal class="{ state.sizeStyle } architrave" ref="modal" modal="{ state.option }" show="{ state.show }">
+  <su-modal class="{ state.sizeStyle } architrave" ref="modal" modal="{ state.option }" show="{ state.show }" onhide="{ onHide }">
     <div class="message-area">
       <pre each="{ message in state.messages }">{ message }</pre>
     </div>
@@ -61,6 +61,9 @@
             show: true
           })
         })
+      },
+      onHide() {
+        this.update({ show: false })
       }
     }
   </script>
