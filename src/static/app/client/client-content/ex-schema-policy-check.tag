@@ -2,11 +2,11 @@
   <!-- ClientのSchemaPolicyCheckの実行画面 (written at 2022/02/20)
    機能:
     o SchemaPolicyCheckを実行し、結果を表示する。
-    o PolicySettingsの状態を表示する。
+    o ポリシー設定の状態を表示する。
 
    作りの特徴:
     o 実行中はモーダルを表示して他の操作をできなくしている。
-    o PolicySettingsのチェックボックスの状態を変化させることでSchemaPolicyMapを編集することができる。
+    o ポリシーのチェックボックスの状態を変化させることでSchemaPolicyMapを編集することができる。
 
    tagの階層
     ex-schema-policy-check.tag
@@ -270,7 +270,7 @@
     //                                       Policy Settings
     //                                       ---------------
     /**
-     * PolicySettingsに並べるタブの名前の定義
+     * ポリシー設定に並べるタブの名前の定義
      */
     this.tabTitles = {
       wholeMap : 'Whole Schema Policy',
