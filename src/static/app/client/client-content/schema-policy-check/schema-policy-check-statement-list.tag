@@ -2,10 +2,10 @@
   <!-- ClientのSchemaPolicyCheckのTableSchemaPolicyとColumnSchemaPolicyののstatementの部分 (written at 2022/04/14)
    機能:
     o statementをドラッグアンドドロップで入れ替えられる
+    o 並び順が変えられるとdfpropも書き変わる
 
    作りの特徴:
     o statementにコメントがあるかどうかで表示の仕方を変えている
-    o 並び順が変えられるとdfpropも書き変わる
    -->
   <ui-list items="{ opts.statements }" onsorted="{ moveStatement }" sortable="{ true }" options="{ prepareListOptions() }">
     

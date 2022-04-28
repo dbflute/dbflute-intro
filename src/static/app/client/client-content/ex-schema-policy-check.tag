@@ -2,11 +2,12 @@
   <!-- ClientのSchemaPolicyCheckの実行画面 (written at 2022/02/20)
    機能:
     o SchemaPolicyCheckを実行し、結果を表示する。
+    o ポリシーのチェックボックスの状態を変化させることでSchemaPolicyMapを編集することができる。
     o ポリシー設定の状態を表示する。
 
    作りの特徴:
     o 実行中はモーダルを表示して他の操作をできなくしている。
-    o ポリシーのチェックボックスの状態を変化させることでSchemaPolicyMapを編集することができる。
+    o チェックボックスのOn/Offでつどつどdfpropを修正しにいってる。
 
    tagの階層
     ex-schema-policy-check.tag

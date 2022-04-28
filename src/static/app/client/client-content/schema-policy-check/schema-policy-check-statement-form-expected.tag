@@ -1,10 +1,11 @@
 <schema-policy-check-statement-form-expected>
   <!-- ClientのSchemaPolicyCheckのStatement追加フォームのExpectedの部分 (written at 2022/03/17)
    機能:
-    o フォームを出したり閉じたりする
+    o expected部分の情報を入力することができる
 
    作りの特徴:
-    o フォーム本体は別tagに切り出し、ここではフォームの開閉の役割のみ担う
+    o input部分は別tagに切り出されている。
+    o and/orでつなげて複数のexpectedを設定することができる。
    -->
 
   <div class="grouped fields required">
