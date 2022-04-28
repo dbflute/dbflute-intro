@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <!-- imput部分は別tagに切り出し -->
+    <!-- input部分は別tagに切り出し -->
     <schema-policy-check-statement-form-expected-field
       each="{ field, index in state.fields }" key="{ field.id }"
       id="{ field.id }"
@@ -100,7 +100,7 @@
     }
 
     /**
-     * imputフィールドの追加処理。
+     * inputフィールドの追加処理。
      */
     self.handleFieldAdd = () => {
       self.props.handleFieldAdd()
@@ -108,7 +108,7 @@
     }
 
     /**
-     * imputフィールドの削除処理。
+     * inputフィールドの削除処理。
      */
     self.handleFileldDelete = (id) => {
       self.props.handleFieldDelete(id)

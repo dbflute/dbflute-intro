@@ -51,7 +51,7 @@
         <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
       </toggle-help>
 
-      <!-- imput -->
+      <!-- input -->
       <div class="ui input field">
         <su-dropdown items="{ subjectDropdownItems }" ref="subject"></su-dropdown>
       </div>
@@ -93,7 +93,7 @@
         <a href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#example" target="_blank">more sample</a>
       </toggle-help>
 
-      <!-- imput -->
+      <!-- input -->
       <div class="ui icon input field" each="{ condition, index in statement.conditions }">
         <input type="text" name="condition" ref="condition_{index}" value="{ condition }" onchange="{ handleChange }">
         <i class="delete link icon" if={statement.conditions.length > 1} onclick="{ statement.deleteConditionField.bind(this, index) }"></i>
@@ -143,7 +143,7 @@
         <p>
           <a class="help link" href="http://dbflute.seasar.org/ja/manual/reference/dfprop/schemapolicy/index.html#tablestatementsupplement" target="_blank">document</a>
         </p>
-        <!-- imput -->
+        <!-- iにnput -->
         <div class="ui input">
           <input type="text" name="comment" ref="comment" value="{ statement.comment }" onchange="{ handleChange }">
         </div>
