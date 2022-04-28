@@ -110,6 +110,7 @@
 
     /**
      * inputフィールドの削除処理。
+     * @param {String} id - expectedのフィールドを一意に特定するキー (NotNull)
      */
     self.handleFileldDelete = (id) => {
       self.props.handleFieldDelete(id)

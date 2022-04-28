@@ -337,7 +337,7 @@
      * [return] IDカラムなら論理名は "なんとかID" にしよう
      *
      * @param {string} statement - statement文字列 (NotNull)
-     * @return {string} statement文字列 (NotNull)
+     * @return {string} statement文字列 (NotNull, EmptyAllowed: そもそもコメントがない場合)
      */
     this.extractComment = (statement) => {
       if (!self.isIncludeComment(statement)) {
@@ -364,7 +364,7 @@
     /**
      * SchemaPolicyを削除する。
      * @param {string} mapType - 編集対象となるマップ種別 (NotNull, only 'tableMap', 'columnMap')
-     * @param {string} statement - 削除対象のstatement
+     * @param {string} statement - 削除対象のstatement (NotNull)
      */
     this.deleteStatement = (mapType, statement) => {
       self.suConfirm('Are you sure to delete this statement?').then(() => {

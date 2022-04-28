@@ -286,6 +286,9 @@
 
     /**
      * Expectedの値が変わったときのイベントハンドラー
+     * @param id - expectedのフィールドを一意に特定するキー (NotNull)
+     * @param subjectVerb 主語動詞
+     * @param complement 補足
      */
     self.handleExpectedFieldChange = (id, subjectVerb, complement) => {
       const fields = self.state.expected.fields
@@ -313,7 +316,7 @@
 
     /**
      * Expectedのinputフィールドが削除されたときのインベントハンドラー
-     * @param {String} id - expectedのフィールドを一意に特定するキー
+     * @param {String} id - expectedのフィールドを一意に特定するキー (NotNull)
      */
     this.handleExpectedFieldDelete = (id) => {
       const fields = self.state.expected.fields
@@ -350,6 +353,7 @@
 
     /**
      * プレビューを構築する。
+     * @return {String} 作成されたプレビューの文字列
      */
     this.buildPreview = () => {
       if (!self.mounted) { // 何も値が反映されていない時はこれを表示

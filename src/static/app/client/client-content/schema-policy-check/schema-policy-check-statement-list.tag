@@ -88,7 +88,7 @@
 
     /**
      * ステートメント文にコメントを含んでいるかを判定します
-     * @param statement {string} ステートメント文
+     * @param statement {string} ステートメント文 (NotNull)
      * @return {boolean} true:コメントを含んでいる, false:含んでいない
      */
     this.hasComment = (statement) => {
@@ -97,8 +97,8 @@
 
     /**
      * ステートメント文からコメントを除去します
-     * @param statement {string} ステートメント文
-     * @return {string} コメントを除去したステートメント文
+     * @param statement {string} ステートメント文 (NotNull)
+     * @return {string} コメントを除去したステートメント文 (NotNull)
      */
     this.removeComment = (statement) => {
       if (!self.hasComment(statement)) {
@@ -110,7 +110,7 @@
 
     /**
      * ステートメント文からコメントを抽出します
-     * @param statement {string} ステートメント文
+     * @param statement {string} ステートメント文 (NotNull)
      * @return {string} ステートメント文中のコメント (NotNull, EmptyAllowed: コメント自体がなかったとき)
      */
     this.extractComment = (statement) => {
@@ -124,7 +124,7 @@
     /**
      * リストtagに渡すオプションを構築します
      * - リストtagのoption属性として渡すことで、tag内で変数や関数として呼び出すことができます
-     * @return {any} リストに渡すオプション
+     * @return {any} リストに渡すオプション (NotNull)
      */
     this.prepareListOptions = () => {
       return {
