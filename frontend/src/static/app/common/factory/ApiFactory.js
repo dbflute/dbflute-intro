@@ -72,7 +72,7 @@ ffetch.errors.subscribe(response => {
   }
 });
 
-export default class ApiFactory {
+export class ApiFactory {
 
   // ===============================================================================
   //                                                                           Intro
@@ -298,3 +298,5 @@ export default class ApiFactory {
     })
   }
 }
+
+export const api = new ApiFactory();

@@ -1,9 +1,9 @@
 <app>
-  <router base="{state.base}">
-    <route each={ item in state.pages } path="{item.name}">
+  <router base={ state.base } initial-route={ state.initialRoute } >
+    <route each={ page in state.pages } path={ page.path }>
       <div class="fixed-user-area">
-        <side-menu></side-menu>
-        <content is="{item.name}"></content>
+        <side-menu is="{ page.sideMenu.name }"></side-menu>
+        <content is="{ page.content.name }"></content>
       </div>
     </route>
   </router>
@@ -16,21 +16,38 @@
     import * as riot from 'riot'
     import CommonMenu from './common/common-menu.riot'
     import Loading from './common/loading.riot'
+    import Main from './main/main.riot'
     import Welcome from './welcome/welcome.riot'
     import ResultView from './common/result-view.riot'
     import Create from './client/create.riot'
-    import { Router, Route } from '@riotjs/route'
+    import Client from './client/client.riot'
+    import ClientMenu from './client/client-menu.riot'
+    import { Router, Route, router } from '@riotjs/route'
+    import { api } from './common/factory/ApiFactory'
 
     const pages = [
       {
-        name: 'welcome',
-        component: Welcome
+        path: 'main',
+        content: Main,
+        sideMenu: CommonMenu,
       },
       {
-        name: 'create',
-        component: Create
+        path: 'client/:project_name/:menu_type?/:menu_name?',
+        content: Client,
+        sideMenu: ClientMenu,
+      },
+      {
+        path: 'welcome',
+        content: Welcome,
+        sideMenu: CommonMenu
+      },
+      {
+        path: 'create',
+        content: Create,
+        sideMenu: CommonMenu
       },
     ]
+    const initialRoute = `${window.location.hash ? window.location.hash.replace('#', '') : 'main'}`
 
     export default {
       components: {
@@ -38,15 +55,21 @@
         Route,
         Loading,
         ResultView,
-        'side-menu': CommonMenu,
       },
       state: {
         pages,
+        initialRoute,
         base: '/#'
       },
       onBeforeMount() {
-        pages.forEach(page => riot.register(page.name, page.component))
-      },
+        pages.forEach(page => riot.register(page.content.name, page.content))
+        Array.from(new Set(pages.map(page => page.sideMenu))).forEach(menu => riot.register(menu.name, menu))
+        api.clientList().then((clients) => {
+          if (clients.length === 0) {
+            router.push('welcome')
+          }
+        })
+      }
     }
   </script>
 </app>

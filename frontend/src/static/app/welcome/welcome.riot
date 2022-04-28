@@ -72,14 +72,11 @@
   </div>
 
   <script>
-    import _ApiFactory from '../common/factory/ApiFactory.js'
-    import _UiAssist from '../common/UiAssist'
+    import { api } from '../common/factory/ApiFactory.js'
+    import { setBlankItem } from '../common/UiAssist'
     import { loading$ } from '../common/loading.riot'
     import i18n from '../common/i18n.riot'
     import { router } from '@riotjs/route'
-
-    const ApiFactory = new _ApiFactory()
-    const UiAssist = new _UiAssist()
 
     export default {
       components: {
@@ -111,7 +108,7 @@
       //                                                                      Initial Method
       //                                                                      ==============
       findClassifications() {
-        ApiFactory.classifications().then((json) => {
+        api.classifications().then((json) => {
           const targetDatabaseItems = Object.keys(json.targetDatabaseMap).map(key => {
             return {value: key, label: json.targetDatabaseMap[key].databaseName}
           })
@@ -121,9 +118,9 @@
           const targetContainerItems = Object.keys(json.targetContainerMap).map(key => {
             return {value: key, label: json.targetContainerMap[key], default: key === 'lasta_di'}
           })
-          UiAssist.setBlankItem(targetDatabaseItems)
-          UiAssist.setBlankItem(targetLanguageItems)
-          UiAssist.setBlankItem(targetContainerItems)
+          setBlankItem(targetDatabaseItems)
+          setBlankItem(targetLanguageItems)
+          setBlankItem(targetContainerItems)
 
           this.update({
             targetDatabaseItems,
@@ -134,7 +131,7 @@
         })
       },
       setLatestEngineVersion() {
-        ApiFactory.engineLatest().then((json) => {
+        api.engineLatest().then((json) => {
           this.update({
             latestVersion: json.latestReleaseVersion
           })
@@ -188,7 +185,7 @@
         }
         const testConnection = this.$('[ref=testConnection]').checked
         loading$.trigger('loading', true)
-        ApiFactory.createWelcomeClient(client, testConnection).then(() => {
+        api.createWelcomeClient(client, testConnection).then(() => {
           router.push('/')
           this.showToast(client.projectName)
         }).finally(() => {

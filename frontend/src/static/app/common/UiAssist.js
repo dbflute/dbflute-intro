@@ -1,5 +1,3 @@
-export default class UiAssist {
-  setBlankItem(itemList) {
-    itemList.unshift({ value: null, label: '' })
-  }
+export function setBlankItem(itemList) {
+  itemList.unshift({ value: null, label: '' })
 }
