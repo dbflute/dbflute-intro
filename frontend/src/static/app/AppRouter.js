@@ -36,7 +36,10 @@ export const pages = Object.freeze({
     content: Client,
     sideMenu: ClientMenu,
     open: (projectName, menuType, menuName) => {
-      router.push(`client/${projectName}/${menuType}/${menuName}`)
+      if (!projectName) {
+        return
+      }
+      router.push(`client/${[projectName, menuType, menuName].filter(param => param).join('/')}`)
     }
   },
   /**
