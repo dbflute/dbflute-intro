@@ -130,6 +130,8 @@
      * DBFluteクライアントの基本設定情報を準備する。
      */
     this.prepareCurrentProject = () => {
+      // 別タグの話だが、こんな議論をしている
+      // https://github.com/dbflute/dbflute-intro/pull/394#discussion_r850480927
       ApiFactory.document(self.opts.projectName).then((response) => {
         self.documentSettingModal.documentSetting = response
         self.update()

@@ -131,9 +131,10 @@
     // #thinking setting を初期化するって誰のなんのためなんだろうという違和感がある、画面としては state とか modal とかを初期化するなら意味はわかる、そういう関数名にしたい by cabos
     this.initSyncSchemaSetting = () => {
       // #thinking "response" というのはやはり、意味のある名前にしたいな by cabos
+      // https://github.com/dbflute/dbflute-intro/pull/394#discussion_r850480927
       ApiFactory.syncSchema(self.props.projectName).then((response) => {
         // #thinking サーバからデータを初期化して state を初期化する処理と、modalを初期化する処理は分けたほうが見通しがいいのかな？ by cabos
-        // https://github.com/dbflute/dbflute-intro/pull/394#discussion_r850480927
+        // https://github.com/dbflute/dbflute-intro/pull/394#discussion_r850495751
         self.syncSettingModal.syncSetting = response
         self.state.syncSetting = response
         self.update()
