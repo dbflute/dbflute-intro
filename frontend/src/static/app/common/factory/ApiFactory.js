@@ -68,7 +68,7 @@ ffetch.errors.subscribe(response => {
   }
   if (header != null || messages != null) {
     const modalSize = validationError ? 'small' : 'large'
-    resultModal$.trigger('result', {header, messages, modalSize})
+    resultModal$.trigger('result', { header, messages, modalSize })
   }
 })
 

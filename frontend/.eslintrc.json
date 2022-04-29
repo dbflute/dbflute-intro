@@ -28,7 +28,11 @@
       "never"
     ],
     "no-var": 2,
-    "prefer-arrow-callback": "error"
+    "prefer-arrow-callback": "error",
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ]
   },
   "plugins": [
     "html"
