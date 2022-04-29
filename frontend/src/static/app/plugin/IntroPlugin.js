@@ -22,7 +22,6 @@ function classNames(classes) {
  * @param {string|null} message メッセージ（未設定の場合は省略される）
  */
 function successToast({title= null, message= null}) {
-  console.log('successToast', title, message)
   this.suToast({
     title, // keyと渡す変数名が同じため省略する ("title: title,"としているのと同じ)
     message, // keyと渡す変数名が同じため省略する ("message: message,"としているのと同じ)

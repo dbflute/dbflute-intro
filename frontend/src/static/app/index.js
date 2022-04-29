@@ -4,7 +4,7 @@ import 'semantic-ui-riot'
 import './plugin/i18n'
 import introPlugin from './plugin/IntroPlugin'
 
-const mountApp = riot.component(App);
+const mountApp = riot.component(App)
 riot.install(introPlugin)
 
-mountApp(document.getElementById('root'));
+mountApp(document.getElementById('root'))

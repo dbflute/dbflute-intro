@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
   entry: './src/static/app/index.js',
@@ -9,6 +9,9 @@ module.exports = {
   devServer: {
     proxy: { // proxy URLs to backend development server
       '/api': 'http://localhost:8925'
+    },
+    static: {
+      directory: './src/static'
     }
   },
   module: {
@@ -22,14 +25,7 @@ module.exports = {
             options: {
               hot: true
             }
-          },
-          {
-            loader: 'eslint-loader',
-            options: {
-              fix: true,
-              emitWarning: true,
-            }
-          },
+          }
         ]
       },
       {
@@ -43,11 +39,19 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    // riot.route で出るエラー回避
+    fallback: { 'url': false }
+  },
   devtool: 'source-map',
   plugins: [
     new webpack.LoaderOptionsPlugin({options: {}}),
     new webpack.ProvidePlugin({
       riot: 'riot',
+    }),
+    new ESLintPlugin({
+      fix: true,
+      emitWarning: true,
     })
   ]
 };

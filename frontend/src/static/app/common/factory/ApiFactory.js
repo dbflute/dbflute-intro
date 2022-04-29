@@ -1,76 +1,76 @@
-import FFetchWrapper from '../FFetchWrapper';
-import i18n from 'i18next';
+import FFetchWrapper from '../FFetchWrapper'
+import i18n from 'i18next'
 import { resultModal$ } from '../result-view.riot'
 
-const ffetch = new FFetchWrapper();
+const ffetch = new FFetchWrapper()
 
 //===================================================================================
 //                                                                     Error Handling
 //                                                                     ==============
 // see IntroApiFailureHook.java for failure response
 ffetch.errors.subscribe(response => {
-  let header = null;
-  let messages = null;
+  let header = null
+  let messages = null
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
   //let reload = false;
-  let validationError = false;
+  let validationError = false
   if (response.status === 0) {
-    messages = ['Cannot access the server, retry later'];
+    messages = ['Cannot access the server, retry later']
   }
   // #hope refactor: extract to method
   if (response.status === 400) {
-    header = '400 Bad Request';
+    header = '400 Bad Request'
     // #hope improvement: formal validation error handling
     if (response.data.failureType) { // basically here (unified JSON if 400)
-      header = header + ': ' + response.data.failureType;
-      validationError = response.data.failureType === 'VALIDATION_ERROR';
+      header = header + ': ' + response.data.failureType
+      validationError = response.data.failureType === 'VALIDATION_ERROR'
     }
     if (response.data.messages) { // basically here (unified JSON if 400)
-      var messageList = new Array();
-      for (var key in response.data.messages) {
-        for (var i in response.data.messages[key]) {
-          var message = response.data.messages[key][i];
+      let messageList = new Array()
+      for (let key in response.data.messages) {
+        for (let i in response.data.messages[key]) {
+          let message = response.data.messages[key][i]
           if (key.match(/List/)) {
             if (key.match(/[0-9]/)) {
-              var newKey = '';
-              var splitList = key.split(/[0-9]/);
-              for (var i in splitList) {
-                newKey += splitList[i].replace(/[0-9]/, '');
+              let newKey = ''
+              let splitList = key.split(/[0-9]/)
+              for (i in splitList) {
+                newKey += splitList[i].replace(/[0-9]/, '')
               }
-              key = newKey;
+              key = newKey
             } else {
-              key += '[]';
+              key += '[]'
             }
           }
           if (key.lastIndexOf('.')) {
-            key = key.substring(key.lastIndexOf('.') + 1);
+            key = key.substring(key.lastIndexOf('.') + 1)
           }
           if (key === '_global') { // don't use key if global
-            messageList.push(message + '\r\n');
+            messageList.push(message + '\r\n')
           } else {
-            const label = i18n.t(`LABEL_${key}`);
-            const symbol = (label === '') ? '' : '：';
-            messageList.push(`${label}${symbol}${message}\r\n`);
+            const label = i18n.t(`LABEL_${key}`)
+            const symbol = (label === '') ? '' : '：'
+            messageList.push(`${label}${symbol}${message}\r\n`)
           }
         }
       }
-      messages = messageList;
+      messages = messageList
     } else {
-      messages = Array.isArray(response.data) ? response.data : [response.data];
+      messages = Array.isArray(response.data) ? response.data : [response.data]
     }
   } else if (response.status === 401) {
-    header = '401 Not Authorized';
+    header = '401 Not Authorized'
   } else if (response.status === 403) {
-    header = '403 Forbidden';
+    header = '403 Forbidden'
   } else if (response.status >= 500) {
-    header = '500 Server Error';
-    messages = Array.isArray(response.data) ? response.data : [response.data];
+    header = '500 Server Error'
+    messages = Array.isArray(response.data) ? response.data : [response.data]
   }
   if (header != null || messages != null) {
-    const modalSize = validationError ? 'small' : 'large';
-    resultModal$.trigger('result', { header, messages, modalSize })
+    const modalSize = validationError ? 'small' : 'large'
+    resultModal$.trigger('result', {header, messages, modalSize})
   }
-});
+})
 
 export class ApiFactory {
 
@@ -80,9 +80,11 @@ export class ApiFactory {
   manifest() {
     return ffetch.post('api/intro/manifest')
   }
+
   classifications() {
     return ffetch.post('api/intro/classifications')
   }
+
   configuration() {
     return ffetch.post('api/intro/configuration')
   }
@@ -92,7 +94,7 @@ export class ApiFactory {
   //                                                                         =======
   createWelcomeClient(client, testConnection) {
     return ffetch.post('api/welcome/create',
-      { body: { client: client, testConnection: testConnection } , timeout: 180000 }); // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
+      { body: { client: client, testConnection: testConnection } , timeout: 180000 }) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
   }
 
   // ===============================================================================
@@ -104,14 +106,17 @@ export class ApiFactory {
   clientList() {
     return ffetch.post('api/client/list')
   }
+
   clientPropbase(projectName) {
     return ffetch.post(`api/client/propbase/${projectName}`)
   }
+
   createClient(client, testConnection) {
     return ffetch.post('api/client/create', {
       body: { client, testConnection },
     })
   }
+
   removeClient(clientBody) {
     return ffetch.post(`api/client/delete/${clientBody.project}`)
   }
@@ -132,6 +137,7 @@ export class ApiFactory {
   syncSchema(projectName) {
     return ffetch.post(`api/dfprop/schemasync/${projectName}`)
   }
+
   editSyncSchema(projectName, syncSchemaSettingData) {
     return ffetch.post(`api/dfprop/schemasync/edit/${projectName}/`, {
       body: {
@@ -150,6 +156,7 @@ export class ApiFactory {
   schemaPolicy(projectName) {
     return ffetch.post(`api/dfprop/schemapolicy/${projectName}`)
   }
+
   editSchemaPolicy(projectName, schemaPolicyData) {
     return ffetch.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
       body: {
@@ -159,6 +166,7 @@ export class ApiFactory {
       },
     })
   }
+
   registerSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(
       `api/dfprop/schemapolicy/statement/register/${projectName}`,
@@ -167,9 +175,11 @@ export class ApiFactory {
       }
     )
   }
+
   getSchemapolicyStatementSubject(mapType) {
-    return ffetch.post(`api/dfprop/schemapolicy/statement/subject?maptype=${mapType}`);
+    return ffetch.post(`api/dfprop/schemapolicy/statement/subject?maptype=${mapType}`)
   }
+
   deleteSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(
       `api/dfprop/schemapolicy/statement/delete/${projectName}`,
@@ -178,6 +188,7 @@ export class ApiFactory {
       }
     )
   }
+
   moveSchemapolicyStatement(projectName, schemaPolicyData) {
     return ffetch.post(
       `api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData }
@@ -190,6 +201,7 @@ export class ApiFactory {
   document(projectName) {
     return ffetch.post(`api/dfprop/document/${projectName}`)
   }
+
   editDocument(projectName, documentSetting) {
     return ffetch.post(`api/dfprop/document/edit/${projectName}`, {
       body: {
@@ -209,6 +221,7 @@ export class ApiFactory {
   settings(projectName) {
     return ffetch.post(`api/dfprop/settings/${projectName}`)
   }
+
   updateSettings(clientBody) {
     return ffetch.post(`api/dfprop/settings/edit/${clientBody.projectName}`, {
       body: { client: clientBody },
@@ -221,12 +234,15 @@ export class ApiFactory {
   openAlterDir(projectName) {
     return ffetch.get(`api/playsql/migration/alter/open/${projectName}`)
   }
+
   alter(projectName) {
     return ffetch.get(`api/playsql/migration/alter/${projectName}/`)
   }
+
   prepareAlterSql(projectName) {
     return ffetch.post(`api/playsql/migration/alter/prepare/${projectName}/`)
   }
+
   createAlterSql(projectName, alterFileName) {
     return ffetch.post(`api/playsql/migration/alter/create/${projectName}/`, {
       body: {
@@ -234,9 +250,11 @@ export class ApiFactory {
       },
     })
   }
+
   openDataDir(projectName) {
     return ffetch.get(`api/playsql/data/open/${projectName}`)
   }
+
   playsqlBeanList(projectName) {
     return ffetch.post(`api/playsql/list/${projectName}`)
   }
@@ -267,13 +285,16 @@ export class ApiFactory {
   engineLatest() {
     return ffetch.post('api/engine/latest')
   }
+
   engineVersions() {
     return ffetch.post('api/engine/versions')
   }
+
   // needs trailing slash if URL parameter contains dot
   downloadEngine(params) {
     return ffetch.post(`api/engine/download/${params.version}/`)
   }
+
   removeEngine(params) {
     return ffetch.post(`api/engine/remove/${params.version}/`)
   }
@@ -284,19 +305,6 @@ export class ApiFactory {
   task(projectName, task) {
     return ffetch.post(`api/task/execute/${projectName}/${task}`)
   }
-
-  // ===============================================================================
-  //                                                                           Retry
-  //                                                                           =====
-  retry(method, url, data, useSystemProxies) {
-    data = data || {}
-    data['useSystemProxies'] = useSystemProxies
-    return http({
-      method: method,
-      url: url,
-      data: data,
-    })
-  }
 }
 
-export const api = new ApiFactory();
+export const api = new ApiFactory()
