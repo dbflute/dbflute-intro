@@ -1,5 +1,5 @@
 <loading>
-  <div class="ui page dimmer inverted {getLoadingClasses()}">
+  <div class="ui page dimmer inverted {classNames({active: state.isActive})}">
     <div class="ui huge text loader">Loading</div>
   </div>
 
@@ -11,7 +11,6 @@
 
   <script>
     import observable from 'riot-observable'
-    import classNames from '../plugin/class-names'
 
     let loadingCounter = 0
     // TODO: hakiba mixinかpluginとして使えるようにしたい (2022/04/24)
@@ -19,7 +18,7 @@
 
     export default {
       state: {
-        counter: loadingCounter
+        isActive: false
       },
       onMounted() {
         loading$.on('loading', visible => {
@@ -28,12 +27,7 @@
           } else {
             loadingCounter--
           }
-          this.update({ counter: loadingCounter })
-        })
-      },
-      getLoadingClasses() {
-        return classNames({
-          active: this.state.counter > 0
+          this.update({ isActive: loadingCounter > 0 })
         })
       }
     }

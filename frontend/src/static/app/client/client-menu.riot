@@ -84,10 +84,9 @@
   </style>
 
   <script>
-    import classNames from '../plugin/class-names'
     import { router } from '@riotjs/route'
 
-export default {
+    export default {
       state: {
         clientMenuType: undefined,
         clientMenuName: undefined,
@@ -118,7 +117,7 @@ export default {
         router.push(`client/${this.props.projectName}/${menuType}/${menuName}`)
       },
       getLinkClasses(menuType, menuName) {
-        return classNames({ active: this.isActiveItem(menuType, menuName) })
+        return this.classNames({active: this.isActiveItem(menuType, menuName)})
       }
     }
   </script>

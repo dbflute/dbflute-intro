@@ -1,12 +1,14 @@
-import * as riot from 'riot'
 import i18next from 'i18next';
 import i18n_ja from '../../assets/i18n/locale-ja.json'
 import i18n_en from '../../assets/i18n/locale-en.json'
-import i18n from '../common/i18n.riot'
 
+/**
+ * 表示テキストの国際化対応の初期化処理を行います。
+ * index.jsなどで import './plugin/i18n' するだけでOKです。
+ */
 i18next.init({
   lng: 'ja',
-  debug: true,
+  debug: false,
   resources: {
     en: {
       translation: i18n_en
@@ -16,5 +18,3 @@ i18next.init({
     },
   }
 });
-
-riot.register('i18n', i18n)

@@ -186,7 +186,7 @@
         const testConnection = this.$('[ref=testConnection]').checked
         loading$.trigger('loading', true)
         api.createWelcomeClient(client, testConnection).then(() => {
-          router.push('/')
+          router.push('main')
           this.showToast(client.projectName)
         }).finally(() => {
           loading$.trigger('loading', false)
@@ -204,13 +204,13 @@
         if (file) {
           reader.readAsBinaryString(file)
         }
+      },
+      showToast(projectName) {
+        this.successToast({
+          title: 'Create task completed',
+          message: 'Client for project \'' + projectName + '\', was successfully created!!',
+        })
       }
-      // this.showToast = (projectName) => {
-      //   this.successToast({
-      //     title: 'Create task completed',
-      //     message: 'Client for project \'' + projectName + '\', was successfully created!!',
-      //   })
-      // }
     }
   </script>
 </welcome>
