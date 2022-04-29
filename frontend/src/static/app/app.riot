@@ -1,5 +1,5 @@
 <app>
-  <router base={ state.base } initial-route={ state.initialRoute } >
+  <router base={ state.base } initial-route={ state.initialRoute }>
     <route each={ page in state.pages } path={ page.path }>
       <div class="fixed-user-area">
         <side-menu is="{ page.sideMenu.name }"></side-menu>

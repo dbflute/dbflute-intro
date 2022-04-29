@@ -110,13 +110,13 @@
       findClassifications() {
         api.classifications().then((json) => {
           const targetDatabaseItems = Object.keys(json.targetDatabaseMap).map(key => {
-            return {value: key, label: json.targetDatabaseMap[key].databaseName}
+            return { value: key, label: json.targetDatabaseMap[key].databaseName }
           })
           const targetLanguageItems = Object.keys(json.targetLanguageMap).map(key => {
-            return {value: key, label: json.targetLanguageMap[key], default: key === 'java'}
+            return { value: key, label: json.targetLanguageMap[key], default: key === 'java' }
           })
           const targetContainerItems = Object.keys(json.targetContainerMap).map(key => {
-            return {value: key, label: json.targetContainerMap[key], default: key === 'lasta_di'}
+            return { value: key, label: json.targetContainerMap[key], default: key === 'lasta_di' }
           })
           setBlankItem(targetDatabaseItems)
           setBlankItem(targetLanguageItems)
