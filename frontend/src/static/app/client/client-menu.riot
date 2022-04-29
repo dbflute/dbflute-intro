@@ -79,12 +79,12 @@
 
   <style>
     .ui.tiny.inverted.vertical.menu {
-      margin-left: 0px;
+      margin-left: 0;
     }
   </style>
 
   <script>
-    import { router } from '@riotjs/route'
+    import { pages } from '../AppRouter'
 
     export default {
       state: {
@@ -112,9 +112,7 @@
           clientMenuType: menuType,
           clientMenuName: menuName
         })
-        // #thinking routing に関する情報、探しやすいように切り出してあげたい by cabos (2022/02/26)
-        // （ただし大規模な修正になるので今やることではない）
-        router.push(`client/${this.props.projectName}/${menuType}/${menuName}`)
+        pages.client.open(this.props.projectName, menuType, menuName)
       },
       getLinkClasses(menuType, menuName) {
         return this.classNames({ active: this.isActiveItem(menuType, menuName) })
