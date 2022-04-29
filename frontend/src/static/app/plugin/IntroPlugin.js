@@ -30,14 +30,6 @@ function successToast({ title= null, message= null }) {
 }
 
 /**
- * 配列に空アイテムを追加する
- * @param itemList
- */
-export function setBlankItem(itemList) {
-  itemList.unshift({ value: null, label: '' })
-}
-
-/**
  * DBFluteIntroのComponentで共通的に利用する処理をpluginとして提供
  * 下記で設定された関数は[riot.install]{@link https://riot.js.org/ja/api/#riotinstall}することで、任意のComponentから直接呼び出せる
  * @param component
@@ -45,5 +37,4 @@ export function setBlankItem(itemList) {
 export default function plugin(component) {
   component.classNames = classNames
   component.successToast = successToast
-  component.setBlankItem = setBlankItem
 }
