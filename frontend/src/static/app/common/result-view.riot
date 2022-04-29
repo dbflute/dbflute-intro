@@ -33,9 +33,7 @@
   </style>
 
   <script>
-    import observable from 'riot-observable'
-    // TODO: hakiba mixinかpluginとして使えるようにしたい (2022/04/24)
-    export const resultModal$ = observable()
+    import { initResultModal } from './ResultView'
 
     export default {
       state: {
@@ -51,7 +49,7 @@
         messages: []
       },
       onMounted() {
-        resultModal$.on('result', content => {
+        initResultModal(content => {
           this.update({
             sizeStyle: content.modalSize,
             option: {

@@ -1,8 +1,8 @@
 import i18n from 'i18next'
-import { resultModal$ } from './result-view.riot'
 import { FFetch } from 'ffetch'
 import { Subject } from 'rxjs'
 import Q from 'q'
+import { setResult } from './ResultView'
 
 function checkStatus(res) {
   if (!res.ok) {
@@ -127,7 +127,7 @@ ffetch.errors.subscribe(response => {
   }
   if (header != null || messages != null) {
     const modalSize = validationError ? 'small' : 'large'
-    resultModal$.trigger('result', { header, messages, modalSize })
+    setResult({ header, messages, modalSize })
   }
 })
 
@@ -153,7 +153,7 @@ export class ApiClient {
   //                                                                         =======
   createWelcomeClient(client, testConnection) {
     return ffetch.post('api/welcome/create',
-      { body: { client: client, testConnection: testConnection } , timeout: 180000 }) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
+      { body: { client: client, testConnection: testConnection }, timeout: 180000 }) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
   }
 
   // ===============================================================================

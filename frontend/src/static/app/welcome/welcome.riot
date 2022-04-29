@@ -73,7 +73,7 @@
 
   <script>
     import { api } from '../common/ApiClient'
-    import { loading$ } from '../common/loading.riot'
+    import { setLoading } from '../common/Loading'
     import i18n from '../common/i18n.riot'
     import { pages } from '../AppRouter'
 
@@ -183,12 +183,12 @@
           client.jdbcDriver = this.state.jdbcDriver
         }
         const testConnection = this.$('[ref=testConnection]').checked
-        loading$.trigger('loading', true)
+        setLoading(true)
         api.createWelcomeClient(client, testConnection).then(() => {
           pages.welcome.open()
           this.showToast(client.projectName)
         }).finally(() => {
-          loading$.trigger('loading', false)
+          setLoading(false)
         })
       },
       changeFile(event) {

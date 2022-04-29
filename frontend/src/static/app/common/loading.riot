@@ -10,24 +10,15 @@
   </style>
 
   <script>
-    import observable from 'riot-observable'
-
-    let loadingCounter = 0
-    // TODO: hakiba mixinかpluginとして使えるようにしたい (2022/04/24)
-    export const loading$ = observable()
+    import { initLoading } from './Loading'
 
     export default {
       state: {
         isActive: false
       },
       onMounted() {
-        loading$.on('loading', visible => {
-          if (visible) {
-            loadingCounter++
-          } else {
-            loadingCounter--
-          }
-          this.update({ isActive: loadingCounter > 0 })
+        initLoading((isLoading) => {
+          this.update({ isActive: isLoading })
         })
       }
     }
