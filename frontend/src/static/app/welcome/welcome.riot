@@ -72,8 +72,7 @@
   </div>
 
   <script>
-    import { api } from '../common/factory/ApiFactory.js'
-    import { setBlankItem } from '../common/UiAssist'
+    import { api } from '../common/ApiClient'
     import { loading$ } from '../common/loading.riot'
     import i18n from '../common/i18n.riot'
     import { pages } from '../AppRouter'
@@ -118,9 +117,9 @@
           const targetContainerItems = Object.keys(json.targetContainerMap).map(key => {
             return { value: key, label: json.targetContainerMap[key], default: key === 'lasta_di' }
           })
-          setBlankItem(targetDatabaseItems)
-          setBlankItem(targetLanguageItems)
-          setBlankItem(targetContainerItems)
+          this.setBlankItem(targetDatabaseItems)
+          this.setBlankItem(targetLanguageItems)
+          this.setBlankItem(targetContainerItems)
 
           this.update({
             targetDatabaseItems,
