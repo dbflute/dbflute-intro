@@ -4,18 +4,7 @@ import { Subject } from 'rxjs'
 import Q from 'q'
 import { setResult } from './ResultView'
 
-function checkStatus(res) {
-  if (!res.ok) {
-    return res.json()
-      .then(err => Promise.reject({
-        status: res.status,
-        data: err
-      }))
-  }
-  return res
-}
-
-export class FFetchWrapper extends FFetch {
+class FFetchWrapper extends FFetch {
 
   constructor(...arg) {
     super(...arg)
@@ -24,40 +13,46 @@ export class FFetchWrapper extends FFetch {
   }
 
   get(url, options) {
-    return Q(super.get(url, options))
-      .then(res => checkStatus(res))
-      .then(res => res.json())
-      .catch(res => this.handleResponseError(res))
+    return this.execute(Q(super.get(url, options)))
   }
 
   post(url, options) {
-    return Q(super.post(url, options))
-      .then(res => checkStatus(res))
-      .then(res => res.json())
-      .catch(res => this.handleResponseError(res))
+    return this.execute(Q(super.post(url, options)))
   }
 
   put(url, options) {
-    return Q(super.put(url, options))
-      .then(res => checkStatus(res))
-      .then(res => res.json())
-      .catch(res => this.handleResponseError(res))
+    return this.execute(Q(super.put(url, options)))
   }
 
   del(url, options) {
-    return Q(super.del(url, options))
-      .then(res => checkStatus(res))
+    return this.execute(Q(super.del(url, options)))
+  }
+
+  execute(request) {
+    return request
+      .then(res => this.checkStatus(res))
       .then(res => res.json())
       .catch(res => this.handleResponseError(res))
   }
 
-  get errors() {
-    return this.errorEvents
+  checkStatus(res) {
+    if (!res.ok) {
+      return res.json()
+        .then(err => Promise.reject({
+          status: res.status,
+          data: err
+        }))
+    }
+    return res
   }
 
   handleResponseError(res) {
     this.errorEvents.next(res)
     return Q.reject(new Error(res))
+  }
+
+  get errors() {
+    return this.errorEvents
   }
 }
 
@@ -85,7 +80,7 @@ ffetch.errors.subscribe(response => {
       validationError = response.data.failureType === 'VALIDATION_ERROR'
     }
     if (response.data.messages) { // basically here (unified JSON if 400)
-      let messageList = new Array()
+      let messageList = []
       for (let key in response.data.messages) {
         for (let i in response.data.messages[key]) {
           let message = response.data.messages[key][i]
