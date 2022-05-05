@@ -10,5 +10,13 @@
     <!-- #thinking なぜか Bootstrap の icon の書き方になっている、SemanticUIの書き方にするとともに、DBFlute関連の画像に差し替えたい by cabos (2022/05/05) -->
     <!-- span class="glyphicon glyphicon-home"></span -->
     <span class="menu-home-text">DBFlute Intro</span>
+
+    <!-- #memo home アイコンにするにしても、このような書き方 by cabos (2022/05/05) -->
+    <!-- a href="/" class="header item">
+      <span class="menu-home-text">
+        <i class="home icon"></i>
+        DBFlute Intro
+      </span>
+    </a -->
   </a>
 </menu-home>
