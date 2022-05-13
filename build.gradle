@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.moowork.node' version '1.2.0'               // ./gradlew npm_xxx
+    id 'com.moowork.node' version '1.3.1'               // ./gradlew npm_xxx
     id 'com.github.hierynomus.license' version '0.13.1' // ./gradlew licenseMain
 }
 
@@ -32,7 +32,7 @@ ext {
             // Basic Resource
             jdk : '1.8',
             gradle : '4.2',
-            node : '8.7.0',
+            node : '16.15.0',
 
             // Main Framework
             dbflute : '1.2.5',

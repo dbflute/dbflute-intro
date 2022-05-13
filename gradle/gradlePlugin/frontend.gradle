@@ -67,7 +67,7 @@ task copyStaticResource(type: Copy) {
   into 'dist/'
 }
 
-['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
+['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_verify', 'npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
           // If task not exists, define empty task.
