@@ -84,7 +84,7 @@
   </style>
 
   <script>
-    import { pages } from '../AppRouter'
+    import { pages } from '../app-router'
     import i18n from '../common/i18n.riot'
     import { api } from '../common/ApiClient'
 
@@ -159,7 +159,7 @@
         api.clientList().then((json) => this.update({ clientList: json }))
       },
       goToClient(client) {
-        pages.client.open(client.projectName)
+        pages.client.open(client.projectName, 'execute', 'documents')
       },
       goToClientCreate() {
         pages.create.open()

@@ -84,12 +84,33 @@
   </style>
 
   <script>
-    import { pages } from '../AppRouter'
+    import { pages } from '../app-router'
+    import MenuHome from '../components/menu/menu-home.riot'
+    import { getCurrentClientRoute } from './client-router'
 
     export default {
+      components: {
+        MenuHome
+      },
       state: {
+        projectName: undefined,
         clientMenuType: undefined,
         clientMenuName: undefined,
+      },
+      onBeforeMount() {
+        // マウント直前のURLに合わせて、適切なメニューを初期値として設定する（本当はpropsでroute.paramsを渡したいが、riot/routeの仕様上、空になってしまう模様）
+        const currentRoute = getCurrentClientRoute()
+        this.state.projectName = currentRoute.projectName
+        this.state.clientMenuType = currentRoute.clientMenuType
+        this.state.clientMenuName = currentRoute.clientMenuName
+        // マウント後のURLの変更にアクティブなメニューが対応できるように監視する
+        pages.client.subscribe(route => {
+          this.update({
+            projectName: route.params.projectName,
+            clientMenuType: route.params.menuType,
+            clientMenuName: route.params.menuName
+          })
+        })
       },
       /**
        * 親から選択されている clientMenuType, clientMenuName を受け取り、メニューの行が、active かどうかを判断している
@@ -108,11 +129,7 @@
        * @see dbflute-intro/src/static/app/index.js@157 (riot6移行時にコードが移動するかも！？)
        */
       goToMenuItem(menuType, menuName) {
-        this.update({
-          clientMenuType: menuType,
-          clientMenuName: menuName
-        })
-        pages.client.open(this.props.projectName, menuType, menuName)
+        pages.client.open(this.state.projectName, menuType, menuName)
       },
       getLinkClasses(menuType, menuName) {
         return this.classNames({ active: this.isActiveItem(menuType, menuName) })

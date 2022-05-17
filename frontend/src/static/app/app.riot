@@ -6,40 +6,27 @@
    作りの特徴:
     o routerコンポーネントでURLベースや初期ルーティングの設定を行なっている
     o URLパス毎にrouteコンポーネントを定義しており、URLの遷移毎に表示されるrouteコンポーネントが切り替わるようになっている
-    o ルーティングの詳細は AppRouter.js に集約している
+    o ルーティングの詳細は app-router.js に集約している
     o ローディングやトーストなど、共通的に利用されるコンポーネントのマウントを行なっている
   -->
-  <router base={ state.base } initial-route={ state.initialRoute }>
-    <route each={ page in state.pages } path={ page.path }>
-      <div class="fixed-user-area">
-        <side-menu is="{ page.sideMenu.name }"></side-menu>
-        <content is="{ page.content.name }"></content>
-      </div>
-    </route>
-  </router>
+  <app-router></app-router>
   <loading></loading>
   <result-view></result-view>
   <su-toast position="top right"></su-toast>
   <su-confirm position="center"></su-confirm>
 
   <script>
+    import AppRouter from './app-router.riot'
+    import { pages } from './app-router'
     import Loading from './common/loading.riot'
     import ResultView from './common/result-view.riot'
-    import { Router, Route } from '@riotjs/route'
     import { api } from './common/ApiClient'
-    import { initRouting, initialRoute, pages } from './AppRouter'
 
     export default {
       components: {
-        Router,
-        Route,
+        AppRouter,
         Loading,
         ResultView,
-      },
-      state: {
-        pages: initRouting(),
-        initialRoute,
-        base: '/#'
       },
       onBeforeMount() {
         // クライアントが1件もない場合はwelcome画面へ遷移する

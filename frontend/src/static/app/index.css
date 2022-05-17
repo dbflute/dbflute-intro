@@ -16,7 +16,7 @@ h1 {
 	/* #thinking jflute not matched for now (2020/04/30)
 	background: url("../image/parts/head-flutist.png") no-repeat bottom left;
 	*/
-	font-family: Times, "Times New Roman", "Hiragino Mincho Pro", "ƒqƒ‰ƒMƒm–¾’© Pro W3", "MS P Mincho", "‚l‚r ‚o–¾’©", serif;
+	font-family: Times, "Times New Roman", "Hiragino Mincho Pro", "ï¿½qï¿½ï¿½ï¿½Mï¿½mï¿½ï¿½ï¿½ï¿½ Pro W3", "MS P Mincho", "ï¿½lï¿½r ï¿½oï¿½ï¿½ï¿½ï¿½", serif;
 	font-weight: normal;
 }
 
@@ -62,7 +62,7 @@ span.frm {
 =======================================================*/
 
 /* means side-menu and content, to move menu to left side */
-.fixed-user-area {
+.fixed-user-area > route {
   display: flex;
   flex-direction: row;
 }

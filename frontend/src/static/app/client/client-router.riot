@@ -1,0 +1,52 @@
+<client-router>
+  <!-- クライアント画面がマウントされるところ -->
+  <route path={ state.routes.executeDocuments.path }>
+    <ex-documents></ex-documents>
+  </route>
+  <route path={ state.routes.executeSchemaSyncCheck.path }>
+    <ex-schema-sync-check></ex-schema-sync-check>
+  </route>
+  <route path={ state.routes.executeReplaceSchema.path }>
+    <ex-replace-schema></ex-replace-schema>
+  </route>
+  <route path={ state.routes.executeAlterCheck.path }>
+    <ex-alter-check></ex-alter-check>
+  </route>
+  <route path={ state.routes.executeSchemaPolicyCheck.path }>
+    <ex-schema-policy-check></ex-schema-policy-check>
+  </route>
+  <route path={ state.routes.settingsDatabaseInfo.path }>
+    <st-database-info></st-database-info>
+  </route>
+  <route path={ state.routes.filesLogs.path }>
+    <fl-logs></fl-logs>
+  </route>
+
+  <script>
+    import { pages } from '../app-router'
+    import { Route } from '@riotjs/route'
+    import ExDocuments from './client-content/ex-documents.riot'
+    import ExSchemaSyncCheck from './client-content/ex-schema-sync-check.riot'
+    import ExReplaceSchema from './client-content/ex-replace-schema.riot'
+    import ExAlterCheck from './client-content/ex-alter-check.riot'
+    import ExSchemaPolicyCheck from './client-content/ex-schema-policy-check.riot'
+    import StDatabaseInfo from './client-content/st-database-info.riot'
+    import FlLogs from './client-content/fl-logs.riot'
+
+    export default {
+      components: {
+        ExDocuments,
+        ExSchemaSyncCheck,
+        ExReplaceSchema,
+        ExAlterCheck,
+        ExSchemaPolicyCheck,
+        StDatabaseInfo,
+        FlLogs,
+        Route
+      },
+      state: {
+        routes: pages.client.routes,
+      },
+    }
+  </script>
+</client-router>

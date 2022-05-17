@@ -1,0 +1,63 @@
+<app-router>
+  <!-- AppRouterコンポーネント
+   機能:
+    o AppのURL遷移（ルーティング）の設定を行う（@riotjs/route を利用している）
+
+   作りの特徴:
+    o routerコンポーネントでURLベースや初期ルーティングの設定を行なっている
+    o URLパス毎にrouteコンポーネントを定義しており、URLの遷移毎に表示されるrouteコンポーネントが切り替わるようになっている
+    o ローディングやトーストなど、共通的に利用されるコンポーネントのマウントを行なっている
+  -->
+  <router base={ state.base } initial-route={ state.initialRoute }>
+    <div class="fixed-user-area">
+      <route path={ state.pages.main.path }>
+        <side-menu is="common-menu"></side-menu>
+        <content is="main"></content>
+      </route>
+      <route path={ state.pages.client.path }>
+        <side-menu is="client-menu" route={ route }></side-menu>
+        <content is="client"></content>
+      </route>
+      <route path={ state.pages.welcome.path }>
+        <side-menu is="common-menu"></side-menu>
+        <content is="welcome"></content>
+      </route>
+      <route path={ state.pages.create.path }>
+        <side-menu is="common-menu"></side-menu>
+        <content is="create"></content>
+      </route>
+    </div>
+  </router>
+
+  <script>
+    import Main from './main/main.riot'
+    import Client from './client/client.riot'
+    import Welcome from './welcome/welcome.riot'
+    import Create from './client/create.riot'
+    import CommonMenu from './common/common-menu.riot'
+    import ClientMenu from './client/client-menu.riot'
+    import { Router, Route } from '@riotjs/route'
+    import { pages, initialRoute, endRouting } from './app-router'
+
+    export default {
+      components: {
+        Main,
+        Client,
+        Welcome,
+        Create,
+        ClientMenu,
+        CommonMenu,
+        Router,
+        Route
+      },
+      state: {
+        pages,
+        initialRoute,
+        base: '/#'
+      },
+      onUnmounted() {
+        endRouting()
+      }
+    }
+  </script>
+</app-router>
