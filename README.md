@@ -30,9 +30,9 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 ## How to refresh application
 1. $ `./gradlew refresh`
 
-## How to build
-1. `$ ./gradlew build`
-2. `$ java -jar build/libs/dbflute-intro.jar`
+## How to build production ready jar file
+1. `$ ./gradlew release`
+1. `$ java -jar build/libs/dbflute-intro.jar # for jar file check` 
 
 ## Server-side Framework
 
