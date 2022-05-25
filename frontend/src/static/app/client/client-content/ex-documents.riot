@@ -19,8 +19,8 @@
     <h2>Documents</h2>
     <!-- 各HTMLのドキュメントリンク -->
     <div class="ui list">
-      <div show="{ client.hasSchemaHtml }" class="item doc-schemahtml-link"><a onclick="{ openSchemaHTML }">Open your SchemaHTML</a></div>
-      <div show="{ client.hasHistoryHtml }" class="item doc-historyhtml-link"><a onclick="{ openHistoryHTML }">Open your HistoryHTML</a></div>
+<!--      <div show="{ state.client.hasSchemaHtml }" class="item doc-schemahtml-link"><a onclick="{ openSchemaHTML }">Open your SchemaHTML</a></div>-->
+<!--      <div show="{ state.client.hasHistoryHtml }" class="item doc-historyhtml-link"><a onclick="{ openHistoryHTML }">Open your HistoryHTML</a></div>-->
     </div>
 
     <!-- documentMap.dfprop の編集を行う Modal を表示するボタン -->
@@ -45,56 +45,56 @@
   </div>
 
   <!-- documentMap.dfprop を編集するための Modal -->
-  <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">
-    <!-- documentMap.dfprop を編集するための form の実態 -->
-    <form class="ui form">
-      <div class="field">
-        <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>
-        <input type="text" ref="aliasDelimiterInDbComment" placeholder="e.g. :"
-               value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">
-      </div>
-      <div class="field">
-        <di class="ui checkbox">
-          <input type="checkbox" ref="upperCaseBasic" checked="{ opts.modal.documentSetting.upperCaseBasic }">
-          <label>Upper case basis <span class="frm">(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase)</span></label>
-        </di>
-      </div>
-      <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" ref="dbCommentOnAliasBasis" checked="{ opts.modal.documentSetting.dbCommentOnAliasBasis }">
-          <label>DB comment on alias basis <span class="frm">(isDbCommentOnAliasBasis)</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" ref="checkColumnDefOrderDiff" checked="{ opts.modal.documentSetting.checkColumnDefOrderDiff }">
-          <label>Check column definition order difference <span class="frm">(isCheckColumnDefOrderDiff)</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" ref="checkDbCommentDiff" checked="{ opts.modal.documentSetting.checkDbCommentDiff }">
-          <label>Check DB comment difference <span class="frm">(isCheckDbCommentDiff)</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <div class="ui checkbox">
-          <input type="checkbox" ref="checkProcedureDiff" checked="{ opts.modal.documentSetting.checkProcedureDiff }">
-          <label>Check procedure difference <span class="frm">(isCheckProcedureDiff)</span></label>
-        </div>
-      </div>
-    </form>
-  </su-modal>
+<!--  <su-modal modal="{ documentSettingModal }" class="large" ref="documentSettingModal">-->
+<!--    &lt;!&ndash; documentMap.dfprop を編集するための form の実態 &ndash;&gt;-->
+<!--    <form class="ui form">-->
+<!--      <div class="field">-->
+<!--        <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>-->
+<!--        <input type="text" ref="aliasDelimiterInDbComment" placeholder="e.g. :"-->
+<!--               value="{ opts.modal.documentSetting.aliasDelimiterInDbComment }">-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <di class="ui checkbox">-->
+<!--          <input type="checkbox" ref="upperCaseBasic" checked="{ opts.modal.documentSetting.upperCaseBasic }">-->
+<!--          <label>Upper case basis <span class="frm">(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase)</span></label>-->
+<!--        </di>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <div class="ui checkbox">-->
+<!--          <input type="checkbox" ref="dbCommentOnAliasBasis" checked="{ opts.modal.documentSetting.dbCommentOnAliasBasis }">-->
+<!--          <label>DB comment on alias basis <span class="frm">(isDbCommentOnAliasBasis)</span></label>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <div class="ui checkbox">-->
+<!--          <input type="checkbox" ref="checkColumnDefOrderDiff" checked="{ opts.modal.documentSetting.checkColumnDefOrderDiff }">-->
+<!--          <label>Check column definition order difference <span class="frm">(isCheckColumnDefOrderDiff)</span></label>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <div class="ui checkbox">-->
+<!--          <input type="checkbox" ref="checkDbCommentDiff" checked="{ opts.modal.documentSetting.checkDbCommentDiff }">-->
+<!--          <label>Check DB comment difference <span class="frm">(isCheckDbCommentDiff)</span></label>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="field">-->
+<!--        <div class="ui checkbox">-->
+<!--          <input type="checkbox" ref="checkProcedureDiff" checked="{ opts.modal.documentSetting.checkProcedureDiff }">-->
+<!--          <label>Check procedure difference <span class="frm">(isCheckProcedureDiff)</span></label>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </form>-->
+<!--  </su-modal>-->
 
-  <!-- Generate Task 実行時に他の操作を抑制するための Modal -->
-  <su-modal modal="{ generateModal }" class="large" ref="generateModal">
-    <div class="description">
-      Generating...
-    </div>
-  </su-modal>
+<!--  &lt;!&ndash; Generate Task 実行時に他の操作を抑制するための Modal &ndash;&gt;-->
+<!--  <su-modal modal="{ generateModal }" class="large" ref="generateModal">-->
+<!--    <div class="description">-->
+<!--      Generating...-->
+<!--    </div>-->
+<!--  </su-modal>-->
 
-  <!-- Generate Task 実行結果を表示するための Modal -->
-  <result-modal ref="resultModal"></result-modal>
+<!--  &lt;!&ndash; Generate Task 実行結果を表示するための Modal &ndash;&gt;-->
+<!--  <result-modal ref="resultModal"></result-modal>-->
 
   <style>
     .latest-result {

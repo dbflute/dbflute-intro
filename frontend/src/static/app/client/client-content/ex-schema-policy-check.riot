@@ -34,128 +34,128 @@
 
     <!-- Policy Settings -->
     <h3>Policy Settings</h3>
-    <div class="ui segment" title="SchemaPolicy">
-      <div class="ui form">
-        <div class="row">
-          <div class="column">
-            <su-tabset
-              class="three column item"
-              schemapolicy="{ schemaPolicy }"
-              tabtitles="{ tabTitles }"
-              projectname="{ projectName }"
-              onregistersuccess="{ onRegisterSuccess }"
-            >
-              <!-- Whole Schema Policy -->
-              <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >
-                <h5 class="spolicy-category">Theme</h5>
-                <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">
-                  <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">
-                    <div class="ui left floated">
-                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>
-                    </div>
-                    <div class="content">
-                      <div class="header">{ theme.name }</div>
-                      <div class="description">
-                        {theme.description}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </su-tab>
+<!--    <div class="ui segment" title="SchemaPolicy">-->
+<!--      <div class="ui form">-->
+<!--        <div class="row">-->
+<!--          <div class="column">-->
+<!--            <su-tabset-->
+<!--              class="three column item"-->
+<!--              schemapolicy="{ schemaPolicy }"-->
+<!--              tabtitles="{ tabTitles }"-->
+<!--              projectname="{ projectName }"-->
+<!--              onregistersuccess="{ onRegisterSuccess }"-->
+<!--            >-->
+<!--              &lt;!&ndash; Whole Schema Policy &ndash;&gt;-->
+<!--              <su-tab label="{ opts.tabtitles['wholeMap']}" schemapolicy="{ opts.schemapolicy }" >-->
+<!--                <h5 class="spolicy-category">Theme</h5>-->
+<!--                <div class="ui divided items segment" if="{opts.schemapolicy.wholeMap}">-->
+<!--                  <div class="item" each="{ theme in opts.schemapolicy.wholeMap.themeList }">-->
+<!--                    <div class="ui left floated">-->
+<!--                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'wholeMap', theme.typeCode) }"></su-checkbox>-->
+<!--                    </div>-->
+<!--                    <div class="content">-->
+<!--                      <div class="header">{ theme.name }</div>-->
+<!--                      <div class="description">-->
+<!--                        {theme.description}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </su-tab>-->
 
-              <!-- Table Schema Policy -->
-              <su-tab
-                label="{ opts.tabtitles['tableMap']}"
-                schemapolicy="{ opts.schemapolicy }"
-                projectname="{ opts.projectname }"
-                onregistersuccess="{ opts.onregistersuccess }">
-                <h5 class="spolicy-category">Theme</h5>
-                <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">
-                  <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">
-                    <div class="ui left floated">
-                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>
-                    </div>
-                    <div class="content">
-                      <div class="header">{ theme.name }</div>
-                      <div class="description">
-                        {theme.description}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <h5 class="spolicy-category">Statement</h5>
+<!--              &lt;!&ndash; Table Schema Policy &ndash;&gt;-->
+<!--              <su-tab-->
+<!--                label="{ opts.tabtitles['tableMap']}"-->
+<!--                schemapolicy="{ opts.schemapolicy }"-->
+<!--                projectname="{ opts.projectname }"-->
+<!--                onregistersuccess="{ opts.onregistersuccess }">-->
+<!--                <h5 class="spolicy-category">Theme</h5>-->
+<!--                <div class="ui divided items segment" if="{opts.schemapolicy.tableMap}">-->
+<!--                  <div class="item" each="{ theme in opts.schemapolicy.tableMap.themeList }">-->
+<!--                    <div class="ui left floated">-->
+<!--                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'tableMap', theme.typeCode) }"></su-checkbox>-->
+<!--                    </div>-->
+<!--                    <div class="content">-->
+<!--                      <div class="header">{ theme.name }</div>-->
+<!--                      <div class="description">-->
+<!--                        {theme.description}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <h5 class="spolicy-category">Statement</h5>-->
 
-                <schema-policy-check-statement-list
-                  if="{ opts.schemapolicy.tableMap }"
-                  maptype="tableMap"
-                  clientname="{ opts.projectname }"
-                  deletestatement="{ parent.parent.deleteStatement }"
-                  statements="{ opts.schemapolicy.tableMap.statementList }"
-                />
+<!--                <schema-policy-check-statement-list-->
+<!--                  if="{ opts.schemapolicy.tableMap }"-->
+<!--                  maptype="tableMap"-->
+<!--                  clientname="{ opts.projectname }"-->
+<!--                  deletestatement="{ parent.parent.deleteStatement }"-->
+<!--                  statements="{ opts.schemapolicy.tableMap.statementList }"-->
+<!--                />-->
 
-                <schema-policy-check-statement-form-wrapper
-                  formtype="tableMap"
-                  projectname="{ opts.projectname }"
-                  onregistersuccess="{ opts.onregistersuccess }"
-                />
-              </su-tab>
+<!--                <schema-policy-check-statement-form-wrapper-->
+<!--                  formtype="tableMap"-->
+<!--                  projectname="{ opts.projectname }"-->
+<!--                  onregistersuccess="{ opts.onregistersuccess }"-->
+<!--                />-->
+<!--              </su-tab>-->
 
-              <!-- Column Schema Policy -->
-              <su-tab
-                label="{ opts.tabtitles['columnMap']}"
-                schemapolicy="{ opts.schemapolicy }"
-                projectname="{ opts.projectname }"
-                onregistersuccess="{ opts.onregistersuccess }"
-              >
-                <h5 class="spolicy-category">Theme</h5>
-                <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">
-                  <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">
-                    <div class="ui left floated">
-                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>
-                    </div>
-                    <div class="content">
-                      <a class="header">{ theme.name }</a>
-                      <div class="description">
-                        {theme.description}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <h5 class="spolicy-category">Statement</h5>
+<!--              &lt;!&ndash; Column Schema Policy &ndash;&gt;-->
+<!--              <su-tab-->
+<!--                label="{ opts.tabtitles['columnMap']}"-->
+<!--                schemapolicy="{ opts.schemapolicy }"-->
+<!--                projectname="{ opts.projectname }"-->
+<!--                onregistersuccess="{ opts.onregistersuccess }"-->
+<!--              >-->
+<!--                <h5 class="spolicy-category">Theme</h5>-->
+<!--                <div class="ui divided items segment" if="{opts.schemapolicy.columnMap}">-->
+<!--                  <div class="item" each="{ theme in opts.schemapolicy.columnMap.themeList }">-->
+<!--                    <div class="ui left floated">-->
+<!--                      <su-checkbox class="toggle middle aligned" checked="{ theme.isActive }" onchange="{ parent.parent.parent.editSchemaPolicyMap.bind(this, 'columnMap', theme.typeCode) }"></su-checkbox>-->
+<!--                    </div>-->
+<!--                    <div class="content">-->
+<!--                      <a class="header">{ theme.name }</a>-->
+<!--                      <div class="description">-->
+<!--                        {theme.description}-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <h5 class="spolicy-category">Statement</h5>-->
 
-                <schema-policy-check-statement-list
-                  if="{ opts.schemapolicy.columnMap }"
-                  maptype="columnMap"
-                  clientname="{ opts.projectname }"
-                  deletestatement="{ parent.parent.deleteStatement }"
-                  statements="{ opts.schemapolicy.columnMap.statementList }"
-                />
+<!--                <schema-policy-check-statement-list-->
+<!--                  if="{ opts.schemapolicy.columnMap }"-->
+<!--                  maptype="columnMap"-->
+<!--                  clientname="{ opts.projectname }"-->
+<!--                  deletestatement="{ parent.parent.deleteStatement }"-->
+<!--                  statements="{ opts.schemapolicy.columnMap.statementList }"-->
+<!--                />-->
 
-                <schema-policy-check-statement-form-wrapper
-                  formtype="columnMap"
-                  projectname="{ opts.projectname }"
-                  onregistersuccess="{ opts.onregistersuccess }"
-                />
-              </su-tab>
-            </su-tabset>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--                <schema-policy-check-statement-form-wrapper-->
+<!--                  formtype="columnMap"-->
+<!--                  projectname="{ opts.projectname }"-->
+<!--                  onregistersuccess="{ opts.onregistersuccess }"-->
+<!--                />-->
+<!--              </su-tab>-->
+<!--            </su-tabset>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 
   <!-- Executeボタンを押したときに表示されるモーダル -->
-  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
-    <div class="content" if="{opts.modal.status === 'Check'}">
-      <div class="header" >{ opts.modal.message }</div>
-    </div>
-    <div class="ui positive message" if="{opts.modal.status === 'Success'}">
-      <h4>{ opts.modal.message }</h4>
-    </div>
-    <div class="ui negative message" if="{opts.modal.status === 'Failure'}">
-      <h4>{ opts.modal.message }</h4>
-    </div>
-  </su-modal>
+<!--  <su-modal modal="{ checkModal }" class="large" ref="checkModal">-->
+<!--    <div class="content" if="{opts.modal.status === 'Check'}">-->
+<!--      <div class="header" >{ opts.modal.message }</div>-->
+<!--    </div>-->
+<!--    <div class="ui positive message" if="{opts.modal.status === 'Success'}">-->
+<!--      <h4>{ opts.modal.message }</h4>-->
+<!--    </div>-->
+<!--    <div class="ui negative message" if="{opts.modal.status === 'Failure'}">-->
+<!--      <h4>{ opts.modal.message }</h4>-->
+<!--    </div>-->
+<!--  </su-modal>-->
 
   <style>
     .latest-result {

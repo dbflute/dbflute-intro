@@ -22,51 +22,51 @@
     <div class="ui divider"></div>
 
     <!-- Step 1: AlterDDLの用意 -->
-    <section if="{ !isEditing() }">
-      <h3>Step1. Prepare alter sql</h3>
-      <!-- 未リリースの確認済みDDLの一覧 -->
-      <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />
-      <!-- 新しいDDLファイルを作成するためのフォーム -->
-      <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />
-    </section>
+<!--    <section if="{ !isEditing() }">-->
+<!--      <h3>Step1. Prepare alter sql</h3>-->
+<!--      &lt;!&ndash; 未リリースの確認済みDDLの一覧 &ndash;&gt;-->
+<!--      <alter-check-checked checkedzip="{ checkedZip }" unreleaseddir="{ unreleasedDir }" />-->
+<!--      &lt;!&ndash; 新しいDDLファイルを作成するためのフォーム &ndash;&gt;-->
+<!--      <alter-check-form ref="altercheckform" projectname="{ opts.projectName }" updatehandler="{ updateBegin }" />-->
+<!--    </section>-->
 
     <!-- Step 2: AlterCheckの実行 -->
-    <section show="{ isEditing() }">
-      <h3>Step2. Execute AlterCheck</h3>
+<!--    <section show="{ isEditing() }">-->
+<!--      <h3>Step2. Execute AlterCheck</h3>-->
 
-      <div class="ui list">
-        <div class="item" each="{ alterItem in editingSqls }">
-          <!-- 押下された alter sql ファイルの表示・非表示を切り替える。また、STEP1で作成されたファイルには印をつけて表示する -->
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
-          <div show="{ alterItem.show }" class="ui message message-area">
-            <!-- SQLの改行やインデントが反映されるようにpreタグを利用
-              <pre><code>...</code></pre> は一行で記述しないと余分な改行やインデントが入ってしまうので注意
-              cssのwhite-spaceを利用するとSQLの先頭に記述したインデントが効かなくなるのでこうするしかなさそう...
-              #thinking: <pre><code>...</code></pre>を含めて共通のコンポーネントにした方が良い by hakiba
-            -->
-            <pre><code><raw content="{ alterItem.content }"></raw></code></pre>
-          </div>
-        </div>
-      </div>
+<!--      <div class="ui list">-->
+<!--        <div class="item" each="{ alterItem in editingSqls }">-->
+<!--          &lt;!&ndash; 押下された alter sql ファイルの表示・非表示を切り替える。また、STEP1で作成されたファイルには印をつけて表示する &ndash;&gt;-->
+<!--          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span show="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>-->
+<!--          <div show="{ alterItem.show }" class="ui message message-area">-->
+<!--            &lt;!&ndash; SQLの改行やインデントが反映されるようにpreタグを利用-->
+<!--              <pre><code>...</code></pre> は一行で記述しないと余分な改行やインデントが入ってしまうので注意-->
+<!--              cssのwhite-spaceを利用するとSQLの先頭に記述したインデントが効かなくなるのでこうするしかなさそう...-->
+<!--              #thinking: <pre><code>...</code></pre>を含めて共通のコンポーネントにした方が良い by hakiba-->
+<!--            &ndash;&gt;-->
+<!--            <pre><code><raw content="{ alterItem.content }"></raw></code></pre>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <div class="ui list">
-        <div class="item">
-          <!-- AlterDDLディレクトリを開くボタン -->
-          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
-        </div>
+<!--      <div class="ui list">-->
+<!--        <div class="item">-->
+<!--          &lt;!&ndash; AlterDDLディレクトリを開くボタン &ndash;&gt;-->
+<!--          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>-->
+<!--        </div>-->
 
-        <div class="item altercheck-execution">
-          <!-- AlterCheckを実行するボタン -->
-          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
-          <!-- AlterCheckの結果HTMLを表示するボタン -->
-          <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
-        </div>
-      </div>
-      <!-- 最新のAlterCheckの結果ログを出力する。実行ログがなければ何も表示しない -->
-      <div class="latest-result">
-        <latest-result></latest-result>
-      </div>
-    </section>
+<!--        <div class="item altercheck-execution">-->
+<!--          &lt;!&ndash; AlterCheckを実行するボタン &ndash;&gt;-->
+<!--          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>-->
+<!--          &lt;!&ndash; AlterCheckの結果HTMLを表示するボタン &ndash;&gt;-->
+<!--          <button class="ui button blue" show="{ client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; 最新のAlterCheckの結果ログを出力する。実行ログがなければ何も表示しない &ndash;&gt;-->
+<!--      <div class="latest-result">-->
+<!--        <latest-result></latest-result>-->
+<!--      </div>-->
+<!--    </section>-->
 
   </div>
 

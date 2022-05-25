@@ -10,40 +10,40 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="column">
-          <div class="required field">
-            <label data-is="i18n">LABEL_dbfluteVersion</label>
-            <su-dropdown ref="dbfluteVersion" items="{ versions }"></su-dropdown>
-          </div>
-          <div class="required field">
-            <label data-is="i18n">LABEL_databaseCode</label>
-            <su-dropdown ref="databaseCode" items="{ targetDatabaseItems }"></su-dropdown>
-          </div>
-          <div class="required field">
-            <label data-is="i18n">LABEL_jdbcDriverFqcn</label>
-            <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver"/>
-          </div>
-          <div class="required field" if="{ needsJdbcDriver }">
-            <label data-is="i18n">LABEL_jdbcDriverFile</label>
-            <input type="file" onchange="{ changeFile }"/>
-          </div>
-        </div>
-        <div class="column">
-          <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label data-is="i18n">LABEL_languageCode</label>
-            <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
-          </div>
-          <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label data-is="i18n">LABEL_containerCode</label>
-            <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
-          </div>
-          <div class="required field" if="{ oRMapperOptionsFlg }">
-            <label data-is="i18n">LABEL_packageBase</label>
-            <input type="text" ref="packageBase" value="org.docksidestage.dbflute"/>
-          </div>
-        </div>
-      </div>
+<!--      <div class="row">-->
+<!--        <div class="column">-->
+<!--          <div class="required field">-->
+<!--            <label data-is="i18n">LABEL_dbfluteVersion</label>-->
+<!--            <su-dropdown ref="dbfluteVersion" items="{ versions }"></su-dropdown>-->
+<!--          </div>-->
+<!--          <div class="required field">-->
+<!--            <label data-is="i18n">LABEL_databaseCode</label>-->
+<!--            <su-dropdown ref="databaseCode" items="{ targetDatabaseItems }"></su-dropdown>-->
+<!--          </div>-->
+<!--          <div class="required field">-->
+<!--            <label data-is="i18n">LABEL_jdbcDriverFqcn</label>-->
+<!--            <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver"/>-->
+<!--          </div>-->
+<!--          <div class="required field" if="{ needsJdbcDriver }">-->
+<!--            <label data-is="i18n">LABEL_jdbcDriverFile</label>-->
+<!--            <input type="file" onchange="{ changeFile }"/>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="column">-->
+<!--          <div class="required field" if="{ oRMapperOptionsFlg }">-->
+<!--            <label data-is="i18n">LABEL_languageCode</label>-->
+<!--            <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>-->
+<!--          </div>-->
+<!--          <div class="required field" if="{ oRMapperOptionsFlg }">-->
+<!--            <label data-is="i18n">LABEL_containerCode</label>-->
+<!--            <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>-->
+<!--          </div>-->
+<!--          <div class="required field" if="{ oRMapperOptionsFlg }">-->
+<!--            <label data-is="i18n">LABEL_packageBase</label>-->
+<!--            <input type="text" ref="packageBase" value="org.docksidestage.dbflute"/>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="row">
         <div class="column">
           <div class="required field">

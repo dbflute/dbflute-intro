@@ -13,34 +13,34 @@
     <div class="ui form">
       <div class="row">
         <div class="column">
-          <div class="ui segment" title="Database info" ref="settings">
-            <!-- 必須かどうかは、databaseInfoMap.dfpropの仕様に合わせている
-             https://dbflute.seasar.org/ja/manual/reference/dfprop/databaseinfo/index.html
+<!--          <div class="ui segment" title="Database info" ref="settings">-->
+<!--            &lt;!&ndash; 必須かどうかは、databaseInfoMap.dfpropの仕様に合わせている-->
+<!--             https://dbflute.seasar.org/ja/manual/reference/dfprop/databaseinfo/index.html-->
 
-             catalogが必要になる場面はめったにないので、Introではひとまずサポートしていない。
-             -->
-            <!-- #hope この画面でDBMSを変えることはできないので、DBMSごとに必須を変えられたらいいかもね by jflute (2022/02/10) -->
-            <div class="required field" if="{ client.mainSchemaSettings }">
-              <!-- LABEL_xxxは、assetsにて定義されている -->
-              <label data-is="i18n">LABEL_url</label>
-              <input type="text" value="{ client.mainSchemaSettings.url }" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
-            </div>
-            <div class="field" if="{ client.mainSchemaSettings }">
-              <label data-is="i18n">LABEL_schema</label>
-              <input type="text" value="{ client.mainSchemaSettings.schema }" ref="schema" placeholder="MAIHAMADB"/>
-            </div>
-            <div class="required field" if="{ client.mainSchemaSettings }">
-              <label data-is="i18n">LABEL_user</label>
-              <input type="text" value="{ client.mainSchemaSettings.user }" ref="user" placeholder="maihamadb"/>
-            </div>
-            <div class="field" if="{ client.mainSchemaSettings }">
-              <label data-is="i18n">LABEL_password</label>
-              <input type="text" value="{ client.mainSchemaSettings.password }" ref="password"/>
-            </div>
-            <div class="field">
-              <button class="ui button primary" onclick="{ editClient }">Edit</button>
-            </div>
-          </div>
+<!--             catalogが必要になる場面はめったにないので、Introではひとまずサポートしていない。-->
+<!--             &ndash;&gt;-->
+<!--            &lt;!&ndash; #hope この画面でDBMSを変えることはできないので、DBMSごとに必須を変えられたらいいかもね by jflute (2022/02/10) &ndash;&gt;-->
+<!--            <div class="required field" if="{ client.mainSchemaSettings }">-->
+<!--              &lt;!&ndash; LABEL_xxxは、assetsにて定義されている &ndash;&gt;-->
+<!--              <label data-is="i18n">LABEL_url</label>-->
+<!--              <input type="text" value="{ client.mainSchemaSettings.url }" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>-->
+<!--            </div>-->
+<!--            <div class="field" if="{ client.mainSchemaSettings }">-->
+<!--              <label data-is="i18n">LABEL_schema</label>-->
+<!--              <input type="text" value="{ client.mainSchemaSettings.schema }" ref="schema" placeholder="MAIHAMADB"/>-->
+<!--            </div>-->
+<!--            <div class="required field" if="{ client.mainSchemaSettings }">-->
+<!--              <label data-is="i18n">LABEL_user</label>-->
+<!--              <input type="text" value="{ client.mainSchemaSettings.user }" ref="user" placeholder="maihamadb"/>-->
+<!--            </div>-->
+<!--            <div class="field" if="{ client.mainSchemaSettings }">-->
+<!--              <label data-is="i18n">LABEL_password</label>-->
+<!--              <input type="text" value="{ client.mainSchemaSettings.password }" ref="password"/>-->
+<!--            </div>-->
+<!--            <div class="field">-->
+<!--              <button class="ui button primary" onclick="{ editClient }">Edit</button>-->
+<!--            </div>-->
+<!--          </div>-->
         </div>
       </div>
     </div>

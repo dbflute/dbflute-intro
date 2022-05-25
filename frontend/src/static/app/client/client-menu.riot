@@ -100,9 +100,9 @@
       onBeforeMount() {
         // マウント直前のURLに合わせて、適切なメニューを初期値として設定する（本当はpropsでroute.paramsを渡したいが、riot/routeの仕様上、空になってしまう模様）
         const currentRoute = getCurrentClientRoute()
-        this.state.projectName = currentRoute.projectName
-        this.state.clientMenuType = currentRoute.clientMenuType
-        this.state.clientMenuName = currentRoute.clientMenuName
+        this.state.projectName = currentRoute.params.projectName
+        this.state.clientMenuType = currentRoute.params.clientMenuType
+        this.state.clientMenuName = currentRoute.params.clientMenuName
         // マウント後のURLの変更にアクティブなメニューが対応できるように監視する
         pages.client.subscribe(route => {
           this.update({
