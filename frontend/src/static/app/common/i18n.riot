@@ -18,7 +18,7 @@
         this.update()
       },
       onUpdated() {
-        const key = this.$('[ref=original]').innerText.trim()
+        const key = this.$('[ref=original]').innerText?.trim()
         this.message = i18n.t(key) || key
       }
     }
