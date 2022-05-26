@@ -55,6 +55,7 @@ task cacheKey(dependsOn: npm_run_build) << {
     file('dist/cacheKey.json').text = json.toString()
 }
 
+// #thinking riot6化に合わせて、フロントエンドの出力先が変わってたらここも修正が必要 by cabos
 task cleanDist() {
     def fileList = file('./dist/').listFiles()
     if (fileList != null) {
@@ -62,12 +63,15 @@ task cleanDist() {
     }
 }
 
+// #thinking riot6の場合、gradle経由でリソースのコピーはしないようにして、このコードを消したい by cabos
 task copyStaticResource(type: Copy) {
   from fileTree(dir: file('src/static'), includes: ["index.html", "favicon.ico", "**/index.css", "assets/**", "image/**"])
   into 'dist/'
 }
 
-['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
+// gradle 経由で npm コマンドが実行されるのは主にjarファイルを固める場合のみ
+// jarファイルを固める前には、念の為フロントの成果物を消して作り直す
+['npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
           // If task not exists, define empty task.
@@ -75,5 +79,3 @@ task copyStaticResource(type: Copy) {
     }
     tasks[it.key].dependsOn(it.value)
 }
-
-tasks['refreshResource'].dependsOn('npmInstall')
