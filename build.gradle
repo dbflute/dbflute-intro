@@ -189,3 +189,12 @@ tasks['refreshResourceAfter'].dependsOn('refreshResource')
 if (tasks.findByName('eclipseClasspath')) {
     tasks['eclipseClasspath'].dependsOn('refreshResource')
 }
+
+// =======================================================================================
+//                                                                                 Release
+//                                                                                 =======
+// フロントエンドのビルド -> バックエンドのビルド -> jar ファイルの作成の順番でリリース物を作成する
+tasks['build'].mustRunAfter('npm_run_build')
+tasks['build'].mustRunAfter('manifest')
+tasks['build'].mustRunAfter('cacheKey')
+task release(dependsOn: ['build', 'manifest', 'cacheKey', 'npm_run_build'])
