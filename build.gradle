@@ -1,4 +1,3 @@
-
 // =======================================================================================
 //                                                                           Core Settings
 //                                                                           =============
@@ -9,6 +8,7 @@ buildscript {
 }
 
 plugins {
+    // TODO hakiba riot v6移行後は npm コマンドはgradleから直接実行しないので削除して良い by 2022/06/01
     id 'com.moowork.node' version '1.3.1'               // ./gradlew npm_xxx
     id 'com.github.hierynomus.license' version '0.13.1' // ./gradlew licenseMain
 }
@@ -30,29 +30,29 @@ ext {
     versions =
         [
             // Basic Resource
-            jdk : '1.8',
-            gradle : '4.2',
-            node : '16.15.0',
+            jdk        : '1.8',
+            gradle     : '4.2',
+            node       : '16.15.0',
 
             // Main Framework
-            dbflute : '1.2.5',
-            h2 : '1.4.199',
+            dbflute    : '1.2.5',
+            h2         : '1.4.199',
             lastaflute : '1.2.3',
 
             // Partner Library
-            slf4j : '1.7.30',
-            logback : '1.2.3',
-            jettyboot : '0.5.1',
-            lastameta : '0.5.2',
-            swaggerui : '3.22.1',
+            slf4j      : '1.7.30',
+            logback    : '1.2.3',
+            jettyboot  : '0.5.1',
+            lastameta  : '0.5.2',
+            swaggerui  : '3.22.1',
 
             // GoodNeighbor Library
-            commonslang : '3.9',
-            commonsio : '2.6',
+            commonslang: '3.9',
+            commonsio  : '2.6',
 
             // Testing
-            junit : '4.13.1',
-            utflute : '0.9.4'
+            junit      : '4.13.1',
+            utflute    : '0.9.4'
         ]
 }
 
@@ -119,7 +119,7 @@ mainClassName = 'org.dbflute.intro.IntroBoot'
 war {
     def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all']
     configurations.compile.collect { file ->
-        if (embeddedArtifactList.any {file.getName().startsWith(it)}) {
+        if (embeddedArtifactList.any { file.getName().startsWith(it) }) {
             from(file.isDirectory() ? file : zipTree(file)) {
                 exclude 'META-INF/*NOTICE*'
                 exclude 'META-INF/*LICENSE*'
@@ -128,7 +128,7 @@ war {
             }
         }
     }
-    rootSpec.exclude(embeddedArtifactList.collect {"**/${it}-*.jar"})
+    rootSpec.exclude(embeddedArtifactList.collect { "**/${it}-*.jar" })
     from fileTree(dir: sourceSets.main.output.classesDir, includes: ["${mainClassName.replace('.', '/')}*.class"])
     from fileTree(dir: file('dist'), include: '**/**')
 
@@ -154,7 +154,7 @@ war {
         attributes 'SCM-Revision': scmRevision
         attributes 'Build-Timestamp': new java.text.SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date())
         attributes 'Jenkins-Build-Number': System.getenv()['BUILD_NUMBER'] ?: ''
-        attributes 'Main-Class' : mainClassName
+        attributes 'Main-Class': mainClassName
     }
 
     // license
@@ -176,7 +176,7 @@ license {
     strictCheck true
     include "**/*.java"
     mapping {
-        java='SLASHSTAR_STYLE'
+        java = 'SLASHSTAR_STYLE'
     }
 }
 
@@ -193,8 +193,16 @@ if (tasks.findByName('eclipseClasspath')) {
 // =======================================================================================
 //                                                                                 Release
 //                                                                                 =======
+// TODO hakiba riot v6移行後は releaseWithRiotV6 を release に置き換え、こちらは削除する
 // フロントエンドのビルド -> バックエンドのビルド -> jar ファイルの作成の順番でリリース物を作成する
-tasks['build'].mustRunAfter('npm_run_build')
-tasks['build'].mustRunAfter('manifest')
-tasks['build'].mustRunAfter('cacheKey')
-task release(dependsOn: ['build', 'manifest', 'cacheKey', 'npm_run_build'])
+task release(dependsOn: ['build', 'manifest', 'cacheKey', 'npm_run_build']) {
+    tasks['build'].mustRunAfter('npm_run_build')
+    tasks['build'].mustRunAfter('manifest')
+    tasks['build'].mustRunAfter('cacheKey')
+}
+
+task releaseWithRiotV6(dependsOn: ['build', 'manifest', 'cacheKey', 'buildFrontend']) {
+    tasks['build'].mustRunAfter('buildFrontend')
+    tasks['build'].mustRunAfter('manifest')
+    tasks['build'].mustRunAfter('cacheKey')
+}
