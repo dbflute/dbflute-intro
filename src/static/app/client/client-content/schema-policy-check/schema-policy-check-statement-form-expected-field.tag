@@ -79,10 +79,12 @@
     }
 
     /**
-     * TODO わからなかった by s-murakami (2022/04/07)
+     * has-is or non-is のドロップダウンが選択された時の処理を設定する。
      */
     self.addDropdownEvent = () => {
       self.refs.subjectVerb.on('select', () => {
+        // このタグの呼び出し元のさらに呼び出し元のhandleExpectedFieldChange()を呼んでいる。
+        // やってることは、self.state.expected.fields のフィールドへの、選択された subjectVerb の反映。
         self.handleChange()
         self.update()
       })
