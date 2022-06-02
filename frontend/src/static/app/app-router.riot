@@ -10,19 +10,19 @@
   -->
   <router base={ state.base } initial-route={ state.initialRoute }>
     <div class="fixed-user-area">
-      <route path={ state.pages.main.path }>
+      <route path={ state.routes.main.path }>
         <side-menu is="common-menu"></side-menu>
         <content is="main"></content>
       </route>
-      <route path={ state.pages.client.path }>
+      <route path={ state.routes.client.path }>
         <side-menu is="client-menu" route={ route }></side-menu>
         <content is="client"></content>
       </route>
-      <route path={ state.pages.welcome.path }>
+      <route path={ state.routes.welcome.path }>
         <side-menu is="common-menu"></side-menu>
         <content is="welcome"></content>
       </route>
-      <route path={ state.pages.create.path }>
+      <route path={ state.routes.create.path }>
         <side-menu is="common-menu"></side-menu>
         <content is="create"></content>
       </route>
@@ -37,7 +37,7 @@
     import CommonMenu from './common/common-menu.riot'
     import ClientMenu from './client/client-menu.riot'
     import { Router, Route } from '@riotjs/route'
-    import { pages, initialRoute, endRouting } from './app-router'
+    import { appRoutes, initialRoute, endRouting } from './app-router'
 
     export default {
       components: {
@@ -51,7 +51,7 @@
         Route
       },
       state: {
-        pages,
+        routes: appRoutes,
         initialRoute,
         base: '/#'
       },

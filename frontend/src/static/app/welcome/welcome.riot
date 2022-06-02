@@ -94,7 +94,7 @@
     import { api } from '../common/ApiClient'
     import { setLoading } from '../common/Loading'
     import i18n from '../common/i18n.riot'
-    import { pages } from '../app-router'
+    import { appRoutes } from '../app-router'
 
     // ===================================================================================
     //                                                                          Definition
@@ -216,7 +216,7 @@
         const testConnection = this.$('[ref=testConnection]').checked
         setLoading(true)
         api.createWelcomeClient(client, testConnection).then(() => {
-          pages.main.open()
+          appRoutes.main.open()
           this.showToast(client.projectName)
         }).finally(() => {
           setLoading(false)

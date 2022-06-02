@@ -19,17 +19,25 @@
   <client-router></client-router>
 
   <script>
-    import { pages } from '../app-router'
     import ClientRouter from './client-router.riot'
+    import { appRoutes } from '../app-router'
+    import { getCurrentClientRoute } from './client-router'
 
     export default {
       components: {
         ClientRouter
       },
       state: {
-        routes: pages.client.routes,
         projectName: undefined
       },
+      onBeforeMount() {
+        // マウント時のURLに合わせて初期値を設定
+        this.state.projectName = getCurrentClientRoute().params.projectName
+        // URLの変更を監視してstateを更新
+        appRoutes.client.subscribe(route => {
+          this.update({ projectName: route.params.projectName })
+        })
+      }
     }
   </script>
 </client>

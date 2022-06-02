@@ -17,7 +17,7 @@
 
   <script>
     import AppRouter from './app-router.riot'
-    import { pages } from './app-router'
+    import { appRoutes } from './app-router'
     import Loading from './common/loading.riot'
     import ResultView from './common/result-view.riot'
     import { api } from './common/ApiClient'
@@ -32,7 +32,7 @@
         // クライアントが1件もない場合はwelcome画面へ遷移する
         api.clientList().then((clients) => {
           if (clients.length === 0) {
-            pages.welcome.open()
+            appRoutes.welcome.open()
           }
         })
       }

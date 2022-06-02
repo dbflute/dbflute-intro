@@ -84,7 +84,7 @@
   </style>
 
   <script>
-    import { pages } from '../app-router'
+    import { appRoutes } from '../app-router'
     import MenuHome from '../components/menu/menu-home.riot'
     import { getCurrentClientRoute } from './client-router'
 
@@ -104,7 +104,7 @@
         this.state.clientMenuType = currentRoute.params.clientMenuType
         this.state.clientMenuName = currentRoute.params.clientMenuName
         // マウント後のURLの変更にアクティブなメニューが対応できるように監視する
-        pages.client.subscribe(route => {
+        appRoutes.client.subscribe(route => {
           this.update({
             projectName: route.params.projectName,
             clientMenuType: route.params.menuType,
@@ -129,7 +129,7 @@
        * @see dbflute-intro/src/static/app/index.js@157 (riot6移行時にコードが移動するかも！？)
        */
       goToMenuItem(menuType, menuName) {
-        pages.client.open(this.state.projectName, menuType, menuName)
+        appRoutes.client.open(this.state.projectName, menuType, menuName)
       },
       getLinkClasses(menuType, menuName) {
         return this.classNames({ active: this.isActiveItem(menuType, menuName) })

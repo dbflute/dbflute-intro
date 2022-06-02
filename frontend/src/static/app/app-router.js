@@ -7,7 +7,7 @@ import { routes as ClientRoutes } from './client/client-router'
  * - content: コンテンツエリアに表示するコンポーネント
  * - sideMenu: サイドメニューエリアに表示するコンポーネント
  */
-export const routes = Object.freeze({
+const routes = Object.freeze({
   /**
    * メイン画面
    * @riotjs/route の仕組み上、空文字を選択すると挙動がおかしくなるので、mainというパスを定義している
@@ -20,7 +20,7 @@ export const routes = Object.freeze({
   },
   /**
    * クライアント画面
-   *  o 「:」をつけることでパスパラメータとして取得することができる
+   *  - 「:」をつけることでパスパラメータとして取得することができる
    */
   client: {
     path: 'client/:projectName/:menuType/:menuName',
@@ -53,28 +53,52 @@ export const routes = Object.freeze({
 })
 
 /**
+ * 各routeのstreamを格納しておくMap
+ * - キャッシュとして利用するのでpathをkeyにstreamを保持する
+ */
+const routeStreams = new Map()
+
+/**
+ * 指定されたパスのstreamを取得する
+ * - なければ作成し、キャッシュする
+ */
+function ensureRouteStream(path) {
+  if (!routeStreams.get(path)) {
+    routeStreams.set(path, riotRoute(path, {}))
+  }
+  return routeStreams.get(path)
+}
+
+/**
  * 初期URL
- * o localhost:3000 → "main"にルーティング → "localhost:3000#main"に遷移
- * o localhost:3000#welcome → "welcome"にルーティング → "localhost:3000#welcome"に遷移
+ * - localhost:3000 → "main"にルーティング → "localhost:3000#main"に遷移
+ * - localhost:3000#welcome → "welcome"にルーティング → "localhost:3000#welcome"に遷移
  */
 export const initialRoute = `${window.location.hash ? window.location.hash.replace('#', '') : 'main'}`
 
-export const pages = Object.freeze(Object.entries(routes).map(([key, route]) => {
-  const stream = riotRoute(route.path, {})
-  return [key, {
-    path: route.path,
-    routes: route.routes,
-    open: route.open,
-    stream,
-    subscribe: (callback) => stream.on.value(callback)
-  }]
-}).reduce((initial, [key, page]) => {
-  initial[key] = page
-  return initial
-}, {}))
+/**
+ * アプリケーションのrouteを束ねたオブジェクト
+ * - {@link routes } にいくつか便利関数を生やしたオブジェクト
+ * - subscribe関数を生やし、URLの変更を監視できるようにしている
+ */
+export const appRoutes = Object.freeze(Object.entries(routes)
+  .reduce((newRoutes, [name, route]) => {
+    newRoutes[name] = {
+      path: route.path,
+      routes: route.routes,
+      open: route.open,
+      subscribe: (callback) => ensureRouteStream(route.path).on.value(callback)
+    }
+    return newRoutes
+  }, {}))
 
+/**
+ * ルーティング関連のcleanup処理
+ * - 監視しているstreamの破棄を行う
+ */
 export function endRouting() {
-  Object.values(pages).forEach(page => {
-    page.stream.end()
+  Object.values(appRoutes).forEach(page => {
+    routeStreams.get(page.path)?.end()
   })
+  routeStreams.clear()
 }

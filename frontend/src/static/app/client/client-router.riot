@@ -23,7 +23,7 @@
   </route>
 
   <script>
-    import { pages } from '../app-router'
+    import { appRoutes } from '../app-router'
     import { Route } from '@riotjs/route'
     import ExDocuments from './client-content/ex-documents.riot'
     import ExSchemaSyncCheck from './client-content/ex-schema-sync-check.riot'
@@ -45,7 +45,7 @@
         Route
       },
       state: {
-        routes: pages.client.routes,
+        routes: appRoutes.client.routes,
       },
     }
   </script>
