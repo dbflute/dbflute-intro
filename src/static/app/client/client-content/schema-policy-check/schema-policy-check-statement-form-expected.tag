@@ -145,7 +145,7 @@
      * expectedを繋ぐand/orの選択を変更する。
      */
     self.handleConditionChange = () => {
-      const handler = self.props.handleConditionChange // 
+      const handler = self.props.handleConditionChange
       const isAnd = self.refs.isAnd.checked
       const isOr = self.refs.isOr.checked
       if (isAnd) {
