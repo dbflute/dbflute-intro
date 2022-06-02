@@ -135,7 +135,7 @@ export class ApiClient {
     return ffetch.post('api/intro/manifest')
   }
 
-  classifications() {
+  findClassifications() {
     return ffetch.post('api/intro/classifications')
   }
 
@@ -336,7 +336,7 @@ export class ApiClient {
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======
-  engineLatest() {
+  findEngineLatest() {
     return ffetch.post('api/engine/latest')
   }
 
