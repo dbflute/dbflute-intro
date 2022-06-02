@@ -2,10 +2,12 @@
   <!-- ClientのSchemaPolicyCheckのStatement追加フォーム (written at 2022/03/17)
    機能:
     o statementを新規追加する
+    o sampleを見ながら作成できる
 
    作りの特徴:
     o selectboxを活用してdfpropを編集するよりも簡単にstatementをつくることができる
-    o sampleを見ながら作成できる
+    o sampleを見ながら作成できるように、sampleをリンクのクリックで表示・非表示を切り替えている
+    o sample領域が、同じ.tagファイル内に存在している
    -->
   <form ref="statementForm" class="ui large form">
     <div class="field">
@@ -253,7 +255,7 @@
     }
 
     /**
-     * subjectのtoggleを開閉する。
+     * subjectのtoggleで開閉する。
      */
     this.toggleSubjectHelp = () => {
       self.refs.subjecthelp.toggle()
