@@ -5,6 +5,7 @@
 
   作りの特徴:
     o ドロップダウンで選択したsubjectVerbによってcomplementのテキストフィールドの活性・非活性がされる。
+    o subjectVerbはExpectedの左のドロップダウンの値、complementはその右側のフリー入力の値
   -->
   <div class="fields">
     <!-- TODO ドロップダウンとテキストフィールドの比率が6:10? by s-murakami (2022/04/07)-->
@@ -109,7 +110,7 @@
      * complementの初期化
      */
     self.initComplement = () => {
-      self.refs.complement.value = self.props.complement // このcomplementはどこからもらったもの...？ by s-murakami (2022/04/07)
+      self.refs.complement.value = self.props.complement // 親の親のschema-policy-check-statement-form.tagで、フィールドが持ってる値
     }
 
     /**
