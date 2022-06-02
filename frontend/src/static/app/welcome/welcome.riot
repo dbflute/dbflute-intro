@@ -23,7 +23,7 @@
           </div>
           <div class="required field">
             <label is="i18n">LABEL_databaseCode</label>
-            <su-dropdown ref="databaseCode" items="{ state.targetDatabaseItems }" onchange="{ onchangeDatabase }"></su-dropdown>
+            <su-dropdown ref="databaseCode" items="{ targetDatabaseItems }" onchange="{ onchangeDatabase }"></su-dropdown>
           </div>
           <div class="required field">
             <label is="i18n">LABEL_jdbcDriverFqcn</label>
@@ -43,11 +43,11 @@
           <!-- ifを使用するとDOMが生成されずthis.$でアクセスできなくなるので、semantic-uiのhidden属性で表示切り替えする -->
           <div class="required field" hidden={ !state.oRMapperOptionsFlg }>
             <label is="i18n">LABEL_languageCode</label>
-            <su-dropdown ref="languageCode" items="{ state.targetLanguageItems }"></su-dropdown>
+            <su-dropdown ref="languageCode" items="{ targetLanguageItems }" value={ defaultLanguageCode }></su-dropdown>
           </div>
           <div class="required field" hidden={ !state.oRMapperOptionsFlg }>
             <label is="i18n">LABEL_containerCode</label>
-            <su-dropdown ref="containerCode" items="{ state.targetContainerItems }"></su-dropdown>
+            <su-dropdown ref="containerCode" items="{ targetContainerItems }" value={ defaultContainerCode }></su-dropdown>
           </div>
           <div class="required field" hidden={ !state.oRMapperOptionsFlg }>
             <label is="i18n">LABEL_packageBase</label>
@@ -96,21 +96,11 @@
     import i18n from '../common/i18n.riot'
     import { appRoutes } from '../app-router'
 
-    // ===================================================================================
-    //                                                                          Definition
-    //                                                                          ==========
-    const DEFAULT_LANGUAGE = 'java'
-    const DEFAULT_DI_CONTAINER = 'lasta_di'
-    const EMPTY_ITEM = { value: null, label: '' }
-
     export default {
       components: {
         i18n
       },
       state: {
-        // 区分値の集めたMap, IntroClsAssist.javaで作られているもの
-        // （本当はサーバーのクラス名をここに書きたくないけど、キー値がわからないとどうにもって感じなので）
-        classificationMap: {}, // e.g. targetDatabase
         // JDBCドライバーのjarファイル情報を格納するオブジェクト
         // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
         // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
@@ -138,12 +128,26 @@
         needsJdbcDriver: false,
         // O/Rマッパー関連設定の表示/非表示
         oRMapperOptionsFlg: false,
-        // DBFluteエンジンの最新バージョン e.g. 1.2.5
-        latestVersion: undefined,
-        targetDatabaseItems: [],
-        targetLanguageItems: [],
-        targetContainerItems: [],
       },
+
+      // ===================================================================================
+      //                                                                          Definition
+      //                                                                          ==========
+      // #thiking jflute 本当はこういうのもサーバー側のロジックで決めたいかも？ (2022/03/17)
+      // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて
+      // [雑談] 個人的には、サーバサイドの区分値と、ここの文字列が常に一致していることを担保できるかどうかが気になります
+      //
+      // とある現場では、TypeScript用の区分値CDefクラスを自動生成して、フロントとサーバーで同期してる。
+      // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
+      // _/_/_/_/_/_/_/_/_/_/
+      defaultLanguageCode: 'java',
+      defaultContainerCode: 'lasta_di',
+      databaseMap: {}, // e.g. targetDatabase
+      // DBFluteエンジンの最新バージョン e.g. 1.2.5
+      latestVersion: undefined,
+      targetDatabaseItems: [],
+      targetLanguageItems: [],
+      targetContainerItems: [],
 
       // ===================================================================================
       //                                                                           Lifecycle
@@ -169,7 +173,7 @@
         // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
         // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
         // そっか、こっちは embeddedJar も使うかありがとう。
-        const database = this.state.classificationMap['targetDatabaseMap'][databaseCode.value]
+        const database = this.databaseMap[databaseCode.value]
         this.$('[ref=jdbcDriverFqcn]').value = database.driverName
         this.$('[ref=url]').value = database.urlTemplate
         this.$('[ref=schema]').value = database.defaultSchema
@@ -249,31 +253,17 @@
        */
       findClassifications() {
         api.findClassifications().then((data) => {
-          const targetDatabaseItems = Object.keys(data.targetDatabaseMap).map(key => {
-            return { value: key, label: data.targetDatabaseMap[key].databaseName }
+          this.databaseMap = data.targetDatabaseMap
+          this.targetDatabaseItems = Object.entries(data.targetDatabaseMap).map(([key, value]) => {
+            return { value: key, label: value.databaseName }
           })
-          const targetLanguageItems = Object.keys(data.targetLanguageMap).map(key => {
-            return { value: key, label: data.targetLanguageMap[key], default: key === DEFAULT_LANGUAGE }
+          this.targetLanguageItems = Object.entries(data.targetLanguageMap).map(([key, value]) => {
+            return { value: key, label: value }
           })
-          const targetContainerItems = Object.keys(data.targetContainerMap).map(key => {
-            return { value: key, label: data.targetContainerMap[key], default: key === DEFAULT_DI_CONTAINER }
+          this.targetContainerItems = Object.entries(data.targetContainerMap).map(([key, value]) => {
+            return { value: key, label: value }
           })
-          this.update({
-            targetDatabaseItems: [EMPTY_ITEM, ...targetDatabaseItems],
-            targetLanguageItems: [EMPTY_ITEM, ...targetLanguageItems],
-            targetContainerItems: [EMPTY_ITEM, ...targetContainerItems],
-            classificationMap: data
-          })
-          // #thiking jflute 本当はこういうのもサーバー側のロジックで決めたいかも？ (2022/03/17)
-          // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて
-          // [雑談] 個人的には、サーバサイドの区分値と、ここの文字列が常に一致していることを担保できるかどうかが気になります
-          //
-          // とある現場では、TypeScript用の区分値CDefクラスを自動生成して、フロントとサーバーで同期してる。
-          // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
-          // _/_/_/_/_/_/_/_/_/_/
-          // TODO: hakiba v4 su-dropdown で内部的な値は書き変わるがlabelが切り替わらないような気がするので直してもらう（または コントリビュートする） (2022/04/24)
-          this.$('[ref=languageCode]').setAttribute('value', DEFAULT_LANGUAGE)
-          this.$('[ref=containerCode]').setAttribute('value', DEFAULT_DI_CONTAINER)
+          this.update()
         })
       },
       /**
