@@ -10,7 +10,7 @@
     o ローディングやトーストなど、共通的に利用されるコンポーネントのマウントを行なっている
   -->
   <app-router></app-router>
-  <loading></loading>
+  <su-loading></su-loading>
   <result-view></result-view>
   <su-toast position="top right"></su-toast>
   <su-confirm position="center"></su-confirm>
@@ -18,14 +18,12 @@
   <script>
     import AppRouter from './app-router.riot'
     import { appRoutes } from './app-router'
-    import Loading from './common/loading.riot'
     import ResultView from './common/result-view.riot'
-    import { api } from './common/ApiClient'
+    import { api } from './common/api-client'
 
     export default {
       components: {
         AppRouter,
-        Loading,
         ResultView,
       },
       onBeforeMount() {

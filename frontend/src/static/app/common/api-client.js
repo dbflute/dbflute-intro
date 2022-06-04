@@ -2,7 +2,7 @@ import i18n from 'i18next'
 import { FFetch } from 'ffetch'
 import { Subject } from 'rxjs'
 import Q from 'q'
-import { setResult } from './ResultView'
+import { triggerShowResult } from '../shared/app-events'
 
 class FFetchWrapper extends FFetch {
 
@@ -63,8 +63,8 @@ const ffetch = new FFetchWrapper()
 //                                                                     ==============
 // see IntroApiFailureHook.java for failure response
 ffetch.errors.subscribe(response => {
-  let header = null
-  let messages = null
+  let header = undefined
+  let messages = undefined
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
   //let reload = false;
   let validationError = false
@@ -122,7 +122,7 @@ ffetch.errors.subscribe(response => {
   }
   if (header != null || messages != null) {
     const modalSize = validationError ? 'small' : 'large'
-    setResult({ header, messages, modalSize })
+    triggerShowResult({ header, messages, modalSize })
   }
 })
 

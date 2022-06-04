@@ -91,8 +91,7 @@
   </div>
 
   <script>
-    import { api } from '../common/ApiClient'
-    import { setLoading } from '../common/Loading'
+    import { api } from '../common/api-client'
     import i18n from '../common/i18n.riot'
     import { appRoutes } from '../app-router'
 
@@ -218,12 +217,12 @@
           jdbcDriverFqcn: this.$('[ref=jdbcDriverFqcn]').value,
         }
         const testConnection = this.$('[ref=testConnection]').checked
-        setLoading(true)
+        this.suLoading(true)
         api.createWelcomeClient(client, testConnection).then(() => {
           appRoutes.main.open()
           this.showToast(client.projectName)
         }).finally(() => {
-          setLoading(false)
+          this.suLoading(false)
         })
       },
 

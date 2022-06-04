@@ -3,8 +3,8 @@ import * as riot from 'riot'
 // TODO: setup処理をutilとして切り出す
 import App from '../src/static/app/app.riot'
 import 'semantic-ui-riot'
-import '../src/static/app/plugin/i18n'
-import introPlugin from '../src/static/app/plugin/IntroPlugin'
+import '../src/static/app/shared/i18n'
+import introPlugin from '../src/static/app/shared/app-plugin'
 
 // 全てのComponentで共通的に利用する処理を登録する
 riot.install(introPlugin)
