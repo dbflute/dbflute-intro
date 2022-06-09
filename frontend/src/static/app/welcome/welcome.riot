@@ -23,13 +23,13 @@
           </div>
           <div class="required field">
             <label is="i18n">LABEL_databaseCode</label>
-            <su-dropdown ref="databaseCode" items="{ targetDatabaseItems }" onchange="{ onchangeDatabase }"></su-dropdown>
+            <su-dropdown ref="databaseCode" items={ targetDatabaseItems } value={ defaultDatabaseCode } onchange="{ onchangeDatabase }"></su-dropdown>
           </div>
           <div class="required field">
             <label is="i18n">LABEL_jdbcDriverFqcn</label>
-            <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value="com.mysql.jdbc.Driver"/>
+            <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value={ defaultJdbcDriver }/>
           </div>
-          <div class="required field" hidden="{ !state.needsJdbcDriver }">
+          <div class="required field" hidden={ !state.needsJdbcDriver }>
             <label is="i18n">LABEL_jdbcDriverFile</label>
             <input type="file" accept=".jar" onchange="{ onchangeJarFile }"/>
           </div>
@@ -61,7 +61,7 @@
         <div class="column">
           <div class="required field">
             <label is="i18n">LABEL_url</label>
-            <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
+            <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb" value={ defaultJdbcUrl }/>
           </div>
           <div class="field">
             <label is="i18n">LABEL_schema</label>
@@ -94,6 +94,7 @@
     import { api } from '../common/api-client'
     import i18n from '../common/i18n.riot'
     import { appRoutes } from '../app-router'
+    import { readFile } from '../shared/io-utils'
 
     export default {
       components: {
@@ -139,6 +140,9 @@
       // とある現場では、TypeScript用の区分値CDefクラスを自動生成して、フロントとサーバーで同期してる。
       // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
       // _/_/_/_/_/_/_/_/_/_/
+      defaultDatabaseCode: 'mysql',
+      defaultJdbcDriver: 'com.mysql.jdbc.Driver',
+      defaultJdbcUrl: 'jdbc:mysql://localhost:3306/xxx',
       defaultLanguageCode: 'java',
       defaultContainerCode: 'lasta_di',
       databaseMap: {}, // e.g. targetDatabase
@@ -180,7 +184,7 @@
           // switch showing JDBCDriver select form
           needsJdbcDriver: !database.embeddedJar,
           // initialize JDBC Driver
-          jdbcDriver: null,
+          jdbcDriver: undefined,
         })
       },
 
@@ -228,20 +232,16 @@
 
       /**
        * JDBCドライバーのファイルが指定されたときの処理。
-       * @param {string} event - この関数を呼び出したイベントのオブジェクト (NotNull)
+       * @param {Event} event - この関数を呼び出したイベントのオブジェクト (NotNull)
        */
       onchangeJarFile(event) {
         const file = event.target.files[0] // event.targetはイベント発生元のオブジェクト
-        const reader = new FileReader() // https://developer.mozilla.org/ja/docs/Web/API/FileReader
-        reader.onload = () => { // 読み込み処理が正常に完了したとき
-          // encode base64: https://developer.mozilla.org/ja/docs/Web/API/btoa
-          const result = window.btoa(reader.result)
-          this.state.jdbcDriver = { fileName: file.name, data: result }
-        }
-
-        if (file) {
-          reader.readAsBinaryString(file)
-        }
+        readFile(file)
+          .then(result => {
+            // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
+            const encoded = window.btoa(result)
+            this.state.jdbcDriver = { fileName: file.name, data: encoded }
+          })
       },
 
       // ===================================================================================
