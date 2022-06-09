@@ -1,12 +1,12 @@
 <schema-policy-check-statement-form-expected>
   <!-- ClientのSchemaPolicyCheckのStatement追加フォームのExpectedの部分 (written at 2022/03/17)
-   機能:
+  　機能:
     o expected部分の情報を入力することができる
-
-   作りの特徴:
-    o input部分は別tagに切り出されている。
     o and/orでつなげて複数のexpectedを設定することができる。
-   -->
+
+  　作りの特徴:
+    o input部分は別tagに切り出されている。
+  　-->
 
   <div class="grouped fields required">
 
