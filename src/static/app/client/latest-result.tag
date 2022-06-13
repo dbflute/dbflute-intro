@@ -98,7 +98,7 @@
      * ログ情報を取得して表示する。
      */
     this.updateLatestResult = () => {
-	  // the response is LogBean.java (2022/05/04)
+      // the response is LogBean.java (2022/05/04)
       ApiFactory.latestResult(self.opts.projectName, self.opts.task).then((response) => {
         if (response.fileName) { // ログファイルがなければempty responseがあり得るのでチェックしている
           // Object.assign(target, source)は、targetの内容をsourceで上書きマージしている
