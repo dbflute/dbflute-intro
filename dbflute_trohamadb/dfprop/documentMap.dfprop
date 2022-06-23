@@ -222,5 +222,13 @@ map:{
         }
     }
     # - - - - - - - - - -/
+
+    ; neighborhoodSchemaHtmlMap = map:{
+        ; intro = map:{ path = ../../../dbflute_introdb/output/doc/schema-introdb.html }
+    }
+
+    ; schemaDiagramMap = map:{
+        ; maihama_erd = map:{ path = ../../../etc/trohamadb/erd/maihamadb.png ; width = 100% ; height = 100% }
+    }
 }
 # ----------------/
