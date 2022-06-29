@@ -10,7 +10,7 @@ import introPlugin from '../src/static/app/shared/app-plugin'
 riot.install(introPlugin)
 
 jest.mock('../src/static/app/app-router', () => {
-  const originalModule = jest.requireActual('../src/static/app/app-router');
+  const originalModule = jest.requireActual('../src/static/app/app-router')
   return {
     ...originalModule,
     initialRoute: 'welcome'
@@ -18,7 +18,7 @@ jest.mock('../src/static/app/app-router', () => {
 })
 
 jest.mock('../src/static/app/common/ApiClient', () => {
-  const originalModule = jest.requireActual('../src/static/app/common/ApiClient');
+  const originalModule = jest.requireActual('../src/static/app/common/ApiClient')
   return {
     ...originalModule
   }
@@ -29,11 +29,11 @@ describe('Welcome', () => {
     // index.htmlのid=rootタグにapp.riotをマウントすることでriotアプリを起動する
     const mountApp = riot.component(App)
     mountApp(document.getElementById('root'))
-  });
+  })
 
   it('サイドメニューに共通メニューが表示されていること', () => {
     const body = document.querySelector('body')
     const commonMenu = body.querySelector('[is=common-menu]')
     expect(commonMenu).not.toBeNull()
-  });
-});
+  })
+})
