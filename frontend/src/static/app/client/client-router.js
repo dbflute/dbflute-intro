@@ -11,6 +11,10 @@ export function getCurrentClientRoute() {
   return { path: currentRoute, params }
 }
 
+/**
+ * クライアント画面のURL（ルーティング）の定義
+ * @type { Routes }
+ */
 export const routes = Object.freeze({
   executeDocuments: {
     path: 'client/:projectName/execute/documents',

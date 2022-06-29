@@ -1,5 +1,12 @@
 <result-view>
-  <su-modal class="{ state.sizeStyle } architrave" modal="{ state.option }" show="{ state.show }" onhide="{ onHide }">
+  <!-- APIの結果などを表示するモーダルコンポーネント (written at 2022/06/25)
+  機能:
+  o 外から渡されたパラメータを用いてモーダルを表示する
+
+  作りの特徴:
+  o observableを使ってパラメータが渡せるようにマウント完了時に設定している
+  -->
+  <su-modal class="{ state.sizeStyle } architrave" modal="{ buildModalOption() }" show="{ state.show }" onhide="{ onHide }">
     <div class="message-area">
       <pre each="{ message in state.messages }">{ message }</pre>
     </div>
@@ -38,31 +45,51 @@
     export default {
       state: {
         sizeStyle: '',
-        option: {
-          closable: true,
-          buttons: [{
-            text: 'Close',
-            default: true
-          }]
-        },
+        header: undefined,
         show: false,
         messages: []
       },
+
+      // ===================================================================================
+      //                                                                          Definition
+      //                                                                          ==========
+      defaultModalOption: {
+        closable: true,
+        buttons: [{
+          text: 'Close',
+          default: true
+        }]
+      },
+
+      // ===================================================================================
+      //                                                                           Lifecycle
+      //                                                                           =========
       onMounted() {
         subscribeShowResult(content => {
           this.update({
             sizeStyle: content.modalSize,
-            option: {
-              ...this.state,
-              header: content.header
-            },
+            header: content.header,
             messages: content.messages,
             show: true
           })
         })
       },
+
+      // ===================================================================================
+      //                                                                       Event Handler
+      //                                                                       =============
       onHide() {
         this.update({ show: false })
+      },
+
+      // ===================================================================================
+      //                                                                             Private
+      //                                                                             =======
+      buildModalOption() {
+        return {
+          ...this.defaultModalOption,
+          header: this.state.header
+        }
       }
     }
   </script>

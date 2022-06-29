@@ -1,12 +1,31 @@
 <main>
+  <!-- Introのトップページ(メイン画面) (written at 2022/03/31)
+   機能:
+    o DBFluteクライアントが一つ以上存在するときのトップページ
+    o DBFluteクライアントが一つもないときはWelcome画面へ自動遷移
+    o DBFluteクライアントの新規作成画面へ遷移
+    o DBFluteクライアントの一覧表示、詳細画面へ遷移
+    o DBFluteエンジンの一覧表示、個別削除、最新版ダウンロード
+    o Introのシステム情報(バージョンやビルド時刻など)の表示
+
+   作りの特徴:
+    o DBFluteエンジンのダウンロードダイアログ
+    o DBFluteエンジンの最新バージョンをwebから取得して設定
+    o Intro自体のシステム情報をManifestファイルから取得
+    o Welcome画面への強引な遷移、フハハハ
+   -->
   <div class="ui text container">
     <h1>DBFlute Intro</h1>
+
+    <!-- DBFluteクライアントの一覧 -->
+    <!-- #thinking このdivはなんだ？DBFlute Engineの方は囲ってない。Createボタンと一緒に囲う必要があるのかな？ by jflute (2022/03/31) -->
     <div>
       <h2>DBFlute Client</h2>
       <input type="button" class="ui button primary" value="Create" onclick="{ goToClientCreate }"/>
     </div>
 
     <table class="ui table">
+      <!-- 表のラベル、基本情報のみ列挙 -->
       <thead>
       <tr>
         <th is="i18n">LABEL_projectName</th>
@@ -15,10 +34,12 @@
         <th is="i18n">LABEL_containerCode</th>
       </tr>
       </thead>
+      <!-- 存在するDBFluteクライアントの一覧とそれぞれの基本情報を表示 -->
       <tbody class="list-group">
       <tr each="{ client in state.clientList }">
         <td>
-          <a onclick="{ goToClient.bind(this, client) }">{ client.projectName }</a>
+          <!-- プロジェクト名がクライアント詳細画面へのリンクになる -->
+          <a onclick="{ goToDocumentsPage.bind(this, client) }">{ client.projectName }</a>
         </td>
         <td>{ client.databaseCode }</td>
         <td>{ client.languageCode }</td>
@@ -27,27 +48,35 @@
       </tbody>
     </table>
 
+    <!-- DBFluteエンジンの一覧 -->
     <h2>DBFlute Engine</h2>
-    <button type="button" class="ui button primary" onclick="{ showDownloadModal }">
+    <!-- 最新版のDBFluteエンジンがダウンロードできる -->
+    <button type="button" class="ui button primary" onclick="{ onclickDownload }">
       <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>Download
     </button>
 
     <table class="ui table">
+      <!-- DBFluteエンジンは大して情報がない -->
       <thead>
       <tr>
         <th is="i18n">LABEL_engineVersion</th>
         <th></th>
       </tr>
       </thead>
+      <!-- 存在するDBFluteエンジンの一覧 -->
+      <!-- 通常は一個しかないってのが理想、クライアントごとにバージョンがバラけないように -->
       <tbody>
       <tr each="{ version in state.versions }">
         <td>{ version }</td>
         <td class="right aligned">
-          <input type="button" class="ui negative button" value="Remove" onclick="{ removeEngine.bind(this,version) }"/>
+          <!-- 何気に削除もできる -->
+          <input type="button" class="ui negative button" value="Remove" onclick="{ onclickRemove.bind(this,version) }"/>
         </td>
       </tr>
       </tbody>
     </table>
+
+    <!-- Intro自体のシステム情報、Introのバージョンとか -->
     <h3>
       <small class="text-info">System Info</small>
     </h3>
@@ -58,7 +87,10 @@
     </div>
   </div>
 
-  <su-modal modal="{ state.downloadModal }" show="{ state.downloadModal.show }" ondownload-engine="{ onClickDownload }" ref="downloadModal">
+  <!-- DBFluteエンジンのダウンロード処理のためのモーダル -->
+  <su-modal modal="{ state.downloadModal }" show="{ state.downloadModal.show }" ondownload-engine="{ onDownloadEngine }"
+            ref="downloadModal">
+    <!-- デフォルトで最新版が指定されるようになっている (webから取得) -->
     <div class="description">
       The latest version is { state.latestVersion.latestReleaseVersion } now.
       <form class="ui form">
@@ -70,13 +102,16 @@
     </div>
   </su-modal>
 
+  <!-- ちと待ってなさいモーダル -->
   <su-modal modal="{ state.processModal }" show="{ state.processModal.show }" ref="processModal">
+
     <div class="description">
       Downloading...
     </div>
   </su-modal>
 
   <style>
+    /* #thiking jflute おおぅ、隣接セレクタじゃん。間にタグ入れると一気に破綻する？ (2022/04/07) */
     table + h2,
     table + h3 {
       margin-top: 3rem;
@@ -93,11 +128,17 @@
         i18n
       },
       state: {
+        // Implementation-Versionなど、System Infoに載せるオブジェクト
         manifest: [], // intro manifest
+        // DBFluteエンジンのバージョン一覧 (実質的にDBFluteエンジンの一覧と考えて良い)
         versions: [], // engine versions
+        // #thinking jflute serverUrlやapiServerUrlなどのIntro自体の設定情報だけど...使ってないようにみえる (2022/04/20)
         configuration: {}, // intro configuration
+        // DBFluteクライアントの一覧
         clientList: [], // existing clients
+        // DBFluteの最新バージョンオブジェクト e.g. latestReleaseVersion
         latestVersion: {}, // latest engin verion
+        // DBFluteエンジンをダウンロードするためのモーダルオブジェクト
         downloadModal: {
           header: 'DBFlute Engine Download',
           closable: true,
@@ -109,14 +150,18 @@
           ],
           show: false
         },
+        // ダウンロード中とかの、ちと待ってなさいモーダル
         processModal: {
           closable: false,
           show: false
         }
       },
       // ===================================================================================
-      //                                                                          Initialize
-      //                                                                          ==========
+      //                                                                           Lifecycle
+      //                                                                           =========
+      /**
+       * マウント完了時の処理。
+       */
       onMounted() {
         this.introManifest()
         this.engineVersions()
@@ -124,9 +169,48 @@
         this.configuration()
         this.prepareClientList()
       },
+
       // ===================================================================================
-      //                                                                          Basic Data
-      //                                                                          ==========
+      //                                                                       Event Handler
+      //                                                                       =============
+      /**
+       * Downloadボタン押下時の処理
+       * - DBFluteエンジンをダウンロードするためのモーダルを表示する。
+       */
+      onclickDownload() {
+        this.state.downloadModal.show = true
+        this.update()
+      },
+      /**
+       * DBFluteエンジンのダウンロード処理を行う。
+       */
+      onDownloadEngine() {
+        this.state.processModal.show = true
+        this.update()
+        const version = this.state.latestVersion.latestReleaseVersion
+        api.downloadEngine({ version }).finally(() => {
+          this.state.processModal.show = false
+          this.engineVersions()
+        })
+      },
+      /**
+       * Removeボタン押下時の処理
+       * - 引数で指定されたDBFluteエンジンを削除する。
+       * @param {string} version - 削除するDBFluteエンジンのバージョン (NotNull)
+       */
+      onclickRemove(version) {
+        api.removeEngine({ version }).finally(() => {
+          this.engineVersions()
+        })
+      },
+
+      // ===================================================================================
+      //                                                                             Private
+      //                                                                             =======
+      // #thiking jflute 関数名、動詞省略するかしないか？tagファイルの関数ではしっかり統一したい (2022/04/23)
+      /**
+       * DBFlute IntroのManifestファイルの情報を反映する。
+       */
       introManifest() {
         api.manifest().then((json) => {
           this.update({
@@ -137,16 +221,27 @@
           })
         })
       },
+      /**
+       * 既存のDBFluteエンジンのバージョン一覧を反映する。
+       * 実質、これが画面上におけるDBFluteエンジンの一覧の元ネタと考えて良い。
+       * (DBFluteエンジンは、バージョンごとにユニークになるので)
+       */
       engineVersions() {
         api.engineVersions().then((json) => {
           this.update({ versions: json })
         })
       },
+      /**
+       * DBFluteの最新バージョン情報をダウンロードモーダルに反映する。
+       */
       latestVersion() {
         api.findEngineLatest().then((json) => {
           this.update({ latestVersion: json })
         })
       },
+      /**
+       * serverUrlなどのIntro自体の設定情報を反映する...だけど、使ってなくない？
+       */
       configuration() {
         api.configuration().then((json) => {
           this.update({ configuration: json })
@@ -155,35 +250,25 @@
       // ===================================================================================
       //                                                                     Client Handling
       //                                                                     ===============
+      /**
+       * DBFluteクライアントの一覧情報を準備する。
+       * なければWelcome画面に遷移させる処理もここに入っている。
+       */
       prepareClientList() {
         api.clientList().then((json) => this.update({ clientList: json }))
       },
-      goToClient(client) {
+      /**
+       * Document画面に遷移する。
+       * @param {Object} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
+       */
+      goToDocumentsPage(client) {
         appRoutes.client.open(client.projectName, 'execute', 'documents')
       },
+      /**
+       * DBFluteクライアント作成画面へ遷移する。
+       */
       goToClientCreate() {
         appRoutes.create.open()
-      },
-      // ===================================================================================
-      //                                                                              Engine
-      //                                                                              ======
-      onClickDownload() {
-        this.state.processModal.show = true
-        this.update()
-        const version = this.state.latestVersion.latestReleaseVersion
-        api.downloadEngine({ version }).finally(() => {
-          this.state.processModal.show = false
-          this.engineVersions()
-        })
-      },
-      showDownloadModal() {
-        this.state.downloadModal.show = true
-        this.update()
-      },
-      removeEngine(version) {
-        api.removeEngine({ version }).finally(() => {
-          this.engineVersions()
-        })
       }
     }
   </script>
