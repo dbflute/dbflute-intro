@@ -28,12 +28,14 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dbflute.helper.dfmap.DfMapFile;
-import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
+import org.dbflute.intro.app.logic.document.DocumentPhysicalLogic;
 import org.dbflute.intro.app.model.client.basic.BasicInfoMap;
 import org.dbflute.intro.app.model.client.database.DatabaseInfoMap;
 import org.dbflute.intro.app.model.client.database.DbConnectionBox;
 import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
+import org.dbflute.intro.app.model.client.document.NeighborhoodSchemaHtmlMap;
+import org.dbflute.intro.app.model.client.document.SchemaDiagramMap;
 import org.dbflute.intro.app.model.client.document.SchemaSyncCheckMap;
 import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 
@@ -52,9 +54,9 @@ public class DfpropReadLogic {
     //                                                                           Attribute
     //                                                                           =========
     @Resource
-    private IntroPhysicalLogic introPhysicalLogic;
-    @Resource
     private DfpropPhysicalLogic dfpropPhysicalLogic;
+    @Resource
+    private DocumentPhysicalLogic documentPhysicalLogic;
 
     // ===================================================================================
     //                                                                 Find all dfprop Map
@@ -158,6 +160,14 @@ public class DfpropReadLogic {
         return prepareDocumentMapInner(readMap);
     }
 
+    public Optional<File> findSchemaDiagram(String projectName, String diagramName) {
+        final DocumentMap documentMap = findDocumentMap(projectName);
+        return documentMap.getSchemaDiagramMap()
+                .toOptional()
+                .flatMap(schemaDiagrams -> schemaDiagrams.get(diagramName).map(diagram -> diagram.path))
+                .map(path -> new File(documentPhysicalLogic.buildDocumentDirPath(projectName) + "/" + path));
+    }
+
     private DocumentMap prepareDocumentMapInner(Map<String, Object> readMap) {
         final DocumentMap documentMap = new DocumentMap();
         documentMap.setDbCommentOnAliasBasis(convertSettingToBoolean(readMap.get("isDbCommentOnAliasBasis")));
@@ -165,6 +175,13 @@ public class DfpropReadLogic {
         documentMap.setCheckColumnDefOrderDiff(convertSettingToBoolean(readMap.get("isCheckColumnDefOrderDiff")));
         documentMap.setCheckDbCommentDiff(convertSettingToBoolean(readMap.get("isCheckDbCommentDiff")));
         documentMap.setCheckProcedureDiff(convertSettingToBoolean(readMap.get("isCheckProcedureDiff")));
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, String>> neighborhoodSchemaHtmlMap =
+                (Map<String, Map<String, String>>) readMap.get("neighborhoodSchemaHtmlMap");
+        documentMap.setNeighborhoodSchemaHtmlMap(new NeighborhoodSchemaHtmlMap(neighborhoodSchemaHtmlMap));
+        @SuppressWarnings("unchecked")
+        Map<String, Map<String, String>> schemaDiagramMap = (Map<String, Map<String, String>>) readMap.get("schemaDiagramMap");
+        documentMap.setSchemaDiagramMap(new SchemaDiagramMap(schemaDiagramMap));
         return documentMap;
     }
 

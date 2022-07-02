@@ -91,6 +91,10 @@ public class DocumentPhysicalLogic {
         return toProjectNamedDocumentFile(projectName, moduleName, "lastadoc");
     }
 
+    public String buildDocumentDirPath(String projectName) {
+        return introPhysicalLogic.buildClientPath(projectName, "output", "doc");
+    }
+
     // ===================================================================================
     //                                                                        Path to File
     //                                                                        ============
@@ -131,7 +135,7 @@ public class DocumentPhysicalLogic {
     //                                            Build Path
     //                                            ----------
     private String buildDocumentPath(String projectName, String pureName) {
-        return introPhysicalLogic.buildClientPath(projectName, "output", "doc", pureName);
+        return buildDocumentDirPath(projectName) + "/" + pureName;
     }
 
     private String buildMigrationPath(String projectName, String subDir, String pureName) {

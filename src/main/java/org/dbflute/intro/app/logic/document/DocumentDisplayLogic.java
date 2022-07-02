@@ -24,7 +24,9 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
@@ -36,9 +38,12 @@ import org.lastaflute.core.exception.LaSystemException;
 public class DocumentDisplayLogic {
 
     private static final Pattern LASTADOC_FILENAME_PATTERN = Pattern.compile("lastadoc-(.*)\\.html\"");
+    private static final Pattern SCHEMA_HTML_FILENAME_PATTERN = Pattern.compile("schema-(.*)\\.html");
 
     @Resource
     private IntroSystemLogic introSystemLogic;
+    @Resource
+    private DfpropReadLogic dfpropReadLogic;
 
     public String modifyHtmlForIntroOpening(String projectName, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
@@ -87,5 +92,34 @@ public class DocumentDisplayLogic {
         } catch (IOException e) {
             throw new LaSystemException("Cannot mark intro opening at document HTML: " + file, e);
         }
+    }
+
+    public String modifySchemaHtmlForIntroOpening(String projectName, File file) {
+        String content = modifyHtmlForIntroOpening(projectName, file);
+        DocumentMap documentMap = dfpropReadLogic.findDocumentMap(projectName);
+
+        if (!documentMap.getSchemaDiagramMap().isEmpty()) {
+            content = documentMap.getSchemaDiagramMap().get().stream().reduce(content, (replacedContent, diagramEntry) -> {
+                final String name = diagramEntry.getKey();
+                final String path = diagramEntry.getValue().path;
+                final String replacedPath = String.format("/api/dfprop/document/schemadiagram/%s/%s", projectName, name);
+                return replacedContent.replaceAll(path, replacedPath);
+            }, (ignore, lastContent) -> lastContent);
+        }
+
+        if (!documentMap.getNeighborhoodSchemaHtmlMap().isEmpty()) {
+            content = documentMap.getNeighborhoodSchemaHtmlMap().get().stream().reduce(content, (replacedContent, neighborhood) -> {
+                Matcher matcher = SCHEMA_HTML_FILENAME_PATTERN.matcher(neighborhood.getValue().path);
+                if (!matcher.find()) {
+                    return replacedContent;
+                }
+                final String neighborhoodProjectName = matcher.group(1);
+                final String path = neighborhood.getValue().path;
+                final String replacedPath = String.format("/api/document/%s/schemahtml", neighborhoodProjectName);
+                return replacedContent.replaceAll(path, replacedPath);
+            }, (ignore, lastContent) -> lastContent);
+        }
+
+        return content;
     }
 }

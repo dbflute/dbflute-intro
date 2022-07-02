@@ -15,6 +15,10 @@
  */
 package org.dbflute.intro.app.web.dfprop.document;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
@@ -25,6 +29,7 @@ import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.response.StreamResponse;
 
 /**
  * @author prprmurakami
@@ -64,5 +69,21 @@ public class DfpropDocumentAction extends IntroBaseAction {
         documentMap.setCheckProcedureDiff(body.checkProcedureDiff);
         dfpropUpdateLogic.replaceDocumentMap(projectName, documentMap);
         return JsonResponse.asEmptyBody();
+    }
+
+    @Execute()
+    public StreamResponse schemadiagram(String projectName, String diagramName) {
+        final File diagram = dfpropReadLogic.findSchemaDiagram(projectName, diagramName).orElse(null);
+        if (diagram == null) {
+            return StreamResponse.asEmptyBody();
+        }
+        try {
+            return asStream(diagramName)
+                    .headerContentDispositionInline()
+                    .contentTypeJpeg()
+                    .data(Files.readAllBytes(diagram.toPath()));
+        } catch (IOException e) {
+            return StreamResponse.asEmptyBody();
+        }
     }
 }

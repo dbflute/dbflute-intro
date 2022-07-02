@@ -52,7 +52,7 @@ public class DocumentAction extends IntroBaseAction {
         if (!schemaHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String schemaHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, schemaHtml);
+        String schemaHtmlContent = documentDisplayLogic.modifySchemaHtmlForIntroOpening(clientName, schemaHtml);
         return createStringSteamResponse(schemaHtmlContent);
     }
 
