@@ -152,153 +152,159 @@
       targetLanguageItems: [],
       targetContainerItems: [],
 
-      // ===================================================================================
-      //                                                                           Lifecycle
-      //                                                                           =========
-      /**
-       * マウント完了時の処理。
-       */
-      onMounted() {
-        this.findClassifications()
-        this.setLatestEngineVersion()
-      },
+      onMounted,
 
-      // ===================================================================================
-      //                                                                       Event Handler
-      //                                                                       =============
-      /**
-       * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
-       * @param {string} databaseCode - 選択されたDBMSのコード (NotNull)
-       */
-      onchangeDatabase(databaseCode) {
-        // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
-        // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
-        // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
-        // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
-        // そっか、こっちは embeddedJar も使うかありがとう。
-        const database = this.databaseMap[databaseCode.value]
-        this.$('[ref=jdbcDriverFqcn]').value = database.driverName
-        this.$('[ref=url]').value = database.urlTemplate
-        this.$('[ref=schema]').value = database.defaultSchema
-        this.update({
-          // switch showing JDBCDriver select form
-          needsJdbcDriver: !database.embeddedJar,
-          // initialize JDBC Driver
-          jdbcDriver: undefined,
+      onchangeDatabase,
+      onclickOrmSetting,
+      onclickCreate,
+      onchangeJarFile,
+
+      convertClassificationsForUI,
+      showToast
+    }
+
+    // ===================================================================================
+    //                                                                           Lifecycle
+    //                                                                           =========
+    /**
+     * マウント完了時の処理。
+     */
+    async function onMounted() {
+      const classifications = await api.findClassifications().then(data => this.convertClassificationsForUI(data))
+      const latestVersion = await api.findEngineLatest().then(data => data.latestReleaseVersion)
+      this.databaseMap = classifications.databaseMap
+      this.targetDatabaseItems = classifications.targetDatabaseItems
+      this.targetLanguageItems = classifications.targetLanguageItems
+      this.targetContainerItems = classifications.targetContainerItems
+      this.latestVersion = latestVersion
+      this.update()
+    }
+
+    // ===================================================================================
+    //                                                                       Event Handler
+    //                                                                       =============
+    /**
+     * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
+     * @param {string} databaseCode - 選択されたDBMSのコード (NotNull)
+     */
+    function onchangeDatabase(databaseCode) {
+      // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
+      // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
+      // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
+      // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
+      // そっか、こっちは embeddedJar も使うかありがとう。
+      const database = this.databaseMap[databaseCode.value]
+      this.$('[ref=jdbcDriverFqcn]').value = database.driverName
+      this.$('[ref=url]').value = database.urlTemplate
+      this.$('[ref=schema]').value = database.defaultSchema
+      this.update({
+        // switch showing JDBCDriver select form
+        needsJdbcDriver: !database.embeddedJar,
+        // initialize JDBC Driver
+        jdbcDriver: undefined,
+      })
+    }
+
+    /**
+     * O/Rマッパー設定の表示/非表示をトグルする。
+     */
+    function onclickOrmSetting() {
+      this.update({
+        oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg
+      })
+    }
+
+    /**
+     * DBFluteクライアントを作成する。(作成ボタンの処理)
+     */
+    function onclickCreate() {
+      // サーバーサイドのWelcomeCreateBody.javaのclient部分の直接的に関連
+      // #thinking jflute "create: true" はサーバーサイドで定義されていないので使われてないような？ (2022/03/17)
+      const client = {
+        projectName: this.$('[ref=projectName]').value,
+        databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
+        create: true,
+        mainSchemaSettings: {
+          user: this.$('[ref=user]').value,
+          url: this.$('[ref=url]').value,
+          schema: this.$('[ref=schema]').value,
+          password: this.$('[ref=password]').value
+        },
+        dbfluteVersion: this.latestVersion,
+        packageBase: this.$('[ref=packageBase]').value,
+        containerCode: this.$('[ref=containerCode]').getAttribute('value'),
+        languageCode: this.$('[ref=languageCode]').getAttribute('value'),
+        jdbcDriver: this.state.jdbcDriver,
+        jdbcDriverFqcn: this.$('[ref=jdbcDriverFqcn]').value,
+      }
+      const testConnection = this.$('[ref=testConnection]').checked
+      this.suLoading(true)
+      api.createWelcomeClient(client, testConnection).then(() => {
+        appRoutes.main.open()
+        this.showToast(client.projectName)
+      }).finally(() => {
+        this.suLoading(false)
+      })
+    }
+
+    /**
+     * JDBCドライバーのファイルが指定されたときの処理。
+     * @param {Event} event - この関数を呼び出したイベントのオブジェクト (NotNull)
+     */
+    function onchangeJarFile(event) {
+      const file = event.target.files[0] // event.targetはイベント発生元のオブジェクト
+      readFile(file)
+        .then(result => {
+          // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
+          const encoded = window.btoa(result)
+          this.state.jdbcDriver = { fileName: file.name, data: encoded }
         })
-      },
+    }
 
-      /**
-       * O/Rマッパー設定の表示/非表示をトグルする。
-       */
-      onclickOrmSetting() {
-        this.update({
-          oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg
-        })
-      },
-
-      /**
-       * DBFluteクライアントを作成する。(作成ボタンの処理)
-       */
-      onclickCreate() {
-        // サーバーサイドのWelcomeCreateBody.javaのclient部分の直接的に関連
-        // #thinking jflute "create: true" はサーバーサイドで定義されていないので使われてないような？ (2022/03/17)
-        const client = {
-          projectName: this.$('[ref=projectName]').value,
-          databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
-          create: true,
-          mainSchemaSettings: {
-            user: this.$('[ref=user]').value,
-            url: this.$('[ref=url]').value,
-            schema: this.$('[ref=schema]').value,
-            password: this.$('[ref=password]').value
-          },
-          dbfluteVersion: this.state.latestVersion,
-          packageBase: this.$('[ref=packageBase]').value,
-          containerCode: this.$('[ref=containerCode]').getAttribute('value'),
-          languageCode: this.$('[ref=languageCode]').getAttribute('value'),
-          jdbcDriver: this.state.jdbcDriver,
-          jdbcDriverFqcn: this.$('[ref=jdbcDriverFqcn]').value,
-        }
-        const testConnection = this.$('[ref=testConnection]').checked
-        this.suLoading(true)
-        api.createWelcomeClient(client, testConnection).then(() => {
-          appRoutes.main.open()
-          this.showToast(client.projectName)
-        }).finally(() => {
-          this.suLoading(false)
-        })
-      },
-
-      /**
-       * JDBCドライバーのファイルが指定されたときの処理。
-       * @param {Event} event - この関数を呼び出したイベントのオブジェクト (NotNull)
-       */
-      onchangeJarFile(event) {
-        const file = event.target.files[0] // event.targetはイベント発生元のオブジェクト
-        readFile(file)
-          .then(result => {
-            // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
-            const encoded = window.btoa(result)
-            this.state.jdbcDriver = { fileName: file.name, data: encoded }
-          })
-      },
-
-      // ===================================================================================
-      //                                                                             Private
-      //                                                                             =======
-      /**
-       * Welcome画面で必要な区分値情報を探す。(保持する)
-       */
-      findClassifications() {
-        api.findClassifications().then((data) => {
-          this.databaseMap = data.targetDatabaseMap
-          this.targetDatabaseItems = Object.entries(data.targetDatabaseMap).map(([key, value]) => {
-            return { value: key, label: value.databaseName }
-          })
-          this.targetLanguageItems = Object.entries(data.targetLanguageMap).map(([key, value]) => {
-            return { value: key, label: value }
-          })
-          this.targetContainerItems = Object.entries(data.targetContainerMap).map(([key, value]) => {
-            return { value: key, label: value }
-          })
-          this.update()
-        })
-      },
-      /**
-       * DBFlute Engineの最新バージョンをwebから取って来て設定する。
-       */
-      setLatestEngineVersion() {
-        api.findEngineLatest().then((data) => {
-          this.update({
-            latestVersion: data.latestReleaseVersion
-          })
-        })
-      },
-
-      // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-      // done jflute シンプルな関数名にするか、showClientCreatedToast()とか具体的な名前にするか迷うね (2022/03/17)
-      // いや、showToast()だと汎用的な処理なのかなとかふと思ってしまって。要はJavaだとhelper的なprivateメソッドみたいな。
-      // もちろん、welcome.tagというクラスみたいな世界の中のshowToast()なのでクライアント作成時のものでしょうって解釈もできるけど。
-      // 少なくともこういうところ、人によってバラけそうじゃない？って思った。
-      //
-      // いんとろんずうむにて、この件を議論(2022/03/24):
-      // o tagはクラスみたいなものなので、シンプルな名前寄りでOK
-      // o でも、toggle()とかは無し、トグルは画面で一つだけ感がない
-      // o なので、多少ケースバイケースで属人的な判断ではある
-      // o 一方で、業務のコードだと2個目が出てきたとき、シンプルな方が置き去りにされやすい
-      // o でも、ここはOSSの世界、2個目が出てきたときは既存も直そうポリシーで
-      // _/_/_/_/_/_/_/_/_/_/
-      /**
-       * DBFluteクライアントを作成したことを知らせるパンじゃなくてトースト。
-       * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
-       */
-      showToast(projectName) {
-        this.successToast({
-          title: 'Create task completed',
-          message: 'Client for project \'' + projectName + '\', was successfully created!!',
+    // ===================================================================================
+    //                                                                             Private
+    //                                                                             =======
+    /**
+     * 区分値情報をUI用のデータに整形する。
+     * @param {any} classifications - APIで取得した区分値情報 (NotNull)
+     */
+    function convertClassificationsForUI(classifications) {
+      return {
+        databaseMap: classifications.targetDatabaseMap,
+        targetDatabaseItems: Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
+          return { value: key, label: value.databaseName }
+        }),
+        targetLanguageItems: Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
+          return { value: key, label: value }
+        }),
+        targetContainerItems: Object.entries(classifications.targetContainerMap).map(([key, value]) => {
+          return { value: key, label: value }
         })
       }
+    }
+
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // done jflute シンプルな関数名にするか、showClientCreatedToast()とか具体的な名前にするか迷うね (2022/03/17)
+    // いや、showToast()だと汎用的な処理なのかなとかふと思ってしまって。要はJavaだとhelper的なprivateメソッドみたいな。
+    // もちろん、welcome.tagというクラスみたいな世界の中のshowToast()なのでクライアント作成時のものでしょうって解釈もできるけど。
+    // 少なくともこういうところ、人によってバラけそうじゃない？って思った。
+    //
+    // いんとろんずうむにて、この件を議論(2022/03/24):
+    // o tagはクラスみたいなものなので、シンプルな名前寄りでOK
+    // o でも、toggle()とかは無し、トグルは画面で一つだけ感がない
+    // o なので、多少ケースバイケースで属人的な判断ではある
+    // o 一方で、業務のコードだと2個目が出てきたとき、シンプルな方が置き去りにされやすい
+    // o でも、ここはOSSの世界、2個目が出てきたときは既存も直そうポリシーで
+    // _/_/_/_/_/_/_/_/_/_/
+    /**
+     * DBFluteクライアントを作成したことを知らせるパンじゃなくてトースト。
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
+     */
+    function showToast(projectName) {
+      this.successToast({
+        title: 'Create task completed',
+        message: 'Client for project \'' + projectName + '\', was successfully created!!',
+      })
     }
   </script>
 </welcome>
