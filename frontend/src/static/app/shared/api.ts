@@ -1,78 +1,42 @@
 import i18n from 'i18next'
-import { FFetch } from 'ffetch'
-import { Subject } from 'rxjs'
-import Q from 'q'
-import { triggerShowResult } from '../shared/app-events'
+import { triggerShowResult } from './app-events'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
-class FFetchWrapper extends FFetch {
-
-  constructor(...arg) {
-    super(...arg)
-
-    this.errorEvents = new Subject()
+class ApiClient {
+  get(url: string, config?: AxiosRequestConfig) {
+    return axios.get(url, config).then(res => res.data).catch(handleError)
   }
 
-  get(url, options) {
-    return this.execute(Q(super.get(url, options)))
+  post(url: string, data?: any, config?: AxiosRequestConfig) {
+    return axios.post(url, data, config).then(res => res.data).catch(handleError)
   }
 
-  post(url, options) {
-    return this.execute(Q(super.post(url, options)))
+  put(url: string, data?: any, config?: AxiosRequestConfig) {
+    return axios.put(url, data, config).then(res => res.data).catch(handleError)
   }
 
-  put(url, options) {
-    return this.execute(Q(super.put(url, options)))
-  }
-
-  del(url, options) {
-    return this.execute(Q(super.del(url, options)))
-  }
-
-  execute(request) {
-    return request
-      .then(res => this.checkStatus(res))
-      .then(res => res.json())
-      .catch(res => this.handleResponseError(res))
-  }
-
-  checkStatus(res) {
-    if (!res.ok) {
-      return res.json()
-        .then(err => Promise.reject({
-          status: res.status,
-          data: err
-        }))
-    }
-    return res
-  }
-
-  handleResponseError(res) {
-    this.errorEvents.next(res)
-    return Q.reject(new Error(res))
-  }
-
-  get errors() {
-    return this.errorEvents
+  del(url: string, config?: AxiosRequestConfig) {
+    return axios.delete(url, config).then(res => res.data).catch(handleError)
   }
 }
-
-const ffetch = new FFetchWrapper()
 
 //===================================================================================
 //                                                                     Error Handling
 //                                                                     ==============
 // see IntroApiFailureHook.java for failure response
-ffetch.errors.subscribe(response => {
+const handleError = (error: AxiosError) => {
   let header = undefined
   let messages = undefined
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
   //let reload = false;
   let validationError = false
-  if (response.status === 0) {
+  const response: any = error.response;
+  const status = response.status;
+  if (status === 0) {
     messages = ['Cannot access the server, retry later']
   }
   // #hope refactor: extract to method
-  if (response.status === 400) {
+  if (status === 400) {
     header = '400 Bad Request'
     // #hope improvement: formal validation error handling
     if (response.data.failureType) { // basically here (unified JSON if 400)
@@ -112,43 +76,48 @@ ffetch.errors.subscribe(response => {
     } else {
       messages = Array.isArray(response.data) ? response.data : [response.data]
     }
-  } else if (response.status === 401) {
+  } else if (status === 401) {
     header = '401 Not Authorized'
-  } else if (response.status === 403) {
+  } else if (status === 403) {
     header = '403 Forbidden'
-  } else if (response.status >= 500) {
+  } else if (status >= 500) {
     header = '500 Server Error'
-    messages = Array.isArray(response.data) ? response.data : [response.data]
+    messages = Object.values(response.data.messages)
   }
   if (header != null || messages != null) {
     const modalSize = validationError ? 'small' : 'large'
     triggerShowResult({ header, messages, modalSize })
   }
-})
+  return Promise.reject(error)
+}
 
-export class ApiClient {
+const apiClient = new ApiClient()
+
+class Api {
 
   // ===============================================================================
   //                                                                           Intro
   //                                                                           =====
   manifest() {
-    return ffetch.post('api/intro/manifest')
+    return apiClient.post('api/intro/manifest')
   }
 
   findClassifications() {
-    return ffetch.post('api/intro/classifications')
+    return apiClient.post('api/intro/classifications')
   }
 
   configuration() {
-    return ffetch.post('api/intro/configuration')
+    return apiClient.post('api/intro/configuration')
   }
 
   // ===============================================================================
   //                                                                         Welcome
   //                                                                         =======
-  createWelcomeClient(client, testConnection) {
-    return ffetch.post('api/welcome/create',
-      { body: { client: client, testConnection: testConnection }, timeout: 180000 }) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
+  createWelcomeClient(client: any, testConnection: boolean) {
+    return apiClient.post('api/welcome/create',
+      { client: client, testConnection: testConnection },
+      { timeout: 180000 }
+    ) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
   }
 
   // ===============================================================================
@@ -158,21 +127,21 @@ export class ApiClient {
   //                                                 Basic
   //                                                 -----
   clientList() {
-    return ffetch.post('api/client/list')
+    return apiClient.post('api/client/list')
   }
 
-  clientPropbase(projectName) {
-    return ffetch.post(`api/client/propbase/${projectName}`)
+  clientPropbase(projectName: string) {
+    return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
-  createClient(client, testConnection) {
-    return ffetch.post('api/client/create', {
+  createClient(client: any, testConnection: boolean) {
+    return apiClient.post('api/client/create', {
       body: { client, testConnection },
     })
   }
 
-  removeClient(clientBody) {
-    return ffetch.post(`api/client/delete/${clientBody.project}`)
+  removeClient(clientBody: any) {
+    return apiClient.post(`api/client/delete/${clientBody.project}`)
   }
 
   // ===============================================================================
@@ -181,19 +150,19 @@ export class ApiClient {
   // -----------------------------------------------------
   //                                                 Basic
   //                                                 -----
-  dfporpBeanList(clientBody) {
-    return ffetch.post(`api/dfprop/list/${clientBody.projectName}`)
+  dfporpBeanList(clientBody: any) {
+    return apiClient.post(`api/dfprop/list/${clientBody.projectName}`)
   }
 
   // -----------------------------------------------------
   //                                       SchemaSyncCheck
   //                                       ---------------
-  syncSchema(projectName) {
-    return ffetch.post(`api/dfprop/schemasync/${projectName}`)
+  syncSchema(projectName: string) {
+    return apiClient.post(`api/dfprop/schemasync/${projectName}`)
   }
 
-  editSyncSchema(projectName, syncSchemaSettingData) {
-    return ffetch.post(`api/dfprop/schemasync/edit/${projectName}/`, {
+  editSyncSchema(projectName: string, syncSchemaSettingData: any) {
+    return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
       body: {
         url: syncSchemaSettingData.url,
         schema: syncSchemaSettingData.schema,
@@ -207,12 +176,12 @@ export class ApiClient {
   // -----------------------------------------------------
   //                                     SchemaPolicyCheck
   //                                     -----------------
-  schemaPolicy(projectName) {
-    return ffetch.post(`api/dfprop/schemapolicy/${projectName}`)
+  schemaPolicy(projectName: string) {
+    return apiClient.post(`api/dfprop/schemapolicy/${projectName}`)
   }
 
-  editSchemaPolicy(projectName, schemaPolicyData) {
-    return ffetch.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
+  editSchemaPolicy(projectName: string, schemaPolicyData: any) {
+    return apiClient.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
       body: {
         wholeMap: schemaPolicyData.wholeMap,
         tableMap: schemaPolicyData.tableMap,
@@ -221,8 +190,8 @@ export class ApiClient {
     })
   }
 
-  registerSchemapolicyStatement(projectName, schemaPolicyData) {
-    return ffetch.post(
+  registerSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
+    return apiClient.post(
       `api/dfprop/schemapolicy/statement/register/${projectName}`,
       {
         body: schemaPolicyData,
@@ -230,12 +199,12 @@ export class ApiClient {
     )
   }
 
-  getSchemapolicyStatementSubject(mapType) {
-    return ffetch.post(`api/dfprop/schemapolicy/statement/subject?maptype=${mapType}`)
+  getSchemapolicyStatementSubject(mapType: string) {
+    return apiClient.post(`api/dfprop/schemapolicy/statement/subject?maptype=${mapType}`)
   }
 
-  deleteSchemapolicyStatement(projectName, schemaPolicyData) {
-    return ffetch.post(
+  deleteSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
+    return apiClient.post(
       `api/dfprop/schemapolicy/statement/delete/${projectName}`,
       {
         body: schemaPolicyData,
@@ -243,8 +212,8 @@ export class ApiClient {
     )
   }
 
-  moveSchemapolicyStatement(projectName, schemaPolicyData) {
-    return ffetch.post(
+  moveSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
+    return apiClient.post(
       `api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData }
     )
   }
@@ -252,12 +221,12 @@ export class ApiClient {
   // -----------------------------------------------------
   //                                              Document
   //                                              --------
-  document(projectName) {
-    return ffetch.post(`api/dfprop/document/${projectName}`)
+  document(projectName: string) {
+    return apiClient.post(`api/dfprop/document/${projectName}`)
   }
 
-  editDocument(projectName, documentSetting) {
-    return ffetch.post(`api/dfprop/document/edit/${projectName}`, {
+  editDocument(projectName: string, documentSetting: any) {
+    return apiClient.post(`api/dfprop/document/edit/${projectName}`, {
       body: {
         upperCaseBasic: documentSetting.upperCaseBasic,
         aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
@@ -272,12 +241,12 @@ export class ApiClient {
   // -----------------------------------------------------
   //                                              Settings
   //                                              --------
-  settings(projectName) {
-    return ffetch.post(`api/dfprop/settings/${projectName}`)
+  settings(projectName: string) {
+    return apiClient.post(`api/dfprop/settings/${projectName}`)
   }
 
-  updateSettings(clientBody) {
-    return ffetch.post(`api/dfprop/settings/edit/${clientBody.projectName}`, {
+  updateSettings(clientBody: any) {
+    return apiClient.post(`api/dfprop/settings/edit/${clientBody.projectName}`, {
       body: { client: clientBody },
     })
   }
@@ -285,43 +254,43 @@ export class ApiClient {
   // ===============================================================================
   //                                                               Client :: playsql
   //                                                               =================
-  openAlterDir(projectName) {
-    return ffetch.get(`api/playsql/migration/alter/open/${projectName}`)
+  openAlterDir(projectName: string) {
+    return apiClient.get(`api/playsql/migration/alter/open/${projectName}`)
   }
 
-  alter(projectName) {
-    return ffetch.get(`api/playsql/migration/alter/${projectName}/`)
+  alter(projectName: string) {
+    return apiClient.get(`api/playsql/migration/alter/${projectName}/`)
   }
 
-  prepareAlterSql(projectName) {
-    return ffetch.post(`api/playsql/migration/alter/prepare/${projectName}/`)
+  prepareAlterSql(projectName: string) {
+    return apiClient.post(`api/playsql/migration/alter/prepare/${projectName}/`)
   }
 
-  createAlterSql(projectName, alterFileName) {
-    return ffetch.post(`api/playsql/migration/alter/create/${projectName}/`, {
+  createAlterSql(projectName: string, alterFileName: string) {
+    return apiClient.post(`api/playsql/migration/alter/create/${projectName}/`, {
       body: {
         alterFileName,
       },
     })
   }
 
-  openDataDir(projectName) {
-    return ffetch.get(`api/playsql/data/open/${projectName}`)
+  openDataDir(projectName: string) {
+    return apiClient.get(`api/playsql/data/open/${projectName}`)
   }
 
-  playsqlBeanList(projectName) {
-    return ffetch.post(`api/playsql/list/${projectName}`)
+  playsqlBeanList(projectName: string) {
+    return apiClient.post(`api/playsql/list/${projectName}`)
   }
 
   // ===============================================================================
   //                                                                   Client :: log
   //                                                                   =============
-  logBeanList(projectName) {
-    return ffetch.post(`api/log/list/${projectName}`)
+  logBeanList(projectName: string) {
+    return apiClient.post(`api/log/list/${projectName}`)
   }
 
-  getLog(projectName, fileName) {
-    return ffetch.post('api/log', {
+  getLog(projectName: string, fileName: string) {
+    return apiClient.post('api/log', {
       body: {
         project: projectName,
         fileName: fileName,
@@ -329,44 +298,44 @@ export class ApiClient {
     })
   }
 
-  latestResult(projectName, task) {
-    return ffetch.get(`api/log/latest/${projectName}/${task}`)
+  latestResult(projectName: string, task: string) {
+    return apiClient.get(`api/log/latest/${projectName}/${task}`)
   }
 
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======
   findEngineLatest() {
-    return ffetch.post('api/engine/latest')
+    return apiClient.post('api/engine/latest')
   }
 
   engineVersions() {
-    return ffetch.post('api/engine/versions')
+    return apiClient.post('api/engine/versions')
   }
 
   // needs trailing slash if URL parameter contains dot
-  downloadEngine(params) {
-    return ffetch.post(`api/engine/download/${params.version}/`)
+  downloadEngine(params: any) {
+    return apiClient.post(`api/engine/download/${params.version}/`)
   }
 
-  removeEngine(params) {
-    return ffetch.post(`api/engine/remove/${params.version}/`)
+  removeEngine(params: any) {
+    return apiClient.post(`api/engine/remove/${params.version}/`)
   }
 
   // ===============================================================================
   //                                                                           Task
   //                                                                          ======
-  task(projectName, task) {
-    return ffetch.post(`api/task/execute/${projectName}/${task}`)
+  task(projectName: string, task: string) {
+    return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
 }
 
-export const api = new ApiClient()
+export const api = new Api()
 
 export class DbfluteTask {
-  task(task, projectName, callback) { // callback: (message: string) => void
+  task(task: string, projectName: string, callback: (message: string) => void) {
     return api.task(projectName, task).then((response) => {
-      const message = response.success ? 'success' : 'failure'
+      const message = response.status === 200 ? 'success' : 'failure'
       callback(message)
     })
   }

@@ -4,7 +4,7 @@ const { createTransformer } = require('babel-jest')
 
 /**
  * .riotファイルをjestで利用できるように変換する
- * o .riotをコンパイルしたあとはbabel-jestに全部お任せしているだけ
+ * - .riotをコンパイルしたあとはbabel-jestに全部お任せしているだけ
  *
  * @param sourceText .riotファイルの中身
  * @param sourcePath .riotファイルのパス

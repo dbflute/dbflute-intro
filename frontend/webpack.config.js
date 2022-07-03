@@ -34,12 +34,18 @@ module.exports = {
         use: ['babel-loader']
       },
       {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: ['ts-loader'],
+      },
+      {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       }
     ]
   },
   resolve: {
+    extensions: ['.ts', '.js'],
     // riot.route で出るエラー回避
     fallback: { 'url': false }
   },
