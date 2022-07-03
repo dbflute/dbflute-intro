@@ -28,11 +28,16 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 2. `$ npm start` => boot FrontEnd Application (Riot)
 
 ## How to refresh application
-1. $ `./gradlew refresh`
+1. `$ ./gradlew refresh`
 
 ## How to build production ready jar file
 1. `$ ./gradlew release`
 1. `$ java -jar build/libs/dbflute-intro.jar # for jar file check` 
+
+## How to prepare containers
+1. `$ docker compose up -d`
+
+See docker-compose.yml for details
 
 ## Server-side Framework
 
