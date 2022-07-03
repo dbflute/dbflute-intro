@@ -18,12 +18,18 @@ commands:
           key: dbflute-intro-gradle-build-{{ checksum "build.gradle" }}
           paths:
             - ~/.gradle
-  setup-front:
+  test-frontend:
     steps:
       - run:
-          name: setup front
+          name: install
           command: |
-            npm install node@8
+            cd frontend
+            npm install node@16
+      - run:
+          name: run test
+          command: |
+            cd frontend
+            npm run test
   restore-npm:
     steps:
       - restore_cache:
@@ -44,6 +50,7 @@ jobs:
       - checkout
       - restore-gradle
       - save-gradle
+      - test-frontend
       - run:
           name: run unit test
           command: ./gradlew test --debug
