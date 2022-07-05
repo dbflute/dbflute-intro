@@ -102,7 +102,7 @@ class Api {
     return apiClient.post('api/intro/manifest')
   }
 
-  findClassifications() {
+  findClassifications(): Promise<IntroClassificationsResult> {
     return apiClient.post('api/intro/classifications')
   }
 
