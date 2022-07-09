@@ -75,6 +75,12 @@ public class DfpropDocumentAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    /**
+     * schemaDiagramMapに設定された画像ファイルを取得します
+     * @param projectName The project name of DBFlute client. (NotNull) e.g. trohamadb
+     * @param diagramName The diagramName name of schemaDiagramMap. e.g. maihama_erd
+     * @return Image file stream
+     */
     @Execute()
     public StreamResponse schemadiagram(String projectName, String diagramName) {
         final File diagram = dfpropReadLogic.findSchemaDiagram(projectName, diagramName).orElse(null);
