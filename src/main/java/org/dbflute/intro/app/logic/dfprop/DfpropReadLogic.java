@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -182,13 +183,8 @@ public class DfpropReadLogic {
         documentMap.setCheckColumnDefOrderDiff(convertSettingToBoolean(readMap.get("isCheckColumnDefOrderDiff")));
         documentMap.setCheckDbCommentDiff(convertSettingToBoolean(readMap.get("isCheckDbCommentDiff")));
         documentMap.setCheckProcedureDiff(convertSettingToBoolean(readMap.get("isCheckProcedureDiff")));
-        @SuppressWarnings("unchecked")
-        Map<String, Map<String, String>> neighborhoodSchemaHtmlMap =
-                (Map<String, Map<String, String>>) readMap.get("neighborhoodSchemaHtmlMap");
-        documentMap.setNeighborhoodSchemaHtmlMap(new NeighborhoodSchemaHtmlMap(neighborhoodSchemaHtmlMap));
-        @SuppressWarnings("unchecked")
-        Map<String, Map<String, String>> schemaDiagramMap = (Map<String, Map<String, String>>) readMap.get("schemaDiagramMap");
-        documentMap.setSchemaDiagramMap(new SchemaDiagramMap(schemaDiagramMap));
+        documentMap.setNeighborhoodSchemaHtmlMap(new NeighborhoodSchemaHtmlMap(convertSettingToMap(readMap.get("neighborhoodSchemaHtmlMap"))));
+        documentMap.setSchemaDiagramMap(new SchemaDiagramMap(convertSettingToMap(readMap.get("schemaDiagramMap"))));
         return documentMap;
     }
 
@@ -210,5 +206,10 @@ public class DfpropReadLogic {
 
     private boolean convertSettingToBoolean(Object obj) {
         return obj != null && Boolean.parseBoolean(convertSettingToString(obj));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Map<String, String>> convertSettingToMap(Object obj) {
+        return obj != null ? (Map<String, Map<String, String>>) obj : new HashMap<>();
     }
 }
