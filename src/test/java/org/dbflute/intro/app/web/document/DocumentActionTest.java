@@ -45,7 +45,7 @@ public class DocumentActionTest extends UnitIntroTestCase {
         // assert that neighborhoodSchemaHtml url replaced
         assertContains(schemaHtml, "<a href=\"/api/document/trohamadb/schemahtml\">to trohama</a>");
         // assert that schemaDiagram url replaced
-        assertContains(schemaHtml, "src=\"/api/dfprop/document/schemadiagram/testdb/maihama_erd\"");
+        assertContains(schemaHtml, "src=\"/api/dfprop/document/schemadiagram/testdb/test_erd\"");
     }
 
     private String readContent(StreamResponse response) throws IOException {
