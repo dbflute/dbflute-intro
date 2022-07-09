@@ -239,7 +239,7 @@ map:{
     #  The path is relative from your SchemaHtml.
     #
     ; schemaDiagramMap = map:{
-        ; maihama_erd = map:{ path = ../../../etc/trohamadb/erd/maihamadb.png ; width = 100% ; height = 100% }
+        ; test_erd = map:{ path = ../../../etc/introdb/erd/test.jpeg ; width = 100% ; height = 100% }
     }
     # - - - - - - - - - -/
 }

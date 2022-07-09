@@ -35,11 +35,11 @@ public class DfpropDocumentActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        StreamResponse response = action.schemadiagram(TEST_CLIENT_PROJECT, "maihama_erd");
+        StreamResponse response = action.schemadiagram(TEST_CLIENT_PROJECT, "test_erd");
 
         // ## Assert ##
         Base64.Encoder encoder = Base64.getEncoder();
-        File expected = new File(getProjectDir(), "etc/trohamadb/erd/maihamadb.png");
+        File expected = new File(getProjectDir(), "etc/introdb/erd/test.jpeg");
         // compare by base64 encoded
         assertEquals(encoder.encodeToString(response.getByteData()), encoder.encodeToString(Files.readAllBytes(expected.toPath())));
     }
