@@ -18,7 +18,9 @@ package org.dbflute.intro.app.web.dfprop.document;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.UUID;
 
+import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.junit.Test;
 import org.lastaflute.web.response.StreamResponse;
@@ -42,5 +44,18 @@ public class DfpropDocumentActionTest extends UnitIntroTestCase {
         File expected = new File(getProjectDir(), "etc/introdb/erd/test.jpeg");
         // compare by base64 encoded
         assertEquals(encoder.encodeToString(response.getByteData()), encoder.encodeToString(Files.readAllBytes(expected.toPath())));
+    }
+
+    @Test
+    public void test_schemadiagram_notfound() throws Exception {
+        // ## Arrange ##
+        DfpropDocumentAction action = new DfpropDocumentAction();
+        inject(action);
+
+        // ## Act ##
+        final String notfoundDiagramName = UUID.randomUUID().toString();
+
+        // ## Assert ##
+        assertException(DfpropFileNotFoundException.class, () -> action.schemadiagram(TEST_CLIENT_PROJECT, notfoundDiagramName));
     }
 }

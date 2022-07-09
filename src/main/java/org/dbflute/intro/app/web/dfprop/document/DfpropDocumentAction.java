@@ -18,6 +18,7 @@ package org.dbflute.intro.app.web.dfprop.document;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 
 import javax.annotation.Resource;
 
@@ -27,6 +28,8 @@ import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
+import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
+import org.dbflute.intro.bizfw.tellfailure.OpenDirNotFoundException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.response.StreamResponse;
@@ -76,13 +79,16 @@ public class DfpropDocumentAction extends IntroBaseAction {
     public StreamResponse schemadiagram(String projectName, String diagramName) {
         final File diagram = dfpropReadLogic.findSchemaDiagram(projectName, diagramName).orElse(null);
         if (diagram == null) {
-            return StreamResponse.asEmptyBody();
+            final String debugMsg = String.format("Not found schemaDiagram %s in the documentMap.dfprop", diagramName);
+            throw new DfpropFileNotFoundException(debugMsg, DocumentMap.DFPROP_NAME);
         }
         try {
             return asStream(diagramName)
                     .headerContentDispositionInline()
                     .contentTypeJpeg()
                     .data(Files.readAllBytes(diagram.toPath()));
+        }  catch (NoSuchFileException e) {
+            throw new OpenDirNotFoundException("Not found schemaDiagram file:" + e.getFile(), e.getFile());
         } catch (IOException e) {
             return StreamResponse.asEmptyBody();
         }

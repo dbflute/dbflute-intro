@@ -25,6 +25,11 @@ import org.dbflute.optional.OptionalThing;
 public class DocumentMap {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DFPROP_NAME = "documentMap.dfprop";
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     protected boolean dbCommentOnAliasBasis;
