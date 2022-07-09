@@ -29,9 +29,9 @@ public class SchemaDiagramMap {
         // ===================================================================================
         //                                                                           Attribute
         //                                                                           =========
-        public String path;
-        public String width;
-        public String height;
+        public final String path;
+        public final String width;
+        public final String height;
 
         public SchemaDiagram(String path, String width, String height) {
             this.path = path;
@@ -43,7 +43,7 @@ public class SchemaDiagramMap {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    public Map<String, SchemaDiagram> map = new HashMap<>();
+    private final Map<String, SchemaDiagram> map = new HashMap<>();
 
     // ===================================================================================
     //                                                                         Constructor

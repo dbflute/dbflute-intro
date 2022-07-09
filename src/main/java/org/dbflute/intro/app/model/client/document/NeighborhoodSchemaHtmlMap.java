@@ -28,7 +28,7 @@ public class NeighborhoodSchemaHtmlMap {
         // ===================================================================================
         //                                                                           Attribute
         //                                                                           =========
-        public String path;
+        public final String path;
 
         public NeighborhoodSchemaHtml(String path) {
             this.path = path;
@@ -38,7 +38,7 @@ public class NeighborhoodSchemaHtmlMap {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    public Map<String, NeighborhoodSchemaHtml> map = new HashMap<>();
+    private final Map<String, NeighborhoodSchemaHtml> map = new HashMap<>();
 
     // ===================================================================================
     //                                                                         Constructor
