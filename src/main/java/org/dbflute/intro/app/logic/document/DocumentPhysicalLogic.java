@@ -28,6 +28,7 @@ import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
  * @author jflute
  * @author cabos
  * @author subaru
+ * @author hakiba
  */
 public class DocumentPhysicalLogic {
 

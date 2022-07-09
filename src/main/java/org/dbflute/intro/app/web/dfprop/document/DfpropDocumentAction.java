@@ -34,6 +34,7 @@ import org.lastaflute.web.response.StreamResponse;
 /**
  * @author prprmurakami
  * @author jflute
+ * @author hakiba
  */
 public class DfpropDocumentAction extends IntroBaseAction {
 

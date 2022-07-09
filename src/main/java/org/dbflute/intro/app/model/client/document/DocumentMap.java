@@ -20,6 +20,7 @@ import org.dbflute.optional.OptionalThing;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class DocumentMap {
 
