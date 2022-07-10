@@ -18,7 +18,6 @@ package org.dbflute.intro.app.web.dfprop.document;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 
 import javax.annotation.Resource;
 
@@ -29,7 +28,7 @@ import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
 import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
-import org.dbflute.intro.bizfw.tellfailure.OpenDirNotFoundException;
+import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.response.StreamResponse;
@@ -79,7 +78,9 @@ public class DfpropDocumentAction extends IntroBaseAction {
      * schemaDiagramMapに設定された画像ファイルを取得します
      * @param projectName The project name of DBFlute client. (NotNull) e.g. trohamadb
      * @param diagramName The diagramName name of schemaDiagramMap. e.g. maihama_erd
-     * @return Image file stream (NotNull, ThrowException: not found schemaDiagramMap or schemaDiagram image file)
+     * @return Image file stream (NotNull: exception if not found)
+     * @throws DfpropFileNotFoundException When documentMap.dfprop is not found.
+     * @throws IntroFileOperationException When the diagram file cannot be opened.
      */
     @Execute()
     public StreamResponse schemadiagram(String projectName, String diagramName) {
@@ -93,10 +94,8 @@ public class DfpropDocumentAction extends IntroBaseAction {
                     .headerContentDispositionInline()
                     .contentTypeJpeg()
                     .data(Files.readAllBytes(diagram.toPath()));
-        }  catch (NoSuchFileException e) {
-            throw new OpenDirNotFoundException("Not found schemaDiagram file:" + e.getFile(), e.getFile());
         } catch (IOException e) {
-            return StreamResponse.asEmptyBody();
+            throw new IntroFileOperationException("Not found schemaDiagram file" , diagramName, e);
         }
     }
 }
