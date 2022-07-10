@@ -166,7 +166,7 @@ public class DfpropReadLogic {
      * <li>ファイルパスはDBFluteIntroプロジェクトからの相対パスに変換します</li>
      * @param projectName The project name of DBFlute client. (NotNull)
      * @param diagramName The diagram name. (NotNull)
-     * @return schema diagram file path (Nullable)
+     * @return schema diagram file path (NotNull, EmptyAllowed: not setup schemaDiagramMap)
      */
     public Optional<File> findSchemaDiagram(String projectName, String diagramName) {
         final DocumentMap documentMap = findDocumentMap(projectName);

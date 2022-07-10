@@ -50,7 +50,7 @@ public class DocumentDisplayLogic {
      * DBFluteの各htmlの各種URLをDBFluteIntro用に置換します。
      * @param projectName The project name of DBFlute client. (NotNull)
      * @param file DBFlute html file. (NotNull)
-     * @return SchemaHtml with each URL replaced for DBFluteIntro
+     * @return SchemaHtml with each URL replaced for DBFluteIntro (NotNull)
      */
     public String modifyHtmlForIntroOpening(String projectName, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
@@ -105,7 +105,7 @@ public class DocumentDisplayLogic {
      * schemaHtmlの各種URLをDBFluteIntro用に置換します。
      * @param projectName The project name of DBFlute client. (NotNull)
      * @param file SchemaHtml file. (NotNull)
-     * @return SchemaHtml with schemaDiagram and NeighborhoodSchemaHtml URL replaced for DBFluteIntro
+     * @return SchemaHtml with schemaDiagram and NeighborhoodSchemaHtml URL replaced for DBFluteIntro (NotNull)
      */
     public String modifySchemaHtmlForIntroOpening(String projectName, File file) {
         String content = modifyHtmlForIntroOpening(projectName, file);

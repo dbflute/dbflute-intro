@@ -79,7 +79,7 @@ public class DfpropDocumentAction extends IntroBaseAction {
      * schemaDiagramMapに設定された画像ファイルを取得します
      * @param projectName The project name of DBFlute client. (NotNull) e.g. trohamadb
      * @param diagramName The diagramName name of schemaDiagramMap. e.g. maihama_erd
-     * @return Image file stream
+     * @return Image file stream (NotNull, ThrowException: not found schemaDiagramMap or schemaDiagram image file)
      */
     @Execute()
     public StreamResponse schemadiagram(String projectName, String diagramName) {
