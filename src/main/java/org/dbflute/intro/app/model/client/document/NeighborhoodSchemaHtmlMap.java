@@ -25,9 +25,6 @@ import java.util.stream.Stream;
 public class NeighborhoodSchemaHtmlMap {
 
     public static class NeighborhoodSchemaHtml {
-        // ===================================================================================
-        //                                                                           Attribute
-        //                                                                           =========
         public final String path;
 
         public NeighborhoodSchemaHtml(String path) {

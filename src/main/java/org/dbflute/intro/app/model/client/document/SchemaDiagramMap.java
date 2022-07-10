@@ -26,9 +26,6 @@ import java.util.stream.Stream;
 public class SchemaDiagramMap {
 
     public static class SchemaDiagram {
-        // ===================================================================================
-        //                                                                           Attribute
-        //                                                                           =========
         public final String path;
         public final String width;
         public final String height;
