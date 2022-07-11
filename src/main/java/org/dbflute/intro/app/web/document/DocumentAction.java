@@ -32,6 +32,7 @@ import org.lastaflute.web.response.StreamResponse;
  * @author deco
  * @author jflute
  * @author subaru
+ * @author hakiba
  */
 public class DocumentAction extends IntroBaseAction {
 
@@ -52,7 +53,7 @@ public class DocumentAction extends IntroBaseAction {
         if (!schemaHtml.exists()) {
             return StreamResponse.asEmptyBody();
         }
-        String schemaHtmlContent = documentDisplayLogic.modifyHtmlForIntroOpening(clientName, schemaHtml);
+        String schemaHtmlContent = documentDisplayLogic.modifySchemaHtmlForIntroOpening(clientName, schemaHtml);
         return createStringSteamResponse(schemaHtmlContent);
     }
 

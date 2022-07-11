@@ -40,7 +40,7 @@ classes/
 # Middleware
 localdb/
 localap/
-etc/introdb
+etc/introdb/introdb.mv.db
 etc/testdb
 
 # DBFlute
