@@ -17,6 +17,10 @@ package org.dbflute.intro.unit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.utflute.lastaflute.WebContainerTestCase;
@@ -26,11 +30,11 @@ import org.lastaflute.core.exception.LaSystemException;
 /**
  * DIコンテナ利用のUnitTestクラスは、このクラスを継承する。<br>
  * 自動的にテスト用DBFluteクライアントが作成される。(不要な場合はsuppress可能) <br>
- * 
+ *
  * <p>テスト用クライアントのディレクトリ構造などの定義やFileオブジェクト取得などを定義する。
  * ディレクトリ構造などは色々なクラスで利用する可能性があるので、できるだけ共有する。
  * (クラスが大きくなってきたら、構造を定義するだけのクラスに切り出して利用してもいいかも) </p>
- * 
+ *
  * @author t-awane
  * @author deco
  * @author jflute
@@ -58,6 +62,8 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
     // _/_/_/_/_/_/_/_/_/_/
     // Intro自体で使っているDBFluteクライアントがテスト用クライアントの元になる
     private static final String SRC_CLIENT_PATH = "dbflute_introdb"; // 単なるディレクトリ名に見えるけど相対パス扱い
+
+    private static final String SRC_CLIENT_PROJECT = "introdb"; // これは名前
 
     // それ↑がこの名前でコピーされて、テストで自由に使えるようになる
     private static final String TEST_CLIENT_PATH = "dbflute_testdb"; // こっちも
@@ -130,6 +136,14 @@ public abstract class UnitIntroTestCase extends WebContainerTestCase {
         File destDir = new File(getProjectDir(), TEST_CLIENT_PATH);
         try {
             FileUtils.copyDirectory(srcDir, destDir);
+            // 各自動生成docのファイル名もテスト用プロジェクトに合わせてリネームしておく
+            Stream<Path> docs = Files.walk(Paths.get(destDir.getPath(), "output", "doc"));
+            docs.forEach(path -> {
+                File original = path.toFile();
+                File renamed = new File(path.toFile().getAbsolutePath().replace(SRC_CLIENT_PROJECT, TEST_CLIENT_PROJECT));
+                original.renameTo(renamed);
+            });
+            docs.close();
         } catch (IOException e) {
             throw new LaSystemException("Cannot copy dir:" + srcDir + "to dir:" + destDir, e);
         }

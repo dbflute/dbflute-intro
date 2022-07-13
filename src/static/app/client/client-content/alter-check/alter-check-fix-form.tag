@@ -1,4 +1,5 @@
 <alter-check-fix-form>
+  <!-- 既存のAlterDDLを開くフォーム (written at 2022/03/13)-->
   <h4>Fix existing Alter SQL</h4>
   <form class="ui form">
     <div class="fields">

@@ -15,7 +15,6 @@
  */
 package org.dbflute.intro.mylasta.direction;
 
-import org.dbflute.intro.mylasta.direction.IntroEnv;
 import org.lastaflute.core.direction.exception.ConfigPropertyNotFoundException;
 
 /**

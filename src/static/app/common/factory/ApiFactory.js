@@ -38,11 +38,6 @@ export default class ApiFactory {
       body: { client, testConnection },
     })
   }
-  updateClient(clientBody, testConnection) {
-    return ffetch.post(`api/client/edit/${clientBody.projectName}`, {
-      body: { clientBody: clientBody, testConnection: testConnection },
-    })
-  }
   removeClient(clientBody) {
     return ffetch.post(`api/client/delete/${clientBody.project}`)
   }
@@ -107,6 +102,11 @@ export default class ApiFactory {
       {
         body: schemaPolicyData,
       }
+    )
+  }
+  moveSchemapolicyStatement(projectName, schemaPolicyData) {
+    return ffetch.post(
+      `api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData }
     )
   }
 

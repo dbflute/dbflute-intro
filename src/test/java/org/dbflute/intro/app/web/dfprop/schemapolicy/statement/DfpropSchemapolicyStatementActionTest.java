@@ -20,12 +20,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.dbflute.intro.app.logic.dfprop.schemapolicy.DfpropSchemaPolicyReadLogic;
 import org.dbflute.intro.app.model.client.document.SchemaPolicyMap;
+import org.dbflute.intro.bizfw.tellfailure.SchemaPolicyStatementOutOfIndexException;
 import org.dbflute.intro.unit.UnitIntroTestCase;
 import org.lastaflute.web.response.JsonResponse;
 import org.lastaflute.web.validation.exception.ValidationErrorException;
@@ -36,7 +38,7 @@ import org.lastaflute.web.validation.exception.ValidationErrorException;
  * @author prprmurakami
  * @author jflute
  */
-public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
+public class DfpropSchemapolicyStatementActionTest extends UnitIntroTestCase {
 
     @Resource
     private DfpropSchemaPolicyReadLogic dfpropSchemaPolicyReadLogic;
@@ -48,7 +50,7 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
         // ## Arrange ##
         DfpropSchemapolicyStatementAction action = new DfpropSchemapolicyStatementAction();
         inject(action);
-        prepareEmptySchemaPolicyMap();
+        prepareSchemaPolicyMap("dfprop/noSetting_schemaPolicyMap.dfprop");
         registerStatementTestCases.forEach(testCase -> {
             if (testCase.isValid) {
                 // ## Act ##
@@ -101,6 +103,101 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
         assertFalse(after.contains(deleteStatement));
     }
 
+    public void test_schemapolicy_statement_move() throws Exception {
+        // ## Arrange ##
+        String dfpropPath = "dfprop/move_schemaPolicyMap.dfprop";
+        prepareSchemaPolicyMap(dfpropPath);
+        List<String> beforeTableStates = findStatementsOf("tableMap");
+        List<String> beforeColumnStates = findStatementsOf("columnMap");
+        DfpropSchemapolicyStatementAction action = new DfpropSchemapolicyStatementAction();
+        inject(action);
+        Arrays.asList(
+                new MoveStatementTestCase(
+                        "tableMap statement move to head",
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 2, 0),
+                        Arrays.asList(beforeTableStates.get(2), beforeTableStates.get(0), beforeTableStates.get(1))
+                ),
+                new MoveStatementTestCase(
+                        "tableMap statement move to same",
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 2, 2),
+                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2))
+                ),
+                new MoveStatementTestCase(
+                        "tableMap statement move to tail",
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 0, 2),
+                        Arrays.asList(beforeTableStates.get(1), beforeTableStates.get(2), beforeTableStates.get(0))
+                ),
+                new MoveStatementTestCase(
+                        "tableMap statement fromIndex is invalid",
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", -1, 2),
+                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2)),
+                        ValidationErrorException.class
+                ),
+                new MoveStatementTestCase(
+                        "tableMap statement toIndex is invalid",
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 0, -1),
+                        Arrays.asList(beforeTableStates.get(0), beforeTableStates.get(1), beforeTableStates.get(2)),
+                        ValidationErrorException.class
+                ),
+                new MoveStatementTestCase(
+                        "tableMap statement out of index",
+                        new DfpropMoveSchemaPolicyStatementBody("tableMap", 0, 100),
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
+                        SchemaPolicyStatementOutOfIndexException.class
+                ),
+                new MoveStatementTestCase(
+                        "columnMap statement move to head",
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 2, 0),
+                        Arrays.asList(beforeColumnStates.get(2), beforeColumnStates.get(0), beforeColumnStates.get(1))
+                ),
+                new MoveStatementTestCase(
+                        "columnMap statement move to same",
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 2, 2),
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2))
+                ),
+                new MoveStatementTestCase(
+                        "columnMap statement move to tail",
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 0, 2),
+                        Arrays.asList(beforeColumnStates.get(1), beforeColumnStates.get(2), beforeColumnStates.get(0))
+                ),
+                new MoveStatementTestCase(
+                        "columnMap statement fromIndex is invalid",
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", -1, 2),
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
+                        ValidationErrorException.class
+                ),
+                new MoveStatementTestCase(
+                        "columnMap statement toIndex is invalid",
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 0, -1),
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
+                        ValidationErrorException.class
+                ),
+                new MoveStatementTestCase(
+                        "columnMap statement out of index",
+                        new DfpropMoveSchemaPolicyStatementBody("columnMap", 0, 100),
+                        Arrays.asList(beforeColumnStates.get(0), beforeColumnStates.get(1), beforeColumnStates.get(2)),
+                        SchemaPolicyStatementOutOfIndexException.class
+                )
+        ).forEach(testCase -> {
+            if (Objects.isNull(testCase.expectedException)) {
+                // ## Act ##
+                action.move(TEST_CLIENT_PROJECT, testCase.input);
+
+                // ## Assert ##
+                List<String> actual = findStatementsOf(testCase.input.mapType);
+                assertEquals(testCase.name, testCase.expected, actual);
+
+                // teardown by each
+                prepareSchemaPolicyMap(dfpropPath);
+            } else {
+                // ## Act & Assert ##
+                assertException(testCase.expectedException, () -> {
+                    action.move(TEST_CLIENT_PROJECT, testCase.input);
+                });
+            }
+        });
+    }
+
     // ===================================================================================
     //                                                                        Assist Logic
     //                                                                        ============
@@ -131,8 +228,8 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
         return body;
     }
 
-    private void prepareEmptySchemaPolicyMap() {
-        File srcFile = findTestResourceFile("dfprop/noSetting_schemaPolicyMap.dfprop");
+    private void prepareSchemaPolicyMap(String filePath) {
+        File srcFile = findTestResourceFile(filePath);
         File destFile = findTestClientFile("dfprop/schemaPolicyMap.dfprop");
         try {
             FileUtils.copyFile(srcFile, destFile);
@@ -179,6 +276,22 @@ public class DfpropSyncschemaActionTest extends UnitIntroTestCase {
         public RegisterStatementTestCase isInvalid() {
             this.isValid = false;
             return this;
+        }
+    }
+
+    static class MoveStatementTestCase {
+        String name;
+        DfpropMoveSchemaPolicyStatementBody input;
+        List<String> expected;
+        Class<? extends Exception> expectedException;
+        public <T extends Exception> MoveStatementTestCase(String name, DfpropMoveSchemaPolicyStatementBody input, List<String> expected, Class<T> expectedException) {
+            this.name = name;
+            this.input = input;
+            this.expected = expected;
+            this.expectedException = expectedException;
+        }
+        public MoveStatementTestCase(String name, DfpropMoveSchemaPolicyStatementBody input, List<String> expected) {
+            this(name, input, expected, null);
         }
     }
 

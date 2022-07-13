@@ -21,7 +21,8 @@ import java.util.Arrays;
 import org.dbflute.util.Srl;
 
 /**
- * The logic for DBFlute Intro physical operation.
+ * The logic for DBFlute Intro physical operation. <br>
+ * Introが起動しているディレクトリの情報を扱う。DBFluteクライアント配下などは、それぞれ個別のLogicクラスにて。
  * @author p1us2er0
  * @author jflute
  */
@@ -30,35 +31,40 @@ public class IntroPhysicalLogic {
     // ===================================================================================
     //                                                                          Definition
     //                                                                          ==========
-    private static final String MYDBFLUTE_PATH = "mydbflute";
-    private static final String ENGINE_TEMPLATE_PATH = MYDBFLUTE_PATH + "/dbflute-%1$s";
-
-    // #needs_fix anyone make this private and use buildIntroPath() instead by jflute (2021/05/01)
     /**
+     * DBFlute Introの実行ディレクトリのベースパス。(基本的に相対パス) <br>
      * <pre>
-     * e.g. "."
+     * e.g. "." だったら dbflute-intro.jar と同じレベルのディレクトリ
      *  dbflute-intro
      *   |-dbflute_maihamadb // client
      *   |-mydbflute         // engine
      *   |-dbflute-intro.jar
      * </pre>
      */
-    public static final String BASE_DIR_PATH = ".";
+    private static final String BASE_DIR_PATH = ".";
+
+    private static final String MYDBFLUTE_PATH = "mydbflute";
+    private static final String ENGINE_TEMPLATE_PATH = MYDBFLUTE_PATH + "/dbflute-%1$s";
 
     // ===================================================================================
     //                                                                               Intro
     //                                                                               =====
     /**
+     * DBFlute Introの実行ディレクトリのベースパスを構築する。(基本的に相対パスで固定的)
      * <pre>
      * e.g.
      *  buildIntroPath(): .
      * </pre>
-     * @return The path to the DBFlute intro. (NotNull)
+     * @return The path to the DBFlute intro, 後ろにスラッシュは付かない (NotNull)
      */
     public String buildIntroPath() {
         return BASE_DIR_PATH;
     }
 
+    /**
+     * DBFlute Introの実行ディレクトリのベースパスを表現するFileオブジェクトを探す。
+     * @return The file object to the DBFlute intro directory (NotNull)
+     */
     public File findIntroDir() {
         return new File(BASE_DIR_PATH);
     }
@@ -103,6 +109,19 @@ public class IntroPhysicalLogic {
 
     public File findMydbfluteDir() {
         return new File(buildMydbflutePath());
+    }
+
+    // ===================================================================================
+    //                                                                              System
+    //                                                                              ======
+    // done anyone move to physical logic? or to caller class by jflute (2021/05/01)
+    /**
+     * Javaシステムにおいて、プロキシサーバーを利用したネットワークアクセスを許すかどうか？を設定する。
+     * @param useSystemProxies the determination for system property "java.net.useSystemProxies".
+     */
+    public void setupSystemProxyUse(boolean useSystemProxies) {
+        // https://docs.oracle.com/javase/jp/8/docs/api/java/net/doc-files/net-properties.html
+        System.setProperty("java.net.useSystemProxies", String.valueOf(useSystemProxies));
     }
 
     // ===================================================================================

@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 
 import org.dbflute.infra.dfprop.DfPublicProperties;
 import org.dbflute.intro.app.logic.exception.PublicPropertiesLoadingFailureException;
-import org.dbflute.intro.app.logic.intro.IntroReadLogic;
+import org.dbflute.intro.app.logic.intro.IntroPhysicalLogic;
 
 /**
  * The logic for public.properties, which is DBFlute public file to provide e.g. current version. <br>
@@ -35,14 +35,16 @@ public class PublicPropertiesLogic {
     private static DfPublicProperties cachedProps; // cached
 
     @Resource
-    private IntroReadLogic introReadLogic;
+    private IntroPhysicalLogic introPhysicalLogic;
 
     public DfPublicProperties findProperties(boolean useSystemProxies) throws PublicPropertiesLoadingFailureException {
         if (cachedProps != null) {
             return cachedProps;
         }
         try {
-            introReadLogic.setProxy(useSystemProxies);
+            // public.properties needs internet access
+            // so you can control proxy use option of JVM by the argument
+            introPhysicalLogic.setupSystemProxyUse(useSystemProxies);
             synchronized (PublicPropertiesLogic.class) {
                 if (cachedProps != null) {
                     return cachedProps;

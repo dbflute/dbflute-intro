@@ -17,6 +17,8 @@ package org.dbflute.intro.app.model.client.document;
 
 import java.util.List;
 
+import org.dbflute.intro.mylasta.appcls.AppCDef.SubjectableMapType;
+
 /**
  * @author hakiba
  */
@@ -74,5 +76,9 @@ public class SchemaPolicyStatement {
         builder.append(" => ");
         builder.append(errorMessage);
         return builder.toString();
+    }
+
+    public SubjectableMapType mapTypeAsCls() {
+        return SubjectableMapType.codeOf(mapType);
     }
 }

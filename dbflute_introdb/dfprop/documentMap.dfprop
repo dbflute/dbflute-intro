@@ -185,7 +185,7 @@ map:{
     #
     #; schemaSyncCheckMap = map:{
     #    ; url = jdbc:h2:file:../src/main/resources/database/maihamasyncdb
-    #    ; schema = 
+    #    ; schema =
     #    ; user = root
     #    ; password = df:dfprop/system-password.txt|
     #    # to compare with only schema structure
@@ -221,6 +221,26 @@ map:{
     #        ; isCheckImplicitOverride = false
     #    }
     #}
+    # - - - - - - - - - -/
+
+    # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # o neighborhoodSchemaHtmlMap: (NotRequired - map:{})
+    #  You can add links to other SchemaHtmls on your SchemaHtml.
+    #  The path is relative from your SchemaHtml.
+    #
+    ; neighborhoodSchemaHtmlMap = map:{
+        ; trohama = map:{ path = ../../../dbflute_trohamadb/output/doc/schema-trohamadb.html }
+    }
+    # - - - - - - - - - -/
+
+    # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # o schemaDiagramMap: (NotRequired - map:{})
+    #  You can display your ER diagram on your SchemaHtml.
+    #  The path is relative from your SchemaHtml.
+    #
+    ; schemaDiagramMap = map:{
+        ; test_erd = map:{ path = ../../../etc/introdb/erd/test.jpeg ; width = 100% ; height = 100% }
+    }
     # - - - - - - - - - -/
 }
 # ----------------/

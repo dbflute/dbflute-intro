@@ -76,8 +76,8 @@ workflows:
       - notify_result:
           requires:
             - test_and_build
-      - ★ start_deploy:
-          type: approval
-          requires:
-            - test_and_build
+      # - ★ start_deploy:
+      #     type: approval
+      #     requires:
+      #       - test_and_build
 

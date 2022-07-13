@@ -438,7 +438,7 @@ public class DfpropSchemaPolicyUpdateLogicTest extends UnitIntroTestCase {
     }
 
     private File fetchSchemaPolicyMapFromTestClient(DfpropPhysicalLogic physicalLogic) {
-        return physicalLogic.findDfpropFile(TEST_CLIENT_PROJECT, "schemaPolicyMap.dfprop");
+        return physicalLogic.findDfpropFileExisting(TEST_CLIENT_PROJECT, "schemaPolicyMap.dfprop");
     }
 
     private void copyNoSettingSchemaPolicyMap() throws IOException {
