@@ -16,7 +16,7 @@
 #
 map:{
 	; driver   = com.mysql.jdbc.Driver
-	; url      = jdbc:mysql://localhost:3306/trohamadb?characterEncoding=UTF-8
+	; url      = jdbc:mysql://localhost:43316/trohamadb?characterEncoding=UTF-8
 	; schema   = 
 	; user     = trohamadb
 	; password = trohamadb
