@@ -3,7 +3,7 @@
  * @param {Blob} file
  * @return {Promise<string | ArrayBuffer | null>} 読み込み結果
  */
-export function readFile(file) {
+export function readFile(file: Blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     // 読み込み成功時はPromiseに読み込み結果を渡す（thenに流れる）ように設定

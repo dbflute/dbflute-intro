@@ -1,21 +1,10 @@
 import { getCurrentRoute, router } from '@riotjs/route'
-
-export function getCurrentClientRoute() {
-  const currentRoute = getCurrentRoute()
-  const paths = currentRoute.split('/')
-  const params = paths.length === 4 ? {
-    projectName: paths[1],
-    clientMenuType: paths[2],
-    clientMenuName: paths[3]
-  } : {}
-  return { path: currentRoute, params }
-}
+import { createRouting } from '../shared/app-route';
 
 /**
  * クライアント画面のURL（ルーティング）の定義
- * @type { Routes }
  */
-export const routes = Object.freeze({
+export const clientRoutes = createRouting({
   executeDocuments: {
     path: 'client/:projectName/execute/documents',
     open: (projectName) => {
@@ -59,3 +48,25 @@ export const routes = Object.freeze({
     }
   },
 })
+
+type ClientRouteParams  = {
+  projectName?: string
+  clientMenuType?: string
+  clientMenuName?: string
+}
+
+type ClientRoute = {
+  path: string
+  params: ClientRouteParams
+}
+
+export function getCurrentClientRoute(): ClientRoute {
+  const currentRoute = getCurrentRoute()
+  const paths = currentRoute.split('/')
+  const params = paths.length === 4 ? {
+    projectName: paths[1],
+    clientMenuType: paths[2],
+    clientMenuName: paths[3]
+  } : {}
+  return { path: currentRoute, params }
+}

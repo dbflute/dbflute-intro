@@ -23,7 +23,6 @@
   </route>
 
   <script>
-    import { appRoutes } from '../app-router'
     import { Route } from '@riotjs/route'
     import ExDocuments from './client-content/ex-documents.riot'
     import ExSchemaSyncCheck from './client-content/ex-schema-sync-check.riot'
@@ -32,6 +31,7 @@
     import ExSchemaPolicyCheck from './client-content/ex-schema-policy-check.riot'
     import StDatabaseInfo from './client-content/st-database-info.riot'
     import FlLogs from './client-content/fl-logs.riot'
+    import { clientRoutes } from './client-router';
 
     export default {
       components: {
@@ -45,7 +45,7 @@
         Route
       },
       state: {
-        routes: appRoutes.client.routes,
+        routes: clientRoutes,
       },
     }
   </script>

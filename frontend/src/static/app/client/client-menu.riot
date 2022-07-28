@@ -123,10 +123,8 @@
       },
       /**
        * URLを変更する
-       * この変更に対応して、index.js の処理により、tagのマウントのされ方が変わる
        * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
        * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
-       * @see dbflute-intro/src/static/app/index.js@157 (riot6移行時にコードが移動するかも！？)
        */
       goToMenuItem(menuType, menuName) {
         appRoutes.client.open(this.state.projectName, menuType, menuName)

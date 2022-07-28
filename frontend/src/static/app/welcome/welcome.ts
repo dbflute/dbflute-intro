@@ -5,6 +5,9 @@ import { readFile } from '../shared/io-utils';
 import { IntroRiotComponent, withIntroTypes } from '../shared/app.types';
 
 interface Welcome extends IntroRiotComponent {
+  // ===================================================================================
+  //                                                                          Definition
+  //                                                                          ==========
   defaultDatabaseCode: string
   defaultJdbcDriver: string
   defaultJdbcUrl: string
@@ -16,11 +19,17 @@ interface Welcome extends IntroRiotComponent {
   targetLanguageItems: any[]
   targetContainerItems: any[]
 
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
   onchangeDatabase: (databaseCode: any) => void
   onclickOrmSetting: () => void
   onclickCreate: () => void
   onchangeJarFile: (event: any) => void
 
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
   convertClassificationsForUI: (classifications: IntroClassificationsResult) => any
   showToast: (projectName: string) => void
   elementAs: <HTMLElement extends Element>(selector: string) => HTMLElement
