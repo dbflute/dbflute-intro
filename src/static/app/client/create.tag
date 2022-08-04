@@ -148,7 +148,7 @@
     }
 
     /**
-     * ダウンロード済みDBFlute Engineをサーバから取得する
+     * ダウンロード済みDBFlute Engine の情報をサーバから取得し、保持する
      */
     this.engineVersions = () => {
       ApiFactory.engineVersions().then((json) => {
@@ -160,7 +160,7 @@
     }
 
     /**
-     * ダウンロード済みDBFlute Engine一覧を取得し、保持する
+     * ダウンロード済みDBFlute Engine のうち、最新のバージョンをサーバから取得し、保持する
      */
     this.setLatestEngineVersion = () => {
       ApiFactory.engineLatest().then((json) => {
