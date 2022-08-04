@@ -14,7 +14,7 @@
     <div class="ui stackable two column divided grid">
       <div class="row">
         <!-- DBFluteクライアントの基本情報の入力欄(1) -->
-        <!-- memo : welcom 画面との差分、下記に記載されている「O/Rマッパー関連設定の入力欄」を少し下げて表示させるために「DBFluteクライアントの基本情報の入力欄」を分けている -->
+        <!-- memo : welcome 画面との差分、下記に記載されている「O/Rマッパー関連設定の入力欄」を少し下げて表示させるために「DBFluteクライアントの基本情報の入力欄」を分けている -->
         <div class="column">
           <div class="required field">
             <label data-is="i18n">LABEL_projectName</label>
@@ -45,7 +45,7 @@
         </div>
 
         <!-- O/Rマッパー関連設定の入力欄 -->
-        <!-- memo : welcom 画面との差分、この設定項目はひっそりしてない -->
+        <!-- memo : welcome 画面との差分、この設定項目はひっそりしてない -->
         <div class="column">
           <div class="required field" if="{ oRMapperOptionsFlg }">
             <label data-is="i18n">LABEL_languageCode</label>
@@ -63,7 +63,7 @@
       </div>
       <div class="row">
         <!-- DB接続情報の入力欄 -->
-        <!-- #thinking jflute DBMSごとにplaceholder変えられたらいいかな？ドキュメントリンクとかも？ (2022/03/10) copy from welcom.tag by cabos (2022/06/09) -->
+        <!-- #thinking jflute DBMSごとにplaceholder変えられたらいいかな？ドキュメントリンクとかも？ (2022/03/10) copy from welcome.tag by cabos (2022/06/09) -->
         <div class="column">
           <div class="required field">
             <label data-is="i18n">LABEL_url</label>
@@ -258,7 +258,7 @@
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
-    // #thinking jflute initializeは上の方に持っていきたい (2022/03/13) copy from welcom.tag by cabos (2022/06/16)
+    // #thinking jflute initializeは上の方に持っていきたい (2022/03/13) copy from welcome.tag by cabos (2022/06/16)
     /**
      * マウント時の処理。
      */
