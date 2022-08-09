@@ -6,34 +6,22 @@
     "es2021": true,
     "jest/globals": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
   "parserOptions": {
     "sourceType": "module"
   },
   "rules": {
-    "no-console": 1,
-    "indent": [
-      "error",
-      2
-    ],
+    "no-console": "error",
     "linebreak-style": [
       "error",
       "unix"
     ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "never"
-    ],
-    "no-var": 2,
-    "prefer-arrow-callback": "error",
-    "object-curly-spacing": [
-      "error",
-      "always"
-    ]
+    "no-var": "error",
+    "prefer-arrow-callback": "error"
   },
   "plugins": [
     "html",

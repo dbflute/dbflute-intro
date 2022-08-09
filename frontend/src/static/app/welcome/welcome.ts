@@ -1,8 +1,8 @@
-import i18n from '../common/i18n.riot';
-import { api } from '../shared/api';
-import { appRoutes } from '../app-router';
-import { readFile } from '../shared/io-utils';
-import { IntroRiotComponent, withIntroTypes } from '../shared/app.types';
+import i18n from '../common/i18n.riot'
+import { api } from '../shared/api'
+import { appRoutes } from '../app-router'
+import { readFile } from '../shared/io-utils'
+import { IntroRiotComponent, withIntroTypes } from '../shared/app.types'
 
 interface Welcome extends IntroRiotComponent {
   // ===================================================================================
@@ -37,7 +37,7 @@ interface Welcome extends IntroRiotComponent {
 
 export default withIntroTypes<Welcome>({
   components: {
-    i18n
+    i18n,
   },
   state: {
     // JDBCドライバーのjarファイル情報を格納するオブジェクト
@@ -98,8 +98,8 @@ export default withIntroTypes<Welcome>({
    * マウント完了時の処理。
    */
   async onMounted() {
-    const classifications = await api.findClassifications().then(data => this.convertClassificationsForUI(data))
-    const latestVersion = await api.findEngineLatest().then(data => data.latestReleaseVersion)
+    const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
+    const latestVersion = await api.findEngineLatest().then((data) => data.latestReleaseVersion)
     this.databaseMap = classifications.databaseMap
     this.targetDatabaseItems = classifications.targetDatabaseItems
     this.targetLanguageItems = classifications.targetLanguageItems
@@ -138,7 +138,7 @@ export default withIntroTypes<Welcome>({
    */
   onclickOrmSetting() {
     this.update({
-      oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg
+      oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg,
     })
   },
 
@@ -156,7 +156,7 @@ export default withIntroTypes<Welcome>({
         user: this.elementAs<HTMLInputElement>('[ref=user]').value,
         url: this.elementAs<HTMLInputElement>('[ref=url]').value,
         schema: this.elementAs<HTMLInputElement>('[ref=schema]').value,
-        password: this.elementAs<HTMLInputElement>('[ref=password]').value
+        password: this.elementAs<HTMLInputElement>('[ref=password]').value,
       },
       dbfluteVersion: this.latestVersion,
       packageBase: this.elementAs<HTMLInputElement>('[ref=packageBase]').value,
@@ -167,12 +167,15 @@ export default withIntroTypes<Welcome>({
     }
     const testConnection = this.elementAs<HTMLInputElement>('[ref=testConnection]').checked
     this.suLoading(true)
-    api.createWelcomeClient(client, testConnection).then(() => {
-      (appRoutes as any).main.open()
-      this.showToast(client.projectName)
-    }).finally(() => {
-      this.suLoading(false)
-    })
+    api
+      .createWelcomeClient(client, testConnection)
+      .then(() => {
+        ;(appRoutes as any).main.open()
+        this.showToast(client.projectName)
+      })
+      .finally(() => {
+        this.suLoading(false)
+      })
   },
 
   /**
@@ -181,12 +184,11 @@ export default withIntroTypes<Welcome>({
    */
   onchangeJarFile(event: any) {
     const file = event.target.files[0] // event.targetはイベント発生元のオブジェクト
-    readFile(file)
-      .then(result => {
-        // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
-        const encoded = window.btoa(result as string)
-        this.state.jdbcDriver = {fileName: file.name, data: encoded}
-      })
+    readFile(file).then((result) => {
+      // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
+      const encoded = window.btoa(result as string)
+      this.state.jdbcDriver = { fileName: file.name, data: encoded }
+    })
   },
 
   // ===================================================================================
@@ -200,14 +202,14 @@ export default withIntroTypes<Welcome>({
     return {
       databaseMap: classifications.targetDatabaseMap,
       targetDatabaseItems: Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
-        return {value: key, label: value.databaseName}
+        return { value: key, label: value.databaseName }
       }),
       targetLanguageItems: Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-        return {value: key, label: value}
+        return { value: key, label: value }
       }),
       targetContainerItems: Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-        return {value: key, label: value}
-      })
+        return { value: key, label: value }
+      }),
     }
   },
 
@@ -231,11 +233,11 @@ export default withIntroTypes<Welcome>({
   showToast(projectName: string) {
     this.successToast({
       title: 'Create task completed',
-      message: 'Client for project \'' + projectName + '\', was successfully created!!',
+      message: "Client for project '" + projectName + "', was successfully created!!",
     })
   },
   // TODO: プラグインに移動
   elementAs<HTMLElement extends Element>(selector: string): HTMLElement {
     return this.$(selector) as HTMLElement
-  }
+  },
 })
