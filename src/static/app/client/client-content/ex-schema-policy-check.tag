@@ -33,7 +33,7 @@
       <latest-result project-name ="{ projectName }" task="doc" ref="latestResult"></latest-result>
     </div>
     
-    <!-- Policy Settings -->
+    <!-- SchemaPolicy Settings for Whole, Table, Column -->
     <h3>Policy Settings</h3>
     <div class="ui segment" title="SchemaPolicy">
       <div class="ui form">
@@ -199,15 +199,15 @@
 
     /**
      * schemaPolicyを初期化する。
-     * @param {string} projectName - プロジェクト名. (NotNull)
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      */
     this.prepareSchemaPolicy = (projectName) => {
       self.fetchSchemaPolicy(projectName)
     }
 
     /**
-     * latestResultを初期化する。
-     * @param {string} projectName - プロジェクト名. (NotNull)
+     * 画面コンポーネントの準備をする。 (latestResultなど)
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      */
     this.prepareComponents = () => {
       // もともと
@@ -320,7 +320,7 @@
      * [return] ; if columnName is suffix:_ID then alias is pattern:.+ID(\(.+\))?$
      *
      * @param {string} statement - statement文字列 (NotNull)
-     * @return {string} statement文字列 (NotNull)
+     * @return {string} statement文字列（コメントが含まれていた場合はコメントを削ったもの。コメントがない場合はそのまま） (NotNull)
      */
     this.extractStatement = (statement) => {
       if (!self.isIncludeComment(statement)) {
@@ -337,7 +337,7 @@
      * [return] IDカラムなら論理名は "なんとかID" にしよう
      *
      * @param {string} statement - statement文字列 (NotNull)
-     * @return {string} statement文字列 (NotNull, EmptyAllowed: そもそもコメントがない場合)
+     * @return {string} 抜粋したコメント (NotNull, EmptyAllowed: そもそもコメントがない場合)
      */
     this.extractComment = (statement) => {
       if (!self.isIncludeComment(statement)) {
@@ -352,7 +352,7 @@
     //                                                                           =========
     /**
      * SchemaPolicyを取得する。
-     * @param {string} projectName - プロジェクト名. (NotNull)
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      */
     this.fetchSchemaPolicy = (projectName) => {
       ApiFactory.schemaPolicy(projectName).then(json => {
@@ -362,7 +362,7 @@
     }
     
     /**
-     * SchemaPolicyを削除する。
+     * statementをSchemaPolicyから削除する。
      * @param {string} mapType - 編集対象となるマップ種別 (NotNull, only 'tableMap', 'columnMap')
      * @param {string} statement - 削除対象のstatement (NotNull)
      */
@@ -377,7 +377,7 @@
 
     /**
      * 登録完了時にSchemaPolicyを再取得し、更新する。
-     * @param {string} projectName - プロジェクト名. (NotNull)
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      */
     this.onRegisterSuccess = () => {
       self.fetchSchemaPolicy(opts.projectName)
