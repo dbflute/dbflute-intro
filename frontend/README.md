@@ -1,13 +1,15 @@
 # 構成
 
 ## 主要ライブラリ
-ライブラリ名| 概要                                     |参考ページ
----|----------------------------------------|---
-riot | フロントエンドフレームワーク                         | https://riot.js.org/ja/
-jest | テスト実装用ライブラリ                            | https://jestjs.io/ja/
-eslint | Lint用ライブラリ                             | https://eslint.org/
-babel | 古いブラウザなどにも対応したjsファイルを書き出すためのトランスパイラ    | https://babeljs.io/
-webpack | 最終的なjsファイルをビルドするバンドラ。ローカル開発時のサーバー起動も担う | https://webpack.js.org/
+ライブラリ名| 概要                                                              |参考ページ
+---|-----------------------------------------------------------------|---
+riot | フロントエンドフレームワーク                                                  | https://riot.js.org/ja/
+jest | テスト実装用ライブラリ                                                     | https://jestjs.io/ja/
+eslint | Lint用ライブラリ                                                      | https://eslint.org/
+babel | 古いブラウザなどにも対応したjsファイルを書き出すためのトランスパイラ                             | https://babeljs.io/
+webpack | 最終的なjsファイルをビルドするバンドラ。ローカル開発時のサーバー起動も担う                          | https://webpack.js.org/
+husky | Gitのpre commit処理にlint, formatを実行するためのライブラリ                      | https://typicode.github.io/husky/#/
+lint-staged | GitのstagedにあるファイルのみにLintを実行するためのライブラリ. huskyと合わせて利用することを想定している。 | https://github.com/okonet/lint-staged#readme
 
 ## パッケージ構成
 
