@@ -51,10 +51,28 @@ npm start
 
 ## IDEの設定
 ### VSCode
-TODO
+下記のプラグインをインストールする
+
+プラグイン名|URL|用途
+---|---|---
+Riot-Tag|https://marketplace.visualstudio.com/items?itemName=crisward.riot-tag|.riotタグのシンタックスハイライトなど。ただし、メンテされてない模様...
+Prettier - Code formatter|https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode|コードフォーマッター
+
+ファイル保存時に自動でformatがかかるようになっている
+
 
 ### IntelliJ
-TODO
+下記のプラグインをインストールする
+
+プラグイン名|URL|用途
+---|---|---
+Riot.js|https://plugins.jetbrains.com/plugin/12748-riot-js|.riotタグのシンタックスハイライトなど。ただし、メンテされてない模様...
+Prettier|https://plugins.jetbrains.com/plugin/10456-prettier|コードフォーマッター
+
+下記の設定をしておくと便利
+
+- opt + ⌘ + L でフォーマットした際にprettierによるフォーマットを実行するようにする
+  - `Preferences > Languages & Frameworks > JavaScript > Prettier` にて `On 'Reformat Code' action` をONにする
 
 # Riotコンポーネントの実装方法
 ## .riotファイル と .tsファイル の雛形を用意する
