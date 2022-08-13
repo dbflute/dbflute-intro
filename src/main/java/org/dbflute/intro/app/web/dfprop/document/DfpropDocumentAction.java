@@ -15,6 +15,10 @@
  */
 package org.dbflute.intro.app.web.dfprop.document;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
 import javax.annotation.Resource;
 
 import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
@@ -23,12 +27,16 @@ import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.dbflute.intro.app.model.client.document.LittleAdjustmentMap;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.bizfw.annotation.NotAvailableDecommentServer;
+import org.dbflute.intro.bizfw.tellfailure.DfpropFileNotFoundException;
+import org.dbflute.intro.bizfw.tellfailure.IntroFileOperationException;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
+import org.lastaflute.web.response.StreamResponse;
 
 /**
  * @author prprmurakami
  * @author jflute
+ * @author hakiba
  */
 public class DfpropDocumentAction extends IntroBaseAction {
 
@@ -64,5 +72,30 @@ public class DfpropDocumentAction extends IntroBaseAction {
         documentMap.setCheckProcedureDiff(body.checkProcedureDiff);
         dfpropUpdateLogic.replaceDocumentMap(projectName, documentMap);
         return JsonResponse.asEmptyBody();
+    }
+
+    /**
+     * schemaDiagramMapに設定された画像ファイルを取得します
+     * @param projectName The project name of DBFlute client. (NotNull) e.g. trohamadb
+     * @param diagramName The diagramName name of schemaDiagramMap. e.g. maihama_erd
+     * @return Image file stream (NotNull: exception if not found)
+     * @throws DfpropFileNotFoundException When documentMap.dfprop is not found.
+     * @throws IntroFileOperationException When the diagram file cannot be opened.
+     */
+    @Execute()
+    public StreamResponse schemadiagram(String projectName, String diagramName) {
+        final File diagram = dfpropReadLogic.findSchemaDiagram(projectName, diagramName).orElse(null);
+        if (diagram == null) {
+            final String debugMsg = String.format("Not found schemaDiagram %s in the documentMap.dfprop", diagramName);
+            throw new DfpropFileNotFoundException(debugMsg, DocumentMap.DFPROP_NAME);
+        }
+        try {
+            return asStream(diagramName)
+                    .headerContentDispositionInline()
+                    .contentTypeJpeg()
+                    .data(Files.readAllBytes(diagram.toPath()));
+        } catch (IOException e) {
+            throw new IntroFileOperationException("Not found schemaDiagram file" , diagramName, e);
+        }
     }
 }

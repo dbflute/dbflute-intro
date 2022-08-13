@@ -24,7 +24,9 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
+import org.dbflute.intro.app.logic.dfprop.DfpropReadLogic;
 import org.dbflute.intro.app.logic.intro.IntroSystemLogic;
+import org.dbflute.intro.app.model.client.document.DocumentMap;
 import org.lastaflute.core.exception.LaSystemException;
 
 /**
@@ -32,14 +34,24 @@ import org.lastaflute.core.exception.LaSystemException;
  * For example, it needs to adjust links to other HTMLs in intro-managed HTML.
  * @author deco
  * @author jflute
+ * @author hakiba
  */
 public class DocumentDisplayLogic {
 
     private static final Pattern LASTADOC_FILENAME_PATTERN = Pattern.compile("lastadoc-(.*)\\.html\"");
+    private static final Pattern SCHEMA_HTML_FILENAME_PATTERN = Pattern.compile("schema-(.*)\\.html");
 
     @Resource
     private IntroSystemLogic introSystemLogic;
+    @Resource
+    private DfpropReadLogic dfpropReadLogic;
 
+    /**
+     * DBFluteの各htmlの各種URLをDBFluteIntro用に置換します。
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @param file DBFlute html file. (NotNull)
+     * @return SchemaHtml with each URL replaced for DBFluteIntro (NotNull)
+     */
     public String modifyHtmlForIntroOpening(String projectName, File file) {
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             boolean addedIntroExecuteTag = false;
@@ -87,5 +99,42 @@ public class DocumentDisplayLogic {
         } catch (IOException e) {
             throw new LaSystemException("Cannot mark intro opening at document HTML: " + file, e);
         }
+    }
+
+    /**
+     * schemaHtmlの各種URLをDBFluteIntro用に置換します。
+     * @param projectName The project name of DBFlute client. (NotNull)
+     * @param file SchemaHtml file. (NotNull)
+     * @return SchemaHtml with schemaDiagram and NeighborhoodSchemaHtml URL replaced for DBFluteIntro (NotNull)
+     */
+    public String modifySchemaHtmlForIntroOpening(String projectName, File file) {
+        String content = modifyHtmlForIntroOpening(projectName, file);
+        DocumentMap documentMap = dfpropReadLogic.findDocumentMap(projectName);
+
+        if (!documentMap.getSchemaDiagramMap().isEmpty()) {
+            // schemaDiagramのリンクをIntro用のAPI URLに置換する
+            content = documentMap.getSchemaDiagramMap().get().stream().reduce(content, (replacedContent, diagramEntry) -> {
+                final String name = diagramEntry.getKey();
+                final String path = diagramEntry.getValue().path;
+                final String replacedPath = String.format("/api/dfprop/document/schemadiagram/%s/%s", projectName, name);
+                return replacedContent.replaceAll(path, replacedPath);
+            }, (ignore, lastContent) -> lastContent);
+        }
+
+        if (!documentMap.getNeighborhoodSchemaHtmlMap().isEmpty()) {
+            // 「schema-{projectName}.html」というファイル名で neighborhood schemaHtml が指定されている場合は Intro用のAPI URLに置換する（厳密には、dfpropでSchemaHTMLの名前が変更できるが、変える人はほぼいないという想定）
+            content = documentMap.getNeighborhoodSchemaHtmlMap().get().stream().reduce(content, (replacedContent, neighborhood) -> {
+                Matcher matcher = SCHEMA_HTML_FILENAME_PATTERN.matcher(neighborhood.getValue().path);
+                if (!matcher.find()) {
+                    return replacedContent;
+                }
+                final String neighborhoodProjectName = matcher.group(1);
+                final String path = neighborhood.getValue().path;
+                final String replacedPath = String.format("/api/document/%s/schemahtml", neighborhoodProjectName);
+                return replacedContent.replaceAll(path, replacedPath);
+            }, (ignore, lastContent) -> lastContent);
+        }
+
+        return content;
     }
 }

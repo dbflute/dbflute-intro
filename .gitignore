@@ -38,9 +38,10 @@ classes/
 /gradle/launch4j/win
 
 # Middleware
-localdb/
+localdb/*
+!localdb/my-docker.cnf
 localap/
-etc/introdb
+etc/introdb/introdb.mv.db
 etc/testdb
 
 # DBFlute
