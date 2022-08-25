@@ -204,6 +204,7 @@
 
       /**
        * Conditionのinputフィールドを減らす処理
+       * @param {number} index - 削除されるフィールドが何番目かを示す数. (NotNull)
        */
       deleteConditionField: (index) => {
         self.statement.conditions.splice(index, 1)
