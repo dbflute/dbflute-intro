@@ -386,7 +386,7 @@
 
     /**
      * 最新の実行結果を更新する。
-     * @param {string} client - クライアント名. (NotNull)
+     * @param {string} client - 現在対象としているDBFluteクライアント. (NotNull)
      */
     this.updateLatestResult = (client) => {
       if (!self.latestResult) {
