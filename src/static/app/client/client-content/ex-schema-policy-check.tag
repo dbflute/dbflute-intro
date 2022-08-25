@@ -207,7 +207,6 @@
 
     /**
      * 画面コンポーネントの準備をする。 (latestResultなど)
-     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      */
     this.prepareComponents = () => {
       // もともと
