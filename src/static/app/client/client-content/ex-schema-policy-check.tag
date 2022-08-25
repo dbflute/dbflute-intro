@@ -284,7 +284,7 @@
     /**
      * SchemaPolicyMapを編集する。
      * @param {string} targetMap - 編集対象となるマップ種別 (NotNull, only 'tableMap', 'columnMap')
-     * @param {string} typeCode - themeを一意に特定するコード (NotNull)
+     * @param {string} typeCode - themeを一意に特定するコード e.g.identityIfPureIDPK (NotNull) 
      */
     this.editSchemaPolicyMap = (targetMap, typeCode) => {
       const targetTheme = this.schemaPolicy[targetMap].themeList.find(theme => theme.typeCode === typeCode)
