@@ -376,7 +376,6 @@
 
     /**
      * 登録完了時にSchemaPolicyを再取得し、更新する。
-     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
      */
     this.onRegisterSuccess = () => {
       self.fetchSchemaPolicy(opts.projectName)
