@@ -137,6 +137,7 @@
 
     /**
      * 複数フィールドがあるかどうか。
+     * @return {boolean} true:複数フィールドがある,false:複数フィールドがない
      */
     self.isMultipleFields = () => {
       return self.state.fields.length > 1
