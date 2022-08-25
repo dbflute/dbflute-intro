@@ -23,7 +23,7 @@
 
     /**
      * ドキュメントのURLを返す
-     * @return Expected項目のdcumentURL
+     * @return Expected項目のdocumentURL (NotNull)
      */
     self.buildDocumentUrl = () => {
       const formType = self.props.formType
