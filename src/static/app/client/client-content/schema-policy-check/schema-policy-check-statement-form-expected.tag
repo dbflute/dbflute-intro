@@ -130,6 +130,7 @@
     /**
      * and, orが必要かどうか。
      * ここでいうconditionはand,orのことを指す。
+     * @return {boolean} true:conditionが必要,false:conditionが不要
      */
     self.needsCondition = () => {
       return self.isMultipleFields()
