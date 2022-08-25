@@ -121,6 +121,7 @@
 
     /**
      * inputフィールドが削除可能かどうか。
+     * @return {boolean} true:削除可能,false:削除不可能
      */
     self.isDeletable = () => {
       return self.isMultipleFields()
