@@ -1,0 +1,37 @@
+<i18n>
+  <!-- 文言を国際化(i18n)対応するためのコンポーネント (written at 2022/06/25)
+  機能:
+  o 特定のタグに is属性 で付与すると、辞書に登録された文言で置換される
+    例: 辞書に「LABEL_url: URL」という定義があり、 <label is="i18n">LABEL_url</label> と記述
+      -> <label is="i18n">URL</label>
+
+  作りの特徴:
+  o マウント完了時にDOMからラベルのkeyを取得している
+  o ラベル用のタグはcssで非表示にしている
+  #thinking ラベルの用のタグがDOM上に残ってしまうのちょっと微妙... by hakiba
+  -->
+  <span>{ message }</span>
+
+  <span ref="original" name="original" class="original">
+    <slot/>
+  </span>
+
+  <style>
+    .original {
+      display: none;
+    }
+  </style>
+  <script>
+    import i18n from 'i18next'
+
+    export default {
+      // ===================================================================================
+      //                                                                           Lifecycle
+      //                                                                           =========
+      onMounted() {
+        const key = this.$('[ref=original]').innerText?.trim()
+        this.message = i18n.t(key) || key
+      }
+    }
+  </script>
+</i18n>

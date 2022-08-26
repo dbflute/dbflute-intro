@@ -1,0 +1,98 @@
+<welcome>
+  <!-- Welcome画面 (DBFluteクライアントが何もない状態の起動時に表示される画面) (written at 2022/03/09)
+   機能:
+    o DBFluteクライアントの作成に必要な最低限の情報を入力
+    o DBFluteクライアント作成前にテスト接続オプション (接続失敗は業務例外で作成処理が中断される)
+    o DBFluteエンジンのダウンロード、DBFluteクライアント作成
+
+   作りの特徴:
+    o O/Rマッパー関連設定を表示/非表示できる (最初は非表示: AltoDBFlute利用を想定して)
+    o ファイルアップロードもあるよ
+    o DBMSの選択によって他の項目の値が書き換わるよ
+  -->
+  <h2 class="heading">Welcome to DBFlute</h2>
+  <div class="ui form">
+    <div class="ui stackable two column divided grid">
+      <div class="row">
+        <!-- DBFluteクライアントの基本情報の入力欄 -->
+        <div class="column">
+          <div class="required field">
+            <!-- labelタグを使いたいので、is属性でマウントする -->
+            <label is="i18n">LABEL_projectName</label>
+            <input type="text" ref="projectName" placeholder="maihamadb"/>
+          </div>
+          <div class="required field">
+            <label is="i18n">LABEL_databaseCode</label>
+            <su-dropdown ref="databaseCode" items={ targetDatabaseItems } value={ defaultDatabaseCode }
+                         onchange="{ onchangeDatabase }"></su-dropdown>
+          </div>
+          <div class="required field">
+            <label is="i18n">LABEL_jdbcDriverFqcn</label>
+            <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value={ defaultJdbcDriver }/>
+          </div>
+          <div class="required field" hidden={ !state.needsJdbcDriver }>
+            <label is="i18n">LABEL_jdbcDriverFile</label>
+            <input type="file" accept=".jar" onchange="{ onchangeJarFile }"/>
+          </div>
+        </div>
+        <!-- O/Rマッパー関連設定の入力欄 -->
+        <!-- Introとしてはオプション的存在なので、同じrowの右側にひっそり表示させる -->
+        <div class="column">
+          <div class="field">
+            <button class="ui button mini" onclick="{ onclickOrmSetting }">O/R Mapper settings</button>
+          </div>
+          <!-- ifを使用するとDOMが生成されずthis.$でアクセスできなくなるので、semantic-uiのhidden属性で表示切り替えする -->
+          <div class="required field" hidden={ !state.oRMapperOptionsFlg }>
+            <label is="i18n">LABEL_languageCode</label>
+            <su-dropdown ref="languageCode" items="{ targetLanguageItems }" value={ defaultLanguageCode }></su-dropdown>
+          </div>
+          <div class="required field" hidden={ !state.oRMapperOptionsFlg }>
+            <label is="i18n">LABEL_containerCode</label>
+            <su-dropdown ref="containerCode" items="{ targetContainerItems }" value={ defaultContainerCode }></su-dropdown>
+          </div>
+          <div class="required field" hidden={ !state.oRMapperOptionsFlg }>
+            <label is="i18n">LABEL_packageBase</label>
+            <input type="text" ref="packageBase" value="org.docksidestage.dbflute"/>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- DB接続情報の入力欄 -->
+        <!-- #thinking jflute DBMSごとにplaceholder変えられたらいいかな？ドキュメントリンクとかも？ (2022/03/10) -->
+        <div class="column">
+          <div class="required field">
+            <label is="i18n">LABEL_url</label>
+            <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb" value={ defaultJdbcUrl }/>
+          </div>
+          <div class="field">
+            <label is="i18n">LABEL_schema</label>
+            <input type="text" ref="schema" placeholder="MAIHAMADB"/>
+          </div>
+          <div class="required field">
+            <label is="i18n">LABEL_user</label>
+            <input type="text" ref="user" placeholder="maihamadb"/>
+          </div>
+          <div class="field">
+            <label is="i18n">LABEL_password</label>
+            <input type="text" ref="password"/>
+          </div>
+        </div>
+        <!-- クライアント作成決定ボタン周り -->
+        <div class="column bottom aligned">
+          <!-- テスト接続はデフォルトではOFF, 作成時に接続できる環境とは限らないので、とりあえずクライアントは作ってもらおう -->
+          <div class="field">
+            <su-checkbox ref="testConnection">Connect as test</su-checkbox>
+          </div>
+          <div class="field">
+            <button class="ui button primary" onclick="{ onclickCreate }">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import welcome from './welcome'
+    export default welcome
+  </script>
+</welcome>

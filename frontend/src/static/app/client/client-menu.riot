@@ -1,0 +1,137 @@
+<client-menu>
+  <!-- DBFlute Intro のクライアント画面で表示される左側メニュー  (written at 2022/03/10)
+    機能:
+      o DBFlute Intro 画面全体の左側のメニュー
+      o urlだと、「#client/${clientName}/*」に当たる画面
+      o のうち、クライアントが選択されているときに表示されるもの
+
+      作りの特徴:
+      o 現在選択されているメニューの情報を親から受け取り、active かどうかを判断している
+      o メニューをクリックしたとき、URLを書き換えている
+  -->
+  <div class="ui left fixed small inverted vertical menu">
+
+    <!-- メニューの一番上に表示されている「DBFlute Intro」の文字列 -->
+    <menu-home></menu-home>
+
+    <!--
+      このタグの簡略図は下記
+
+      Execute
+      |- Documents
+      |- Schema Policy Check
+      |- Schema Sync Check
+      |- Replace Schema
+      |- Alter Check
+
+      General Settings
+      |- Database Info
+
+      Files
+      |- Logs
+    -->
+    <div class="item">
+      <div class="header">Execute</div>
+      <div class="ui tiny inverted vertical menu">
+        <!-- 選択されていたら active というクラス名がつく、太字で目立って表示される -->
+        <!-- このaタグが押されたとき、URLが変わる -->
+        <a class="{ getLinkClasses('execute', 'documents') } item"
+           onclick="{ goToMenuItem.bind(this, 'execute', 'documents') }">
+          Documents
+        </a>
+        <a class="{ getLinkClasses('execute', 'schema-policy-check') } item"
+           onclick="{ goToMenuItem.bind(this, 'execute', 'schema-policy-check') }">
+          Schema Policy Check
+        </a>
+        <a class="{ getLinkClasses('execute', 'schema-sync-check') } item"
+           onclick="{ goToMenuItem.bind(this, 'execute', 'schema-sync-check') }">
+          Schema Sync Check
+        </a>
+        <a class="{ getLinkClasses('execute', 'replace-schema') } item"
+           onclick="{ goToMenuItem.bind(this, 'execute', 'replace-schema') }">
+          Replace Schema
+        </a>
+        <a class="{ getLinkClasses('execute', 'alter-check') } item"
+           onclick="{ goToMenuItem.bind(this, 'execute', 'alter-check') }">
+          Alter Check
+        </a>
+      </div>
+    </div>
+    <div class="item">
+      <div class="header">General Settings</div>
+      <div class="ui tiny inverted vertical menu">
+        <a class="{ getLinkClasses('settings', 'database-info') } item"
+           onclick="{ goToMenuItem.bind(this, 'settings', 'database-info') }">
+          Database Info
+        </a>
+      </div>
+    </div>
+    <div class="item">
+      <div class="header">Files</div>
+      <div class="ui tiny inverted vertical menu">
+        <a class="{ getLinkClasses('files', 'logs') } item"
+           onclick="{ goToMenuItem.bind(this, 'files', 'logs') }">
+          Logs
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .ui.tiny.inverted.vertical.menu {
+      margin-left: 0;
+    }
+  </style>
+
+  <script>
+    import { appRoutes } from '../app-router'
+    import MenuHome from '../components/menu/menu-home.riot'
+    import { getCurrentClientRoute } from './client-router'
+
+    export default {
+      components: {
+        MenuHome
+      },
+      state: {
+        projectName: undefined,
+        clientMenuType: undefined,
+        clientMenuName: undefined,
+      },
+      onBeforeMount() {
+        // マウント直前のURLに合わせて、適切なメニューを初期値として設定する（本当はpropsでroute.paramsを渡したいが、riot/routeの仕様上、空になってしまう模様）
+        const currentRoute = getCurrentClientRoute()
+        this.state.projectName = currentRoute.params.projectName
+        this.state.clientMenuType = currentRoute.params.clientMenuType
+        this.state.clientMenuName = currentRoute.params.clientMenuName
+        // マウント後のURLの変更にアクティブなメニューが対応できるように監視する
+        appRoutes.client.subscribe(route => {
+          this.update({
+            projectName: route.params.projectName,
+            clientMenuType: route.params.menuType,
+            clientMenuName: route.params.menuName
+          })
+        })
+      },
+      /**
+       * 親から選択されている clientMenuType, clientMenuName を受け取り、メニューの行が、active かどうかを判断している
+       * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
+       * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
+       * @return {boolean} 現在選択されているメニューであれば true (NotNull)
+       */
+      isActiveItem(menuType, menuName) {
+        return menuType === this.state.clientMenuType && menuName === this.state.clientMenuName
+      },
+      /**
+       * URLを変更する
+       * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
+       * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
+       */
+      goToMenuItem(menuType, menuName) {
+        appRoutes.client.open(this.state.projectName, menuType, menuName)
+      },
+      getLinkClasses(menuType, menuName) {
+        return this.classNames({ active: this.isActiveItem(menuType, menuName) })
+      }
+    }
+  </script>
+</client-menu>

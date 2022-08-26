@@ -24,6 +24,7 @@ log/
 !**/.idea/encodings.xml
 !**/.idea/misc.xml
 !**/.idea/saveactions_settings.xml
+!**/.idea/prettier.xml
 **/*.iml
 /out
 

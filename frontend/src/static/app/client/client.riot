@@ -1,0 +1,43 @@
+<client>
+  <!-- DBFlute Intro のクライアント画面のメニュー以外の部分 (written at 2022/03/10)
+    機能:
+      o DBFluteのクライアント機能全般を提供する
+      o urlだと、「#client/${clientName}/*」に当たる画面
+      o この tag で実施しているのは、どの機能を表示するのか切り替えることだけ
+
+      作りの特徴:
+      o tag の切り替えは、親から渡される "clientMenuType", "clientMenuName" を元にしている
+      o 豪快に mount している
+  -->
+
+  <h1>DBFlute Client { state.projectName }</h1>
+  <!-- hide for_now, not important and should be designed more by jflute (2020/09/28)
+  <p>for { client.databaseCode }, { client.languageCode }, { client.containerCode }</p>
+   -->
+
+  <!-- クライアント画面がマウントされるところ -->
+  <client-router></client-router>
+
+  <script>
+    import ClientRouter from './client-router.riot'
+    import { appRoutes } from '../app-router'
+    import { getCurrentClientRoute } from './client-router'
+
+    export default {
+      components: {
+        ClientRouter
+      },
+      state: {
+        projectName: undefined
+      },
+      onBeforeMount() {
+        // マウント時のURLに合わせて初期値を設定
+        this.state.projectName = getCurrentClientRoute().params.projectName
+        // URLの変更を監視してstateを更新
+        appRoutes.client.subscribe(route => {
+          this.update({ projectName: route.params.projectName })
+        })
+      }
+    }
+  </script>
+</client>
