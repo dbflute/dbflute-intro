@@ -1,16 +1,30 @@
 <create>
+  <!-- Create画面 (DBFluteクライアントを新しく作るための画面) (written at 2022/06/09)
+   機能:
+    o DBFluteクライアントの作成に必要な最低限の情報を入力
+    o DBFluteクライアント作成前にテスト接続オプション (接続失敗は業務例外で作成処理が中断される)
+    o DBFluteクライアント作成
+
+   作りの特徴:
+    o ファイルアップロードもあるよ
+    o DBMSの選択によって他の項目の値が書き換わるよ
+  -->
   <h2 class="heading">Create Client</h2>
   <div class="ui form">
     <div class="ui stackable two column divided grid">
       <div class="row">
+        <!-- DBFluteクライアントの基本情報の入力欄(1) -->
+        <!-- memo : welcome 画面との差分、下記に記載されている「O/Rマッパー関連設定の入力欄」を少し下げて表示させるために「DBFluteクライアントの基本情報の入力欄」を分けている -->
         <div class="column">
           <div class="required field">
             <label data-is="i18n">LABEL_projectName</label>
-            <input type="text" ref="projectName" placeholder="maihamadb" />
+            <input type="text" ref="projectName" placeholder="e.g. maihamadb" />
           </div>
         </div>
       </div>
+
       <div class="row">
+        <!-- DBFluteクライアントの基本情報の入力欄(2) -->
         <div class="column">
           <div class="required field">
             <label data-is="i18n">LABEL_dbfluteVersion</label>
@@ -29,6 +43,9 @@
             <input type="file" onchange="{ changeFile }"/>
           </div>
         </div>
+
+        <!-- O/Rマッパー関連設定の入力欄 -->
+        <!-- memo : welcome 画面との差分、この設定項目はひっそりしてない -->
         <div class="column">
           <div class="required field" if="{ oRMapperOptionsFlg }">
             <label data-is="i18n">LABEL_languageCode</label>
@@ -45,6 +62,8 @@
         </div>
       </div>
       <div class="row">
+        <!-- DB接続情報の入力欄 -->
+        <!-- #thinking jflute DBMSごとにplaceholder変えられたらいいかな？ドキュメントリンクとかも？ (2022/03/10) copy from welcome.tag by cabos (2022/06/09) -->
         <div class="column">
           <div class="required field">
             <label data-is="i18n">LABEL_url</label>
@@ -82,16 +101,32 @@
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    this.classificationMap = {} // e.g. targetDatabase
+    // 区分値の集めたMap, IntroClsAssist.javaで作られているもの
+    // （本当はサーバーのクラス名をここに書きたくないけど、キー値がわからないとどうにもって感じなので）
+    this.classificationMap = {} // e.g. DBMSやDIコンテナなど
+
+    // JDBCドライバーのjarファイル情報を格納するオブジェクト
     this.jdbcDriver = null
+
+    // JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
+    // (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
     this.needsJdbcDriver = false
+
+    // O/Rマッパー関連設定の表示/非表示
     this.oRMapperOptionsFlg = true
+
+    // すでにダウンロードされているDBFluteエンジンのバージョン
     this.versions = []
+
+    // thisが何を指すのかわからなくなるので、おまじない
     const self = this
 
     // ===================================================================================
     //                                                                      Initial Method
     //                                                                      ==============
+    /**
+     * Create画面で必要な区分値情報を探す。(保持する)
+     */
     this.findClassifications = () => {
       ApiFactory.classifications().then((json) => {
         self.targetDatabaseItems = Object.keys(json.targetDatabaseMap).map(key => {
@@ -111,6 +146,10 @@
         self.update()
       })
     }
+
+    /**
+     * ダウンロード済みDBFlute Engine の情報をサーバから取得し、保持する
+     */
     this.engineVersions = () => {
       ApiFactory.engineVersions().then((json) => {
         self.versions = json.map(element => {
@@ -119,6 +158,10 @@
         self.update()
       })
     }
+
+    /**
+     * ダウンロード済みDBFlute Engine のうち、最新のバージョンをサーバから取得し、保持する
+     */
     this.setLatestEngineVersion = () => {
       ApiFactory.engineLatest().then((json) => {
         self.refs.dbfluteVersion.value = json.latestReleaseVersion
@@ -129,6 +172,10 @@
     // ===================================================================================
     //                                                                        Event Method
     //                                                                        ============
+    /**
+     * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する
+     * @param {string} databaseCode - 選択されたDBMSのコード (NotNull)
+     */
     const changeDatabase = (databaseCode) => {
       let database = self.classificationMap['targetDatabaseMap'][databaseCode]
       // switch showing JDBCDriver select form
@@ -139,6 +186,10 @@
       self.refs.url.value = database.urlTemplate
       self.refs.schema.value = database.defaultSchema
     }
+
+    /**
+     * DBFluteクライアントを作成する。(作成ボタンの処理)
+     */
     this.create = () => {
       const client = {
         projectName: self.refs.projectName.value,
@@ -166,8 +217,17 @@
         this.showToast(client.projectName)
       })
     }
+
+    /**
+     * JDBCファイルを読み込み、このタグのプロパティとして保持する
+     * フォームでJDBCドライバーのファイルを指定したときに呼び出される
+     * @param {string} event - この関数を呼び出したイベントのオブジェクト (NotNull)
+     */
     this.changeFile = (event) => {
       let file = event.target.files[0]
+      
+      // イベントを仕込む処理を、イベントハンドラの中で定義している
+      // #thinking cabos この処理は外部に切り出すことができる（ような気がする） (2022/06/16)
       let reader = new FileReader()
       reader.onload = (function () {
         return () => {
@@ -183,6 +243,11 @@
         reader.readAsBinaryString(file)
       }
     }
+
+    /**
+     * DBFluteクライアントが作成できたことを知らせるトーストを表示する
+     * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+     */
     this.showToast = (projectName) => {
       this.successToast({
         title: 'Create task completed',
@@ -193,6 +258,10 @@
     // ===================================================================================
     //                                                                          Initialize
     //                                                                          ==========
+    // #thinking jflute initializeは上の方に持っていきたい (2022/03/13) copy from welcome.tag by cabos (2022/06/16)
+    /**
+     * マウント時の処理。
+     */
     this.on('mount', () => {
       this.findClassifications()
       this.engineVersions()
