@@ -1,0 +1,15 @@
+# Copy from https://github.com/dbflute-test/dbflute-test-dbms-mysql/blob/master/docker-compose.yml by cabos (2022/07/03)
+version: "3.3"
+services:
+  db:
+    image: mysql:8.0.22
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
+    volumes:
+      - ./localdb/my-docker.cnf:/etc/my.cnf:delegated
+      - db_volume:/var/lib/mysql:delegated
+    ports:
+      - "43316:3306"
+volumes:
+  db_volume:

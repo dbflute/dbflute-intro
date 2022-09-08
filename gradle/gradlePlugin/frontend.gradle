@@ -2,6 +2,7 @@ import groovy.json.JsonBuilder
 
 import java.text.SimpleDateFormat
 
+// TODO hakiba riotv6移行後は node, upgradePackageDependencies, copyStaticResource, npm_run_build は 削除して良い (2022/06/01)
 node {
     version = versions.node
     download = true
@@ -12,68 +13,80 @@ task upgradePackageDependencies(type: NodeTask) {
     args = ['-u', '--packageFile', file('package.json')]
 }
 
-task manifest(dependsOn: npm_run_build) << {
-    def scmBranch = 'unknown'
-    def scmRevision = 'unknown'
+task manifest() {
+    mustRunAfter('cleanDist')
+    doLast {
+        def scmBranch = 'unknown'
+        def scmRevision = 'unknown'
 
-    try {
-        scmBranch = 'git branch --contains'.execute().text.trim() - '* '
-        scmRevision = 'git rev-parse HEAD'.execute().text.trim()
-    } catch (Exception ignored) {
+        try {
+            scmBranch = 'git branch --contains'.execute().text.trim() - '* '
+            scmRevision = 'git rev-parse HEAD'.execute().text.trim()
+        } catch (Exception ignored) {
+        }
+
+        def json = new JsonBuilder()
+        json(
+            [
+                'Implementation-Title'  : applicationName,
+                'Implementation-Version': project.version,
+                'SCM-Branch'            : scmBranch,
+                'SCM-Revision'          : scmRevision,
+                'Build-Timestamp'       : new SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date()),
+                'Jenkins-Build-Number'  : System.getenv()['BUILD_NUMBER'] ?: ''
+            ]
+        )
+
+        file('dist/manifest.json').text = json.toString()
     }
-
-    def json = new JsonBuilder()
-    json (
-        [
-            'Implementation-Title': applicationName,
-            'Implementation-Version': project.version,
-            'SCM-Branch': scmBranch,
-            'SCM-Revision': scmRevision,
-            'Build-Timestamp': new SimpleDateFormat('yyyy/MM/dd HH:mm:ss.SSS').format(new Date()),
-            'Jenkins-Build-Number': System.getenv()['BUILD_NUMBER'] ?: ''
-        ]
-    )
-
-    file('dist/manifest.json').text = json.toString()
 }
 
-task cacheKey(dependsOn: npm_run_build) << {
-    def scmRevision = 'unknown'
+task cacheKey() {
+    mustRunAfter('cleanDist')
+    doLast {
+        def scmRevision = 'unknown'
 
-    try {
-        scmRevision = 'git rev-parse HEAD'.execute().text.trim()
-    } catch (Exception ignored) {
+        try {
+            scmRevision = 'git rev-parse HEAD'.execute().text.trim()
+        } catch (Exception ignored) {
+        }
+
+        def json = new JsonBuilder()
+        json(
+            [
+                'cacheKey': scmRevision
+            ]
+        )
+
+        file('dist/cacheKey.json').text = json.toString()
     }
-
-    def json = new JsonBuilder()
-    json (
-        [
-            'cacheKey': scmRevision
-        ]
-    )
-
-    file('dist/cacheKey.json').text = json.toString()
 }
 
 task cleanDist() {
     def fileList = file('./dist/').listFiles()
     if (fileList != null) {
-      project.delete file('./dist/').listFiles()
+        project.delete file('./dist/').listFiles()
     }
 }
 
-task copyStaticResource(type: Copy) {
-  from fileTree(dir: file('src/static'), includes: ["index.html", "favicon.ico", "**/index.css", "assets/**", "image/**"])
-  into 'dist/'
+task buildFrontend(type: Exec, dependsOn: ['cleanDist']) {
+    executable './frontend-build.sh'
 }
 
-['classes' : ['npm_run_build', 'manifest', 'cacheKey'], 'clean' : 'npm_cache_clean', 'npm_run_build' : ['cleanDist', 'copyStaticResource']].each {
+// #thinking riot6の場合、gradle経由でリソースのコピーはしないようにして、このコードを消したい by cabos
+task copyStaticResource(type: Copy) {
+    mustRunAfter('cleanDist')
+    from fileTree(dir: file('src/static'), includes: ["index.html", "favicon.ico", "**/index.css", "assets/**", "image/**"])
+    into 'dist/'
+}
+
+// gradle 経由で npm コマンドが実行されるのは主にjarファイルを固める場合のみ
+// jarファイルを固める前には、念の為フロントの成果物を消して作り直す
+['npm_run_build': ['cleanDist', 'copyStaticResource']].each {
     if (!tasks.findByName(it.key)) {
         task(it.key) {
-          // If task not exists, define empty task.
+            // If task not exists, define empty task.
         }
     }
     tasks[it.key].dependsOn(it.value)
 }
-
-tasks['refreshResource'].dependsOn('npmInstall')

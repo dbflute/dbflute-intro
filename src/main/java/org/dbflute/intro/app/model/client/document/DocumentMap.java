@@ -20,8 +20,14 @@ import org.dbflute.optional.OptionalThing;
 /**
  * @author p1us2er0
  * @author jflute
+ * @author hakiba
  */
 public class DocumentMap {
+
+    // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    public static final String DFPROP_NAME = "documentMap.dfprop";
 
     // ===================================================================================
     //                                                                           Attribute
@@ -32,6 +38,8 @@ public class DocumentMap {
     protected boolean checkDbCommentDiff;
     protected boolean checkProcedureDiff;
     protected SchemaSyncCheckMap schemaSyncCheckMap;
+    protected NeighborhoodSchemaHtmlMap neighborhoodSchemaHtmlMap;
+    protected SchemaDiagramMap schemaDiagramMap;
 
     // ===================================================================================
     //                                                                            Accessor
@@ -86,5 +94,25 @@ public class DocumentMap {
 
     public void setSchemaSyncCheckMap(SchemaSyncCheckMap schemaSyncCheckMap) {
         this.schemaSyncCheckMap = schemaSyncCheckMap;
+    }
+
+    public OptionalThing<NeighborhoodSchemaHtmlMap> getNeighborhoodSchemaHtmlMap() {
+        return OptionalThing.ofNullable(neighborhoodSchemaHtmlMap, () -> {
+            throw new IllegalStateException("Not found the neighborhoodSchemaHtmlMap.");
+        });
+    }
+
+    public void setNeighborhoodSchemaHtmlMap(NeighborhoodSchemaHtmlMap neighborhoodSchemaHtmlMap) {
+        this.neighborhoodSchemaHtmlMap = neighborhoodSchemaHtmlMap;
+    }
+
+    public OptionalThing<SchemaDiagramMap> getSchemaDiagramMap() {
+        return OptionalThing.ofNullable(schemaDiagramMap, () -> {
+            throw new IllegalStateException("Not found the schemaDiagramMap.");
+        });
+    }
+
+    public void setSchemaDiagramMap(SchemaDiagramMap schemaDiagramMap) {
+        this.schemaDiagramMap = schemaDiagramMap;
     }
 }

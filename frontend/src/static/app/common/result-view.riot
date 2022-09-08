@@ -1,0 +1,96 @@
+<result-view>
+  <!-- APIの結果などを表示するモーダルコンポーネント (written at 2022/06/25)
+  機能:
+  o 外から渡されたパラメータを用いてモーダルを表示する
+
+  作りの特徴:
+  o observableを使ってパラメータが渡せるようにマウント完了時に設定している
+  -->
+  <su-modal class="{ state.sizeStyle } architrave" modal="{ buildModalOption() }" show="{ state.show }" onhide="{ onHide }">
+    <div class="message-area">
+      <pre each="{ message in state.messages }">{ message }</pre>
+    </div>
+  </su-modal>
+
+  <style>
+    .ui.modal.architrave > .header,
+    .ui.modal.architrave > .actions {
+      background-color: #FFEEEE
+    }
+
+    .ui.modal.architrave > .header {
+      border-radius: 0px 0px 50px 0px / 0px 0px 50px 0px;
+      color: #AA4455
+    }
+
+    .ui.modal.architrave > .actions {
+      border-radius: 50px 0px 0px 0px / 50px 0px 0px 0px;
+    }
+
+    .message-area {
+      max-height: 500px;
+      overflow: scroll;
+      border-radius: 20px 0px 0px 0px / 20px 0px 0px 0px;
+      padding-left: 10px;
+    }
+
+    .message-area pre {
+      font-family: Monaco, "Courier New", serif;
+    }
+  </style>
+
+  <script>
+    import { subscribeShowResult } from '../shared/app-events'
+
+    export default {
+      state: {
+        sizeStyle: '',
+        header: undefined,
+        show: false,
+        messages: []
+      },
+
+      // ===================================================================================
+      //                                                                          Definition
+      //                                                                          ==========
+      defaultModalOption: {
+        closable: true,
+        buttons: [{
+          text: 'Close',
+          default: true
+        }]
+      },
+
+      // ===================================================================================
+      //                                                                           Lifecycle
+      //                                                                           =========
+      onMounted() {
+        subscribeShowResult(content => {
+          this.update({
+            sizeStyle: content.modalSize,
+            header: content.header,
+            messages: content.messages,
+            show: true
+          })
+        })
+      },
+
+      // ===================================================================================
+      //                                                                       Event Handler
+      //                                                                       =============
+      onHide() {
+        this.update({ show: false })
+      },
+
+      // ===================================================================================
+      //                                                                             Private
+      //                                                                             =======
+      buildModalOption() {
+        return {
+          ...this.defaultModalOption,
+          header: this.state.header
+        }
+      }
+    }
+  </script>
+</result-view>
