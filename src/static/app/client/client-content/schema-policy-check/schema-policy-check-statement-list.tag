@@ -1,6 +1,16 @@
 <schema-policy-check-statement-list>
+  <!-- ClientのSchemaPolicyCheckのTableSchemaPolicyとColumnSchemaPolicyののstatementの部分 (written at 2022/04/14)
+   機能:
+    o statementをドラッグアンドドロップで入れ替えられる
+    o 並び順が変えられるとdfpropも書き変わる
+
+   作りの特徴:
+    o statementにコメントがあるかどうかで表示の仕方を変えている
+   -->
   <ui-list items="{ opts.statements }" onsorted="{ moveStatement }" sortable="{ true }" options="{ prepareListOptions() }">
+    
     <div class="content">
+      <!-- statementにコメントがあるかどうかで表示の仕方を変える　-->
       <div class="header" if="{ !props.options.hasComment(item) }">
         { item }
       </div>
@@ -11,6 +21,7 @@
         <span class="frm">&#61&gt;{ props.options.extractComment(item) }</span>
       </div>
     </div>
+
     <i class="delete link icon" onclick="{ props.options.deleteStatement.bind(this, props.options.mapType, item) }"/>
   </ui-list>
 
@@ -47,6 +58,9 @@
     // =======================================================================================
     //                                                                              Life Cycle
     //                                                                              ==========
+    /**
+     * self.updateのときに呼ばれるコールバック処理。画面を描画しなおすときに呼ばれる。
+     */
     this.on('update', () => {
       this.state = {
         statements: self.opts.statements
@@ -74,7 +88,7 @@
 
     /**
      * ステートメント文にコメントを含んでいるかを判定します
-     * @param statement {string} ステートメント文
+     * @param statement {string} ステートメント文 (NotNull)
      * @return {boolean} true:コメントを含んでいる, false:含んでいない
      */
     this.hasComment = (statement) => {
@@ -83,8 +97,8 @@
 
     /**
      * ステートメント文からコメントを除去します
-     * @param statement {string} ステートメント文
-     * @return {string} コメントを除去したステートメント文
+     * @param statement {string} ステートメント文 (NotNull)
+     * @return {string} コメントを除去したステートメント文 (NotNull)
      */
     this.removeComment = (statement) => {
       if (!self.hasComment(statement)) {
@@ -96,7 +110,7 @@
 
     /**
      * ステートメント文からコメントを抽出します
-     * @param statement {string} ステートメント文
+     * @param statement {string} ステートメント文 (NotNull)
      * @return {string} ステートメント文中のコメント (NotNull, EmptyAllowed: コメント自体がなかったとき)
      */
     this.extractComment = (statement) => {
@@ -110,7 +124,7 @@
     /**
      * リストtagに渡すオプションを構築します
      * - リストtagのoption属性として渡すことで、tag内で変数や関数として呼び出すことができます
-     * @return {any} リストに渡すオプション
+     * @return {any} リストに渡すオプション (NotNull)
      */
     this.prepareListOptions = () => {
       return {
