@@ -69,12 +69,11 @@ const dbflutePlugin: DBFluteIntroPlugin = {
  * @param component
  */
 export default function plugin(component: RiotComponent) {
-  const plugins: PropertyDescriptorMap & ThisType<any> = Object.getOwnPropertyNames(dbflutePlugin).reduce((acc, methodName) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore TODO: typesafeになるように修正
-    acc[methodName] = { value: dbflutePlugin[methodName] }
-    return acc
-  }, {})
-  Object.defineProperties(component, plugins)
+  // 定義されている関数(厳密にはプロパティ)のMapを用意
+  const propertyDescriptors = Object.getOwnPropertyDescriptors(dbflutePlugin)
+  // 各関数(厳密にはプロパティ)をcomponentに定義していく
+  Object.getOwnPropertyNames(dbflutePlugin).forEach((methodName) => {
+    Object.defineProperty(component, methodName, propertyDescriptors[methodName])
+  })
   return component
 }
