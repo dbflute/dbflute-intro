@@ -30,15 +30,15 @@
   </router>
 
   <script>
-    import Main from './main/main.riot'
-    import Client from './client/client.riot'
-    import Welcome from './welcome/welcome.riot'
-    import Create from './client/create.riot'
-    import CommonMenu from './common/common-menu.riot'
-    import ClientMenu from './client/client-menu.riot'
+    import Main from './pages/main/main.riot'
+    import Client from './pages/client/client.riot'
+    import Welcome from './pages/welcome/welcome.riot'
+    import Create from './pages/create/create.riot'
+    import CommonMenu from './components/common/common-menu.riot'
+    import ClientMenu from './pages/client/client-menu.riot'
     import { Router, Route } from '@riotjs/route'
     import { appRoutes, initialRoute, } from './app-router'
-    import { endRouting } from './shared/app-route';
+    import { endRouting } from './app-route';
 
     export default {
       components: {

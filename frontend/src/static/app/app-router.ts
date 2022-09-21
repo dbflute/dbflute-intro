@@ -1,6 +1,6 @@
 import { router } from '@riotjs/route'
-import { clientRoutes } from './client/client-router'
-import { createRouting } from './shared/app-route';
+import { clientRoutes } from './pages/client/client-router'
+import { createRouting } from './app-route'
 
 /**
  * アプリのRootURL（ルーティング）の定義
@@ -14,7 +14,7 @@ export const appRoutes = createRouting({
     path: 'main',
     open: () => {
       router.push('main')
-    }
+    },
   },
   /**
    * クライアント画面
@@ -37,7 +37,7 @@ export const appRoutes = createRouting({
     path: 'welcome',
     open: () => {
       router.push('welcome')
-    }
+    },
   },
   /**
    * プロジェクト作成画面
@@ -46,8 +46,8 @@ export const appRoutes = createRouting({
     path: 'create',
     open: () => {
       router.push('create')
-    }
-  }
+    },
+  },
 })
 
 /**

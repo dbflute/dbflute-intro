@@ -1,8 +1,8 @@
-import i18n from '../common/i18n.riot'
-import { api } from '../shared/api'
-import { appRoutes } from '../app-router'
-import { readFile } from '../shared/io-utils'
-import { IntroRiotComponent, withIntroTypes } from '../shared/app.types'
+import i18n from '../../components/common/i18n.riot'
+import { api } from '../../api/api'
+import { appRoutes } from '../../app-router'
+import { readFile } from '../../shared/io-utils'
+import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 
 interface Welcome extends IntroRiotComponent {
   // ===================================================================================
@@ -115,7 +115,7 @@ export default withIntroTypes<Welcome>({
    * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
    * @param {string} databaseCode - 選択されたDBMSのコード (NotNull)
    */
-  onchangeDatabase(databaseCode: any) {
+  onchangeDatabase(databaseCode: { value: string; label: string }) {
     // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
     // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
     // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
@@ -170,7 +170,7 @@ export default withIntroTypes<Welcome>({
     api
       .createWelcomeClient(client, testConnection)
       .then(() => {
-        ;(appRoutes as any).main.open()
+        appRoutes.main.open()
         this.showToast(client.projectName)
       })
       .finally(() => {

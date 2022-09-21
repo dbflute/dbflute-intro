@@ -24,7 +24,7 @@
   </style>
 
   <script>
-    import _ApiFactory from '../common/factory/ApiFactory'
+    import _ApiFactory from '../components/common/factory/ApiFactory'
 
     const ApiFactory = new _ApiFactory()
     let self = this

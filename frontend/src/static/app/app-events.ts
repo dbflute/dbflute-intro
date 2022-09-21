@@ -30,4 +30,3 @@ export function subscribeShowResult(callback: (content: ShowResultContent) => vo
 export function triggerShowResult(content: ShowResultContent) {
   appObservable.trigger('show-result', content)
 }
-

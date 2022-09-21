@@ -2,7 +2,7 @@ import * as riot from 'riot'
 import App from './app.riot'
 import 'semantic-ui-riot'
 import './shared/i18n'
-import introPlugin from './shared/app-plugin'
+import introPlugin from './app-plugin'
 
 // 全てのComponentで共通的に利用する処理を登録する
 riot.install(introPlugin)

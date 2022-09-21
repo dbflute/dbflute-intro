@@ -1,8 +1,8 @@
-import { RiotComponent } from "riot";
+import { RiotComponent } from 'riot'
 
 export interface DBFluteIntroPlugin {
-  classNames: (classes: { [ key: string]: boolean } ) => string
-  successToast: (input: { title: string | undefined, message: string | undefined}) => void
+  classNames: (classes: { [key: string]: boolean }) => string
+  successToast: (input: { title: string | undefined; message: string | undefined }) => void
 }
 
 const dbflutePlugin: DBFluteIntroPlugin = {
@@ -12,14 +12,16 @@ const dbflutePlugin: DBFluteIntroPlugin = {
    * @param   {{ [ key: string]: boolean }} classes - class list as object
    * @returns {string} return only the classes having a truthy value
    */
-  classNames(classes: { [ key: string]: boolean } ) {
-    return Object.entries(classes).reduce((acc, item) => {
-      const [key, value] = item
+  classNames(classes: { [key: string]: boolean }) {
+    return Object.entries(classes)
+      .reduce((acc, item) => {
+        const [key, value] = item
 
-      if (value) return [...acc, key]
+        if (value) return [...acc, key]
 
-      return acc
-    }, []).join(' ')
+        return acc
+      }, [])
+      .join(' ')
   },
   /**
    * 成功時のトーストを表示する
@@ -28,13 +30,13 @@ const dbflutePlugin: DBFluteIntroPlugin = {
    * @param {string|undefined} title タイトル（未設定の場合は省略される）
    * @param {string|undefined} message メッセージ（未設定の場合は省略される）
    */
-  successToast({ title = undefined, message = undefined }: { title: string | undefined, message: string | undefined}) {
+  successToast({ title = undefined, message = undefined }: { title: string | undefined; message: string | undefined }) {
     this.suToast({
       title, // keyと渡す変数名が同じため省略する ("title: title,"としているのと同じ)
       message, // keyと渡す変数名が同じため省略する ("message: message,"としているのと同じ)
-      class: 'pink positive'
+      class: 'pink positive',
     })
-  }
+  },
 }
 
 /**
@@ -43,12 +45,11 @@ const dbflutePlugin: DBFluteIntroPlugin = {
  * @param component
  */
 export default function plugin(component: RiotComponent) {
-  const plugins: PropertyDescriptorMap & ThisType<any> = Object.getOwnPropertyNames(dbflutePlugin)
-    .reduce((acc, methodName) => {
-      // @ts-ignore TODO: typesafeになるように修正
-      acc[methodName] = { value: dbflutePlugin[methodName] }
-      return acc
-    }, {});
+  const plugins: PropertyDescriptorMap & ThisType<any> = Object.getOwnPropertyNames(dbflutePlugin).reduce((acc, methodName) => {
+    // @ts-ignore TODO: typesafeになるように修正
+    acc[methodName] = { value: dbflutePlugin[methodName] }
+    return acc
+  }, {})
   Object.defineProperties(component, plugins)
   return component
 }
