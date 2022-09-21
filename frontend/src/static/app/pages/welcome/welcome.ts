@@ -3,6 +3,7 @@ import { api } from '../../api/api'
 import { appRoutes } from '../../app-router'
 import { readFile } from '../../shared/io-utils'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
+import { DropdownItem } from '../../components/dropdown/dropdown'
 
 interface Welcome extends IntroRiotComponent {
   // ===================================================================================
@@ -13,26 +14,30 @@ interface Welcome extends IntroRiotComponent {
   defaultJdbcUrl: string
   defaultLanguageCode: string
   defaultContainerCode: string
-  databaseMap: any
+  databaseMap: { [key: string]: DatabaseDefBean }
   latestVersion: string | undefined
-  targetDatabaseItems: any[]
-  targetLanguageItems: any[]
-  targetContainerItems: any[]
+  targetDatabaseItems: DropdownItem[]
+  targetLanguageItems: DropdownItem[]
+  targetContainerItems: DropdownItem[]
 
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  onchangeDatabase: (databaseCode: any) => void
+  onchangeDatabase: (databaseCode: DropdownItem) => void
   onclickOrmSetting: () => void
   onclickCreate: () => void
-  onchangeJarFile: (event: any) => void
+  onchangeJarFile: (event: InputEvent) => void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  convertClassificationsForUI: (classifications: IntroClassificationsResult) => any
+  convertClassificationsForUI: (classifications: IntroClassificationsResult) => {
+    databaseMap: { [key: string]: DatabaseDefBean }
+    targetContainerItems: DropdownItem[]
+    targetLanguageItems: DropdownItem[]
+    targetDatabaseItems: DropdownItem[]
+  }
   showToast: (projectName: string) => void
-  elementAs: <HTMLElement extends Element>(selector: string) => HTMLElement
 }
 
 export default withIntroTypes<Welcome>({
@@ -113,18 +118,18 @@ export default withIntroTypes<Welcome>({
   //                                                                       =============
   /**
    * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
-   * @param {string} databaseCode - 選択されたDBMSのコード (NotNull)
+   * @param {DropdownItem} targetDatabase - 選択されたDBMS (NotNull)
    */
-  onchangeDatabase(databaseCode: { value: string; label: string }) {
+  onchangeDatabase(targetDatabase: DropdownItem) {
     // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
     // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
     // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
     // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
     // そっか、こっちは embeddedJar も使うかありがとう。
-    const database = this.databaseMap[databaseCode.value]
-    this.elementAs<HTMLInputElement>('[ref=jdbcDriverFqcn]').value = database.driverName
-    this.elementAs<HTMLInputElement>('[ref=url]').value = database.urlTemplate
-    this.elementAs<HTMLInputElement>('[ref=schema]').value = database.defaultSchema
+    const database = this.databaseMap[targetDatabase.value]
+    this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
+    this.inputElementBy('[ref=url]').value = database.urlTemplate
+    this.inputElementBy('[ref=schema]').value = database.defaultSchema
     this.update({
       // switch showing JDBCDriver select form
       needsJdbcDriver: !database.embeddedJar,
@@ -149,23 +154,23 @@ export default withIntroTypes<Welcome>({
     // サーバーサイドのWelcomeCreateBody.javaのclient部分の直接的に関連
     // #thinking jflute "create: true" はサーバーサイドで定義されていないので使われてないような？ (2022/03/17)
     const client = {
-      projectName: this.elementAs<HTMLInputElement>('[ref=projectName]').value,
+      projectName: this.inputElementBy('[ref=projectName]').value,
       databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
       create: true,
       mainSchemaSettings: {
-        user: this.elementAs<HTMLInputElement>('[ref=user]').value,
-        url: this.elementAs<HTMLInputElement>('[ref=url]').value,
-        schema: this.elementAs<HTMLInputElement>('[ref=schema]').value,
-        password: this.elementAs<HTMLInputElement>('[ref=password]').value,
+        user: this.inputElementBy('[ref=user]').value,
+        url: this.inputElementBy('[ref=url]').value,
+        schema: this.inputElementBy('[ref=schema]').value,
+        password: this.inputElementBy('[ref=password]').value,
       },
       dbfluteVersion: this.latestVersion,
-      packageBase: this.elementAs<HTMLInputElement>('[ref=packageBase]').value,
+      packageBase: this.inputElementBy('[ref=packageBase]').value,
       containerCode: this.$('[ref=containerCode]').getAttribute('value'),
       languageCode: this.$('[ref=languageCode]').getAttribute('value'),
       jdbcDriver: this.state.jdbcDriver,
-      jdbcDriverFqcn: this.elementAs<HTMLInputElement>('[ref=jdbcDriverFqcn]').value,
+      jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
     }
-    const testConnection = this.elementAs<HTMLInputElement>('[ref=testConnection]').checked
+    const testConnection = this.inputElementBy('[ref=testConnection]').checked
     this.suLoading(true)
     api
       .createWelcomeClient(client, testConnection)
@@ -182,11 +187,12 @@ export default withIntroTypes<Welcome>({
    * JDBCドライバーのファイルが指定されたときの処理。
    * @param {Event} event - この関数を呼び出したイベントのオブジェクト (NotNull)
    */
-  onchangeJarFile(event: any) {
-    const file = event.target.files[0] // event.targetはイベント発生元のオブジェクト
+  onchangeJarFile(event: InputEvent) {
+    const eventTarget = event.target as HTMLInputElement // event.targetはイベント発生元のオブジェクト
+    const file = eventTarget.files[0]
     readFile(file).then((result) => {
       // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
-      const encoded = window.btoa(result as string)
+      const encoded = window.btoa(result)
       this.state.jdbcDriver = { fileName: file.name, data: encoded }
     })
   },
@@ -235,9 +241,5 @@ export default withIntroTypes<Welcome>({
       title: 'Create task completed',
       message: "Client for project '" + projectName + "', was successfully created!!",
     })
-  },
-  // TODO: プラグインに移動
-  elementAs<HTMLElement extends Element>(selector: string): HTMLElement {
-    return this.$(selector) as HTMLElement
   },
 })

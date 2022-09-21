@@ -3,6 +3,17 @@ import { RiotComponent } from 'riot'
 export interface DBFluteIntroPlugin {
   classNames: (classes: { [key: string]: boolean }) => string
   successToast: (input: { title: string | undefined; message: string | undefined }) => void
+  elementAs: <HTMLElement extends Element>(selector: string) => HTMLElement
+  inputElementBy: (selector: string) => HTMLInputElement
+}
+
+/**
+ * $関数で取得したElementに型を付与する際のヘルパー関数
+ * - 複数のplugin関数で再利用するためglobalな関数として定義
+ * @param {string} selector querySelector
+ */
+function elementAs<T extends Element>(selector: string): T {
+  return this.$(selector) as T
 }
 
 const dbflutePlugin: DBFluteIntroPlugin = {
@@ -37,6 +48,19 @@ const dbflutePlugin: DBFluteIntroPlugin = {
       class: 'pink positive',
     })
   },
+  /**
+   * @see {elementAs}
+   */
+  elementAs<T extends Element>(selector: string): T {
+    return elementAs<T>.bind(this, selector).apply()
+  },
+  /**
+   * 指定されたselectorのDOM要素を{@link HTMLInputElement}として返す
+   * @param {string} selector querySelector
+   */
+  inputElementBy(selector: string): HTMLInputElement {
+    return elementAs<HTMLInputElement>.bind(this, selector).apply()
+  },
 }
 
 /**
@@ -46,6 +70,7 @@ const dbflutePlugin: DBFluteIntroPlugin = {
  */
 export default function plugin(component: RiotComponent) {
   const plugins: PropertyDescriptorMap & ThisType<any> = Object.getOwnPropertyNames(dbflutePlugin).reduce((acc, methodName) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore TODO: typesafeになるように修正
     acc[methodName] = { value: dbflutePlugin[methodName] }
     return acc
