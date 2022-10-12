@@ -1,5 +1,5 @@
-import { appRoutes } from '../app-router';
-import { route as riotRoute } from '@riotjs/route';
+import { appRoutes } from './app-router'
+import { route as riotRoute } from '@riotjs/route'
 
 /**
  * Routeをsubscribeしたときのcallbackに渡ってくる値（@riotjs/routeのcreateRouteが返却する値）
@@ -36,16 +36,17 @@ export type RoutesDefinition = { [name: string]: RouteDefinition }
  * - subscribe関数を生やし、URLの変更を監視できるようにしている
  */
 export function createRouting(definition: RoutesDefinition): Routes {
-  return Object.freeze(Object.entries(definition)
-    .reduce((newRoutes, [name, route]) => {
+  return Object.freeze(
+    Object.entries(definition).reduce((newRoutes, [name, route]) => {
       newRoutes[name] = {
         path: route.path,
         children: route.children,
         open: route.open,
-        subscribe: (callback: any) => ensureRouteStream(route.path).on.value(callback)
+        subscribe: (callback: any) => ensureRouteStream(route.path).on.value(callback),
       }
       return newRoutes
-    }, {} as Routes))
+    }, {} as Routes)
+  )
 }
 
 /**
@@ -53,7 +54,7 @@ export function createRouting(definition: RoutesDefinition): Routes {
  * - 監視しているstreamの破棄を行う
  */
 export function endRouting() {
-  Object.values(appRoutes).forEach(route => {
+  Object.values(appRoutes).forEach((route) => {
     routeStreams.get(route.path)?.end()
   })
   routeStreams.clear()

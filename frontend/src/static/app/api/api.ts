@@ -1,22 +1,34 @@
 import i18n from 'i18next'
-import { triggerShowResult } from './app-events'
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { triggerShowResult } from '../app-events'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 
 class ApiClient {
   get(url: string, config?: AxiosRequestConfig) {
-    return axios.get(url, config).then(res => res.data).catch(handleError)
+    return axios
+      .get(url, config)
+      .then((res) => res.data)
+      .catch(handleError)
   }
 
   post(url: string, data?: any, config?: AxiosRequestConfig) {
-    return axios.post(url, data, config).then(res => res.data).catch(handleError)
+    return axios
+      .post(url, data, config)
+      .then((res) => res.data)
+      .catch(handleError)
   }
 
   put(url: string, data?: any, config?: AxiosRequestConfig) {
-    return axios.put(url, data, config).then(res => res.data).catch(handleError)
+    return axios
+      .put(url, data, config)
+      .then((res) => res.data)
+      .catch(handleError)
   }
 
   del(url: string, config?: AxiosRequestConfig) {
-    return axios.delete(url, config).then(res => res.data).catch(handleError)
+    return axios
+      .delete(url, config)
+      .then((res) => res.data)
+      .catch(handleError)
   }
 }
 
@@ -30,8 +42,8 @@ const handleError = (error: AxiosError) => {
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
   //let reload = false;
   let validationError = false
-  const response: any = error.response;
-  const status = response.status;
+  const response: any = error.response
+  const status = response.status
   if (status === 0) {
     messages = ['Cannot access the server, retry later']
   }
@@ -39,11 +51,13 @@ const handleError = (error: AxiosError) => {
   if (status === 400) {
     header = '400 Bad Request'
     // #hope improvement: formal validation error handling
-    if (response.data.failureType) { // basically here (unified JSON if 400)
+    if (response.data.failureType) {
+      // basically here (unified JSON if 400)
       header = header + ': ' + response.data.failureType
       validationError = response.data.failureType === 'VALIDATION_ERROR'
     }
-    if (response.data.messages) { // basically here (unified JSON if 400)
+    if (response.data.messages) {
+      // basically here (unified JSON if 400)
       let messageList = []
       for (let key in response.data.messages) {
         for (let i in response.data.messages[key]) {
@@ -63,11 +77,12 @@ const handleError = (error: AxiosError) => {
           if (key.lastIndexOf('.')) {
             key = key.substring(key.lastIndexOf('.') + 1)
           }
-          if (key === '_global') { // don't use key if global
+          if (key === '_global') {
+            // don't use key if global
             messageList.push(message + '\r\n')
           } else {
             const label = i18n.t(`LABEL_${key}`)
-            const symbol = (label === '') ? '' : '：'
+            const symbol = label === '' ? '' : '：'
             messageList.push(`${label}${symbol}${message}\r\n`)
           }
         }
@@ -94,7 +109,6 @@ const handleError = (error: AxiosError) => {
 const apiClient = new ApiClient()
 
 class Api {
-
   // ===============================================================================
   //                                                                           Intro
   //                                                                           =====
@@ -114,10 +128,7 @@ class Api {
   //                                                                         Welcome
   //                                                                         =======
   createWelcomeClient(client: any, testConnection: boolean) {
-    return apiClient.post('api/welcome/create',
-      { client: client, testConnection: testConnection },
-      { timeout: 180000 }
-    ) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
+    return apiClient.post('api/welcome/create', { client: client, testConnection: testConnection }, { timeout: 180000 }) // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
   }
 
   // ===============================================================================
@@ -191,12 +202,9 @@ class Api {
   }
 
   registerSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
-    return apiClient.post(
-      `api/dfprop/schemapolicy/statement/register/${projectName}`,
-      {
-        body: schemaPolicyData,
-      }
-    )
+    return apiClient.post(`api/dfprop/schemapolicy/statement/register/${projectName}`, {
+      body: schemaPolicyData,
+    })
   }
 
   getSchemapolicyStatementSubject(mapType: string) {
@@ -204,18 +212,13 @@ class Api {
   }
 
   deleteSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
-    return apiClient.post(
-      `api/dfprop/schemapolicy/statement/delete/${projectName}`,
-      {
-        body: schemaPolicyData,
-      }
-    )
+    return apiClient.post(`api/dfprop/schemapolicy/statement/delete/${projectName}`, {
+      body: schemaPolicyData,
+    })
   }
 
   moveSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
-    return apiClient.post(
-      `api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData }
-    )
+    return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData })
   }
 
   // -----------------------------------------------------
@@ -340,4 +343,3 @@ export class DbfluteTask {
     })
   }
 }
-

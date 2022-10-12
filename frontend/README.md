@@ -25,7 +25,12 @@ lint-staged | GitのstagedにあるファイルのみにLintを実行するた�
 ├── package.json             npmにおける利用ライブラリやコマンドなどの設定ファイル
 ├── src                      アプリを構築するファイル郡のディレクトリ
 │   ├── @types               TypeScriptで型補完を効かせるための定義ファイル群（d.ts）
-│   └── xxx                  TODO: 変わりそうなので後ほど追記
+│   └── static
+│       └── app
+│           ├── api          APIリクエスト群
+│           ├── components   様々な画面で利用する共通的なUIコンポーネント群
+│           ├── pages        URLに紐づいた機能を提供する各画面群
+│           └── shared       共通的に利用する関数など
 ├── tsconfig.json            TypeScriptの設定ファイル
 └── webpack.config.js        webpackの設定ファイル
 ```
