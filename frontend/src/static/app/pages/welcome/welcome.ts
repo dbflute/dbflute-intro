@@ -5,7 +5,37 @@ import { readFile } from '../../shared/io-utils'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import { DropdownItem } from '../../components/dropdown/dropdown'
 
-interface Welcome extends IntroRiotComponent {
+interface WelcomeState {
+  // JDBCドライバーのjarファイル情報を格納するオブジェクト
+  // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
+  // [雑談]
+  // 多分 java の書き方に合わせただけなんじゃないですかね？
+  // 別にコメントのように書いても問題ないと思います
+  //
+  // [雑談]
+  // this.jdbcDriver という変数の使われ方的にファイルがある/ないを示したい気もするので、型をつけるとしたら Optional<{ fileName: String, data: String }> ってみたいな感じになって、案外適切な表現なのかもなって気もしました 笑
+  // （TypeScript的な型をつけるなら { fileName: String, data: String } | null という感じ）
+  //
+  // なるほど。このへんはriot6のときに方向性を統一したいね。
+  // _/_/_/_/_/_/_/_/_/_/
+  //
+  // コメントで書いても定義先で変わったときに追従できない。(ついつい型定義したくなってしまうな...)
+  // というか、この宣言要るのか？なければないでundefinedとかで落ちちゃうのかな？？？
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
+  // 使われ方的にはnullによる初期化はなくてもいいですね
+  // 話がそれますが、TypeScriptの界隈ではnullとundefinedのどちらを使うのか、使い分けるべきかみたいなところはいろいろ意見が分かれてるみたいです。
+  // _/_/_/_/_/_/_/_/_/_/
+  //
+  jdbcDriver: { fileName: string; data: string }
+  // JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
+  // (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
+  needsJdbcDriver: boolean
+  // O/Rマッパー関連設定の表示/非表示
+  oRMapperOptionsFlg: boolean
+}
+
+interface Welcome extends IntroRiotComponent<never, WelcomeState> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
@@ -45,32 +75,8 @@ export default withIntroTypes<Welcome>({
     i18n,
   },
   state: {
-    // JDBCドライバーのjarファイル情報を格納するオブジェクト
-    // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
-    // [雑談]
-    // 多分 java の書き方に合わせただけなんじゃないですかね？
-    // 別にコメントのように書いても問題ないと思います
-    //
-    // [雑談]
-    // this.jdbcDriver という変数の使われ方的にファイルがある/ないを示したい気もするので、型をつけるとしたら Optional<{ fileName: String, data: String }> ってみたいな感じになって、案外適切な表現なのかもなって気もしました 笑
-    // （TypeScript的な型をつけるなら { fileName: String, data: String } | null という感じ）
-    //
-    // なるほど。このへんはriot6のときに方向性を統一したいね。
-    // _/_/_/_/_/_/_/_/_/_/
-    //
-    // コメントで書いても定義先で変わったときに追従できない。(ついつい型定義したくなってしまうな...)
-    // というか、この宣言要るのか？なければないでundefinedとかで落ちちゃうのかな？？？
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
-    // 使われ方的にはnullによる初期化はなくてもいいですね
-    // 話がそれますが、TypeScriptの界隈ではnullとundefinedのどちらを使うのか、使い分けるべきかみたいなところはいろいろ意見が分かれてるみたいです。
-    // _/_/_/_/_/_/_/_/_/_/
-    //
     jdbcDriver: undefined,
-    // JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
-    // (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
     needsJdbcDriver: false,
-    // O/Rマッパー関連設定の表示/非表示
     oRMapperOptionsFlg: false,
   },
 

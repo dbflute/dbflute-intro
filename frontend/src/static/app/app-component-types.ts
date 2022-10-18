@@ -2,7 +2,11 @@ import { AutobindObjectMethods, RiotComponent, RiotComponentFactoryFunction } fr
 import { DBFluteIntroPlugin } from './app-plugin'
 import { SemanticUiRiotPlugin } from '../../@types/semantic-ui-riot'
 
-export interface IntroRiotComponent extends RiotComponent, DBFluteIntroPlugin, SemanticUiRiotPlugin {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface IntroRiotComponent<Props = any, State = any>
+  extends RiotComponent<Props, State>,
+    DBFluteIntroPlugin,
+    SemanticUiRiotPlugin {}
 
 export type IntroRiotComponentWithoutInternals<Component extends IntroRiotComponent> = Omit<
   Component,
