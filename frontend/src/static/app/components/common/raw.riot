@@ -1,0 +1,17 @@
+<raw>
+  <!--
+  HTML要素をそのまま表示したいときに利用するタグ
+  ルートのDOMノードに外から渡されたコンテンツをhtmlとしてセットする
+  -->
+  <script>
+    export default {
+      onMounted() {
+        this.root.innerHTML = this.props.content
+      },
+      onUpdated() {
+        // コンテンツが更新されるごとにhtmlに反映する
+        this.root.innerHTML = this.props.content
+      }
+    }
+  </script>
+</raw>

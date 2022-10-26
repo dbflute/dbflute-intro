@@ -271,9 +271,7 @@ class Api {
 
   createAlterSql(projectName: string, alterFileName: string) {
     return apiClient.post(`api/playsql/migration/alter/create/${projectName}/`, {
-      body: {
-        alterFileName,
-      },
+      alterFileName,
     })
   }
 
@@ -336,7 +334,7 @@ class Api {
 export const api = new Api()
 
 export class DbfluteTask {
-  task(task: string, projectName: string, callback: (message: string) => void) {
+  static task(task: string, projectName: string, callback: (message: string) => void) {
     return api.task(projectName, task).then((response) => {
       const message = response.status === 200 ? 'success' : 'failure'
       callback(message)

@@ -1,0 +1,30 @@
+<latest-result>
+  <div if="{ state.latestResult.loaded }">
+    <h3 if="{ state.latestResult.header.show }">{ state.latestResult.header.text }</h3>
+    <div class="ui { state.latestResult.success ? 'positive' : 'negative' } message">
+      <h4 class="latest-result-title">{ state.latestResult.success ? success.title : failure.title }</h4>
+      <p if="{ state.latestResult.success && success.message }">{ success.message }</p>
+      <p if="{ !state.latestResult.success && failure.message }">{ failure.message }</p>
+      <p if="{ !state.latestResult.success && failure.link && failure.link.message }" >
+        <a onclick="{ failure.link.clickAction }">{ failure.link.message }</a>
+      </p>
+      <a onclick="{ toggleLatestResult }">{ state.latestResult.show ? 'hide latest log' : 'show latest log' }</a>
+      <div if="{ state.latestResult.show }" class="ui message message-area">
+        <pre><code><raw content="{ state.latestResult.content }"></raw></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    pre {
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+
+  <script>
+    import LatestResult from './latest-result'
+    export default LatestResult
+  </script>
+</latest-result>

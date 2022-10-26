@@ -6,7 +6,7 @@
    o prism.jsを使ってSQLハイライトしたhtml要素が利用元から渡されてくる
   -->
   <div class="ui list">
-    <div class="item" each="{ file in opts.checkedfiles }">
+    <div class="item" each="{ file in props.checkedfiles }">
       <a onclick="{ clickFileName.bind(this, file) }">{ file.fileName }</a>
       <div show="{ file.show }" class="ui message message-area">
         <!-- SQLの改行やインデントが反映されるようにpreタグを利用
@@ -20,12 +20,7 @@
   </div>
 
   <script>
-    /**
-     * ファイルの表示・非表示を切り替えます
-     * @param file クリックされたファイルのオブジェクト (NotNull)
-     */
-    this.clickFileName = (file) => {
-      file.show = !(file.show)
-    }
+    import AlterCheckCheckedFiles from './alter-check-checked-files'
+    export default AlterCheckCheckedFiles
   </script>
 </alter-check-checked-files>
