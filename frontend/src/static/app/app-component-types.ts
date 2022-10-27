@@ -38,6 +38,10 @@ export function withIntroTypes<
 export function withIntroTypes<
   Component extends IntroRiotComponent,
   ComponentObjectWithoutInitialState = IntroRiotComponentWithoutInternalsAndInitialState<Component>
+>(component: AutobindObjectMethods<ComponentObjectWithoutInitialState, Component>): Component
+export function withIntroTypes<
+  Component extends IntroRiotComponent,
+  ComponentObjectWithoutInitialState = IntroRiotComponentWithoutInternalsAndInitialState<Component>
 >(component: AutobindObjectMethods<ComponentObjectWithoutInitialState, Component>): Component {
   return component as any
 }

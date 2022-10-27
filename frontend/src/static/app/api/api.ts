@@ -319,7 +319,7 @@ class Api {
     return apiClient.post('api/engine/latest')
   }
 
-  engineVersions() {
+  engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
   }
 
