@@ -214,13 +214,13 @@ export default withIntroTypes<Welcome>({
     return {
       databaseMap: classifications.targetDatabaseMap,
       targetDatabaseItems: Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
-        return { value: key, label: value.databaseName }
+        return { value: key, label: value.databaseName, default: false }
       }),
       targetLanguageItems: Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-        return { value: key, label: value }
+        return { value: key, label: value, default: false }
       }),
       targetContainerItems: Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-        return { value: key, label: value }
+        return { value: key, label: value, default: false }
       }),
     }
   },
