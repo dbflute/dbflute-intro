@@ -35,25 +35,25 @@ import org.dbflute.intro.dbflute.exentity.*;
  *     DATABASE_CODE, DATABASE_NAME, JDBC_DRIVER_FQCN, URL_TEMPLATE, DEFAULT_SCHEMA, SCHEMA_REQUIRED_FLG, SCHEMA_UPPER_CASE_FLG, USER_INPUT_ASSIST_FLG, EMBEDDED_JAR_FLG, DISPLAY_ORDER
  *
  * [sequence]
- *
+ *     
  *
  * [identity]
- *
+ *     
  *
  * [version-no]
- *
+ *     
  *
  * [foreign table]
- *
+ *     
  *
  * [referrer table]
- *
+ *     
  *
  * [foreign property]
- *
+ *     
  *
  * [referrer property]
- *
+ *     
  *
  * [get/set template]
  * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -155,7 +155,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @return The instance of classification definition (as ENUM type). (NullAllowed: when the column value is null)
      */
     public CDef.TargetDatabase getDatabaseCodeAsTargetDatabase() {
-        return CDef.TargetDatabase.codeOf(getDatabaseCode());
+        return CDef.TargetDatabase.of(getDatabaseCode()).orElse(null);
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @return The instance of classification definition (as ENUM type). (NullAllowed: when the column value is null)
      */
     public CDef.Flg getSchemaRequiredFlgAsFlg() {
-        return CDef.Flg.codeOf(getSchemaRequiredFlg());
+        return CDef.Flg.of(getSchemaRequiredFlg()).orElse(null);
     }
 
     /**
@@ -196,7 +196,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @param determination The determination, true or false. (NullAllowed: if null, null value is set to the column)
      */
     public void setSchemaRequiredFlgAsBoolean(Boolean determination) {
-        setSchemaRequiredFlgAsFlg(CDef.Flg.codeOf(determination));
+        setSchemaRequiredFlgAsFlg(CDef.Flg.of(determination).orElse(null));
     }
 
     /**
@@ -207,7 +207,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @return The instance of classification definition (as ENUM type). (NullAllowed: when the column value is null)
      */
     public CDef.Flg getSchemaUpperCaseFlgAsFlg() {
-        return CDef.Flg.codeOf(getSchemaUpperCaseFlg());
+        return CDef.Flg.of(getSchemaUpperCaseFlg()).orElse(null);
     }
 
     /**
@@ -227,7 +227,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @param determination The determination, true or false. (NullAllowed: if null, null value is set to the column)
      */
     public void setSchemaUpperCaseFlgAsBoolean(Boolean determination) {
-        setSchemaUpperCaseFlgAsFlg(CDef.Flg.codeOf(determination));
+        setSchemaUpperCaseFlgAsFlg(CDef.Flg.of(determination).orElse(null));
     }
 
     /**
@@ -238,7 +238,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @return The instance of classification definition (as ENUM type). (NullAllowed: when the column value is null)
      */
     public CDef.Flg getUserInputAssistFlgAsFlg() {
-        return CDef.Flg.codeOf(getUserInputAssistFlg());
+        return CDef.Flg.of(getUserInputAssistFlg()).orElse(null);
     }
 
     /**
@@ -258,7 +258,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @param determination The determination, true or false. (NullAllowed: if null, null value is set to the column)
      */
     public void setUserInputAssistFlgAsBoolean(Boolean determination) {
-        setUserInputAssistFlgAsFlg(CDef.Flg.codeOf(determination));
+        setUserInputAssistFlgAsFlg(CDef.Flg.of(determination).orElse(null));
     }
 
     /**
@@ -269,7 +269,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @return The instance of classification definition (as ENUM type). (NullAllowed: when the column value is null)
      */
     public CDef.Flg getEmbeddedJarFlgAsFlg() {
-        return CDef.Flg.codeOf(getEmbeddedJarFlg());
+        return CDef.Flg.of(getEmbeddedJarFlg()).orElse(null);
     }
 
     /**
@@ -289,7 +289,7 @@ public abstract class BsClsTargetDatabase extends AbstractEntity implements Doma
      * @param determination The determination, true or false. (NullAllowed: if null, null value is set to the column)
      */
     public void setEmbeddedJarFlgAsBoolean(Boolean determination) {
-        setEmbeddedJarFlgAsFlg(CDef.Flg.codeOf(determination));
+        setEmbeddedJarFlgAsFlg(CDef.Flg.of(determination).orElse(null));
     }
 
     // ===================================================================================

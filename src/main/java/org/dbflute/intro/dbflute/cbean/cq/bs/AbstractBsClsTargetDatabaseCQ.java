@@ -678,7 +678,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * @param determination The determination, true or false. (basically NotNull: error as default, or no condition as option)
      */
     public void setSchemaRequiredFlg_Equal_AsBoolean(Boolean determination) {
-        setSchemaRequiredFlg_Equal_AsFlg(CDef.Flg.codeOf(determination));
+        setSchemaRequiredFlg_Equal_AsFlg(CDef.Flg.of(determination).get());
     }
 
     /**
@@ -815,7 +815,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * @param determination The determination, true or false. (basically NotNull: error as default, or no condition as option)
      */
     public void setSchemaUpperCaseFlg_Equal_AsBoolean(Boolean determination) {
-        setSchemaUpperCaseFlg_Equal_AsFlg(CDef.Flg.codeOf(determination));
+        setSchemaUpperCaseFlg_Equal_AsFlg(CDef.Flg.of(determination).get());
     }
 
     /**
@@ -952,7 +952,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * @param determination The determination, true or false. (basically NotNull: error as default, or no condition as option)
      */
     public void setUserInputAssistFlg_Equal_AsBoolean(Boolean determination) {
-        setUserInputAssistFlg_Equal_AsFlg(CDef.Flg.codeOf(determination));
+        setUserInputAssistFlg_Equal_AsFlg(CDef.Flg.of(determination).get());
     }
 
     /**
@@ -1089,7 +1089,7 @@ public abstract class AbstractBsClsTargetDatabaseCQ extends AbstractConditionQue
      * @param determination The determination, true or false. (basically NotNull: error as default, or no condition as option)
      */
     public void setEmbeddedJarFlg_Equal_AsBoolean(Boolean determination) {
-        setEmbeddedJarFlg_Equal_AsFlg(CDef.Flg.codeOf(determination));
+        setEmbeddedJarFlg_Equal_AsFlg(CDef.Flg.of(determination).get());
     }
 
     /**
