@@ -14,7 +14,7 @@ interface States {
   client: any
 }
 
-interface FlLog extends IntroRiotComponent<Props, States> {
+interface Log extends IntroRiotComponent<Props, States> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
@@ -28,7 +28,7 @@ interface FlLog extends IntroRiotComponent<Props, States> {
   onLogSelect: () => void
 }
 
-export default withIntroTypes<FlLog>({
+export default withIntroTypes<Log>({
   state: {
     logDropDownItems: [],
     selectedLogValue: '',
