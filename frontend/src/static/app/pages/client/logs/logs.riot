@@ -8,6 +8,10 @@
      o ログファイルの内容をごっそりサーバーからもらって、dropdownのvalueにぶち込んでる
     -->
   <div class="ui container">
+    <section class="ui info message">
+      <div class="header">What is "Logs"?</div>
+      <p>The logs output during various DBFlute processes can be viewed on this screen.</p>
+    </section>
     <div class="ui segment" title="Log">
       <!-- dropdownのvalueにログの中身が入ってるので、refでdropdownを参照してpreに展開している -->
       <su-dropdown items="{ state.logDropDownItems }" onselect="{ onLogSelect }" ref="dropdown"></su-dropdown>
