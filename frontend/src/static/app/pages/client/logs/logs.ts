@@ -8,7 +8,7 @@ interface States {
   // label:fileName, value:ログの中身
   logDropDownItems: Array<{
     label: string
-    value: undefined | string
+    value: string | undefined
   }>
   selectedLogValue: string
   client: any
