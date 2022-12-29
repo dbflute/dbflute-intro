@@ -72,14 +72,13 @@ export default withIntroTypes<Log>({
     // dropdown要素の表示順序はサーバーのレスポンスデータに依存
     const projectName = this.props.projectName
     api.logBeanList(projectName).then((body) => {
-      // TODO cabos dropdown Items という型があるはずなのでそれを利用する
-      // TODO cabos default Item の扱いを統一する
-      const logDropDownItems: Array<{ label: string; value: string | undefined }> = body.map((item) => ({
-        label: item.fileName,
-        value: item.content,
-      }))
-      logDropDownItems.unshift(this.defaultItem)
-      this.state.logDropDownItems = logDropDownItems
+      this.state.logDropDownItems = [
+        this.defaultItem,
+        ...body.map((item) => ({
+          label: item.fileName,
+          value: item.content,
+        })),
+      ]
       this.update()
     })
   },
