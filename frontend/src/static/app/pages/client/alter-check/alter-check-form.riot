@@ -6,10 +6,10 @@
   <div class="ui segment">
     <div class="ui two column very relaxed stackable grid">
       <div class="column">
-        <alter-check-begin-form ref="beginform" project-name="{ props.projectName }" update-handler="{ props.updateHandler }" />
+        <alter-check-begin-form ref="beginform" project-name="{ props.projectName }" on-complete="{ props.onComplete }" />
       </div>
       <div class="column">
-        <alter-check-fix-form project-name="{ props.projectName }" update-handler="{ props.updateHandler }" />
+        <alter-check-fix-form project-name="{ props.projectName }" on-complete="{ props.onComplete }" />
       </div>
     </div>
     <!-- semantic-uiを利用してフォームの間に区切り線を引いている -->

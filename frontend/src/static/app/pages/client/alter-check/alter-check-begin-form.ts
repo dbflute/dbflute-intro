@@ -3,7 +3,7 @@ import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types
 
 interface Props {
   projectName: string
-  updateHandler(): void
+  onComplete(inputFileName?: string): void
 }
 interface State {
   invalidFileName: boolean
@@ -39,7 +39,7 @@ export default withIntroTypes<AlterCheckBeginForm>({
       const alterFileName = 'alter-schema-' + ticketName + '.sql'
       api.createAlterSql(this.props.projectName, alterFileName).then(() => {
         // 呼び元から渡された後続処理を実行
-        this.props.updateHandler()
+        this.props.onComplete(alterFileName)
       })
     })
   },

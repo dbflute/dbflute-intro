@@ -28,7 +28,7 @@
       <!-- 未リリースの確認済みDDLの一覧 -->
       <alter-check-checked checkedzip="{ state.checkedZip }" unreleaseddir="{ state.unreleasedDir }"/>
       <!-- 新しいDDLファイルを作成するためのフォーム -->
-      <alter-check-form ref="altercheckform" project-name="{ props.projectName }" update-handler="{ updateBegin }"/>
+      <alter-check-form ref="altercheckform" project-name="{ props.projectName }" on-complete="{ onCompletePrepareAlterSql }"/>
     </section>
 
     <!-- Step 2: AlterCheckの実行 -->
@@ -36,16 +36,16 @@
       <h3>Step2. Execute AlterCheck</h3>
 
       <div class="ui list">
-        <div class="item" each="{ alterItem in state.editingSqls }">
+        <div class="item" each="{ alterSql in state.editingSqls }">
           <!-- 押下された alter sql ファイルの表示・非表示を切り替える。また、STEP1で作成されたファイルには印をつけて表示する -->
-          <a onclick="{ alterItemClick.bind(this, alterItem) }">{ alterItem.fileName } <span if="{ nowPrepared(alterItem.fileName) }">(now prepared)</span></a>
-          <div if="{ alterItem.show }" class="ui message message-area">
+          <a onclick="{ () => onclickAlterSql(alterSql) }">{ alterSql.fileName } <span if="{ nowPrepared(alterSql.fileName) }">(now prepared)</span></a>
+          <div if="{ alterSql.show }" class="ui message message-area">
             <!-- SQLの改行やインデントが反映されるようにpreタグを利用
               <pre><code>...</code></pre> は一行で記述しないと余分な改行やインデントが入ってしまうので注意
               cssのwhite-spaceを利用するとSQLの先頭に記述したインデントが効かなくなるのでこうするしかなさそう...
               #thinking: <pre><code>...</code></pre>を含めて共通のコンポーネントにした方が良い by hakiba
             -->
-            <pre><code><raw content="{ alterItem.content }"></raw></code></pre>
+            <pre><code><raw content="{ alterSql.content }"></raw></code></pre>
           </div>
         </div>
       </div>
@@ -53,33 +53,42 @@
       <div class="ui list">
         <div class="item">
           <!-- AlterDDLディレクトリを開くボタン -->
-          <button class="ui button" onclick="{ openAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+          <button class="ui button" onclick="{ onclickOpenAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
         </div>
 
         <div class="item altercheck-execution">
           <!-- AlterCheckを実行するボタン -->
-          <button class="ui red button" onclick="{ alterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
+          <button class="ui red button" onclick="{ onclickAlterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
           <!-- AlterCheckの結果HTMLを表示するボタン -->
-          <button class="ui button blue" if="{ state.client.hasAlterCheckResultHtml }" onclick="{ openAlterCheckResultHTML }"><i class="linkify icon"></i>Open Check Result HTML</button>
+          <button class="ui button blue" if="{ state.hasAlterCheckResultHtml }" onclick="{ onclickOpenAlterCheckResultHTML }"><i
+            class="linkify icon"></i>Open Check Result HTML
+          </button>
         </div>
       </div>
       <!-- 最新のAlterCheckの結果ログを出力する。実行ログがなければ何も表示しない -->
-      <div class="latest-result">
-        <latest-result project-name="{ props.projectName }" task="alterCheck"></latest-result>
+      <div class="latest-result" if="{ state.latestResult }">
+        <latest-result
+          project-name="{ props.projectName }"
+          task="alterCheck"
+          show-header="{ false }"
+          content="{ state.latestResult.content }"
+          result-title="{ state.latestResult.title }"
+          result-message="{ state.latestResult.message }"
+        ></latest-result>
       </div>
     </section>
 
   </div>
 
   <!-- 実行時に表示されるモーダル -->
-  <su-modal modal="{ executeModal }" show="{ state.execStatus === 'Executing' }" class="large" ref="executeModal">
+  <su-modal show="{ state.modal.status === 'Executing' }" class="large">
     <div class="description">
       Executing...
     </div>
   </su-modal>
 
   <!-- 実行結果を表示するモーダル -->
-  <result-modal ref="resultModal" show="{ state.execStatus === 'Completed' }" message="{ state.resultMessage }"></result-modal>
+  <result-modal show="{ state.modal.status === 'Completed' }" message="{ state.modal.message }"></result-modal>
 
   <style>
     .latest-result {

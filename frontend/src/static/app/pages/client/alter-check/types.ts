@@ -1,10 +1,10 @@
-export type AlterFile = {
+export type AlterFileState = {
   fileName: string
   content: string
   show: boolean
 }
 
-export type AlterZip = {
+export type AlterZipState = {
   fileName: string
-  checkedFiles: AlterFile[]
+  checkedFiles: AlterFileState[]
 }

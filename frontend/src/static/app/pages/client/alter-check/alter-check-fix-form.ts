@@ -3,7 +3,7 @@ import { api } from '../../../api/api'
 
 interface Props {
   projectName: string
-  updateHandler(): void
+  onComplete(inputFileName?: string): void
 }
 
 interface AlterCheckFixForm extends IntroRiotComponent<Props, never> {
@@ -14,7 +14,7 @@ export default withIntroTypes<AlterCheckFixForm>({
   prepareAlterCheck() {
     api.prepareAlterSql(this.props.projectName).then(() => {
       api.openAlterDir(this.props.projectName).then(() => {
-        this.props.updateHandler()
+        this.props.onComplete()
       })
     })
   },

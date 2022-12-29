@@ -1,16 +1,15 @@
 <latest-result>
-  <div if="{ state.latestResult.loaded }">
-    <h3 if="{ state.latestResult.header.show }">{ state.latestResult.header.text }</h3>
-    <div class="ui { state.latestResult.success ? 'positive' : 'negative' } message">
-      <h4 class="latest-result-title">{ state.latestResult.success ? success.title : failure.title }</h4>
-      <p if="{ state.latestResult.success && success.message }">{ success.message }</p>
-      <p if="{ !state.latestResult.success && failure.message }">{ failure.message }</p>
-      <p if="{ !state.latestResult.success && failure.link && failure.link.message }" >
-        <a onclick="{ failure.link.clickAction }">{ failure.link.message }</a>
+  <div if="{ state.loaded }">
+    <h3 if="{ props.showHeader }">{ props.headerTitle }</h3>
+    <div class="ui { props.success ? 'positive' : 'negative' } message">
+      <h4 class="latest-result-title">{ props.resultTitle }</h4>
+      <p if="{ props.resultMessage }">{ props.resultMessage }</p>
+      <p if="{ props.linkTitle && props.onClickLink }" >
+        <a onclick="{ props.onClickLink }">{ props.linkTitle }</a>
       </p>
-      <a onclick="{ toggleLatestResult }">{ state.latestResult.show ? 'hide latest log' : 'show latest log' }</a>
-      <div if="{ state.latestResult.show }" class="ui message message-area">
-        <pre><code><raw content="{ state.latestResult.content }"></raw></code></pre>
+      <a onclick="{ toggleLatestResult }">{ state.showContent ? 'hide latest log' : 'show latest log' }</a>
+      <div if="{ state.showContent }" class="ui message message-area">
+        <pre><code><raw content="{ props.content }"></raw></code></pre>
       </div>
     </div>
   </div>
@@ -24,7 +23,7 @@
   </style>
 
   <script>
-    import LatestResult from './latest-result'
-    export default LatestResult
+    import latestResult from './latest-result'
+    export default latestResult
   </script>
 </latest-result>

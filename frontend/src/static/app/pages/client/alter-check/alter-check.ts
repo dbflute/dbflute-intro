@@ -1,30 +1,38 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
-import { api, DbfluteTask } from '../../../api/api'
+import { api } from '../../../api/api'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-sql.min'
 import 'prismjs/themes/prism.css'
-import { AlterFile } from './types'
+import { AlterFileState, AlterZipState } from './types'
 import AlterCheckChecked from './alter-check-checked.riot'
 import AlterCheckForm from './alter-check-form.riot'
 import Raw from '../../../components/common/raw.riot'
 import ResultModal from '../../../pages/client/result-modal.riot'
 import LatestResult from '../latest-result.riot'
 
-type ExecStatus = 'Nothing' | 'Executing' | 'Completed'
+type AlterDirState = {
+  checkedFiles: AlterFileState[]
+}
+
+type AlterLatestResultState = {
+  title: string
+  message?: string
+  content?: string
+}
+
+type AlterModalState = {
+  status: 'None' | 'Executing' | 'Completed'
+  message?: string
+}
 
 interface State {
-  client: any
-  inputFileName: string
-  editingSqls: AlterFile[]
-  checkedZip: {
-    fileName: string
-    checkedFiles: AlterFile[]
-  }
-  unreleasedDir: {
-    checkedFiles: AlterFile[]
-  }
-  execStatus: ExecStatus
-  resultMessage: string
+  hasAlterCheckResultHtml: boolean
+  inputFileName?: string
+  editingSqls: AlterFileState[]
+  checkedZip: AlterZipState
+  unreleasedDir: AlterDirState
+  latestResult?: AlterLatestResultState
+  modal: AlterModalState
 }
 
 interface Props {
@@ -32,37 +40,28 @@ interface Props {
 }
 
 interface AlterCheck extends IntroRiotComponent<Props, State> {
-  projectName: string
-
-  // api response
-  alter: any
-
-  // view params
-  ngMarkFile: undefined
-  preparedFileName: string
-  validated: boolean
-
+  // ===================================================================================
+  //                                                                           UI Helper
+  //                                                                           =========
   isEditing(): boolean
-
-  prepareUnreleased(): void
-
-  prepareChecked(): void
-
-  prepareLatestResult(): void
-
-  updateBegin(): void
-
-  updateContents(): void
-
-  alterItemClick(alterItem: AlterFile): void
-
   nowPrepared(fileName: string): void
 
-  openAlterDir(): void
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  onclickAlterSql(alterFile: AlterFileState): void
+  onCompletePrepareAlterSql(inputFileName?: string): void
+  onclickOpenAlterDir(): void
+  onclickOpenAlterCheckResultHTML(): void
+  onclickAlterCheckTask(): void
 
-  openAlterCheckResultHTML(): void
-
-  alterCheckTask(): void
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
+  updateContents(additionalState?: Partial<State>): void
+  prepareUnreleased(unreleased: AlterSQLResultUnreleasedDirPart | undefined): AlterDirState
+  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDirState): AlterZipState
+  prepareLatestResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState>
 }
 
 export default withIntroTypes<AlterCheck>({
@@ -74,8 +73,7 @@ export default withIntroTypes<AlterCheck>({
     LatestResult,
   },
   state: {
-    client: {},
-    inputFileName: '',
+    hasAlterCheckResultHtml: false,
     editingSqls: [],
     checkedZip: {
       fileName: '',
@@ -84,22 +82,10 @@ export default withIntroTypes<AlterCheck>({
     unreleasedDir: {
       checkedFiles: [],
     },
-    execStatus: 'Nothing',
-    resultMessage: '',
+    modal: {
+      status: 'None',
+    },
   },
-
-  // ===================================================================================
-  //                                                                          Definition
-  //                                                                          ==========
-  projectName: '',
-
-  // api response
-  alter: {},
-
-  // view params
-  ngMarkFile: undefined,
-  preparedFileName: '',
-  validated: false,
 
   // ===================================================================================
   //                                                                           Lifecycle
@@ -119,163 +105,176 @@ export default withIntroTypes<AlterCheck>({
     return this.state.editingSqls !== undefined && this.state.editingSqls.length > 0
   },
   /**
-   * 未リリースチェック済みのAlterDDLをタグにセットします（sqlファイルのみ）
-   * sqlファイルはシンタックスハイライトされた状態でセットします
-   */
-  prepareUnreleased() {
-    if (!this.alter.unreleasedDir) {
-      return
-    }
-    this.state.unreleasedDir = {
-      checkedFiles: [],
-    }
-    this.state.unreleasedDir.checkedFiles = []
-    this.alter.unreleasedDir.checkedFiles.forEach((file: any) => {
-      if (file.fileName.indexOf('.sql') === -1) {
-        return
-      }
-      this.state.unreleasedDir.checkedFiles.push({
-        fileName: file.fileName,
-        content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
-        show: false,
-      })
-    })
-  },
-  /**
-   * チェック済みのAlterDDL zipをタグにセットします
-   * sqlファイルはシンタックスハイライトされた状態でセットします
-   */
-  prepareChecked() {
-    if (!this.alter.checkedZip) {
-      return
-    }
-    const unreleasedFileNames = this.state.unreleasedDir.checkedFiles.map((checkedFile) => checkedFile.fileName.replace('READONLY_', ''))
-    this.state.checkedZip = {
-      fileName: this.alter.checkedZip.fileName,
-      checkedFiles: [],
-    }
-    this.alter.checkedZip.checkedFiles.forEach((file: any) => {
-      // for hybrid state 0.2.0, 0.2.1
-      if (unreleasedFileNames.includes(file.fileName)) {
-        return
-      }
-      this.state.checkedZip.checkedFiles.push({
-        fileName: file.fileName,
-        // sqlファイル表示時に余白を用意するために改行(\n)を予め入れておく（多分そういう目的）
-        content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
-        show: false,
-      })
-    })
-  },
-  prepareLatestResult() {
-    // this.latestResult = riot.mount('latest-result', { projectName: this.opts.projectName, task: 'alterCheck' })[0]
-    // if (!this.latestResult) {
-    //   return
-    // }
-    // this.latestResult.latestResult.header.show = false
-    // // NGマークファイルに合わせて失敗時のタイトルとメッセージを用意
-    // if (this.ngMarkFile.ngMark ==='previous-NG') {
-    //   this.latestResult.failure = {
-    //     title: 'Found problems on Previous DDL.',
-    //     message: 'Retry save previous.',
-    //   }
-    // } else if (this.ngMarkFile.ngMark ==='alter-NG') {
-    //   this.latestResult.failure = {
-    //     title: 'Found problems on Alter DDL.',
-    //     message: this.ngMarkFile.content.split('\n')[0],
-    //   }
-    // } else if (this.ngMarkFile.ngMark ==='next-NG') {
-    //   this.latestResult.failure = {
-    //     title: 'Found problems on Next DDL.',
-    //     message: 'Fix your DDL and data grammatically.',
-    //   }
-    // }
-    // // 成功時のタイトルを用意
-    // this.latestResult.success = {
-    //   title: 'AlterCheck Successfully finished',
-    // }
-    // // latest-resultタグの更新処理を呼び出し、結果を反映する
-    // this.latestResult.updateLatestResult()
-  },
-  updateBegin() {
-    this.state.inputFileName = this.inputElementBy('[ref="altercheckform"] [ref="beginform"] [ref="alterNameInput"]').value
-    this.updateContents()
-  },
-  updateContents() {
-    api.alter(this.props.projectName).then((data) => {
-      this.alter = data
-      api.clientPropbase(this.props.projectName).then((data) => {
-        this.state.client = data
-        this.ngMarkFile = this.alter.ngMarkFile
-        this.alter.editingFiles.forEach((file: any) => {
-          this.state.editingSqls.push({
-            fileName: file.fileName,
-            content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
-            show: false,
-          })
-        })
-        this.prepareUnreleased()
-        this.prepareChecked()
-        this.prepareLatestResult()
-        this.update()
-      })
-    })
-  },
-  /**
-   * AlterDDLの表示・非表示を切り替えます
-   */
-  alterItemClick(alterItem: AlterFile) {
-    alterItem.show = !alterItem.show
-    this.update({
-      editingSqls: this.state.editingSqls,
-    })
-    return false
-  },
-  /**
    * 画面から作成直後のファイルであるかチェックします
    * リロードするとこのチェックはfalseになります
    * @param fileName DDLファイル名
    * @return {boolean} true:作成直後である,false:作成直後でない
    */
   nowPrepared(fileName: string) {
-    const inputFileName = this.state.inputFileName
-    const alterFileName = 'alter-schema-' + inputFileName + '.sql'
+    return this.state.inputFileName === fileName
+  },
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  /**
+   * AlterSqlの用意が完了した際に呼ばれます
+   * 画面から作成直後のファイルであるかをチェックするためにファイル名を保存し、画面全体を更新します
+   */
+  onCompletePrepareAlterSql(inputFileName?: string) {
+    this.updateContents({ inputFileName })
+  },
+  /**
+   * AlterDDLの表示・非表示を切り替えます
+   */
+  onclickAlterSql(alterFile: AlterFileState) {
+    alterFile.show = !alterFile.show
     this.update()
-    return alterFileName === fileName
   },
   /**
    * OSごとのファイルマネージャーでalterディレクトリを開きます
    */
-  openAlterDir() {
+  onclickOpenAlterDir() {
     api.openAlterDir(this.props.projectName)
   },
   /**
    * AlterCheckの実行結果htmlを表示します
    */
-  openAlterCheckResultHTML() {
+  onclickOpenAlterCheckResultHTML() {
     window.open('api/document/' + this.props.projectName + '/altercheckresulthtml/')
   },
   /**
    * AlterCheckをAPI経由で実行します
    * confirmを許可した場合のみ実行されます
    */
-  alterCheckTask() {
+  onclickAlterCheckTask() {
     this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
-      this.update({
-        execStatus: 'Executing',
-      })
-      DbfluteTask.task('alterCheck', this.props.projectName, (message: string) => {
-        this.update({
-          execStatus: 'Completed',
-          resultMessage: message,
+      this.update({ modal: { status: 'Executing' } })
+      api
+        .task(this.props.projectName, 'alterCheck')
+        .then((data) => {
+          const message = data.success ? 'success' : 'failure'
+          this.update({ modal: { status: 'Completed', message } })
         })
-      }).finally(() => {
-        // 失敗した際の情報も反映するため、APIの実行結果に問わずタグの各値を更新
-        // this.updateContents()
+        .finally(() => {
+          // 失敗した際の情報も反映するため、APIの実行結果に問わずタグの各値を更新
+          this.updateContents({ modal: { status: 'None' } })
+        })
+    })
+  },
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
+  /**
+   * 画面全体を更新します
+   * @param additionalState 一緒に更新したいstate. 指定しなくてもOK
+   */
+  updateContents(additionalState?: Partial<State>) {
+    api.alter(this.props.projectName).then((result) => {
+      api.clientPropbase(this.props.projectName).then(async (client) => {
+        const editingSqls = result.editingFiles.map((file) => ({
+          fileName: file.fileName,
+          content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
+          show: false,
+        }))
+        const unreleasedDir = this.prepareUnreleased(result.unreleasedDir)
+        const checkedZip = this.prepareChecked(result.checkedZip, unreleasedDir)
+        const latestResult = await this.prepareLatestResult(result.ngMarkFile)
         this.update({
-          execStatus: 'Nothing',
+          hasAlterCheckResultHtml: client.hasAlterCheckResultHtml,
+          editingSqls,
+          unreleasedDir,
+          checkedZip,
+          latestResult,
+          ...additionalState,
         })
       })
+    })
+  },
+  /**
+   * 未リリースチェック済みのAlterDDLを用意します（sqlファイルのみ）
+   * sqlファイルはシンタックスハイライトされた状態でセットします
+   * @param unreleasedDir APIで取得した未リリースディレクトリ情報 (Nullable)
+   * @return {AlterDirState} 未リリースAlterディレクトリのState情報
+   */
+  prepareUnreleased(unreleasedDir: AlterSQLResultUnreleasedDirPart | undefined): AlterDirState {
+    if (!unreleasedDir) {
+      return { checkedFiles: [] }
+    }
+    return {
+      checkedFiles: unreleasedDir.checkedFiles
+        .filter((file) => file.fileName.includes('.sql'))
+        .map((file) => ({
+          fileName: file.fileName,
+          content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
+          show: false,
+        })),
+    }
+  },
+  /**
+   * チェック済みのAlterDDL zipを用意します
+   * sqlファイルはシンタックスハイライトされた状態でセットします
+   * @param checkedZip APIで取得したチェック済みのAlterDDL zip情報 (Nullable)
+   * @param unreleasedDir 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
+   * @return {AlterDirState} 未リリースAlterディレクトリのState情報
+   */
+  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDirState): AlterZipState {
+    if (!checkedZip) {
+      return {
+        fileName: '',
+        checkedFiles: [],
+      }
+    }
+    const excludeFileNames = unreleasedDir.checkedFiles.map((file) => file.fileName.replace('READONLY_', ''))
+    return {
+      fileName: checkedZip.fileName,
+      checkedFiles: checkedZip.checkedFiles
+        // for hybrid state 0.2.0, 0.2.1
+        .filter((file) => !excludeFileNames.includes(file.fileName))
+        .map((file) => ({
+          fileName: file.fileName,
+          // sqlファイル表示時に余白を用意するために改行(\n)を予め入れておく（多分そういう目的）
+          content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
+          show: false,
+        })),
+    }
+  },
+  /**
+   * 最新の実行結果を取得します
+   * @param ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
+   */
+  async prepareLatestResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState> {
+    return api.latestResult(this.props.projectName, 'alterCheck').then((res) => {
+      const success = res.fileName.includes('success')
+      const content = res.content
+      if (success) {
+        return {
+          title: 'AlterCheck Successfully finished',
+          content,
+        }
+      } else if (!ngMarkFile) {
+        return {
+          title: 'Result: Failure',
+          content,
+        }
+      } else if (ngMarkFile.ngMark === 'previous-NG') {
+        return {
+          title: 'Found problems on Previous DDL.',
+          message: 'Retry save previous.',
+          content,
+        }
+      } else if (ngMarkFile.ngMark === 'alter-NG') {
+        return {
+          title: 'Found problems on Alter DDL.',
+          message: ngMarkFile.content.split('\n')[0],
+          content,
+        }
+      } else if (ngMarkFile.ngMark === 'next-NG') {
+        return {
+          title: 'Found problems on Next DDL.',
+          message: 'Fix your DDL and data grammatically.',
+          content,
+        }
+      }
     })
   },
 })

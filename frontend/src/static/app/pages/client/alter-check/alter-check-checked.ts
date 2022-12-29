@@ -1,10 +1,10 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import AlterCheckCheckedFiles from './alter-check-checked-files.riot'
-import { AlterZip } from './types'
+import { AlterZipState } from './types'
 
 interface AlterCheckCheckedProps {
-  checkedzip: AlterZip
-  unreleaseddir: AlterZip
+  checkedzip: AlterZipState
+  unreleaseddir: AlterZipState
 }
 
 interface AlterCheckChecked extends IntroRiotComponent<AlterCheckCheckedProps, never> {
