@@ -1,14 +1,13 @@
 import i18n from '../../components/common/i18n.riot'
 import { api } from '../../api/api'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
-import { DropdownItem } from '../../components/dropdown/dropdown'
+import { DropdownItem, defaultDropDownItem } from '../../components/dropdown/dropdown'
 import { appRoutes } from '../../app-router'
 import { readFile } from '../../shared/io-utils'
 
 interface State {
   jdbcDriver: { fileName: string; data: string }
   needsJdbcDriver: boolean
-  oRMapperOptionsFlg: boolean
 }
 
 interface Create extends IntroRiotComponent<never, State> {
@@ -52,7 +51,6 @@ export default withIntroTypes<Create>({
   state: {
     jdbcDriver: undefined,
     needsJdbcDriver: false,
-    oRMapperOptionsFlg: true,
   },
   // ===================================================================================
   //                                                                          Definition
@@ -100,7 +98,7 @@ export default withIntroTypes<Create>({
     this.inputElementBy('[ref=schema]').value = database.defaultSchema
     this.update({
       // switch showing JDBCDriver select form
-      needsJdbcDriver: true,
+      needsJdbcDriver: !database.embeddedJar,
       jdbcDriver: undefined,
     })
   },
@@ -158,9 +156,12 @@ export default withIntroTypes<Create>({
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
     return {
       databaseMap: classifications.targetDatabaseMap,
-      targetDatabaseItems: Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
-        return { value: key, label: value.databaseName, default: false }
-      }),
+      targetDatabaseItems: [
+        ...Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
+          return { value: key, label: value.databaseName, default: false }
+        }),
+        defaultDropDownItem,
+      ],
       targetLanguageItems: Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
         return { value: key, label: value, default: false }
       }),
