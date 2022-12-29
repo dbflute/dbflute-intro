@@ -18,7 +18,7 @@
           </div>
           <div class="required field">
             <label is="i18n">LABEL_databaseCode</label>
-            <su-dropdown ref="databaseCode" items={ targetDatabaseItems } onchange="{ onchangeDatabase }"></su-dropdown>
+            <su-dropdown ref="databaseCode" items={ targetDatabaseItems } value={ defaultDatabaseCode } onchange="{ onchangeDatabase }"></su-dropdown>
           </div>
           <div class="required field">
             <label is="i18n">LABEL_jdbcDriverFqcn</label>
@@ -32,11 +32,11 @@
         <div class="column">
           <div class="required field">
             <label is="i18n">LABEL_languageCode</label>
-            <su-dropdown ref="languageCode" items="{ targetLanguageItems }"></su-dropdown>
+            <su-dropdown ref="languageCode" items="{ targetLanguageItems }" value={ defaultLanguageCode }></su-dropdown>
           </div>
           <div class="required field">
             <label is="i18n">LABEL_containerCode</label>
-            <su-dropdown ref="containerCode" items="{ targetContainerItems }"></su-dropdown>
+            <su-dropdown ref="containerCode" items="{ targetContainerItems }" value={ defaultContainerCode }></su-dropdown>
           </div>
           <div class="required field">
             <label is="i18n">LABEL_packageBase</label>
@@ -48,7 +48,7 @@
         <div class="column">
           <div class="required field">
             <label is="i18n">LABEL_url</label>
-            <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb"/>
+            <input type="text" ref="url" placeholder="jdbc:mysql://localhost:3306/maihamadb" value={ defaultJdbcUrl }/>
           </div>
           <div class="field">
             <label is="i18n">LABEL_schema</label>
