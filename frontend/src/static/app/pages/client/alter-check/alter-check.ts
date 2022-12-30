@@ -7,18 +7,14 @@ import { AlterDir, AlterFile, AlterZip } from './types'
 import AlterCheckChecked from './alter-check-checked.riot'
 import AlterCheckForm from './alter-check-form.riot'
 import Raw from '../../../components/common/raw.riot'
-import ResultModal from '../../../pages/client/result-modal.riot'
+import TaskExecuteModal from '../task-execute-modal.riot'
 import LatestResult from '../latest-result.riot'
+import { TaskExecuteStatus } from '../task-execute-modal'
 
 type AlterLatestResultState = {
   title: string
   message?: string
   content?: string
-}
-
-type AlterModalState = {
-  status: 'None' | 'Executing' | 'Completed'
-  message?: string
 }
 
 interface State {
@@ -28,7 +24,8 @@ interface State {
   checkedZip: AlterZip
   unreleasedDir: AlterDir
   latestResult?: AlterLatestResultState
-  modal: AlterModalState
+  executeStatus: TaskExecuteStatus
+  executeResultMessage?: string
 }
 
 interface Props {
@@ -57,7 +54,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   updateContents(additionalState?: Partial<State>): void
   prepareUnreleased(unreleased: AlterSQLResultUnreleasedDirPart | undefined): AlterDir
   prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
-  prepareLatestResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState>
+  prepareLatestFailureResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState | undefined>
 }
 
 export default withIntroTypes<AlterCheck>({
@@ -65,7 +62,7 @@ export default withIntroTypes<AlterCheck>({
     AlterCheckChecked,
     AlterCheckForm,
     Raw,
-    ResultModal,
+    TaskExecuteModal,
     LatestResult,
   },
   state: {
@@ -78,9 +75,7 @@ export default withIntroTypes<AlterCheck>({
     unreleasedDir: {
       checkedFiles: [],
     },
-    modal: {
-      status: 'None',
-    },
+    executeStatus: 'None',
   },
 
   // ===================================================================================
@@ -144,16 +139,16 @@ export default withIntroTypes<AlterCheck>({
    */
   onclickAlterCheckTask() {
     this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
-      this.update({ modal: { status: 'Executing' } })
+      this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
       api
         .task(this.props.projectName, 'alterCheck')
         .then((data) => {
-          const message = data.success ? 'success' : 'failure'
-          this.update({ modal: { status: 'Completed', message } })
+          const executeResultMessage = data.success ? 'Success' : 'Failure'
+          this.updateContents({ executeStatus: 'Completed', executeResultMessage })
         })
-        .finally(() => {
-          // 失敗した際の情報も反映するため、APIの実行結果に問わずタグの各値を更新
-          this.updateContents({ modal: { status: 'None' } })
+        .catch(() => {
+          // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
+          this.updateContents({ executeStatus: 'None' })
         })
     })
   },
@@ -174,7 +169,7 @@ export default withIntroTypes<AlterCheck>({
         }))
         const unreleasedDir = this.prepareUnreleased(result.unreleasedDir)
         const checkedZip = this.prepareChecked(result.checkedZip, unreleasedDir)
-        const latestResult = await this.prepareLatestResult(result.ngMarkFile)
+        const latestResult = await this.prepareLatestFailureResult(result.ngMarkFile)
         this.update({
           hasAlterCheckResultHtml: client.hasAlterCheckResultHtml,
           editingSqls,
@@ -235,20 +230,19 @@ export default withIntroTypes<AlterCheck>({
     }
   },
   /**
-   * 最新の実行結果を取得します
+   * 最新の実行失敗結果を取得します
+   * Step2（AlterCheck実行時）に最新の別のAlterCheckの成功結果を表示する必要がないため、現在実行中のAlterCheckの失敗結果を表示するようにしています
    * @param {AlterSQLResultNgMarkFilePart | undefined} ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
-   * @return {Promise<AlterLatestResultState>} 最新の実行結果
+   * @return {Promise<AlterLatestResultState>} 最新の実行失敗結果.最新が成功している場合はnull (Nullable)
    */
-  async prepareLatestResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState> {
+  async prepareLatestFailureResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState | undefined> {
     return api.latestResult(this.props.projectName, 'alterCheck').then((res) => {
       const success = res.fileName.includes('success')
-      const content = res.content
       if (success) {
-        return {
-          title: 'AlterCheck Successfully finished',
-          content,
-        }
-      } else if (!ngMarkFile) {
+        return
+      }
+      const content = res.content
+      if (!ngMarkFile) {
         return {
           title: 'Result: Failure',
           content,

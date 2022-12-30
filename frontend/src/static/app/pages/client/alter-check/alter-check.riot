@@ -28,7 +28,7 @@
       <!-- 未リリースの確認済みDDLの一覧 -->
       <alter-check-checked checked-zip="{ state.checkedZip }" unreleased-dir="{ state.unreleasedDir }"/>
       <!-- 新しいDDLファイルを作成するためのフォーム -->
-      <alter-check-form ref="altercheckform" project-name="{ props.projectName }" on-complete="{ onCompletePrepareAlterSql }"/>
+      <alter-check-form project-name="{ props.projectName }" on-complete="{ onCompletePrepareAlterSql }"/>
     </section>
 
     <!-- Step 2: AlterCheckの実行 -->
@@ -70,6 +70,7 @@
         <latest-result
           project-name="{ props.projectName }"
           task="alterCheck"
+          success="{ false }"
           show-header="{ false }"
           content="{ state.latestResult.content }"
           result-title="{ state.latestResult.title }"
@@ -81,14 +82,7 @@
   </div>
 
   <!-- 実行時に表示されるモーダル -->
-  <su-modal show="{ state.modal.status === 'Executing' }" class="large">
-    <div class="description">
-      Executing...
-    </div>
-  </su-modal>
-
-  <!-- 実行結果を表示するモーダル -->
-  <result-modal show="{ state.modal.status === 'Completed' }" message="{ state.modal.message }"></result-modal>
+  <task-execute-modal status="{ state.executeStatus }" message="{ state.executeResultMessage }"></task-execute-modal>
 
   <style>
     .latest-result {

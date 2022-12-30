@@ -4,6 +4,7 @@ import Raw from '../../components/common/raw.riot'
 interface Props {
   projectName: string
   task: string
+  success: boolean
   showHeader: boolean
   headerTitle?: string
   resultTitle: string
@@ -30,12 +31,10 @@ export default withIntroTypes<LatestResult>({
     loaded: false,
     showContent: false,
   },
-
   onMounted() {
     this.state.loaded = true
     this.update()
   },
-
   toggleLatestResult() {
     this.state.showContent = !this.state.showContent
     this.update()
