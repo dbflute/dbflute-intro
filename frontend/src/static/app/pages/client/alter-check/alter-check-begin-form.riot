@@ -8,7 +8,7 @@
   <h4>Begin New AlterCheck!!</h4>
   <form class="ui form">
     <div class="fields">
-      <div class="inline field error{!state.invalidFileName}">
+      <div class="inline field { inputClasses() }">
         <!-- alter-schema-"チケット名".sql という感じでチケット名を入力するためのinput -->
         <label>alter-schema-</label>
         <input type="text" ref="alterNameInput" placeholder="input ticket name">

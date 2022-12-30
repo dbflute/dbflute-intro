@@ -12,6 +12,7 @@ interface State {
 interface AlterCheckBeginForm extends IntroRiotComponent<Props, State> {
   createAlterSql(): void
   validate(ticketName: string): boolean
+  inputClasses(): string
 }
 
 export default withIntroTypes<AlterCheckBeginForm>({
@@ -50,7 +51,15 @@ export default withIntroTypes<AlterCheckBeginForm>({
    */
   validate(ticketName: string): boolean {
     // 空文字は許さない
-    this.state.invalidFileName = !ticketName || ticketName === ''
-    return this.state.invalidFileName
+    const invalidFileName = !ticketName || ticketName.trim() === ''
+    this.update({ invalidFileName })
+    return invalidFileName
+  },
+  /**
+   * inputタグのstyle用classを定義します
+   * @return {string} class文字列
+   */
+  inputClasses(): string {
+    return this.classNames({ error: this.state.invalidFileName })
   },
 })
