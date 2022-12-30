@@ -6,9 +6,9 @@
    o prism.jsを使ってSQLハイライトしたhtml要素が利用元から渡されてくる
   -->
   <div class="ui list">
-    <div class="item" each="{ file in props.checkedfiles }">
-      <a onclick="{ clickFileName.bind(this, file) }">{ file.fileName }</a>
-      <div show="{ file.show }" class="ui message message-area">
+    <div class="item" each="{ file in props.checkedFiles }">
+      <a onclick="{ () => clickFileName(file) }">{ file.fileName }</a>
+      <div if="{ file.show }" class="ui message message-area">
         <!-- SQLの改行やインデントが反映されるようにpreタグを利用
           <pre><code>...</code></pre> は一行で記述しないと余分な改行やインデントが入ってしまうので注意
           cssのwhite-spaceを利用するとSQLの先頭に記述したインデントが効かなくなるのでこうするしかなさそう...

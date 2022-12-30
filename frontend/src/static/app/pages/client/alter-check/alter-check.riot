@@ -26,7 +26,7 @@
     <section if="{ !isEditing() }">
       <h3>Step1. Prepare alter sql</h3>
       <!-- 未リリースの確認済みDDLの一覧 -->
-      <alter-check-checked checkedzip="{ state.checkedZip }" unreleaseddir="{ state.unreleasedDir }"/>
+      <alter-check-checked checked-zip="{ state.checkedZip }" unreleased-dir="{ state.unreleasedDir }"/>
       <!-- 新しいDDLファイルを作成するためのフォーム -->
       <alter-check-form ref="altercheckform" project-name="{ props.projectName }" on-complete="{ onCompletePrepareAlterSql }"/>
     </section>

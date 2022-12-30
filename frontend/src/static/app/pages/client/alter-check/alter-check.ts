@@ -3,16 +3,12 @@ import { api } from '../../../api/api'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-sql.min'
 import 'prismjs/themes/prism.css'
-import { AlterFileState, AlterZipState } from './types'
+import { AlterDir, AlterFile, AlterZip } from './types'
 import AlterCheckChecked from './alter-check-checked.riot'
 import AlterCheckForm from './alter-check-form.riot'
 import Raw from '../../../components/common/raw.riot'
 import ResultModal from '../../../pages/client/result-modal.riot'
 import LatestResult from '../latest-result.riot'
-
-type AlterDirState = {
-  checkedFiles: AlterFileState[]
-}
 
 type AlterLatestResultState = {
   title: string
@@ -28,9 +24,9 @@ type AlterModalState = {
 interface State {
   hasAlterCheckResultHtml: boolean
   inputFileName?: string
-  editingSqls: AlterFileState[]
-  checkedZip: AlterZipState
-  unreleasedDir: AlterDirState
+  editingSqls: AlterFile[]
+  checkedZip: AlterZip
+  unreleasedDir: AlterDir
   latestResult?: AlterLatestResultState
   modal: AlterModalState
 }
@@ -49,7 +45,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  onclickAlterSql(alterFile: AlterFileState): void
+  onclickAlterSql(alterFile: AlterFile): void
   onCompletePrepareAlterSql(inputFileName?: string): void
   onclickOpenAlterDir(): void
   onclickOpenAlterCheckResultHTML(): void
@@ -59,8 +55,8 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   updateContents(additionalState?: Partial<State>): void
-  prepareUnreleased(unreleased: AlterSQLResultUnreleasedDirPart | undefined): AlterDirState
-  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDirState): AlterZipState
+  prepareUnreleased(unreleased: AlterSQLResultUnreleasedDirPart | undefined): AlterDir
+  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
   prepareLatestResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState>
 }
 
@@ -126,7 +122,7 @@ export default withIntroTypes<AlterCheck>({
   /**
    * AlterDDLの表示・非表示を切り替えます
    */
-  onclickAlterSql(alterFile: AlterFileState) {
+  onclickAlterSql(alterFile: AlterFile) {
     alterFile.show = !alterFile.show
     this.update()
   },
@@ -193,10 +189,10 @@ export default withIntroTypes<AlterCheck>({
   /**
    * 未リリースチェック済みのAlterDDLを用意します（sqlファイルのみ）
    * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param unreleasedDir APIで取得した未リリースディレクトリ情報 (Nullable)
-   * @return {AlterDirState} 未リリースAlterディレクトリのState情報
+   * @param {AlterSQLResultUnreleasedDirPart | undefined} unreleasedDir APIで取得した未リリースディレクトリ情報 (Nullable)
+   * @return {AlterDir} 未リリースAlterディレクトリのState情報
    */
-  prepareUnreleased(unreleasedDir: AlterSQLResultUnreleasedDirPart | undefined): AlterDirState {
+  prepareUnreleased(unreleasedDir: AlterSQLResultUnreleasedDirPart | undefined): AlterDir {
     if (!unreleasedDir) {
       return { checkedFiles: [] }
     }
@@ -213,11 +209,11 @@ export default withIntroTypes<AlterCheck>({
   /**
    * チェック済みのAlterDDL zipを用意します
    * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param checkedZip APIで取得したチェック済みのAlterDDL zip情報 (Nullable)
-   * @param unreleasedDir 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
-   * @return {AlterDirState} 未リリースAlterディレクトリのState情報
+   * @param {AlterSQLResultCheckedZipPart | undefined} checkedZip APIで取得したチェック済みのAlterDDL zip情報 (Nullable)
+   * @param {AlterDir} unreleasedDir 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
+   * @return {AlterZip} 未リリースAlterディレクトリのState情報
    */
-  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDirState): AlterZipState {
+  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip {
     if (!checkedZip) {
       return {
         fileName: '',
@@ -240,7 +236,8 @@ export default withIntroTypes<AlterCheck>({
   },
   /**
    * 最新の実行結果を取得します
-   * @param ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
+   * @param {AlterSQLResultNgMarkFilePart | undefined} ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
+   * @return {Promise<AlterLatestResultState>} 最新の実行結果
    */
   async prepareLatestResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState> {
     return api.latestResult(this.props.projectName, 'alterCheck').then((res) => {

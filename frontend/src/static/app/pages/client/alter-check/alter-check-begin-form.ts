@@ -20,14 +20,6 @@ export default withIntroTypes<AlterCheckBeginForm>({
     invalidFileName: false,
   },
   /**
-   * マウント前に実行される処理
-   */
-  onMounted() {
-    this.state = {
-      invalidFileName: false,
-    }
-  },
-  /**
    * AlterDDLファイルを作成します
    */
   createAlterSql() {
