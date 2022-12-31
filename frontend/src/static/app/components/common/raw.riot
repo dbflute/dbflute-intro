@@ -4,6 +4,7 @@
   ルートのDOMノードに外から渡されたコンテンツをhtmlとしてセットする
   -->
   <script>
+    // わざわざtsファイルを作成するほどではなかったのでriotファイル内に直接定義
     export default {
       onMounted() {
         this.root.innerHTML = this.props.content
