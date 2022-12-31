@@ -17,6 +17,10 @@ type AlterLatestResultState = {
   content?: string
 }
 
+interface Props {
+  projectName: string
+}
+
 interface State {
   hasAlterCheckResultHtml: boolean
   inputFileName?: string
@@ -26,10 +30,6 @@ interface State {
   latestResult?: AlterLatestResultState
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
-}
-
-interface Props {
-  projectName: string
 }
 
 interface AlterCheck extends IntroRiotComponent<Props, State> {
