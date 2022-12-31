@@ -18,17 +18,26 @@ type AlterLatestResultState = {
 }
 
 interface Props {
+  /** プロジェクト名 */
   projectName: string
 }
 
 interface State {
+  /** AlterCheckの結果HTMLが存在するか */
   hasAlterCheckResultHtml: boolean
+  /** Step1（AlterCheckの準備）で入力されたファイル名 */
   inputFileName?: string
+  /** AlterCheck用SQLファイル */
   editingSqls: AlterFile[]
+  /** チェック済みのAlterDDL zip */
   checkedZip: AlterZip
+  /** 未リリースチェック済みのAlterDDL */
   unreleasedDir: AlterDir
+  /** 最新のタスク実行結果 */
   latestResult?: AlterLatestResultState
+  /** タスク実行ステータス */
   executeStatus: TaskExecuteStatus
+  /** タスク実行結果メッセージ */
   executeResultMessage?: string
 }
 

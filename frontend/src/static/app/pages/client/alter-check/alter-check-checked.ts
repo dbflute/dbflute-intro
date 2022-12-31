@@ -3,7 +3,9 @@ import AlterCheckCheckedFiles from './alter-check-checked-files.riot'
 import { AlterDir, AlterZip } from './types'
 
 interface AlterCheckCheckedProps {
+  /** チェック済みのAlterDDL zip */
   checkedZip: AlterZip
+  /** 未リリースチェック済みのAlterDDL */
   unreleasedDir: AlterDir
 }
 

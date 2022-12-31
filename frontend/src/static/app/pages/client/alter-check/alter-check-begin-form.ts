@@ -2,10 +2,13 @@ import { api } from '../../../api/api'
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 
 interface Props {
+  /** プロジェクト名 */
   projectName: string
-  onComplete(inputFileName?: string): void
+  /** AlterDDL作成完了後の処理 */
+  onCompleteCreate(inputFileName?: string): void
 }
 interface State {
+  /** 入力されたファイル名が不正であるか */
   invalidFileName: boolean
 }
 
@@ -32,7 +35,7 @@ export default withIntroTypes<AlterCheckBeginForm>({
       const alterFileName = 'alter-schema-' + ticketName + '.sql'
       api.createAlterSql(this.props.projectName, alterFileName).then(() => {
         // 呼び元から渡された後続処理を実行
-        this.props.onComplete(alterFileName)
+        this.props.onCompleteCreate(alterFileName)
       })
     })
   },

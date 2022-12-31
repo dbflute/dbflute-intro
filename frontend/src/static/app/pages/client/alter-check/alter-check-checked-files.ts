@@ -4,6 +4,7 @@ import Raw from '../../../components/common/raw.riot'
 import { AlterFile } from './types'
 
 interface Props {
+  /** チェック済みのAlterDDL */
   checkedFiles: AlterFile[]
 }
 
