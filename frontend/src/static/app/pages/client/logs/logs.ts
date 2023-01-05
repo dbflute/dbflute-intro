@@ -4,7 +4,7 @@ import { api } from '../../../api/api'
 interface Props {
   projectName: string
 }
-interface States {
+interface State {
   // label:fileName, value:ログの中身
   logDropDownItems: Array<{
     label: string
@@ -12,7 +12,7 @@ interface States {
   }>
 }
 
-interface Log extends IntroRiotComponent<Props, States> {
+interface Log extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
