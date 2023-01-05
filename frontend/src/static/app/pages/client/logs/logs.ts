@@ -14,11 +14,6 @@ interface State {
 
 interface Log extends IntroRiotComponent<Props, State> {
   // ===================================================================================
-  //                                                                          Definition
-  //                                                                          ==========
-  defaultItem: { label: string; value: undefined }
-
-  // ===================================================================================
   //                                                                             Private
   //                                                                             =======
   prepareLogs: () => void
@@ -29,11 +24,6 @@ export default withIntroTypes<Log>({
   state: {
     logDropDownItems: [],
   },
-
-  // ===================================================================================
-  //                                                                          Definition
-  //                                                                          ==========
-  defaultItem: { label: '-', value: undefined },
 
   //===================================================================================
   //                                                                           Lifecycle
@@ -56,7 +46,7 @@ export default withIntroTypes<Log>({
     const projectName = this.props.projectName
     api.logBeanList(projectName).then((body) => {
       this.state.logDropDownItems = [
-        this.defaultItem,
+        { label: '-', value: undefined },
         ...body.map((item) => ({
           label: item.fileName,
           value: item.content,
