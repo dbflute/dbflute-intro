@@ -10,8 +10,6 @@ interface States {
     label: string
     value: string | undefined
   }>
-  selectedLogValue: string
-  client: any
 }
 
 interface Log extends IntroRiotComponent<Props, States> {
@@ -23,7 +21,6 @@ interface Log extends IntroRiotComponent<Props, States> {
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  prepareSettings: () => void
   prepareLogs: () => void
   onLogSelect: () => void
 }
@@ -31,8 +28,6 @@ interface Log extends IntroRiotComponent<Props, States> {
 export default withIntroTypes<Log>({
   state: {
     logDropDownItems: [],
-    selectedLogValue: '',
-    client: {},
   },
 
   // ===================================================================================
@@ -47,24 +42,12 @@ export default withIntroTypes<Log>({
    * マウント完了時の処理。
    */
   async onMounted() {
-    this.prepareSettings()
     this.prepareLogs()
   },
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  /**
-   * DBFluteクライアントの基本設定情報を準備する。
-   */
-  prepareSettings() {
-    const projectName = this.props.projectName
-    api.settings(projectName).then((body) => {
-      this.state.client = body
-      this.update()
-    })
-  },
-
   /**
    * ログ情報表示部分を準備する。
    */
