@@ -12,7 +12,7 @@ interface State {
   }>
 }
 
-interface Log extends IntroRiotComponent<Props, State> {
+interface Logs extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
@@ -20,7 +20,7 @@ interface Log extends IntroRiotComponent<Props, State> {
   onselectLog: () => void
 }
 
-export default withIntroTypes<Log>({
+export default withIntroTypes<Logs>({
   state: {
     logDropDownItems: [],
   },
