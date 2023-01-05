@@ -14,7 +14,7 @@
     </section>
     <div class="ui segment" title="Log">
       <!-- dropdownのvalueにログの中身が入ってるので、refでdropdownを参照してpreに展開している -->
-      <su-dropdown items="{ state.logDropDownItems }" onselect="{ onLogSelect }" ref="dropdown"></su-dropdown>
+      <su-dropdown items="{ state.logDropDownItems }" onselect="{ onselectLog }" ref="dropdown"></su-dropdown>
       <div class="ui message message-area">
         <pre>{ $('[ref=dropdown]').getAttribute('value') }</pre>
       </div>

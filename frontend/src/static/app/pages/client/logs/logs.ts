@@ -17,7 +17,7 @@ interface Log extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   prepareLogs: () => void
-  onLogSelect: () => void
+  onselectLog: () => void
 }
 
 export default withIntroTypes<Log>({
@@ -56,7 +56,7 @@ export default withIntroTypes<Log>({
     })
   },
 
-  onLogSelect() {
+  onselectLog() {
     this.update()
   },
 })
