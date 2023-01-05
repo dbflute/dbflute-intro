@@ -18,4 +18,4 @@ type LogBean = {
   fileName: string
   content: string
 }
-type LogListResult = Array<LogBean>
+type LogListResult = LogBean[]
