@@ -1,0 +1,68 @@
+##
+## Copyright 2014-2018 the original author or authors.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+## either express or implied. See the License for the specific language
+## governing permissions and limitations under the License.
+##
+#if ($data.exBehaviorMap && $data.exBehaviorMap.size() > 0)
+#set ($rule = $scriptEngine.get('remoteApiRule'))
+<h2 id="rempteapi-$data.schema">rempteapi ($data.schema)</h2>
+<table>
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>URL</th>
+        <th>Http Method</th>
+        <th>class#method</th>
+    </tr>
+    </thead>
+    <tbody id="rempteapi-$data.schema-list-body">
+#foreach($exBehavior in $data.exBehaviorMap.values())
+#foreach($method in $exBehavior.bsBehavior.methodList)
+    <tr>
+        <td class="rowcellnum">${foreach.count}</td>
+        <td class="rowcell"><a href="#$manager.htmlEscapeAsId($method.api.url)::$manager.htmlEscapeAsId($method.api.httpMethod)">$method.api.url</a></td>
+        <td class="rowcell">$method.api.httpMethod</td>
+#set ($behaviorRequestMethodName = $scriptEngine.invokeMethod($rule, 'behaviorRequestMethodName', $method.api))
+        <td class="rowcell">$manager.htmlEscape($exBehavior.className)#$manager.htmlEscape($behaviorRequestMethodName)()</td>
+    </tr>
+#end
+#end
+    </tbody>
+</table>
+
+#foreach($exBehavior in $data.exBehaviorMap.values())
+#foreach($method in $exBehavior.bsBehavior.methodList)
+<h3 id="$manager.htmlEscapeAsId($method.api.url)::$manager.htmlEscapeAsId($method.api.httpMethod)">
+$manager.htmlEscape($method.api.url) ($method.api.httpMethod)
+</h3>
+<p>
+#set ($behaviorRequestMethodName = $scriptEngine.invokeMethod($rule, 'behaviorRequestMethodName', $method.api))
+<span class="doctitle">Request Method:</span> <span class="docmainvalue">$manager.htmlEscape($exBehavior.className)#$manager.htmlEscape($behaviorRequestMethodName)()</span>
+</p>
+#if (!$method.pathVariables.isEmpty())
+<span class="doctitle">URL Parameter:</span>
+#set ($urlParameter = {})
+#set ($put = $urlParameter.put('properties', $method.pathVariables))
+$generator.parse("remoteapi/doc/RemoteApiDocHtmlBean.vm", null, "data", $urlParameter)
+#end
+#if ($method.paramBean.className)
+<span class="doctitle">Param as:</span> <span class="docsubvalue">$manager.htmlEscape($method.paramBean.className)</span>
+$generator.parse("remoteapi/doc/RemoteApiDocHtmlBean.vm", null, "data", $method.paramBean)
+#end
+#if ($method.returnBean.className)
+<span class="doctitle">Return as:</span> <span class="docsubvalue">$manager.htmlEscape($method.returnBean.className)</span>
+$generator.parse("remoteapi/doc/RemoteApiDocHtmlBean.vm", null, "data", $method.returnBean)
+#end
+#end
+#end
+#end

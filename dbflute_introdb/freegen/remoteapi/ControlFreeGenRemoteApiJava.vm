@@ -1,0 +1,58 @@
+##
+## Copyright 2017-2021 the original author or authors.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+## either express or implied. See the License for the specific language
+## governing permissions and limitations under the License.
+##
+#set ($scriptEngine = $manager.createJavaScriptEngine())
+$scriptEngine.put('scriptEngine', $scriptEngine)
+$scriptEngine.put('generator', $generator)
+$scriptEngine.put('manager', $manager)
+$scriptEngine.eval('load("./freegen/remoteapi/ControlFreeGenRemoteApiJava.js");')
+$scriptEngine.invokeFunction('process', $requestList)
+
+## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+## generate indent.
+## @param package package (NotNull)
+## @param importList importList (NotNull)
+## _/_/_/_/_/_/_/_/_/_/
+#macro(generateIndent, $indentSize)
+#foreach($nest in [0..$indentSize])    #end
+#end
+## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+## generate imports.
+## @param importList importList (NotNull)
+## @param package package (NotNull)
+## @param importOrderList importOrderList (NotNull)
+## _/_/_/_/_/_/_/_/_/_/
+#macro(generateImports, $importList, $package, $importOrderList)
+#set ($sortImportMap = $generator.getClass().forName('java.util.TreeMap').newInstance())
+#foreach($import in $importList)
+#if ($import.substring(0, $import.lastIndexOf('.')) != $package)
+#set ($importOrderIndex = -1)
+#foreach($importOrder in $importOrderList)
+#if ($importOrder != -1 && $importOrder == $import.substring(0, $import.indexOf('.')))
+#set ($importOrderIndex = $foreach.index)
+#end
+#end
+#set($put = $sortImportMap.put("${importOrderIndex}$import.substring(0, $import.lastIndexOf('.'))     $import.substring($import.lastIndexOf('.'))", $import))
+#end
+#end
+#set ($preImport = '.')
+#foreach($import in $sortImportMap.values())
+#if ($import.substring(0, $import.indexOf('.')) != $preImport.substring(0, $preImport.indexOf('.')))
+#set ($preImport = $import)
+
+#end
+import ${import};
+#end
+#end

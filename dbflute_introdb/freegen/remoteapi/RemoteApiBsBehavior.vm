@@ -1,0 +1,231 @@
+##
+## Copyright 2017-2021 the original author or authors.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+## either express or implied. See the License for the specific language
+## governing permissions and limitations under the License.
+##
+#set ($rule = $scriptEngine.get('remoteApiRule'))
+#set ($typeMap = {})
+#set ($put = $typeMap.putAll($scriptEngine.invokeMethod($rule, 'typeMap')))
+${manager.allClassCopyright}package ${data.package};
+#set ($importList = [])
+#set($added = $importList.add('org.lastaflute.web.servlet.request.RequestManager'))
+#set ($parameterFlg = false)
+#if ($rule['behaviorMethodGeneration'])
+#foreach($method in $data.methodList)
+#if (${method.paramBean.className} && ${method.paramBean.className} != '')
+#set($added = $importList.add("${method.paramBean.package}.${method.paramBean.className}"))
+#set ($parameterFlg = true)
+#end
+#if (${method.returnBean.package} && ${method.returnBean.package} != '' && ${method.returnBean.className} && ${method.returnBean.className} != '')
+#set($added = $importList.add("${method.returnBean.package}.${method.returnBean.className}"))
+#end
+#end
+#end
+#if ($rule['behaviorMethodGeneration'])
+#set($added = $importList.add('java.util.function.Consumer'))
+#set($added = $importList.add('org.dbflute.remoteapi.FlutyRemoteApiRule'))
+#end
+#set($added = $importList.add("${data.abstractBehavior.package}.${data.abstractBehavior.className}"))
+#generateImports($importList, $data.package, $scriptEngine.invokeMethod($rule, 'importOrderList'))
+
+/**
+ * The base class as generation gap for remote API of ${data.remoteApiExp}.
+ * @author FreeGen
+ */
+public abstract class ${data.className} extends ${data.abstractBehavior.className} {
+
+    // ===================================================================================
+    //                                                                         Constructor
+    //                                                                         ===========
+    /**
+     * @param requestManager The manager of request, LastaFlute component. (NotNull)
+     */
+    public ${data.className}(RequestManager requestManager) {
+        super(requestManager);
+    }
+#if ($rule['behaviorMethodGeneration'])
+#set ($behaviorRequestMethodSignatureList = [])
+#foreach($method in $data.methodList)
+
+#if ($foreach.index == 0)
+    // ===================================================================================
+    //                                                                             Execute
+    //                                                                             =======
+#end
+#set ($behaviorRequestMethodName = $scriptEngine.invokeMethod($rule, 'behaviorRequestMethodName', $method.api))
+#set ($behaviorRuleMethodName = $scriptEngine.invokeMethod($rule, 'behaviorRuleMethodName', $method.api))
+#foreach($pathVariableEntry in $method.pathVariables.entrySet())
+#set ($pathVariableName = $scriptEngine.invokeMethod($rule, 'fieldName', $data.api, {'in': 'path'}, $pathVariableEntry.key))
+#set ($behaviorRuleMethodName = "$behaviorRuleMethodName$manager.initCap($pathVariableName)")
+#end
+#set ($parameterList = [])
+#set ($parameterDefinition = '')
+#set ($moreUrl = '')
+#set ($returnBeanClassName = 'void')
+#foreach($pathVariableEntry in $method.pathVariables.entrySet())
+#set ($pathVariableName = $scriptEngine.invokeMethod($rule, 'fieldName', $data.api, {'in': 'path'}, $pathVariableEntry.key))
+#set ($pathVariable = $pathVariableEntry.value)
+#if ($pathVariable.type == 'array')
+#if ($scriptEngine.invokeMethod($rule, 'pathVariableManualMappingClass', $api, $pathVariable))
+#set ($pathVariableClass = "${typeMap[$pathVariable.type]}<$scriptEngine.invokeMethod($rule, 'pathVariableManualMappingClass', $api, $pathVariable))>"))
+#elseif (${typeMap[$pathVariable.items.format]})
+#set ($pathVariableClass = "${typeMap[$pathVariable.type]}<${typeMap[$pathVariable.items.format]}>")
+#elseif (${typeMap[$pathVariable.items.type]})
+#set ($pathVariableClass = "${typeMap[$pathVariable.type]}<${typeMap[$pathVariable.items.type]}>")
+#end
+#elseif ($scriptEngine.invokeMethod($rule, 'pathVariableManualMappingClass', $api, $pathVariable))
+#set ($pathVariableClass = $scriptEngine.invokeMethod($rule, 'pathVariableManualMappingClass', $api, $pathVariable))
+#elseif (${typeMap[$pathVariable.format]})
+#set ($pathVariableClass = ${typeMap[$pathVariable.format]})
+#elseif (${typeMap[$pathVariable.type]})
+#set ($pathVariableClass = ${typeMap[$pathVariable.type]})
+#end
+## TODO p1us2er0 temporary for beanPropertyManualMappingDescription. (2017/10/10)
+#set ($pathVariable.name = $pathVariableName)
+#set ($enumValueComment = '')
+#set ($nestType = '')
+#if ($pathVariable.enum)
+#set ($enumValueComment = "(enumValue=$pathVariable.enum) ")
+#elseif ($pathVariable.items.enum)
+#set ($enumValueComment = "(enumValue=$pathVariable.items.enum) ")
+#end
+#if ($scriptEngine.invokeMethod($rule, 'pathVariableManualMappingDescription', $api, $pathVariable))
+#set ($added = $parameterList.add({ 'name': ${pathVariableName}, 'class': ${pathVariableClass}, 'description': "The value of path variable for ${pathVariableName}. ${enumValueComment}(${scriptEngine.invokeMethod($rule, 'pathVariableManualMappingDescription', $api, $pathVariable)}) (NotNull)"}))
+#elseif ($pathVariable.description)
+#set ($added = $parameterList.add({ 'name': ${pathVariableName}, 'class': ${pathVariableClass}, 'description': "The value of path variable for ${pathVariableName}. ${enumValueComment}(${pathVariable.description}) (NotNull)"}))
+#else
+#set ($added = $parameterList.add({ 'name': ${pathVariableName}, 'class': ${pathVariableClass}, 'description': "The value of path variable for ${pathVariableName}. ${enumValueComment}(NotNull)"}))
+#end
+#set ($parameterDefinition = "${parameterDefinition}${pathVariableClass} ${pathVariableName}, ")
+#set ($moreUrl = "${moreUrl}${pathVariableName}, ")
+#end
+#set ($paramBeanClassName = '')
+#if (${method.paramBean.className})
+#set ($paramBeanClassName = ${method.paramBean.className})
+#if ($method.paramBeanArray)
+#set ($paramBeanClassName = "java.util.List<${paramBeanClassName}>")
+#end
+#set ($parameterDefinition = "${parameterDefinition}Consumer<${paramBeanClassName}> paramLambda")
+#set ($added = $parameterList.add({ 'name': 'paramLambda', 'class': 'Consumer', 'description': "The callback for $paramBeanClassName. (NotNull)"}))
+#end
+#set ($parameterDefinition = $parameterDefinition.replaceAll(', $', ''))
+#set ($moreUrl = $moreUrl.replaceAll('^(.+), $', 'moreUrl($1)'))
+#if ($moreUrl == '')
+#set ($moreUrl = 'noMoreUrl()')
+#end
+#set ($returnBeanClassName = ${method.returnBean.className})
+#if ($method.returnBeanArray)
+#set ($returnBeanClassName = "${typeMap['array']}<${returnBeanClassName}>")
+#end
+#set ($returnBeanClassName = $scriptEngine.invokeMethod($rule, 'unDefinitionKey', ${returnBeanClassName}))
+#set ($parameterSignature = "")
+#foreach($parameter in $parameterList)
+    #set ($parameterSignature = "$parameterSignature|$parameter['class']")
+#end
+#set ($behaviorRequestMethodSignature = "$behaviorRequestMethodName$parameterSignature")
+#if ($behaviorRequestMethodSignatureList.contains($behaviorRequestMethodSignature))
+#foreach($pathVariableEntry in $method.pathVariables.entrySet())
+#set ($behaviorRequestMethodName = "$behaviorRequestMethodName$manager.initCap($pathVariableName)")
+#end
+#set ($behaviorRequestMethodSignature = "$behaviorRequestMethodName$parameterSignature")
+#end
+#set($added = $behaviorRequestMethodSignatureList.add($behaviorRequestMethodSignature))
+#set($added = $behaviorRequestMethodSignatureList.add("do$behaviorRequestMethodSignature|Consumer"))
+    /**
+     * Request remote call to $method.api.url. (auto-generated method)<br>
+     * <pre>
+     * url: $method.api.url
+     * httpMethod: $method.api.httpMethod.toUpperCase()
+     * </pre>
+#foreach($parameter in $parameterList)
+     * @param $parameter.name $parameter.description
+#end
+#if ($returnBeanClassName != 'void')
+     * @return The bean object as return type, receiving response body. (NotNull)
+#end
+     */
+    $rule['behaviorMethodAccessModifier'] $returnBeanClassName $behaviorRequestMethodName($!{parameterDefinition}) {
+#set ($ruleParam = 'rule -> {}')
+       #if ($returnBeanClassName != 'void') return#end do$manager.initCap($behaviorRequestMethodName)(#foreach($parameter in $parameterList)$parameter.name, #end$ruleParam);
+    }
+
+    /**
+     * Request remote call to ${method.api.url}. (auto-generated method)<br>
+     * <pre>
+     * url: $method.api.url
+     * httpMethod: $method.api.httpMethod.toUpperCase()
+     * </pre>
+#foreach($parameter in $parameterList)
+     * @param $parameter.name $parameter.description
+#end
+     * @param ruleLambda The callback for setting rule as dynamic requirement. (NotNull)
+#if ($returnBeanClassName != 'void')
+     * @return The bean object as return type, receiving response body. (NotNull)
+#end
+     */
+#set ($parameterDefinitionRule = "${parameterDefinition}")
+#if ($parameterDefinitionRule && $parameterDefinitionRule != '')
+#set ($parameterDefinitionRule = "${parameterDefinitionRule}, ")
+#end
+#set ($parameterDefinitionRule = "${parameterDefinitionRule}Consumer<FlutyRemoteApiRule> ruleLambda")
+#if ($returnBeanClassName.contains('<'))
+#set ($returnType = "new org.lastaflute.di.helper.misc.ParameterizedRef<$returnBeanClassName>() {
+        }.getType()")
+#else
+#set ($returnType = "${returnBeanClassName}.class")
+#end
+    protected $returnBeanClassName do$manager.initCap($behaviorRequestMethodName)($!{parameterDefinitionRule}) {
+#set ($paramMap = {})
+#if ($method.api.httpMethod == 'get' || $method.api.httpMethod == 'delete')
+#set ($param = 'noQuery()')
+#else
+#set ($param = 'noRequestBody()')
+#end
+#if (${paramBeanClassName} && ${paramBeanClassName} != '')
+#if ($method.paramBeanArray)
+        ${paramBeanClassName} param = new java.util.ArrayList<${method.paramBean.className}>();
+#else
+        ${paramBeanClassName} param = new ${paramBeanClassName}();
+#end
+        paramLambda.accept(param);
+#set($put = $paramMap.put('query', 'query(param)'))
+#set($put = $paramMap.put('formData', 'param'))
+#set($put = $paramMap.put('json', 'param'))
+#set($put = $paramMap.put('xml', 'param'))
+#end
+#if ($paramMap.containsKey("$!{method.paramBean.in}"))
+#set ($param = $paramMap["$!{method.paramBean.in}"])
+#end
+#set($doRequestSuffix = '')
+#if ($method.api.httpMethod == 'delete' && $method.paramBean.in == 'json')
+#set($doRequestSuffix = 'Enclosing')
+#end
+        #if ($returnBeanClassName != 'void')return #{end}doRequest$manager.initCap($method.api.httpMethod)$doRequestSuffix($returnType, "${method.api.url}", $moreUrl, $param, rule -> {
+#if ($method.paramBean.in == 'formData')
+            rule.sendBodyBy(
+                    new org.lastaflute.remoteapi.sender.body.LaFormSender(new org.dbflute.remoteapi.mapping.FlVacantMappingPolicy()));
+#end
+            ${behaviorRuleMethodName}(rule);
+            ruleLambda.accept(rule);
+        });
+    }
+
+    /**
+     * Set up method-level rule of ${method.api.url}.<br>
+     * @param rule The rule that class default rule is already set. (NotNull)
+     */
+    protected void ${behaviorRuleMethodName}(FlutyRemoteApiRule rule) {
+    }
+#end
+#end
+}

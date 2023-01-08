@@ -3,6 +3,9 @@
 cd `dirname $0`
 . ./_project.sh
 
+echo "...copying customized RemoteApiGen templates"
+cp -R ./freegen/customized/remoteapi/* ./freegen/remoteapi/
+
 FIRST_ARG=$1
 SECOND_ARG=$2
 
