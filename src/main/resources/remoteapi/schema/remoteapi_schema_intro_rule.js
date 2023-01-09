@@ -20,12 +20,28 @@ remoteApiRule.target = function(api) { // you can select generated API
 // =======================================================================================
 //                                                                            Param/Return
 //                                                                            ============
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// o 先頭の "Remote" は除去する (無くても良いかなと、シンプルな方を優先)
+// o JavaScriptとJavaで直感的に行き来できるように、Java側のクラス名に合わせる
+// _/_/_/_/_/_/_/_/_/_/
+// @Override
+remoteApiRule.paramClassName = function(api, detail) {
+    var baseName = this.beanClassName(api, detail).replace('Remote', ''); // 固定prefixなし
+    return baseName + 'Body'; // Paramじゃなくて
+}
+
+// @Override
+remoteApiRule.returnClassName = function(api, detail) {
+    var baseName = this.beanClassName(api, detail).replace('Remote', ''); // 固定prefixなし
+    return baseName + 'Result'; // Paramじゃなくて
+}
 
 
 
 // =======================================================================================
 //                                                                                  Option
 //                                                                                  ======
+// すべてのマッピングをTypeScriptの型に合わせる
 // @Override
 remoteApiRule.typeMap = function() {
     var typeMap = baseRule.typeMap();
@@ -46,6 +62,7 @@ remoteApiRule.typeMap = function() {
     return typeMap;
 }
 
+// 区分値クラスも自動生成するようにしたら、ここで関連付けをしていく
 // name and type mapping for e.g. classification
 var manualMappingClassMap = {
 };

@@ -183,11 +183,11 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #end
 #set ($manualMappingDesc = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingDescription', $data.api, $declaringClassName, $property))
 #if ($manualMappingDesc)
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${manualMappingDesc}) ${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${enumValueComment}(${manualMappingDesc}) ${requiredDocSuffix} */
 #elseif (${property.description})
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${property.description}) ${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${enumValueComment}(${property.description}) ${requiredDocSuffix} */
 #else
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${enumValueComment}${requiredDocSuffix} */
 #end
 ## XMLはレアなので基本不要だが、いざあったときに気付けるようにコメントアノテーションだけ残しておく。
 #if ($data.in == 'xml')

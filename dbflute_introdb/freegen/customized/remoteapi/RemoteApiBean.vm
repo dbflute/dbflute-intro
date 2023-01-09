@@ -19,6 +19,8 @@
 #set ($definitionMap = {})
 #set ($definitionMap = $data.definitionMap)
 ${manager.allClassCopyright}
+## #for_now jflute added も importList も不要のはずだが、analyze処理をまんま使うために残している (2023/01/09)
+## (頑張れば削除もできると思うが、そこまでやってない)
 #set ($importList = [])
 #set($added = $importList.add('org.lastaflute.core.util.Lato'))
 #if (!$data.properties.isEmpty() && $data.in == 'xml')
@@ -183,11 +185,11 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #end
 #set ($manualMappingDesc = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingDescription', $data.api, $declaringClassName, $property))
 #if ($manualMappingDesc)
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${manualMappingDesc}) ${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${enumValueComment}(${manualMappingDesc}) ${requiredDocSuffix} */
 #elseif (${property.description})
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${property.description}) ${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${enumValueComment}(${property.description}) ${requiredDocSuffix} */
 #else
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${enumValueComment}${requiredDocSuffix} */
 #end
 ## XMLはレアなので基本不要だが、いざあったときに気付けるようにコメントアノテーションだけ残しておく。
 #if ($data.in == 'xml')
