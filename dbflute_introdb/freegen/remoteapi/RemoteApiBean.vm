@@ -33,8 +33,13 @@ ${manager.allClassCopyright}
 #set($added = $importList.add('org.lastaflute.web.validation.Required'))
 #end
 #end
+##
+## analyzeでネストtypeのプロパティのrequiredのセットアップをしている。
+## なので、import文自体は生成しないが、analyze処理だけは呼び出している。
+##
 #set ($tempDefinitionMap = {})
 #set ($put = $tempDefinitionMap.putAll($definitionMap))
+#analyzeImports($importList, $tempDefinitionMap, $property)
 #end
 ## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 ## 元々JavaのテンプレートをTypeScript用に修正している。
@@ -54,14 +59,32 @@ ${manager.allClassCopyright}
  * @author FreeGen
  */
 type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') extends $data.extendsClass#end#if ($data.implementsClasses && $data.implementsClasses != '') implements $data.implementsClasses#end = {
+##
+## #for_now jflute ネストオブジェクトにフラットユニーク名を付けるためのprefix, ざっくりルートのクラス名だけ (2023/01/09)
+## 厳密なユニークにするなら、ネストの分prefixをチェーンさせていかないといけないが、ほとんどのケースで大丈夫なので妥協
+## (Global変数として扱う)
+##
+#set ($propertyTypePrefix = "${data.className}")
+##
+## すべてのプロパティで利用されるネストtypeの定義名(実質FQCN)のリスト
+## (Global変数として扱う)
+##
 #set($nestTypeFullNameList = [])
+##
+## プロパティのループでーす
+##
 #foreach($propertyEntry in $data.properties.entrySet())
 
 ## ^^^ プロパティ定義間で空行を空けている
+##
+## ひとつのプロパティの中で積み重なるネストオブジェクトのリスト
+## (Global変数として扱う)
+##
 #set($nestList = [])
 #generateProperty($data.className, $propertyEntry)
 #set($nestList = [])
 #end
+## ^^^ プロパティのループ終わり
 #set($nestTypeFullNameList = [])
 }
 
@@ -81,14 +104,60 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 
 
 ## =======================================================================================
-##                                                                      generateProperty()
-##                                                                      ==================
+##                                                                        analyzeImports()
+##                                                                        ================
 ## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-## generate property.
+## analyze imports.
 ## @param class class (NotNull)
 ## @param propertyEntry propertyEntry (NotNull)
 ## _/_/_/_/_/_/_/_/_/_/
-#macro(generateProperty, $class, $propertyEntry)
+#macro(analyzeImports, $importList, $definitionMap, $property)
+#set ($nestType = '')
+#if ($property.items && $property.items['$ref'])
+#set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.items['$ref'].replace('#/definitions/', ''), 'UTF-8'))
+#elseif ($property.items && $property.items.allOf[0]['$ref'])
+#set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.items.allOf[0]['$ref'].replace('#/definitions/', ''), 'UTF-8'))
+#elseif ($property['$ref'])
+#set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property['$ref'].replace('#/definitions/', ''), 'UTF-8'))
+#elseif ($property.allOf[0]['$ref'])
+#set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.allOf[0]['$ref'].replace('#/definitions/', ''), 'UTF-8'))
+#end
+#if ($nestType && $nestType != '')
+#foreach($nestPropertyEntry in $definitionMap[$nestType].properties.entrySet())
+## ここでネストtypeのプロパティのrequiredをセットアップしている。
+## import文自体は使わなくても、この処理自体が必要なので analyzeImports() が必要。
+#set ($nestPropertyEntry.value.required = $definitionMap[$nestType].required.contains($nestPropertyEntry.key))
+#set ($nestProperty = $nestPropertyEntry.value)
+#if (${nestProperty.required})
+#if ($nestProperty.type == 'array')
+#set($added = $importList.add('javax.validation.constraints.NotNull'))
+#else
+#set($added = $importList.add('org.lastaflute.web.validation.Required'))
+#end
+#end
+#end
+#if ($definitionMap.containsKey($nestType))
+#set ($definition = $definitionMap[$nestType])
+#set ($remove = $definitionMap.remove($nestType))
+#foreach($nestPropertyEntry in $definition.properties.entrySet())
+#analyzeImports($importList, $definitionMap, $nestPropertyEntry.value)
+#end
+#end
+#end
+#set ($nestType = '')
+#end
+
+
+
+## =======================================================================================
+##                                                                      generateProperty()
+##                                                                      ==================
+## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+## そのプロパティの変数定義を生成する。
+## @param declaringClassName The FQCN of the class declaring the property. (NotNull)
+## @param propertyEntry The entry (having key and value) of the property. (NotNull)
+## _/_/_/_/_/_/_/_/_/_/
+#macro(generateProperty, $declaringClassName, $propertyEntry)
 #set ($fieldName = ${scriptEngine.invokeMethod($rule, 'fieldName', $data.api, $data, $propertyEntry.key)})
 #set ($property = $propertyEntry.value)
 #set ($property.name = $fieldName)
@@ -100,26 +169,36 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #elseif ($property.items.enum)
 #set ($enumValueComment = "(enumValue=$property.items.enum) ")
 #end
-#if ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingDescription', $data.api, $class, $property))
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingDescription', $data.api, $class, $property)) #if (!${property.required})(NullAllowed) #end*/
-#elseif (${property.description})
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${property.description}) #if (!${property.required})(NullAllowed) #end*/
+## アノテーションがないので、JSDocで項目の有無をすべて表現する。
+## Requiredは、nullだけでなく空白もないので、そのまま(Lasta的な)Requiredと表現する。
+#set ($requiredDocSuffix = "")
+#if (${property.required})
+#if ($property.type == 'array')
+#set ($requiredDocSuffix = "(NotNull)")
 #else
-#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}#if (!${property.required})(NullAllowed) #end*/
+#set ($requiredDocSuffix = "(Required)")
 #end
+#else
+#set ($requiredDocSuffix = "(NullAllowed)")
+#end
+#set ($manualMappingDesc = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingDescription', $data.api, $declaringClassName, $property))
+#if ($manualMappingDesc)
+#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${manualMappingDesc}) ${requiredDocSuffix} */
+#elseif (${property.description})
+#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}(${property.description}) ${requiredDocSuffix} */
+#else
+#generateIndent($nestList.size())/** The property of ${fieldName}. ${enumValueComment}${requiredDocSuffix} */
+#end
+## XMLはレアなので基本不要だが、いざあったときに気付けるようにコメントアノテーションだけ残しておく。
 #if ($data.in == 'xml')
 #generateIndent($nestList.size())// java hint: @XmlElement(name = "$propertyEntry.key")
 #end
-#if (${property.required})
+## ネストオブジェクトにフラットユニーク名を付けるための判定
+## (ArrayのGenericは除く: 純粋のプロパティの型がオブジェクトのときだけtrue)
+#set ($isPropertyTypeObjectType = false)
 #if ($property.type == 'array')
-#generateIndent($nestList.size())// java hint: @NotNull
-#else
-#generateIndent($nestList.size())// java hint: @Required
-#end
-#end
-#if ($property.type == 'array')
-#if ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $class, $property))
-#set ($fieldClass = "${typeMap[$property.type]}<$scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $class, $property)>")
+#if ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property))
+#set ($fieldClass = "${typeMap[$property.type]}<$scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property)>")
 #elseif (${typeMap[$property.items.format]})
 #set ($fieldClass = "${typeMap[$property.type]}<${typeMap[$property.items.format]}>")
 #elseif (${typeMap[$property.items.type]})
@@ -131,27 +210,32 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.items.allOf[0]['$ref'].replace('#/definitions/', ''), 'UTF-8'))
 #end
 #adjustType($nestType)
-#set ($fieldClass = "${typeMap[$property.type]}<$adjustType>")
-#generateIndent($nestList.size())// java hint: @javax.validation.Valid
+#set ($fieldClass = "${typeMap[$property.type]}<${propertyTypePrefix}_${adjustedType}>")
 #end
-#elseif ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $class, $property))
-#set ($fieldClass = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $class, $property))
+## vvv arrayのifのelseif
+#elseif ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property))
+#set ($fieldClass = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property))
 #elseif (${typeMap[$property.format]})
 #set ($fieldClass = ${typeMap[$property.format]})
 #elseif (${typeMap[$property.type]})
 #set ($fieldClass = ${typeMap[$property.type]})
 #elseif ($property['$ref'] || $property.allOf[0]['$ref'])
+#set ($isPropertyTypeObjectType = true)
 #if ($property['$ref'])
 #set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property['$ref'].replace('#/definitions/', ''), 'UTF-8'))
 #elseif ($property.allOf[0]['$ref'])
 #set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.allOf[0]['$ref'].replace('#/definitions/', ''), 'UTF-8'))
 #end
 #adjustType($nestType)
-#set ($fieldClass = $adjustType)
-#generateIndent($nestList.size())// java hint: @javax.validation.Valid
+#set ($fieldClass = $adjustedType)
 #end
 #if ($fieldClass == '')
 #set ($fieldClass = ${typeMap['']})
+#end
+## ネストオブジェクトにフラットユニーク名を付けるための処理
+## (Arrayじゃなく直オブジェクトの場合の解決: ArrayのGenericはまた別の箇所、arrayのif内にて解決)
+#if ($isPropertyTypeObjectType)
+#set ($fieldClass = "${propertyTypePrefix}_${fieldClass}")
 #end
 #generateIndent($nestList.size())$fieldName: $fieldClass
 #end
@@ -162,12 +246,12 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 ##                                                                 manageFlatDefNestType()
 ##                                                                 =======================
 ## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-## そのプロパティに紐づくネストtypeをフラットに定義する。
+## そのプロパティに紐づくネストtype定義をフラットに生成するための制御をする。(生成処理も呼ぶ)
 ## generateProperty()をコピーして、フラットにネストtypeを出力するための処理に変えている。
-## @param class class (NotNull)
-## @param propertyEntry propertyEntry (NotNull)
+## @param declaringClassName The FQCN of the class declaring the property. (NotNull)
+## @param propertyEntry The entry (having key and value) of the property. (NotNull)
 ## _/_/_/_/_/_/_/_/_/_/
-#macro(manageFlatDefNestType, $className, $propertyEntry)
+#macro(manageFlatDefNestType, $declaringClassName, $propertyEntry)
 #set ($fieldName = ${scriptEngine.invokeMethod($rule, 'fieldName', $data.api, $data, $propertyEntry.key)})
 #set ($property = $propertyEntry.value)
 #set ($property.name = $fieldName)
@@ -177,8 +261,8 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 ## この辺はgeneratePropertyの処理をそのまま持ってきて、nestTypeの調整を維持している(はず)
 ##
 #if ($property.type == 'array')
-#if ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $className, $property))
-#set ($fieldClass = "${typeMap[$property.type]}<$scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $className, $property)>")
+#if ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property))
+#set ($fieldClass = "${typeMap[$property.type]}<$scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property)>")
 #elseif (${typeMap[$property.items.format]})
 #set ($fieldClass = "${typeMap[$property.type]}<${typeMap[$property.items.format]}>")
 #elseif (${typeMap[$property.items.type]})
@@ -190,11 +274,11 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.items.allOf[0]['$ref'].replace('#/definitions/', ''), 'UTF-8'))
 #end
 #adjustType($nestType)
-#set ($fieldClass = "${typeMap[$property.type]}<$adjustType>")
+#set ($fieldClass = "${typeMap[$property.type]}<$adjustedType>")
 #end
 ## vvv arrayのifのelseif
-#elseif ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $className, $property))
-#set ($fieldClass = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $className, $property))
+#elseif ($scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property))
+#set ($fieldClass = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingClass', $data.api, $declaringClassName, $property))
 #elseif (${typeMap[$property.format]})
 #set ($fieldClass = ${typeMap[$property.format]})
 #elseif (${typeMap[$property.type]})
@@ -206,7 +290,7 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #set ($nestType = $generator.getClass().forName('java.net.URLDecoder').decode($property.allOf[0]['$ref'].replace('#/definitions/', ''), 'UTF-8'))
 #end
 #adjustType($nestType)
-#set ($fieldClass = $adjustType)
+#set ($fieldClass = $adjustedType)
 #end
 ## ^^^ arrayのifのend
 #if ($fieldClass == '')
@@ -221,20 +305,20 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 ##                                                                      generateNestType()
 ##                                                                      ==================
 ## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-## generate nest type.
-## @param nestType プロパティで利用されているネストオブジェクトの型 (NotNull)
+## そのネストtype定義をフラットに生成する。
+## @param nestType プロパティで利用されているネストオブジェクトの型名(実質FQCN) (NotNull)
 ## _/_/_/_/_/_/_/_/_/_/
 #macro(generateNestType, $nestType)
 #if ($nestType && $nestType != '' && !$nestList.contains($nestType) && !($nestTypeFullNameList.contains($nestType) || $nestTypeFullNameList.contains("$nestType.join('_', $nestList)_$nestType")))
 #adjustType($nestType)
-## #for_now jflute フラット定義なのでインデントなしにしてよいのだが... (2022/01/08)
+## #for_now jflute フラット定義なのでインデントなしにしてよいのだが... (2023/01/08)
 ## generateProperty()の方のインデント処理と関連してて簡単ではなさそう。
 #set ($currentNestIndentSize = $nestList.size())
 #generateIndent($currentNestIndentSize)/**
-#generateIndent($currentNestIndentSize) * The part class of ${adjustType}.
+#generateIndent($currentNestIndentSize) * The part class of ${adjustedType}.
 #generateIndent($currentNestIndentSize) * @author FreeGen
 #generateIndent($currentNestIndentSize) */
-#generateIndent($currentNestIndentSize)type $adjustType = {
+#generateIndent($currentNestIndentSize)type ${propertyTypePrefix}_${adjustedType} = {
 #set($added = $nestList.add($nestType))
 #set($added = $nestTypeFullNameList.add("$nestType.join('_', $nestList)"))
 ##
@@ -244,7 +328,7 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #foreach($nestPropertyEntry in $currentEntrySet)
 
 ## ^^^ プロパティ定義間で空行を空けている
-#generateProperty($adjustType, $nestPropertyEntry)
+#generateProperty($adjustedType, $nestPropertyEntry)
 #end
 #set($i = $nestList.size() - 1)
 #set($removed = $nestList.remove($i))
@@ -256,7 +340,7 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 ## ネストプロパティのネストtypeを生成
 ##
 #foreach($nestPropertyEntry in $currentEntrySet)
-#manageFlatDefNestType($adjustType, $nestPropertyEntry)
+#manageFlatDefNestType($adjustedType, $nestPropertyEntry)
 #end
 #end
 #end
@@ -268,16 +352,19 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 ##                                                                            ============
 ## _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 ## Adjust java type of e.g. property. e.g. java.util.List to List
-## @param type The type of java type. (NotNull)
-## @return adjustType The filtered expression of the type. (NotNull)
+## macro呼び出し後に "adjustedType" という名前の変数を使えば戻り値を受け取れる。
+## (単なるGlobal変数的な扱いでやり取りをしているだけ: Velocityの変数はスコープがないので)
+## @param javaType The type of java type. (NotNull)
+## @return adjustedType The filtered expression of the type. (NotNull)
 ## _/_/_/_/_/_/_/_/_/_/
-#macro(adjustType, $type)
-#set ($adjustType = ${type})
-#set ($index = ${adjustType.lastIndexOf('.')})
+#macro(adjustType, $javaType)
+#set ($adjustedType = ${javaType})
+#set ($index = ${adjustedType.lastIndexOf('.')})
 #if ($index != -1)
 #set ($index = $index + 1)
-#set ($adjustType = ${adjustType.substring($index)})
+#set ($adjustedType = ${adjustedType.substring($index)})
 #end
-#set ($adjustType = $adjustType.replaceAll("^.*\$", ''))
-#set ($adjustType = $scriptEngine.invokeMethod($rule, 'nestClassName', $schema, $adjustType))
+#set ($adjustedType = $adjustedType.replaceAll("^.*\$", ''))
+#set ($adjustedType = $scriptEngine.invokeMethod($rule, 'nestClassName', $schema, $adjustedType))
+## ^^^ この (Global変数的な) adjustedType 経由で調整されたType名を受け取る
 #end

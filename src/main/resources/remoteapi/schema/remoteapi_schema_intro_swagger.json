@@ -2713,14 +2713,6 @@
         }
       }
     },
-    "org.dbflute.intro.app.web.document.decomment.DecommentPickupResult$SeaSeaPart": {
-      "type": "object",
-      "properties": {
-        "seaName": {
-          "type": "string"
-        }
-      }
-    },
     "org.dbflute.intro.app.web.document.decomment.DecommentPickupResult": {
       "type": "object",
       "required": [
@@ -2733,9 +2725,6 @@
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.document.decomment.DecommentPickupResult%24TablePart"
           }
-        },
-        "yyyyyyyyyy": {
-          "$ref": "#/definitions/org.dbflute.intro.app.web.document.decomment.DecommentPickupResult%24SeaSeaPart"
         }
       }
     },
