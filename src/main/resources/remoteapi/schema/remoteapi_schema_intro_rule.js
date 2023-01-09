@@ -14,6 +14,9 @@ remoteApiRule.target = function(api) { // you can select generated API
 // ======================================================================================
 //                                                                               Behavior
 //                                                                               ========
+// Bhvクラスを自動生成しない。Param/Returnクラスのみを利用する想定。
+// #for_now jflute api.tsも自動生成できなくはないだろうが、すでにだいぶ整備されてるのでいつの日か (2023/01/09)
+remoteApiRule.behaviorClassGeneration = false;
 
 
 
@@ -26,14 +29,12 @@ remoteApiRule.target = function(api) { // you can select generated API
 // _/_/_/_/_/_/_/_/_/_/
 // @Override
 remoteApiRule.paramClassName = function(api, detail) {
-    var baseName = this.beanClassName(api, detail).replace('Remote', ''); // 固定prefixなし
-    return baseName + 'Body'; // Paramじゃなくて
+    return baseRule.paramClassName(api).replace(/Param$/g, 'Body').replace('Remote', '');
 }
 
 // @Override
 remoteApiRule.returnClassName = function(api, detail) {
-    var baseName = this.beanClassName(api, detail).replace('Remote', ''); // 固定prefixなし
-    return baseName + 'Result'; // Paramじゃなくて
+    return baseRule.returnClassName(api).replace(/Return$/g, 'Result').replace('Remote', '');
 }
 
 

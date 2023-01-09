@@ -278,8 +278,7 @@ function processHull(request) {
     }
 
     processBean(rule, remoteApiBeanList);
-    // #typescript suppress behavior
-    //processBhv(rule, request, exBehaviorMap);
+    processBhv(rule, request, exBehaviorMap);
     processDoc(rule, request, exBehaviorMap);
 }
 
