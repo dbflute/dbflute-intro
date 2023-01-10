@@ -6,6 +6,11 @@ cd `dirname $0`
 echo "...copying customized RemoteApiGen templates"
 cp -R ./freegen/customized/remoteapi/* ./freegen/remoteapi/
 
+if [ -e ../build/lastadoc/swagger.json ];then
+  echo "...copying swagger.json to RemoteApiGen schema"
+  cp ../build/lastadoc/swagger.json ../src/main/resources/remoteapi/schema/remoteapi_schema_intro_swagger.json
+fi
+
 FIRST_ARG=$1
 SECOND_ARG=$2
 
