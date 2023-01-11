@@ -121,15 +121,17 @@
         ]
       }
     },
-    "/client/propbase/{clientName}": {
+    "/client/propbase/{projectName}": {
       "get": {
-        "summary": "@author jflute (split from large action) (at roppongi japanese)",
-        "description": "@author jflute (split from large action) (at roppongi japanese)",
+        "summary": "DBFluteクライアントの基本プロパティを扱うAction。\u003cbr\u003e, @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)",
+        "description": "DBFluteクライアントの基本プロパティを扱うAction。\u003cbr\u003e, @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)",
         "parameters": [
           {
-            "name": "clientName",
+            "name": "projectName",
+            "description": "DBFluteクライアントのプロジェクト名",
             "type": "string",
             "in": "path",
+            "default": "maihamadb",
             "required": true
           }
         ],
@@ -1587,8 +1589,8 @@
     },
     "/welcome/create": {
       "post": {
-        "summary": "@author hakiba",
-        "description": "@author hakiba",
+        "summary": "Welcome画面に対応するAction。\u003cbr\u003e, Welcome画面で入力された情報からDBFluteクライアントを作成する。",
+        "description": "Welcome画面に対応するAction。\u003cbr\u003e, Welcome画面で入力された情報からDBFluteクライアントを作成する。",
         "consumes": [
           "application/json"
         ],
@@ -1625,16 +1627,24 @@
       ],
       "properties": {
         "url": {
-          "type": "string"
+          "description": "JDBCの接続URL e.g. jdbc:mysql://localhost:3306/maihamadb",
+          "type": "string",
+          "example": "jdbc:mysql://localhost:3306/maihamadb"
         },
         "schema": {
-          "type": "string"
+          "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+          "type": "string",
+          "example": "maihamadb"
         },
         "user": {
-          "type": "string"
+          "description": "JDBCの接続ユーザー e.g. maihamauser",
+          "type": "string",
+          "example": "maihamauser"
         },
         "password": {
-          "type": "string"
+          "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+          "type": "string",
+          "example": "maihamapass"
         }
       }
     },
@@ -1646,10 +1656,14 @@
       ],
       "properties": {
         "fileName": {
-          "type": "string"
+          "description": "JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. mysql-connector-java-5",
+          "type": "string",
+          "example": "mysql-connector-java-5.1.46-bin.jar"
         },
         "data": {
-          "type": "string"
+          "description": "JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね e.g. QWERTYUIOP",
+          "type": "string",
+          "example": "QWERTYUIOP"
         }
       }
     },
@@ -1694,9 +1708,12 @@
       ],
       "properties": {
         "projectName": {
-          "type": "string"
+          "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+          "type": "string",
+          "example": "maihamadb"
         },
         "databaseCode": {
+          "description": "DBMSを識別するコード e.g. mysql: * `mysql` - MySQL. * `postgresql` - PostgreSQL. * `oracle` - Oracle. * `db2` - Db2, DB2. * `sqlserver` - SQLServer. * `h2` - H2Database, H2 Database. * `derby` - ApacheDerby, Apache Derby. :: fromCls(CDef$TargetDatabase)",
           "type": "string",
           "enum": [
             "mysql",
@@ -1707,20 +1724,20 @@
             "h2",
             "derby"
           ],
-          "description": " * `mysql` - MySQL. * `postgresql` - PostgreSQL. * `oracle` - Oracle. * `db2` - Db2, DB2. * `sqlserver` - SQLServer. * `h2` - H2Database, H2 Database. * `derby` - ApacheDerby, Apache Derby. :: fromCls(CDef$TargetDatabase)",
           "example": "mysql"
         },
         "languageCode": {
+          "description": "自動生成コードの言語を識別するコード e.g. java: * `java` - Java. * `csharp` - C, C#. * `scala` - Scala. :: fromCls(CDef$TargetLanguage)",
           "type": "string",
           "enum": [
             "java",
             "csharp",
             "scala"
           ],
-          "description": " * `java` - Java. * `csharp` - C, C#. * `scala` - Scala. :: fromCls(CDef$TargetLanguage)",
           "example": "java"
         },
         "containerCode": {
+          "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di: * `lasta_di` - LastaDi, Lasta Di. * `spring` - SpringFramework, Spring Framework. * `guice` - GoogleGuice, Google Guice. * `seasar` - SeasarS2Container, Seasar (S2Container). * `cdi` - Cdi, CDI. :: fromCls(CDef$TargetContainer)",
           "type": "string",
           "enum": [
             "lasta_di",
@@ -1729,14 +1746,17 @@
             "seasar",
             "cdi"
           ],
-          "description": " * `lasta_di` - LastaDi, Lasta Di. * `spring` - SpringFramework, Spring Framework. * `guice` - GoogleGuice, Google Guice. * `seasar` - SeasarS2Container, Seasar (S2Container). * `cdi` - Cdi, CDI. :: fromCls(CDef$TargetContainer)",
           "example": "lasta_di"
         },
         "packageBase": {
-          "type": "string"
+          "description": "自動生成コードの基底パッケージ (",
+          "type": "string",
+          "example": "org.docksidestage.showbase"
         },
         "jdbcDriverFqcn": {
-          "type": "string"
+          "description": "JDBCドライバーのクラス名 e.g. com",
+          "type": "string",
+          "example": "com.mysql.jdbc.Driver"
         },
         "mainSchemaSettings": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.client.ClientCreateBody%24ClientPart%24DatabaseSettingsPart"
@@ -1745,7 +1765,9 @@
           "$ref": "#/definitions/org.dbflute.intro.app.web.client.ClientCreateBody%24ClientPart%24DatabaseSettingsPart"
         },
         "dbfluteVersion": {
-          "type": "string"
+          "description": "DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. 1",
+          "type": "string",
+          "example": "1.2.6"
         },
         "jdbcDriver": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.client.ClientCreateBody%24ClientPart%24JdbcDriverPart"
@@ -1754,6 +1776,7 @@
           "$ref": "#/definitions/org.dbflute.intro.app.web.client.ClientCreateBody%24ClientPart%24OptionBody"
         },
         "schemaSyncCheckMap": {
+          "description": "SchemaSyncCheckするためのDB情報",
           "type": "object"
         }
       }
@@ -1769,7 +1792,9 @@
           "$ref": "#/definitions/org.dbflute.intro.app.web.client.ClientCreateBody%24ClientPart"
         },
         "testConnection": {
-          "type": "boolean"
+          "description": "DBMSへの接続テストを行うかどうか？ e.g. false",
+          "type": "boolean",
+          "example": false
         }
       }
     },
@@ -1838,9 +1863,12 @@
       ],
       "properties": {
         "projectName": {
-          "type": "string"
+          "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+          "type": "string",
+          "example": "maihamadb"
         },
         "databaseCode": {
+          "description": "DBMSを識別するコード e.g. mysql: * `mysql` - MySQL. * `postgresql` - PostgreSQL. * `oracle` - Oracle. * `db2` - Db2, DB2. * `sqlserver` - SQLServer. * `h2` - H2Database, H2 Database. * `derby` - ApacheDerby, Apache Derby. :: fromCls(CDef$TargetDatabase)",
           "type": "string",
           "enum": [
             "mysql",
@@ -1851,20 +1879,20 @@
             "h2",
             "derby"
           ],
-          "description": " * `mysql` - MySQL. * `postgresql` - PostgreSQL. * `oracle` - Oracle. * `db2` - Db2, DB2. * `sqlserver` - SQLServer. * `h2` - H2Database, H2 Database. * `derby` - ApacheDerby, Apache Derby. :: fromCls(CDef$TargetDatabase)",
           "example": "mysql"
         },
         "languageCode": {
+          "description": "自動生成コードの言語を識別するコード e.g. java: * `java` - Java. * `csharp` - C, C#. * `scala` - Scala. :: fromCls(CDef$TargetLanguage)",
           "type": "string",
           "enum": [
             "java",
             "csharp",
             "scala"
           ],
-          "description": " * `java` - Java. * `csharp` - C, C#. * `scala` - Scala. :: fromCls(CDef$TargetLanguage)",
           "example": "java"
         },
         "containerCode": {
+          "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di: * `lasta_di` - LastaDi, Lasta Di. * `spring` - SpringFramework, Spring Framework. * `guice` - GoogleGuice, Google Guice. * `seasar` - SeasarS2Container, Seasar (S2Container). * `cdi` - Cdi, CDI. :: fromCls(CDef$TargetContainer)",
           "type": "string",
           "enum": [
             "lasta_di",
@@ -1873,26 +1901,37 @@
             "seasar",
             "cdi"
           ],
-          "description": " * `lasta_di` - LastaDi, Lasta Di. * `spring` - SpringFramework, Spring Framework. * `guice` - GoogleGuice, Google Guice. * `seasar` - SeasarS2Container, Seasar (S2Container). * `cdi` - Cdi, CDI. :: fromCls(CDef$TargetContainer)",
           "example": "lasta_di"
         },
         "dbfluteVersion": {
-          "type": "string"
+          "description": "そのDBFluteクライアントが利用するDBFluteのバージョン e.g. 1",
+          "type": "string",
+          "example": "1.2.6"
         },
         "hasSchemaHtml": {
-          "type": "boolean"
+          "description": "SchemaHTMLが自動生成されているかどうか？ e.g. false",
+          "type": "boolean",
+          "example": false
         },
         "hasHistoryHtml": {
-          "type": "boolean"
+          "description": "HistoryHTMLが自動生成されているかどうか？ e.g. false",
+          "type": "boolean",
+          "example": false
         },
         "hasSyncCheckResultHtml": {
-          "type": "boolean"
+          "description": "SchemaSyncCheckの結果HTMLが存在しているかどうか？ e.g. false",
+          "type": "boolean",
+          "example": false
         },
         "hasAlterCheckResultHtml": {
-          "type": "boolean"
+          "description": "AlterCheckの結果HTMLが存在しているかどうか？ e.g. false",
+          "type": "boolean",
+          "example": false
         },
         "violatesSchemaPolicy": {
-          "type": "boolean"
+          "description": "SchemaPolicyの違反がある状態かどうか？ (古いバージョンの場合はnull) e.g. false",
+          "type": "boolean",
+          "example": false
         }
       }
     },
@@ -3155,16 +3194,24 @@
       ],
       "properties": {
         "url": {
-          "type": "string"
+          "description": "JDBCの接続URL e.g. jdbc:mysql://localhost:3306/maihamadb",
+          "type": "string",
+          "example": "jdbc:mysql://localhost:3306/maihamadb"
         },
         "schema": {
-          "type": "string"
+          "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+          "type": "string",
+          "example": "maihamadb"
         },
         "user": {
-          "type": "string"
+          "description": "JDBCの接続ユーザー e.g. maihamauser",
+          "type": "string",
+          "example": "maihamauser"
         },
         "password": {
-          "type": "string"
+          "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+          "type": "string",
+          "example": "maihamapass"
         }
       }
     },
@@ -3176,10 +3223,14 @@
       ],
       "properties": {
         "fileName": {
-          "type": "string"
+          "description": "JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. mysql-connector-java-5",
+          "type": "string",
+          "example": "mysql-connector-java-5.1.46-bin.jar"
         },
         "data": {
-          "type": "string"
+          "description": "JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね e.g. QWERTYUIOP",
+          "type": "string",
+          "example": "QWERTYUIOP"
         }
       }
     },
@@ -3197,9 +3248,12 @@
       ],
       "properties": {
         "projectName": {
-          "type": "string"
+          "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+          "type": "string",
+          "example": "maihamadb"
         },
         "databaseCode": {
+          "description": "DBMSを識別するコード e.g. mysql: * `mysql` - MySQL. * `postgresql` - PostgreSQL. * `oracle` - Oracle. * `db2` - Db2, DB2. * `sqlserver` - SQLServer. * `h2` - H2Database, H2 Database. * `derby` - ApacheDerby, Apache Derby. :: fromCls(CDef$TargetDatabase)",
           "type": "string",
           "enum": [
             "mysql",
@@ -3210,20 +3264,20 @@
             "h2",
             "derby"
           ],
-          "description": " * `mysql` - MySQL. * `postgresql` - PostgreSQL. * `oracle` - Oracle. * `db2` - Db2, DB2. * `sqlserver` - SQLServer. * `h2` - H2Database, H2 Database. * `derby` - ApacheDerby, Apache Derby. :: fromCls(CDef$TargetDatabase)",
           "example": "mysql"
         },
         "languageCode": {
+          "description": "自動生成コードの言語を識別するコード e.g. java: * `java` - Java. * `csharp` - C, C#. * `scala` - Scala. :: fromCls(CDef$TargetLanguage)",
           "type": "string",
           "enum": [
             "java",
             "csharp",
             "scala"
           ],
-          "description": " * `java` - Java. * `csharp` - C, C#. * `scala` - Scala. :: fromCls(CDef$TargetLanguage)",
           "example": "java"
         },
         "containerCode": {
+          "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di: * `lasta_di` - LastaDi, Lasta Di. * `spring` - SpringFramework, Spring Framework. * `guice` - GoogleGuice, Google Guice. * `seasar` - SeasarS2Container, Seasar (S2Container). * `cdi` - Cdi, CDI. :: fromCls(CDef$TargetContainer)",
           "type": "string",
           "enum": [
             "lasta_di",
@@ -3232,20 +3286,25 @@
             "seasar",
             "cdi"
           ],
-          "description": " * `lasta_di` - LastaDi, Lasta Di. * `spring` - SpringFramework, Spring Framework. * `guice` - GoogleGuice, Google Guice. * `seasar` - SeasarS2Container, Seasar (S2Container). * `cdi` - Cdi, CDI. :: fromCls(CDef$TargetContainer)",
           "example": "lasta_di"
         },
         "packageBase": {
-          "type": "string"
+          "description": "自動生成コードの基底パッケージ (",
+          "type": "string",
+          "example": "org.docksidestage.showbase"
         },
         "jdbcDriverFqcn": {
-          "type": "string"
+          "description": "JDBCドライバーのクラス名 e.g. com",
+          "type": "string",
+          "example": "com.mysql.jdbc.Driver"
         },
         "mainSchemaSettings": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.welcome.WelcomeCreateBody%24ClientPart%24DatabaseSettingsPart"
         },
         "dbfluteVersion": {
-          "type": "string"
+          "description": "DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. 1",
+          "type": "string",
+          "example": "1.2.6"
         },
         "jdbcDriver": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.welcome.WelcomeCreateBody%24ClientPart%24JdbcDriverPart"
@@ -3263,7 +3322,9 @@
           "$ref": "#/definitions/org.dbflute.intro.app.web.welcome.WelcomeCreateBody%24ClientPart"
         },
         "testConnection": {
-          "type": "boolean"
+          "description": "DBMSへの接続テストを行うかどうか？ e.g. false",
+          "type": "boolean",
+          "example": false
         },
         "useSystemProxies": {
           "type": "boolean"

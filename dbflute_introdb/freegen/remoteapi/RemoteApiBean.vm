@@ -185,9 +185,9 @@ type ${data.className}#if ($data.extendsClass && $data.extendsClass != '') exten
 #end
 #set ($manualMappingDesc = $scriptEngine.invokeMethod($rule, 'beanPropertyManualMappingDescription', $data.api, $declaringClassName, $property))
 #if ($manualMappingDesc)
-#generateIndent($nestList.size())/** ${enumValueComment}(${manualMappingDesc}) ${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${manualMappingDesc} ${enumValueComment}${requiredDocSuffix} */
 #elseif (${property.description})
-#generateIndent($nestList.size())/** ${enumValueComment}(${property.description}) ${requiredDocSuffix} */
+#generateIndent($nestList.size())/** ${property.description} ${enumValueComment}${requiredDocSuffix} */
 #else
 #generateIndent($nestList.size())/** ${enumValueComment}${requiredDocSuffix} */
 #end
