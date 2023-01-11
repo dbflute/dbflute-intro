@@ -47,7 +47,7 @@ public class ClientPropbaseResult { // prop-base means basic properties of clien
     @Required
     public CDef.TargetContainer containerCode;
 
-    /** そのDBFluteクライアントが利用するDBFluteのバージョン e.g. 1.2.6 */
+    /** そのDBFluteクライアントが利用するDBFluteのバージョン e.g. "1.2.6" */
     @Required
     public String dbfluteVersion;
 

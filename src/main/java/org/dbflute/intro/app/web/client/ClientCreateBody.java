@@ -56,11 +56,11 @@ public class ClientCreateBody {
         @Required
         public CDef.TargetContainer containerCode;
 
-        /** 自動生成コードの基底パッケージ (.dbflute.はここでは含まない) e.g. org.docksidestage.showbase */
+        /** 自動生成コードの基底パッケージ (.dbflute.はここでは含まない) e.g. "org.docksidestage.showbase" */
         @Required
         public String packageBase;
 
-        /** JDBCドライバーのクラス名 e.g. com.mysql.jdbc.Driver */
+        /** JDBCドライバーのクラス名 e.g. "com.mysql.jdbc.Driver" */
         @Required
         public String jdbcDriverFqcn;
 
@@ -76,7 +76,7 @@ public class ClientCreateBody {
 
         public static class DatabaseSettingsPart {
 
-            /** JDBCの接続URL e.g. jdbc:mysql://localhost:3306/maihamadb */
+            /** JDBCの接続URL e.g. "jdbc:mysql://localhost:3306/maihamadb" */
             @Required
             public String url;
 
@@ -103,7 +103,7 @@ public class ClientCreateBody {
         public static class JdbcDriverPart {
 
             // if fileName or data is null, it's client problem.
-            /** JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. mysql-connector-java-5.1.46-bin.jar */
+            /** JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. "mysql-connector-java-5.1.46-bin.jar" */
             @Required(groups = ClientError.class)
             public String fileName;
 

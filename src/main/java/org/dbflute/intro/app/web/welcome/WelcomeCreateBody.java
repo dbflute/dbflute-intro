@@ -50,11 +50,11 @@ public class WelcomeCreateBody {
         @Required
         public CDef.TargetContainer containerCode;
 
-        /** 自動生成コードの基底パッケージ (.dbflute.はここでは含まない) e.g. org.docksidestage.showbase */
+        /** 自動生成コードの基底パッケージ (.dbflute.はここでは含まない) e.g. "org.docksidestage.showbase" */
         @Required
         public String packageBase;
 
-        /** JDBCドライバーのクラス名 e.g. com.mysql.jdbc.Driver */
+        /** JDBCドライバーのクラス名 e.g. "com.mysql.jdbc.Driver" */
         @Required
         public String jdbcDriverFqcn;
 
@@ -65,7 +65,7 @@ public class WelcomeCreateBody {
 
         public static class DatabaseSettingsPart {
 
-            /** JDBCの接続URL e.g. jdbc:mysql://localhost:3306/maihamadb */
+            /** JDBCの接続URL e.g. "jdbc:mysql://localhost:3306/maihamadb" */
             @Required
             public String url;
 
@@ -84,7 +84,7 @@ public class WelcomeCreateBody {
         // (続き) というか、DBFluteエンジンのダウンロードはActionの中で最新バージョンを取得していて...
         // DBFluteクライアントの参照先(_project.sh)として利用されるのがリクエストされたものになっている。
         // フロントからはもらわずに、Actionで取得した最新バージョンをそのままクライアントでも使えば良いかなと。
-        /** DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. 1.2.6 */
+        /** DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. "1.2.6" */
         @Required
         public String dbfluteVersion;
 
@@ -98,7 +98,7 @@ public class WelcomeCreateBody {
 
             // done hakiba add required with ClientError by jflute (2017/04/06)
             // if fileName or data is null, it's client problem.
-            /** JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. mysql-connector-java-5.1.46-bin.jar */
+            /** JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. "mysql-connector-java-5.1.46-bin.jar" */
             @Required(groups = ClientError.class)
             public String fileName;
 
