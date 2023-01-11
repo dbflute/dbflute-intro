@@ -84,7 +84,7 @@ public class WelcomeCreateBody {
         // (続き) というか、DBFluteエンジンのダウンロードはActionの中で最新バージョンを取得していて...
         // DBFluteクライアントの参照先(_project.sh)として利用されるのがリクエストされたものになっている。
         // フロントからはもらわずに、Actionで取得した最新バージョンをそのままクライアントでも使えば良いかなと。
-        /** DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. maihamapass */
+        /** DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. 1.2.6 */
         @Required
         public String dbfluteVersion;
 
