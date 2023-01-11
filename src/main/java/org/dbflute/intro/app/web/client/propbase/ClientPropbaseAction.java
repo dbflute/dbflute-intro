@@ -30,6 +30,8 @@ import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
+ * DBFluteクライアントの基本プロパティを扱うAction。<br>
+ * (プロジェクト名やDBや言語のコードなど)
  * @author jflute (split from large action) (at roppongi japanese)
  */
 public class ClientPropbaseAction extends IntroBaseAction { // prop-base means basic properties of client
@@ -49,10 +51,14 @@ public class ClientPropbaseAction extends IntroBaseAction { // prop-base means b
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    /**
+     * @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)
+     * @return DBFluteクライアントの基本プロパティの情報 (NotNull)
+     */
     @Execute
-    public JsonResponse<ClientPropbaseResult> index(String clientName) {
-        ClientModel clientModel = clientReadLogic.findClient(clientName).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
+    public JsonResponse<ClientPropbaseResult> index(String projectName) {
+        ClientModel clientModel = clientReadLogic.findClient(projectName).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + projectName, projectName);
         });
         ClientPropbaseResult detailBean = mappingToOperationResult(clientModel);
         return asJson(detailBean);
@@ -61,14 +67,14 @@ public class ClientPropbaseAction extends IntroBaseAction { // prop-base means b
     private ClientPropbaseResult mappingToOperationResult(ClientModel clientModel) {
         ClientPropbaseResult operation = new ClientPropbaseResult();
         prepareBasic(operation, clientModel);
-        String clientName = clientModel.getProjectInfra().getProjectName();
-        operation.hasSchemaHtml = documentPhysicalLogic.existsSchemaHtml(clientName);
-        operation.hasHistoryHtml = documentPhysicalLogic.existsHistoryHtml(clientName);
-        operation.hasSyncCheckResultHtml = documentPhysicalLogic.existsSyncCheckResultHtml(clientName);
-        operation.hasAlterCheckResultHtml = documentPhysicalLogic.existsAlterCheckResultHtml(clientName);
+        String projectName = clientModel.getProjectInfra().getProjectName();
+        operation.hasSchemaHtml = documentPhysicalLogic.existsSchemaHtml(projectName);
+        operation.hasHistoryHtml = documentPhysicalLogic.existsHistoryHtml(projectName);
+        operation.hasSyncCheckResultHtml = documentPhysicalLogic.existsSyncCheckResultHtml(projectName);
+        operation.hasAlterCheckResultHtml = documentPhysicalLogic.existsAlterCheckResultHtml(projectName);
         boolean isDebugEngineVersion = engineReadLogic.getExistingVersionList().contains("1.x"); // 1.x is version for debug
         if (engineReadLogic.existsNewerVersionThan("1.2.0") || isDebugEngineVersion) {
-            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(clientName);
+            operation.violatesSchemaPolicy = logPhysicalLogic.existsViolationSchemaPolicyCheck(projectName);
         }
         return operation;
     }
