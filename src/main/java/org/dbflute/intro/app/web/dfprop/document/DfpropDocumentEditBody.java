@@ -20,18 +20,31 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author deco
  * @author subaru
+ * @author jflute
  */
 public class DfpropDocumentEditBody {
 
+    /** テーブル名やカラム名が大文字ベースかどうか？ (大文字に変換するかどうか？) */
     @Required
     public Boolean upperCaseBasic;
+
+    /** DBコメントの中の別名を区切るデリミタ (DBコメントに別名を入れてない場合は必ずnull) */
     public String aliasDelimiterInDbComment;
+
+    /** DBコメントが別名ベースかどうか？ (デリミタがないとき別名かどうか？) */
     @Required
     public Boolean dbCommentOnAliasBasis;
+
+    // TODO you checksにしたいかも？ by jflute (2023/01/12)
+    /** 差分チェックでカラムの定義順を含めるかどうか？ */
     @Required
     public Boolean checkColumnDefOrderDiff;
+
+    /** 差分チェックでDBコメントを含めるかどうか？ */
     @Required
     public Boolean checkDbCommentDiff;
+
+    /** 差分チェックでストアドプロシージャを含めるかどうか？ */
     @Required
     public Boolean checkProcedureDiff;
 }
