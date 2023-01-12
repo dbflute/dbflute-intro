@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@3.4.0
+  slack: circleci/slack@4.9.3
 executors:
   build_container:
     docker:
@@ -71,10 +71,7 @@ jobs:
       - image: circleci/node
     steps:
       - slack/notify:
-          channel: intro_ci_notify
-          title: ":tada: Suceess!!"
-          message: "<https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID}|Execute Workflow>"
-          color: '#adff2f'
+          template: basic_success_1
 workflows:
   version: 2.1
   topic_branch_test_and_build:
