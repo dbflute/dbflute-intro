@@ -50,7 +50,7 @@ public class WelcomeCreateBody {
         @Required
         public CDef.TargetContainer containerCode;
 
-        /** 自動生成コードの基底パッケージ (.dbflute.はここでは含まない) e.g. "org.docksidestage.showbase" */
+        /** 自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. "org.docksidestage.showbase" */
         @Required
         public String packageBase;
 

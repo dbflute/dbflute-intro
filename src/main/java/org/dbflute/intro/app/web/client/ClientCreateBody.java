@@ -56,7 +56,7 @@ public class ClientCreateBody {
         @Required
         public CDef.TargetContainer containerCode;
 
-        /** 自動生成コードの基底パッケージ (.dbflute.はここでは含まない) e.g. "org.docksidestage.showbase" */
+        /** 自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. "org.docksidestage.showbase" */
         @Required
         public String packageBase;
 
@@ -91,7 +91,7 @@ public class ClientCreateBody {
             public String password;
         }
 
-        /** DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. 1.2.6 */
+        /** DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. "1.2.6" */
         @Required
         public String dbfluteVersion;
 

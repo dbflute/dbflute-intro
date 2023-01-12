@@ -15,11 +15,11 @@
  */
 package org.dbflute.intro.app.web.dfprop.settings;
 
+import javax.validation.Valid;
+
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.lastaflute.core.util.Lato;
 import org.lastaflute.web.validation.Required;
-
-import javax.validation.Valid;
 
 /**
  * @author hakiba
@@ -30,36 +30,58 @@ public class DfpropSettingsResult {
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
+    /** DBFluteクライアントのプロジェクト名 e.g. maihamadb */
     @Required
     public String projectName;
+
+    /** DBMSを識別するコード e.g. mysql */
     @Required
     public CDef.TargetDatabase databaseCode;
+
+    /** 自動生成コードの言語を識別するコード e.g. java */
     @Required
     public CDef.TargetLanguage languageCode;
+
+    /** 自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di */
     @Required
     public CDef.TargetContainer containerCode;
+
+    /** 自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. "org.docksidestage.showbase" */
     @Required
     public String packageBase;
+
+    /** JDBCドライバーのクラス名 e.g. "com.mysql.jdbc.Driver" */
     @Required
     public String jdbcDriverFqcn;
 
+    /** DBのメインスキーマの接続情報、databaseInfoMap.dfpropに記載されているもの */
     @Required
     @Valid
     public DatabaseSettingsPart mainSchemaSettings;
 
     public static class DatabaseSettingsPart {
 
+        /** JDBCの接続URL e.g. "jdbc:mysql://localhost:3306/maihamadb" */
         @Required
         public String url;
+
+        /** JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb */
         public String schema;
+
+        /** JDBCの接続ユーザー e.g. maihamauser */
         @Required
         public String user;
+
+        /** JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass */
         public String password;
     }
 
+    /** DBFluteクライアントが利用するDBFluteのバージョン e.g. "1.2.6" */
     @Required
     public String dbfluteVersion;
 
+    // TODO you 画面で使ってるところが見つからない... by jflute (2023/01/13)
+    /** extlib配下のJDBCドライバーのjarファイルのcanonical path e.g. "/Users/intro/xxx.../extlib/yyy.jar" (NullAllowed) */
     public String jdbcDriverJarPath;
 
     // ===================================================================================
