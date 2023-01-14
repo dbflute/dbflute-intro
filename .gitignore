@@ -6,7 +6,6 @@ target/
 work/
 tmp/
 temp/
-log/
 *.lck
 *.log
 *.swp
