@@ -1,15 +1,16 @@
 # 構成
 
 ## 主要ライブラリ
-ライブラリ名| 概要                                                              |参考ページ
----|-----------------------------------------------------------------|---
-riot | フロントエンドフレームワーク                                                  | https://riot.js.org/ja/
-jest | テスト実装用ライブラリ                                                     | https://jestjs.io/ja/
-eslint | Lint用ライブラリ                                                      | https://eslint.org/
-babel | 古いブラウザなどにも対応したjsファイルを書き出すためのトランスパイラ                             | https://babeljs.io/
-webpack | 最終的なjsファイルをビルドするバンドラ。ローカル開発時のサーバー起動も担う                          | https://webpack.js.org/
-husky | Gitのpre commit処理にlint, formatを実行するためのライブラリ                      | https://typicode.github.io/husky/#/
-lint-staged | GitのstagedにあるファイルのみにLintを実行するためのライブラリ. huskyと合わせて利用することを想定している。 | https://github.com/okonet/lint-staged#readme
+
+| ライブラリ名 | 概要                                                                                                             | 参考ページ                                   |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| riot         | フロントエンドフレームワーク                                                                                     | https://riot.js.org/ja/                      |
+| jest         | テスト実装用ライブラリ                                                                                           | https://jestjs.io/ja/                        |
+| eslint       | Lint 用ライブラリ                                                                                                | https://eslint.org/                          |
+| babel        | 古いブラウザなどにも対応した js ファイルを書き出すためのトランスパイラ                                           | https://babeljs.io/                          |
+| webpack      | 最終的な js ファイルをビルドするバンドラ。ローカル開発時のサーバー起動も担う                                     | https://webpack.js.org/                      |
+| husky        | Git の pre commit 処理に lint, format を実行するためのライブラリ                                                 | https://typicode.github.io/husky/#/          |
+| lint-staged  | Git の staged にあるファイルのみに Lint を実行するためのライブラリ. husky と合わせて利用することを想定している。 | https://github.com/okonet/lint-staged#readme |
 
 ## パッケージ構成
 
@@ -35,8 +36,8 @@ lint-staged | GitのstagedにあるファイルのみにLintを実行するた�
 └── webpack.config.js        webpackの設定ファイル
 ```
 
-
 # セットアップ
+
 ## ローカル環境の設定
 
 ```shell
@@ -50,56 +51,64 @@ cd frontend
 # 3. (最初とpackage.jsonを更新した時だけ) ライブラリインストール
 npm install
 
-# 4. フロントサーバー起動 
+# 4. フロントサーバー起動
 npm start
 ```
 
-## IDEの設定
-### VSCode
+## IDE の設定
+
+### VS Code
+
 下記のプラグインをインストールする
 
-プラグイン名|URL|用途
----|---|---
-Riot-Tag|https://marketplace.visualstudio.com/items?itemName=crisward.riot-tag|.riotタグのシンタックスハイライトなど。ただし、メンテされてない模様...
-Prettier - Code formatter|https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode|コードフォーマッター
+| プラグイン名              | URL                                                                        | 用途                                                                              |
+| ------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Riot.JS VSC               | https://marketplace.visualstudio.com/items?itemName=nesterow.riot-vsc      | Riot4 以降の.riot のシンタックスハイライトなど。                                  |
+| Riot-Tag                  | https://marketplace.visualstudio.com/items?itemName=crisward.riot-tag      | Riot3 の.tag タグのシンタックスハイライトなど。Riot3 をコードを見なくなったら不要 |
+| Prettier - Code formatter | https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode | コードフォーマッター                                                              |
 
-ファイル保存時に自動でformatがかかるようになっている
-
+Prettier をインストールするだけで、ファイル保存時に自動で format がかかるようになっている。  
+(DBFlute Intro のリポジトリルートで VS Code を Open することが前提: 直下の.vscode/settings.json にて設定しているため)
 
 ### IntelliJ
+
 下記のプラグインをインストールする
 
-プラグイン名|URL|用途
----|---|---
-Riot.js|https://plugins.jetbrains.com/plugin/12748-riot-js|.riotタグのシンタックスハイライトなど。ただし、メンテされてない模様...
-Prettier|https://plugins.jetbrains.com/plugin/10456-prettier|コードフォーマッター
+| プラグイン名 | URL                                                 | 用途                                                                    |
+| ------------ | --------------------------------------------------- | ----------------------------------------------------------------------- |
+| Riot.js      | https://plugins.jetbrains.com/plugin/12748-riot-js  | .riot タグのシンタックスハイライトなど。ただし、メンテされてない模様... |
+| Prettier     | https://plugins.jetbrains.com/plugin/10456-prettier | コードフォーマッター                                                    |
 
 下記の設定をしておくと便利
 
-- opt + ⌘ + L でフォーマットした際にprettierによるフォーマットを実行するようにする
-  - `Preferences > Languages & Frameworks > JavaScript > Prettier` にて `On 'Reformat Code' action` をONにする
+- opt + ⌘ + L でフォーマットした際に prettier によるフォーマットを実行するようにする
+  - `Preferences > Languages & Frameworks > JavaScript > Prettier` にて `On 'Reformat Code' action` を ON にする
 
-# Riotコンポーネントの実装方法
-## .riotファイル と .tsファイル の雛形を用意する
-1. 実装したいディレクトリに .riotファイルと.tsファイルを作成する
+# Riot コンポーネントの実装方法
+
+## .riot ファイル と .ts ファイル の雛形を用意する
+
+1. 実装したいディレクトリに .riot ファイルと.ts ファイルを作成する
+
 ```
 例: welcomeタグを作成する場合
 ├── src
 │   └── ...
-│     ├── welcome.riot 
-│     └── welcome.ts 
+│     ├── welcome.riot
+│     └── welcome.ts
 ```
-2. タグコメントごとのルールにしたがって .tsファイル に `interface` を定義する
- 
-タグコメント|定義するもの
----|---
-Definition|一度初期化されたら変わることのないプロパティ（state に含める必要がないプロパティ）
-Event Handler|HTMLタグのイベント属性から呼び出される関数. 原則、prefixはDOMイベント名に合わせること（onchange、onclick、...）
-Private|TypeScriptファイル内からのみ呼び出されるヘルパー関数など
+
+2. タグコメントごとのルールにしたがって .ts ファイル に `interface` を定義する
+
+| タグコメント  | 定義するもの                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Definition    | 一度初期化されたら変わることのないプロパティ（state に含める必要がないプロパティ）                                  |
+| Event Handler | HTML タグのイベント属性から呼び出される関数. 原則、prefix は DOM イベント名に合わせること（onchange、onclick、...） |
+| Private       | TypeScript ファイル内からのみ呼び出されるヘルパー関数など                                                           |
 
 ```ts
 // 例: welcome.ts
-import { IntroRiotComponent } from '../shared/app.types';
+import { IntroRiotComponent } from '../shared/app.types'
 
 // NOTE: IntroRiotComponent を extends する (riotの組み込み関数やIntro用のpluginをTypeScriptで呼び出せるようにするために必要)
 interface Welcome extends IntroRiotComponent {
@@ -122,18 +131,19 @@ interface Welcome extends IntroRiotComponent {
   // ...
 }
 ```
-3. タグコメントごとのルールにしたがって、.tsファイルにRiotコンポーネントを実装し、`export default` で公開する
 
-タグコメント|定義するもの
----|---
-Definition|interfaceで定義したDefinitionの実値
-Lifecycle|riot標準のライフサイクル関数（必要に応じて）
-Event Handler|interfaceで定義したEvent Handlerの実装
-Private|interfaceで定義したPrivate関数の実装
+3. タグコメントごとのルールにしたがって、.ts ファイルに Riot コンポーネントを実装し、`export default` で公開する
+
+| タグコメント  | 定義するもの                                  |
+| ------------- | --------------------------------------------- |
+| Definition    | interface で定義した Definition の実値        |
+| Lifecycle     | riot 標準のライフサイクル関数（必要に応じて） |
+| Event Handler | interface で定義した Event Handler の実装     |
+| Private       | interface で定義した Private 関数の実装       |
 
 ```ts
 // 例: welcome.ts
-import { IntroRiotComponent, withIntroTypes } from '../shared/app.types';
+import { IntroRiotComponent, withIntroTypes } from '../shared/app.types'
 
 interface Welcome extends IntroRiotComponent {
   // ...
@@ -159,18 +169,20 @@ export default withIntroTypes<Welcome>({
   //                                                                       Event Handler
   //                                                                       =============
   onchangeDatabase(databaseCode: any) {
-      // ...
+    // ...
   },
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
-      // ...
-  }
+    // ...
+  },
 })
 ```
-4. .riotファイルに HTMLタグの定義 と RiotComponentのimport&export を実装する
+
+4. .riot ファイルに HTML タグの定義 と RiotComponent の import&export を実装する
+
 ```html
 <!-- 例: welcome.riot -->
 <welcome>
@@ -179,7 +191,7 @@ export default withIntroTypes<Welcome>({
     <div>...</div>
     ...
   </div>
-  
+
   <script>
     // NOTE: 先に定義した .ts ファイルをimportし、そのままexportする
     import welcome from './welcome'
@@ -189,16 +201,20 @@ export default withIntroTypes<Welcome>({
 ```
 
 ## state を利用する
-1. Riotコンポーネントにstateプロパティを定義する
+
+1. Riot コンポーネントに state プロパティを定義する
+
 ```ts
 // 例: welcome.ts
 export default withIntroTypes<Welcome>({
   state: {
     oRMapperOptionsFlg: false,
-  }
+  },
 })
 ```
-2. HTMLから呼び出す
+
+2. HTML から呼び出す
+
 ```html
 <!-- 例: welcome.riot -->
 <welcome>
@@ -208,19 +224,23 @@ export default withIntroTypes<Welcome>({
 </welcome>
 ```
 
-stateの更新の仕方などは[こちら](https://riot.js.org/ja/documentation/#%E7%8A%B6%E6%85%8B)を参照 
+state の更新の仕方などは[こちら](https://riot.js.org/ja/documentation/#%E7%8A%B6%E6%85%8B)を参照
 
-## 他のRiotコンポーネントを利用する
-1. .tsファイルに利用するコンポーネントをimportする
+## 他の Riot コンポーネントを利用する
+
+1. .ts ファイルに利用するコンポーネントを import する
+
 ```ts
 // 例: welcome.ts
-import i18n from '../common/i18n.riot';
+import i18n from '../common/i18n.riot'
 
 export default withIntroTypes<Welcome>({
   components: { i18n }, // NOTE: components: { i18n: i18n }, と定義しているのと同義
 })
 ```
-2. HTMLから呼び出す
+
+2. HTML から呼び出す
+
 ```html
 <!-- 例: welcome.riot -->
 <welcome>
@@ -234,14 +254,18 @@ export default withIntroTypes<Welcome>({
 </welcome>
 ```
 
-## semantic-ui-riotを利用する
+## semantic-ui-riot を利用する
+
 1. interface `SemanticUiRiotPlugin` に関数定義を追加する
+
 ```ts
 export interface SemanticUiRiotPlugin {
   suLoading(b: boolean): void
 }
 ```
-2. Riotコンポーネントから呼び出す
+
+2. Riot コンポーネントから呼び出す
+
 ```ts
 // 例: welcome.ts
 export default withIntroTypes<Welcome>({
@@ -252,28 +276,34 @@ export default withIntroTypes<Welcome>({
 })
 ```
 
-※ 現状、semantic-ui-riot は TypeScript用の型定義(d.tsファイル)が存在していないので利用する semantic-ui-riot 関数に合わせて定義する必要がある
+※ 現状、semantic-ui-riot は TypeScript 用の型定義(d.ts ファイル)が存在していないので利用する semantic-ui-riot 関数に合わせて定義する必要がある
 
 ## plugin（共通関数）を利用する
+
 1. interface `DBFluteIntroPlugin` に関数定義を追加する
+
 ```ts
 export interface DBFluteIntroPlugin {
-  successToast: (input: { title: string | undefined, message: string | undefined}) => void
+  successToast: (input: { title: string | undefined; message: string | undefined }) => void
 }
 ```
+
 2. 定義した関数を実装する
+
 ```ts
 export interface DBFluteIntroPlugin {
-  successToast: (input: { title: string | undefined, message: string | undefined}) => void
+  successToast: (input: { title: string | undefined; message: string | undefined }) => void
 }
 
 const dbflutePlugin: DBFluteIntroPlugin = {
-  successToast({ title = undefined, message = undefined }: { title: string | undefined, message: string | undefined}) {
-      // ...
-  }
+  successToast({ title = undefined, message = undefined }: { title: string | undefined; message: string | undefined }) {
+    // ...
+  },
 }
 ```
-3. Riotコンポーネントから呼び出す
+
+3. Riot コンポーネントから呼び出す
+
 ```ts
 // 例: welcome.ts
 export default withIntroTypes<Welcome>({
@@ -282,9 +312,8 @@ export default withIntroTypes<Welcome>({
     this.successToast({ title: 'xxx', message: 'yyy' })
   },
 })
-
 ```
 
-
 # テストの実装方法
+
 TODO
