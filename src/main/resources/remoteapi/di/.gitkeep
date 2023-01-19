@@ -1,0 +1,4 @@
+# RemoteApiGenがDi xmlを自動生成するディレクトリ
+#
+# #for_now jflute 今のところTypeScript向けだけなので生成物がない (2022/01/08)
+# ただ、RemoteApiGenのスタンダードな階層が見えた方がわかりやすいかなということでキープ
