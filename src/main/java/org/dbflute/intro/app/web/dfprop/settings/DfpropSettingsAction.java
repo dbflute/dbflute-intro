@@ -55,9 +55,9 @@ public class DfpropSettingsAction extends IntroBaseAction {
     //                                              Settings
     //                                              --------
     @Execute
-    public JsonResponse<DfpropSettingsResult> index(String clientName) {
-        ClientModel clientModel = clientReadLogic.findClient(clientName).orElseThrow(() -> {
-            return new ClientNotFoundException("Not found the project: " + clientName, clientName);
+    public JsonResponse<DfpropSettingsResult> index(String projectName) {
+        ClientModel clientModel = clientReadLogic.findClient(projectName).orElseThrow(() -> {
+            return new ClientNotFoundException("Not found the project: " + projectName, projectName);
         });
         DfpropSettingsResult result = mappingToSettingsResult(clientModel);
         return asJson(result);

@@ -47,6 +47,8 @@ import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
 
 /**
+ * Welcome画面に対応するAction。<br>
+ * 手始めのDBFluteクライアントの作成とDBFluteエンジンのインストールを司る。
  * @author hakiba
  * @author cabos
  * @author jflute
@@ -74,9 +76,16 @@ public class WelcomeAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    // TODO you welcomeCreateBodyの変数名、慣習として単なるbodyでOK by jflute (2023/01/10)
+    /**
+     * Welcome画面で入力された情報からDBFluteクライアントを作成する。
+     * @param welcomeCreateBody DBFluteクライアントを作成するための情報 (NotNull)
+     * @return レスポンスなし (NotNull)
+     */
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> create(WelcomeCreateBody welcomeCreateBody) {
+        // TODO you もう少しprivateメソッドで処理を分けたい by jflute (2023/01/10)
         validate(welcomeCreateBody, messages -> {
             ClientPart client = welcomeCreateBody.client;
             String projectName = client.projectName;
@@ -85,6 +94,7 @@ public class WelcomeAction extends IntroBaseAction {
             }
             // done hakiba JDBC Driver's required check depending on database type by jflute (2017/04/13)
             // done hakiba needs to check jar existence by jflute (2017/04/06)
+            // TODO you databaseCdというようにCodeをCdを略さず、そのままdatabaseCodeにしたい by jflute (2023/01/10)
             TargetDatabase databaseCd = client.databaseCode;
             if (databaseCd != null && !databaseInfoLogic.isEmbeddedJar(databaseCd) && Objects.isNull(client.jdbcDriver)) {
                 messages.addErrorsDatabaseNeedsJar("database", databaseCd.alias());
@@ -123,6 +133,7 @@ public class WelcomeAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Mapping
     //                                                                             =======
+    // TODO you 変数名はclientBodyじゃなくてclientPartがいいかな by jflute (2023/01/10)
     private ClientModel mappingToClientModel(ClientPart clientBody) {
         return newClientModel(clientBody);
     }
