@@ -16,6 +16,8 @@
 package org.dbflute.intro.dbflute.allcommon;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.dbflute.exception.ClassificationNotFoundException;
 import org.dbflute.jdbc.Classification;
@@ -23,7 +25,6 @@ import org.dbflute.jdbc.ClassificationCodeType;
 import org.dbflute.jdbc.ClassificationMeta;
 import org.dbflute.jdbc.ClassificationUndefinedHandlingType;
 import org.dbflute.optional.OptionalThing;
-import static org.dbflute.util.DfTypeUtil.emptyStrings;
 
 /**
  * The definition of classification.
@@ -36,120 +37,72 @@ public interface CDef extends Classification {
      */
     public enum Flg implements CDef {
         /** Checked: means yes */
-        True("1", "Checked", new String[] {"true"})
-        ,
+        True("1", "Checked", new String[] {"true"}),
         /** Unchecked: means no */
-        False("0", "Unchecked", new String[] {"false"})
-        ;
-        private static final Map<String, Flg> _codeClsMap = new HashMap<String, Flg>();
-        private static final Map<String, Flg> _nameClsMap = new HashMap<String, Flg>();
-        static {
-            for (Flg value : values()) {
-                _codeClsMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
-                _nameClsMap.put(value.name().toLowerCase(), value);
-            }
-        }
+        False("0", "Unchecked", new String[] {"false"});
+        private static ZzzoneSlimmer<Flg> _slimmer = new ZzzoneSlimmer<>(Flg.class, values());
         private String _code; private String _alias; private Set<String> _sisterSet;
         private Flg(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        { _code = code; _alias = alias; _sisterSet = ZzzoneSlimmer.toSisterSet(sisters); }
         public String code() { return _code; } public String alias() { return _alias; }
         public Set<String> sisterSet() { return _sisterSet; }
         public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.Flg; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
+        public boolean inGroup(String groupName) { return false; }
         /**
          * Get the classification of the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
          * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<Flg> of(Object code) {
-            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
-            if (code instanceof Flg) { return OptionalThing.of((Flg)code); }
-            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
-            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification code: " + code);
-            });
-        }
-
+        public static OptionalThing<Flg> of(Object code) { return _slimmer.of(code); }
         /**
          * Find the classification by the name. (CaseInsensitive)
          * @param name The string of name, which is case-insensitive. (NotNull)
          * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<Flg> byName(String name) {
-            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
-            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification name: " + name);
-            });
-        }
-
+        public static OptionalThing<Flg> byName(String name) { return _slimmer.byName(name); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
-         * Get the classification by the code. (CaseInsensitive)
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span>
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static Flg codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof Flg) { return (Flg)code; }
-            return _codeClsMap.get(code.toString().toLowerCase());
-        }
-
+        public static Flg codeOf(Object code) { return _slimmer.codeOf(code); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
-         * Get the classification by the name (also called 'value' in ENUM world).
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span>
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         * @deprecated use byName(name) instead.
          */
-        public static Flg nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
+        public static Flg nameOf(String name) { return _slimmer.nameOf(name, nm -> valueOf(nm)); }
         /**
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<Flg> listAll() {
-            return new ArrayList<Flg>(Arrays.asList(values()));
-        }
-
+        public static List<Flg> listAll() { return _slimmer.listAll(values()); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * Get the list of classification elements in the specified group. (returns new copied list)
          * @param groupName The string of group name, which is case-insensitive. (NotNull)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         * @return The snapshot list of classification elements in the group. (NotNull)
+         * @throws ClassificationNotFoundException When the group is not found.
          */
         public static List<Flg> listByGroup(String groupName) {
             if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
             throw new ClassificationNotFoundException("Unknown classification group: Flg." + groupName);
         }
-
         /**
-         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use e.g. Stream API with of().</span>
          * @param codeList The list of plain code, which is case-insensitive. (NotNull)
          * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         * @deprecated use e.g. Stream API with of() instead.
          */
-        public static List<Flg> listOf(Collection<String> codeList) {
-            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
-            List<Flg> clsList = new ArrayList<Flg>(codeList.size());
-            for (String code : codeList) { clsList.add(of(code).get()); }
-            return clsList;
-        }
-
+        public static List<Flg> listOf(Collection<String> codeList) { return _slimmer.listOf(codeList); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use listByGroup(groupName).</span>
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         * @deprecated use listByGroup(groupName) instead.
          */
-        public static List<Flg> groupOf(String groupName) {
-            return new ArrayList<Flg>(4);
-        }
-
+        public static List<Flg> groupOf(String groupName) { return new ArrayList<>(); }
         @Override public String toString() { return code(); }
     }
 
@@ -158,135 +111,81 @@ public interface CDef extends Classification {
      */
     public enum TargetDatabase implements CDef {
         /** MySQL */
-        MySQL("mysql", "MySQL", emptyStrings())
-        ,
+        MySQL("mysql", "MySQL"),
         /** PostgreSQL */
-        PostgreSQL("postgresql", "PostgreSQL", emptyStrings())
-        ,
+        PostgreSQL("postgresql", "PostgreSQL"),
         /** Oracle */
-        Oracle("oracle", "Oracle", emptyStrings())
-        ,
+        Oracle("oracle", "Oracle"),
         /** DB2 */
-        Db2("db2", "DB2", emptyStrings())
-        ,
+        Db2("db2", "DB2"),
         /** SQLServer */
-        SQLServer("sqlserver", "SQLServer", emptyStrings())
-        ,
+        SQLServer("sqlserver", "SQLServer"),
         /** H2 Database */
-        H2Database("h2", "H2 Database", emptyStrings())
-        ,
+        H2Database("h2", "H2 Database"),
         /** Apache Derby */
-        ApacheDerby("derby", "Apache Derby", emptyStrings())
-        ;
-        private static final Map<String, TargetDatabase> _codeClsMap = new HashMap<String, TargetDatabase>();
-        private static final Map<String, TargetDatabase> _nameClsMap = new HashMap<String, TargetDatabase>();
-        static {
-            for (TargetDatabase value : values()) {
-                _codeClsMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
-                _nameClsMap.put(value.name().toLowerCase(), value);
-            }
-        }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private TargetDatabase(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        ApacheDerby("derby", "Apache Derby");
+        private static ZzzoneSlimmer<TargetDatabase> _slimmer = new ZzzoneSlimmer<>(TargetDatabase.class, values());
+        private String _code; private String _alias;
+        private TargetDatabase(String code, String alias) { _code = code; _alias = alias; }
         public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
+        public Set<String> sisterSet() { return Collections.emptySet(); }
         public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.TargetDatabase; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
+        public boolean inGroup(String groupName) { return false; }
         /**
          * Get the classification of the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
          * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TargetDatabase> of(Object code) {
-            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
-            if (code instanceof TargetDatabase) { return OptionalThing.of((TargetDatabase)code); }
-            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
-            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification code: " + code);
-            });
-        }
-
+        public static OptionalThing<TargetDatabase> of(Object code) { return _slimmer.of(code); }
         /**
          * Find the classification by the name. (CaseInsensitive)
          * @param name The string of name, which is case-insensitive. (NotNull)
          * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TargetDatabase> byName(String name) {
-            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
-            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification name: " + name);
-            });
-        }
-
+        public static OptionalThing<TargetDatabase> byName(String name) { return _slimmer.byName(name); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
-         * Get the classification by the code. (CaseInsensitive)
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span>
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static TargetDatabase codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof TargetDatabase) { return (TargetDatabase)code; }
-            return _codeClsMap.get(code.toString().toLowerCase());
-        }
-
+        public static TargetDatabase codeOf(Object code) { return _slimmer.codeOf(code); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
-         * Get the classification by the name (also called 'value' in ENUM world).
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span>
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         * @deprecated use byName(name) instead.
          */
-        public static TargetDatabase nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
+        public static TargetDatabase nameOf(String name) { return _slimmer.nameOf(name, nm -> valueOf(nm)); }
         /**
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<TargetDatabase> listAll() {
-            return new ArrayList<TargetDatabase>(Arrays.asList(values()));
-        }
-
+        public static List<TargetDatabase> listAll() { return _slimmer.listAll(values()); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * Get the list of classification elements in the specified group. (returns new copied list)
          * @param groupName The string of group name, which is case-insensitive. (NotNull)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         * @return The snapshot list of classification elements in the group. (NotNull)
+         * @throws ClassificationNotFoundException When the group is not found.
          */
         public static List<TargetDatabase> listByGroup(String groupName) {
             if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
             throw new ClassificationNotFoundException("Unknown classification group: TargetDatabase." + groupName);
         }
-
         /**
-         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use e.g. Stream API with of().</span>
          * @param codeList The list of plain code, which is case-insensitive. (NotNull)
          * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         * @deprecated use e.g. Stream API with of() instead.
          */
-        public static List<TargetDatabase> listOf(Collection<String> codeList) {
-            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
-            List<TargetDatabase> clsList = new ArrayList<TargetDatabase>(codeList.size());
-            for (String code : codeList) { clsList.add(of(code).get()); }
-            return clsList;
-        }
-
+        public static List<TargetDatabase> listOf(Collection<String> codeList) { return _slimmer.listOf(codeList); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use listByGroup(groupName).</span>
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         * @deprecated use listByGroup(groupName) instead.
          */
-        public static List<TargetDatabase> groupOf(String groupName) {
-            return new ArrayList<TargetDatabase>(4);
-        }
-
+        public static List<TargetDatabase> groupOf(String groupName) { return new ArrayList<>(); }
         @Override public String toString() { return code(); }
     }
 
@@ -295,123 +194,73 @@ public interface CDef extends Classification {
      */
     public enum TargetLanguage implements CDef {
         /** Java */
-        Java("java", "Java", emptyStrings())
-        ,
+        Java("java", "Java"),
         /** C# */
-        C("csharp", "C#", emptyStrings())
-        ,
+        C("csharp", "C#"),
         /** Scala */
-        Scala("scala", "Scala", emptyStrings())
-        ;
-        private static final Map<String, TargetLanguage> _codeClsMap = new HashMap<String, TargetLanguage>();
-        private static final Map<String, TargetLanguage> _nameClsMap = new HashMap<String, TargetLanguage>();
-        static {
-            for (TargetLanguage value : values()) {
-                _codeClsMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
-                _nameClsMap.put(value.name().toLowerCase(), value);
-            }
-        }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private TargetLanguage(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        Scala("scala", "Scala");
+        private static ZzzoneSlimmer<TargetLanguage> _slimmer = new ZzzoneSlimmer<>(TargetLanguage.class, values());
+        private String _code; private String _alias;
+        private TargetLanguage(String code, String alias) { _code = code; _alias = alias; }
         public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
+        public Set<String> sisterSet() { return Collections.emptySet(); }
         public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.TargetLanguage; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
+        public boolean inGroup(String groupName) { return false; }
         /**
          * Get the classification of the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
          * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TargetLanguage> of(Object code) {
-            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
-            if (code instanceof TargetLanguage) { return OptionalThing.of((TargetLanguage)code); }
-            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
-            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification code: " + code);
-            });
-        }
-
+        public static OptionalThing<TargetLanguage> of(Object code) { return _slimmer.of(code); }
         /**
          * Find the classification by the name. (CaseInsensitive)
          * @param name The string of name, which is case-insensitive. (NotNull)
          * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TargetLanguage> byName(String name) {
-            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
-            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification name: " + name);
-            });
-        }
-
+        public static OptionalThing<TargetLanguage> byName(String name) { return _slimmer.byName(name); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
-         * Get the classification by the code. (CaseInsensitive)
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span>
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static TargetLanguage codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof TargetLanguage) { return (TargetLanguage)code; }
-            return _codeClsMap.get(code.toString().toLowerCase());
-        }
-
+        public static TargetLanguage codeOf(Object code) { return _slimmer.codeOf(code); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
-         * Get the classification by the name (also called 'value' in ENUM world).
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span>
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         * @deprecated use byName(name) instead.
          */
-        public static TargetLanguage nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
+        public static TargetLanguage nameOf(String name) { return _slimmer.nameOf(name, nm -> valueOf(nm)); }
         /**
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<TargetLanguage> listAll() {
-            return new ArrayList<TargetLanguage>(Arrays.asList(values()));
-        }
-
+        public static List<TargetLanguage> listAll() { return _slimmer.listAll(values()); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * Get the list of classification elements in the specified group. (returns new copied list)
          * @param groupName The string of group name, which is case-insensitive. (NotNull)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         * @return The snapshot list of classification elements in the group. (NotNull)
+         * @throws ClassificationNotFoundException When the group is not found.
          */
         public static List<TargetLanguage> listByGroup(String groupName) {
             if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
             throw new ClassificationNotFoundException("Unknown classification group: TargetLanguage." + groupName);
         }
-
         /**
-         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use e.g. Stream API with of().</span>
          * @param codeList The list of plain code, which is case-insensitive. (NotNull)
          * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         * @deprecated use e.g. Stream API with of() instead.
          */
-        public static List<TargetLanguage> listOf(Collection<String> codeList) {
-            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
-            List<TargetLanguage> clsList = new ArrayList<TargetLanguage>(codeList.size());
-            for (String code : codeList) { clsList.add(of(code).get()); }
-            return clsList;
-        }
-
+        public static List<TargetLanguage> listOf(Collection<String> codeList) { return _slimmer.listOf(codeList); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use listByGroup(groupName).</span>
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         * @deprecated use listByGroup(groupName) instead.
          */
-        public static List<TargetLanguage> groupOf(String groupName) {
-            return new ArrayList<TargetLanguage>(4);
-        }
-
+        public static List<TargetLanguage> groupOf(String groupName) { return new ArrayList<>(); }
         @Override public String toString() { return code(); }
     }
 
@@ -420,129 +269,77 @@ public interface CDef extends Classification {
      */
     public enum TargetContainer implements CDef {
         /** Lasta Di */
-        LastaDi("lasta_di", "Lasta Di", emptyStrings())
-        ,
+        LastaDi("lasta_di", "Lasta Di"),
         /** Spring Framework */
-        SpringFramework("spring", "Spring Framework", emptyStrings())
-        ,
+        SpringFramework("spring", "Spring Framework"),
         /** Google Guice */
-        GoogleGuice("guice", "Google Guice", emptyStrings())
-        ,
+        GoogleGuice("guice", "Google Guice"),
         /** Seasar (S2Container) */
-        SeasarS2Container("seasar", "Seasar (S2Container)", emptyStrings())
-        ,
+        SeasarS2Container("seasar", "Seasar (S2Container)"),
         /** CDI */
-        Cdi("cdi", "CDI", emptyStrings())
-        ;
-        private static final Map<String, TargetContainer> _codeClsMap = new HashMap<String, TargetContainer>();
-        private static final Map<String, TargetContainer> _nameClsMap = new HashMap<String, TargetContainer>();
-        static {
-            for (TargetContainer value : values()) {
-                _codeClsMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
-                _nameClsMap.put(value.name().toLowerCase(), value);
-            }
-        }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private TargetContainer(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        Cdi("cdi", "CDI");
+        private static ZzzoneSlimmer<TargetContainer> _slimmer = new ZzzoneSlimmer<>(TargetContainer.class, values());
+        private String _code; private String _alias;
+        private TargetContainer(String code, String alias) { _code = code; _alias = alias; }
         public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
+        public Set<String> sisterSet() { return Collections.emptySet(); }
         public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.TargetContainer; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
+        public boolean inGroup(String groupName) { return false; }
         /**
          * Get the classification of the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
          * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TargetContainer> of(Object code) {
-            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
-            if (code instanceof TargetContainer) { return OptionalThing.of((TargetContainer)code); }
-            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
-            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification code: " + code);
-            });
-        }
-
+        public static OptionalThing<TargetContainer> of(Object code) { return _slimmer.of(code); }
         /**
          * Find the classification by the name. (CaseInsensitive)
          * @param name The string of name, which is case-insensitive. (NotNull)
          * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TargetContainer> byName(String name) {
-            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
-            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification name: " + name);
-            });
-        }
-
+        public static OptionalThing<TargetContainer> byName(String name) { return _slimmer.byName(name); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
-         * Get the classification by the code. (CaseInsensitive)
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span>
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static TargetContainer codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof TargetContainer) { return (TargetContainer)code; }
-            return _codeClsMap.get(code.toString().toLowerCase());
-        }
-
+        public static TargetContainer codeOf(Object code) { return _slimmer.codeOf(code); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
-         * Get the classification by the name (also called 'value' in ENUM world).
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span>
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         * @deprecated use byName(name) instead.
          */
-        public static TargetContainer nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
+        public static TargetContainer nameOf(String name) { return _slimmer.nameOf(name, nm -> valueOf(nm)); }
         /**
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<TargetContainer> listAll() {
-            return new ArrayList<TargetContainer>(Arrays.asList(values()));
-        }
-
+        public static List<TargetContainer> listAll() { return _slimmer.listAll(values()); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * Get the list of classification elements in the specified group. (returns new copied list)
          * @param groupName The string of group name, which is case-insensitive. (NotNull)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         * @return The snapshot list of classification elements in the group. (NotNull)
+         * @throws ClassificationNotFoundException When the group is not found.
          */
         public static List<TargetContainer> listByGroup(String groupName) {
             if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
             throw new ClassificationNotFoundException("Unknown classification group: TargetContainer." + groupName);
         }
-
         /**
-         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use e.g. Stream API with of().</span>
          * @param codeList The list of plain code, which is case-insensitive. (NotNull)
          * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         * @deprecated use e.g. Stream API with of() instead.
          */
-        public static List<TargetContainer> listOf(Collection<String> codeList) {
-            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
-            List<TargetContainer> clsList = new ArrayList<TargetContainer>(codeList.size());
-            for (String code : codeList) { clsList.add(of(code).get()); }
-            return clsList;
-        }
-
+        public static List<TargetContainer> listOf(Collection<String> codeList) { return _slimmer.listOf(codeList); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use listByGroup(groupName).</span>
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         * @deprecated use listByGroup(groupName) instead.
          */
-        public static List<TargetContainer> groupOf(String groupName) {
-            return new ArrayList<TargetContainer>(4);
-        }
-
+        public static List<TargetContainer> groupOf(String groupName) { return new ArrayList<>(); }
         @Override public String toString() { return code(); }
     }
 
@@ -551,41 +348,24 @@ public interface CDef extends Classification {
      */
     public enum TaskType implements CDef {
         /** JDBC */
-        JDBC("jdbc", "JDBC", emptyStrings())
-        ,
+        JDBC("jdbc", "JDBC"),
         /** Doc */
-        Doc("doc", "Doc", emptyStrings())
-        ,
+        Doc("doc", "Doc"),
         /** Generate */
-        Generate("generate", "Generate", emptyStrings())
-        ,
+        Generate("generate", "Generate"),
         /** OutsideSqlTest */
-        OutsideSqlTest("outside_sql_test", "OutsideSqlTest", emptyStrings())
-        ,
+        OutsideSqlTest("outside_sql_test", "OutsideSqlTest"),
         /** Sql2Entity */
-        Sql2Entity("sql2entity", "Sql2Entity", emptyStrings())
-        ,
+        Sql2Entity("sql2entity", "Sql2Entity"),
         /** ReplaceSchema */
-        ReplaceSchema("replace_schema", "ReplaceSchema", emptyStrings())
-        ,
+        ReplaceSchema("replace_schema", "ReplaceSchema"),
         /** LoadDataReverse */
-        LoadDataReverse("load_data_reverse", "LoadDataReverse", emptyStrings())
-        ,
+        LoadDataReverse("load_data_reverse", "LoadDataReverse"),
         /** SchemaSyncCheck */
-        SchemaSyncCheck("schema_sync_check", "SchemaSyncCheck", emptyStrings())
-        ,
+        SchemaSyncCheck("schema_sync_check", "SchemaSyncCheck"),
         /** AlterCheck */
-        AlterCheck("alter_check", "AlterCheck", emptyStrings())
-        ;
-        private static final Map<String, TaskType> _codeClsMap = new HashMap<String, TaskType>();
-        private static final Map<String, TaskType> _nameClsMap = new HashMap<String, TaskType>();
-        static {
-            for (TaskType value : values()) {
-                _codeClsMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
-                _nameClsMap.put(value.name().toLowerCase(), value);
-            }
-        }
+        AlterCheck("alter_check", "AlterCheck");
+        private static ZzzoneSlimmer<TaskType> _slimmer = new ZzzoneSlimmer<>(TaskType.class, values());
         private static final Map<String, Map<String, Object>> _subItemMapMap = new HashMap<String, Map<String, Object>>();
         static {
             {
@@ -634,110 +414,70 @@ public interface CDef extends Classification {
                 _subItemMapMap.put(AlterCheck.code(), Collections.unmodifiableMap(subItemMap));
             }
         }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private TaskType(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        private String _code; private String _alias;
+        private TaskType(String code, String alias) { _code = code; _alias = alias; }
         public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
+        public Set<String> sisterSet() { return Collections.emptySet(); }
         public Map<String, Object> subItemMap() { return _subItemMapMap.get(code()); }
         public ClassificationMeta meta() { return CDef.DefMeta.TaskType; }
-
         public String manageArg() {
             return (String)subItemMap().get("manageArg");
         }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
+        public boolean inGroup(String groupName) { return false; }
         /**
          * Get the classification of the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
          * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TaskType> of(Object code) {
-            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
-            if (code instanceof TaskType) { return OptionalThing.of((TaskType)code); }
-            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
-            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification code: " + code);
-            });
-        }
-
+        public static OptionalThing<TaskType> of(Object code) { return _slimmer.of(code); }
         /**
          * Find the classification by the name. (CaseInsensitive)
          * @param name The string of name, which is case-insensitive. (NotNull)
          * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<TaskType> byName(String name) {
-            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
-            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification name: " + name);
-            });
-        }
-
+        public static OptionalThing<TaskType> byName(String name) { return _slimmer.byName(name); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
-         * Get the classification by the code. (CaseInsensitive)
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span>
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static TaskType codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof TaskType) { return (TaskType)code; }
-            return _codeClsMap.get(code.toString().toLowerCase());
-        }
-
+        public static TaskType codeOf(Object code) { return _slimmer.codeOf(code); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
-         * Get the classification by the name (also called 'value' in ENUM world).
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span>
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         * @deprecated use byName(name) instead.
          */
-        public static TaskType nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
+        public static TaskType nameOf(String name) { return _slimmer.nameOf(name, nm -> valueOf(nm)); }
         /**
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<TaskType> listAll() {
-            return new ArrayList<TaskType>(Arrays.asList(values()));
-        }
-
+        public static List<TaskType> listAll() { return _slimmer.listAll(values()); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * Get the list of classification elements in the specified group. (returns new copied list)
          * @param groupName The string of group name, which is case-insensitive. (NotNull)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         * @return The snapshot list of classification elements in the group. (NotNull)
+         * @throws ClassificationNotFoundException When the group is not found.
          */
         public static List<TaskType> listByGroup(String groupName) {
             if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
             throw new ClassificationNotFoundException("Unknown classification group: TaskType." + groupName);
         }
-
         /**
-         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use e.g. Stream API with of().</span>
          * @param codeList The list of plain code, which is case-insensitive. (NotNull)
          * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         * @deprecated use e.g. Stream API with of() instead.
          */
-        public static List<TaskType> listOf(Collection<String> codeList) {
-            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
-            List<TaskType> clsList = new ArrayList<TaskType>(codeList.size());
-            for (String code : codeList) { clsList.add(of(code).get()); }
-            return clsList;
-        }
-
+        public static List<TaskType> listOf(Collection<String> codeList) { return _slimmer.listOf(codeList); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use listByGroup(groupName).</span>
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         * @deprecated use listByGroup(groupName) instead.
          */
-        public static List<TaskType> groupOf(String groupName) {
-            return new ArrayList<TaskType>(4);
-        }
-
+        public static List<TaskType> groupOf(String groupName) { return new ArrayList<>(); }
         @Override public String toString() { return code(); }
     }
 
@@ -746,281 +486,276 @@ public interface CDef extends Classification {
      */
     public enum NgMark implements CDef {
         /** PreviousNG: has problems on previous ddl */
-        PreviousNG("previous-NG", "PreviousNG", emptyStrings())
-        ,
+        PreviousNG("previous-NG", "PreviousNG"),
         /** AlterNG: has problems on alter ddl */
-        AlterNG("alter-NG", "AlterNG", emptyStrings())
-        ,
+        AlterNG("alter-NG", "AlterNG"),
         /** NextNG: has problems on next ddl */
-        NextNG("next-NG", "NextNG", emptyStrings())
-        ;
-        private static final Map<String, NgMark> _codeClsMap = new HashMap<String, NgMark>();
-        private static final Map<String, NgMark> _nameClsMap = new HashMap<String, NgMark>();
-        static {
-            for (NgMark value : values()) {
-                _codeClsMap.put(value.code().toLowerCase(), value);
-                for (String sister : value.sisterSet()) { _codeClsMap.put(sister.toLowerCase(), value); }
-                _nameClsMap.put(value.name().toLowerCase(), value);
-            }
-        }
-        private String _code; private String _alias; private Set<String> _sisterSet;
-        private NgMark(String code, String alias, String[] sisters)
-        { _code = code; _alias = alias; _sisterSet = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters))); }
+        NextNG("next-NG", "NextNG");
+        private static ZzzoneSlimmer<NgMark> _slimmer = new ZzzoneSlimmer<>(NgMark.class, values());
+        private String _code; private String _alias;
+        private NgMark(String code, String alias) { _code = code; _alias = alias; }
         public String code() { return _code; } public String alias() { return _alias; }
-        public Set<String> sisterSet() { return _sisterSet; }
+        public Set<String> sisterSet() { return Collections.emptySet(); }
         public Map<String, Object> subItemMap() { return Collections.emptyMap(); }
         public ClassificationMeta meta() { return CDef.DefMeta.NgMark; }
-
-        public boolean inGroup(String groupName) {
-            return false;
-        }
-
+        public boolean inGroup(String groupName) { return false; }
         /**
          * Get the classification of the code. (CaseInsensitive)
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns empty)
          * @return The optional classification corresponding to the code. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<NgMark> of(Object code) {
-            if (code == null) { return OptionalThing.ofNullable(null, () -> { throw new ClassificationNotFoundException("null code specified"); }); }
-            if (code instanceof NgMark) { return OptionalThing.of((NgMark)code); }
-            if (code instanceof OptionalThing<?>) { return of(((OptionalThing<?>)code).orElse(null)); }
-            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification code: " + code);
-            });
-        }
-
+        public static OptionalThing<NgMark> of(Object code) { return _slimmer.of(code); }
         /**
          * Find the classification by the name. (CaseInsensitive)
          * @param name The string of name, which is case-insensitive. (NotNull)
          * @return The optional classification corresponding to the name. (NotNull, EmptyAllowed: if not found, returns empty)
          */
-        public static OptionalThing<NgMark> byName(String name) {
-            if (name == null) { throw new IllegalArgumentException("The argument 'name' should not be null."); }
-            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () ->{
-                throw new ClassificationNotFoundException("Unknown classification name: " + name);
-            });
-        }
-
+        public static OptionalThing<NgMark> byName(String name) { return _slimmer.byName(name); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span> <br>
-         * Get the classification by the code. (CaseInsensitive)
+         * <span style="color: #AD4747; font-size: 120%">Old style so use of(code).</span>
          * @param code The value of code, which is case-insensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the code. (NullAllowed: if not found, returns null)
          */
-        public static NgMark codeOf(Object code) {
-            if (code == null) { return null; }
-            if (code instanceof NgMark) { return (NgMark)code; }
-            return _codeClsMap.get(code.toString().toLowerCase());
-        }
-
+        public static NgMark codeOf(Object code) { return _slimmer.codeOf(code); }
         /**
-         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span> <br>
-         * Get the classification by the name (also called 'value' in ENUM world).
+         * <span style="color: #AD4747; font-size: 120%">Old style so use byName(name).</span>
          * @param name The string of name, which is case-sensitive. (NullAllowed: if null, returns null)
          * @return The instance of the corresponding classification to the name. (NullAllowed: if not found, returns null)
+         * @deprecated use byName(name) instead.
          */
-        public static NgMark nameOf(String name) {
-            if (name == null) { return null; }
-            try { return valueOf(name); } catch (RuntimeException ignored) { return null; }
-        }
-
+        public static NgMark nameOf(String name) { return _slimmer.nameOf(name, nm -> valueOf(nm)); }
         /**
          * Get the list of all classification elements. (returns new copied list)
          * @return The snapshot list of all classification elements. (NotNull)
          */
-        public static List<NgMark> listAll() {
-            return new ArrayList<NgMark>(Arrays.asList(values()));
-        }
-
+        public static List<NgMark> listAll() { return _slimmer.listAll(values()); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * Get the list of classification elements in the specified group. (returns new copied list)
          * @param groupName The string of group name, which is case-insensitive. (NotNull)
-         * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if not found, throws exception)
+         * @return The snapshot list of classification elements in the group. (NotNull)
+         * @throws ClassificationNotFoundException When the group is not found.
          */
         public static List<NgMark> listByGroup(String groupName) {
             if (groupName == null) { throw new IllegalArgumentException("The argument 'groupName' should not be null."); }
             throw new ClassificationNotFoundException("Unknown classification group: NgMark." + groupName);
         }
-
         /**
-         * Get the list of classification elements corresponding to the specified codes. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use e.g. Stream API with of().</span>
          * @param codeList The list of plain code, which is case-insensitive. (NotNull)
          * @return The snapshot list of classification elements in the code list. (NotNull, EmptyAllowed: when empty specified)
+         * @deprecated use e.g. Stream API with of() instead.
          */
-        public static List<NgMark> listOf(Collection<String> codeList) {
-            if (codeList == null) { throw new IllegalArgumentException("The argument 'codeList' should not be null."); }
-            List<NgMark> clsList = new ArrayList<NgMark>(codeList.size());
-            for (String code : codeList) { clsList.add(of(code).get()); }
-            return clsList;
-        }
-
+        public static List<NgMark> listOf(Collection<String> codeList) { return _slimmer.listOf(codeList); }
         /**
-         * Get the list of classification elements in the specified group. (returns new copied list) <br>
+         * <span style="color: #AD4747; font-size: 120%">Old style so use listByGroup(groupName).</span>
          * @param groupName The string of group name, which is case-sensitive. (NullAllowed: if null, returns empty list)
          * @return The snapshot list of classification elements in the group. (NotNull, EmptyAllowed: if the group is not found)
+         * @deprecated use listByGroup(groupName) instead.
          */
-        public static List<NgMark> groupOf(String groupName) {
-            return new ArrayList<NgMark>(4);
-        }
-
+        public static List<NgMark> groupOf(String groupName) { return new ArrayList<>(); }
         @Override public String toString() { return code(); }
     }
 
     public enum DefMeta implements ClassificationMeta {
         /** general boolean classification for every flg-column */
-        Flg
-        ,
+        Flg(cd -> CDef.Flg.of(cd), nm -> CDef.Flg.byName(nm)
+        , () -> CDef.Flg.listAll(), gp -> CDef.Flg.listByGroup(gp)
+        , ClassificationCodeType.Number, ClassificationUndefinedHandlingType.EXCEPTION),
+
         /** databases DBFlute cau use */
-        TargetDatabase
-        ,
+        TargetDatabase(cd -> CDef.TargetDatabase.of(cd), nm -> CDef.TargetDatabase.byName(nm)
+        , () -> CDef.TargetDatabase.listAll(), gp -> CDef.TargetDatabase.listByGroup(gp)
+        , ClassificationCodeType.String, ClassificationUndefinedHandlingType.EXCEPTION),
+
         /** databases DBFlute cau use */
-        TargetLanguage
-        ,
+        TargetLanguage(cd -> CDef.TargetLanguage.of(cd), nm -> CDef.TargetLanguage.byName(nm)
+        , () -> CDef.TargetLanguage.listAll(), gp -> CDef.TargetLanguage.listByGroup(gp)
+        , ClassificationCodeType.String, ClassificationUndefinedHandlingType.EXCEPTION),
+
         /** containers DBFlute cau use */
-        TargetContainer
-        ,
+        TargetContainer(cd -> CDef.TargetContainer.of(cd), nm -> CDef.TargetContainer.byName(nm)
+        , () -> CDef.TargetContainer.listAll(), gp -> CDef.TargetContainer.listByGroup(gp)
+        , ClassificationCodeType.String, ClassificationUndefinedHandlingType.EXCEPTION),
+
         /** DBFlute tasks e.g. jdbc, doc */
-        TaskType
-        ,
+        TaskType(cd -> CDef.TaskType.of(cd), nm -> CDef.TaskType.byName(nm)
+        , () -> CDef.TaskType.listAll(), gp -> CDef.TaskType.listByGroup(gp)
+        , ClassificationCodeType.String, ClassificationUndefinedHandlingType.EXCEPTION),
+
         /** Alter Check NG-mark */
-        NgMark
-        ;
-        public String classificationName() {
-            return name(); // same as definition name
+        NgMark(cd -> CDef.NgMark.of(cd), nm -> CDef.NgMark.byName(nm)
+        , () -> CDef.NgMark.listAll(), gp -> CDef.NgMark.listByGroup(gp)
+        , ClassificationCodeType.String, ClassificationUndefinedHandlingType.EXCEPTION);
+
+        private static final Map<String, DefMeta> _nameMetaMap = new HashMap<>();
+        static {
+            for (DefMeta value : values()) {
+                _nameMetaMap.put(value.name().toLowerCase(), value);
+            }
+        }
+        private final Function<Object, OptionalThing<? extends Classification>> _ofCall;
+        private final Function<String, OptionalThing<? extends Classification>> _byNameCall;
+        private final Supplier<List<? extends Classification>> _listAllCall;
+        private final Function<String, List<? extends Classification>> _listByGroupCall;
+        private final ClassificationCodeType _codeType;
+        private final ClassificationUndefinedHandlingType _undefinedHandlingType;
+        private DefMeta(Function<Object, OptionalThing<? extends Classification>> ofCall
+                      , Function<String, OptionalThing<? extends Classification>> byNameCall
+                      , Supplier<List<? extends Classification>> listAllCall
+                      , Function<String, List<? extends Classification>> listByGroupCall
+                      , ClassificationCodeType codeType
+                      , ClassificationUndefinedHandlingType undefinedHandlingType
+                ) {
+            _ofCall = ofCall;
+            _byNameCall = byNameCall;
+            _listAllCall = listAllCall;
+            _listByGroupCall = listByGroupCall;
+            _codeType = codeType;
+            _undefinedHandlingType = undefinedHandlingType;
+        }
+        public String classificationName() { return name(); } // same as definition name
+
+        public OptionalThing<? extends Classification> of(Object code) { return _ofCall.apply(code); }
+        public OptionalThing<? extends Classification> byName(String name) { return _byNameCall.apply(name); }
+
+        public Classification codeOf(Object code) // null allowed, old style
+        { return of(code).orElse(null); }
+        public Classification nameOf(String name) { // null allowed, old style
+            if (name == null) { return null; } // for compatible
+            return byName(name).orElse(null); // case insensitive
         }
 
-        public OptionalThing<? extends Classification> of(Object code) {
-            if (Flg.name().equals(name())) { return CDef.Flg.of(code); }
-            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.of(code); }
-            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.of(code); }
-            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.of(code); }
-            if (TaskType.name().equals(name())) { return CDef.TaskType.of(code); }
-            if (NgMark.name().equals(name())) { return CDef.NgMark.of(code); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public OptionalThing<? extends Classification> byName(String name) {
-            if (Flg.name().equals(name())) { return CDef.Flg.byName(name); }
-            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.byName(name); }
-            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.byName(name); }
-            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.byName(name); }
-            if (TaskType.name().equals(name())) { return CDef.TaskType.byName(name); }
-            if (NgMark.name().equals(name())) { return CDef.NgMark.byName(name); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public Classification codeOf(Object code) { // null if not found, old style so use of(code)
-            if (Flg.name().equals(name())) { return CDef.Flg.codeOf(code); }
-            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.codeOf(code); }
-            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.codeOf(code); }
-            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.codeOf(code); }
-            if (TaskType.name().equals(name())) { return CDef.TaskType.codeOf(code); }
-            if (NgMark.name().equals(name())) { return CDef.NgMark.codeOf(code); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public Classification nameOf(String name) { // null if not found, old style so use byName(name)
-            if (Flg.name().equals(name())) { return CDef.Flg.valueOf(name); }
-            if (TargetDatabase.name().equals(name())) { return CDef.TargetDatabase.valueOf(name); }
-            if (TargetLanguage.name().equals(name())) { return CDef.TargetLanguage.valueOf(name); }
-            if (TargetContainer.name().equals(name())) { return CDef.TargetContainer.valueOf(name); }
-            if (TaskType.name().equals(name())) { return CDef.TaskType.valueOf(name); }
-            if (NgMark.name().equals(name())) { return CDef.NgMark.valueOf(name); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public List<Classification> listAll() {
-            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.listAll()); }
-            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.listAll()); }
-            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listAll()); }
-            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listAll()); }
-            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listAll()); }
-            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.listAll()); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public List<Classification> listByGroup(String groupName) { // exception if not found
-            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.listByGroup(groupName)); }
-            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.listByGroup(groupName)); }
-            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listByGroup(groupName)); }
-            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listByGroup(groupName)); }
-            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listByGroup(groupName)); }
-            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.listByGroup(groupName)); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public List<Classification> listOf(Collection<String> codeList) {
-            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.listOf(codeList)); }
-            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.listOf(codeList)); }
-            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.listOf(codeList)); }
-            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.listOf(codeList)); }
-            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.listOf(codeList)); }
-            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.listOf(codeList)); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
-
-        public List<Classification> groupOf(String groupName) { // old style
-            if (Flg.name().equals(name())) { return toClsList(CDef.Flg.groupOf(groupName)); }
-            if (TargetDatabase.name().equals(name())) { return toClsList(CDef.TargetDatabase.groupOf(groupName)); }
-            if (TargetLanguage.name().equals(name())) { return toClsList(CDef.TargetLanguage.groupOf(groupName)); }
-            if (TargetContainer.name().equals(name())) { return toClsList(CDef.TargetContainer.groupOf(groupName)); }
-            if (TaskType.name().equals(name())) { return toClsList(CDef.TaskType.groupOf(groupName)); }
-            if (NgMark.name().equals(name())) { return toClsList(CDef.NgMark.groupOf(groupName)); }
-            throw new IllegalStateException("Unknown definition: " + this); // basically unreachable
-        }
+        public List<Classification> listAll()
+        { return toClsList(_listAllCall.get()); }
+        public List<Classification> listByGroup(String groupName) // exception if not found
+        { return toClsList(_listByGroupCall.apply(groupName)); }
 
         @SuppressWarnings("unchecked")
-        private List<Classification> toClsList(List<?> clsList) {
-            return (List<Classification>)clsList;
+        private List<Classification> toClsList(List<?> clsList) { return (List<Classification>)clsList; }
+
+        public List<Classification> listOf(Collection<String> codeList) { // copied from slimmer, old style
+            if (codeList == null) {
+                throw new IllegalArgumentException("The argument 'codeList' should not be null.");
+            }
+            List<Classification> clsList = new ArrayList<>(codeList.size());
+            for (String code : codeList) {
+                clsList.add(of(code).get());
+            }
+            return clsList;
+        }
+        public List<Classification> groupOf(String groupName) { // empty if not found, old style
+            try {
+                return listByGroup(groupName); // case insensitive
+            } catch (IllegalArgumentException | ClassificationNotFoundException e) {
+                return new ArrayList<>(); // null or not found
+            }
         }
 
-        public ClassificationCodeType codeType() {
-            if (Flg.name().equals(name())) { return ClassificationCodeType.Number; }
-            if (TargetDatabase.name().equals(name())) { return ClassificationCodeType.String; }
-            if (TargetLanguage.name().equals(name())) { return ClassificationCodeType.String; }
-            if (TargetContainer.name().equals(name())) { return ClassificationCodeType.String; }
-            if (TaskType.name().equals(name())) { return ClassificationCodeType.String; }
-            if (NgMark.name().equals(name())) { return ClassificationCodeType.String; }
-            return ClassificationCodeType.String; // as default
-        }
-
-        public ClassificationUndefinedHandlingType undefinedHandlingType() {
-            if (Flg.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if (TargetDatabase.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if (TargetLanguage.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if (TargetContainer.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if (TaskType.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            if (NgMark.name().equals(name())) { return ClassificationUndefinedHandlingType.EXCEPTION; }
-            return ClassificationUndefinedHandlingType.LOGGING; // as default
-        }
+        public ClassificationCodeType codeType() { return _codeType; }
+        public ClassificationUndefinedHandlingType undefinedHandlingType() { return _undefinedHandlingType; }
 
         public static OptionalThing<CDef.DefMeta> find(String classificationName) { // instead of valueOf()
             if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
-            if (Flg.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.Flg); }
-            if (TargetDatabase.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetDatabase); }
-            if (TargetLanguage.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetLanguage); }
-            if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TargetContainer); }
-            if (TaskType.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.TaskType); }
-            if (NgMark.name().equalsIgnoreCase(classificationName)) { return OptionalThing.of(CDef.DefMeta.NgMark); }
-            return OptionalThing.ofNullable(null, () -> {
+            return OptionalThing.ofNullable(_nameMetaMap.get(classificationName.toLowerCase()), () -> {
                 throw new ClassificationNotFoundException("Unknown classification: " + classificationName);
             });
         }
-
         public static CDef.DefMeta meta(String classificationName) { // old style so use find(name)
-            if (classificationName == null) { throw new IllegalArgumentException("The argument 'classificationName' should not be null."); }
-            if (Flg.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.Flg; }
-            if (TargetDatabase.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetDatabase; }
-            if (TargetLanguage.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetLanguage; }
-            if (TargetContainer.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TargetContainer; }
-            if (TaskType.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.TaskType; }
-            if (NgMark.name().equalsIgnoreCase(classificationName)) { return CDef.DefMeta.NgMark; }
-            throw new IllegalStateException("Unknown classification: " + classificationName);
+            return find(classificationName).orElseTranslatingThrow(cause -> {
+                return new IllegalStateException("Unknown classification: " + classificationName);
+            });
+        }
+    }
+
+    public static class ZzzoneSlimmer<CLS extends CDef> {
+
+        public static Set<String> toSisterSet(String[] sisters) { // used by initializer so static
+            return Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(sisters)));
         }
 
-        @SuppressWarnings("unused")
-        private String[] xinternalEmptyString() {
-            return emptyStrings(); // to suppress 'unused' warning of import statement
+        private final Class<CLS> _clsType;
+        private final Map<String, CLS> _codeClsMap = new HashMap<>();
+        private final Map<String, CLS> _nameClsMap = new HashMap<>();
+
+        public ZzzoneSlimmer(Class<CLS> clsType, CLS[] values) {
+            _clsType = clsType;
+            initMap(values);
+        }
+
+        private void initMap(CLS[] values) {
+            for (CLS value : values) {
+                _codeClsMap.put(value.code().toLowerCase(), value);
+                for (String sister : value.sisterSet()) {
+                    _codeClsMap.put(sister.toLowerCase(), value);
+                }
+                _nameClsMap.put(value.name().toLowerCase(), value);
+            }
+        }
+
+        public OptionalThing<CLS> of(Object code) {
+            if (code == null) {
+                return OptionalThing.ofNullable(null, () -> {
+                    throw new ClassificationNotFoundException("null code specified");
+                });
+            }
+            if (_clsType.isAssignableFrom(code.getClass())) {
+                @SuppressWarnings("unchecked")
+                CLS cls = (CLS) code;
+                return OptionalThing.of(cls);
+            }
+            if (code instanceof OptionalThing<?>) {
+                return of(((OptionalThing<?>) code).orElse(null));
+            }
+            return OptionalThing.ofNullable(_codeClsMap.get(code.toString().toLowerCase()), () -> {
+                throw new ClassificationNotFoundException("Unknown classification code: " + code);
+            });
+        }
+
+        public OptionalThing<CLS> byName(String name) {
+            if (name == null) {
+                throw new IllegalArgumentException("The argument 'name' should not be null.");
+            }
+            return OptionalThing.ofNullable(_nameClsMap.get(name.toLowerCase()), () -> {
+                throw new ClassificationNotFoundException("Unknown classification name: " + name);
+            });
+        }
+
+        public CLS codeOf(Object code) {
+            if (code == null) {
+                return null;
+            }
+            if (_clsType.isAssignableFrom(code.getClass())) {
+                @SuppressWarnings("unchecked")
+                CLS cls = (CLS) code;
+                return cls;
+            }
+            return _codeClsMap.get(code.toString().toLowerCase());
+        }
+
+        public CLS nameOf(String name, java.util.function.Function<String, CLS> valueOfCall) {
+            if (name == null) {
+                return null;
+            }
+            try {
+                return valueOfCall.apply(name);
+            } catch (RuntimeException ignored) { // not found
+                return null;
+            }
+        }
+
+        public List<CLS> listAll(CLS[] clss) {
+            return new ArrayList<>(Arrays.asList(clss));
+        }
+
+        public List<CLS> listOf(Collection<String> codeList) {
+            if (codeList == null) {
+                throw new IllegalArgumentException("The argument 'codeList' should not be null.");
+            }
+            List<CLS> clsList = new ArrayList<>(codeList.size());
+            for (String code : codeList) {
+                clsList.add(of(code).get());
+            }
+            return clsList;
         }
     }
 }

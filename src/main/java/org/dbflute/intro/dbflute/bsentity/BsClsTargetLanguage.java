@@ -35,25 +35,25 @@ import org.dbflute.intro.dbflute.exentity.*;
  *     LANGUAGE_CODE, LANGUAGE_NAME, DISPLAY_ORDER
  *
  * [sequence]
- *
+ *     
  *
  * [identity]
- *
+ *     
  *
  * [version-no]
- *
+ *     
  *
  * [foreign table]
- *
+ *     
  *
  * [referrer table]
- *
+ *     
  *
  * [foreign property]
- *
+ *     
  *
  * [referrer property]
- *
+ *     
  *
  * [get/set template]
  * /= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -120,7 +120,7 @@ public abstract class BsClsTargetLanguage extends AbstractEntity implements Doma
      * @return The instance of classification definition (as ENUM type). (NullAllowed: when the column value is null)
      */
     public CDef.TargetLanguage getLanguageCodeAsTargetLanguage() {
-        return CDef.TargetLanguage.codeOf(getLanguageCode());
+        return CDef.TargetLanguage.of(getLanguageCode()).orElse(null);
     }
 
     /**
