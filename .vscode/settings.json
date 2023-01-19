@@ -1,3 +1,20 @@
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// VS CodeのWorkspaceの設定、実質的にプロジェクト設定としてみんなで共通の設定を入れる想定。
+//
+// User設定: 個人設定、背景色とか好みのもの
+// Workspace設定: プロジェクト設定、みんなで共通の設定
+//
+// 注1: リポジトリルートのdbflute-introディレクトリでVS CodeをOpenすることを前提とする。
+// (Openした直下の.vscodeのsettings.jsonがWorkspace設定になる)
+//
+// 注2: EclipseにおけるWorkspace設定というのは存在しないことになる。
+// User設定はPC全体の設定になるので、Introだけ有効にする個人設定というのはできない(と思われる)。
+// _/_/_/_/_/_/_/_/_/_/
 {
-  "editor.formatOnSave": true
+  // 保存ボタンを押したら自動的にフォーマットが掛かるように
+  "editor.formatOnSave": true,
+
+  // フォーマッターとしてPrettierを採用、ここを設定しないと自動フォーマットも効かない
+  // (User設定の方で別のフォーマッターを定義してても、ここで上書きする)
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
