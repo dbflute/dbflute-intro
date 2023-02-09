@@ -288,7 +288,7 @@ class Api {
   // ===============================================================================
   //                                                                   Client :: log
   //                                                                   =============
-  logBeanList(projectName: string) {
+  logBeanList(projectName: string): Promise<LogListResult> {
     return apiClient.post(`api/log/list/${projectName}`)
   }
 
