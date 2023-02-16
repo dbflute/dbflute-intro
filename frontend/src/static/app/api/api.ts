@@ -154,10 +154,8 @@ class Api {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
-  createClient(client: any, testConnection: boolean) {
-    return apiClient.post('api/client/create', {
-      body: { client, testConnection },
-    })
+  createClient(body: ClientCreateBody) {
+    return apiClient.post('api/client/create', body)
   }
 
   removeClient(clientBody: any) {
