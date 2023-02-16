@@ -145,6 +145,11 @@ class Api {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
+  /**
+   * DBFluteクライアントを作成する。
+   * @param {ClientCreateBody} body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   */
   createClient(body: ClientCreateBody) {
     return apiClient.post('api/client/create', body)
   }
