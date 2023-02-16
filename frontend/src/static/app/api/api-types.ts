@@ -18,9 +18,3 @@ type IntroClassificationsResult = {
   targetLanguageMap: { [key: string]: string }
   targetContainerMap: { [key: string]: string }
 }
-
-type LogBean = {
-  fileName: string
-  content: string
-}
-type LogListResult = LogBean[]
