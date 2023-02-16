@@ -107,28 +107,29 @@ export default withIntroTypes<Create>({
    * DBFluteクライアントを作成する。(作成ボタンの処理)
    */
   onclickCreate() {
-    let client = {
-      projectName: this.inputElementBy('[ref=projectName]').value,
-      databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
-      create: true,
-      mainSchemaSettings: {
-        user: this.inputElementBy('[ref=user]').value,
-        url: this.inputElementBy('[ref=url]').value,
-        schema: this.inputElementBy('[ref=schema]').value,
-        password: this.inputElementBy('[ref=password]').value,
+    const body: ClientCreateBody = {
+      client: {
+        projectName: this.inputElementBy('[ref=projectName]').value,
+        databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
+        languageCode: this.inputElementBy('[ref=languageCode]').value,
+        containerCode: this.inputElementBy('[ref=containerCode]').value,
+        packageBase: this.inputElementBy('[ref=packageBase]').value,
+        jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
+        mainSchemaSettings: {
+          url: this.inputElementBy('[ref=url]').value,
+          schema: this.inputElementBy('[ref=schema]').value,
+          user: this.inputElementBy('[ref=user]').value,
+          password: this.inputElementBy('[ref=password]').value,
+        },
+        dbfluteVersion: this.inputElementBy('[ref=dbfluteVersion]').value,
+        jdbcDriver: this.state.jdbcDriver,
+        schemaSyncCheckMap: {},
       },
-      schemaSyncCheckMap: {},
-      dbfluteVersion: this.inputElementBy('[ref=dbfluteVersion]').value,
-      packageBase: this.inputElementBy('[ref=packageBase]').value,
-      containerCode: this.inputElementBy('[ref=containerCode]').value,
-      languageCode: this.inputElementBy('[ref=languageCode]').value,
-      jdbcDriver: this.state.jdbcDriver,
-      jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
+      testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }
-    const testConnection = this.inputElementBy('[ref=testConnection]').checked
-    api.createWelcomeClient(client, testConnection).then(() => {
+    api.createClient(body).then(() => {
       appRoutes.main.open()
-      this.showToast(client.projectName)
+      this.showToast(body.client.projectName)
     })
   },
 
