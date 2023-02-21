@@ -157,32 +157,31 @@ export default withIntroTypes<Welcome>({
    * DBFluteクライアントを作成する。(作成ボタンの処理)
    */
   onclickCreate() {
-    // サーバーサイドのWelcomeCreateBody.javaのclient部分の直接的に関連
-    // #thinking jflute "create: true" はサーバーサイドで定義されていないので使われてないような？ (2022/03/17)
-    const client = {
-      projectName: this.inputElementBy('[ref=projectName]').value,
-      databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
-      create: true,
-      mainSchemaSettings: {
-        user: this.inputElementBy('[ref=user]').value,
-        url: this.inputElementBy('[ref=url]').value,
-        schema: this.inputElementBy('[ref=schema]').value,
-        password: this.inputElementBy('[ref=password]').value,
+    const body: WelcomeCreateBody = {
+      client: {
+        projectName: this.inputElementBy('[ref=projectName]').value,
+        databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
+        mainSchemaSettings: {
+          user: this.inputElementBy('[ref=user]').value,
+          url: this.inputElementBy('[ref=url]').value,
+          schema: this.inputElementBy('[ref=schema]').value,
+          password: this.inputElementBy('[ref=password]').value,
+        },
+        dbfluteVersion: this.latestVersion,
+        packageBase: this.inputElementBy('[ref=packageBase]').value,
+        containerCode: this.$('[ref=containerCode]').getAttribute('value'),
+        languageCode: this.$('[ref=languageCode]').getAttribute('value'),
+        jdbcDriver: this.state.jdbcDriver,
+        jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
       },
-      dbfluteVersion: this.latestVersion,
-      packageBase: this.inputElementBy('[ref=packageBase]').value,
-      containerCode: this.$('[ref=containerCode]').getAttribute('value'),
-      languageCode: this.$('[ref=languageCode]').getAttribute('value'),
-      jdbcDriver: this.state.jdbcDriver,
-      jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
+      testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }
-    const testConnection = this.inputElementBy('[ref=testConnection]').checked
     this.suLoading(true)
     api
-      .createWelcomeClient(client, testConnection)
+      .createWelcomeClient(body)
       .then(() => {
         appRoutes.main.open()
-        this.showToast(client.projectName)
+        this.showToast(body.client.projectName)
       })
       .finally(() => {
         this.suLoading(false)
