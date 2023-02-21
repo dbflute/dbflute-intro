@@ -51,6 +51,10 @@ public class DfpropDocumentAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    /**
+     * @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)
+     * @return dfpropのドキュメントに関する情報 (NotNull)
+     */
     @Execute
     public JsonResponse<DfpropDocumentResult> index(String projectName) {
         final LittleAdjustmentMap littleAdjustmentMap = dfpropReadLogic.findLittleAdjustmentMap(projectName);
@@ -90,12 +94,9 @@ public class DfpropDocumentAction extends IntroBaseAction {
             throw new DfpropFileNotFoundException(debugMsg, DocumentMap.DFPROP_NAME);
         }
         try {
-            return asStream(diagramName)
-                    .headerContentDispositionInline()
-                    .contentTypeJpeg()
-                    .data(Files.readAllBytes(diagram.toPath()));
+            return asStream(diagramName).headerContentDispositionInline().contentTypeJpeg().data(Files.readAllBytes(diagram.toPath()));
         } catch (IOException e) {
-            throw new IntroFileOperationException("Not found schemaDiagram file" , diagramName, e);
+            throw new IntroFileOperationException("Not found schemaDiagram file", diagramName, e);
         }
     }
 }

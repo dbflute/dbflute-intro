@@ -1,0 +1,19 @@
+map:{
+    # ==========================================================================
+    #                                                                 Remote Api
+    #                                                                 ==========
+    ; RemoteApiIntro = map:{
+        ; resourceMap = map:{
+            ; baseDir = ../src/main
+            ; resourceType = SWAGGER
+            ; resourceFile = $$baseDir$$/resources/remoteapi/schema/remoteapi_schema_intro_swagger.json
+        }
+        ; outputMap = map:{
+            ; outputDirectory = ../frontend/src/static
+            ; package = app.api
+        }
+        ; optionMap = map:{
+            ; ruleJsPath = ../src/main/resources/remoteapi/schema/remoteapi_schema_intro_rule.js
+        }
+    }
+}

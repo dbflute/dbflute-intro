@@ -32,12 +32,19 @@ public class ClientRowResult {
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     // DBFluteクライアント一覧で必要な項目だけ定義、必要になった時に追加 by jflute (2022/01/15) 
     // _/_/_/_/_/_/_/_/_/_/
+    /** DBFluteクライアントのプロジェクト名 e.g. maihamadb */
     @Required
     public String projectName;
+
+    /** DBMSを識別するコード e.g. mysql */
     @Required
     public CDef.TargetDatabase databaseCode;
+
+    /** 自動生成コードの言語を識別するコード e.g. java */
     @Required
     public CDef.TargetLanguage languageCode;
+
+    /** 自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di */
     @Required
     public CDef.TargetContainer containerCode;
 

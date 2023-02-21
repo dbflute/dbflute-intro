@@ -19,7 +19,7 @@
     <st-database-info></st-database-info>
   </route>
   <route path={ state.routes.filesLogs.path }>
-    <fl-logs></fl-logs>
+    <logs project-name={ props.projectName }></logs>
   </route>
 
   <script>
@@ -30,7 +30,7 @@
     import AlterCheck from './alter-check/alter-check.riot'
     import ExSchemaPolicyCheck from './schema-policy-check/ex-schema-policy-check.riot'
     import StDatabaseInfo from './database-infro/st-database-info.riot'
-    import FlLogs from './logs/fl-logs.riot'
+    import Logs from './logs/logs.riot'
     import { clientRoutes } from './client-router';
 
     export default {
@@ -41,7 +41,7 @@
         AlterCheck,
         ExSchemaPolicyCheck,
         StDatabaseInfo,
-        FlLogs,
+        Logs,
         Route
       },
       state: {

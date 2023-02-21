@@ -43,11 +43,14 @@ public class ClientListAction extends IntroBaseAction {
     // ===================================================================================
     //                                                                             Execute
     //                                                                             =======
+    /**
+     * @return DBFluteクライアントの基本情報のリスト (NotNull)
+     */
     @Execute
     public JsonResponse<List<ClientRowResult>> index() {
-        List<String> projectList = clientReadLogic.getProjectNameList();
-        List<ClientRowResult> beans = projectList.stream().map(project -> {
-            ClientModel clientModel = clientReadLogic.findClient(project).get();
+        List<String> projectNameList = clientReadLogic.getProjectNameList();
+        List<ClientRowResult> beans = projectNameList.stream().map(projectName -> {
+            ClientModel clientModel = clientReadLogic.findClient(projectName).get();
             return mappingToRowBean(clientModel);
         }).collect(Collectors.toList());
         return asJson(beans);
