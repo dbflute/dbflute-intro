@@ -205,6 +205,7 @@ export default withIntroTypes<AlterCheck>({
         .filter((file) => file.fileName.includes('.sql'))
         .map((file) => ({
           fileName: file.fileName,
+          // sqlファイル表示時に余白を用意するために改行(\n)を予め入れておく（多分そういう目的）
           content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         })),
