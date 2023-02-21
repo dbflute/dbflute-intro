@@ -1,0 +1,28 @@
+<alter-check-begin-form>
+  <!-- 新しいAlterDDLを作成するフォーム (written at 2022/03/13)
+  機能:
+   o AlterDDLファイル名を入力してsqlファイルを作成できる（ファイル名には必ず "alter-schema-" というprefixがつく）
+  作りの特徴:
+   o 呼び出し元からファイル作成後のコールバック(opts.updateHandler)を渡してもらい、ファイル作成が完了した際に実行する
+  -->
+  <h4>Begin New AlterCheck!!</h4>
+  <form class="ui form">
+    <div class="fields">
+      <div class="inline field { inputClasses() }">
+        <!-- alter-schema-"チケット名".sql という感じでチケット名を入力するためのinput -->
+        <label>alter-schema-</label>
+        <input type="text" ref="alterNameInput" placeholder="input ticket name">
+        <label>.sql</label>
+      </div>
+      <div class="inline field">
+        <!-- このボタンを押下するとファイル作成が行われる -->
+        <button type="button" class="ui primary button" onclick="{ createAlterSql }">Begin</button>
+      </div>
+    </div>
+  </form>
+
+  <script>
+    import AlterCheckBeginForm from './alter-check-begin-form'
+    export default AlterCheckBeginForm
+  </script>
+</alter-check-begin-form>

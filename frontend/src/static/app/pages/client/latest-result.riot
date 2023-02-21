@@ -1,0 +1,29 @@
+<latest-result>
+  <div if="{ state.loaded }">
+    <h3 if="{ props.showHeader }">{ props.headerTitle }</h3>
+    <div class="ui { props.success ? 'positive' : 'negative' } message">
+      <h4 class="latest-result-title">{ props.resultTitle }</h4>
+      <p if="{ props.resultMessage }">{ props.resultMessage }</p>
+      <p if="{ props.linkTitle && props.onClickLink }" >
+        <a onclick="{ props.onClickLink }">{ props.linkTitle }</a>
+      </p>
+      <a onclick="{ toggleLatestResult }">{ state.showContent ? 'hide latest log' : 'show latest log' }</a>
+      <div if="{ state.showContent }" class="ui message message-area">
+        <pre><code><raw content="{ props.content }"></raw></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    pre {
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+
+  <script>
+    import latestResult from './latest-result'
+    export default latestResult
+  </script>
+</latest-result>

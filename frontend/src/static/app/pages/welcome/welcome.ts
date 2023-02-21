@@ -5,7 +5,7 @@ import { readFile } from '../../shared/io-utils'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import { DropdownItem } from '../../components/dropdown/dropdown'
 
-interface WelcomeState {
+interface State {
   // JDBCドライバーのjarファイル情報を格納するオブジェクト
   // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
   // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ プルリクにて:
@@ -35,7 +35,7 @@ interface WelcomeState {
   oRMapperOptionsFlg: boolean
 }
 
-interface Welcome extends IntroRiotComponent<never, WelcomeState> {
+interface Welcome extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========

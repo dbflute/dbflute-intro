@@ -1,0 +1,97 @@
+<alter-check>
+  <!-- ClientのAlterCheck画面 (written at 2022/03/13)
+  機能:
+   o AlterCheckが実行できる
+   o 2Stepに分けて処理を行える
+   o Step1ではAlterDDLの用意を行う。未リリースのAlterDDLがある場合はそれも表示される
+   o Step2ではAlterDDLの実行を行う。編集中のDDLが他にもあればそれも表示される
+  作りの特徴:
+   o Stepの切り替えは編集中のAlterDDLファイルが存在するかしないかによって切り替わる
+   o SQLファイルの一覧のためにドロップダウンを利用している
+   o prism.jsを使ってSQLのハイライトを実現している
+   #thinking STEP1とSTEP2で利用しているtagをそれぞれ別ディレクトリに分けるなどした方が迷子になりづらそう by hakiba (2022/03/24)
+  -->
+  <div class="ui container">
+    <h2>AlterCheck</h2>
+
+    <section class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/intro/alterbyintro.html" target="_blank">"AlterCheck"?</a>
+      </div>
+      <p>A mechanism to validate differential DDL with ReplaceSchema.</p>
+    </section>
+
+    <div class="ui divider"></div>
+
+    <!-- Step 1: AlterDDLの用意 -->
+    <section if="{ !isEditing() }">
+      <h3>Step1. Prepare alter sql</h3>
+      <!-- 未リリースの確認済みDDLの一覧 -->
+      <alter-check-checked checked-zip="{ state.checkedZip }" unreleased-dir="{ state.unreleasedDir }"/>
+      <!-- 新しいDDLファイルを作成するためのフォーム -->
+      <alter-check-form project-name="{ props.projectName }" on-complete="{ onCompletePrepareAlterSql }"/>
+    </section>
+
+    <!-- Step 2: AlterCheckの実行 -->
+    <section if="{ isEditing() }">
+      <h3>Step2. Execute AlterCheck</h3>
+
+      <div class="ui list">
+        <div class="item" each="{ alterSql in state.editingSqls }">
+          <!-- 押下された alter sql ファイルの表示・非表示を切り替える。また、STEP1で作成されたファイルには印をつけて表示する -->
+          <a onclick="{ () => onclickAlterSql(alterSql) }">{ alterSql.fileName } <span if="{ nowPrepared(alterSql.fileName) }">(now prepared)</span></a>
+          <div if="{ alterSql.show }" class="ui message message-area">
+            <!-- SQLの改行やインデントが反映されるようにpreタグを利用
+              <pre><code>...</code></pre> は一行で記述しないと余分な改行やインデントが入ってしまうので注意
+              cssのwhite-spaceを利用するとSQLの先頭に記述したインデントが効かなくなるのでこうするしかなさそう...
+              #thinking: <pre><code>...</code></pre>を含めて共通のコンポーネントにした方が良い by hakiba
+            -->
+            <pre><code><raw content="{ alterSql.content }"></raw></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui list">
+        <div class="item">
+          <!-- AlterDDLディレクトリを開くボタン -->
+          <button class="ui button" onclick="{ onclickOpenAlterDir }"><i class="folder open icon"></i>SQL Files Directory</button>
+        </div>
+
+        <div class="item altercheck-execution">
+          <!-- AlterCheckを実行するボタン -->
+          <button class="ui red button" onclick="{ onclickAlterCheckTask }"><i class="play icon"></i>Execute AlterCheck</button>
+          <!-- AlterCheckの結果HTMLを表示するボタン -->
+          <button class="ui button blue" if="{ state.hasAlterCheckResultHtml }" onclick="{ onclickOpenAlterCheckResultHTML }"><i
+            class="linkify icon"></i>Open Check Result HTML
+          </button>
+        </div>
+      </div>
+      <!-- 最新のAlterCheckの結果ログを出力する。実行ログがなければ何も表示しない -->
+      <div class="latest-result" if="{ state.latestResult }">
+        <latest-result
+          project-name="{ props.projectName }"
+          task="alterCheck"
+          success="{ false }"
+          show-header="{ false }"
+          content="{ state.latestResult.content }"
+          result-title="{ state.latestResult.title }"
+          result-message="{ state.latestResult.message }"
+        ></latest-result>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 実行時に表示されるモーダル -->
+  <task-execute-modal status="{ state.executeStatus }" message="{ state.executeResultMessage }"></task-execute-modal>
+
+  <style>
+    .latest-result {
+      margin-top: 1em;
+    }
+  </style>
+
+  <script>
+    import alterCheck from './alter-check'
+    export default alterCheck
+  </script>
+</alter-check>

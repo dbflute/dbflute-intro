@@ -58,14 +58,14 @@ const handleError = (error: AxiosError) => {
     }
     if (response.data.messages) {
       // basically here (unified JSON if 400)
-      let messageList = []
+      const messageList = []
       for (let key in response.data.messages) {
         for (let i in response.data.messages[key]) {
-          let message = response.data.messages[key][i]
+          const message = response.data.messages[key][i]
           if (key.match(/List/)) {
             if (key.match(/[0-9]/)) {
               let newKey = ''
-              let splitList = key.split(/[0-9]/)
+              const splitList = key.split(/[0-9]/)
               for (i in splitList) {
                 newKey += splitList[i].replace(/[0-9]/, '')
               }
@@ -261,7 +261,7 @@ class Api {
     return apiClient.get(`api/playsql/migration/alter/open/${projectName}`)
   }
 
-  alter(projectName: string) {
+  alter(projectName: string): Promise<AlterSQLResult> {
     return apiClient.get(`api/playsql/migration/alter/${projectName}/`)
   }
 
@@ -269,11 +269,9 @@ class Api {
     return apiClient.post(`api/playsql/migration/alter/prepare/${projectName}/`)
   }
 
-  createAlterSql(projectName: string, alterFileName: string) {
+  createAlterSql(projectName: string, alterFileName: string): Promise<void> {
     return apiClient.post(`api/playsql/migration/alter/create/${projectName}/`, {
-      body: {
-        alterFileName,
-      },
+      alterFileName,
     })
   }
 
@@ -301,7 +299,7 @@ class Api {
     })
   }
 
-  latestResult(projectName: string, task: string) {
+  latestResult(projectName: string, task: string): Promise<LogBean> {
     return apiClient.get(`api/log/latest/${projectName}/${task}`)
   }
 
@@ -328,18 +326,9 @@ class Api {
   // ===============================================================================
   //                                                                           Task
   //                                                                          ======
-  task(projectName: string, task: string) {
+  task(projectName: string, task: string): Promise<TaskExecutionResult> {
     return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
 }
 
 export const api = new Api()
-
-export class DbfluteTask {
-  task(task: string, projectName: string, callback: (message: string) => void) {
-    return api.task(projectName, task).then((response) => {
-      const message = response.status === 200 ? 'success' : 'failure'
-      callback(message)
-    })
-  }
-}

@@ -6,10 +6,10 @@
   <div class="ui segment">
     <div class="ui two column very relaxed stackable grid">
       <div class="column">
-        <alter-check-begin-form ref="beginform" projectname="{ opts.projectname }" updatehandler="{ opts.updatehandler }" />
+        <alter-check-begin-form ref="beginform" project-name="{ props.projectName }" on-complete-create="{ props.onComplete }" />
       </div>
       <div class="column">
-        <alter-check-fix-form projectname="{ opts.projectname }" updatehandler="{ opts.updatehandler }" />
+        <alter-check-fix-form project-name="{ props.projectName }" on-complete-open-dir="{ props.onComplete }" />
       </div>
     </div>
     <!-- semantic-uiを利用してフォームの間に区切り線を引いている -->
@@ -17,4 +17,14 @@
       Or
     </div>
   </div>
+  <script>
+    import AlterCheckBeginForm from './alter-check-begin-form.riot'
+    import AlterCheckFixForm from './alter-check-fix-form.riot'
+    export default {
+      components: {
+        AlterCheckBeginForm,
+        AlterCheckFixForm
+      }
+    }
+  </script>
 </alter-check-form>

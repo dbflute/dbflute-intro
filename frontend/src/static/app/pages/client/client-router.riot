@@ -10,7 +10,7 @@
     <ex-replace-schema></ex-replace-schema>
   </route>
   <route path={ state.routes.executeAlterCheck.path }>
-    <ex-alter-check></ex-alter-check>
+    <alter-check project-name={ props.projectName }></alter-check>
   </route>
   <route path={ state.routes.executeSchemaPolicyCheck.path }>
     <ex-schema-policy-check></ex-schema-policy-check>
@@ -27,7 +27,7 @@
     import ExDocuments from './documents/ex-documents.riot'
     import ExSchemaSyncCheck from './schema-sync-check/ex-schema-sync-check.riot'
     import ExReplaceSchema from './replace-schema/ex-replace-schema.riot'
-    import ExAlterCheck from './alter-check/ex-alter-check.riot'
+    import AlterCheck from './alter-check/alter-check.riot'
     import ExSchemaPolicyCheck from './schema-policy-check/ex-schema-policy-check.riot'
     import StDatabaseInfo from './database-infro/st-database-info.riot'
     import Logs from './logs/logs.riot'
@@ -38,7 +38,7 @@
         ExDocuments,
         ExSchemaSyncCheck,
         ExReplaceSchema,
-        ExAlterCheck,
+        AlterCheck,
         ExSchemaPolicyCheck,
         StDatabaseInfo,
         Logs,
@@ -46,7 +46,7 @@
       },
       state: {
         routes: clientRoutes,
-      },
+      }
     }
   </script>
 </client-router>
