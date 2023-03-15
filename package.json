@@ -30,7 +30,7 @@
     "semantic-ui-riot": "^2.4.0",
     "style-loader": "^0.23.1",
     "vinyl-source-stream": "^2.0.0",
-    "webpack": "^5.75.0",
+    "webpack": "^5.76.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^4.11.0"
   },
