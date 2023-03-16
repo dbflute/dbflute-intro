@@ -1,9 +1,15 @@
 import i18n from '../../components/common/i18n.riot'
 import { api } from '../../api/api'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
-import { DropdownItem, defaultDropDownItem } from '../../components/dropdown/dropdown'
+import { DropdownItem } from '../../components/dropdown/dropdown'
 import { appRoutes } from '../../app-router'
 import { readFile } from '../../shared/io-utils'
+
+const defaultDropDownItem = {
+  value: '',
+  label: 'not selected',
+  default: true,
+}
 
 interface State {
   jdbcDriver: { fileName: string; data: string }
@@ -16,7 +22,6 @@ interface Create extends IntroRiotComponent<never, State> {
   //                                                                          ==========
   defaultDatabaseCode: string
   defaultJdbcDriver: string
-  defaultJdbcUrl: string
   defaultLanguageCode: string
   defaultContainerCode: string
   databaseMap: { [key: string]: DatabaseDefBean }
@@ -57,9 +62,8 @@ export default withIntroTypes<Create>({
   //                                                                          ==========
   defaultDatabaseCode: '',
   defaultJdbcDriver: 'com.mysql.jdbc.Driver',
-  defaultJdbcUrl: 'jdbc:mysql://localhost:3306/xxx',
-  defaultLanguageCode: 'java',
-  defaultContainerCode: 'lasta_di',
+  defaultLanguageCode: '',
+  defaultContainerCode: '',
   databaseMap: {},
   engineVersions: [],
   targetDatabaseItems: [],
@@ -111,18 +115,18 @@ export default withIntroTypes<Create>({
       client: {
         projectName: this.inputElementBy('[ref=projectName]').value,
         databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
-        languageCode: this.inputElementBy('[ref=languageCode]').value,
-        containerCode: this.inputElementBy('[ref=containerCode]').value,
+        languageCode: this.$('[ref=languageCode]').getAttribute('value'),
+        containerCode: this.$('[ref=containerCode]').getAttribute('value'),
         packageBase: this.inputElementBy('[ref=packageBase]').value,
         jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
+        dbfluteVersion: this.$('[ref=languageCode]').getAttribute('value'),
+        jdbcDriver: this.state.jdbcDriver,
         mainSchemaSettings: {
           url: this.inputElementBy('[ref=url]').value,
           schema: this.inputElementBy('[ref=schema]').value,
           user: this.inputElementBy('[ref=user]').value,
           password: this.inputElementBy('[ref=password]').value,
         },
-        dbfluteVersion: this.inputElementBy('[ref=dbfluteVersion]').value,
-        jdbcDriver: this.state.jdbcDriver,
         schemaSyncCheckMap: {},
       },
       testConnection: this.inputElementBy('[ref=testConnection]').checked,
@@ -163,12 +167,18 @@ export default withIntroTypes<Create>({
         }),
         defaultDropDownItem,
       ],
-      targetLanguageItems: Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-        return { value: key, label: value, default: false }
-      }),
-      targetContainerItems: Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-        return { value: key, label: value, default: false }
-      }),
+      targetLanguageItems: [
+        ...Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
+          return { value: key, label: value, default: false }
+        }),
+        defaultDropDownItem,
+      ],
+      targetContainerItems: [
+        ...Object.entries(classifications.targetContainerMap).map(([key, value]) => {
+          return { value: key, label: value, default: false }
+        }),
+        defaultDropDownItem,
+      ],
     }
   },
 
