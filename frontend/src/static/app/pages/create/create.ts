@@ -119,7 +119,7 @@ export default withIntroTypes<Create>({
         containerCode: this.$('[ref=containerCode]').getAttribute('value'),
         packageBase: this.inputElementBy('[ref=packageBase]').value,
         jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
-        dbfluteVersion: this.$('[ref=languageCode]').getAttribute('value'),
+        dbfluteVersion: this.$('[ref=dbfluteVersion]').getAttribute('value'),
         jdbcDriver: this.state.jdbcDriver,
         mainSchemaSettings: {
           url: this.inputElementBy('[ref=url]').value,
@@ -131,6 +131,7 @@ export default withIntroTypes<Create>({
       },
       testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }
+
     api.createClient(body).then(() => {
       appRoutes.main.open()
       this.showToast(body.client.projectName)
