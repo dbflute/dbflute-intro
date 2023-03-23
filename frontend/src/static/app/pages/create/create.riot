@@ -24,7 +24,7 @@
             <label is="i18n">LABEL_jdbcDriverFqcn</label>
             <input type="text" ref="jdbcDriverFqcn" placeholder="com.mysql.jdbc.Driver" value={ defaultJdbcDriver }/>
           </div>
-          <div class="required field" if="{ state.needsJdbcDriver }">
+          <div class="required field" hidden={ !state.needsJdbcDriver }>
             <label is="i18n">LABEL_jdbcDriverFile</label>
             <input type="file" accept=".jar" onchange="{ onchangeJarFile }"/>
           </div>
