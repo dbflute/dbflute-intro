@@ -5,6 +5,12 @@ import { readFile } from '../../shared/io-utils'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import { DropdownItem } from '../../components/dropdown/dropdown'
 
+const defaultDropDownItem = {
+  value: '',
+  label: 'not selected',
+  default: true,
+}
+
 interface State {
   // JDBCドライバーのjarファイル情報を格納するオブジェクト
   // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
@@ -90,11 +96,11 @@ export default withIntroTypes<Welcome>({
   // とある現場では、TypeScript用の区分値CDefクラスを自動生成して、フロントとサーバーで同期してる。
   // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
   // _/_/_/_/_/_/_/_/_/_/
-  defaultDatabaseCode: 'mysql',
+  defaultDatabaseCode: '',
   defaultJdbcDriver: 'com.mysql.jdbc.Driver',
   defaultJdbcUrl: 'jdbc:mysql://localhost:3306/xxx',
-  defaultLanguageCode: 'java',
-  defaultContainerCode: 'lasta_di',
+  defaultLanguageCode: '',
+  defaultContainerCode: '',
   databaseMap: {}, // e.g. targetDatabase
   // DBFluteエンジンの最新バージョン e.g. 1.2.5
   latestVersion: undefined,
@@ -212,15 +218,24 @@ export default withIntroTypes<Welcome>({
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
     return {
       databaseMap: classifications.targetDatabaseMap,
-      targetDatabaseItems: Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
-        return { value: key, label: value.databaseName, default: false }
-      }),
-      targetLanguageItems: Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-        return { value: key, label: value, default: false }
-      }),
-      targetContainerItems: Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-        return { value: key, label: value, default: false }
-      }),
+      targetDatabaseItems: [
+        ...Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
+          return { value: key, label: value.databaseName, default: false }
+        }),
+        defaultDropDownItem,
+      ],
+      targetLanguageItems: [
+        ...Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
+          return { value: key, label: value, default: false }
+        }),
+        defaultDropDownItem,
+      ],
+      targetContainerItems: [
+        ...Object.entries(classifications.targetContainerMap).map(([key, value]) => {
+          return { value: key, label: value, default: false }
+        }),
+        defaultDropDownItem,
+      ],
     }
   },
 
