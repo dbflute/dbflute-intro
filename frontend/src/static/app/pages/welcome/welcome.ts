@@ -97,10 +97,10 @@ export default withIntroTypes<Welcome>({
   // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
   // _/_/_/_/_/_/_/_/_/_/
   defaultDatabaseCode: '',
-  defaultJdbcDriver: 'com.mysql.jdbc.Driver',
-  defaultJdbcUrl: 'jdbc:mysql://localhost:3306/xxx',
-  defaultLanguageCode: '',
-  defaultContainerCode: '',
+  defaultJdbcDriver: '',
+  defaultJdbcUrl: '',
+  defaultLanguageCode: 'java',
+  defaultContainerCode: 'lasta_di',
   databaseMap: {}, // e.g. targetDatabase
   // DBFluteエンジンの最新バージョン e.g. 1.2.5
   latestVersion: undefined,
@@ -133,21 +133,32 @@ export default withIntroTypes<Welcome>({
    * @param {DropdownItem} targetDatabase - 選択されたDBMS (NotNull)
    */
   onchangeDatabase(targetDatabase: DropdownItem) {
-    // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
-    // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
-    // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
-    // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
-    // そっか、こっちは embeddedJar も使うかありがとう。
-    const database = this.databaseMap[targetDatabase.value]
-    this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
-    this.inputElementBy('[ref=url]').value = database.urlTemplate
-    this.inputElementBy('[ref=schema]').value = database.defaultSchema
-    this.update({
-      // switch showing JDBCDriver select form
-      needsJdbcDriver: !database.embeddedJar,
-      // initialize JDBC Driver
-      jdbcDriver: undefined,
-    })
+    // Dropdownでselectedを選択した場合はデフォルト値に戻す
+    if (targetDatabase.default) {
+      this.inputElementBy('[ref=jdbcDriverFqcn]').value = ''
+      this.inputElementBy('[ref=url]').value = ''
+      this.inputElementBy('[ref=schema]').value = ''
+      this.update({
+        needsJdbcDriver: false,
+        jdbcDriver: undefined,
+      })
+    } else {
+      // done jflute self.targetDatabaseItems を使えばいいんじゃないか？と思ったんだけど... (2022/03/13)
+      // それはあくまでリストボックス用だから、全部入りのclassificationMapの方から取ってるのかな!?
+      // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
+      // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
+      // そっか、こっちは embeddedJar も使うかありがとう。
+      const database = this.databaseMap[targetDatabase.value]
+      this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
+      this.inputElementBy('[ref=url]').value = database.urlTemplate
+      this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      this.update({
+        // switch showing JDBCDriver select form
+        needsJdbcDriver: !database.embeddedJar,
+        // initialize JDBC Driver
+        jdbcDriver: undefined,
+      })
+    }
   },
 
   /**
