@@ -61,7 +61,7 @@ export default withIntroTypes<Create>({
   //                                                                          Definition
   //                                                                          ==========
   defaultDatabaseCode: '',
-  defaultJdbcDriver: 'com.mysql.jdbc.Driver',
+  defaultJdbcDriver: '',
   defaultLanguageCode: '',
   defaultContainerCode: '',
   databaseMap: {},
@@ -96,15 +96,26 @@ export default withIntroTypes<Create>({
    * @param {DropdownItem} targetDatabase - 選択されたDBMS (NotNull)
    */
   onchangeDatabase(targetDatabase: DropdownItem) {
-    const database = this.databaseMap[targetDatabase.value]
-    this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
-    this.inputElementBy('[ref=url]').value = database.urlTemplate
-    this.inputElementBy('[ref=schema]').value = database.defaultSchema
-    this.update({
-      // switch showing JDBCDriver select form
-      needsJdbcDriver: !database.embeddedJar,
-      jdbcDriver: undefined,
-    })
+    // Dropdownでselectedを選択した場合はデフォルト値に戻す
+    if (targetDatabase.default) {
+      this.inputElementBy('[ref=jdbcDriverFqcn]').value = ''
+      this.inputElementBy('[ref=url]').value = ''
+      this.inputElementBy('[ref=schema]').value = ''
+      this.update({
+        needsJdbcDriver: false,
+        jdbcDriver: undefined,
+      })
+    } else {
+      const database = this.databaseMap[targetDatabase.value]
+      this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
+      this.inputElementBy('[ref=url]').value = database.urlTemplate
+      this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      this.update({
+        // switch showing JDBCDriver select form
+        needsJdbcDriver: !database.embeddedJar,
+        jdbcDriver: undefined,
+      })
+    }
   },
 
   /**
@@ -127,7 +138,7 @@ export default withIntroTypes<Create>({
           user: this.inputElementBy('[ref=user]').value,
           password: this.inputElementBy('[ref=password]').value,
         },
-        schemaSyncCheckMap: {},
+        schemaSyncCheckMap: {}, // SchemaSyncCheckの画面で、後付けで設定するため固定で空。
       },
       testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }

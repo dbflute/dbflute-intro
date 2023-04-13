@@ -322,6 +322,10 @@ class Api {
     return apiClient.post('api/engine/latest')
   }
 
+  /**
+   * DBFlutエンジンの一覧を取得する
+   * @returns {Promise<string[]>} DBFluteエンジンのリスト (NotNull)
+   */
   engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
   }
