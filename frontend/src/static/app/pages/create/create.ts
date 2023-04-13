@@ -138,7 +138,6 @@ export default withIntroTypes<Create>({
           user: this.inputElementBy('[ref=user]').value,
           password: this.inputElementBy('[ref=password]').value,
         },
-        schemaSyncCheckMap: {}, // SchemaSyncCheckの画面で、後付けで設定するため固定で空。
       },
       testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }

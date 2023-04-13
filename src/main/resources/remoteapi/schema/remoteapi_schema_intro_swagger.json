@@ -1705,8 +1705,7 @@
         "packageBase",
         "jdbcDriverFqcn",
         "mainSchemaSettings",
-        "dbfluteVersion",
-        "schemaSyncCheckMap"
+        "dbfluteVersion"
       ],
       "properties": {
         "projectName": {
@@ -1776,10 +1775,6 @@
         },
         "optionBody": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.client.ClientCreateBody%24ClientPart%24OptionBody"
-        },
-        "schemaSyncCheckMap": {
-          "description": "SchemaSyncCheckするためのDB情報",
-          "type": "object"
         }
       }
     },

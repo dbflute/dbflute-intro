@@ -63,9 +63,6 @@ type ClientCreateBody_ClientPart = {
 
   /** (NullAllowed) */
   optionBody?: ClientCreateBody_OptionBodyPart
-
-  /** SchemaSyncCheckするためのDB情報 (Required) */
-  schemaSyncCheckMap: any
 }
 
 /**
