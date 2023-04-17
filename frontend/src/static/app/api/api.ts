@@ -146,7 +146,7 @@ class Api {
   // -----------------------------------------------------
   //                                                 Basic
   //                                                 -----
-  clientList() {
+  clientList(): Promise<ClientListResult[]> {
     return apiClient.post('api/client/list')
   }
 
@@ -315,11 +315,11 @@ class Api {
   // ===============================================================================
   //                                                                          Engine
   //                                                                          ======
-  findEngineLatest() {
+  findEngineLatest(): Promise<EngineLatestResult> {
     return apiClient.post('api/engine/latest')
   }
 
-  engineVersions() {
+  engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
   }
 
