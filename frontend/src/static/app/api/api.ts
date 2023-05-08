@@ -323,7 +323,7 @@ class Api {
   }
 
   /**
-   * DBFlutエンジンの一覧を取得する
+   * DBFluteエンジンの一覧を取得する e.g. 1.2.6
    * @returns {Promise<string[]>} DBFluteエンジンのリスト (NotNull)
    */
   engineVersions(): Promise<string[]> {
