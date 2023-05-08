@@ -233,10 +233,20 @@ class Api {
   // -----------------------------------------------------
   //                                              Document
   //                                              --------
+  /**
+   * dfpropのドキュメントに関する情報を取得する。
+   * @param {string} projectName - DBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns {DfpropDocumentResult} - dfpropのドキュメントに関する情報 (NotNull)
+   */
   document(projectName: string) {
     return apiClient.post(`api/dfprop/document/${projectName}`)
   }
 
+  /**
+   * dfpropのドキュメントに関する情報を編集する。
+   * @param {DfpropDocumentEditBody} body - DBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   */
   editDocument(projectName: string, documentSetting: any) {
     return apiClient.post(`api/dfprop/document/edit/${projectName}`, {
       body: {
