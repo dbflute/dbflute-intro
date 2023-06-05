@@ -8,6 +8,8 @@
     o URLパス毎にrouteコンポーネントを定義しており、URLの遷移毎に表示されるrouteコンポーネントが切り替わるようになっている
     o ルーティングの詳細は app-router.ts に集約している
     o ローディングやトーストなど、共通的に利用されるコンポーネントのマウントを行なっている
+
+    o TODO you ↓ここのタグの定義順番って何か縛りある？独立して描画されるコンポーネントだから順序はなんでもOK？ by jflute (2023/05/08)
   -->
   <app-router></app-router>
   <su-loading></su-loading>
@@ -22,12 +24,20 @@
     import { api } from './api/api'
 
     export default {
+      // ここでは、アプリ独自のcomponentをriotのcomponentに登録している
+      // (su-loadingなどはすでにSemanticUIRiotが登録しているのでここでは不要)
+      // (大文字小文字や区切り文字は気にせずタグとマッピングさせてくれるっぽい)
       components: {
         AppRouter,
         ResultView,
       },
+      // ここで定義された関数はすべてのriotコンポーネントに付与される
+      // onBeforeMount は riot.js の COMPONENTS_IMPLEMENTATION_MAP で予約されている関数名
+      // どんな関数があるかはriot本体のgithub上のコードを参考に。
+      // https://github.com/riot/riot/blob/df2585c555e6eda0ff55a76c4c8364ec3c68f1a6/riot.js
       onBeforeMount() {
-        // クライアントが1件もない場合はwelcome画面へ遷移する
+        // DBFluteクライアントが1件もない場合はwelcome画面へ遷移する
+        // (DBFlute Introをまっさらな状態で最初に起動したときは、welcomeで環境構築してもらうため)
         api.clientList().then((clients) => {
           if (clients.length === 0) {
             appRoutes.welcome.open()

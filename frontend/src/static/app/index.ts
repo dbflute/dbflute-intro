@@ -26,7 +26,7 @@ import './shared/i18n'
 // アプリ独自のプラグイン関数をriotにinstall()するための関数
 import introPlugin from './app-plugin'
 
-// 全てのComponentで共通的に利用する処理を登録する
+// 全てのRiotコンポーネントにアプリ共通の関数を付与していく
 riot.install(introPlugin)
 
 // index.htmlのid=rootタグにapp.riotをマウントすることでriotアプリを起動する
