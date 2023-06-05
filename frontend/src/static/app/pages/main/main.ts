@@ -209,9 +209,6 @@ export default withIntroTypes<Main>({
     })
   },
 
-  // ===================================================================================
-  //                                                                     Client Handling
-  //                                                                     ===============
   /**
    * DBFluteクライアントの一覧情報を準備する。
    * なければWelcome画面に遷移させる処理もここに入っている。
@@ -220,6 +217,9 @@ export default withIntroTypes<Main>({
     api.clientList().then((json) => this.update({ clientList: json }))
   },
 
+  // ===================================================================================
+  //                                                                     Client Handling
+  //                                                                     ===============
   /**
    * Document画面に遷移する。
    * @param {ClientListResult} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
