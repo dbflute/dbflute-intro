@@ -154,10 +154,13 @@ class Api {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
-  createClient(client: any, testConnection: boolean) {
-    return apiClient.post('api/client/create', {
-      body: { client, testConnection },
-    })
+  /**
+   * DBFluteクライアントを作成する。
+   * @param {ClientCreateBody} body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   */
+  createClient(body: ClientCreateBody) {
+    return apiClient.post('api/client/create', body)
   }
 
   removeClient(clientBody: any) {
@@ -319,7 +322,11 @@ class Api {
     return apiClient.post('api/engine/latest')
   }
 
-  engineVersions() {
+  /**
+   * DBFluteエンジンの一覧を取得する
+   * @returns {Promise<string[]>} DBFluteエンジンのバージョン番号のリスト e.g. [ "1.2.6" ] (NotNull)
+   */
+  engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
   }
 

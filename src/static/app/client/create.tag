@@ -201,7 +201,6 @@
           schema: self.refs.schema.value,
           password: self.refs.password.value
         },
-        schemaSyncCheckMap: {},
         dbfluteVersion: self.refs.dbfluteVersion.value,
         packageBase: self.refs.packageBase.value,
         containerCode: self.refs.containerCode.value,
