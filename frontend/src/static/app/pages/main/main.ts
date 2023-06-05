@@ -36,35 +36,31 @@ type ProcessModal = ProcessModalBase
 
 interface Main extends IntroRiotComponent<Props, State> {
   // ===================================================================================
+  //                                                                          Definition
+  //                                                                          ==========
+  downloadModalBase: DownloadModalBase
+  processModalBase: ProcessModalBase
+
+  // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
   onclickDownload: () => void
   onDownloadEngine: () => void
   onclickRemove: (version: string) => void
-
-  // ===================================================================================
-  //                                                                     Client Handling
-  //                                                                     ===============
-  prepareClientList: () => void
   goToDocumentsPage: (client: ClientListResult) => void
   goToClientCreate: () => void
-
-  // ===================================================================================
-  //                                                                               Modal
-  //                                                                               =====
-  downloadModalBase: DownloadModalBase
-  downloadModal: () => DownloadModal
   onDownloadModalHide: () => void // あなた、Event Handler では？
-  processModalBase: ProcessModalBase
-  processModal: () => ProcessModal
   onProcessModalHide: () => void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  prepareClientList: () => void
   introManifest: () => void
   engineVersions: () => Promise<void>
   latestVersion: () => Promise<void>
+  downloadModal: () => DownloadModal
+  processModal: () => ProcessModal
 }
 
 export default withIntroTypes<Main>({
@@ -81,6 +77,31 @@ export default withIntroTypes<Main>({
     },
     showDownloadModal: false,
     showProcessModal: false,
+  },
+
+  // ===================================================================================
+  //                                                                          Definition
+  //                                                                          ==========
+  /**
+   * DBFlute Engine のダウンロードに必要なUIを提供する Modal
+   */
+  downloadModalBase: {
+    header: 'DBFlute Engine Download',
+    closable: true,
+    buttons: [
+      {
+        text: 'Download',
+        action: 'download-engine',
+      },
+    ],
+  },
+
+  /**
+   * DBFlute Engine のダウンロードを実施しているときに表示する Modal
+   * ダウンロード中は、ユーザがその他の操作をできないように制御する
+   */
+  processModalBase: {
+    closable: false,
   },
 
   // ===================================================================================
@@ -132,40 +153,33 @@ export default withIntroTypes<Main>({
     })
   },
 
-  // ===================================================================================
-  //                                                                               Modal
-  //                                                                               =====
   /**
-   * DBFlute Engine のダウンロードに必要なUIを提供する Modal
+   * Document画面に遷移する。
+   * @param {ClientListResult} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
    */
-  downloadModalBase: {
-    header: 'DBFlute Engine Download',
-    closable: true,
-    buttons: [
-      {
-        text: 'Download',
-        action: 'download-engine',
-      },
-    ],
+  goToDocumentsPage(client: ClientListResult) {
+    appRoutes.client.open(client.projectName, 'execute', 'documents')
   },
-  downloadModal() {
-    return this.downloadModalBase
+
+  /**
+   * DBFluteクライアント作成画面へ遷移する。
+   */
+  goToClientCreate() {
+    appRoutes.create.open()
   },
+
+  /**
+   * ユーザがDBFluteエンジンをダウンロードするために表示する Modal を非表示にする
+   */
   onDownloadModalHide() {
     this.state.showDownloadModal = false
     this.update()
   },
 
   /**
-   * DBFlute Engine のダウンロードを実施しているときに表示する Modal
-   * ダウンロード中は、ユーザがその他の操作をできないように制御する
+   * DBFlute Intro がバックグランドでプロセスを実行中に
+   * ユーザが他の操作を抑制するための Modal を非表示にする
    */
-  processModalBase: {
-    closable: false,
-  },
-  processModal() {
-    return this.processModalBase
-  },
   onProcessModalHide() {
     this.state.showProcessModal = false
     this.update()
@@ -174,6 +188,14 @@ export default withIntroTypes<Main>({
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  /**
+   * DBFluteクライアントの一覧情報を準備する。
+   * なければWelcome画面に遷移させる処理もここに入っている。
+   */
+  async prepareClientList() {
+    api.clientList().then((json) => this.update({ clientList: json }))
+  },
+
   // #thiking jflute 関数名、動詞省略するかしないか？tagファイルの関数ではしっかり統一したい (2022/04/23)
   /**
    * DBFlute IntroのManifestファイルの情報を反映する。
@@ -210,28 +232,19 @@ export default withIntroTypes<Main>({
   },
 
   /**
-   * DBFluteクライアントの一覧情報を準備する。
-   * なければWelcome画面に遷移させる処理もここに入っている。
+   * ユーザがDBFluteエンジンをダウンロードするために表示する Modal を返す
+   * @returns {DownloadModal} ダウンロード時に表示する Modal
    */
-  async prepareClientList() {
-    api.clientList().then((json) => this.update({ clientList: json }))
-  },
-
-  // ===================================================================================
-  //                                                                     Client Handling
-  //                                                                     ===============
-  /**
-   * Document画面に遷移する。
-   * @param {ClientListResult} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
-   */
-  goToDocumentsPage(client: ClientListResult) {
-    appRoutes.client.open(client.projectName, 'execute', 'documents')
+  downloadModal(): DownloadModal {
+    return this.downloadModalBase
   },
 
   /**
-   * DBFluteクライアント作成画面へ遷移する。
+   * DBFlute Intro がバックグランドでプロセスを実行中に
+   * ユーザが他の操作を抑制するための Modal を返す
+   * @returns {ProcessModal} 処理中に表示する Modal
    */
-  goToClientCreate() {
-    appRoutes.create.open()
+  processModal(): ProcessModalBase {
+    return this.processModalBase
   },
 })
