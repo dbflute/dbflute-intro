@@ -126,7 +126,7 @@ export default withIntroTypes<Main>({
    * - 引数で指定されたDBFluteエンジンを削除する。
    * @param {string} version - 削除するDBFluteエンジンのバージョン (NotNull)
    */
-  onclickRemove(version) {
+  onclickRemove(version: string) {
     api.removeEngine({ version }).finally(() => {
       this.engineVersions()
     })
@@ -222,7 +222,7 @@ export default withIntroTypes<Main>({
 
   /**
    * Document画面に遷移する。
-   * @param {Object} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
+   * @param {ClientListResult} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
    */
   goToDocumentsPage(client: ClientListResult) {
     appRoutes.client.open(client.projectName, 'execute', 'documents')
