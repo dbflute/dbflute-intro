@@ -132,7 +132,7 @@ export default withIntroTypes<Main>({
   onDownloadEngine() {
     this.state.showProcessModal = true
     this.update()
-    const version = this.state.latestVersion.latestReleaseVersion
+    const version = this.inputElementBy('[ref=version]').value
     api.downloadEngine({ version }).then(() => {
       this.state.showProcessModal = false
       this.engineVersions()
