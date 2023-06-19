@@ -148,7 +148,7 @@ class Api {
   //                                                 -----
   /**
    * Introが起動している環境にインストールされている、DBFluteクライアントのリストを取得する
-   * @returns {Promise<ClientListResult[]>} DBFluteクライアントのリスト (NotNull)
+   * @returns DBFluteクライアントのリスト (NotNull)
    */
   clientList(): Promise<ClientListResult[]> {
     return apiClient.post('api/client/list')
@@ -321,7 +321,7 @@ class Api {
   //                                                                          ======
   /**
    * 最新のDBFluteエンジンバージョンを取得する
-   * @returns {Promise<EngineLatestResult>} 最新のDBFluteエンジンバージョン (NotNull)
+   * @returns 最新のDBFluteエンジンバージョン (NotNull)
    */
   findEngineLatest(): Promise<EngineLatestResult> {
     return apiClient.post('api/engine/latest')
@@ -329,7 +329,7 @@ class Api {
 
   /**
    * DBFluteエンジンバージョンの一覧を取得する
-   * @returns {string[]} DBFluteエンジンバージョンの一覧 (NotNull)
+   * @returns DBFluteエンジンバージョンの一覧 (NotNull)
    */
   engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')

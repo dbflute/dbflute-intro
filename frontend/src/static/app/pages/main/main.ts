@@ -142,7 +142,7 @@ export default withIntroTypes<Main>({
   /**
    * Removeボタン押下時の処理
    * - 引数で指定されたDBFluteエンジンを削除する。
-   * @param {string} version - 削除するDBFluteエンジンのバージョン (NotNull)
+   * @param version - 削除するDBFluteエンジンのバージョン (NotNull)
    */
   onclickRemove(version: string) {
     api.removeEngine({ version }).finally(() => {
@@ -230,7 +230,7 @@ export default withIntroTypes<Main>({
 
   /**
    * ユーザがDBFluteエンジンをダウンロードするために表示する Modal を返す
-   * @returns {DownloadModal} ダウンロード時に表示する Modal
+   * @returns ダウンロード時に表示する Modal
    */
   downloadModal(): DownloadModal {
     return this.downloadModalBase
@@ -239,7 +239,7 @@ export default withIntroTypes<Main>({
   /**
    * DBFlute Intro がバックグランドでプロセスを実行中に
    * ユーザが他の操作を抑制するための Modal を返す
-   * @returns {ProcessModal} 処理中に表示する Modal
+   * @returns 処理中に表示する Modal
    */
   processModal(): ProcessModalBase {
     return this.processModalBase
