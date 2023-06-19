@@ -111,10 +111,7 @@ export default withIntroTypes<Main>({
    * マウント完了時の処理。
    */
   async onMounted() {
-    await this.introManifest()
-    await this.engineVersions()
-    await this.latestVersion()
-    await this.prepareClientList()
+    await Promise.all([this.introManifest(), this.engineVersions(), this.latestVersion(), this.prepareClientList()])
   },
 
   // ===================================================================================
