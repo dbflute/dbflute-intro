@@ -314,6 +314,20 @@ export default withIntroTypes<Welcome>({
 })
 ```
 
+# API Client の実装方法
+```ts
+  /**
+   * DBFluteクライアントの一覧情報を準備する。
+   * なければWelcome画面に遷移させる処理もここに入っている。
+   */
+  async prepareClientList() {
+    api.clientList()
+      .then((json) => { // ここの変数名は絶対に "json"
+        this.update({ clientList: json })
+      })
+  },
+```
+
 # テストの実装方法
 
 TODO
