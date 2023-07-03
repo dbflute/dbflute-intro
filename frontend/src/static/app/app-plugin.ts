@@ -9,8 +9,8 @@ export interface DBFluteIntroPlugin {
   /**
    * Componentにclass名を動的に与えるためのオブジェクトを構築する
    * 具体例は [riotのマイグレーションガイド]{@link https://riot.js.org/ja/migration-guide/#%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E3%81%AE%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88}を参照
-   * @param   {{ [ key: string]: boolean }} classes - class list as object
-   * @returns {string} return only the classes having a truthy value
+   * @param classes - class list as object
+   * @returns return only the classes having a truthy value
    */
   classNames: (classes: { [key: string]: boolean }) => string
 
@@ -18,22 +18,23 @@ export interface DBFluteIntroPlugin {
    * 成功時のトーストを表示する
    * - semantic-ui-riotのsuToast関数がinstallされている（= index.jsなどでimport 'semantic-ui-riot'されている）ことを前提とする
    * - 使用できるパラメータは[semantic-ui-riotのtoast]{@link https://semantic-ui-riot.web.app/addon/toast}を参照
-   * @param {string|undefined} title タイトル（未設定の場合は省略される）
-   * @param {string|undefined} message メッセージ（未設定の場合は省略される）
+   * @param title トーストで表示されるタイトル （未設定の場合は省略される）
+   * @param message トーストで表示されるメッセージ （未設定の場合は省略される）
    */
   successToast: (input: { title: string | undefined; message: string | undefined }) => void
 
   /**
    * $関数で取得したElementに型を付与する際のヘルパー関数
    * - 複数のplugin関数で再利用するためglobalな関数として定義
-   * @param {string} selector querySelector
+   * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
+   * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
    */
   elementAs: <HTMLElement extends Element>(selector: string) => HTMLElement
 
   /**
    * 指定されたselectorのDOM要素を{@link HTMLInputElement}として返す
-   * @param {string} selector querySelector
-   * @returns
+   * @param @pselector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
+   * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
    */
   inputElementBy: (selector: string) => HTMLInputElement
 }
@@ -85,7 +86,7 @@ const dbflutePlugin: DBFluteIntroPlugin = {
  *
  * 下記で設定された関数は [riot.install]{@link https://riot.js.org/ja/api/#riotinstall} することで、任意のComponentから直接呼び出せる。
  *
- * @param component Riotコンポーネント自身、ここにプロパティを追加したりする (NotNull)
+ * @param component Riotコンポーネント自身、ここにプロパティを追加したりする
  */
 export default function plugin(component: RiotComponent) {
   // 定義されている関数(厳密にはプロパティ)のMapを用意
