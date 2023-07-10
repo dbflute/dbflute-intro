@@ -33,7 +33,7 @@ export interface DBFluteIntroPlugin {
 
   /**
    * 指定されたselectorのDOM要素を{@link HTMLInputElement}として返す
-   * @param @pselector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
+   * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
    * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
    */
   inputElementBy: (selector: string) => HTMLInputElement
