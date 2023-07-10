@@ -33,7 +33,6 @@ type ShowResultContent = {
   messages: string[]
 }
 
-// TODO you @propertyは効いてるのかな？ VS CodeでJSDoc補完しても何も表示されない by jflute (2023/06/05)
 /**
  * 結果ビュー表示イベントを購読する。
  * @param {(content: ShowResultContent) => void} callback 結果ビューに表示するデータを受け取るコールバック (NotNull)
