@@ -9,9 +9,10 @@ import observable from 'riot-observable'
 // https://github.com/riot/observable
 // (mainブランチが新しいもの)
 //
-// TODO you これexportする必要あるだろうか？ (今のところimportしてる人はいなさそう) by jflute (2023/06/05)
+// done you これexportする必要あるだろうか？ (今のところimportしてる人はいなさそう) by jflute (2023/06/05)
 // (できるだけ、このモジュールファイル内で完結させて、公開関数だけ呼んでもらうがいいかな？)
-export const appObservable = observable()
+// → プルリク上でhakibaに確認をしたので、もうexportを削除しちゃった (2023/07/10)
+const appObservable = observable()
 
 // ===================================================================================
 //                                                                         Show Result
