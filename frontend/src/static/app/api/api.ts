@@ -132,10 +132,10 @@ class Api {
   //                                                                         =======
   /**
    * Welcomeの気持ちでDBFluteクライアントを作成する。
-   * @param {WelcomeCreateBody} body - DBFluteクライアントを作るための入力情報 (NotNull)
-   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   * @param body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @returns 業務的なレスポンスデータは特になし (NotNull)
    */
-  createWelcomeClient(body: WelcomeCreateBody) {
+  createWelcomeClient(body: WelcomeCreateBody): Promise<void> {
     // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
     return apiClient.post('api/welcome/create', body, { timeout: 180000 })
   }

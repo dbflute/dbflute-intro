@@ -1,17 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>DBFlute Intro</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.css">
-  <link rel="stylesheet" href="./app/index.css">
-  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-</head>
-<body>
-  <div id="root"></div>
-  <!-- webpackでbundleされた（1つにまとめられた）jsファイル. 開発者が実装するエントリーポイントとなるファイルは index.ts であることに注意-->
-  <script src="./main.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>DBFlute Intro</title>
+    <meta name="description" content="DBFlute Management Service provided by DBFlute Intro" />
+    <meta name="viewport" content="width=device-width" />
+
+    <!-- Semantic UI の css 参照。
+     Semantic UI Riot (https://semantic-ui-riot.web.app/) が参照するので合ったバージョンを指定すること。
+    -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.2.13/dist/semantic.min.css" />
+
+    <!-- Introで用意しているCSS。Semantic UI で賄えないデザインを調整したり。 -->
+    <link rel="stylesheet" href="./app/index.css" />
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  </head>
+  <body>
+    <!-- 画面のコンテンツの展開領域。ここで app.riot がマウントされ、画面のHTMLに差し替わる。 -->
+    <div id="root"></div>
+
+    <!-- webpackでbundleされた（1つにまとめられた）jsファイル.
+   開発者が実装するエントリーポイントとなるファイルは index.ts であることに注意
+   -->
+    <script src="./main.js"></script>
+  </body>
 </html>
