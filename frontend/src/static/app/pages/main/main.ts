@@ -49,7 +49,7 @@ interface Main extends IntroRiotComponent<Props, State> {
   onclickRemove: (version: string) => void
   goToDocumentsPage: (client: ClientListResult) => void
   goToClientCreate: () => void
-  onDownloadModalHide: () => void // あなた、Event Handler では？
+  onDownloadModalHide: () => void
   onProcessModalHide: () => void
 
   // ===================================================================================
