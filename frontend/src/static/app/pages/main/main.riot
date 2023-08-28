@@ -88,7 +88,10 @@
   </div>
 
   <!-- DBFluteエンジンのダウンロード処理のためのモーダル -->
-  <su-modal modal="{ state.downloadModal }" show="{ state.downloadModal.show }" ondownload-engine="{ onDownloadEngine }"
+  <su-modal modal="{ downloadModal() }"
+            show="{ state.showDownloadModal }"
+            onhide="{ onDownloadModalHide }"
+            ondownload-engine="{ onDownloadEngine }"
             ref="downloadModal">
     <!-- デフォルトで最新版が指定されるようになっている (webから取得) -->
     <div class="description">
@@ -103,7 +106,10 @@
   </su-modal>
 
   <!-- ちと待ってなさいモーダル -->
-  <su-modal modal="{ state.processModal }" show="{ state.processModal.show }" ref="processModal">
+  <su-modal modal="{ processModal() }"
+            show="{ state.showProcessModal }"
+            onhide="{ onProcessModalHide }"
+            ref="processModal">
 
     <div class="description">
       Downloading...
@@ -119,157 +125,7 @@
   </style>
 
   <script>
-    import { appRoutes } from '../../app-router'
-    import i18n from '../../components/common/i18n.riot'
-    import { api } from '../../api/api'
-
-    export default {
-      components: {
-        i18n
-      },
-      state: {
-        // Implementation-Versionなど、System Infoに載せるオブジェクト
-        manifest: [], // intro manifest
-        // DBFluteエンジンのバージョン一覧 (実質的にDBFluteエンジンの一覧と考えて良い)
-        versions: [], // engine versions
-        // #thinking jflute serverUrlやapiServerUrlなどのIntro自体の設定情報だけど...使ってないようにみえる (2022/04/20)
-        configuration: {}, // intro configuration
-        // DBFluteクライアントの一覧
-        clientList: [], // existing clients
-        // DBFluteの最新バージョンオブジェクト e.g. latestReleaseVersion
-        latestVersion: {}, // latest engin verion
-        // DBFluteエンジンをダウンロードするためのモーダルオブジェクト
-        downloadModal: {
-          header: 'DBFlute Engine Download',
-          closable: true,
-          buttons: [
-            {
-              text: 'Download',
-              action: 'download-engine'
-            }
-          ],
-          show: false
-        },
-        // ダウンロード中とかの、ちと待ってなさいモーダル
-        processModal: {
-          closable: false,
-          show: false
-        }
-      },
-      // ===================================================================================
-      //                                                                           Lifecycle
-      //                                                                           =========
-      /**
-       * マウント完了時の処理。
-       */
-      onMounted() {
-        this.introManifest()
-        this.engineVersions()
-        this.latestVersion()
-        this.configuration()
-        this.prepareClientList()
-      },
-
-      // ===================================================================================
-      //                                                                       Event Handler
-      //                                                                       =============
-      /**
-       * Downloadボタン押下時の処理
-       * - DBFluteエンジンをダウンロードするためのモーダルを表示する。
-       */
-      onclickDownload() {
-        this.state.downloadModal.show = true
-        this.update()
-      },
-      /**
-       * DBFluteエンジンのダウンロード処理を行う。
-       */
-      onDownloadEngine() {
-        this.state.processModal.show = true
-        this.update()
-        const version = this.state.latestVersion.latestReleaseVersion
-        api.downloadEngine({ version }).finally(() => {
-          this.state.processModal.show = false
-          this.engineVersions()
-        })
-      },
-      /**
-       * Removeボタン押下時の処理
-       * - 引数で指定されたDBFluteエンジンを削除する。
-       * @param {string} version - 削除するDBFluteエンジンのバージョン (NotNull)
-       */
-      onclickRemove(version) {
-        api.removeEngine({ version }).finally(() => {
-          this.engineVersions()
-        })
-      },
-
-      // ===================================================================================
-      //                                                                             Private
-      //                                                                             =======
-      // #thiking jflute 関数名、動詞省略するかしないか？tagファイルの関数ではしっかり統一したい (2022/04/23)
-      /**
-       * DBFlute IntroのManifestファイルの情報を反映する。
-       */
-      introManifest() {
-        api.manifest().then((json) => {
-          this.update({
-            manifest: [
-              ['Implementation-Version', json['Implementation-Version']],
-              ['Build-Timestamp', json['Build-Timestamp']]
-            ]
-          })
-        })
-      },
-      /**
-       * 既存のDBFluteエンジンのバージョン一覧を反映する。
-       * 実質、これが画面上におけるDBFluteエンジンの一覧の元ネタと考えて良い。
-       * (DBFluteエンジンは、バージョンごとにユニークになるので)
-       */
-      engineVersions() {
-        api.engineVersions().then((json) => {
-          this.update({ versions: json })
-        })
-      },
-      /**
-       * DBFluteの最新バージョン情報をダウンロードモーダルに反映する。
-       */
-      latestVersion() {
-        api.findEngineLatest().then((json) => {
-          this.update({ latestVersion: json })
-        })
-      },
-      /**
-       * serverUrlなどのIntro自体の設定情報を反映する...だけど、使ってなくない？
-       */
-      configuration() {
-        api.configuration().then((json) => {
-          this.update({ configuration: json })
-        })
-      },
-      // ===================================================================================
-      //                                                                     Client Handling
-      //                                                                     ===============
-      /**
-       * DBFluteクライアントの一覧情報を準備する。
-       * なければWelcome画面に遷移させる処理もここに入っている。
-       */
-      prepareClientList() {
-        api.clientList().then((json) => this.update({ clientList: json }))
-      },
-      /**
-       * Document画面に遷移する。
-       * @param {Object} client - 遷移するDBFluteクライアントのオブジェクト (NotNull)
-       */
-      goToDocumentsPage(client) {
-        appRoutes.client.open(client.projectName, 'execute', 'documents')
-      },
-      /**
-       * DBFluteクライアント作成画面へ遷移する。
-       */
-      goToClientCreate() {
-        appRoutes.create.open()
-      }
-    }
+    import main from './main.ts'
+    export default main
   </script>
 </main>
