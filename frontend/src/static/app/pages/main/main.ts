@@ -241,7 +241,7 @@ export default withIntroTypes<Main>({
    * ユーザが他の操作を抑制するための Modal を返す
    * @returns 処理中に表示する Modal
    */
-  processModal(): ProcessModalBase {
+  processModal(): ProcessModal {
     return this.processModalBase
   },
 })
