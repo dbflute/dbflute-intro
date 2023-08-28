@@ -133,13 +133,6 @@ public class ClientCreateBody {
             public Boolean generateProcedureParameterBean;
             public String procedureSynonymHandlingType;
         }
-
-        // TODO you IntroのCreate画面では、SchemaSyncCheckは入れなくても良いのでは？ by jflute (2023/01/11)
-        // SchemaSyncCheckの画面で、後付けで設定できるみたいな感じで良いのではないだろうか？
-        // TODO you Mapは避けたい by jflute (2023/01/11)
-        /** SchemaSyncCheckするためのDB情報 */
-        @NotNull
-        public Map<String, DatabaseSettingsPart> schemaSyncCheckMap;
     }
 
     // ===================================================================================

@@ -132,10 +132,10 @@ class Api {
   //                                                                         =======
   /**
    * Welcomeの気持ちでDBFluteクライアントを作成する。
-   * @param {WelcomeCreateBody} body - DBFluteクライアントを作るための入力情報 (NotNull)
-   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   * @param body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @returns 業務的なレスポンスデータは特になし (NotNull)
    */
-  createWelcomeClient(body: WelcomeCreateBody) {
+  createWelcomeClient(body: WelcomeCreateBody): Promise<void> {
     // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
     return apiClient.post('api/welcome/create', body, { timeout: 180000 })
   }
@@ -158,10 +158,13 @@ class Api {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
-  createClient(client: any, testConnection: boolean) {
-    return apiClient.post('api/client/create', {
-      body: { client, testConnection },
-    })
+  /**
+   * DBFluteクライアントを作成する。
+   * @param {ClientCreateBody} body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   */
+  createClient(body: ClientCreateBody) {
+    return apiClient.post('api/client/create', body)
   }
 
   removeClient(clientBody: any) {
@@ -328,8 +331,8 @@ class Api {
   }
 
   /**
-   * DBFluteエンジンバージョンの一覧を取得する
-   * @returns DBFluteエンジンバージョンの一覧 (NotNull)
+   * DBFluteエンジンの一覧を取得する
+   * @returns {Promise<string[]>} DBFluteエンジンのバージョン番号のリスト e.g. [ "1.2.6" ] (NotNull)
    */
   engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
