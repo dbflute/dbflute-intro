@@ -1,5 +1,8 @@
 import { RiotComponent } from 'riot'
 
+// =======================================================================================
+//                                                                        Plugin Interface
+//                                                                        ================
 /**
  * DBFlute Intro固有の共通関数をriotに定義するプラグイン用インターフェース。
  * - 単独で参照されるのでexport対象
@@ -24,26 +27,50 @@ export interface DBFluteIntroPlugin {
   successToast: (input: { title: string | undefined; message: string | undefined }) => void
 
   /**
-   * $関数で取得したElementに型を付与する際のヘルパー関数
+   * 指定されたselectorでHTMLのDOM要素を探す。(ないかもしれないときに使う)
+   * - $関数で取得したElementに型を付与する際のヘルパー関数
    * - 複数のplugin関数で再利用するためglobalな関数として定義
    * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
    * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
    */
-  elementAs: <HTMLElement extends Element>(selector: string) => HTMLElement
+  elementAs: <HTMLElement extends Element>(selector: string) => HTMLElement | null
 
   /**
-   * 指定されたselectorのDOM要素を{@link HTMLInputElement}として返す
+   * 指定されたselectorでinputのDOM要素を探す。(ないかもしれないときに使う)
    * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
    * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
    */
-  inputElementBy: (selector: string) => HTMLInputElement
+  inputElementBy: (selector: string) => HTMLInputElement | null
+
+  /**
+   * 指定されたselectorでinputのDOM要素を探す。(存在するはずのときに使う)
+   * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn]
+   * @returns 対象のタグのHTMLオブジェクト (NotNull: exception if not found)
+   * @throws {ElementNotFoundError} 指定されたselectorに合致するinputのelementが存在しなかったら
+   */
+  inputElementByRequired: (selector: string) => HTMLInputElement
 }
 
-// dbflutePluginの中で共通的に利用される関数をプライベート関数的に扱うために外に出している
-function elementAs<T extends Element>(selector: string): T {
-  return this.$(selector) as T
+// ---------------------------------------------------------
+//                                            Error Handling
+//                                            --------------
+/**
+ * 以下のサイトを参考に作成:
+ * - // JavaScript/TypeScriptで独自のエラークラスを利用する
+ * - https://www.memory-lovers.blog/entry/2021/01/18/022021
+ *
+ * // #thinking jflute と思ったが、そのまま書いてもTypeScript的なコンパイルエラーが発生してしまった... (2023/09/25)
+ * // なので、いったんシンプルに実装して、実際に使ってみて情報が足らないようだったらまた考える。
+ */
+export class ElementNotFoundError extends Error {
+  constructor(msg: string) {
+    super(msg)
+  }
 }
 
+// =======================================================================================
+//                                                                   Plugin Implementation
+//                                                                   =====================
 /**
  * DBFlute Intro固有の共通関数の実装インスタンス。
  */
@@ -51,7 +78,6 @@ const dbflutePlugin: DBFluteIntroPlugin = {
   // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   // JSDocはインターフェースの方に記述している。その方が利用する側で補完時に見られるため。
   // _/_/_/_/_/_/_/_/_/_/
-
   classNames(classes: { [key: string]: boolean }) {
     return Object.entries(classes)
       .reduce((acc, item) => {
@@ -66,27 +92,49 @@ const dbflutePlugin: DBFluteIntroPlugin = {
 
   successToast({ title = undefined, message = undefined }: { title: string | undefined; message: string | undefined }) {
     this.suToast({
-      title, // keyと渡す変数名が同じため省略する ("title: title,"としているのと同じ)
-      message, // keyと渡す変数名が同じため省略する ("message: message,"としているのと同じ)
+      title,
+      message,
       class: 'pink positive',
     })
   },
 
-  elementAs<T extends Element>(selector: string): T {
+  // #thinking jflute 実装インスタンスだけ T になってるのは、Javaで言う共変戻り値的な感じ？ (2023/09/25)
+  elementAs<T extends Element>(selector: string): T | null {
     return elementAs.bind(this, selector).apply() // 戻り型推論ちゃんと効いてるっぽい
   },
 
-  inputElementBy(selector: string): HTMLInputElement {
+  // #thinking jflute 見つかったのがinputタグじゃなかったら？それはそれでnullか例外で良いような？その制御があると良い (2023/09/25)
+  inputElementBy(selector: string): HTMLInputElement | null {
     return elementAs.bind(this, selector).apply() // こっちも
+  },
+
+  inputElementByRequired: function (selector: string): HTMLInputElement {
+    const foundElement = this.inputElementBy(selector)
+    if (foundElement === null) {
+      throw new ElementNotFoundError('Not found the element by the selector: ' + selector)
+    }
+    return foundElement
   },
 }
 
+// ---------------------------------------------------------
+//                                          Element Handling
+//                                          ----------------
+// dbflutePluginの中で共通的に利用される関数をプライベート関数的に扱うために外に出している
+function elementAs<T extends Element>(selector: string): T {
+  return this.$(selector) as T
+}
+
+// =======================================================================================
+//                                                                            Riot Install
+//                                                                            ============
+// #thinking jflute JSDocの書き方、[]と@linkはつながってる書き方なのかな？ (2023/09/25)
 /**
  * DBFluteIntroのComponentで共通的に利用する処理をpluginとして提供。
  *
- * 下記で設定された関数は [riot.install]{@link https://riot.js.org/ja/api/#riotinstall} することで、任意のComponentから直接呼び出せる。
- *
- * @param component Riotコンポーネント自身、ここにプロパティを追加したりする
+ * 下記で設定された関数は [riot.install]{@link https://riot.js.org/ja/api/#riotinstall} することで、
+ * 任意のComponentから直接呼び出せる。
+ * @param component Riotコンポーネント自身、ここにプロパティを追加したりする (NotNull)
  */
 export default function plugin(component: RiotComponent) {
   // 定義されている関数(厳密にはプロパティ)のMapを用意
