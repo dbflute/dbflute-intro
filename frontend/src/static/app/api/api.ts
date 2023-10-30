@@ -154,7 +154,12 @@ class Api {
     return apiClient.post('api/client/list')
   }
 
-  clientPropbase(projectName: string) {
+  /**
+   * プロジェクトの基本プロパティを取得する
+   * @param projectName プロジェクト名
+   * @returns プロジェクトの基本情報 (NotNull)
+   */
+  clientPropbase(projectName: string): Promise<ClientPropbaseResult> {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
@@ -184,7 +189,7 @@ class Api {
   // -----------------------------------------------------
   //                                       SchemaSyncCheck
   //                                       ---------------
-  syncSchema(projectName: string) {
+  syncSchema(projectName: string): Promise<DfpropSchemasyncResult> {
     return apiClient.post(`api/dfprop/schemasync/${projectName}`)
   }
 
