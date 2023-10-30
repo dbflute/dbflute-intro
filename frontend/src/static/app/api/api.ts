@@ -184,7 +184,7 @@ class Api {
   // -----------------------------------------------------
   //                                       SchemaSyncCheck
   //                                       ---------------
-  syncSchema(projectName: string) {
+  syncSchema(projectName: string): Promise<DfpropSchemasyncResult> {
     return apiClient.post(`api/dfprop/schemasync/${projectName}`)
   }
 
