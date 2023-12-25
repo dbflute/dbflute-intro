@@ -22,11 +22,14 @@ export default withIntroTypes<SchemaSyncCheck>({
    * マウント完了時の処理。
    */
   async onMounted() {
+    console.log('mounted')
     await this.prepareSyncSchemaSetting()
   },
 
   async prepareSyncSchemaSetting() {
     const projectName = this.props.projectName
-    api.syncSchema(projectName).then
+    api.syncSchema(projectName).then((body) => {
+      console.log(body)
+    })
   },
 })
