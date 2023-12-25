@@ -16,26 +16,38 @@
 
   <div class="ui container">
     <h2>Schema Sync Check</h2>
+    <!--  DBFlute Client が管理していない方のデータベースへの接続情報 -->
 <!--    <p show="{ canCheckSchemaSetting() }">-->
 <!--      for { state.syncSetting.url }<span show="{ state.syncSetting.schema != null }">, { state.syncSetting.schema }</span>, { state.syncSetting.user }-->
 <!--    </p>-->
+    <!-- 各HTMLのドキュメントリンク -->
+    <!-- #thinking ex-document.tag に合わせて list にしているのかな？要素は一つしか無いけど by cabos (written at 2022/04/07) -->
 <!--    <div class="ui list">-->
 <!--      <div show="{ state.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>-->
 <!--    </div>-->
+    <!-- DBFlute Client が管理していない方のデータベースへの接続情報を編集するための modal を表示するボタン  -->
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
+
+    <!-- SchemaSyncCheck実行ボタン  -->
 <!--    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">-->
 <!--      Execute SchemaSyncCheck-->
 <!--    </button>-->
+
+    <!-- "SchemaSyncCheck" ってそもそもなんやねん？の説明 -->
     <div class="ui info message">
       <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"SchemaSyncCheck"?</a></div>
       <p>A checking tool for differences between the two schemas.</p>
     </div>
+
+    <!-- 最後に SchemaSyncCheck を実行したときのログを表示するところ -->
     <div class="latest-result">
       <latest-result></latest-result>
     </div>
   </div>
 
+<!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
 <!--  <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">-->
+<!-- documentMap.dfprop の schemaSyncCheckMap を編集するための form の実態 -->
 <!--    <form class="ui form">-->
 <!--      <div class="required field">-->
 <!--        <label>URL</label>-->
@@ -62,14 +74,17 @@
 <!--    </form>-->
 <!--  </su-modal>-->
 
+  <!-- SchemaSyncCheck 実行時に他の操作を抑制するための Modal -->
   <su-modal modal="{ checkModal }" class="large" ref="checkModal">
     <div class="description">
       Checking...
     </div>
   </su-modal>
 
+  <!-- SchemaSyncCheck 実行結果を表示するための Modal -->
   <result-modal ref="resultModal"></result-modal>
 
+  <!-- #thinking ex-document.tag にも同じスタイル調整が入ってる、共通化してもいいかも？ by cabos (written at 2022/04/07) -->
   <style>
     .latest-result {
       margin-top: 1em;
@@ -104,12 +119,19 @@
     // // ===================================================================================
     // //                                                                          Initialize
     // //                                                                          ==========
+    /**
+     * マウント時の処理
+     */
     // this.on('mount', () => {
     //   self.initSyncSchemaSetting()
     //   self.prepareComponents()
     //   self.registerModalEvent()
     // })
     //
+    /**
+     * SchemaSyncCheck の設定を取得し、それを編集するための Modal 内に含まれる form を初期化する
+     */
+    // #thinking setting を初期化するって誰のなんのためなんだろうという違和感がある、画面としては state とか modal とかを初期化するなら意味はわかる、そういう関数名にしたい by cabos
     // this.initSyncSchemaSetting = () => {
     //   ApiFactory.syncSchema(self.props.projectName).then((response) => {
     //     self.syncSettingModal.syncSetting = response
@@ -118,10 +140,18 @@
     //   })
     // }
     //
+    /**
+     * 最後の実行結果を表示するためのコンポーネントを初期化する
+     */
+    // #thinking prepaseLatestResult という名前の方が体を表している... by cabos
     // this.prepareComponents = () => {
     //   self.latestResult = riot.mount('latest-result', { projectName: self.props.projectName, task: 'schemaSyncCheck' })[0]
     // }
     //
+    /**
+     * SchemaSyncCheck の設定を編集するための Modal の中にある、「OK」ボタンが押されたときの挙動を登録する
+     * 具体的には、Modal の中にある form の値を取得し、サーバに設定更新のためのリクエストをPostする
+     */
     // this.registerModalEvent = () => {
     //   this.refs.syncSettingModal.on('editSyncSettings', () => {
     //     const syncSettingModalRefs = self.refs.syncSettingModal.refs
@@ -142,10 +172,16 @@
     // // ===================================================================================
     // //                                                                       Open Document
     // //                                                                       =============
+    /**
+     * SchemaSyncCheck の設定が確認可能か、つまり SchemaSyncCheckの設定が存在するかを確認する
+     */
     // this.canCheckSchemaSetting = () => {
     //   return self.state.syncSetting.url != null && self.state.syncSetting.user != null
     // }
     //
+    /**
+     * SchemaSyncCheck の結果を確認できる sync-check-result.html を開く
+     */
     // this.openSyncCheckResultHTML = () => {
     //   window.open(global.ffetch.baseUrl + 'api/document/' + self.props.projectName + '/synccheckresulthtml/')
     // }
@@ -156,6 +192,9 @@
     // // -----------------------------------------------------
     // //                                            Definition
     // //                                            ----------
+    /**
+     * SchemaSyncCheck の設定を変更するための Modal の、画面読み込み時の初期値
+     */
     // this.syncSettingModal = {
     //   header: 'Schema Sync Check Settings',
     //   closable: true,
@@ -169,9 +208,21 @@
     //   syncSetting: {}
     // }
     //
+    /**
+     * SchemaSyncCheck を実行しているあいだ、その他のユーザの操作を抑制するための Modal
+     */
+    // #thinking 実行中の抑制に対して "check" という名前は適切か？ by cabos
+    // self.checkModal = {
+    //   header: 'SchemaPolicyCheck',
+    //   closable: false
+    // }
     // // -----------------------------------------------------
     // //                                                  Show
     // //                                                  ----
+    /**
+     * SchemaSyncCheckを設定するための Modal を表示する
+     * 「Edit check settings」というボタンを押したときに実行される
+     */
     // this.showSyncSettingModal = () => {
     //   self.refs.syncSettingModal.show()
     // }
@@ -179,6 +230,12 @@
     // // ===================================================================================
     // //                                                                        Execute Task
     // //                                                                        ============
+    /**
+     * DBFlute Engine に SchemaSyncCheck を実行させるためのリクエストをバックエンドに送信する
+     * SchemaSyncCheck の処理中、他の操作を抑制するための Modal を表示させている
+     * SchemaSyncCheck の処理後、Modal を処理結果のもとに差し替え、最終実行ログを画面に表示する
+     * 「Execute SchemaSyncCheck」というボタンをクリックすると呼び出される
+     */
     // this.schemaSyncCheckTask = () => {
     //   self.refs.checkModal.show()
     //   DbfluteTask.task('schemaSyncCheck', self.props.projectName, (message) => {
