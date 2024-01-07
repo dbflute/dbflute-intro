@@ -12,7 +12,7 @@ const defaultDropDownItem = {
 }
 
 interface State {
-  jdbcDriver: { fileName: string; data: string }
+  jdbcDriver: { fileName: string; data: string } | undefined
   needsJdbcDriver: boolean
 }
 
@@ -33,6 +33,7 @@ interface Create extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
+  onMounted: () => void
   onchangeDatabase: (databaseCode: DropdownItem) => void
   onclickCreate: () => void
   onchangeJarFile: (event: InputEvent) => void
@@ -125,12 +126,12 @@ export default withIntroTypes<Create>({
     const body: ClientCreateBody = {
       client: {
         projectName: this.inputElementBy('[ref=projectName]').value,
-        databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
-        languageCode: this.$('[ref=languageCode]').getAttribute('value'),
-        containerCode: this.$('[ref=containerCode]').getAttribute('value'),
+        databaseCode: this.valueAttributeBy('[ref=databaseCode]'),
+        languageCode: this.valueAttributeBy('[ref=languageCode]'),
+        containerCode: this.valueAttributeBy('[ref=containerCode]'),
         packageBase: this.inputElementBy('[ref=packageBase]').value,
         jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
-        dbfluteVersion: this.$('[ref=dbfluteVersion]').getAttribute('value'),
+        dbfluteVersion: this.valueAttributeBy('[ref=dbfluteVersion]'),
         jdbcDriver: this.state.jdbcDriver,
         mainSchemaSettings: {
           url: this.inputElementBy('[ref=url]').value,
@@ -155,6 +156,10 @@ export default withIntroTypes<Create>({
    */
   onchangeJarFile(event: InputEvent) {
     const eventTarget = event.target as HTMLInputElement
+    // TypeScriptのstrictモードを適用したのでnullチェックが必須になった
+    if (!eventTarget.files) {
+      throw new Error('not found any files')
+    }
     const file = eventTarget.files[0]
     readFile(file).then((result) => {
       const encoded = window.btoa(result)

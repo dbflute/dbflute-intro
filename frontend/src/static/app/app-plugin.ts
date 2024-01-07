@@ -1,3 +1,7 @@
+// このファイルは TypeScript のStrictモードに対応するのが難しいので、TypeScriptのlintを無効化するeslintの設定を無効化している
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// prettier-ignore
+
 import { RiotComponent } from 'riot'
 
 // =======================================================================================
@@ -36,19 +40,20 @@ export interface DBFluteIntroPlugin {
   elementAs: <EL extends HTMLElement>(selector: string) => EL | null
 
   /**
-   * 指定されたselectorでinputのDOM要素を探す。(ないかもしれないときに使う)
-   * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn] (NotNull)
-   * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
-   */
-  inputElementBy: (selector: string) => HTMLInputElement | null
-
-  /**
    * 指定されたselectorでinputのDOM要素を探す。(存在するはずのときに使う)
    * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn] (NotNull)
    * @returns 対象のタグのHTMLオブジェクト (NotNull: exception if not found)
    * @throws {ElementNotFoundError} 指定されたselectorに合致するinputのelementが存在しなかったら
    */
-  inputElementByRequired: (selector: string) => HTMLInputElement
+  inputElementBy: (selector: string) => HTMLInputElement
+
+  /**
+   * 指定されたselectorの value attribute を返す。(存在するはずのときに使う)
+   * @param {string} selector $関数に入れるselector文字列 e.g. [ref=databaseCode] (NotNull)
+   * @return {string} 対象のタグのElementオブジェクト (NotNull: exception if not found)
+   * @throws {ElementNotFoundError} 指定されたselectorに合致するelementが存在しなかったら
+   */
+  valueAttributeBy: (selector: string) => string
 }
 
 // ---------------------------------------------------------
@@ -88,7 +93,7 @@ const dbflutePlugin: DBFluteIntroPlugin = {
   // _/_/_/_/_/_/_/_/_/_/
   classNames(classes: { [key: string]: boolean }) {
     return Object.entries(classes)
-      .reduce((acc, item) => {
+      .reduce((acc: string[], item: [string, boolean]) => {
         const [key, value] = item
 
         if (value) return [...acc, key]
@@ -99,6 +104,8 @@ const dbflutePlugin: DBFluteIntroPlugin = {
   },
 
   successToast({ title = undefined, message = undefined }: { title: string | undefined; message: string | undefined }) {
+    // this.suToastを参照した際のlintエラーを回避するため@ts-ignoreで暫定回避
+    // @ts-ignore
     this.suToast({
       title,
       message,
@@ -107,20 +114,30 @@ const dbflutePlugin: DBFluteIntroPlugin = {
   },
 
   elementAs<EL extends HTMLElement>(selector: string): EL | null {
-    return elementAs.bind(this, selector).apply() // 戻り型推論ちゃんと効いてるっぽい
+    // elementAs<EL>.callとするとlintエラーになるので()で囲んでいる。また、フォーマット時に()が外れないようにprettier-ignoreをつけている
+    // prettier-ignore
+    return (elementAs<EL>).call(this, selector)
   },
 
   // #thinking jflute 見つかったのがinputタグじゃなかったら？それはそれでnullか例外で良いような？その制御があると良い (2023/09/25)
-  inputElementBy(selector: string): HTMLInputElement | null {
-    return elementAs.bind(this, selector).apply() // こっちも
-  },
-
-  inputElementByRequired: function (selector: string): HTMLInputElement {
-    const foundElement = this.inputElementBy(selector)
+  inputElementBy(selector: string): HTMLInputElement {
+    // elementAs<HTMLInputElement>.callとするとlintエラーになるので()で囲んでいる。また、フォーマット時に()が外れないようにprettier-ignoreをつけている
+    // prettier-ignore
+    const foundElement = (elementAs<HTMLInputElement>).call(this, selector) // こっちも
     if (foundElement === null) {
       throw new ElementNotFoundError('Not found the element by the selector: ' + selector)
     }
     return foundElement
+  },
+
+  valueAttributeBy(selector: string): string {
+    // elementAs<Element>.callとするとlintエラーになるので()で囲んでいる。また、フォーマット時に()が外れないようにprettier-ignoreをつけている
+    // prettier-ignore
+    const value = (elementAs<Element>).call(this, selector)?.getAttribute('value')
+    if (!value) {
+      throw new ElementNotFoundError(`not found value attribute by ${selector}`)
+    }
+    return value
   },
 }
 
@@ -128,8 +145,10 @@ const dbflutePlugin: DBFluteIntroPlugin = {
 //                                          Element Handling
 //                                          ----------------
 // dbflutePluginの中で共通的に利用される関数をプライベート関数的に扱うために外に出している
-function elementAs<EL extends HTMLElement>(selector: string): EL | null {
+function elementAs<EL extends Element>(selector: string): EL | null {
   // #thinking jflute $()の戻りってHTMLElementじゃなくてElementだと思うんだけど、ノーチェックでいいのかな？ (2023/12/25)
+  // this.suToastを参照した際のlintエラーを回避するため@ts-ignoreで暫定回避
+  // @ts-ignore
   return this.$(selector) as EL
 }
 

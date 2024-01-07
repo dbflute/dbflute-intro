@@ -51,6 +51,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
+  onMounted(): void
   onclickAlterSql(alterFile: AlterFile): void
   onCompletePrepareAlterSql(inputFileName?: string): void
   onclickOpenAlterDir(): void

@@ -3,7 +3,6 @@ import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import { appRoutes } from '../../app-router'
 import { api } from '../../api/api'
 
-interface Props {}
 interface State {
   // Implementation-Versionなど、System Infoに載せるオブジェクト
   manifest: Array<Array<object>>
@@ -34,7 +33,7 @@ type ProcessModalBase = {
 }
 type ProcessModal = ProcessModalBase
 
-interface Main extends IntroRiotComponent<Props, State> {
+interface Main extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
@@ -44,6 +43,7 @@ interface Main extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
+  onMounted: () => void
   onclickDownload: () => void
   onDownloadEngine: () => void
   onclickRemove: (version: string) => void
@@ -68,7 +68,7 @@ export default withIntroTypes<Main>({
     i18n,
   },
   state: {
-    manifest: undefined,
+    manifest: [],
     versions: [],
     clientList: [],
     latestVersion: {

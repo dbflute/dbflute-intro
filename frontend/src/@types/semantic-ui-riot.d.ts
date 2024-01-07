@@ -20,4 +20,5 @@ export interface SemanticUiRiotPlugin {
    * @param message 確認画面上のメッセージ (NotNull)
    */
   suConfirm(message: string): Promise<void>
+  suToast(toast: { title: string | undefined; message: string | undefined; class: string | undefined }): void
 }

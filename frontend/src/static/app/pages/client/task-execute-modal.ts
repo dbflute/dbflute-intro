@@ -32,6 +32,7 @@ const COMPLETED_MODAL: SuModal = {
 }
 
 interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
+  onBeforeUpdate(): void
   show(): boolean
   modal(): SuModal | undefined
   onHide(): void
