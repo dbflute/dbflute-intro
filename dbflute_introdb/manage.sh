@@ -16,7 +16,7 @@ taskReturnCode=$?
 
 echo "...formatting generated types immediately"
 pushd ../frontend
-npx prettier --write "../frontend/src/static/app/api/intro/**/*.ts"
+npx prettier --write "./src/static/app/api/intro/**/*.ts"
 popd
 
 if [ $taskReturnCode -ne 0 ];then
