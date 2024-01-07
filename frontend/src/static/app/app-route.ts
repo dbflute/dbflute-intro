@@ -70,7 +70,8 @@ const routeStreams = new Map()
  * 指定されたパスのstreamを取得する
  * - なければ作成し、キャッシュする
  */
-function ensureRouteStream(path: string) {
+function ensureRouteStream(path: string): any {
+  // #thinking jflute Riot側でJSのみのコードで型が指定できない(!?)ので苦肉のany (2024/01/07)
   if (!routeStreams.get(path)) {
     routeStreams.set(path, riotRoute(path, {}))
   }
