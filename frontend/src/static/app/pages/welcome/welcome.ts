@@ -175,23 +175,25 @@ export default withIntroTypes<Welcome>({
    */
   onclickCreate() {
     const body: WelcomeCreateBody = {
+      // #thinking inputElement用意してるくらいなら、リストボックスもthis.$()の部分使わなくていいようにしてもいい？ jflute (2023/12/25)
+      // (というか、そもそもHTMLElementとして取得したらダメなのか？)
       client: {
-        projectName: this.inputElementBy('[ref=projectName]').value,
+        projectName: this.inputElementByRequired('[ref=projectName]').value,
         databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
         mainSchemaSettings: {
-          user: this.inputElementBy('[ref=user]').value,
-          url: this.inputElementBy('[ref=url]').value,
-          schema: this.inputElementBy('[ref=schema]').value,
-          password: this.inputElementBy('[ref=password]').value,
+          user: this.inputElementByRequired('[ref=user]').value,
+          url: this.inputElementByRequired('[ref=url]').value,
+          schema: this.inputElementByRequired('[ref=schema]').value,
+          password: this.inputElementByRequired('[ref=password]').value,
         },
         dbfluteVersion: this.latestVersion,
-        packageBase: this.inputElementBy('[ref=packageBase]').value,
+        packageBase: this.inputElementByRequired('[ref=packageBase]').value,
         containerCode: this.$('[ref=containerCode]').getAttribute('value'),
         languageCode: this.$('[ref=languageCode]').getAttribute('value'),
         jdbcDriver: this.state.jdbcDriver,
-        jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
+        jdbcDriverFqcn: this.inputElementByRequired('[ref=jdbcDriverFqcn]').value,
       },
-      testConnection: this.inputElementBy('[ref=testConnection]').checked,
+      testConnection: this.inputElementByRequired('[ref=testConnection]').checked,
     }
     this.suLoading(true)
     api

@@ -53,7 +53,7 @@ export function createRouting(definition: RoutesDefinition): Routes {
  * ルーティング関連のcleanup処理
  * - 監視しているstreamの破棄を行う
  */
-export function endRouting() {
+export function endRouting(): void {
   Object.values(appRoutes).forEach((route) => {
     routeStreams.get(route.path)?.end()
   })

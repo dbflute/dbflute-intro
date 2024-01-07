@@ -144,7 +144,7 @@ function elementAs<EL extends HTMLElement>(selector: string): EL | null {
  * 任意のComponentから直接呼び出せる。
  * @param component Riotコンポーネント自身、ここにプロパティを追加したりする (NotNull)
  */
-export default function plugin(component: RiotComponent) {
+export default function plugin(component: RiotComponent): RiotComponent {
   // 定義されている関数(厳密にはプロパティ)のMapを用意
   const propertyDescriptors = Object.getOwnPropertyDescriptors(dbflutePlugin)
 
