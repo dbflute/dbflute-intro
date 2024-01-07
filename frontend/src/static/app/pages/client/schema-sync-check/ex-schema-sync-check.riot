@@ -40,8 +40,15 @@
     </div>
 
     <!-- 最後に SchemaSyncCheck を実行したときのログを表示するところ -->
-    <div class="latest-result">
-      <latest-result></latest-result>
+    <div class="latest-result" if="{ state.latestResult }">
+      <latest-result
+        result-title="Execution Result"
+        project-name="{ props.projectName }"
+        task="schemaSyncCheck"
+        show-header="{ false }"
+        success="{ state.latestResult.success }"
+        content="{ state.latestResult.content }"
+      ></latest-result>
     </div>
   </div>
 
