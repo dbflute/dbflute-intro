@@ -202,8 +202,8 @@
             "typeName": "org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart",
             "simpleTypeName": "ClientPart",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "一つのDBFluteクライアントを新規作成するための入力情報",
+            "comment": "一つのDBFluteクライアントを新規作成するための入力情報",
             "annotationList": [
               "Required",
               "Valid"
@@ -215,8 +215,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+                "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
                 "annotationList": [
                   "Required"
                 ],
@@ -228,8 +228,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
                 "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
-                "description": null,
-                "comment": null,
+                "description": "DBMSを識別するコード e.g. mysql",
+                "comment": "DBMSを識別するコード e.g. mysql",
                 "annotationList": [
                   "Required"
                 ],
@@ -241,8 +241,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
                 "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードの言語を識別するコード e.g. java",
+                "comment": "自動生成コードの言語を識別するコード e.g. java",
                 "annotationList": [
                   "Required"
                 ],
@@ -254,8 +254,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
                 "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
+                "comment": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
                 "annotationList": [
                   "Required"
                 ],
@@ -267,8 +267,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. \"org",
+                "comment": "自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. \"org.docksidestage.showbase\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -280,8 +280,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCドライバーのクラス名 e.g. \"com",
+                "comment": "JDBCドライバーのクラス名 e.g. \"com.mysql.jdbc.Driver\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -293,8 +293,8 @@
                 "typeName": "org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart$DatabaseSettingsPart",
                 "simpleTypeName": "DatabaseSettingsPart",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBのメインスキーマの接続情報、databaseInfoMap",
+                "comment": "DBのメインスキーマの接続情報、databaseInfoMap.dfpropに反映される",
                 "annotationList": [
                   "Required",
                   "Valid"
@@ -306,8 +306,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
+                    "comment": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
                     "annotationList": [
                       "Required"
                     ],
@@ -319,8 +319,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+                    "comment": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   },
@@ -330,8 +330,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続ユーザー e.g. maihamauser",
+                    "comment": "JDBCの接続ユーザー e.g. maihamauser",
                     "annotationList": [
                       "Required"
                     ],
@@ -343,8 +343,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+                    "comment": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   }
@@ -366,8 +366,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
+                    "comment": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
                     "annotationList": [
                       "Required"
                     ],
@@ -379,8 +379,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+                    "comment": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   },
@@ -390,8 +390,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続ユーザー e.g. maihamauser",
+                    "comment": "JDBCの接続ユーザー e.g. maihamauser",
                     "annotationList": [
                       "Required"
                     ],
@@ -403,8 +403,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+                    "comment": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   }
@@ -416,8 +416,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. \"1",
+                "comment": "DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. \"1.2.6\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -429,8 +429,8 @@
                 "typeName": "org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart$JdbcDriverPart",
                 "simpleTypeName": "JdbcDriverPart",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要",
+                "comment": "JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要",
                 "annotationList": [
                   "Valid"
                 ],
@@ -441,8 +441,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. \"mysql-connector-java-5",
+                    "comment": "JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. \"mysql-connector-java-5.1.46-bin.jar\"",
                     "annotationList": [
                       "Required{groups\u003d[ClientError]}"
                     ],
@@ -454,8 +454,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね e.g. QWERTYUIOP",
+                    "comment": "JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね e.g. QWERTYUIOP",
                     "annotationList": [
                       "Required{groups\u003d[ClientError]}"
                     ],
@@ -551,19 +551,6 @@
                     "nestTypeDocMetaList": []
                   }
                 ]
-              },
-              {
-                "name": "schemaSyncCheckMap",
-                "publicName": "schemaSyncCheckMap",
-                "typeName": "java.util.Map\u003cjava.lang.String, org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart$DatabaseSettingsPart\u003e",
-                "simpleTypeName": "Map\u003cString, ClientCreateBody$ClientPart$DatabaseSettingsPart\u003e",
-                "value": null,
-                "description": null,
-                "comment": null,
-                "annotationList": [
-                  "NotNull"
-                ],
-                "nestTypeDocMetaList": []
               }
             ]
           },
@@ -573,8 +560,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBMSへの接続テストを行うかどうか？ e.g. false",
+            "comment": "DBMSへの接続テストを行うかどうか？ e.g. false",
             "annotationList": [
               "Required"
             ],
@@ -681,7 +668,7 @@
       "url": "/client/list/",
       "typeName": "org.dbflute.intro.app.web.client.list.ClientListAction",
       "simpleTypeName": "ClientListAction",
-      "description": "DBFluteクライアント一覧のためのAction。",
+      "description": "DBFluteクライアント一覧のためのAction。, @return DBFluteクライアントの基本情報のリスト (NotNull)",
       "typeComment": "DBFluteクライアント一覧のためのAction。\n\n@author jflute (split from large action) (at roppongi japanese)",
       "fieldTypeDocMetaList": [
         {
@@ -699,7 +686,7 @@
         }
       ],
       "methodName": "index",
-      "methodComment": null,
+      "methodComment": "@return DBFluteクライアントの基本情報のリスト (NotNull)",
       "annotationList": [
         "Execute"
       ],
@@ -721,8 +708,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+            "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
             "annotationList": [
               "Required"
             ],
@@ -734,8 +721,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
             "simpleTypeName": "CDef.TargetDatabase",
             "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
-            "description": null,
-            "comment": null,
+            "description": "DBMSを識別するコード e.g. mysql",
+            "comment": "DBMSを識別するコード e.g. mysql",
             "annotationList": [
               "Required"
             ],
@@ -747,8 +734,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
             "simpleTypeName": "CDef.TargetLanguage",
             "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードの言語を識別するコード e.g. java",
+            "comment": "自動生成コードの言語を識別するコード e.g. java",
             "annotationList": [
               "Required"
             ],
@@ -760,8 +747,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
             "simpleTypeName": "CDef.TargetContainer",
             "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
+            "comment": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
             "annotationList": [
               "Required"
             ],
@@ -769,15 +756,15 @@
           }
         ]
       },
-      "fileLineCount": 41,
+      "fileLineCount": 44,
       "methodLineCount": 8
     },
     {
-      "url": "/client/propbase/{clientName}",
+      "url": "/client/propbase/{projectName}",
       "typeName": "org.dbflute.intro.app.web.client.propbase.ClientPropbaseAction",
       "simpleTypeName": "ClientPropbaseAction",
-      "description": "@author jflute (split from large action) (at roppongi japanese)",
-      "typeComment": "@author jflute (split from large action) (at roppongi japanese)",
+      "description": "DBFluteクライアントの基本プロパティを扱うAction。\u003cbr\u003e, @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)",
+      "typeComment": "DBFluteクライアントの基本プロパティを扱うAction。\u003cbr\u003e\n(プロジェクト名やDBや言語のコードなど)\n\n@author jflute (split from large action) (at roppongi japanese)",
       "fieldTypeDocMetaList": [
         {
           "name": "clientReadLogic",
@@ -833,19 +820,19 @@
         }
       ],
       "methodName": "index",
-      "methodComment": null,
+      "methodComment": "@param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)\n@return DBFluteクライアントの基本プロパティの情報 (NotNull)",
       "annotationList": [
         "Execute"
       ],
       "parameterTypeDocMetaList": [
         {
-          "name": "clientName",
-          "publicName": "clientName",
+          "name": "projectName",
+          "publicName": "projectName",
           "typeName": "java.lang.String",
           "simpleTypeName": "String",
           "value": null,
-          "description": null,
-          "comment": null,
+          "description": "DBFluteクライアントのプロジェクト名",
+          "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)",
           "annotationList": [],
           "nestTypeDocMetaList": []
         }
@@ -856,7 +843,7 @@
         "publicName": null,
         "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.client.propbase.ClientPropbaseResult\u003e",
         "simpleTypeName": "JsonResponse\u003cClientPropbaseResult\u003e",
-        "value": "new ClientNotFoundException(\"Not found the project: \" + clientName, clientName),asJson(detailBean)",
+        "value": "new ClientNotFoundException(\"Not found the project: \" + projectName, projectName),asJson(detailBean)",
         "description": null,
         "comment": null,
         "annotationList": [],
@@ -867,8 +854,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+            "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
             "annotationList": [
               "Required"
             ],
@@ -880,8 +867,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
             "simpleTypeName": "CDef.TargetDatabase",
             "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
-            "description": null,
-            "comment": null,
+            "description": "DBMSを識別するコード e.g. mysql",
+            "comment": "DBMSを識別するコード e.g. mysql",
             "annotationList": [
               "Required"
             ],
@@ -893,8 +880,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
             "simpleTypeName": "CDef.TargetLanguage",
             "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードの言語を識別するコード e.g. java",
+            "comment": "自動生成コードの言語を識別するコード e.g. java",
             "annotationList": [
               "Required"
             ],
@@ -906,8 +893,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
             "simpleTypeName": "CDef.TargetContainer",
             "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
+            "comment": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
             "annotationList": [
               "Required"
             ],
@@ -919,8 +906,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "そのDBFluteクライアントが利用するDBFluteのバージョン e.g. \"1",
+            "comment": "そのDBFluteクライアントが利用するDBFluteのバージョン e.g. \"1.2.6\"",
             "annotationList": [
               "Required"
             ],
@@ -932,8 +919,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "SchemaHTMLが自動生成されているかどうか？ e.g. false",
+            "comment": "SchemaHTMLが自動生成されているかどうか？ e.g. false",
             "annotationList": [
               "Required"
             ],
@@ -945,8 +932,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "HistoryHTMLが自動生成されているかどうか？ e.g. false",
+            "comment": "HistoryHTMLが自動生成されているかどうか？ e.g. false",
             "annotationList": [
               "Required"
             ],
@@ -958,8 +945,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "SchemaSyncCheckの結果HTMLが存在しているかどうか？ e.g. false",
+            "comment": "SchemaSyncCheckの結果HTMLが存在しているかどうか？ e.g. false",
             "annotationList": [
               "Required"
             ],
@@ -971,8 +958,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "AlterCheckの結果HTMLが存在しているかどうか？ e.g. false",
+            "comment": "AlterCheckの結果HTMLが存在しているかどうか？ e.g. false",
             "annotationList": [
               "Required"
             ],
@@ -984,14 +971,14 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "SchemaPolicyの違反がある状態かどうか？ (古いバージョンの場合はnull) e.g. false",
+            "comment": "SchemaPolicyの違反がある状態かどうか？ (古いバージョンの場合はnull) e.g. false",
             "annotationList": [],
             "nestTypeDocMetaList": []
           }
         ]
       },
-      "fileLineCount": 50,
+      "fileLineCount": 54,
       "methodLineCount": 7
     },
     {
@@ -1221,7 +1208,7 @@
       "url": "/dfprop/document/{projectName}",
       "typeName": "org.dbflute.intro.app.web.dfprop.document.DfpropDocumentAction",
       "simpleTypeName": "DfpropDocumentAction",
-      "description": "@author prprmurakami",
+      "description": "@author prprmurakami, @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)",
       "typeComment": "@author prprmurakami\n@author jflute\n@author hakiba",
       "fieldTypeDocMetaList": [
         {
@@ -1252,7 +1239,7 @@
         }
       ],
       "methodName": "index",
-      "methodComment": null,
+      "methodComment": "@param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)\n@return dfpropのドキュメントに関する情報 (NotNull)",
       "annotationList": [
         "Execute"
       ],
@@ -1263,8 +1250,8 @@
           "typeName": "java.lang.String",
           "simpleTypeName": "String",
           "value": null,
-          "description": null,
-          "comment": null,
+          "description": "DBFluteクライアントのプロジェクト名",
+          "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb (NotNull)",
           "annotationList": [],
           "nestTypeDocMetaList": []
         }
@@ -1286,8 +1273,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "テーブル名やカラム名が大文字ベースかどうか？ (大文字に変換するかどうか？)",
+            "comment": "テーブル名やカラム名が大文字ベースかどうか？ (大文字に変換するかどうか？)",
             "annotationList": [],
             "nestTypeDocMetaList": []
           },
@@ -1297,8 +1284,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBコメントの中の別名を区切るデリミタ (DBコメントに別名を入れてない場合は必ずnull)",
+            "comment": "DBコメントの中の別名を区切るデリミタ (DBコメントに別名を入れてない場合は必ずnull)",
             "annotationList": [],
             "nestTypeDocMetaList": []
           },
@@ -1308,8 +1295,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBコメントが別名ベースかどうか？ (デリミタがないとき別名かどうか？)",
+            "comment": "DBコメントが別名ベースかどうか？ (デリミタがないとき別名かどうか？)",
             "annotationList": [],
             "nestTypeDocMetaList": []
           },
@@ -1319,8 +1306,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "差分チェックでカラムの定義順を含めるかどうか？",
+            "comment": "差分チェックでカラムの定義順を含めるかどうか？",
             "annotationList": [],
             "nestTypeDocMetaList": []
           },
@@ -1330,8 +1317,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "差分チェックでDBコメントを含めるかどうか？",
+            "comment": "差分チェックでDBコメントを含めるかどうか？",
             "annotationList": [],
             "nestTypeDocMetaList": []
           },
@@ -1341,14 +1328,14 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "差分チェックでストアドプロシージャを含めるかどうか？",
+            "comment": "差分チェックでストアドプロシージャを含めるかどうか？",
             "annotationList": [],
             "nestTypeDocMetaList": []
           }
         ]
       },
-      "fileLineCount": 60,
+      "fileLineCount": 61,
       "methodLineCount": 5
     },
     {
@@ -1411,7 +1398,7 @@
         "simpleTypeName": "DfpropDocumentEditBody",
         "value": null,
         "description": "@author deco",
-        "comment": "@author deco\n@author subaru",
+        "comment": "@author deco\n@author subaru\n@author jflute",
         "annotationList": [],
         "nestTypeDocMetaList": [
           {
@@ -1420,8 +1407,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "テーブル名やカラム名が大文字ベースかどうか？ (大文字に変換するかどうか？)",
+            "comment": "テーブル名やカラム名が大文字ベースかどうか？ (大文字に変換するかどうか？)",
             "annotationList": [
               "Required"
             ],
@@ -1433,8 +1420,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBコメントの中の別名を区切るデリミタ (DBコメントに別名を入れてない場合は必ずnull)",
+            "comment": "DBコメントの中の別名を区切るデリミタ (DBコメントに別名を入れてない場合は必ずnull)",
             "annotationList": [],
             "nestTypeDocMetaList": []
           },
@@ -1444,8 +1431,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBコメントが別名ベースかどうか？ (デリミタがないとき別名かどうか？)",
+            "comment": "DBコメントが別名ベースかどうか？ (デリミタがないとき別名かどうか？)",
             "annotationList": [
               "Required"
             ],
@@ -1457,8 +1444,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "差分チェックでカラムの定義順を含めるかどうか？",
+            "comment": "差分チェックでカラムの定義順を含めるかどうか？",
             "annotationList": [
               "Required"
             ],
@@ -1470,8 +1457,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "差分チェックでDBコメントを含めるかどうか？",
+            "comment": "差分チェックでDBコメントを含めるかどうか？",
             "annotationList": [
               "Required"
             ],
@@ -1483,8 +1470,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "差分チェックでストアドプロシージャを含めるかどうか？",
+            "comment": "差分チェックでストアドプロシージャを含めるかどうか？",
             "annotationList": [
               "Required"
             ],
@@ -1503,7 +1490,7 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 60,
+      "fileLineCount": 61,
       "methodLineCount": 14
     },
     {
@@ -1581,8 +1568,8 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 60,
-      "methodLineCount": 15
+      "fileLineCount": 61,
+      "methodLineCount": 12
     },
     {
       "url": "/dfprop/schemapolicy/{clientName}",
@@ -2885,7 +2872,7 @@
       "methodLineCount": 8
     },
     {
-      "url": "/dfprop/settings/{clientName}",
+      "url": "/dfprop/settings/{projectName}",
       "typeName": "org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsAction",
       "simpleTypeName": "DfpropSettingsAction",
       "description": "@author hakiba",
@@ -2925,8 +2912,8 @@
       ],
       "parameterTypeDocMetaList": [
         {
-          "name": "clientName",
-          "publicName": "clientName",
+          "name": "projectName",
+          "publicName": "projectName",
           "typeName": "java.lang.String",
           "simpleTypeName": "String",
           "value": null,
@@ -2942,7 +2929,7 @@
         "publicName": null,
         "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.dfprop.settings.DfpropSettingsResult\u003e",
         "simpleTypeName": "JsonResponse\u003cDfpropSettingsResult\u003e",
-        "value": "new ClientNotFoundException(\"Not found the project: \" + clientName, clientName),asJson(result)",
+        "value": "new ClientNotFoundException(\"Not found the project: \" + projectName, projectName),asJson(result)",
         "description": null,
         "comment": null,
         "annotationList": [],
@@ -2953,8 +2940,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+            "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
             "annotationList": [
               "Required"
             ],
@@ -2966,8 +2953,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
             "simpleTypeName": "CDef.TargetDatabase",
             "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
-            "description": null,
-            "comment": null,
+            "description": "DBMSを識別するコード e.g. mysql",
+            "comment": "DBMSを識別するコード e.g. mysql",
             "annotationList": [
               "Required"
             ],
@@ -2979,8 +2966,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
             "simpleTypeName": "CDef.TargetLanguage",
             "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードの言語を識別するコード e.g. java",
+            "comment": "自動生成コードの言語を識別するコード e.g. java",
             "annotationList": [
               "Required"
             ],
@@ -2992,8 +2979,8 @@
             "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
             "simpleTypeName": "CDef.TargetContainer",
             "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
+            "comment": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
             "annotationList": [
               "Required"
             ],
@@ -3005,8 +2992,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. \"org",
+            "comment": "自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. \"org.docksidestage.showbase\"",
             "annotationList": [
               "Required"
             ],
@@ -3018,8 +3005,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "JDBCドライバーのクラス名 e.g. \"com",
+            "comment": "JDBCドライバーのクラス名 e.g. \"com.mysql.jdbc.Driver\"",
             "annotationList": [
               "Required"
             ],
@@ -3031,8 +3018,8 @@
             "typeName": "org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsResult$DatabaseSettingsPart",
             "simpleTypeName": "DatabaseSettingsPart",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBのメインスキーマの接続情報、databaseInfoMap",
+            "comment": "DBのメインスキーマの接続情報、databaseInfoMap.dfpropに記載されているもの",
             "annotationList": [
               "Required",
               "Valid"
@@ -3044,8 +3031,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
+                "comment": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -3057,8 +3044,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+                "comment": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
                 "annotationList": [],
                 "nestTypeDocMetaList": []
               },
@@ -3068,8 +3055,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCの接続ユーザー e.g. maihamauser",
+                "comment": "JDBCの接続ユーザー e.g. maihamauser",
                 "annotationList": [
                   "Required"
                 ],
@@ -3081,8 +3068,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+                "comment": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
                 "annotationList": [],
                 "nestTypeDocMetaList": []
               }
@@ -3094,8 +3081,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBFluteクライアントが利用するDBFluteのバージョン e.g. \"1",
+            "comment": "DBFluteクライアントが利用するDBFluteのバージョン e.g. \"1.2.6\"",
             "annotationList": [
               "Required"
             ],
@@ -3107,8 +3094,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "extlib配下のJDBCドライバーのjarファイルのcanonical path e.g. \"/Users/intro/xxx",
+            "comment": "extlib配下のJDBCドライバーのjarファイルのcanonical path e.g. \"/Users/intro/xxx.../extlib/yyy.jar\" (NullAllowed)",
             "annotationList": [],
             "nestTypeDocMetaList": []
           }
@@ -3177,7 +3164,7 @@
         "simpleTypeName": "DfpropSettingsUpdateBody",
         "value": null,
         "description": "@author hakiba",
-        "comment": "@author hakiba",
+        "comment": "@author hakiba\n@author jflute",
         "annotationList": [],
         "nestTypeDocMetaList": [
           {
@@ -3199,8 +3186,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
                 "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
-                "description": null,
-                "comment": null,
+                "description": "DBMSを識別するコード e.g. mysql",
+                "comment": "DBMSを識別するコード e.g. mysql",
                 "annotationList": [
                   "Required"
                 ],
@@ -3212,8 +3199,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
                 "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードの言語を識別するコード e.g. java",
+                "comment": "自動生成コードの言語を識別するコード e.g. java",
                 "annotationList": [
                   "Required"
                 ],
@@ -3225,8 +3212,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
                 "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
+                "comment": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
                 "annotationList": [
                   "Required"
                 ],
@@ -3238,8 +3225,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードの基底パッケージ (dbfluteパッケージは含まない) e.g. \"org",
+                "comment": "自動生成コードの基底パッケージ (dbfluteパッケージは含まない) e.g. \"org.docksidestage.showbase\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -3251,8 +3238,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCドライバーのクラス名 e.g. \"com",
+                "comment": "JDBCドライバーのクラス名 e.g. \"com.mysql.jdbc.Driver\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -3264,8 +3251,8 @@
                 "typeName": "org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsUpdateBody$ClientPart$DatabaseSettingsPart",
                 "simpleTypeName": "DatabaseSettingsPart",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBのメインスキーマの接続情報、databaseInfoMap",
+                "comment": "DBのメインスキーマの接続情報、databaseInfoMap.dfpropに反映される",
                 "annotationList": [
                   "Required",
                   "Valid"
@@ -3277,8 +3264,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
+                    "comment": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
                     "annotationList": [
                       "Required"
                     ],
@@ -3290,8 +3277,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+                    "comment": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   },
@@ -3301,8 +3288,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続ユーザー e.g. maihamauser",
+                    "comment": "JDBCの接続ユーザー e.g. maihamauser",
                     "annotationList": [
                       "Required"
                     ],
@@ -3314,8 +3301,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+                    "comment": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   }
@@ -3327,8 +3314,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBFluteクライアントが利用するDBFluteのバージョン e.g. \"1",
+                "comment": "DBFluteクライアントが利用するDBFluteのバージョン e.g. \"1.2.6\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -5585,8 +5572,8 @@
       "url": "/intro/manifest",
       "typeName": "org.dbflute.intro.app.web.intro.IntroAction",
       "simpleTypeName": "IntroAction",
-      "description": "@author p1us2er0",
-      "typeComment": "@author p1us2er0\n@author jflute\n@author deco\n@author subaru",
+      "description": "Intro全体で共有するようなリクエストを司るAction。, MANIFEST.MFの内容を戻す。\u003cbr\u003e",
+      "typeComment": "Intro全体で共有するようなリクエストを司るAction。\n\n@author p1us2er0\n@author jflute\n@author deco\n@author subaru",
       "fieldTypeDocMetaList": [
         {
           "name": "introReadLogic",
@@ -5616,7 +5603,7 @@
         }
       ],
       "methodName": "manifest",
-      "methodComment": null,
+      "methodComment": "MANIFEST.MFの内容を戻す。\u003cbr\u003e\nそのままkey/valueで表示するだけなので、BeanクラスにはせずMapで戻している。\n\n@return mfファイルの内容をそのままkey/valueにしている (NotNull)",
       "annotationList": [
         "Execute"
       ],
@@ -5633,15 +5620,15 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 34,
+      "fileLineCount": 53,
       "methodLineCount": 3
     },
     {
       "url": "/intro/classifications",
       "typeName": "org.dbflute.intro.app.web.intro.IntroAction",
       "simpleTypeName": "IntroAction",
-      "description": "@author p1us2er0",
-      "typeComment": "@author p1us2er0\n@author jflute\n@author deco\n@author subaru",
+      "description": "Intro全体で共有するようなリクエストを司るAction。, サーバーサイドの区分値の情報一括で戻す。",
+      "typeComment": "Intro全体で共有するようなリクエストを司るAction。\n\n@author p1us2er0\n@author jflute\n@author deco\n@author subaru",
       "fieldTypeDocMetaList": [
         {
           "name": "introReadLogic",
@@ -5671,7 +5658,7 @@
         }
       ],
       "methodName": "classifications",
-      "methodComment": null,
+      "methodComment": "サーバーサイドの区分値の情報一括で戻す。\n\n@return map型のキーに対してそれぞれの区分値が定義されている (NotNull)",
       "annotationList": [
         "Execute"
       ],
@@ -5688,15 +5675,15 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 34,
-      "methodLineCount": 4
+      "fileLineCount": 53,
+      "methodLineCount": 5
     },
     {
       "url": "/intro/configuration",
       "typeName": "org.dbflute.intro.app.web.intro.IntroAction",
       "simpleTypeName": "IntroAction",
-      "description": "@author p1us2er0",
-      "typeComment": "@author p1us2er0\n@author jflute\n@author deco\n@author subaru",
+      "description": "Intro全体で共有するようなリクエストを司るAction。, Introサーバーの設定を一括で戻す。",
+      "typeComment": "Intro全体で共有するようなリクエストを司るAction。\n\n@author p1us2er0\n@author jflute\n@author deco\n@author subaru",
       "fieldTypeDocMetaList": [
         {
           "name": "introReadLogic",
@@ -5726,7 +5713,7 @@
         }
       ],
       "methodName": "configuration",
-      "methodComment": null,
+      "methodComment": "Introサーバーの設定を一括で戻す。\n\n@return map型でそれぞれの設定が格納されている (NotNull)",
       "annotationList": [
         "Execute"
       ],
@@ -5743,8 +5730,8 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 34,
-      "methodLineCount": 9
+      "fileLineCount": 53,
+      "methodLineCount": 10
     },
     {
       "url": "/log/",
@@ -7045,8 +7032,8 @@
       "url": "/welcome/create",
       "typeName": "org.dbflute.intro.app.web.welcome.WelcomeAction",
       "simpleTypeName": "WelcomeAction",
-      "description": "@author hakiba",
-      "typeComment": "@author hakiba\n@author cabos\n@author jflute",
+      "description": "Welcome画面に対応するAction。\u003cbr\u003e, Welcome画面で入力された情報からDBFluteクライアントを作成する。",
+      "typeComment": "Welcome画面に対応するAction。\u003cbr\u003e\n手始めのDBFluteクライアントの作成とDBFluteエンジンのインストールを司る。\n\n@author hakiba\n@author cabos\n@author jflute",
       "fieldTypeDocMetaList": [
         {
           "name": "clientReadLogic",
@@ -7141,7 +7128,7 @@
         }
       ],
       "methodName": "create",
-      "methodComment": null,
+      "methodComment": "Welcome画面で入力された情報からDBFluteクライアントを作成する。\n\n@param welcomeCreateBody DBFluteクライアントを作成するための情報 (NotNull)\n@return レスポンスなし (NotNull)",
       "annotationList": [
         "NotAvailableDecommentServer",
         "Execute"
@@ -7154,7 +7141,7 @@
         "simpleTypeName": "WelcomeCreateBody",
         "value": null,
         "description": "@author hakiba",
-        "comment": "@author hakiba",
+        "comment": "@author hakiba\n@author jflute",
         "annotationList": [],
         "nestTypeDocMetaList": [
           {
@@ -7163,8 +7150,8 @@
             "typeName": "org.dbflute.intro.app.web.welcome.WelcomeCreateBody$ClientPart",
             "simpleTypeName": "ClientPart",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "一つのDBFluteクライアントを新規作成するための入力情報",
+            "comment": "一つのDBFluteクライアントを新規作成するための入力情報",
             "annotationList": [
               "Required",
               "Valid"
@@ -7176,8 +7163,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
+                "comment": "DBFluteクライアントのプロジェクト名 e.g. maihamadb",
                 "annotationList": [
                   "Required"
                 ],
@@ -7189,8 +7176,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase",
                 "simpleTypeName": "CDef.TargetDatabase",
                 "value": "{mysql\u003dMySQL, postgresql\u003dPostgreSQL, oracle\u003dOracle, db2\u003dDB2, sqlserver\u003dSQLServer, h2\u003dH2 Database, derby\u003dApache Derby}",
-                "description": null,
-                "comment": null,
+                "description": "DBMSを識別するコード e.g. mysql",
+                "comment": "DBMSを識別するコード e.g. mysql",
                 "annotationList": [
                   "Required"
                 ],
@@ -7202,8 +7189,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage",
                 "simpleTypeName": "CDef.TargetLanguage",
                 "value": "{java\u003dJava, csharp\u003dC#, scala\u003dScala}",
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードの言語を識別するコード e.g. java",
+                "comment": "自動生成コードの言語を識別するコード e.g. java",
                 "annotationList": [
                   "Required"
                 ],
@@ -7215,8 +7202,8 @@
                 "typeName": "org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer",
                 "simpleTypeName": "CDef.TargetContainer",
                 "value": "{lasta_di\u003dLasta Di, spring\u003dSpring Framework, guice\u003dGoogle Guice, seasar\u003dSeasar (S2Container), cdi\u003dCDI}",
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
+                "comment": "自動生成コードが利用するDIコンテナを識別するコード e.g. lasta_di",
                 "annotationList": [
                   "Required"
                 ],
@@ -7228,8 +7215,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. \"org",
+                "comment": "自動生成コードの基底パッケージ (dbfluteはここでは含まない) e.g. \"org.docksidestage.showbase\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -7241,8 +7228,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCドライバーのクラス名 e.g. \"com",
+                "comment": "JDBCドライバーのクラス名 e.g. \"com.mysql.jdbc.Driver\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -7254,8 +7241,8 @@
                 "typeName": "org.dbflute.intro.app.web.welcome.WelcomeCreateBody$ClientPart$DatabaseSettingsPart",
                 "simpleTypeName": "DatabaseSettingsPart",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBのメインスキーマの接続情報、databaseInfoMap",
+                "comment": "DBのメインスキーマの接続情報、databaseInfoMap.dfpropに反映される",
                 "annotationList": [
                   "Required",
                   "Valid"
@@ -7267,8 +7254,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
+                    "comment": "JDBCの接続URL e.g. \"jdbc:mysql://localhost:3306/maihamadb\"",
                     "annotationList": [
                       "Required"
                     ],
@@ -7280,8 +7267,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
+                    "comment": "JDBCの接続スキーマ、DBMSによっては指定なし e.g. maihamadb",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   },
@@ -7291,8 +7278,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続ユーザー e.g. maihamauser",
+                    "comment": "JDBCの接続ユーザー e.g. maihamauser",
                     "annotationList": [
                       "Required"
                     ],
@@ -7304,8 +7291,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
+                    "comment": "JDBCの接続パスワード、パスワードなしなら空っぽ e.g. maihamapass",
                     "annotationList": [],
                     "nestTypeDocMetaList": []
                   }
@@ -7317,8 +7304,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. \"1",
+                "comment": "DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新 e.g. \"1.2.6\"",
                 "annotationList": [
                   "Required"
                 ],
@@ -7330,8 +7317,8 @@
                 "typeName": "org.dbflute.intro.app.web.welcome.WelcomeCreateBody$ClientPart$JdbcDriverPart",
                 "simpleTypeName": "JdbcDriverPart",
                 "value": null,
-                "description": null,
-                "comment": null,
+                "description": "JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要",
+                "comment": "JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要",
                 "annotationList": [
                   "Valid"
                 ],
@@ -7342,8 +7329,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. \"mysql-connector-java-5",
+                    "comment": "JDBCドライバーのjarファイルのファイル名 (パスなし、extlib配下で使われる) e.g. \"mysql-connector-java-5.1.46-bin.jar\"",
                     "annotationList": [
                       "Required{groups\u003d[ClientError]}"
                     ],
@@ -7355,8 +7342,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": null,
-                    "comment": null,
+                    "description": "JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね e.g. QWERTYUIOP",
+                    "comment": "JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね e.g. QWERTYUIOP",
                     "annotationList": [
                       "Required{groups\u003d[ClientError]}"
                     ],
@@ -7372,8 +7359,8 @@
             "typeName": "java.lang.Boolean",
             "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
+            "description": "DBMSへの接続テストを行うかどうか？ e.g. false",
+            "comment": "DBMSへの接続テストを行うかどうか？ e.g. false",
             "annotationList": [
               "Required"
             ],
@@ -7403,8 +7390,8 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 113,
-      "methodLineCount": 44
+      "fileLineCount": 122,
+      "methodLineCount": 46
     }
   ]
 }
