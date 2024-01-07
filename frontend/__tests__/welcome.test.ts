@@ -25,12 +25,15 @@ describe('Welcome', () => {
   beforeAll(() => {
     // index.htmlのid=rootタグにapp.riotをマウントすることでriotアプリを起動する
     const mountApp = riot.component(App)
-    mountApp(document.getElementById('root'))
+    const elementId = 'root'
+    const root = document.getElementById(elementId)
+    if (!root) throw Error(`not found element by id=${elementId}`)
+    mountApp(root)
   })
 
   it('サイドメニューに共通メニューが表示されていること', () => {
     const body = document.querySelector('body')
-    const commonMenu = body.querySelector('[is=common-menu]')
+    const commonMenu = body?.querySelector('[is=common-menu]')
     expect(commonMenu).not.toBeNull()
   })
 })

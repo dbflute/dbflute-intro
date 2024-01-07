@@ -32,4 +32,9 @@ riot.install(introPlugin)
 // index.htmlのid=rootタグにapp.riotをマウントすることでriotアプリを起動する
 // (component()関数でDOM操作のための関数を作成してHTML要素を指定)
 const mountApp = riot.component(App)
-mountApp(document.getElementById('root'))
+const root = document.getElementById('root')
+if (root) {
+  mountApp(root)
+} else {
+  throw new Error('not found riot root element')
+}

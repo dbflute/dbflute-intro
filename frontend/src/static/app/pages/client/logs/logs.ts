@@ -13,6 +13,7 @@ interface State {
 }
 
 interface Logs extends IntroRiotComponent<Props, State> {
+  onMounted: () => void
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======

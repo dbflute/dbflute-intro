@@ -33,7 +33,7 @@ interface State {
   // 話がそれますが、TypeScriptの界隈ではnullとundefinedのどちらを使うのか、使い分けるべきかみたいなところはいろいろ意見が分かれてるみたいです。
   // _/_/_/_/_/_/_/_/_/_/
   //
-  jdbcDriver: { fileName: string; data: string }
+  jdbcDriver: { fileName: string; data: string } | undefined
   // JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
   // (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
   needsJdbcDriver: boolean
@@ -59,6 +59,7 @@ interface Welcome extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
+  onMounted(): void
   onchangeDatabase: (databaseCode: DropdownItem) => void
   onclickOrmSetting: () => void
   onclickCreate: () => void
@@ -174,26 +175,30 @@ export default withIntroTypes<Welcome>({
    * DBFluteクライアントを作成する。(作成ボタンの処理)
    */
   onclickCreate() {
+    // TypeScriptのstrictモードを適用したのでnullチェックが必須になった
+    if (!this.latestVersion) {
+      throw new Error('not complete fetch latest version')
+    }
     const body: WelcomeCreateBody = {
       // #thinking inputElement用意してるくらいなら、リストボックスもthis.$()の部分使わなくていいようにしてもいい？ jflute (2023/12/25)
       // (というか、そもそもHTMLElementとして取得したらダメなのか？)
       client: {
-        projectName: this.inputElementByRequired('[ref=projectName]').value,
-        databaseCode: this.$('[ref=databaseCode]').getAttribute('value'),
+        projectName: this.inputElementBy('[ref=projectName]').value,
+        databaseCode: this.valueAttributeBy('[ref=databaseCode]'),
         mainSchemaSettings: {
-          user: this.inputElementByRequired('[ref=user]').value,
-          url: this.inputElementByRequired('[ref=url]').value,
-          schema: this.inputElementByRequired('[ref=schema]').value,
-          password: this.inputElementByRequired('[ref=password]').value,
+          user: this.inputElementBy('[ref=user]').value,
+          url: this.inputElementBy('[ref=url]').value,
+          schema: this.inputElementBy('[ref=schema]').value,
+          password: this.inputElementBy('[ref=password]').value,
         },
         dbfluteVersion: this.latestVersion,
-        packageBase: this.inputElementByRequired('[ref=packageBase]').value,
-        containerCode: this.$('[ref=containerCode]').getAttribute('value'),
-        languageCode: this.$('[ref=languageCode]').getAttribute('value'),
+        packageBase: this.inputElementBy('[ref=packageBase]').value,
+        containerCode: this.valueAttributeBy('[ref=containerCode]'),
+        languageCode: this.valueAttributeBy('[ref=languageCode]'),
         jdbcDriver: this.state.jdbcDriver,
-        jdbcDriverFqcn: this.inputElementByRequired('[ref=jdbcDriverFqcn]').value,
+        jdbcDriverFqcn: this.inputElementBy('[ref=jdbcDriverFqcn]').value,
       },
-      testConnection: this.inputElementByRequired('[ref=testConnection]').checked,
+      testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }
     this.suLoading(true)
     api
@@ -213,6 +218,10 @@ export default withIntroTypes<Welcome>({
    */
   onchangeJarFile(event: InputEvent) {
     const eventTarget = event.target as HTMLInputElement // event.targetはイベント発生元のオブジェクト
+    // TypeScriptのstrictモードを適用したのでnullチェックが必須になった
+    if (!eventTarget.files) {
+      throw new Error('not found any files')
+    }
     const file = eventTarget.files[0]
     readFile(file).then((result) => {
       // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa

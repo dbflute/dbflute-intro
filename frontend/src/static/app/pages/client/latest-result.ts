@@ -20,6 +20,7 @@ interface State {
 }
 
 interface LatestResult extends IntroRiotComponent<Props, State> {
+  onMounted(): void
   toggleLatestResult(): void
 }
 
