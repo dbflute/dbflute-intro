@@ -135,7 +135,7 @@ const dbflutePlugin: DBFluteIntroPlugin = {
     // prettier-ignore
     const value = (elementAs<Element>).call(this, selector)?.getAttribute('value')
     if (!value) {
-      throw new Error(`not found value attribute by ${selector}`)
+      throw new ElementNotFoundError(`not found value attribute by ${selector}`)
     }
     return value
   },
