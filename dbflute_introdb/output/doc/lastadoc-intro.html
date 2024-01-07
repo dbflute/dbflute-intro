@@ -314,7 +314,7 @@ table.child, table.child td, table.child th {
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">DBFluteクライアント一覧のためのAction。</td>
+        <td class="rowcell">DBFluteクライアント一覧のためのAction。,&nbsp;&#064;return&nbsp;DBFluteクライアントの基本情報のリスト&nbsp;(NotNull)</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.client.list.ClientListAction">ClientListAction</span>#index()</td>
         <td class="rowcell">
         </td>
@@ -322,17 +322,17 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.List&lt;org.dbflute.intro.app.web.client.list.ClientRowResult&gt;&gt;">JsonResponse&lt;List&lt;ClientRowResult&gt;&gt;</span>
         </td>
         <td class="rowcellnum">1</td>
-        <td class="rowcellnum">41</td>
+        <td class="rowcellnum">44</td>
         <td class="rowcellnum">8</td>
     </tr>
     <tr>
         <td class="rowcellnum">6</td>
-        <td class="rowcell"><a href="#.client.propbase._b_clientName_e_::index">/client/propbase/{clientName}</a></td>
+        <td class="rowcell"><a href="#.client.propbase._b_projectName_e_::index">/client/propbase/{projectName}</a></td>
         <td class="rowcell">
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">&#064;author&nbsp;jflute&nbsp;(split&nbsp;from&nbsp;large&nbsp;action)&nbsp;(at&nbsp;roppongi&nbsp;japanese)</td>
+        <td class="rowcell">DBFluteクライアントの基本プロパティを扱うAction。&lt;br&gt;,&nbsp;&#064;param&nbsp;projectName&nbsp;DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.client.propbase.ClientPropbaseAction">ClientPropbaseAction</span>#index()</td>
         <td class="rowcell">
         </td>
@@ -340,7 +340,7 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.client.propbase.ClientPropbaseResult&gt;">JsonResponse&lt;ClientPropbaseResult&gt;</span>
         </td>
         <td class="rowcellnum">4</td>
-        <td class="rowcellnum">50</td>
+        <td class="rowcellnum">54</td>
         <td class="rowcellnum">7</td>
     </tr>
     <tr>
@@ -387,7 +387,7 @@ table.child, table.child td, table.child th {
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">&#064;author&nbsp;prprmurakami</td>
+        <td class="rowcell">&#064;author&nbsp;prprmurakami,&nbsp;&#064;param&nbsp;projectName&nbsp;DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.dfprop.document.DfpropDocumentAction">DfpropDocumentAction</span>#index()</td>
         <td class="rowcell">
         </td>
@@ -395,7 +395,7 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.dfprop.document.DfpropDocumentResult&gt;">JsonResponse&lt;DfpropDocumentResult&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">60</td>
+        <td class="rowcellnum">61</td>
         <td class="rowcellnum">5</td>
     </tr>
     <tr>
@@ -414,7 +414,7 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.lang.Void&gt;">JsonResponse&lt;Void&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">60</td>
+        <td class="rowcellnum">61</td>
         <td class="rowcellnum">14</td>
     </tr>
     <tr>
@@ -432,8 +432,8 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.StreamResponse">StreamResponse</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">60</td>
-        <td class="rowcellnum">15</td>
+        <td class="rowcellnum">61</td>
+        <td class="rowcellnum">12</td>
     </tr>
     <tr>
         <td class="rowcellnum">12</td>
@@ -587,7 +587,7 @@ table.child, table.child td, table.child th {
     </tr>
     <tr>
         <td class="rowcellnum">20</td>
-        <td class="rowcell"><a href="#.dfprop.settings._b_clientName_e_::index">/dfprop/settings/{clientName}</a></td>
+        <td class="rowcell"><a href="#.dfprop.settings._b_projectName_e_::index">/dfprop/settings/{projectName}</a></td>
         <td class="rowcell">
 # simple implementation for now
             api
@@ -904,7 +904,7 @@ table.child, table.child td, table.child th {
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">&#064;author&nbsp;p1us2er0</td>
+        <td class="rowcell">Intro全体で共有するようなリクエストを司るAction。,&nbsp;MANIFEST.MFの内容を戻す。&lt;br&gt;</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.intro.IntroAction">IntroAction</span>#manifest()</td>
         <td class="rowcell">
         </td>
@@ -912,7 +912,7 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.lang.Object&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Object&gt;&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">34</td>
+        <td class="rowcellnum">53</td>
         <td class="rowcellnum">3</td>
     </tr>
     <tr>
@@ -922,7 +922,7 @@ table.child, table.child td, table.child th {
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">&#064;author&nbsp;p1us2er0</td>
+        <td class="rowcell">Intro全体で共有するようなリクエストを司るAction。,&nbsp;サーバーサイドの区分値の情報一括で戻す。</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.intro.IntroAction">IntroAction</span>#classifications()</td>
         <td class="rowcell">
         </td>
@@ -930,8 +930,8 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.util.Map&lt;?,&nbsp;?&gt;&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Map&lt;?,&nbsp;?&gt;&gt;&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">34</td>
-        <td class="rowcellnum">4</td>
+        <td class="rowcellnum">53</td>
+        <td class="rowcellnum">5</td>
     </tr>
     <tr>
         <td class="rowcellnum">39</td>
@@ -940,7 +940,7 @@ table.child, table.child td, table.child th {
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">&#064;author&nbsp;p1us2er0</td>
+        <td class="rowcell">Intro全体で共有するようなリクエストを司るAction。,&nbsp;Introサーバーの設定を一括で戻す。</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.intro.IntroAction">IntroAction</span>#configuration()</td>
         <td class="rowcell">
         </td>
@@ -948,8 +948,8 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.lang.Object&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Object&gt;&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">34</td>
-        <td class="rowcellnum">9</td>
+        <td class="rowcellnum">53</td>
+        <td class="rowcellnum">10</td>
     </tr>
     <tr>
         <td class="rowcellnum">40</td>
@@ -1159,7 +1159,7 @@ table.child, table.child td, table.child th {
 # simple implementation for now
             api
         </td>
-        <td class="rowcell">&#064;author&nbsp;hakiba</td>
+        <td class="rowcell">Welcome画面に対応するAction。&lt;br&gt;,&nbsp;Welcome画面で入力された情報からDBFluteクライアントを作成する。</td>
         <td class="rowcell"><span title="org.dbflute.intro.app.web.welcome.WelcomeAction">WelcomeAction</span>#create()</td>
         <td class="rowcell">
             <span title="org.dbflute.intro.app.web.welcome.WelcomeCreateBody">WelcomeCreateBody</span>
@@ -1168,8 +1168,8 @@ table.child, table.child td, table.child th {
             <span title="org.lastaflute.web.response.JsonResponse&lt;java.lang.Void&gt;">JsonResponse&lt;Void&gt;</span>
         </td>
         <td class="rowcellnum">7</td>
-        <td class="rowcellnum">113</td>
-        <td class="rowcellnum">44</td>
+        <td class="rowcellnum">122</td>
+        <td class="rowcellnum">46</td>
     </tr>
     </tbody>
 </table>
@@ -1230,7 +1230,7 @@ table.child, table.child td, table.child th {
         <td>client</td>
         <td><p title="org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart">ClientPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="一つのDBFluteクライアントを新規作成するための入力情報">一つのDBFluteクライアントを新規作成するための入力情報</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1257,7 +1257,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb">DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1269,7 +1269,7 @@ table.child, table.child td, table.child th {
         <td>databaseCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase">CDef.TargetDatabase</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSを識別するコード&nbsp;e.g.&nbsp;mysql">DBMSを識別するコード&nbsp;e.g.&nbsp;mysql</p>
             <p>{mysql=MySQL,&nbsp;postgresql=PostgreSQL,&nbsp;oracle=Oracle,&nbsp;db2=DB2,&nbsp;sqlserver=SQLServer,&nbsp;h2=H2&nbsp;Database,&nbsp;derby=Apache&nbsp;Derby}</p>
         </td>
         <td class="fieldannotations">
@@ -1281,7 +1281,7 @@ table.child, table.child td, table.child th {
         <td>languageCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage">CDef.TargetLanguage</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java">自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java</p>
             <p>{java=Java,&nbsp;csharp=C#,&nbsp;scala=Scala}</p>
         </td>
         <td class="fieldannotations">
@@ -1293,7 +1293,7 @@ table.child, table.child td, table.child th {
         <td>containerCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer">CDef.TargetContainer</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di">自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di</p>
             <p>{lasta_di=Lasta&nbsp;Di,&nbsp;spring=Spring&nbsp;Framework,&nbsp;guice=Google&nbsp;Guice,&nbsp;seasar=Seasar&nbsp;(S2Container),&nbsp;cdi=CDI}</p>
         </td>
         <td class="fieldannotations">
@@ -1305,7 +1305,7 @@ table.child, table.child td, table.child th {
         <td>packageBase</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの基底パッケージ&nbsp;(dbfluteはここでは含まない)&nbsp;e.g.&nbsp;"org.docksidestage.showbase"">自動生成コードの基底パッケージ&nbsp;(dbfluteはここでは含まない)&nbsp;e.g.&nbsp;"org</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1317,7 +1317,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriverFqcn</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com.mysql.jdbc.Driver"">JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1329,7 +1329,7 @@ table.child, table.child td, table.child th {
         <td>mainSchemaSettings</td>
         <td><p title="org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart$DatabaseSettingsPart">DatabaseSettingsPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBのメインスキーマの接続情報、databaseInfoMap.dfpropに反映される">DBのメインスキーマの接続情報、databaseInfoMap</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1356,7 +1356,7 @@ table.child, table.child td, table.child th {
         <td>url</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"">JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1368,7 +1368,7 @@ table.child, table.child td, table.child th {
         <td>schema</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb">JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1379,7 +1379,7 @@ table.child, table.child td, table.child th {
         <td>user</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser">JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1391,7 +1391,7 @@ table.child, table.child td, table.child th {
         <td>password</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass">JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1431,7 +1431,7 @@ table.child, table.child td, table.child th {
         <td>url</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"">JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1443,7 +1443,7 @@ table.child, table.child td, table.child th {
         <td>schema</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb">JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1454,7 +1454,7 @@ table.child, table.child td, table.child th {
         <td>user</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser">JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1466,7 +1466,7 @@ table.child, table.child td, table.child th {
         <td>password</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass">JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1482,7 +1482,7 @@ table.child, table.child td, table.child th {
         <td>dbfluteVersion</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新&nbsp;e.g.&nbsp;"1.2.6"">DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新&nbsp;e.g.&nbsp;"1</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1494,7 +1494,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriver</td>
         <td><p title="org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart$JdbcDriverPart">JdbcDriverPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要">JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1519,7 +1519,7 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのjarファイルのファイル名&nbsp;(パスなし、extlib配下で使われる)&nbsp;e.g.&nbsp;"mysql-connector-java-5.1.46-bin.jar"">JDBCドライバーのjarファイルのファイル名&nbsp;(パスなし、extlib配下で使われる)&nbsp;e.g.&nbsp;"mysql-connector-java-5</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1531,7 +1531,7 @@ table.child, table.child td, table.child th {
         <td>data</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね&nbsp;e.g.&nbsp;QWERTYUIOP">JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね&nbsp;e.g.&nbsp;QWERTYUIOP</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1649,18 +1649,6 @@ table.child, table.child td, table.child th {
             </div>
         </td>
     </tr>
-    <tr>
-        <td class="rowcellnum" rowspan="1">12</td>
-        <td>schemaSyncCheckMap</td>
-        <td><p title="java.util.Map&lt;java.lang.String,&nbsp;org.dbflute.intro.app.web.client.ClientCreateBody$ClientPart$DatabaseSettingsPart&gt;">Map&lt;String,&nbsp;ClientCreateBody$ClientPart$DatabaseSettingsPart&gt;</p></td>
-        <td class="fieldcomment">
-            <p title=""></p>
-            <p></p>
-        </td>
-        <td class="fieldannotations">
-            &#64;NotNull
-        </td>
-    </tr>
 </table>
 
             </div>
@@ -1671,7 +1659,7 @@ table.child, table.child td, table.child th {
         <td>testConnection</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSへの接続テストを行うかどうか？&nbsp;e.g.&nbsp;false">DBMSへの接続テストを行うかどうか？&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1731,6 +1719,7 @@ table.child, table.child td, table.child th {
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
 <p class="tablecomment" style="white-space:pre-wrap;">DBFluteクライアント一覧のためのAction。<br><br>&#064;author&nbsp;jflute&nbsp;(split&nbsp;from&nbsp;large&nbsp;action)&nbsp;(at&nbsp;roppongi&nbsp;japanese)</p>
+<p class="tablecomment" style="white-space:pre-wrap;">&#064;return&nbsp;DBFluteクライアントの基本情報のリスト&nbsp;(NotNull)</p>
 <span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.List&lt;org.dbflute.intro.app.web.client.list.ClientRowResult&gt;&gt;">JsonResponse&lt;List&lt;ClientRowResult&gt;&gt;</span></span>
 <table>
     <thead>
@@ -1747,7 +1736,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb">DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1759,7 +1748,7 @@ table.child, table.child td, table.child th {
         <td>databaseCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase">CDef.TargetDatabase</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSを識別するコード&nbsp;e.g.&nbsp;mysql">DBMSを識別するコード&nbsp;e.g.&nbsp;mysql</p>
             <p>{mysql=MySQL,&nbsp;postgresql=PostgreSQL,&nbsp;oracle=Oracle,&nbsp;db2=DB2,&nbsp;sqlserver=SQLServer,&nbsp;h2=H2&nbsp;Database,&nbsp;derby=Apache&nbsp;Derby}</p>
         </td>
         <td class="fieldannotations">
@@ -1771,7 +1760,7 @@ table.child, table.child td, table.child th {
         <td>languageCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage">CDef.TargetLanguage</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java">自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java</p>
             <p>{java=Java,&nbsp;csharp=C#,&nbsp;scala=Scala}</p>
         </td>
         <td class="fieldannotations">
@@ -1783,7 +1772,7 @@ table.child, table.child td, table.child th {
         <td>containerCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer">CDef.TargetContainer</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di">自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di</p>
             <p>{lasta_di=Lasta&nbsp;Di,&nbsp;spring=Spring&nbsp;Framework,&nbsp;guice=Google&nbsp;Guice,&nbsp;seasar=Seasar&nbsp;(S2Container),&nbsp;cdi=CDI}</p>
         </td>
         <td class="fieldannotations">
@@ -1792,8 +1781,8 @@ table.child, table.child td, table.child th {
     </tr>
 </table>
 
-<h3 id=".client.propbase._b_clientName_e_::index">
-/client/propbase/{clientName}
+<h3 id=".client.propbase._b_projectName_e_::index">
+/client/propbase/{projectName}
 </h3>
 <p>
 <span class="doctitle">Execute Method:</span> <span class="docmainvalue">org.dbflute.intro.app.web.client.propbase.ClientPropbaseAction#index()</span>
@@ -1802,7 +1791,8 @@ table.child, table.child td, table.child th {
 <span class="docsubtitle">annotations:</span>
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
-<p class="tablecomment" style="white-space:pre-wrap;">&#064;author&nbsp;jflute&nbsp;(split&nbsp;from&nbsp;large&nbsp;action)&nbsp;(at&nbsp;roppongi&nbsp;japanese)</p>
+<p class="tablecomment" style="white-space:pre-wrap;">DBFluteクライアントの基本プロパティを扱うAction。&lt;br&gt;<br>(プロジェクト名やDBや言語のコードなど)<br><br>&#064;author&nbsp;jflute&nbsp;(split&nbsp;from&nbsp;large&nbsp;action)&nbsp;(at&nbsp;roppongi&nbsp;japanese)</p>
+<p class="tablecomment" style="white-space:pre-wrap;">&#064;param&nbsp;projectName&nbsp;DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)<br>&#064;return&nbsp;DBFluteクライアントの基本プロパティの情報&nbsp;(NotNull)</p>
 <span class="doctitle">Path Variables:</span>
 <table>
     <thead>
@@ -1816,10 +1806,10 @@ table.child, table.child td, table.child th {
     </thead>
     <tr>
         <td class="rowcellnum" rowspan="1">1</td>
-        <td>clientName</td>
+        <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)">DBFluteクライアントのプロジェクト名</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1843,7 +1833,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb">DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1855,7 +1845,7 @@ table.child, table.child td, table.child th {
         <td>databaseCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase">CDef.TargetDatabase</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSを識別するコード&nbsp;e.g.&nbsp;mysql">DBMSを識別するコード&nbsp;e.g.&nbsp;mysql</p>
             <p>{mysql=MySQL,&nbsp;postgresql=PostgreSQL,&nbsp;oracle=Oracle,&nbsp;db2=DB2,&nbsp;sqlserver=SQLServer,&nbsp;h2=H2&nbsp;Database,&nbsp;derby=Apache&nbsp;Derby}</p>
         </td>
         <td class="fieldannotations">
@@ -1867,7 +1857,7 @@ table.child, table.child td, table.child th {
         <td>languageCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage">CDef.TargetLanguage</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java">自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java</p>
             <p>{java=Java,&nbsp;csharp=C#,&nbsp;scala=Scala}</p>
         </td>
         <td class="fieldannotations">
@@ -1879,7 +1869,7 @@ table.child, table.child td, table.child th {
         <td>containerCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer">CDef.TargetContainer</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di">自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di</p>
             <p>{lasta_di=Lasta&nbsp;Di,&nbsp;spring=Spring&nbsp;Framework,&nbsp;guice=Google&nbsp;Guice,&nbsp;seasar=Seasar&nbsp;(S2Container),&nbsp;cdi=CDI}</p>
         </td>
         <td class="fieldannotations">
@@ -1891,7 +1881,7 @@ table.child, table.child td, table.child th {
         <td>dbfluteVersion</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="そのDBFluteクライアントが利用するDBFluteのバージョン&nbsp;e.g.&nbsp;"1.2.6"">そのDBFluteクライアントが利用するDBFluteのバージョン&nbsp;e.g.&nbsp;"1</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1903,7 +1893,7 @@ table.child, table.child td, table.child th {
         <td>hasSchemaHtml</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="SchemaHTMLが自動生成されているかどうか？&nbsp;e.g.&nbsp;false">SchemaHTMLが自動生成されているかどうか？&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1915,7 +1905,7 @@ table.child, table.child td, table.child th {
         <td>hasHistoryHtml</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="HistoryHTMLが自動生成されているかどうか？&nbsp;e.g.&nbsp;false">HistoryHTMLが自動生成されているかどうか？&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1927,7 +1917,7 @@ table.child, table.child td, table.child th {
         <td>hasSyncCheckResultHtml</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="SchemaSyncCheckの結果HTMLが存在しているかどうか？&nbsp;e.g.&nbsp;false">SchemaSyncCheckの結果HTMLが存在しているかどうか？&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1939,7 +1929,7 @@ table.child, table.child td, table.child th {
         <td>hasAlterCheckResultHtml</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="AlterCheckの結果HTMLが存在しているかどうか？&nbsp;e.g.&nbsp;false">AlterCheckの結果HTMLが存在しているかどうか？&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -1951,7 +1941,7 @@ table.child, table.child td, table.child th {
         <td>violatesSchemaPolicy</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="SchemaPolicyの違反がある状態かどうか？&nbsp;(古いバージョンの場合はnull)&nbsp;e.g.&nbsp;false">SchemaPolicyの違反がある状態かどうか？&nbsp;(古いバージョンの場合はnull)&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2117,6 +2107,7 @@ table.child, table.child td, table.child th {
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
 <p class="tablecomment" style="white-space:pre-wrap;">&#064;author&nbsp;prprmurakami<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;hakiba</p>
+<p class="tablecomment" style="white-space:pre-wrap;">&#064;param&nbsp;projectName&nbsp;DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)<br>&#064;return&nbsp;dfpropのドキュメントに関する情報&nbsp;(NotNull)</p>
 <span class="doctitle">Path Variables:</span>
 <table>
     <thead>
@@ -2133,7 +2124,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb&nbsp;(NotNull)">DBFluteクライアントのプロジェクト名</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2157,7 +2148,7 @@ table.child, table.child td, table.child th {
         <td>upperCaseBasic</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="テーブル名やカラム名が大文字ベースかどうか？&nbsp;(大文字に変換するかどうか？)">テーブル名やカラム名が大文字ベースかどうか？&nbsp;(大文字に変換するかどうか？)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2168,7 +2159,7 @@ table.child, table.child td, table.child th {
         <td>aliasDelimiterInDbComment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBコメントの中の別名を区切るデリミタ&nbsp;(DBコメントに別名を入れてない場合は必ずnull)">DBコメントの中の別名を区切るデリミタ&nbsp;(DBコメントに別名を入れてない場合は必ずnull)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2179,7 +2170,7 @@ table.child, table.child td, table.child th {
         <td>dbCommentOnAliasBasis</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBコメントが別名ベースかどうか？&nbsp;(デリミタがないとき別名かどうか？)">DBコメントが別名ベースかどうか？&nbsp;(デリミタがないとき別名かどうか？)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2190,7 +2181,7 @@ table.child, table.child td, table.child th {
         <td>checkColumnDefOrderDiff</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="差分チェックでカラムの定義順を含めるかどうか？">差分チェックでカラムの定義順を含めるかどうか？</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2201,7 +2192,7 @@ table.child, table.child td, table.child th {
         <td>checkDbCommentDiff</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="差分チェックでDBコメントを含めるかどうか？">差分チェックでDBコメントを含めるかどうか？</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2212,7 +2203,7 @@ table.child, table.child td, table.child th {
         <td>checkProcedureDiff</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="差分チェックでストアドプロシージャを含めるかどうか？">差分チェックでストアドプロシージャを含めるかどうか？</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2257,7 +2248,7 @@ table.child, table.child td, table.child th {
 </table>
 
 <span class="doctitle">Form or Body:</span> <span class="docsubvalue"><span title="org.dbflute.intro.app.web.dfprop.document.DfpropDocumentEditBody">DfpropDocumentEditBody</span></span>
-<p class="tablecomment" title="&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru">&#064;author&nbsp;deco</p>
+<p class="tablecomment" title="&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru<br>&#064;author&nbsp;jflute">&#064;author&nbsp;deco</p>
 <table>
     <thead>
     <tr>
@@ -2273,7 +2264,7 @@ table.child, table.child td, table.child th {
         <td>upperCaseBasic</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="テーブル名やカラム名が大文字ベースかどうか？&nbsp;(大文字に変換するかどうか？)">テーブル名やカラム名が大文字ベースかどうか？&nbsp;(大文字に変換するかどうか？)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2285,7 +2276,7 @@ table.child, table.child td, table.child th {
         <td>aliasDelimiterInDbComment</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBコメントの中の別名を区切るデリミタ&nbsp;(DBコメントに別名を入れてない場合は必ずnull)">DBコメントの中の別名を区切るデリミタ&nbsp;(DBコメントに別名を入れてない場合は必ずnull)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2296,7 +2287,7 @@ table.child, table.child td, table.child th {
         <td>dbCommentOnAliasBasis</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBコメントが別名ベースかどうか？&nbsp;(デリミタがないとき別名かどうか？)">DBコメントが別名ベースかどうか？&nbsp;(デリミタがないとき別名かどうか？)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2308,7 +2299,7 @@ table.child, table.child td, table.child th {
         <td>checkColumnDefOrderDiff</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="差分チェックでカラムの定義順を含めるかどうか？">差分チェックでカラムの定義順を含めるかどうか？</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2320,7 +2311,7 @@ table.child, table.child td, table.child th {
         <td>checkDbCommentDiff</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="差分チェックでDBコメントを含めるかどうか？">差分チェックでDBコメントを含めるかどうか？</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -2332,7 +2323,7 @@ table.child, table.child td, table.child th {
         <td>checkProcedureDiff</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="差分チェックでストアドプロシージャを含めるかどうか？">差分チェックでストアドプロシージャを含めるかどうか？</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3688,8 +3679,8 @@ table.child, table.child td, table.child th {
 
 <span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.lang.Void&gt;">JsonResponse&lt;Void&gt;</span></span>
 
-<h3 id=".dfprop.settings._b_clientName_e_::index">
-/dfprop/settings/{clientName}
+<h3 id=".dfprop.settings._b_projectName_e_::index">
+/dfprop/settings/{projectName}
 </h3>
 <p>
 <span class="doctitle">Execute Method:</span> <span class="docmainvalue">org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsAction#index()</span>
@@ -3712,7 +3703,7 @@ table.child, table.child td, table.child th {
     </thead>
     <tr>
         <td class="rowcellnum" rowspan="1">1</td>
-        <td>clientName</td>
+        <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
             <p title=""></p>
@@ -3739,7 +3730,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb">DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3751,7 +3742,7 @@ table.child, table.child td, table.child th {
         <td>databaseCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase">CDef.TargetDatabase</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSを識別するコード&nbsp;e.g.&nbsp;mysql">DBMSを識別するコード&nbsp;e.g.&nbsp;mysql</p>
             <p>{mysql=MySQL,&nbsp;postgresql=PostgreSQL,&nbsp;oracle=Oracle,&nbsp;db2=DB2,&nbsp;sqlserver=SQLServer,&nbsp;h2=H2&nbsp;Database,&nbsp;derby=Apache&nbsp;Derby}</p>
         </td>
         <td class="fieldannotations">
@@ -3763,7 +3754,7 @@ table.child, table.child td, table.child th {
         <td>languageCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage">CDef.TargetLanguage</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java">自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java</p>
             <p>{java=Java,&nbsp;csharp=C#,&nbsp;scala=Scala}</p>
         </td>
         <td class="fieldannotations">
@@ -3775,7 +3766,7 @@ table.child, table.child td, table.child th {
         <td>containerCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer">CDef.TargetContainer</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di">自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di</p>
             <p>{lasta_di=Lasta&nbsp;Di,&nbsp;spring=Spring&nbsp;Framework,&nbsp;guice=Google&nbsp;Guice,&nbsp;seasar=Seasar&nbsp;(S2Container),&nbsp;cdi=CDI}</p>
         </td>
         <td class="fieldannotations">
@@ -3787,7 +3778,7 @@ table.child, table.child td, table.child th {
         <td>packageBase</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの基底パッケージ&nbsp;(dbfluteはここでは含まない)&nbsp;e.g.&nbsp;"org.docksidestage.showbase"">自動生成コードの基底パッケージ&nbsp;(dbfluteはここでは含まない)&nbsp;e.g.&nbsp;"org</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3799,7 +3790,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriverFqcn</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com.mysql.jdbc.Driver"">JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3811,7 +3802,7 @@ table.child, table.child td, table.child th {
         <td>mainSchemaSettings</td>
         <td><p title="org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsResult$DatabaseSettingsPart">DatabaseSettingsPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBのメインスキーマの接続情報、databaseInfoMap.dfpropに記載されているもの">DBのメインスキーマの接続情報、databaseInfoMap</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3838,7 +3829,7 @@ table.child, table.child td, table.child th {
         <td>url</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"">JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3850,7 +3841,7 @@ table.child, table.child td, table.child th {
         <td>schema</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb">JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3861,7 +3852,7 @@ table.child, table.child td, table.child th {
         <td>user</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser">JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3873,7 +3864,7 @@ table.child, table.child td, table.child th {
         <td>password</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass">JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3889,7 +3880,7 @@ table.child, table.child td, table.child th {
         <td>dbfluteVersion</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントが利用するDBFluteのバージョン&nbsp;e.g.&nbsp;"1.2.6"">DBFluteクライアントが利用するDBFluteのバージョン&nbsp;e.g.&nbsp;"1</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3901,7 +3892,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriverJarPath</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="extlib配下のJDBCドライバーのjarファイルのcanonical&nbsp;path&nbsp;e.g.&nbsp;"/Users/intro/xxx.../extlib/yyy.jar"&nbsp;(NullAllowed)">extlib配下のJDBCドライバーのjarファイルのcanonical&nbsp;path&nbsp;e.g.&nbsp;"/Users/intro/xxx</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -3946,7 +3937,7 @@ table.child, table.child td, table.child th {
 </table>
 
 <span class="doctitle">Form or Body:</span> <span class="docsubvalue"><span title="org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsUpdateBody">DfpropSettingsUpdateBody</span></span>
-<p class="tablecomment" title="&#064;author&nbsp;hakiba">&#064;author&nbsp;hakiba</p>
+<p class="tablecomment" title="&#064;author&nbsp;hakiba<br>&#064;author&nbsp;jflute">&#064;author&nbsp;hakiba</p>
 <table>
     <thead>
     <tr>
@@ -3989,7 +3980,7 @@ table.child, table.child td, table.child th {
         <td>databaseCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase">CDef.TargetDatabase</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSを識別するコード&nbsp;e.g.&nbsp;mysql">DBMSを識別するコード&nbsp;e.g.&nbsp;mysql</p>
             <p>{mysql=MySQL,&nbsp;postgresql=PostgreSQL,&nbsp;oracle=Oracle,&nbsp;db2=DB2,&nbsp;sqlserver=SQLServer,&nbsp;h2=H2&nbsp;Database,&nbsp;derby=Apache&nbsp;Derby}</p>
         </td>
         <td class="fieldannotations">
@@ -4001,7 +3992,7 @@ table.child, table.child td, table.child th {
         <td>languageCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage">CDef.TargetLanguage</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java">自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java</p>
             <p>{java=Java,&nbsp;csharp=C#,&nbsp;scala=Scala}</p>
         </td>
         <td class="fieldannotations">
@@ -4013,7 +4004,7 @@ table.child, table.child td, table.child th {
         <td>containerCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer">CDef.TargetContainer</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di">自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di</p>
             <p>{lasta_di=Lasta&nbsp;Di,&nbsp;spring=Spring&nbsp;Framework,&nbsp;guice=Google&nbsp;Guice,&nbsp;seasar=Seasar&nbsp;(S2Container),&nbsp;cdi=CDI}</p>
         </td>
         <td class="fieldannotations">
@@ -4025,7 +4016,7 @@ table.child, table.child td, table.child th {
         <td>packageBase</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの基底パッケージ&nbsp;(dbfluteパッケージは含まない)&nbsp;e.g.&nbsp;"org.docksidestage.showbase"">自動生成コードの基底パッケージ&nbsp;(dbfluteパッケージは含まない)&nbsp;e.g.&nbsp;"org</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4037,7 +4028,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriverFqcn</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com.mysql.jdbc.Driver"">JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4049,7 +4040,7 @@ table.child, table.child td, table.child th {
         <td>mainSchemaSettings</td>
         <td><p title="org.dbflute.intro.app.web.dfprop.settings.DfpropSettingsUpdateBody$ClientPart$DatabaseSettingsPart">DatabaseSettingsPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBのメインスキーマの接続情報、databaseInfoMap.dfpropに反映される">DBのメインスキーマの接続情報、databaseInfoMap</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4076,7 +4067,7 @@ table.child, table.child td, table.child th {
         <td>url</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"">JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4088,7 +4079,7 @@ table.child, table.child td, table.child th {
         <td>schema</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb">JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4099,7 +4090,7 @@ table.child, table.child td, table.child th {
         <td>user</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser">JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4111,7 +4102,7 @@ table.child, table.child td, table.child th {
         <td>password</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass">JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -4127,7 +4118,7 @@ table.child, table.child td, table.child th {
         <td>dbfluteVersion</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントが利用するDBFluteのバージョン&nbsp;e.g.&nbsp;"1.2.6"">DBFluteクライアントが利用するDBFluteのバージョン&nbsp;e.g.&nbsp;"1</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -5889,7 +5880,8 @@ table.child, table.child td, table.child th {
 <span class="docsubtitle">annotations:</span>
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
-<p class="tablecomment" style="white-space:pre-wrap;">&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
+<p class="tablecomment" style="white-space:pre-wrap;">Intro全体で共有するようなリクエストを司るAction。<br><br>&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
+<p class="tablecomment" style="white-space:pre-wrap;">MANIFEST.MFの内容を戻す。&lt;br&gt;<br>そのままkey/valueで表示するだけなので、BeanクラスにはせずMapで戻している。<br><br>&#064;return&nbsp;mfファイルの内容をそのままkey/valueにしている&nbsp;(NotNull)</p>
 <span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.lang.Object&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Object&gt;&gt;</span></span>
 
 <h3 id=".intro.classifications::classifications">
@@ -5902,7 +5894,8 @@ table.child, table.child td, table.child th {
 <span class="docsubtitle">annotations:</span>
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
-<p class="tablecomment" style="white-space:pre-wrap;">&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
+<p class="tablecomment" style="white-space:pre-wrap;">Intro全体で共有するようなリクエストを司るAction。<br><br>&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
+<p class="tablecomment" style="white-space:pre-wrap;">サーバーサイドの区分値の情報一括で戻す。<br><br>&#064;return&nbsp;map型のキーに対してそれぞれの区分値が定義されている&nbsp;(NotNull)</p>
 <span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.util.Map&lt;?,&nbsp;?&gt;&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Map&lt;?,&nbsp;?&gt;&gt;&gt;</span></span>
 
 <h3 id=".intro.configuration::configuration">
@@ -5915,7 +5908,8 @@ table.child, table.child td, table.child th {
 <span class="docsubtitle">annotations:</span>
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
-<p class="tablecomment" style="white-space:pre-wrap;">&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
+<p class="tablecomment" style="white-space:pre-wrap;">Intro全体で共有するようなリクエストを司るAction。<br><br>&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
+<p class="tablecomment" style="white-space:pre-wrap;">Introサーバーの設定を一括で戻す。<br><br>&#064;return&nbsp;map型でそれぞれの設定が格納されている&nbsp;(NotNull)</p>
 <span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.lang.Object&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Object&gt;&gt;</span></span>
 
 <h3 id=".log.::index">
@@ -6900,9 +6894,10 @@ table.child, table.child td, table.child th {
 <span class="docannotations docsubvalue">&#64;NotAvailableDecommentServer</span>
 <span class="docannotations docsubvalue">&#64;Execute</span>
 </p>
-<p class="tablecomment" style="white-space:pre-wrap;">&#064;author&nbsp;hakiba<br>&#064;author&nbsp;cabos<br>&#064;author&nbsp;jflute</p>
+<p class="tablecomment" style="white-space:pre-wrap;">Welcome画面に対応するAction。&lt;br&gt;<br>手始めのDBFluteクライアントの作成とDBFluteエンジンのインストールを司る。<br><br>&#064;author&nbsp;hakiba<br>&#064;author&nbsp;cabos<br>&#064;author&nbsp;jflute</p>
+<p class="tablecomment" style="white-space:pre-wrap;">Welcome画面で入力された情報からDBFluteクライアントを作成する。<br><br>&#064;param&nbsp;welcomeCreateBody&nbsp;DBFluteクライアントを作成するための情報&nbsp;(NotNull)<br>&#064;return&nbsp;レスポンスなし&nbsp;(NotNull)</p>
 <span class="doctitle">Form or Body:</span> <span class="docsubvalue"><span title="org.dbflute.intro.app.web.welcome.WelcomeCreateBody">WelcomeCreateBody</span></span>
-<p class="tablecomment" title="&#064;author&nbsp;hakiba">&#064;author&nbsp;hakiba</p>
+<p class="tablecomment" title="&#064;author&nbsp;hakiba<br>&#064;author&nbsp;jflute">&#064;author&nbsp;hakiba</p>
 <table>
     <thead>
     <tr>
@@ -6918,7 +6913,7 @@ table.child, table.child td, table.child th {
         <td>client</td>
         <td><p title="org.dbflute.intro.app.web.welcome.WelcomeCreateBody$ClientPart">ClientPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="一つのDBFluteクライアントを新規作成するための入力情報">一つのDBFluteクライアントを新規作成するための入力情報</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6945,7 +6940,7 @@ table.child, table.child td, table.child th {
         <td>projectName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb">DBFluteクライアントのプロジェクト名&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6957,7 +6952,7 @@ table.child, table.child td, table.child th {
         <td>databaseCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetDatabase">CDef.TargetDatabase</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSを識別するコード&nbsp;e.g.&nbsp;mysql">DBMSを識別するコード&nbsp;e.g.&nbsp;mysql</p>
             <p>{mysql=MySQL,&nbsp;postgresql=PostgreSQL,&nbsp;oracle=Oracle,&nbsp;db2=DB2,&nbsp;sqlserver=SQLServer,&nbsp;h2=H2&nbsp;Database,&nbsp;derby=Apache&nbsp;Derby}</p>
         </td>
         <td class="fieldannotations">
@@ -6969,7 +6964,7 @@ table.child, table.child td, table.child th {
         <td>languageCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetLanguage">CDef.TargetLanguage</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java">自動生成コードの言語を識別するコード&nbsp;e.g.&nbsp;java</p>
             <p>{java=Java,&nbsp;csharp=C#,&nbsp;scala=Scala}</p>
         </td>
         <td class="fieldannotations">
@@ -6981,7 +6976,7 @@ table.child, table.child td, table.child th {
         <td>containerCode</td>
         <td><p title="org.dbflute.intro.dbflute.allcommon.CDef$TargetContainer">CDef.TargetContainer</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di">自動生成コードが利用するDIコンテナを識別するコード&nbsp;e.g.&nbsp;lasta_di</p>
             <p>{lasta_di=Lasta&nbsp;Di,&nbsp;spring=Spring&nbsp;Framework,&nbsp;guice=Google&nbsp;Guice,&nbsp;seasar=Seasar&nbsp;(S2Container),&nbsp;cdi=CDI}</p>
         </td>
         <td class="fieldannotations">
@@ -6993,7 +6988,7 @@ table.child, table.child td, table.child th {
         <td>packageBase</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="自動生成コードの基底パッケージ&nbsp;(dbfluteはここでは含まない)&nbsp;e.g.&nbsp;"org.docksidestage.showbase"">自動生成コードの基底パッケージ&nbsp;(dbfluteはここでは含まない)&nbsp;e.g.&nbsp;"org</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7005,7 +7000,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriverFqcn</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com.mysql.jdbc.Driver"">JDBCドライバーのクラス名&nbsp;e.g.&nbsp;"com</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7017,7 +7012,7 @@ table.child, table.child td, table.child th {
         <td>mainSchemaSettings</td>
         <td><p title="org.dbflute.intro.app.web.welcome.WelcomeCreateBody$ClientPart$DatabaseSettingsPart">DatabaseSettingsPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBのメインスキーマの接続情報、databaseInfoMap.dfpropに反映される">DBのメインスキーマの接続情報、databaseInfoMap</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7044,7 +7039,7 @@ table.child, table.child td, table.child th {
         <td>url</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"">JDBCの接続URL&nbsp;e.g.&nbsp;"jdbc:mysql://localhost:3306/maihamadb"</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7056,7 +7051,7 @@ table.child, table.child td, table.child th {
         <td>schema</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb">JDBCの接続スキーマ、DBMSによっては指定なし&nbsp;e.g.&nbsp;maihamadb</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7067,7 +7062,7 @@ table.child, table.child td, table.child th {
         <td>user</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser">JDBCの接続ユーザー&nbsp;e.g.&nbsp;maihamauser</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7079,7 +7074,7 @@ table.child, table.child td, table.child th {
         <td>password</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass">JDBCの接続パスワード、パスワードなしなら空っぽ&nbsp;e.g.&nbsp;maihamapass</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7095,7 +7090,7 @@ table.child, table.child td, table.child th {
         <td>dbfluteVersion</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新&nbsp;e.g.&nbsp;"1.2.6"">DBFluteクライアント作成時のDBFluteエンジンのバージョン、基本的に最新&nbsp;e.g.&nbsp;"1</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7107,7 +7102,7 @@ table.child, table.child td, table.child th {
         <td>jdbcDriver</td>
         <td><p title="org.dbflute.intro.app.web.welcome.WelcomeCreateBody$ClientPart$JdbcDriverPart">JdbcDriverPart</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要">JDBCドライバーのライブラリ情報、組み込まれてないDBMSのときだけ必要</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7132,7 +7127,7 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのjarファイルのファイル名&nbsp;(パスなし、extlib配下で使われる)&nbsp;e.g.&nbsp;"mysql-connector-java-5.1.46-bin.jar"">JDBCドライバーのjarファイルのファイル名&nbsp;(パスなし、extlib配下で使われる)&nbsp;e.g.&nbsp;"mysql-connector-java-5</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7144,7 +7139,7 @@ table.child, table.child td, table.child th {
         <td>data</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね&nbsp;e.g.&nbsp;QWERTYUIOP">JDBCドライバーのjarファイルの中身のデータ(Base64形式)、豪快だね&nbsp;e.g.&nbsp;QWERTYUIOP</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7166,7 +7161,7 @@ table.child, table.child td, table.child th {
         <td>testConnection</td>
         <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="DBMSへの接続テストを行うかどうか？&nbsp;e.g.&nbsp;false">DBMSへの接続テストを行うかどうか？&nbsp;e.g.&nbsp;false</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -7306,7 +7301,7 @@ table.child, table.child td, table.child th {
     </tr>
     <tr>
         <td class="rowcellnum">4</td>
-        <td class="rowcell"><a href="#.client.propbase._b_clientName_e_::get">/client/propbase/{clientName}</a></td>
+        <td class="rowcell"><a href="#.client.propbase._b_projectName_e_::get">/client/propbase/{projectName}</a></td>
         <td class="rowcell">get</td>
         <td class="rowcell">RemoteIntroClientBhv#requestPropbase()</td>
     </tr>
@@ -7390,7 +7385,7 @@ table.child, table.child td, table.child th {
     </tr>
     <tr>
         <td class="rowcellnum">14</td>
-        <td class="rowcell"><a href="#.dfprop.settings._b_clientName_e_::get">/dfprop/settings/{clientName}</a></td>
+        <td class="rowcell"><a href="#.dfprop.settings._b_projectName_e_::get">/dfprop/settings/{projectName}</a></td>
         <td class="rowcell">get</td>
         <td class="rowcell">RemoteIntroDfpropBhv#requestSettings()</td>
     </tr>
@@ -7669,8 +7664,8 @@ table.child, table.child td, table.child th {
     </tr>
 </table>
 
-<h3 id=".client.propbase._b_clientName_e_::get">
-/client/propbase/{clientName} (get)
+<h3 id=".client.propbase._b_projectName_e_::get">
+/client/propbase/{projectName} (get)
 </h3>
 <p>
 <span class="doctitle">Request Method:</span> <span class="docmainvalue">RemoteIntroClientBhv#requestPropbase()</span>
@@ -7686,7 +7681,7 @@ table.child, table.child td, table.child th {
     </thead>
     <tr>
         <td class="rowcellnum" rowspan="$rowspan">1</td>
-        <td>clientName</td>
+        <td>projectName</td>
         <td>TODO</td>
     </tr>
 </table>
@@ -8396,8 +8391,8 @@ table.child, table.child td, table.child th {
     </tr>
 </table>
 
-<h3 id=".dfprop.settings._b_clientName_e_::get">
-/dfprop/settings/{clientName} (get)
+<h3 id=".dfprop.settings._b_projectName_e_::get">
+/dfprop/settings/{projectName} (get)
 </h3>
 <p>
 <span class="doctitle">Request Method:</span> <span class="docmainvalue">RemoteIntroDfpropBhv#requestSettings()</span>
@@ -8413,7 +8408,7 @@ table.child, table.child td, table.child th {
     </thead>
     <tr>
         <td class="rowcellnum" rowspan="$rowspan">1</td>
-        <td>clientName</td>
+        <td>projectName</td>
         <td>TODO</td>
     </tr>
 </table>
