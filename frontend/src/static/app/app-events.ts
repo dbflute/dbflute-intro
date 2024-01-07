@@ -37,7 +37,7 @@ type ShowResultContent = {
  * 結果ビュー表示イベントを購読する。
  * @param {(content: ShowResultContent) => void} callback 結果ビューに表示するデータを受け取るコールバック (NotNull)
  */
-export function subscribeShowResult(callback: (content: ShowResultContent) => void) {
+export function subscribeShowResult(callback: (content: ShowResultContent) => void): void {
   appObservable.on('show-result', (content: ShowResultContent) => callback(content))
 }
 
@@ -45,6 +45,6 @@ export function subscribeShowResult(callback: (content: ShowResultContent) => vo
  * 結果ビュー表示イベントを発行する。
  * @param {ShowResultContent} content 結果ビューの表示情報 (NotNull)
  */
-export function triggerShowResult(content: ShowResultContent) {
+export function triggerShowResult(content: ShowResultContent): void {
   appObservable.trigger('show-result', content)
 }

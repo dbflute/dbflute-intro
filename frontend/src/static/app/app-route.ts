@@ -53,7 +53,7 @@ export function createRouting(definition: RoutesDefinition): Routes {
  * ルーティング関連のcleanup処理
  * - 監視しているstreamの破棄を行う
  */
-export function endRouting() {
+export function endRouting(): void {
   Object.values(appRoutes).forEach((route) => {
     routeStreams.get(route.path)?.end()
   })
@@ -70,7 +70,8 @@ const routeStreams = new Map()
  * 指定されたパスのstreamを取得する
  * - なければ作成し、キャッシュする
  */
-function ensureRouteStream(path: string) {
+function ensureRouteStream(path: string): any {
+  // #thinking jflute Riot側でJSのみのコードで型が指定できない(!?)ので苦肉のany (2024/01/07)
   if (!routeStreams.get(path)) {
     routeStreams.set(path, riotRoute(path, {}))
   }

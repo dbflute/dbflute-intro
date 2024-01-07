@@ -6,32 +6,20 @@
     "es2021": true,
     "jest/globals": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "parserOptions": {
     "sourceType": "module"
   },
   "rules": {
     "no-console": "error",
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
+    "linebreak-style": ["error", "unix"],
     "no-var": "error",
-    "prefer-arrow-callback": "error"
+    "prefer-arrow-callback": "error",
+    "@typescript-eslint/explicit-function-return-type": "error"
   },
-  "plugins": [
-    "html",
-    "jest"
-  ],
+  "plugins": ["html", "jest"],
   "settings": {
-    "html/html-extensions": [
-      ".html",
-      ".riot"
-    ]
+    "html/html-extensions": [".html", ".riot"]
   },
   "globals": {
     "opts": true,
