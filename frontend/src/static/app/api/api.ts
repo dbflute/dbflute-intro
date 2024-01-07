@@ -315,8 +315,13 @@ class Api {
     })
   }
 
-  latestResult(projectName: string, task: string): Promise<LogBean> {
-    return apiClient.get(`api/log/latest/${projectName}/${task}`)
+  latestResult(projectName: string, task: string): Promise<LogBean | null> {
+    return apiClient.get(`api/log/latest/${projectName}/${task}`).then((body) => {
+      // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
+      // https://github.com/dbflute/dbflute-intro/issues/493
+      if (Object.keys(body).length === 0) return null
+      return body
+    })
   }
 
   // ===============================================================================

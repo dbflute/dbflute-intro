@@ -75,6 +75,8 @@ public class LogAction extends IntroBaseAction {
         return logPhysicalLogic.findLatestResultFile(clientName, task).map((file) -> {
             return asJson(new LogBean(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
         }).orElseGet(() -> {
+            // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
+            // https://github.com/dbflute/dbflute-intro/issues/493
             return JsonResponse.asEmptyBody();
         });
     }

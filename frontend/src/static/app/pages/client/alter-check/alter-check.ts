@@ -246,12 +246,11 @@ export default withIntroTypes<AlterCheck>({
    * @return {Promise<AlterLatestResultState>} 最新の実行失敗結果.最新が成功している場合はnull (Nullable)
    */
   async prepareLatestFailureResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState | undefined> {
-    return api.latestResult(this.props.projectName, 'alterCheck').then((res) => {
-      const success = res.fileName.includes('success')
-      if (success) {
+    return api.latestResult(this.props.projectName, 'alterCheck').then((body) => {
+      if (!body || body.fileName.includes('success')) {
         return
       }
-      const content = res.content
+      const content = body.content
       if (!ngMarkFile) {
         return {
           title: 'Result: Failure',
