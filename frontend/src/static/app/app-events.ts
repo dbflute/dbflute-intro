@@ -13,6 +13,7 @@ import observable from 'riot-observable'
 // (できるだけ、このモジュールファイル内で完結させて、公開関数だけ呼んでもらうがいいかな？)
 // → プルリク上でhakibaに確認をしたので、もうexportを削除しちゃった (2023/07/10)
 const appObservable = observable()
+const globalErrorObservable = observable()
 
 // ===================================================================================
 //                                                                         Show Result
@@ -24,10 +25,10 @@ const appObservable = observable()
  */
 type ShowResultContent = {
   /** モーダルのサイズ。指定できるサイズは <a href="https://semantic-ui-riot.web.app/module/modal#size">こちら</a> 参照 */
-  modalSize: string | undefined
+  modalSize?: string
 
   /** モーダルのヘッダーに表示するタイトル */
-  header: string | undefined
+  header?: string
 
   /** モーダルのに表示するメッセージ群 */
   messages: string[]
@@ -47,4 +48,18 @@ export function subscribeShowResult(callback: (content: ShowResultContent) => vo
  */
 export function triggerShowResult(content: ShowResultContent): void {
   appObservable.trigger('show-result', content)
+}
+
+/**
+ * グローバルエラーを購読します
+ */
+export function subscribeGlobalError(callback: (message: string) => void): void {
+  globalErrorObservable.on('handle-error', callback)
+}
+
+/**
+ * グローバルエラーを発行します
+ */
+export function triggerGlobalError(message: string): void {
+  globalErrorObservable.trigger('handle-error', message)
 }

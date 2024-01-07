@@ -26,6 +26,9 @@ import './shared/i18n'
 // アプリ独自のプラグイン関数をriotにinstall()するための関数
 import introPlugin from './app-plugin'
 
+// グローバルエラーを監視するための関数
+import { subscribeGlobalError, triggerGlobalError, triggerShowResult } from './app-events'
+
 // 全てのRiotコンポーネントにアプリ共通の関数を付与していく
 riot.install(introPlugin)
 
@@ -38,3 +41,17 @@ if (root) {
 } else {
   throw new Error('not found riot root element')
 }
+
+// フロントエンドのグローバルエラーの監視を開始
+subscribeGlobalError((msg) => {
+  // エラーを拾った際、ダイアログでエラーを表示する
+  triggerShowResult({ header: 'Unexpected Frontend Error', messages: [msg] })
+})
+// キャッチされなかったerrorを拾うためEventListenerを設定
+window.addEventListener('error', (event) => {
+  triggerGlobalError(event.error)
+})
+// Promiseの中でthrowされたエラーを拾うため、さらにunhandledrejectionにもEventListenerを設定
+window.addEventListener('unhandledrejection', (event) => {
+  triggerGlobalError(event.type)
+})
