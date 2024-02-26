@@ -1,4 +1,4 @@
-<ex-schema-sync-check>
+<schema-sync-check>
   <!-- DBFlute の SchemaSyncCheck 機能をGUIで操作できるようにするタグ (written at 2022/04/07)
    機能:
     o DBFlute Client が管理しているDBとは別に、スキーマの差分を確認したいデータベースへの接続情報を設定する
@@ -17,21 +17,22 @@
   <div class="ui container">
     <h2>Schema Sync Check</h2>
     <!--  DBFlute Client が管理していない方のデータベースへの接続情報 -->
-<!--    <p show="{ canCheckSchemaSetting() }">-->
-<!--      for { state.syncSetting.url }<span show="{ state.syncSetting.schema != null }">, { state.syncSetting.schema }</span>, { state.syncSetting.user }-->
-<!--    </p>-->
+    <p if="{ canCheckSchemaSetting() }">
+      for { state.syncSchemaSetting.url }<span show="{ state.syncSchemaSetting.schema != null }">, { state.syncSchemaSetting.schema }</span>, { state.syncSchemaSetting.user }
+    </p>
     <!-- 各HTMLのドキュメントリンク -->
     <!-- #thinking ex-document.tag に合わせて list にしているのかな？要素は一つしか無いけど by cabos (written at 2022/04/07) -->
-<!--    <div class="ui list">-->
-<!--      <div show="{ state.client.hasSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>-->
-<!--    </div>-->
+    <div class="ui list">
+      TODO 動作確認、HTMLのドキュメントリンク
+      <div if="{ state.hasSchemaSyncCheckResultHtml }" class="item"><a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a></div>
+    </div>
     <!-- DBFlute Client が管理していない方のデータベースへの接続情報を編集するための modal を表示するボタン  -->
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
 
     <!-- SchemaSyncCheck実行ボタン  -->
-<!--    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ schemaSyncCheckTask }">-->
-<!--      Execute SchemaSyncCheck-->
-<!--    </button>-->
+    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ onclickSchemaSyncCheckTask }">
+      Execute SchemaSyncCheck
+    </button>
 
     <!-- "SchemaSyncCheck" ってそもそもなんやねん？の説明 -->
     <div class="ui info message">
@@ -80,16 +81,12 @@
 <!--      </div>-->
 <!--    </form>-->
 <!--  </su-modal>-->
+  <schema-sync-check-form-modal
+    schema-sync-setting={" state.syncSchemaSetting "}
+  ></schema-sync-check-form-modal>
 
-  <!-- SchemaSyncCheck 実行時に他の操作を抑制するための Modal -->
-  <su-modal modal="{ checkModal }" class="large" ref="checkModal">
-    <div class="description">
-      Checking...
-    </div>
-  </su-modal>
-
-  <!-- SchemaSyncCheck 実行結果を表示するための Modal -->
-  <result-modal ref="resultModal"></result-modal>
+  <!-- SchemaSyncCheck 実行Modal -->
+  <task-execute-modal status="{ state.executeStatus }" message="{ state.executeResultMessage }"></task-execute-modal>
 
   <!-- #thinking ex-document.tag にも同じスタイル調整が入ってる、共通化してもいいかも？ by cabos (written at 2022/04/07) -->
   <style>
@@ -260,4 +257,4 @@
     //   })
     // }
   </script>
-</ex-schema-sync-check>
+</schema-sync-check>

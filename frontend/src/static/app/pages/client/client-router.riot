@@ -4,7 +4,7 @@
     <ex-documents></ex-documents>
   </route>
   <route path={ state.routes.executeSchemaSyncCheck.path }>
-    <ex-schema-sync-check project-name={ props.projectName }></ex-schema-sync-check>
+    <schema-sync-check project-name={ props.projectName }></schema-sync-check>
   </route>
   <route path={ state.routes.executeReplaceSchema.path }>
     <ex-replace-schema></ex-replace-schema>
@@ -25,7 +25,7 @@
   <script>
     import { Route } from '@riotjs/route'
     import ExDocuments from './documents/ex-documents.riot'
-    import ExSchemaSyncCheck from './schema-sync-check/ex-schema-sync-check.riot'
+    import SchemaSyncCheck from './schema-sync-check/schema-sync-check.riot'
     import ExReplaceSchema from './replace-schema/ex-replace-schema.riot'
     import AlterCheck from './alter-check/alter-check.riot'
     import ExSchemaPolicyCheck from './schema-policy-check/ex-schema-policy-check.riot'
@@ -36,7 +36,7 @@
     export default {
       components: {
         ExDocuments,
-        ExSchemaSyncCheck,
+        SchemaSyncCheck,
         ExReplaceSchema,
         AlterCheck,
         ExSchemaPolicyCheck,

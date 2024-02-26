@@ -31,6 +31,11 @@ const COMPLETED_MODAL: SuModal = {
   ],
 }
 
+const EXECUTING_MODAL: SuModal = {
+  closable: false,
+  buttons: [],
+}
+
 interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
   show(): boolean
   modal(): SuModal | undefined
@@ -52,7 +57,7 @@ export default withIntroTypes<TaskExecuteModal>({
       case 'None':
         return undefined
       case 'Executing':
-        return undefined
+        return EXECUTING_MODAL
       case 'Completed':
         return COMPLETED_MODAL
     }
