@@ -260,7 +260,7 @@ class Api {
   // -----------------------------------------------------
   //                                              Settings
   //                                              --------
-  settings(projectName: string) {
+  settings(projectName: string): Promise<DfpropSettingsResult> {
     return apiClient.post(`api/dfprop/settings/${projectName}`)
   }
 
@@ -295,7 +295,7 @@ class Api {
     return apiClient.get(`api/playsql/data/open/${projectName}`)
   }
 
-  playsqlBeanList(projectName: string) {
+  playsqlBeanList(projectName: string): Promise<PlaysqlListResult[]> {
     return apiClient.post(`api/playsql/list/${projectName}`)
   }
 
