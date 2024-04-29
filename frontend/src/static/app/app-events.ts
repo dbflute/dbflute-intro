@@ -52,6 +52,7 @@ export function triggerShowResult(content: ShowResultContent): void {
 
 /**
  * グローバルエラーを購読します
+ * @param callback メッセージを処理するcallback (NotNull) e.g.モーダルを使ったメッセージの通知処理
  */
 export function subscribeGlobalError(callback: (message: string) => void): void {
   globalErrorObservable.on('handle-error', callback)
@@ -59,6 +60,7 @@ export function subscribeGlobalError(callback: (message: string) => void): void 
 
 /**
  * グローバルエラーを発行します
+ * @param message グローバルエラーとして通知するメッセージ (NotNull)
  */
 export function triggerGlobalError(message: string): void {
   globalErrorObservable.trigger('handle-error', message)
