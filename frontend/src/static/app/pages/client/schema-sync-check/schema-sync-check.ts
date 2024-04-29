@@ -4,7 +4,7 @@ import LatestResult from '../latest-result.riot'
 import { api } from '../../../api/api'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
-import SchemaSyncCheckFormModal from './form-modal'
+import SchemaSyncCheckFormModal from './schema-sync-check-form-modal'
 
 type SchemaSyncCheckLatestResult = {
   success: boolean
