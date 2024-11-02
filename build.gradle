@@ -11,6 +11,11 @@ plugins {
     // TODO hakiba riot v6移行後は npm コマンドはgradleから直接実行しないので削除して良い by 2022/06/01
     id 'com.moowork.node' version '1.3.1'               // ./gradlew npm_xxx
     id 'com.github.hierynomus.license' version '0.13.1' // ./gradlew licenseMain
+
+    // 複数IDE開発のためにspotless formatterを入れてみる by jflute (2024/11/02)
+    // https://github.com/dbflute/dbflute-intro/issues/503
+    // https://plugins.gradle.org/plugin/com.diffplug.spotless
+    id 'com.diffplug.spotless' version "7.0.0.BETA4"
 }
 
 apply plugin: 'application'    // ./gradlew run: can execute main() of the 'mainClassName' variable
@@ -86,28 +91,28 @@ repositories {
     }
 }
 
-dependencies {
+dependencies { // #gradle8 compileが使えなくなったのでimplementationを使うようにした by jflute (2024/11/02)
     // Main Framework
-    compile "org.dbflute:dbflute-runtime:${versions.dbflute}"
-    runtime "com.h2database:h2:${versions.h2}"
-    compile "org.lastaflute:lastaflute:${versions.lastaflute}"
+    implementation "org.dbflute:dbflute-runtime:${versions.dbflute}"
+    runtimeOnly "com.h2database:h2:${versions.h2}"
+    implementation "org.lastaflute:lastaflute:${versions.lastaflute}"
 
     // Partner Library
-    compile "javax.transaction:javax.transaction-api:1.2"
-    compile "org.slf4j:slf4j-api:${versions.slf4j}"
-    runtime "ch.qos.logback:logback-classic:${versions.logback}"
-    compile "javax.servlet:javax.servlet-api:3.1.0"
-    compile "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
-    compile "org.lastaflute.meta:lasta-meta:${versions.lastameta}"
-    runtime "org.webjars:swagger-ui:${versions.swaggerui}"
+    implementation "javax.transaction:javax.transaction-api:1.2"
+    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+    runtimeOnly "ch.qos.logback:logback-classic:${versions.logback}"
+    implementation "javax.servlet:javax.servlet-api:3.1.0"
+    implementation "org.dbflute.jetty:jetty-boot:${versions.jettyboot}"
+    implementation "org.lastaflute.meta:lasta-meta:${versions.lastameta}"
+    runtimeOnly "org.webjars:swagger-ui:${versions.swaggerui}"
 
     // GoodNeighbor Library
-    compile "org.apache.commons:commons-lang3:${versions.commonslang}"
-    compile "commons-io:commons-io:${versions.commonsio}"
+    implementation "org.apache.commons:commons-lang3:${versions.commonslang}"
+    implementation "commons-io:commons-io:${versions.commonsio}"
 
     // Testing
-    testCompile "junit:junit:${versions.junit}"
-    testCompile "org.dbflute.utflute:utflute-lastaflute:${versions.utflute}"
+    testImplementation "junit:junit:${versions.junit}"
+    testImplementation "org.dbflute.utflute:utflute-lastaflute:${versions.utflute}"
 }
 
 
@@ -118,7 +123,8 @@ mainClassName = 'org.dbflute.intro.IntroBoot'
 
 war {
     def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all']
-    configurations.compile.collect { file ->
+    // #gradle8 runtimeClasspathを使うようにした by jflute (2024/11/02)
+    configurations.runtimeClasspath.collect { file ->
         if (embeddedArtifactList.any { file.getName().startsWith(it) }) {
             from(file.isDirectory() ? file : zipTree(file)) {
                 exclude 'META-INF/*NOTICE*'
@@ -129,14 +135,16 @@ war {
         }
     }
     rootSpec.exclude(embeddedArtifactList.collect { "**/${it}-*.jar" })
-    from fileTree(dir: sourceSets.main.output.classesDir, includes: ["${mainClassName.replace('.', '/')}*.class"])
+    from fileTree(dir: sourceSets.main.output.classesDirs, includes: ["${mainClassName.replace('.', '/')}*.class"])
     from fileTree(dir: file('dist'), include: '**/**')
 
     includeEmptyDirs = false
 
     version = ''
     archivesBaseName = 'dbflute-intro'
-    extension = 'jar'
+
+    // #gradle8 extensionが使えなくなって、Gradleのソースコードを真似たやり方 by jflute (2024/11/02)
+    archiveExtension.set('jar')
 
     def scmBranch = 'unknown'
     def scmRevision = 'unknown'
@@ -190,6 +198,7 @@ if (tasks.findByName('eclipseClasspath')) {
     tasks['eclipseClasspath'].dependsOn('refreshResource')
 }
 
+
 // =======================================================================================
 //                                                                                 Release
 //                                                                                 =======
@@ -205,4 +214,20 @@ task releaseWithRiotV6(dependsOn: ['build', 'manifest', 'cacheKey', 'buildFronte
     tasks['build'].mustRunAfter('buildFrontend')
     tasks['build'].mustRunAfter('manifest')
     tasks['build'].mustRunAfter('cacheKey')
+}
+
+
+// =======================================================================================
+//                                                                                Spotless
+//                                                                                ========
+// Spotless plugin for Gradle
+// https://github.com/diffplug/spotless/blob/main/plugin-gradle/README.md
+spotless {
+  java {
+    // 相対パスでいいの？
+    eclipse().configFile project.file("./etc/tools/eclipse/dbflute-eclipse-code-formatter.xml")
+
+    importOrder('java', 'javax', 'org', 'com') // Eclipseのデフォルトに合わせて
+    removeUnusedImports()
+  }
 }

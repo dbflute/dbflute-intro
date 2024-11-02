@@ -1,4 +1,5 @@
-task wrapper(type: Wrapper) {
+// #gradle8 "task wrapper" 定義ができなくなったのでwrapperブロックを使うように by jflute (2024/11/02)
+wrapper {
     gradleVersion = versions.gradle
 }
 

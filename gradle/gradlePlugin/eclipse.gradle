@@ -29,22 +29,23 @@ eclipse {
 }
 
 tasks.eclipseJdt {
+    // #gradle8 "eclipseJdt << {" が使えなくなったので doLast() を使うように by jflute (2024/11/02)
+    doLast() {
+        assert "org.eclipse.jdt.core.prefs.tmp" == outputFile.name
+        assert "org.eclipse.jdt.core.prefs" == ext.originalOutputFile.name
+        List lines = outputFile.readLines(encoding)
+        Collections.sort(lines)
+        ext.originalOutputFile.withWriter(encoding) { writer ->
+            lines.each { line ->
+                writer << line
+                writer << "\n"
+            }
+        }
+        assert outputFile.delete()
+    }
     assert "org.eclipse.jdt.core.prefs" == outputFile.name
     ext.originalOutputFile = outputFile
     outputFile = (outputFile.absolutePath + ".tmp") as File
-}
-tasks.eclipseJdt << {
-    assert "org.eclipse.jdt.core.prefs.tmp" == outputFile.name
-    assert "org.eclipse.jdt.core.prefs" == ext.originalOutputFile.name
-    List lines = outputFile.readLines(encoding)
-    Collections.sort(lines)
-    ext.originalOutputFile.withWriter(encoding) { writer ->
-        lines.each { line ->
-            writer << line
-            writer << "\n"
-        }
-    }
-    assert outputFile.delete()
 }
 
 eclipse {
