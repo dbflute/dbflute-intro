@@ -9,8 +9,12 @@ buildscript {
 
 plugins {
     // TODO hakiba riot v6移行後は npm コマンドはgradleから直接実行しないので削除して良い by 2022/06/01
-    id 'com.moowork.node' version '1.3.1'               // ./gradlew npm_xxx
-    id 'com.github.hierynomus.license' version '0.13.1' // ./gradlew licenseMain
+    // #gradle8 mooworkが新しいGradleに対応していなくて落ちるので別のものを導入 by jflute (2024/11/02)
+    //id 'com.moowork.node' version '1.3.1'               // ./gradlew npm_xxx
+    id 'com.github.node-gradle.node' version "7.1.0"
+
+    // #gradle8 upgrade to latest version to avoid redundant getter errors by jflute (2024/11/03)
+    id 'com.github.hierynomus.license' version '0.16.1' // ./gradlew licenseMain
 
     // 複数IDE開発のためにspotless formatterを入れてみる by jflute (2024/11/02)
     // https://github.com/dbflute/dbflute-intro/issues/503
