@@ -126,21 +126,23 @@ dependencies { // #gradle8 compileが使えなくなったのでimplementation�
 mainClassName = 'org.dbflute.intro.IntroBoot'
 
 war {
+    webAppDirectory = file('src/main/webapp')
+
     def embeddedArtifactList = ['javax.servlet-api', 'jetty-boot', 'jetty-all']
     // #gradle8 runtimeClasspathを使うようにした by jflute (2024/11/02)
-    configurations.runtimeClasspath.collect { file ->
-        if (embeddedArtifactList.any { file.getName().startsWith(it) }) {
-            from(file.isDirectory() ? file : zipTree(file)) {
-                exclude 'META-INF/*NOTICE*'
-                exclude 'META-INF/*LICENSE*'
-                exclude 'META-INF/*DEPENDENCIES*'
-                exclude 'META-INF/maven/**'
-            }
-        }
-    }
-    rootSpec.exclude(embeddedArtifactList.collect { "**/${it}-*.jar" })
-    from fileTree(dir: sourceSets.main.output.classesDirs, includes: ["${mainClassName.replace('.', '/')}*.class"])
-    from fileTree(dir: file('dist'), include: '**/**')
+    //configurations.runtimeClasspath.collect { file ->
+    //    if (embeddedArtifactList.any { file.getName().startsWith(it) }) {
+    //        from(file.isDirectory() ? file : zipTree(file)) {
+    //            exclude 'META-INF/*NOTICE*'
+    //            exclude 'META-INF/*LICENSE*'
+    //            exclude 'META-INF/*DEPENDENCIES*'
+    //            exclude 'META-INF/maven/**'
+    //        }
+    //    }
+    //}
+    //rootSpec.exclude(embeddedArtifactList.collect { "**/${it}-*.jar" })
+    //from fileTree(dir: sourceSets.main.output.classesDirs, includes: ["${mainClassName.replace('.', '/')}*.class"])
+    //from fileTree(dir: file('dist'), include: '**/**')
 
     includeEmptyDirs = false
 
@@ -148,7 +150,7 @@ war {
     archivesBaseName = 'dbflute-intro'
 
     // #gradle8 extensionが使えなくなって、Gradleのソースコードを真似たやり方 by jflute (2024/11/02)
-    archiveExtension.set('jar')
+    //archiveExtension.set('jar')
 
     def scmBranch = 'unknown'
     def scmRevision = 'unknown'
@@ -228,8 +230,25 @@ task releaseWithRiotV6(dependsOn: ['build', 'manifest', 'cacheKey', 'buildFronte
 // https://github.com/diffplug/spotless/blob/main/plugin-gradle/README.md
 spotless {
   java {
-    // 相対パスでいいの？
+    // Gradleコマンドを実行するところから相対パス (実質プロジェクトルート)
     eclipse().configFile project.file("./etc/tools/eclipse/dbflute-eclipse-code-formatter.xml")
+
+    // 自動生成クラスは除外
+    targetExclude(
+        'src/main/java/**/dbflute/**/allcommon/'
+      , 'src/main/java/**/dbflute/**/bsbhv/'
+      , 'src/main/java/**/dbflute/**/bsentity/'
+      , 'src/main/java/**/dbflute/**/cbean/bs/'
+      , 'src/main/java/**/dbflute/**/cbean/cq/bs/'
+      , 'src/main/java/**/dbflute/**/cbean/cq/ciq/'
+      , 'src/main/java/**/dbflute/**/cbean/nss/'
+      , 'src/main/java/**/mylasta/action/*HtmlPath.java'
+      , 'src/main/java/**/mylasta/action/*Labels.java'
+      , 'src/main/java/**/mylasta/action/*Messages.java'
+      , 'src/main/java/**/mylasta/appcls/'
+      , 'src/main/java/**/mylasta/direction/*Config.java'
+      , 'src/main/java/**/mylasta/direction/*Env.java'
+    )
 
     importOrder('java', 'javax', 'org', 'com') // Eclipseのデフォルトに合わせて
     removeUnusedImports()
