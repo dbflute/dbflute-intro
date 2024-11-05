@@ -230,10 +230,19 @@ task releaseWithRiotV6(dependsOn: ['build', 'manifest', 'cacheKey', 'buildFronte
 // https://github.com/diffplug/spotless/blob/main/plugin-gradle/README.md
 spotless {
   java {
-    // Gradleコマンドを実行するところから相対パス (実質プロジェクトルート)
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // IDEで使っているフォーマット定義と同じもの。(Eclipseベース)
+    // Gradleコマンドを実行するところ(実質プロジェクトルート)から相対パスで指定。
+    // _/_/_/_/_/_/_/_/_/_/
     eclipse().configFile project.file("./etc/tools/eclipse/dbflute-eclipse-code-formatter.xml")
 
-    // 自動生成クラスは除外
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // 自動生成クラスをフォーマット対象から除外している。(主にDBFluteやLastaFlute)
+    // 自動生成都合によるフォーマットはそのままの方が見やすいという想定で残すように。
+    //
+    // dbflute/**/allcommon/ は dbflute/allcommonも含まれる。
+    // test側は同じパッケージでも自動生成じゃないこともあるので、mainとtestで区別している。
+    // _/_/_/_/_/_/_/_/_/_/
     targetExclude(
         'src/main/java/**/dbflute/**/allcommon/'
       , 'src/main/java/**/dbflute/**/bsbhv/'
@@ -250,7 +259,11 @@ spotless {
       , 'src/main/java/**/mylasta/direction/*Env.java'
     )
 
-    importOrder('java', 'javax', 'org', 'com') // Eclipseのデフォルトに合わせて
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // Eclipseのデフォルトに合わせている。VSCodeもデフォルトが同じなのでOK。
+    // IntelliJは.ideaの設定で同じ形になるように調整している。
+    // _/_/_/_/_/_/_/_/_/_/
+    importOrder('java', 'javax', 'org', 'com')
     removeUnusedImports()
   }
 }
