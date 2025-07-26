@@ -10,8 +10,25 @@
 // (riot変数でexportされてるものにアクセスできる)
 import * as riot from 'riot'
 
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // アプリのriot関連の共通コンポーネントをimportする
 // (defaultでexportされてるものをAppという名前で扱って後にマウント)
+//
+// app.riot                // RiotアプリケーションのRootコンポーネント
+//  |-app-router.riot      // それぞれの画面のコンポーネントをimportしてcomponent化
+//  |  |-import Main from './pages/main/main.riot'
+//  |  |-import Client from './pages/client/client.riot'
+//  |  |-import (それぞれの画面の.riot)
+//  |  |   |-import (それぞれの画面の.ts)
+//  |  |       |-app-component-types.ts // as IntroRiotComponent, withIntroTypes
+//  |  |           |-app-plugin.ts      // as DBFluteIntroPlugin
+//  |  |
+//  |  |-app-router.ts     // export const appRoutes(rootになる画面のpath設定), initialRoute
+//  |  |  |-app-route.ts   // createRouting() called as export const
+//  |  |-app-route.ts      // endRouting() called in onUnmounted()
+//  |
+//  |-app-router.ts        // onBeforeMount()で初期状態のときにWelcome画面を表示させるため
+// _/_/_/_/_/_/_/_/
 import App from './app.riot'
 
 // アプリ内でsemantic-ui-riotとsemantic-uiのグローバルオブジェクトを使うために
@@ -19,14 +36,29 @@ import App from './app.riot'
 // (初期化だけで良いので受け取りのための変数は特になし)
 import 'semantic-ui-riot'
 
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // 国際化対応の初期化処理を行うために
 // (初期化だけで良いので受け取りのための変数はない)
+//
+// i18n.ts
+//  |-import i18n_ja from '../../assets/i18n/locale-ja.json'
+//  |-import i18n_en from '../../assets/i18n/locale-en.json'
+// _/_/_/_/_/_/_/_/
 import './shared/i18n'
 
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // アプリ独自のプラグイン関数をriotにinstall()するための関数
+//
+//  |-import { RiotComponent } from 'riot'
+// _/_/_/_/_/_/_/_/
 import introPlugin from './app-plugin'
 
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // グローバルエラーを監視するための関数
+//
+// app-events.ts
+//  |-import observable from 'riot-observable'
+// _/_/_/_/_/_/_/_/
 import { subscribeGlobalError, triggerGlobalError, triggerShowResult } from './app-events'
 
 // 全てのRiotコンポーネントにアプリ共通の関数を付与していく
