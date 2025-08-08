@@ -16,12 +16,22 @@ import * as riot from 'riot'
 //
 // app.riot                // RiotアプリケーションのRootコンポーネント
 //  |-app-router.riot      // それぞれの画面のコンポーネントをimportしてcomponent化
-//  |  |-import Main from './pages/main/main.riot'
-//  |  |-import Client from './pages/client/client.riot'
-//  |  |-import (それぞれの画面の.riot)
-//  |  |   |-import (それぞれの画面の.ts)
-//  |  |       |-app-component-types.ts // as IntroRiotComponent, withIntroTypes
-//  |  |           |-app-plugin.ts      // as DBFluteIntroPlugin
+//  |  |
+//  |  |-import Main from './pages/main/main.riot'              // 大分類の画面
+//  |  |-import Client from './pages/client/client.riot'        // 大分類の画面
+//  |  |  |-import ClientRouter from './pages/client/client-router.riot'
+//  |  |     |
+//  |  |     | // 中分類の画面たち
+//  |  |     |-import ExDocuments from './pages/client/documents/ex-documents.riot'
+//  |  |     |-import ExReplaceSchema from './pages/client/replace-schema/ex-replace-schema.riot'
+//  |  |     |-import (その他、Clientの機能ごとの画面たち)
+//  |  |
+//  |  |-import Welcome from './pages/welcome/welcome.riot'     // 大分類の画面
+//  |  |-import Create from './pages/create/create.riot'        // 大分類の画面
+//  |  |
+//  |  |    (各画面の.riot)
+//  |  |         |-app-component-types.ts // as IntroRiotComponent, withIntroTypes
+//  |  |            |-app-plugin.ts       // as DBFluteIntroPlugin
 //  |  |
 //  |  |-app-router.ts     // export const appRoutes(rootになる画面のpath設定), initialRoute
 //  |  |  |-app-route.ts   // createRouting() called as export const
@@ -48,7 +58,7 @@ import './shared/i18n'
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // アプリ独自のプラグイン関数をriotにinstall()するための関数
-//
+// app-plugin.ts
 //  |-import { RiotComponent } from 'riot'
 // _/_/_/_/_/_/_/_/
 import introPlugin from './app-plugin'
