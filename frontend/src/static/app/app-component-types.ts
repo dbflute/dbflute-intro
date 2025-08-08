@@ -11,6 +11,9 @@
 // その interface実装として画面の詳細な振る舞いを定義して、
 // それを引数の取る withIntroTypes()関数を export default する。
 // (この withIntroTypes() は誰が呼ぶのかな？riotの仕組みで呼ばれる？)
+//
+// withIntroTypes()は、riot.withTypes()の代わり
+// コア API - riot.withTypes | Riot.js: https://riot.js.org/ja/api/#riotwithtypes
 // _/_/_/_/_/_/_/_/
 
 import { AutobindObjectMethods, RiotComponent, RiotComponentFactoryFunction } from 'riot'
