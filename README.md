@@ -21,7 +21,7 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
    
    or, it might be better to use nodebrew.
 4. install components of npm for application (at dbflute-intro directory)
-   1. `$ npm install`
+   1. `$ npm ci`
 
 ## How to boot (for committer)
 1. `$ ./gradlew run` => boot API Server (same as IntroBoot.main())
