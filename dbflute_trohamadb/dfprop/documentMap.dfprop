@@ -199,8 +199,8 @@ map:{
     #   o password: The database password. (NotRequired - Default '')
     #
     ; schemaSyncCheckMap = map:{
-        ; url = jdbc:mysql://localhost:3306/trohamasyncdb?characterEncoding=UTF-8
-        ; schema =
+        ; url = jdbc:mysql://localhost:43317/trohamasyncdb?characterEncoding=UTF-8
+        ; schema = 
         ; user = trohamasyncdb
         ; password = trohamasyncdb
         ; isSuppressCraftDiff = true
