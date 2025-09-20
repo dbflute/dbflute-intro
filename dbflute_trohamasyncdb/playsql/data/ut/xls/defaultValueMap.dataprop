@@ -1,0 +1,9 @@
+map:{
+    ; REGISTER_DATETIME = sysdate
+    ; REGISTER_USER     = foo
+    ; UPDATE_DATETIME   = sysdate
+    ; UPDATE_USER       = foo
+    ; VERSION_NO        = 0
+    ; TIMESTAMP_CONVERTED = sysdate
+    ; DEFAULT_ESCAPED = \{a\;b\=c\}d
+}

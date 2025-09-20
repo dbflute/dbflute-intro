@@ -1,0 +1,281 @@
+# /---------------------------------------------------------------------------
+# classificationDefinitionMap: (NotRequired - Default map:{})
+#
+# The definition of classification.
+#
+# Specification:
+# map: {
+#     [classification-name] = list:{
+#         ; map:{
+#             ; topComment=[comment]; codeType=[String(default) or Number or Boolean]}
+#             ; isCheckImplicitSet=[true or false(default)]
+#             ; isUseDocumentOnly=[true or false(default)]
+#             ; isSuppressAutoDeploy=[true or false(default)]
+#             ; groupingMap = map:{
+#                 ; [group-name] = map:{
+#                     ; groupComment=[comment]
+#                     ; elementList=list:{[the list of classification element's name]}
+#                 }
+#             }
+#         ; map:{code=[code]; name=[name]; alias=[alias]; comment=[comment]}
+#         ; map:{
+#             ; table=[table-name]
+#             ; code=[column-name for code]; name=[column-name for name]
+#             ; alias=[column-name for alias]; comment=[column-name for comment]}
+#             ; where=[condition for select]; orderBy=[column-name for ordering]
+#             ; exceptCodeList=[the list of except code]
+#         }
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    # ====================================================================================
+    #                                                                        Whitebox Test
+    #                                                                        =============
+    ; GroupingReference = list:{
+        ; map:{
+            ; topComment=the test of reference variable in grouping map
+            ; codeType=String
+            ; groupingMap = map:{
+                ; serviceAvailable = map:{
+                    ; groupComment = サービスが利用できる会員
+                    ; elementList = list:{LAND_NAME;SEA_NAME}
+                }
+                ; servicePlus = map:{
+                    ; elementList = list:{$$ref$$.serviceAvailable ; IKSPIARY_NAME}
+                }
+                ; nestedPlus = map:{
+                    ; elementList = list:{ AMPHI_NAME ; $$ref$$.servicePlus }
+                }
+                ; oneDef = map:{
+                    ; elementList = list:{ IKSPIARY_NAME }
+                }
+                ; twoRef = map:{
+                    ; elementList = list:{ $$ref$$.serviceAvailable ; $$ref$$.oneDef }
+                    ; isUseDocumentOnly = true
+                }
+                ; dupRef = map:{
+                    ; elementList = list:{ $$ref$$.servicePlus ; $$ref$$.oneDef }
+                }
+            }
+        }
+        ; map:{code=LND; name=LAND_NAME}
+        ; map:{code=SEA; name=SEA_NAME}
+        ; map:{code=IKS; name=IKSPIARY_NAME}
+        ; map:{code=AMP; name=AMPHI_NAME}
+    }
+
+    # the test of 'sql' expression
+    ; SelfReference = list:{
+        ; map:{topComment=The test of relation reference; codeType=Number}
+        ; map:{
+            ; table=$sql: WHITE_SELF_REFERENCE loc left outer join WHITE_SELF_REFERENCE rel on loc.PARENT_ID = rel.SELF_REFERENCE_ID
+            ; code=$sql: loc.SELF_REFERENCE_ID; name=$sql: loc.SELF_REFERENCE_NAME
+            ; comment=$sql: 'of ' || rel.SELF_REFERENCE_NAME
+            ; orderBy=loc.PARENT_ID is not null, loc.SELF_REFERENCE_ID
+        }
+    }
+
+    # the test of document only
+    ; DocumentOnly = list:{
+        ; map:{
+            ; topComment=The test of document only classification
+            ; codeType=String; isUseDocumentOnly=true; isCheckImplicitSet=true
+        }
+        ; map:{code=FOO; name=FOO_NAME}
+        ; map:{code=BAR; name=BAR_NAME}
+    }
+
+    # the test of top comment only
+    ; TopCommentOnly = list:{
+        ; map:{
+            ; topComment=The test of top only
+        }
+    }
+
+    # the test of sub-item map for implicit classification
+    ; SubItemImplicit = list:{
+        ; map:{
+            ; topComment=the test of sub-item map for implicit classification
+            ; codeType=Number; isCheckImplicitSet=true
+        }
+        ; map:{
+            ; code=FOO;name=Foo;alias=Aaa;comment=means foo
+            ; subItemMap=map:{
+                ; regularStringItem=value1<tag> ; regularNumberItem=123
+                ; regularVariousItem=list:{reg;var;ite}
+                ; listItem=list:{aa;bb;cc}
+            }
+        }
+        ; map:{
+            ; code=BAR;name=Bar;alias=Bbb;comment=means bar
+            ; subItemMap=map:{
+                ; regularStringItem=value2<teg> ; regularNumberItem=456
+                ; regularVariousItem=map:{reg=var;ous=ite}
+                ; mapItem=map:{key11=value11}
+                ; containsLine = va
+lue
+            }
+        }
+    }
+
+    # the test of sub-item map for table classification
+    # and groupingMap for table classification with japanese
+    ; SubItemTable = list:{
+        ; map:{
+            ; topComment=the test of sub-item map for table classification
+            ; codeType=String
+            ; groupingMap = map:{
+                ; serviceAvailable = map:{
+                    ; groupComment = サービスが利用できる会員
+                    ; elementList = list:{正式会員;仮会員}
+                }
+                ; lastestStatus = map:{
+                    ; elementList = list:{退会会員}
+                }
+            }
+        }
+        ; map:{
+            ; table=MEMBER_STATUS
+            ; code=MEMBER_STATUS_CODE; name=MEMBER_STATUS_NAME
+            ; comment=DESCRIPTION; orderBy=DISPLAY_ORDER
+            ; subItemMap=map:{key1=DISPLAY_ORDER;key2=MEMBER_STATUS_NAME; key3=null}
+        }
+    }
+
+    # the test of boolean flg
+    ; BooleanFlg = list:{
+        ; map:{
+            ; topComment=boolean classification for boolean column
+            ; codeType=Boolean; isCheckImplicitSet=false
+            # no check for test
+        }
+        ; map:{code=true; name=True ; alias=Checked  ; comment=means yes}
+        ; map:{code=false; name=False; alias=Unchecked; comment=means no}
+    }
+
+    # the test of variant relation (biz-many-to-one)
+    # and groupingMap for implicit classification
+    ; VariantRelationMasterType = list:{
+        ; map:{
+            ; topComment=master type of variant relation (biz-many-to-one)
+            ; codeType=String; isCheckImplicitSet=true
+            ; groupingMap = map:{
+                ; fooBarQux = map:{
+                    ; groupComment = Foo or Bar or Qux
+                    ; elementList = list:{FooCls;BarCls;QuxCls}
+                }
+            }
+        }
+        ; map:{code=FOO; name=FooCls}
+        ; map:{code=BAR; name=BarCls}
+        ; map:{code=QUX; name=QuxCls}
+        ; map:{code=CORGE; name=CorgeCls}
+    }
+    ; VariantRelationQuxType = list:{
+        ; map:{
+            ; topComment=qux type of variant relation (biz-many-to-one)
+            ; codeType=String; isCheckImplicitSet=true
+        }
+        ; map:{code=Qua} ; map:{code=Que} ; map:{code=Quo}
+    }
+
+    # the test of all-in-one table classification
+    ; $$SQL$$ =
+select category.CLS_CATEGORY_NAME as classificationName
+     , category.DESCRIPTION as topComment
+     , element.CLS_ELEMENT_CODE as code
+     , element.CLS_ELEMENT_NAME as name
+     , element.CLS_ELEMENT_NAME as alias
+     , element.CLS_ELEMENT_NAME as comment
+  from WHITE_ALL_IN_ONE_CLS_ELEMENT element 
+    left outer join WHITE_ALL_IN_ONE_CLS_CATEGORY category
+      on element.CLS_CATEGORY_CODE = category.CLS_CATEGORY_CODE
+ order by classificationName, code
+
+    # the test of all-in-one merged
+    ; QuxCls = list:{
+        ; map:{
+            ; topComment=merged; codeType=String
+        }
+        ; map:{code=MRG; name=Merged; comment=merged qux element}
+    }
+    ; CorgeCls = list:{
+        ; map:{
+            ; topComment=merged & docOnly; codeType=String; isUseDocumentOnly=true
+        }
+        ; map:{code=MRG; name=Merged; comment=merged corge element}
+    }
+
+    # the test of escaped for DfProp
+    ; EscapedDfpropCls = list:{
+        ; map:{
+            ; topComment=delimiter\; & endBrace\} & path\foo\bar; codeType=String
+        }
+        # needs space before real delimiter ';'
+        # needs escape char escape on CDef
+        ; map:{code=\;@\\ ; name=First; comment=delimiter & rear escape char}
+        ; map:{code=\\\}\;; name=Second; comment=escape char & endBrace & delimiter}
+        ; map:{code=\{\=\}; name=Third; comment=startBrace & equal & endBrace}
+    }
+
+    # the test of escaped for JavaDoc
+    ; EscapedJavaDocCls = list:{
+        ; map:{
+            ; topComment=/*IF pmb.yourTop*/><&
+            ; codeType=String
+            ; groupingMap = map:{
+                ; lineGroup = map:{
+                    ; groupComment = /*IF pmb.yourGroup*/><&
+                    ; elementList = list:{ First ; Second }
+                }
+            }
+        }
+        ; map:{code=FOO ; name=First
+            ; comment=/*IF pmb.yourFooComment*/><&
+        }
+        ; map:{code=BAR; name=Second
+            ; comment=/*IF pmb.yourBarComment*/><&
+        }
+    }
+
+    # the test of escaped for DfProp
+    ; EscapedNumberInitialCls = list:{
+        ; map:{
+            ; topComment=6; codeType=String
+        }
+        ; map:{table=WHITE_ESCAPED_NUMBER_INITIAL; code=NUMBER_INITIAL_CODE; name=NUMBER_INITIAL_NAME}
+    }
+
+    # the test of line separator
+    ; LineSepCommentCls = list:{
+        ; map:{
+            ; topComment=top first line
+            top second line
+            top third line
+            ; codeType=String
+            ; groupingMap = map:{
+                ; lineGroup = map:{
+                    ; groupComment = group first line
+                    group second line
+                    ; elementList = list:{ First ; Second }
+                }
+            }
+        }
+        ; map:{code=FOO ; name=First
+            ; comment=foo first line
+            foo second line
+            
+        }
+        ; map:{code=BAR; name=Second
+            ; comment=bar first line
+
+            
+            bar second line
+        }
+    }
+}
+# ----------------/
+

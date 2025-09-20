@@ -1,0 +1,13 @@
+# /---------------------------------------------------------------------------
+# behaviorFilterMap: (Default 'map:{}')
+# 
+# The definition of behavior filter.
+#
+map:{
+    ; beforeInsertMap = map:{
+        ; WITHDRAWAL_DATETIME = $$AccessContext$$.getAccessLocalDateTimeOnThread()
+    }
+    ; beforeUpdateMap = map:{
+    }
+}
+# ----------------/

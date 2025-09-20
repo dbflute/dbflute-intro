@@ -1,0 +1,5 @@
+map:{
+    ; schemaHtmlFileName = schema-trorayasudb.html
+    ; historyHtmlFileName = history-trorayasudb.html
+    ; coreCraftMetaDirPath = $$DEFAULT$$/nextdb
+}

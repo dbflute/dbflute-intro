@@ -1,0 +1,10 @@
+
+* * * * * * * * * *
+*                 *
+* Xls Data Result *
+*                 *
+* * * * * * * * * *
+data-directory: playsql/data/ut/firstxls
+
+[92-whitebox-suppressdefcheck.xls]
+  WHITE_SUPPRESS_DEF_CHECK (4)

@@ -1,0 +1,4 @@
+"MEMBER_STATUS_CODE"	"MEMBER_STATUS_NAME"	"DESCRIPTION"	"DISPLAY_ORDER"
+"FML"	"正式会員"	"正式な会員としてサイトサービスが利用可能"	"1"
+"PRV"	"仮会員"	"入会直後のステータスで一部のサイトサービスが利用可能"	"3"
+"WDL"	"退会会員"	"退会が確定した会員でサイトサービスはダメ"	"2"
