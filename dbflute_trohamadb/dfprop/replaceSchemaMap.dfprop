@@ -154,7 +154,7 @@ map:{
         ; system = map:{
             ; url = df:dfprop/db-system-url.txt|jdbc:mysql://localhost:43316
             ; user = root
-            ; password = df:dfprop/system-password.txt|rootpass
+            ; password = df:dfprop/system-password.txt|
         }
     }
     # - - - - - - - - - -/

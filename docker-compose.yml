@@ -5,10 +5,12 @@ services:
     image: mysql:8.0
     container_name: torohamadb
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: trohamadb
-      MYSQL_USER: trohamadb
-      MYSQL_PASSWORD: trohamadb
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
+      ################################# これらは DBFlute の Relace Schema で作成されます。
+      # MYSQL_DATABASE: trohamadb
+      # MYSQL_USER: trohamadb
+      # MYSQL_PASSWORD: trohamadb
     ports:
       - "43316:3306"
     volumes:
@@ -18,10 +20,12 @@ services:
     image: mysql:8.0
     container_name: torohamasyncdb
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: trohamasyncdb
-      MYSQL_USER: trohamasyncdb
-      MYSQL_PASSWORD: trohamasyncdb
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
+      ################################## これらは DBFlute の Relace Schema で作成されます。
+      # MYSQL_DATABASE: trohamadb
+      # MYSQL_USER: trohamadb
+      # MYSQL_PASSWORD: trohamadb
     ports:
       - "43317:3306"
     volumes:
