@@ -58,7 +58,7 @@ map:{
     #  The output directory mainly for schemaHtml and data xls template.
     #  Basically you don't need this.
     #  It is considered of value that it always exists at same plain.
-    # 
+    #
     #; documentOutputDirectory = ./output/doc
     # - - - - - - - - - -/
 
@@ -70,7 +70,7 @@ map:{
     #  DB comment which does not have the delimiter is not treated
     #  as alias, treated as description (real comment).
     #  But you can change it by 'isDbCommentOnAliasBasis'.
-    # 
+    #
     ; aliasDelimiterInDbComment = :
     # - - - - - - - - - -/
 
@@ -79,21 +79,21 @@ map:{
     #  Is DB comment on alias basis?
     #  (Is DB comment alias name when it has no alias delimiter?)
     #  This property works with 'aliasDelimiterInDbComment'.
-    # 
+    #
     ; isDbCommentOnAliasBasis = true
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isEntityJavaDocDbCommentValid (NotRequired - Default true)
     #  Does it allow DB comment to be on java-doc?
-    # 
+    #
     ; isEntityJavaDocDbCommentValid = true
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isEntityDBMetaDbCommentValid (NotRequired - Default false)
     #  Does it allow DB comment to be on DB meta of entity?
-    # 
+    #
     ; isEntityDBMetaDbCommentValid = true
     # - - - - - - - - - -/
 
@@ -102,7 +102,7 @@ map:{
     #  The file name (not contain path) of schemaHtml.
     #  Basically you don't need this.
     #  (For example, when you use Application Behavior, you need this)
-    # 
+    #
     #; schemaHtmlFileName = xxx.html
     # - - - - - - - - - -/
 
@@ -111,7 +111,7 @@ map:{
     #  Does it remove outsideSql information from schemaHtml?
     #  Basically you don't need this.
     #  OutsideSql information (related to tables) is very useful.
-    # 
+    #
     #; isSuppressSchemaHtmlOutsideSql = false
     # - - - - - - - - - -/
 
@@ -144,7 +144,7 @@ map:{
     #  The file name (not contain path) of HistoryHtml.
     #  Basically you don't need this.
     #  (For example, when you use Application Behavior, you need this)
-    # 
+    #
     #; historyHtmlFileName = xxx.html
     # - - - - - - - - - -/
 
@@ -152,7 +152,7 @@ map:{
     # o isCheckColumnDefOrderDiff (NotRequired - Default false)
     #  Does it check differences of column-def order?
     #  (except added or deleted columns)
-    # 
+    #
     ; isCheckColumnDefOrderDiff = true
     # - - - - - - - - - -/
 
@@ -199,8 +199,8 @@ map:{
     #   o password: The database password. (NotRequired - Default '')
     #
     ; schemaSyncCheckMap = map:{
-        ; url = jdbc:mysql://localhost:43317/trohamasyncdb?characterEncoding=UTF-8
-        ; schema = 
+        ; url = df:dfprop/db-syncdb-url.txt|jdbc:mysql://localhost:43317/trohamasyncdb?characterEncoding=UTF-8
+        ; schema =
         ; user = trohamasyncdb
         ; password = trohamasyncdb
         ; isSuppressCraftDiff = true
