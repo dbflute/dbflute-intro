@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_ROOT_PASSWORD: ''
-      ################################# これらは DBFlute の Relace Schema で作成されます。
+      ################################# これらは DBFlute の ReplaceSchema で作成されます。
       # MYSQL_DATABASE: trohamadb
       # MYSQL_USER: trohamadb
       # MYSQL_PASSWORD: trohamadb
@@ -22,7 +22,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_ROOT_PASSWORD: ''
-      ################################## これらは DBFlute の Relace Schema で作成されます。
+      ################################## これらは DBFlute の ReplaceSchema で作成されます。
       # MYSQL_DATABASE: trohamadb
       # MYSQL_USER: trohamadb
       # MYSQL_PASSWORD: trohamadb
