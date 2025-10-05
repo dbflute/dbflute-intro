@@ -17,7 +17,7 @@
 # The following options will be passed to all MySQL clients
 [client]
 #password	= your_password
-port		= 43316
+port		= 3306
 socket		= /tmp/dbflute-mysql-3306.sock
 
 # Here follows entries for some specific programs

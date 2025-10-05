@@ -1,0 +1,71 @@
+# /---------------------------------------------------------------------------
+# classificationDeploymentMap: (NotRequired - Default map:{})
+#
+# The relation between column and classification.
+#
+# This property uses classification names of classificationDefinitionMap.
+# The table name '$$ALL$$' means all tables are target.
+# The table names and column names are treated as case insensitive.
+#
+# You don't need specify here about table classifications.
+# Because table classifications are auto-deployed by relation information.
+#
+# Specification:
+# map: {
+#     [table-name or $$ALL$$] = map:{
+#         ; [column-name (with hint)]=[classification-name]
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    ; $$ALL$$ = map:{
+        # Defined at classificationResource.dfprop(ERD Export File) instead of this.
+        #; suffix:_FLG=Flg
+        #; MEMBER_STATUS_CODE=MemberStatus
+        #; PRODUCT_STATUS_CODE=ProductStatus
+
+        # the test of boolean flg
+        ; TYPE_OF_BOOLEAN = BooleanFlg
+        ; UQ_CLS_BIT_FLG = BooleanFlg
+    }
+    ; PURCHASE_PAYMENT = map:{PAYMENT_METHOD_CODE=PaymentMethod}
+
+    # the test of document only
+    ; PRODUCT = map:{
+        ; UPDATE_USER = DocumentOnly
+    }
+
+    # the test of variant relation (biz-one-to-one)
+    ; WHITE_VARIANT_RELATION_REFERRER = map:{
+        ; MASTER_TYPE_CODE = VariantRelationMasterType
+    }
+    ; WHITE_VARIANT_RELATION_MASTER_QUX = map:{
+        ; QUX_TYPE_CODE = VariantRelationQuxType
+    }
+    ; WHITE_VARIANT_RELATION_MASTER_CORGE = map:{
+        ; CORGE_TYPE_CODE = VariantRelationQuxType
+    }
+
+    # the test of grouping map
+    ; WHITE_GROUPING_REFERENCE = map:{
+        ; GROUPING_REFERENCE_CODE = GroupingReference
+    }
+
+    # the test of escape and line separator
+    ; WHITE_ESCAPED_DFPROP = map:{
+        ; ESCAPED_DFPROP_CODE = EscapedDfpropCls
+    }
+    ; WHITE_ESCAPED_JAVA_DOC = map:{
+        ; ESCAPED_JAVA_DOC_CODE = EscapedJavaDocCls
+    }
+    ; WHITE_LINE_SEP_COMMENT = map:{
+        ; LINE_SEP_COMMENT_CODE = LineSepCommentCls
+    }
+    ; WHITE_DEPRECATED_CLS_ELEMENT = map:{
+        ; DEPRECATED_CLS_ELEMENT_CODE = DeprecatedMapCollaborationType
+    }
+}
+# ----------------/
+

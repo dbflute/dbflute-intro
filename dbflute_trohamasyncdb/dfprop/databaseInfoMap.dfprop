@@ -16,10 +16,10 @@
 #
 map:{
 	; driver   = com.mysql.jdbc.Driver
-	; url      = df:dfprop/db-app-url.txt|jdbc:mysql://localhost:43316/trohamadb?characterEncoding=UTF-8
-	; schema   =
-	; user     = trohamadb
-	; password = trohamadb
+    ; url      = df:dfprop/db-app-url.txt|jdbc:mysql://localhost:43317/trohamasyncdb?characterEncoding=UTF-8
+    ; schema   = 
+    ; user     = trohamasyncdb
+    ; password = trohamasyncdb
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o propertiesMap: (NotRequired - Default map:{})

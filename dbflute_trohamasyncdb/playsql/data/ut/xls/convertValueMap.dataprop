@@ -1,0 +1,16 @@
+map:{
+    ; STRING_CONVERTED = map:{
+        ; foo = bar
+        ; F = case sensitive
+        ; $$null$$ = $$empty$$
+
+        # you should write after empty conversion
+        # because converters are executed orderly
+        ; NullValue = $$null$$
+
+        ; "" = quoted
+        ; contain:\\n = \n
+    }
+    # TIMESTAMP test is implemented at dbflute-postgresql-example
+    # because MySQL does not have millisecond data type
+}

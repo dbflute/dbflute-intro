@@ -1,0 +1,4 @@
+map:{
+    # for the test of no-exist column allowed
+    ; isSuppressColumnDefCheck = true
+}

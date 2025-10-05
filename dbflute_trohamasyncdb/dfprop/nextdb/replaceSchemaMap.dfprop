@@ -9,8 +9,6 @@
 # o isErrorSqlContinue: (NotRequired - Default false)
 # o sqlFileEncoding: (NotRequired - Default 'UTF-8')
 # o skipSheet: (NotRequired - Default '')
-# o isCheckSchemaPolicyInReps: (NotRequired - Default false)
-# o conventionalTakeAssertMap: (NotRequired - Default map:{})
 # o isIncrementSequenceToDataMax: (NotRequired - Default false)
 # o isSuppressBatchUpdate: (NotRequired - Default false)
 # o objectTypeTargetList: (NotRequired - Default databaseInfoMap's)
@@ -37,7 +35,7 @@ map:{
     #   e.g. if ut, data files in './playsql/data/ut/...' are loaded
     #  If DBFlute environment type is specified, inherits it as default.
     #
-    #; repsEnvType = ut
+    ; repsEnvType = ut
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,30 +75,6 @@ map:{
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # o isCheckSchemaPolicyInReps: (NotRequired - Default false)
-    #  Does it check schema policy in ReplaceSchema?
-    #  Normally the check is executed in Doc task but it may be late
-    #  so you can also check (as far as possible) here.
-    #
-    #; isCheckSchemaPolicyInReps = false
-    # - - - - - - - - - -/
-
-    # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # o conventionalTakeAssertMap: (NotRequired - Default map:{})
-    #  Does it assert data by conventional rule in take-finally
-    #  For example, you can check empty table (no-data).
-    #
-    ; conventionalTakeAssertMap = map:{
-        ; emptyTableMap = map:{
-            ; isFailure = true
-            ; workableRepsEnvTypeList = list:{$$ALL$$}
-            ; tableExceptList = list:{ prefix:VENDOR_ ; prefix:WHITE_ }
-            ; tableTargetList = list:{}
-        }
-    }
-    # - - - - - - - - - -/
-
-    # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isIncrementSequenceToDataMax: (NotRequired - Default false)
     #  Does it increment sequence values to max value of table data?
     #  Referring the property 'sequenceDefinitionMap'.
@@ -129,10 +103,9 @@ map:{
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o filterVariablesMap: (NotRequired - Default 'map:{}')
     #  You can specify the filter variables for DDL.
-    #
-    ; filterVariablesMap = map:{
-        ; nextCatalog = trorayasudb
-    }
+    # 
+    #; filterVariablesMap = map:{
+    #}
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -152,7 +125,7 @@ map:{
     #
     ; additionalUserMap = map:{
         ; system = map:{
-            ; url = df:dfprop/db-system-url.txt|jdbc:mysql://localhost:43316
+            ; url = jdbc:mysql://localhost:43306
             ; user = root
             ; password = df:dfprop/system-password.txt|
         }
@@ -187,7 +160,7 @@ map:{
     #  This property is relative path to (main) PlaySql directory,
     #  You should not use this property easily.
     #
-    #; playSqlDirectory = ../../foo-project/playsql
+    ; playSqlDirectory = ./playsql/nextsql
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -211,42 +184,42 @@ map:{
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isSuppressTruncateTable: (NotRequired - Default false)
     #  You can suppress truncating tables at initializing schema.
-    #
+    # 
     #; isSuppressTruncateTable = false
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isSuppressDropForeignKey: (NotRequired - Default false)
     #  You can suppress dropping foreign keys at initializing schema.
-    #
+    # 
     #; isSuppressDropForeignKey = false
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isSuppressDropTable: (NotRequired - Default false)
     #  You can suppress dropping tables at initializing schema.
-    #
+    # 
     #; isSuppressDropTable = false
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isSuppressDropSequence: (NotRequired - Default false)
     #  You can suppress dropping sequences at initializing schema.
-    #
+    # 
     #; isSuppressDropSequence = false
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isSuppressDropProcedure: (NotRequired - Default false)
     #  You can suppress dropping procedures at initializing schema.
-    #
+    # 
     #; isSuppressDropProcedure = false
     # - - - - - - - - - -/
 
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o isSuppressDropDBLink: (NotRequired - Default false)
     #  You can suppress dropping DB links at initializing schema.
-    #
+    # 
     #; isSuppressDropDBLink = false
     # - - - - - - - - - -/
 

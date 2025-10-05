@@ -1,0 +1,5 @@
+map:{
+	; url			= jdbc:mysql://localhost:43316/trohamadb?characterEncoding=UTF-8
+	; user			= trohamadb
+	; password		= trohamadb
+}

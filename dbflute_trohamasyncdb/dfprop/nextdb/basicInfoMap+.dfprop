@@ -1,0 +1,4 @@
+map:{
+    ; projectSchemaXMLFilePath = ./schema/project-schema-trorayasudb.xml
+    ; projectSchemaHistoryFilePath = ./schema/project-schema-trorayasudb.diffmap
+}

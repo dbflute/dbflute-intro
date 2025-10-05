@@ -1,0 +1,142 @@
+# /---------------------------------------------------------------------------
+# conditionBeanMap: (NotRequired - Default map:{})
+#
+# Specification:
+# map:{
+#     ; [property-type] = map:{
+#         ; [condition-key] = map:{ [table] = list:{ [column] ; [column] } }
+# }
+#
+# property-type: String, Number, Date, OrderBy, ...
+# condition-key: NotEqual, GreaterThan, LessThan, GreaterEqual, LessEqual
+#              , InScope, NotInScope, PrefixSearch, LikeSearch, NotLikeSearch
+#              , EmptyString, FromTo, DateFromTo, RangeOf, ...
+#              , (and prefix '!' means excluding, '%' means reviving)
+# table: table name (hint) or $$ALL$$
+# column: column name (hint) or $$CommonColumn$$ or $$VersionNo$$
+#
+# Example:
+# map:{
+#     # This means that String includes GreaterThan at MEMBER.MEMBER_ACCOUNT only
+#     # and LessThan at PRODUCT.PRODUCT_NAME and PRODUCT.PRODUCT_HANDLE_CODE,
+#     # and InScope for LONGVARCHAR(e.g. text type) is excluded.
+#     ; String = map:{
+#         ; GreaterThan = map:{ MEMBER = list:{ MEMBER_ACCOUNT } }
+#         ; LessThan = map:{ PRODUCT = list:{ PRODUCT_NAME ; PRODUCT_HANDLE_CODE } }
+#         ; !InScope = map:{ $$ALL$$ = list:{ type:LONGVARCHAR } }
+#     }
+#     # This means that Number excludes all version-no's NotEqual.
+#     ; Number = map:{
+#         ; !NotEqual = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+#     }
+#     # This means that Date does not includes NotEqual at all tables.  
+#     ; Date = map:{
+#         ; NotEqual = map:{}
+#     }
+# }
+#
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    ; String = map:{
+        # [Include]
+        # String columns may not be needed
+        # to be set these condition-keys basically.
+        # *set UPDATE_USER for the test of geared cipher.
+        ; GreaterThan = map:{ MEMBER = list:{UPDATE_USER} }
+        ; LessThan = map:{ MEMBER = list:{UPDATE_USER} }
+        ; GreaterEqual = map:{}
+        ; LessEqual = map:{}
+
+        # the test of revived
+        ; %LikeSearch = map:{ PRODUCT_CATEGORY = list:{PRODUCT_CATEGORY_NAME} }
+
+        # [Exclude]
+        # Common columns of String type may not be needed
+        # to be set these condition-keys basically.
+        ; !NotEqual = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !GreaterThan = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !LessThan = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !GreaterEqual = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !LessEqual = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !InScope = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !NotInScope = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !PrefixSearch = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        # for the test of geared cipher
+        #; !LikeSearch = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !NotLikeSearch = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+    }
+    ; Number = map:{
+        # [Include]
+        ; NotEqual = map:{}
+
+        # [Exclude]
+        # VersionNo column may not be needed
+        # to be set these condition-keys basically.
+        ; !GreaterThan = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+        ; !LessThan = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+        ; !GreaterEqual = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+        ; !LessEqual = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+        ; !InScope = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+        ; !NotInScope = map:{ $$ALL$$ = list:{ $$VersionNo$$ } }
+    }
+    ; Date = map:{
+        # [Include]
+        # Date columns may not be needed
+        # to be set these condition-keys basically.
+        ; NotEqual = map:{}
+        ; InScope = map:{}
+        ; NotInScope = map:{}
+
+        # [Exclude]
+        # Common columns of Date type may not be needed
+        # to be set these condition-keys basically.
+        ; !GreaterThan = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !LessThan = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !GreaterEqual = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        # for the test of column hints
+        ; !LessEqual = map:{ $$ALL$$ = list:{ prefix:REGISTER_ ; prefix:UPDATE_ } }
+        ; !FromTo = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+        ; !DateFromTo = map:{ $$ALL$$ = list:{ $$CommonColumn$$ } }
+    }
+    ; $MEMBER = map:{
+        ; MEMBER_ACCOUNT(String) = list:{ !NotInScope ; !PrefixSearch ; !NotLikeSearch }
+    }
+    ; $WHITE_INCLUDE_QUERY = map:{
+        ; INCLUDE_QUERY_INTEGER(Number) = list:{}
+        ; INCLUDE_QUERY_INTEGER(OrderBy) = list:{}
+        ; INCLUDE_QUERY_VARCHAR(String) = list:{ !PrefixSearch ; !LikeSearch ; !NotLikeSearch }
+        ; INCLUDE_QUERY_DATE(Date) = list:{}
+        ; INCLUDE_QUERY_DATETIME(Date) = list:{ !GreaterThan ; !GreaterEqual ; !LessThan ; !LessEqual }
+    }
+    # WITHDRAWAL_RE is test of table classification small size
+    ; $prefix:WITHDRAWAL_RE = map:{
+        ; suffix:_CODE(String) = list:{
+            ; !NotEqual ; !NotInScope ; !PrefixSearch; !LikeSearch; !NotLikeSearch ; !IsNull ; !IsNotNull
+        }
+        ; suffix:_TEXT(String) = list:{}
+        ; suffix:_TEXT(OrderBy) = list:{}
+        ; suffix:_ORDER(Number) = list:{}
+        ; suffix:_ORDER(OrderBy) = list:{ !Desc }
+    }
+    ; $suffix:CT_CATEGORY = map:{
+        ; suffix:_CODE(String) = list:{ !PrefixSearch ; !LikeSearch ; !NotLikeSearch }
+        ; suffix:_NAME(String) = list:{}
+    }
+    ; Relation = map:{
+        ; !ExistsReferrer = map:{ prefix:WITHDRAWAL_RE = list:{} ; suffix:CT_CATEGORY = list:{} }
+        ; !InScopeRelation = map:{ prefix:WITHDRAWAL_RE = list:{} ; suffix:CT_CATEGORY = list:{} }
+        ; !DerivedReferrer = map:{ prefix:WITHDRAWAL_RE = list:{} }
+        ; !SpecifiedDerivedOrderBy = map:{ prefix:WITHDRAWAL_RE = list:{} }
+        ; %ExistsReferrer = map:{ PRODUCT_CATEGORY = list:{} }
+    }
+    ; Myself = map:{
+        ; !InlineView = map:{ prefix:WITHDRAWAL_RE = list:{} }
+        ; !ScalarCondition = map:{ prefix:WITHDRAWAL_RE = list:{} ; suffix:CT_CATEGORY = list:{} }
+        ; !MyselfDerived = map:{ prefix:WITHDRAWAL_RE = list:{} }
+        ; !MyselfExists = map:{ prefix:WITHDRAWAL_RE = list:{} }
+        ; !MyselfInScope = map:{ prefix:WITHDRAWAL_RE = list:{} }
+        ; %ScalarCondition = map:{ PRODUCT_CATEGORY = list:{} }
+    }
+}
+# ----------------/
