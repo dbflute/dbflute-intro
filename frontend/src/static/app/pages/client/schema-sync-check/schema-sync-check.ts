@@ -4,7 +4,7 @@ import LatestResult from '../latest-result.riot'
 import { api } from '../../../api/api'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
-import SchemaSyncCheckFormModal from './schema-sync-check-form-modal'
+import SchemaSyncCheckFormModal from './schema-sync-check-form-modal.riot'
 
 type SchemaSyncCheckLatestResult = {
   success: boolean
@@ -24,9 +24,13 @@ interface State {
 }
 
 interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
-  prepareComponents: () => Promise<void>
+  onMounted: () => void
+  prepareComponents: () => void
   canCheckSchemaSetting: () => boolean
   onclickSchemaSyncCheckTask: () => void
+  showSyncSettingModal: () => void
+  onSettingSaved: () => void
+  openSyncCheckResultHTML: () => void
 
   // private
   updateContents: (additionalState?: Partial<State>) => Promise<void>
@@ -52,12 +56,12 @@ export default withIntroTypes<SchemaSyncCheck>({
   /**
    * マウント完了時の処理。
    */
-  async onMounted() {
-    await this.prepareComponents()
+  onMounted() {
+    this.prepareComponents()
   },
 
-  async prepareComponents() {
-    await this.updateContents()
+  prepareComponents() {
+    this.updateContents()
   },
 
   async updateContents(additionalState?: Partial<State>) {
@@ -103,5 +107,24 @@ export default withIntroTypes<SchemaSyncCheck>({
         // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
         await this.updateContents({ executeStatus: 'None' })
       })
+  },
+
+  showSyncSettingModal() {
+    // 子コンポーネント (SchemaSyncCheckFormModal) の show メソッドを呼び出す
+    const modals = this.$$('syncSettingModal') as any[]
+    const modal = modals[0]
+    if (modal && modal.show) {
+      modal.show()
+    }
+  },
+
+  async onSettingSaved() {
+    // 設定保存後に最新のデータを再取得
+    await this.updateContents()
+  },
+
+  openSyncCheckResultHTML() {
+    // SchemaSyncCheck の結果HTMLを新しいタブで開く
+    window.open('/api/document/' + this.props.projectName + '/synccheckresulthtml/')
   },
 })

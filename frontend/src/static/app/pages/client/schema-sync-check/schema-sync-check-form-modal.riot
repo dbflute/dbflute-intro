@@ -1,36 +1,57 @@
 <schema-sync-check-form-modal>
   <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
-  <!--  <su-modal modal="{ syncSettingModal }" class="large" ref="syncSettingModal">-->
-  <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための form の実態 -->
-  <su-modal>
+  <su-modal
+    modal="{ modal() }"
+    show="{ state.showModal }"
+    onhide="{ onHide }"
+    onaction="{ onModalAction }"
+    class="large">
     <form class="ui form">
       <div class="required field">
         <label>URL</label>
-        <input type="url" ref="url" placeholder="jdbc:mysql://localhost:3306/examplesyncdb"
-          value="{ opts.modal.syncSetting.url }">
+        <input
+          type="url"
+          placeholder="jdbc:mysql://localhost:3306/examplesyncdb"
+          value="{ state.syncSchemaSetting.url }"
+          onchange="{ (e) => { state.syncSchemaSetting.url = e.target.value } }">
       </div>
       <div class="field">
         <label>Schema</label>
-        <input type="text" ref="schema" placeholder="EXAMPLESYNCDB" value="{ opts.modal.syncSetting.schema }">
+        <input
+          type="text"
+          placeholder="EXAMPLESYNCDB"
+          value="{ state.syncSchemaSetting.schema }"
+          onchange="{ (e) => { state.syncSchemaSetting.schema = e.target.value } }">
       </div>
       <div class="required field">
         <label>User</label>
-        <input type="text" ref="user" placeholder="examplesyncdb" value="{ opts.modal.syncSetting.user }">
+        <input
+          type="text"
+          placeholder="examplesyncdb"
+          value="{ state.syncSchemaSetting.user }"
+          onchange="{ (e) => { state.syncSchemaSetting.user = e.target.value } }">
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="text" ref="password" placeholder="" value="{ opts.modal.syncSetting.password }">
+        <input
+          type="text"
+          placeholder=""
+          value="{ state.syncSchemaSetting.password }"
+          onchange="{ (e) => { state.syncSchemaSetting.password = e.target.value } }">
       </div>
       <div class="field">
         <div class="ui checkbox">
-          <input type="checkbox" ref="isSuppressCraftDiff" checked="{ opts.modal.syncSetting.isSuppressCraftDiff }">
+          <input
+            type="checkbox"
+            checked="{ state.syncSchemaSetting.isSuppressCraftDiff }"
+            onchange="{ (e) => { state.syncSchemaSetting.isSuppressCraftDiff = e.target.checked } }">
           <label>Suppress Craft Diff</label>
         </div>
       </div>
     </form>
   </su-modal>
   <script>
-    import SchemaSyncCheckFormModal from './schema-sync-check-form-modal'
-    export default SchemaSyncCheckFormModal
+    import schemaSyncCheckFormModal from './schema-sync-check-form-modal.ts'
+    export default schemaSyncCheckFormModal
   </script>
 </schema-sync-check-form-modal>
