@@ -17,6 +17,7 @@ type SuModalButton = {
   text: string
   action: string
   default?: boolean
+  closable?: boolean
 }
 
 type SuModal = {
@@ -33,6 +34,7 @@ const FORM_MODAL: SuModal = {
       text: 'OK',
       action: 'save',
       default: true,
+      closable: false,
     },
   ],
 }
@@ -116,11 +118,15 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
   },
 
   async saveSettings() {
-    console.log('saveSettings called')
-    console.log(this.state.syncSchemaSetting)
     const projectName = this.props.projectName
     const formData = this.state.syncSchemaSetting
-
-    await api.editSyncSchema(projectName, formData)
+    await api
+      .editSyncSchema(projectName, formData)
+      .then(() => {
+        this.onHide()
+      })
+      .catch((_) => {
+        // API Client で modal 出す以上のハンドリングはしない
+      })
   },
 })
