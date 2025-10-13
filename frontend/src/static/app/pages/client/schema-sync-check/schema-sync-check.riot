@@ -59,8 +59,8 @@
     if="{ state.prepared }"
     project-name="{ props.projectName }"
     sync-schema-setting="{ state.syncSchemaSetting }"
-    show-modal="{ state.editing }"
-    on-setting-saved="{ onSettingSaved }"
+    show="{ state.showSyncSettingModal }"
+    on-modal-hide="{ onSettingSaved }"
   ></schema-sync-check-form-modal>
 
   <!-- SchemaSyncCheck 実行Modal -->

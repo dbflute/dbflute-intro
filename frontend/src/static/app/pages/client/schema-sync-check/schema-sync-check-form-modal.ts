@@ -3,11 +3,13 @@ import { api } from '../../../api/api'
 
 interface Props {
   projectName: string
+  show: boolean
   syncSchemaSetting: DfpropSchemasyncResult
-  showModal: boolean
+  onModalHide?: () => void
 }
 
 interface State {
+  show: boolean
   syncSchemaSetting: DfpropSchemasyncResult
 }
 
@@ -36,9 +38,10 @@ const FORM_MODAL: SuModal = {
 }
 
 interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
-  show(): boolean
   modal(): SuModal
   onBeforeMount(): void
+  onBeforeUpdate(): void
+  onHide(): void
   onChangeUrl(e: InputEvent): void
   onChangeSchema(e: InputEvent): void
   onChangeUser(e: InputEvent): void
@@ -49,6 +52,7 @@ interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
 
 export default withIntroTypes<SchemaSyncCheckFormModal>({
   state: {
+    show: false,
     syncSchemaSetting: {},
   },
 
@@ -56,12 +60,19 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     this.state.syncSchemaSetting = this.props.syncSchemaSetting
   },
 
-  show(): boolean {
-    return this.props.showModal
+  onBeforeUpdate() {
+    this.state.show = this.props.show
   },
 
   modal(): SuModal {
     return FORM_MODAL
+  },
+
+  onHide() {
+    this.update({ show: false })
+    if (this.props.onModalHide) {
+      this.props.onModalHide()
+    }
   },
 
   onChangeUrl(e: InputEvent) {

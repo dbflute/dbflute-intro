@@ -20,7 +20,7 @@ interface State {
   hasSchemaSyncCheckResultHtml: boolean
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
-  editing: boolean
+  showSyncSettingModal: boolean
   prepared: boolean
 }
 
@@ -49,7 +49,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     hasSchemaSyncCheckResultHtml: false,
     executeStatus: 'None',
     executeResultMessage: undefined,
-    editing: false,
+    showSyncSettingModal: false,
     prepared: false,
   },
 
@@ -113,12 +113,13 @@ export default withIntroTypes<SchemaSyncCheck>({
   },
 
   showSyncSettingModal() {
-    this.update({ editing: true })
+    this.update({ showSyncSettingModal: true })
   },
 
   async onSettingSaved() {
     // 設定保存後に最新のデータを再取得
-    await this.updateContents()
+    console.log('onSettingSaved called')
+    await this.updateContents({ showSyncSettingModal: false })
   },
 
   openSyncCheckResultHTML() {

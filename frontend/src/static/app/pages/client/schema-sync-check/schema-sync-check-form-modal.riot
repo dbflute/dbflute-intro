@@ -1,6 +1,6 @@
 <schema-sync-check-form-modal>
   <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
-  <su-modal show="{ show() }" modal="{ modal() }" onsave="{ saveSettings }" class="large">
+  <su-modal show="{ state.show }" modal="{ modal() }" onhide="{ onHide }" onsave="{ saveSettings }" class="large">
     <form class="ui form">
       <div class="required field">
         <label>URL</label>
