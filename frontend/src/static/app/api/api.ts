@@ -195,13 +195,11 @@ class Api {
 
   editSyncSchema(projectName: string, syncSchemaSettingData: any) {
     return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
-      body: {
-        url: syncSchemaSettingData.url,
-        schema: syncSchemaSettingData.schema,
-        user: syncSchemaSettingData.user,
-        password: syncSchemaSettingData.password,
-        isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false, // need not null
-      },
+      url: syncSchemaSettingData.url,
+      schema: syncSchemaSettingData.schema,
+      user: syncSchemaSettingData.user,
+      password: syncSchemaSettingData.password,
+      isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false, // need not null
     })
   }
 
