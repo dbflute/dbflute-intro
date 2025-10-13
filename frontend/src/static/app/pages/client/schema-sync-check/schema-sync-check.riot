@@ -31,7 +31,7 @@
     <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
 
     <!-- SchemaSyncCheck実行ボタン  -->
-    <button show="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ onclickSchemaSyncCheckTask }">
+    <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ onclickSchemaSyncCheckTask }">
       Execute SchemaSyncCheck
     </button>
 

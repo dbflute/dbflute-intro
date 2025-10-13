@@ -15,7 +15,7 @@ interface Props {
 }
 
 interface State {
-  syncSchemaSetting: DfpropSchemasyncResult
+  syncSchemaSetting?: DfpropSchemasyncResult
   latestResult?: SchemaSyncCheckLatestResult
   hasSchemaSyncCheckResultHtml: boolean
   executeStatus: TaskExecuteStatus
@@ -45,7 +45,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     SchemaSyncCheckFormModal,
   },
   state: {
-    syncSchemaSetting: {},
+    syncSchemaSetting: undefined,
     latestResult: undefined,
     hasSchemaSyncCheckResultHtml: false,
     executeStatus: 'None',
@@ -71,6 +71,7 @@ export default withIntroTypes<SchemaSyncCheck>({
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.syncSchema(projectName)
+    console.log('Fetched syncSchemaSetting:', syncSchemaSetting)
     const latestResult = await api.latestResult(projectName, 'schemaSyncCheck').then((body) => {
       if (body) {
         return {
@@ -93,7 +94,7 @@ export default withIntroTypes<SchemaSyncCheck>({
    */
   canCheckSchemaSetting() {
     const setting = this.state.syncSchemaSetting
-    return setting.url != null && setting.user != null
+    return !!setting && !!setting.url && !!setting.user
   },
 
   async onclickSchemaSyncCheckTask() {
