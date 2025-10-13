@@ -4,12 +4,12 @@ import { api } from '../../../api/api'
 interface Props {
   projectName: string
   syncSchemaSetting: DfpropSchemasyncResult
+  showModal: boolean
   onSettingSaved?: () => void
 }
 
 interface State {
   syncSchemaSetting: DfpropSchemasyncResult
-  showModal: boolean
 }
 
 type SuModalButton = {
@@ -24,71 +24,38 @@ type SuModal = {
   buttons: SuModalButton[]
 }
 
-interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
-  show(): void
-  hide(): void
-  modal(): SuModal
-  onModalAction(action: string): void
-  onHide(): void
+const FORM_MODAL: SuModal = {
+  header: 'Schema Sync Check Settings',
+  closable: true,
+  buttons: [
+    {
+      text: 'OK',
+      action: 'save',
+      default: true,
+    },
+  ],
+}
 
-  // private
-  saveSettings(): Promise<void>
+interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
+  show(): boolean
+  modal(): SuModal
+  onBeforeMount(): void
 }
 
 export default withIntroTypes<SchemaSyncCheckFormModal>({
   state: {
     syncSchemaSetting: {},
-    showModal: false,
   },
 
-  onBeforeUpdate(props: Props, state: State) {
-    if (props.syncSchemaSetting) {
-      this.state.syncSchemaSetting = props.syncSchemaSetting
-    }
+  onBeforeMount() {
+    this.state.syncSchemaSetting = this.props.syncSchemaSetting
   },
 
-  show() {
-    this.update({ showModal: true })
-  },
-
-  hide() {
-    this.update({ showModal: false })
+  show(): boolean {
+    return this.props.showModal
   },
 
   modal(): SuModal {
-    return {
-      header: 'Schema Sync Check Settings',
-      closable: true,
-      buttons: [
-        {
-          text: 'OK',
-          action: 'save',
-          default: true,
-        },
-      ],
-    }
-  },
-
-  onModalAction(action: string) {
-    if (action === 'save') {
-      this.saveSettings()
-    }
-  },
-
-  async saveSettings() {
-    const projectName = this.props.projectName
-    const formData = this.state.syncSchemaSetting
-
-    await api.editSyncSchema(projectName, formData)
-    this.hide()
-
-    // 親コンポーネントに保存完了を通知
-    if (this.props.onSettingSaved) {
-      this.props.onSettingSaved()
-    }
-  },
-
-  onHide() {
-    this.hide()
+    return FORM_MODAL
   },
 })

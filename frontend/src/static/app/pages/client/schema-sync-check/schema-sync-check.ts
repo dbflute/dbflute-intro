@@ -1,4 +1,3 @@
-import i18n from '../../components/common/i18n.riot'
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import LatestResult from '../latest-result.riot'
 import { api } from '../../../api/api'
@@ -21,6 +20,8 @@ interface State {
   hasSchemaSyncCheckResultHtml: boolean
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
+  editing: boolean
+  prepared: boolean
 }
 
 interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
@@ -48,6 +49,8 @@ export default withIntroTypes<SchemaSyncCheck>({
     hasSchemaSyncCheckResultHtml: false,
     executeStatus: 'None',
     executeResultMessage: undefined,
+    editing: false,
+    prepared: false,
   },
 
   // ===================================================================================
@@ -61,7 +64,7 @@ export default withIntroTypes<SchemaSyncCheck>({
   },
 
   prepareComponents() {
-    this.updateContents()
+    this.updateContents({ prepared: true })
   },
 
   async updateContents(additionalState?: Partial<State>) {
@@ -110,12 +113,7 @@ export default withIntroTypes<SchemaSyncCheck>({
   },
 
   showSyncSettingModal() {
-    // 子コンポーネント (SchemaSyncCheckFormModal) の show メソッドを呼び出す
-    const modals = this.$$('syncSettingModal') as any[]
-    const modal = modals[0]
-    if (modal && modal.show) {
-      modal.show()
-    }
+    this.update({ editing: true })
   },
 
   async onSettingSaved() {

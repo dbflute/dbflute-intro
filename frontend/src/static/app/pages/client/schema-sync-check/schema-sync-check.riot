@@ -56,10 +56,11 @@
 
   <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
   <schema-sync-check-form-modal
-    ref="syncSettingModal"
-    projectName="{ props.projectName }"
-    syncSchemaSetting="{ state.syncSchemaSetting }"
-    onSettingSaved="{ onSettingSaved }"
+    if="{ state.prepared }"
+    project-name="{ props.projectName }"
+    sync-schema-setting="{ state.syncSchemaSetting }"
+    show-modal="{ state.editing }"
+    on-setting-saved="{ onSettingSaved }"
   ></schema-sync-check-form-modal>
 
   <!-- SchemaSyncCheck 実行Modal -->
