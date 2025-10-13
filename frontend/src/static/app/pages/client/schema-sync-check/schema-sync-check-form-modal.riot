@@ -1,6 +1,6 @@
 <schema-sync-check-form-modal>
   <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
-  <su-modal show="{ show() }" modal="{ modal() }" class="large">
+  <su-modal show="{ show() }" modal="{ modal() }" onsave="{ saveSettings }" class="large">
     <form class="ui form">
       <div class="required field">
         <label>URL</label>
@@ -8,7 +8,7 @@
           type="url"
           placeholder="jdbc:mysql://localhost:3306/examplesyncdb"
           value="{ state.syncSchemaSetting.url }"
-          onchange="{ (e) => console.log('url changed:', e.target.value) }">
+          onchange="{ onChangeUrl }">
       </div>
       <div class="field">
         <label>Schema</label>
@@ -16,7 +16,7 @@
           type="text"
           placeholder="EXAMPLESYNCDB"
           value="{ state.syncSchemaSetting.schema }"
-          onchange="{ (e) => console.log('schema changed:', e.target.value) }">
+          onchange="{ onChangeSchema }">
       </div>
       <div class="required field">
         <label>User</label>
@@ -24,7 +24,7 @@
           type="text"
           placeholder="examplesyncdb"
           value="{ state.syncSchemaSetting.user }"
-          onchange="{ (e) => console.log('user changed:', e.target.value) }">
+          onchange="{ onChangeUser }">
       </div>
       <div class="field">
         <label>Password</label>
@@ -32,14 +32,14 @@
           type="text"
           placeholder=""
           value="{ state.syncSchemaSetting.password }"
-          onchange="{ (e) => console.log('password changed:', e.target.value) }">
+          onchange="{ onChangePassword }">
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input
             type="checkbox"
             checked="{ state.syncSchemaSetting.isSuppressCraftDiff }"
-            onchange="{ (e) => console.log('isSuppressCraftDiff changed:', e.target.checked) }">
+            onchange="{ onChangeIsSuppressCraftDiff }">
           <label>Suppress Craft Diff</label>
         </div>
       </div>

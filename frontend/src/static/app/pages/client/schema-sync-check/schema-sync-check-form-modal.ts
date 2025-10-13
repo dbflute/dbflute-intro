@@ -5,7 +5,6 @@ interface Props {
   projectName: string
   syncSchemaSetting: DfpropSchemasyncResult
   showModal: boolean
-  onSettingSaved?: () => void
 }
 
 interface State {
@@ -40,6 +39,12 @@ interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
   show(): boolean
   modal(): SuModal
   onBeforeMount(): void
+  onChangeUrl(e: InputEvent): void
+  onChangeSchema(e: InputEvent): void
+  onChangeUser(e: InputEvent): void
+  onChangePassword(e: InputEvent): void
+  onChangeIsSuppressCraftDiff(e: InputEvent): void
+  saveSettings(): Promise<void>
 }
 
 export default withIntroTypes<SchemaSyncCheckFormModal>({
@@ -57,5 +62,54 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
 
   modal(): SuModal {
     return FORM_MODAL
+  },
+
+  onChangeUrl(e: InputEvent) {
+    const value = (e.target as HTMLInputElement).value
+    console.log('onChangeUrl called:', value)
+    this.update({
+      syncSchemaSetting: { ...this.state.syncSchemaSetting, url: value },
+    })
+  },
+
+  onChangeSchema(e: InputEvent) {
+    const value = (e.target as HTMLInputElement).value
+    console.log('onChangeSchema called:', value)
+    this.update({
+      syncSchemaSetting: { ...this.state.syncSchemaSetting, schema: value },
+    })
+  },
+
+  onChangeUser(e: InputEvent) {
+    const value = (e.target as HTMLInputElement).value
+    console.log('onChangeUser called:', value)
+    this.update({
+      syncSchemaSetting: { ...this.state.syncSchemaSetting, user: value },
+    })
+  },
+
+  onChangePassword(e: InputEvent) {
+    const value = (e.target as HTMLInputElement).value
+    console.log('onChangePassword called:', value)
+    this.update({
+      syncSchemaSetting: { ...this.state.syncSchemaSetting, password: value },
+    })
+  },
+
+  onChangeIsSuppressCraftDiff(e: InputEvent) {
+    const checked = (e.target as HTMLInputElement).checked
+    console.log('onChangeIsSuppressCraftDiff called:', checked)
+    this.update({
+      syncSchemaSetting: { ...this.state.syncSchemaSetting, isSuppressCraftDiff: checked },
+    })
+  },
+
+  async saveSettings() {
+    console.log('saveSettings called')
+    console.log(this.state.syncSchemaSetting)
+    const projectName = this.props.projectName
+    const formData = this.state.syncSchemaSetting
+
+    await api.editSyncSchema(projectName, formData)
   },
 })
