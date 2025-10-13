@@ -5,6 +5,7 @@ export type TaskExecuteStatus = 'None' | 'Executing' | 'Completed'
 interface Props {
   message: string
   status: TaskExecuteStatus
+  onModalHide?: () => void
 }
 
 interface State {
@@ -66,5 +67,8 @@ export default withIntroTypes<TaskExecuteModal>({
   onHide() {
     this.state.status = 'None'
     this.update()
+    if (this.props.onModalHide) {
+      this.props.onModalHide()
+    }
   },
 })

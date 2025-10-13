@@ -31,6 +31,7 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   onclickSchemaSyncCheckTask: () => void
   showSyncSettingModal: () => void
   onSettingSaved: () => void
+  onExecuteModalHide: () => void
   openSyncCheckResultHTML: () => void
 
   // private
@@ -120,6 +121,11 @@ export default withIntroTypes<SchemaSyncCheck>({
     // 設定保存後に最新のデータを再取得
     console.log('onSettingSaved called')
     await this.updateContents({ showSyncSettingModal: false })
+  },
+
+  onExecuteModalHide() {
+    // タスク実行モーダルが閉じられたときに executeStatus をリセット
+    this.update({ executeStatus: 'None' })
   },
 
   openSyncCheckResultHTML() {

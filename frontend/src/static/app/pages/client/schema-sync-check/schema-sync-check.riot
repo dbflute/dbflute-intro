@@ -64,7 +64,11 @@
   ></schema-sync-check-form-modal>
 
   <!-- SchemaSyncCheck 実行Modal -->
-  <task-execute-modal status="{ state.executeStatus }" message="{ state.executeResultMessage }"></task-execute-modal>
+  <task-execute-modal
+    status="{ state.executeStatus }"
+    message="{ state.executeResultMessage }"
+    on-modal-hide="{ onExecuteModalHide }"
+  ></task-execute-modal>
 
   <!-- #thinking ex-document.tag にも同じスタイル調整が入ってる、共通化してもいいかも？ by cabos (written at 2022/04/07) -->
   <style>
