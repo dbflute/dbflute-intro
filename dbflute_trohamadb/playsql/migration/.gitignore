@@ -1,0 +1,4 @@
+# AlterCheckの手動テストの結果ファイルはgitignoreとする
+/alter
+/history
+/schema
