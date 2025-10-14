@@ -12,6 +12,8 @@ temp/
 .cvsignore
 
 # Eclipse
+# o GradleでEclipse設定ファイルを自動生成するのでほとんどignore
+# o 生成される設定ファイルの詳細は、eclipse.gradle を参照
 .project
 .classpath
 .settings/
@@ -49,11 +51,16 @@ latest-data.zip
 /dbflute_jflutedb
 /dbflute_decodb
 /dbflute_hakibadb
+/dbflute_cabosdb
+/dbflute_tanaryodb
+/dbflute_shinydb
 /dbflute_testdb
 /dbflute_maihamadb
 /dbflute_new_maihamadb
 /dbflute-intro.jar
 /dbflute-intro.war
+
+# LastaFlute
 trial_config.ignored
 
 # node
