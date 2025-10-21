@@ -3132,7 +3132,7 @@
           "example": "previous-NG"
         },
         "content": {
-          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
           "type": "string",
           "example": "ALTER"
         }
@@ -3151,7 +3151,7 @@
           "example": "alter-sql-SAMPLE.sql"
         },
         "content": {
-          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
           "type": "string",
           "example": "ALTER"
         }
@@ -3160,7 +3160,8 @@
     "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$CheckedZipPart": {
       "type": "object",
       "required": [
-        "fileName"
+        "fileName",
+        "checkedFiles"
       ],
       "properties": {
         "fileName": {
@@ -3169,7 +3170,7 @@
           "example": "20190831_2249/checked-alter-to-20190422-2332.zip"
         },
         "checkedFiles": {
-          "description": "list of checked sql files",
+          "description": "list of checked sql files (NotNull, EmptyAllowed)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24SQLFilePart"
@@ -3179,9 +3180,12 @@
     },
     "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$UnreleasedDirPart": {
       "type": "object",
+      "required": [
+        "checkedFiles"
+      ],
       "properties": {
         "checkedFiles": {
-          "description": "list of checked sql files",
+          "description": "list of checked sql files (NotNull, EmptyAllowed)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24SQLFilePart"
@@ -3191,12 +3195,15 @@
     },
     "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult": {
       "type": "object",
+      "required": [
+        "editingFiles"
+      ],
       "properties": {
         "ngMarkFile": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24NgMarkFilePart"
         },
         "editingFiles": {
-          "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory",
+          "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory (NotNull, EmptyAllowed)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24SQLFilePart"

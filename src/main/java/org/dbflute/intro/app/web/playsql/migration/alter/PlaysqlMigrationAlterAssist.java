@@ -70,10 +70,10 @@ public class PlaysqlMigrationAlterAssist {
     //                                       ---------------
     public AlterSQLResult mappingAlterSQLResult(PlaysqlMigrationDirReturn bean) {
         AlterSQLResult result = new AlterSQLResult();
-        result.ngMarkFile = mappingNgMarkFileResult(bean);
-        result.editingFiles = mappingAlterEditingFilePart(bean);
-        result.checkedZip = mappingCheckedZipPart(bean);
-        result.unreleasedDir = mappingUnreleasedDirPart(bean);
+        result.ngMarkFile = mappingNgMarkFileResult(bean); // null allowed
+        result.editingFiles = mappingAlterEditingFilePart(bean); // not null, empty allowed
+        result.checkedZip = mappingCheckedZipPart(bean); // null allowed
+        result.unreleasedDir = mappingUnreleasedDirPart(bean); // null allowed
         return result;
     }
 

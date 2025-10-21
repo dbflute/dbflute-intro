@@ -62,9 +62,11 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   updateContents(additionalState?: Partial<State>): void
-  prepareUnreleased(unreleased: AlterSQLResultUnreleasedDirPart | undefined): AlterDir
-  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
-  prepareLatestFailureResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState | undefined>
+  prepareUnreleased(unreleased: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir
+  prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
+  prepareLatestFailureResult(
+    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
+  ): Promise<AlterLatestResultState | undefined>
 }
 
 export default withIntroTypes<AlterCheck>({
@@ -194,10 +196,10 @@ export default withIntroTypes<AlterCheck>({
   /**
    * 未リリースチェック済みのAlterDDLを用意します（sqlファイルのみ）
    * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param {AlterSQLResultUnreleasedDirPart | undefined} unreleasedDir APIで取得した未リリースディレクトリ情報 (Nullable)
-   * @return {AlterDir} 未リリースAlterディレクトリのState情報
+   * @param unreleasedDir APIで取得した未リリースディレクトリ情報
+   * @return 未リリースAlterディレクトリのState情報 (EmptyAllowed)
    */
-  prepareUnreleased(unreleasedDir: AlterSQLResultUnreleasedDirPart | undefined): AlterDir {
+  prepareUnreleased(unreleasedDir: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir {
     if (!unreleasedDir) {
       return { checkedFiles: [] }
     }
@@ -215,11 +217,11 @@ export default withIntroTypes<AlterCheck>({
   /**
    * チェック済みのAlterDDL zipを用意します
    * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param {AlterSQLResultCheckedZipPart | undefined} checkedZip APIで取得したチェック済みのAlterDDL zip情報 (Nullable)
-   * @param {AlterDir} unreleasedDir 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
-   * @return {AlterZip} 未リリースAlterディレクトリのState情報
+   * @param checkedZip APIで取得したチェック済みのAlterDDL zip情報 (Nullable)
+   * @param unreleasedDir 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
+   * @return 未リリースAlterディレクトリのState情報
    */
-  prepareChecked(checkedZip: AlterSQLResultCheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip {
+  prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip {
     if (!checkedZip) {
       return {
         fileName: '',
@@ -243,10 +245,12 @@ export default withIntroTypes<AlterCheck>({
   /**
    * 最新の実行失敗結果を取得します
    * Step2（AlterCheck実行時）に最新の別のAlterCheckの成功結果を表示する必要がないため、現在実行中のAlterCheckの失敗結果を表示するようにしています
-   * @param {AlterSQLResultNgMarkFilePart | undefined} ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
-   * @return {Promise<AlterLatestResultState>} 最新の実行失敗結果.最新が成功している場合はnull (Nullable)
+   * @param ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
+   * @return 最新の実行失敗結果.最新が成功している場合はnull (Nullable)
    */
-  async prepareLatestFailureResult(ngMarkFile: AlterSQLResultNgMarkFilePart | undefined): Promise<AlterLatestResultState | undefined> {
+  async prepareLatestFailureResult(
+    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
+  ): Promise<AlterLatestResultState | undefined> {
     return api.latestResult(this.props.projectName, 'alterCheck').then((body) => {
       if (!body || body.fileName.includes('success')) {
         return

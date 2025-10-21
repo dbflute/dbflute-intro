@@ -19,34 +19,6 @@ type IntroClassificationsResult = {
   targetContainerMap: { [key: string]: string }
 }
 
-type NgMark = 'previous-NG' | 'alter-NG' | 'next-NG'
-
-type AlterSQLResultNgMarkFilePart = {
-  ngMark: NgMark
-  content: string
-}
-
-type AlterSQLResultSQLFilePart = {
-  fileName: string
-  content: string
-}
-
-type AlterSQLResultCheckedZipPart = {
-  fileName: string
-  checkedFiles: AlterSQLResultSQLFilePart[]
-}
-
-type AlterSQLResultUnreleasedDirPart = {
-  checkedFiles: AlterSQLResultSQLFilePart[]
-}
-
-type AlterSQLResult = {
-  ngMarkFile: AlterSQLResultNgMarkFilePart
-  editingFiles: AlterSQLResultSQLFilePart[]
-  checkedZip: AlterSQLResultCheckedZipPart
-  unreleasedDir: AlterSQLResultUnreleasedDirPart
-}
-
 type LogBean = {
   fileName: string
   content: string
