@@ -1181,7 +1181,7 @@
           "200": {
             "description": "success",
             "schema": {
-              "type": "object"
+              "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult"
             }
           },
           "400": {
@@ -3029,6 +3029,106 @@
       "properties": {
         "useSystemProxies": {
           "type": "boolean"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.DatabaseDefPart": {
+      "type": "object",
+      "required": [
+        "databaseCode",
+        "databaseName",
+        "driverName",
+        "urlTemplate",
+        "schemaRequired",
+        "schemaUpperCase",
+        "userInputAssist",
+        "embeddedJar"
+      ],
+      "properties": {
+        "databaseCode": {
+          "type": "string"
+        },
+        "databaseName": {
+          "type": "string"
+        },
+        "driverName": {
+          "type": "string"
+        },
+        "urlTemplate": {
+          "type": "string"
+        },
+        "defaultSchema": {
+          "type": "string"
+        },
+        "schemaRequired": {
+          "type": "boolean"
+        },
+        "schemaUpperCase": {
+          "type": "boolean"
+        },
+        "userInputAssist": {
+          "type": "boolean"
+        },
+        "embeddedJar": {
+          "type": "boolean"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.LanguageDefPart": {
+      "type": "object",
+      "required": [
+        "languageCode",
+        "languageName"
+      ],
+      "properties": {
+        "languageCode": {
+          "type": "string"
+        },
+        "languageName": {
+          "type": "string"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.ContainerDefPart": {
+      "type": "object",
+      "required": [
+        "containerCode",
+        "containerName"
+      ],
+      "properties": {
+        "containerCode": {
+          "type": "string"
+        },
+        "containerName": {
+          "type": "string"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult": {
+      "type": "object",
+      "required": [
+        "targetDatabaseList",
+        "targetLanguageList",
+        "targetContainerList"
+      ],
+      "properties": {
+        "targetDatabaseList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.DatabaseDefPart"
+          }
+        },
+        "targetLanguageList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.LanguageDefPart"
+          }
+        },
+        "targetContainerList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.ContainerDefPart"
+          }
         }
       }
     },

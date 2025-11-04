@@ -13,39 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.base.cls;
+package org.dbflute.intro.app.web.base.cls.result;
 
-import org.dbflute.intro.dbflute.exentity.ClsTargetDatabase;
+import org.dbflute.intro.dbflute.exentity.ClsTargetLanguage;
+import org.lastaflute.web.validation.Required;
 
 /**
- * @author p1us2er0
- * @author jflute
+ * 自動生成されるクラスのプログラミング言語に関する定義のレスポンスオブジェクト。
+ * @author jflute (2025/10/28 Tuesday at ichihara)
  */
-public class DatabaseDefBean {
+public class LanguageDefPart {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    public final String databaseName;
-    public final String driverName;
-    public final String urlTemplate;
-    public final String defaultSchema;
-    public final boolean schemaRequired;
-    public final boolean schemaUpperCase;
-    public final boolean userInputAssist;
-    public final boolean embeddedJar;
+    @Required
+    public final String languageCode; // PK, not null
+    @Required
+    public final String languageName; // not null
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DatabaseDefBean(ClsTargetDatabase databaseInfoDef) {
-        this.databaseName = databaseInfoDef.getDatabaseName();
-        this.driverName = databaseInfoDef.getJdbcDriverFqcn();
-        this.urlTemplate = databaseInfoDef.getUrlTemplate();
-        this.defaultSchema = databaseInfoDef.getDefaultSchema();
-        this.schemaRequired = databaseInfoDef.isSchemaRequiredFlgTrue();
-        this.schemaUpperCase = databaseInfoDef.isSchemaUpperCaseFlgTrue();
-        this.userInputAssist = databaseInfoDef.isUserInputAssistFlgTrue();
-        this.embeddedJar = databaseInfoDef.isEmbeddedJarFlgTrue();
+    public LanguageDefPart(ClsTargetLanguage targetLanguage) {
+        this.languageCode = targetLanguage.getLanguageCode();
+        this.languageName = targetLanguage.getLanguageName();
     }
 }
