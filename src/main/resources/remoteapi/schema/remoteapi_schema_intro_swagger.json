@@ -1241,7 +1241,7 @@
           "200": {
             "description": "success",
             "schema": {
-              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogBean"
+              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogResult"
             }
           },
           "400": {
@@ -1278,7 +1278,7 @@
           "200": {
             "description": "success",
             "schema": {
-              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogBean"
+              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogResult"
             }
           },
           "400": {
@@ -1311,7 +1311,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/java.util.List%3Corg.dbflute.intro.app.web.log.LogBean%3E"
+                "$ref": "#/definitions/java.util.List%3Corg.dbflute.intro.app.web.log.LogResult%3E"
               }
             }
           },
@@ -3151,7 +3151,7 @@
         }
       }
     },
-    "org.dbflute.intro.app.web.log.LogBean": {
+    "org.dbflute.intro.app.web.log.LogResult": {
       "type": "object",
       "required": [
         "fileName",
@@ -3159,18 +3159,18 @@
       ],
       "properties": {
         "fileName": {
-          "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
+          "description": "ログのファイル名",
           "type": "string",
           "example": "intro-last-execute-failure-alterCheck.log"
         },
         "content": {
-          "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
+          "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
           "type": "string",
           "example": "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
         }
       }
     },
-    "java.util.List\u003corg.dbflute.intro.app.web.log.LogBean\u003e": {
+    "java.util.List\u003corg.dbflute.intro.app.web.log.LogResult\u003e": {
       "type": "object",
       "required": [
         "fileName",
@@ -3178,12 +3178,12 @@
       ],
       "properties": {
         "fileName": {
-          "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
+          "description": "ログのファイル名",
           "type": "string",
           "example": "intro-last-execute-failure-alterCheck.log"
         },
         "content": {
-          "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
+          "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
           "type": "string",
           "example": "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
         }

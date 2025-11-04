@@ -20,22 +20,23 @@ import org.lastaflute.web.validation.Required;
 /**
  * @author deco
  * @author cabos
+ * @author jflute
  */
-public class LogBean {
+public class LogResult {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     /**
-     * log file name
-     * Log files are under the dbflute_yourdb(DBFlute client)/log
+     * ログのファイル名。(ディレクトリパスなし) <br>
+     * Log files are under the dbflute_yourdb(DBFlute client)/log <br>
      * e.g. "intro-last-execute-failure-alterCheck.log"
      */
     @Required
     public final String fileName;
 
     /**
-     * long long texts in log file
+     * long long texts in log file <br>
      * e.g. "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
      */
     @Required
@@ -44,7 +45,7 @@ public class LogBean {
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public LogBean(String fileName, String content) {
+    public LogResult(String fileName, String content) {
         this.fileName = fileName;
         this.content = content;
     }

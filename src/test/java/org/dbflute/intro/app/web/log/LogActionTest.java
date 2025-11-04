@@ -56,11 +56,11 @@ public class LogActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
+        JsonResponse<List<LogResult>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        TestingJsonData<List<LogBean>> jsonData = validateJsonData(response);
-        List<LogBean> logList = jsonData.getJsonResult(); // might be empty
+        TestingJsonData<List<LogResult>> jsonData = validateJsonData(response);
+        List<LogResult> logList = jsonData.getJsonResult(); // might be empty
         logList.forEach(log -> { // show only
             log(log);
         });
@@ -79,11 +79,11 @@ public class LogActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
+        JsonResponse<List<LogResult>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        TestingJsonData<List<LogBean>> jsonData = validateJsonData(response);
-        List<LogBean> jsonBean = jsonData.getJsonResult();
+        TestingJsonData<List<LogResult>> jsonData = validateJsonData(response);
+        List<LogResult> jsonBean = jsonData.getJsonResult();
         assertHasAnyElement(jsonBean);
         jsonBean.forEach(bean -> {
             assertTrue(bean.fileName.endsWith(".log"));

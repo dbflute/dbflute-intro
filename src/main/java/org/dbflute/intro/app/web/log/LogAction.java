@@ -58,10 +58,10 @@ public class LogAction extends IntroBaseAction {
     //                                                 index
     //                                                 -----
     @Execute
-    public JsonResponse<LogBean> index(LogBody logBody) {
+    public JsonResponse<LogResult> index(LogBody logBody) {
         validate(logBody, (moreValidator) -> {});
         return logPhysicalLogic.findLogFile(logBody.project, logBody.fileName).map((file) -> {
-            return asJson(new LogBean(file.getName(), flutyFileLogic.readFile(file)));
+            return asJson(new LogResult(file.getName(), flutyFileLogic.readFile(file)));
         }).orElseGet(() -> {
             String debugMsg = "file not found fileName : " + logBody.fileName;
             throw new Forced404NotFoundException(debugMsg, UserMessages.empty());
@@ -71,9 +71,9 @@ public class LogAction extends IntroBaseAction {
     // done cabos implements all log (2019-10-20)
     // fix this issue https://github.com/dbflute/dbflute-intro/issues/263
     @Execute
-    public JsonResponse<LogBean> latest(String clientName, String task) {
+    public JsonResponse<LogResult> latest(String clientName, String task) {
         return logPhysicalLogic.findLatestResultFile(clientName, task).map((file) -> {
-            return asJson(new LogBean(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
+            return asJson(new LogResult(file.getName(), cutOffErrorLogIfNeeds(flutyFileLogic.readFile(file))));
         }).orElseGet(() -> {
             // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
             // https://github.com/dbflute/dbflute-intro/issues/493
@@ -93,10 +93,10 @@ public class LogAction extends IntroBaseAction {
     }
 
     @Execute
-    public JsonResponse<List<LogBean>> list(String clientName) {
+    public JsonResponse<List<LogResult>> list(String clientName) {
         List<File> logFileList = logPhysicalLogic.findLogFileAllList(clientName);
-        List<LogBean> beans = logFileList.stream()
-                .map(logFile -> new LogBean(logFile.getName(), flutyFileLogic.readFile(logFile)))
+        List<LogResult> beans = logFileList.stream()
+                .map(logFile -> new LogResult(logFile.getName(), flutyFileLogic.readFile(logFile)))
                 .collect(Collectors.toList());
         return asJson(beans);
     }
