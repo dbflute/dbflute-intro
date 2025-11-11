@@ -7231,12 +7231,14 @@
           {
             "name": "success",
             "publicName": "success",
-            "typeName": "boolean",
-            "simpleTypeName": "boolean",
+            "typeName": "java.lang.Boolean",
+            "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
-            "annotationList": [],
+            "description": "業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど",
+            "comment": "業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど。\u003cbr\u003e\nシステム的な失敗のケースは、そもそも例外がthrowされるのでHTTP statusが200ではない。",
+            "annotationList": [
+              "Required"
+            ],
             "nestTypeDocMetaList": []
           }
         ]

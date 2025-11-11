@@ -3330,8 +3330,12 @@
     },
     "org.dbflute.intro.app.web.task.TaskExecutionResult": {
       "type": "object",
+      "required": [
+        "success"
+      ],
       "properties": {
         "success": {
+          "description": "業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど",
           "type": "boolean"
         }
       }

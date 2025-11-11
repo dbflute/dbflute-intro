@@ -19,6 +19,6 @@
  * @author FreeGen
  */
 type TaskExecuteResult = {
-  /** (NullAllowed) */
-  success?: boolean
+  /** 業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど (Required) */
+  success: boolean
 }

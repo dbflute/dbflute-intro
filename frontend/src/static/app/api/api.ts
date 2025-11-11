@@ -390,7 +390,7 @@ class Api {
   // ===============================================================================
   //                                                                           Task
   //                                                                          ======
-  task(projectName: string, task: string): Promise<TaskExecutionResult> {
+  task(projectName: string, task: string): Promise<TaskExecuteResult> {
     return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
 }
