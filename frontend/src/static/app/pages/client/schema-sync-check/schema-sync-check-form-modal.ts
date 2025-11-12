@@ -78,6 +78,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
+  /**
+   * モーダルの定義を返す
+   * @returns フォームモーダルの定義
+   */
   modal(): SuModal {
     return FORM_MODAL
   },
@@ -85,10 +89,16 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                          ==========
+  /**
+   * コンポーネントのマウント前に props から state を初期化する
+   */
   onBeforeMount() {
     this.state.syncSchemaSetting = this.props.syncSchemaSetting
   },
 
+  /**
+   * コンポーネントの更新前に props から state を同期する
+   */
   onBeforeUpdate() {
     this.state.show = this.props.show
   },
@@ -99,6 +109,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
   // -----------------------------------------------------
   //                                                 Modal
   //                                                 -----
+  /**
+   * モーダルを閉じる
+   * 親コンポーネントに onModalHide イベントを通知する
+   */
   onHide() {
     this.update({ show: false })
     if (this.props.onModalHide) {
@@ -109,6 +123,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
   // -----------------------------------------------------
   //                                                  Form
   //                                                  ----
+  /**
+   * URL の入力値が変更されたとき、state を更新する
+   * @param e 入力イベント（input要素からの値変更イベント）
+   */
   onChangeUrl(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
     console.log('onChangeUrl called:', value)
@@ -117,6 +135,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     })
   },
 
+  /**
+   * Schema の入力値が変更されたとき、state を更新する
+   * @param e 入力イベント（input要素からの値変更イベント）
+   */
   onChangeSchema(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
     console.log('onChangeSchema called:', value)
@@ -125,6 +147,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     })
   },
 
+  /**
+   * User の入力値が変更されたとき、state を更新する
+   * @param e 入力イベント（input要素からの値変更イベント）
+   */
   onChangeUser(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
     console.log('onChangeUser called:', value)
@@ -133,6 +159,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     })
   },
 
+  /**
+   * Password の入力値が変更されたとき、state を更新する
+   * @param e 入力イベント（input要素からの値変更イベント）
+   */
   onChangePassword(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
     console.log('onChangePassword called:', value)
@@ -141,6 +171,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     })
   },
 
+  /**
+   * IsSuppressCraftDiff のチェックボックスが変更されたとき、state を更新する
+   * @param e 入力イベント（checkbox要素からの値変更イベント）
+   */
   onChangeIsSuppressCraftDiff(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
     console.log('onChangeIsSuppressCraftDiff called:', checked)
@@ -149,6 +183,10 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     })
   },
 
+  /**
+   * SchemaSyncCheck 設定を保存する
+   * 保存成功時はモーダルを閉じる
+   */
   async saveSettings() {
     const projectName = this.props.projectName
     const formData = this.state.syncSchemaSetting
