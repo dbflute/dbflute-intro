@@ -40,10 +40,27 @@ const FORM_MODAL: SuModal = {
 }
 
 interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
+  // ===================================================================================
+  //                                                                          Definition
+  //                                                                          ==========
   modal(): SuModal
+
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                          ==========
   onBeforeMount(): void
   onBeforeUpdate(): void
+
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  // -----------------------------------------------------
+  //                                                 Modal
+  //                                                 -----
   onHide(): void
+  // -----------------------------------------------------
+  //                                                  Form
+  //                                                  ----
   onChangeUrl(e: InputEvent): void
   onChangeSchema(e: InputEvent): void
   onChangeUser(e: InputEvent): void
@@ -58,6 +75,16 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     syncSchemaSetting: {},
   },
 
+  // ===================================================================================
+  //                                                                          Definition
+  //                                                                          ==========
+  modal(): SuModal {
+    return FORM_MODAL
+  },
+
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                          ==========
   onBeforeMount() {
     this.state.syncSchemaSetting = this.props.syncSchemaSetting
   },
@@ -66,10 +93,12 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     this.state.show = this.props.show
   },
 
-  modal(): SuModal {
-    return FORM_MODAL
-  },
-
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  // -----------------------------------------------------
+  //                                                 Modal
+  //                                                 -----
   onHide() {
     this.update({ show: false })
     if (this.props.onModalHide) {
@@ -77,6 +106,9 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     }
   },
 
+  // -----------------------------------------------------
+  //                                                  Form
+  //                                                  ----
   onChangeUrl(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
     console.log('onChangeUrl called:', value)
