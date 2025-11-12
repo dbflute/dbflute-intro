@@ -25,16 +25,34 @@ interface State {
 }
 
 interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                          ==========
   onMounted: () => void
-  prepareComponents: () => void
+
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  // -----------------------------------------------------
+  //                                           Result HTML
+  //                                           -----------
+  openSyncCheckResultHTML: () => void
   canCheckSchemaSetting: () => boolean
-  onclickSchemaSyncCheckTask: () => void
+  // -----------------------------------------------------
+  //                                         Setting Modal
+  //                                         -------------
   showSyncSettingModal: () => void
   onSettingSaved: () => void
+  // -----------------------------------------------------
+  //                                             Execution
+  //                                             ---------
+  onclickSchemaSyncCheckTask: () => void
   onExecuteModalHide: () => void
-  openSyncCheckResultHTML: () => void
 
-  // private
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
+  prepareComponents: () => void
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
@@ -64,10 +82,88 @@ export default withIntroTypes<SchemaSyncCheck>({
     this.prepareComponents()
   },
 
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  // -----------------------------------------------------
+  //                                           Result HTML
+  //                                           -----------
+  openSyncCheckResultHTML() {
+    // SchemaSyncCheck の結果HTMLを新しいタブで開く
+    window.open('/api/document/' + this.props.projectName + '/synccheckresulthtml/')
+  },
+
+  /**
+   * SchemaSyncCheck の設定が確認可能か、つまり SchemaSyncCheckの設定が存在するかを確認する
+   */
+  canCheckSchemaSetting() {
+    const setting = this.state.syncSchemaSetting
+    return !!setting && !!setting.url && !!setting.user
+  },
+
+  // -----------------------------------------------------
+  //                                         Setting Modal
+  //                                         -------------
+  /**
+   * SchemaSyncCheck 設定モーダルを表示する
+   */
+  showSyncSettingModal() {
+    this.update({ showSyncSettingModal: true })
+  },
+
+  /**
+   * SchemaSyncCheck 設定を保存するとき、画面の状態を最新化する
+   */
+  async onSettingSaved() {
+    await this.updateContents({ showSyncSettingModal: false })
+  },
+
+  // -----------------------------------------------------
+  //                                             Execution
+  //                                             ---------
+  /**
+   * SchemaSyncCheck タスクを実行する
+   * すでに実行されている状態であれば何もしない
+   */
+  async onclickSchemaSyncCheckTask() {
+    if (this.state.executeStatus !== 'None') {
+      return
+    }
+    await this.updateContents({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
+    await api
+      .task(this.props.projectName, 'schemaSyncCheck')
+      .then(async (data) => {
+        const executeResultMessage = data.success ? 'Success' : 'Failure'
+        await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
+      })
+      .catch(async () => {
+        // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
+        await this.updateContents({ executeStatus: 'None' })
+      })
+  },
+
+  /**
+   * タスク実行モーダルを閉じるとき、画面の状態を最新化する
+   */
+  onExecuteModalHide() {
+    // タスク実行モーダルが閉じられたときに executeStatus をリセット
+    this.update({ executeStatus: 'None' })
+  },
+
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
+  /**
+   * コンポーネントの初期化を完了した状態にし、画面を最新化する
+   */
   prepareComponents() {
     this.updateContents({ prepared: true })
   },
 
+  /**
+   * 引数で受け取った state を更新しつつ、画面を最新化する
+   * @param additionalState 更新する state の値
+   */
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.syncSchema(projectName)
@@ -87,50 +183,5 @@ export default withIntroTypes<SchemaSyncCheck>({
       hasSchemaSyncCheckResultHtml: client.hasSyncCheckResultHtml,
       ...additionalState,
     })
-  },
-
-  /**
-   * SchemaSyncCheck の設定が確認可能か、つまり SchemaSyncCheckの設定が存在するかを確認する
-   */
-  canCheckSchemaSetting() {
-    const setting = this.state.syncSchemaSetting
-    return !!setting && !!setting.url && !!setting.user
-  },
-
-  async onclickSchemaSyncCheckTask() {
-    if (this.state.executeStatus !== 'None') {
-      return
-    }
-    await this.updateContents({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
-    await api
-      .task(this.props.projectName, 'schemaSyncCheck')
-      .then(async (data) => {
-        const executeResultMessage = data.success ? 'Success' : 'Failure'
-        await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
-      })
-      .catch(async () => {
-        // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
-        await this.updateContents({ executeStatus: 'None' })
-      })
-  },
-
-  showSyncSettingModal() {
-    this.update({ showSyncSettingModal: true })
-  },
-
-  async onSettingSaved() {
-    // 設定保存後に最新のデータを再取得
-    console.log('onSettingSaved called')
-    await this.updateContents({ showSyncSettingModal: false })
-  },
-
-  onExecuteModalHide() {
-    // タスク実行モーダルが閉じられたときに executeStatus をリセット
-    this.update({ executeStatus: 'None' })
-  },
-
-  openSyncCheckResultHTML() {
-    // SchemaSyncCheck の結果HTMLを新しいタブで開く
-    window.open('/api/document/' + this.props.projectName + '/synccheckresulthtml/')
   },
 })
