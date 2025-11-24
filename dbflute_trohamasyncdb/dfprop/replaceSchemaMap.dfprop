@@ -94,7 +94,7 @@ map:{
         ; emptyTableMap = map:{
             ; isFailure = true
             ; workableRepsEnvTypeList = list:{$$ALL$$}
-            ; tableExceptList = list:{ prefix:VENDOR_ ; prefix:WHITE_ ; prefix:ADDITIONAL_ }
+            ; tableExceptList = list:{ prefix:VENDOR_ ; prefix:WHITE_ ; SYNC_DIFF_ADDED_TARGET }
             ; tableTargetList = list:{}
         }
     }
