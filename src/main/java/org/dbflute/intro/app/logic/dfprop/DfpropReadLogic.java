@@ -162,8 +162,9 @@ public class DfpropReadLogic {
     }
 
     /**
-     * schema diagramのファイルを取得します
-     * <li>ファイルパスはDBFluteIntroプロジェクトからの相対パスに変換します</li>
+     * schema diagramのファイルを取得します<br>
+     * ファイルパスはDBFluteIntroプロジェクトからの相対パスに変換します
+     *
      * @param projectName The project name of DBFlute client. (NotNull)
      * @param diagramName The diagram name. (NotNull)
      * @return schema diagram file path (NotNull, EmptyAllowed: not setup schemaDiagramMap)
