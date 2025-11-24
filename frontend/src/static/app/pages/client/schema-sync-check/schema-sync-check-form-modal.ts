@@ -47,7 +47,7 @@ interface SchemaSyncCheckFormModal extends IntroRiotComponent<Props, State> {
 
   // ===================================================================================
   //                                                                           Lifecycle
-  //                                                                          ==========
+  //                                                                           =========
   onBeforeMount(): void
   onBeforeUpdate(): void
 
@@ -88,7 +88,7 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
 
   // ===================================================================================
   //                                                                           Lifecycle
-  //                                                                          ==========
+  //                                                                           =========
   /**
    * コンポーネントのマウント前に props から state を初期化する
    */

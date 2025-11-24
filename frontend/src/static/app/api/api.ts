@@ -356,8 +356,8 @@ class Api {
   }
 
   // ===============================================================================
-  //                                                                           Task
-  //                                                                          ======
+  //                                                                            Task
+  //                                                                            ====
   task(projectName: string, task: string): Promise<TaskExecutionResult> {
     return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
