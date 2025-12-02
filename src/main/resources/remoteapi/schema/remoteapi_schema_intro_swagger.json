@@ -1181,7 +1181,7 @@
           "200": {
             "description": "success",
             "schema": {
-              "type": "object"
+              "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult"
             }
           },
           "400": {
@@ -1241,7 +1241,7 @@
           "200": {
             "description": "success",
             "schema": {
-              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogBean"
+              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogResult"
             }
           },
           "400": {
@@ -1278,7 +1278,7 @@
           "200": {
             "description": "success",
             "schema": {
-              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogBean"
+              "$ref": "#/definitions/org.dbflute.intro.app.web.log.LogResult"
             }
           },
           "400": {
@@ -1311,7 +1311,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/java.util.List%3Corg.dbflute.intro.app.web.log.LogBean%3E"
+                "$ref": "#/definitions/java.util.List%3Corg.dbflute.intro.app.web.log.LogResult%3E"
               }
             }
           },
@@ -3032,6 +3032,106 @@
         }
       }
     },
+    "org.dbflute.intro.app.web.base.cls.result.DatabaseDefPart": {
+      "type": "object",
+      "required": [
+        "databaseCode",
+        "databaseName",
+        "driverName",
+        "urlTemplate",
+        "schemaRequired",
+        "schemaUpperCase",
+        "userInputAssist",
+        "embeddedJar"
+      ],
+      "properties": {
+        "databaseCode": {
+          "type": "string"
+        },
+        "databaseName": {
+          "type": "string"
+        },
+        "driverName": {
+          "type": "string"
+        },
+        "urlTemplate": {
+          "type": "string"
+        },
+        "defaultSchema": {
+          "type": "string"
+        },
+        "schemaRequired": {
+          "type": "boolean"
+        },
+        "schemaUpperCase": {
+          "type": "boolean"
+        },
+        "userInputAssist": {
+          "type": "boolean"
+        },
+        "embeddedJar": {
+          "type": "boolean"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.LanguageDefPart": {
+      "type": "object",
+      "required": [
+        "languageCode",
+        "languageName"
+      ],
+      "properties": {
+        "languageCode": {
+          "type": "string"
+        },
+        "languageName": {
+          "type": "string"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.ContainerDefPart": {
+      "type": "object",
+      "required": [
+        "containerCode",
+        "containerName"
+      ],
+      "properties": {
+        "containerCode": {
+          "type": "string"
+        },
+        "containerName": {
+          "type": "string"
+        }
+      }
+    },
+    "org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult": {
+      "type": "object",
+      "required": [
+        "targetDatabaseList",
+        "targetLanguageList",
+        "targetContainerList"
+      ],
+      "properties": {
+        "targetDatabaseList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.DatabaseDefPart"
+          }
+        },
+        "targetLanguageList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.LanguageDefPart"
+          }
+        },
+        "targetContainerList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/org.dbflute.intro.app.web.base.cls.result.ContainerDefPart"
+          }
+        }
+      }
+    },
     "org.dbflute.intro.app.web.log.LogBody": {
       "type": "object",
       "required": [
@@ -3051,7 +3151,7 @@
         }
       }
     },
-    "org.dbflute.intro.app.web.log.LogBean": {
+    "org.dbflute.intro.app.web.log.LogResult": {
       "type": "object",
       "required": [
         "fileName",
@@ -3059,18 +3159,18 @@
       ],
       "properties": {
         "fileName": {
-          "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
+          "description": "ログのファイル名",
           "type": "string",
           "example": "intro-last-execute-failure-alterCheck.log"
         },
         "content": {
-          "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
+          "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
           "type": "string",
           "example": "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
         }
       }
     },
-    "java.util.List\u003corg.dbflute.intro.app.web.log.LogBean\u003e": {
+    "java.util.List\u003corg.dbflute.intro.app.web.log.LogResult\u003e": {
       "type": "object",
       "required": [
         "fileName",
@@ -3078,12 +3178,12 @@
       ],
       "properties": {
         "fileName": {
-          "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
+          "description": "ログのファイル名",
           "type": "string",
           "example": "intro-last-execute-failure-alterCheck.log"
         },
         "content": {
-          "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
+          "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
           "type": "string",
           "example": "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
         }
@@ -3132,7 +3232,7 @@
           "example": "previous-NG"
         },
         "content": {
-          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
           "type": "string",
           "example": "ALTER"
         }
@@ -3151,7 +3251,7 @@
           "example": "alter-sql-SAMPLE.sql"
         },
         "content": {
-          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+          "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
           "type": "string",
           "example": "ALTER"
         }
@@ -3160,7 +3260,8 @@
     "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$CheckedZipPart": {
       "type": "object",
       "required": [
-        "fileName"
+        "fileName",
+        "checkedFiles"
       ],
       "properties": {
         "fileName": {
@@ -3169,7 +3270,7 @@
           "example": "20190831_2249/checked-alter-to-20190422-2332.zip"
         },
         "checkedFiles": {
-          "description": "list of checked sql files",
+          "description": "list of checked sql files (NotNull, EmptyAllowed)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24SQLFilePart"
@@ -3179,9 +3280,12 @@
     },
     "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$UnreleasedDirPart": {
       "type": "object",
+      "required": [
+        "checkedFiles"
+      ],
       "properties": {
         "checkedFiles": {
-          "description": "list of checked sql files",
+          "description": "list of checked sql files (NotNull, EmptyAllowed)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24SQLFilePart"
@@ -3191,12 +3295,15 @@
     },
     "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult": {
       "type": "object",
+      "required": [
+        "editingFiles"
+      ],
       "properties": {
         "ngMarkFile": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24NgMarkFilePart"
         },
         "editingFiles": {
-          "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory",
+          "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory (NotNull, EmptyAllowed)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult%24SQLFilePart"
@@ -3223,8 +3330,12 @@
     },
     "org.dbflute.intro.app.web.task.TaskExecutionResult": {
       "type": "object",
+      "required": [
+        "success"
+      ],
       "properties": {
         "success": {
+          "description": "業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど",
           "type": "boolean"
         }
       }

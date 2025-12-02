@@ -22,8 +22,8 @@ type PlaysqlMigrationAlterResult = {
   /** (NullAllowed) */
   ngMarkFile?: PlaysqlMigrationAlterResult_NgMarkFilePart
 
-  /** list of editing sql files in dbflute_client/playsql/migration/alter directory (NullAllowed) */
-  editingFiles?: Array<PlaysqlMigrationAlterResult_SQLFilePart>
+  /** list of editing sql files in dbflute_client/playsql/migration/alter directory (NotNull, EmptyAllowed) (NotNull) */
+  editingFiles: Array<PlaysqlMigrationAlterResult_SQLFilePart>
 
   /** (NullAllowed) */
   checkedZip?: PlaysqlMigrationAlterResult_CheckedZipPart
@@ -40,7 +40,7 @@ type PlaysqlMigrationAlterResult_NgMarkFilePart = {
   /**  * `previous-NG` - PreviousNG. * `alter-NG` - AlterNG. * `next-NG` - NextNG. :: fromCls(CDef$NgMark) (enumValue=[previous-NG, alter-NG, next-NG]) (Required) */
   ngMark: string
 
-  /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (Required) */
+  /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed) (Required) */
   content: string
 }
 
@@ -52,7 +52,7 @@ type PlaysqlMigrationAlterResult_SQLFilePart = {
   /** file name e.g. alter-sql-SAMPLE (Required) */
   fileName: string
 
-  /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (Required) */
+  /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed) (Required) */
   content: string
 }
 
@@ -64,8 +64,8 @@ type PlaysqlMigrationAlterResult_CheckedZipPart = {
   /** zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332 (Required) */
   fileName: string
 
-  /** list of checked sql files (NullAllowed) */
-  checkedFiles?: Array<PlaysqlMigrationAlterResult_SQLFilePart>
+  /** list of checked sql files (NotNull, EmptyAllowed) (NotNull) */
+  checkedFiles: Array<PlaysqlMigrationAlterResult_SQLFilePart>
 }
 
 /**
@@ -73,6 +73,6 @@ type PlaysqlMigrationAlterResult_CheckedZipPart = {
  * @author FreeGen
  */
 type PlaysqlMigrationAlterResult_UnreleasedDirPart = {
-  /** list of checked sql files (NullAllowed) */
-  checkedFiles?: Array<PlaysqlMigrationAlterResult_SQLFilePart>
+  /** list of checked sql files (NotNull, EmptyAllowed) (NotNull) */
+  checkedFiles: Array<PlaysqlMigrationAlterResult_SQLFilePart>
 }

@@ -19,12 +19,10 @@
  * @author FreeGen
  */
 type LogResult = {
-  /** log file name
-Log files are under the dbflute_yourdb(DBFlute client)/log
-e.g. "intro-last-execute-failure-alterCheck (Required) */
+  /** ログのファイル名 (Required) */
   fileName: string
 
-  /** long long texts in log file
+  /** long long texts in log file <br>
 e.g. "[df-replace-schema] / (Required) */
   content: string
 }

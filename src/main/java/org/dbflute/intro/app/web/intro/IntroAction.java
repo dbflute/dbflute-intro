@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import org.dbflute.intro.app.logic.intro.IntroReadLogic;
 import org.dbflute.intro.app.web.base.IntroBaseAction;
 import org.dbflute.intro.app.web.base.cls.IntroClsAssist;
+import org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult;
 import org.dbflute.intro.bizfw.server.BootingInternetDomain;
 import org.lastaflute.web.Execute;
 import org.lastaflute.web.response.JsonResponse;
@@ -65,10 +66,10 @@ public class IntroAction extends IntroBaseAction {
      * @return map型のキーに対してそれぞれの区分値が定義されている (NotNull)
      */
     @Execute
-    public JsonResponse<Map<String, Map<?, ?>>> classifications() {
-        // TODO you MapじゃなくてちゃんとしたBeanクラスにしたいところ by jflute (2023/01/12)
-        Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
-        return asJson(classificationMap);
+    public JsonResponse<BasicClassificationResult> classifications() {
+        // done you MapじゃなくてちゃんとしたBeanクラスにしたいところ by jflute (2023/01/12)
+        //Map<String, Map<?, ?>> classificationMap = introClsAssist.getClassificationMap();
+        return asJson(introClsAssist.prepareClassificationResult());
     }
 
     // TODO you これフロントで実際には使ってないようなので、ひとまず無くていいような？ by jflute (2023/01/12)

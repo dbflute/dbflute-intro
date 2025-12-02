@@ -15,15 +15,26 @@
  */
 package org.dbflute.intro.app.web.task;
 
+import org.lastaflute.web.validation.Required;
+
 /**
+ * DBFluteタスクの実行結果。
  * @author deco
  * @author jflute
  */
 public class TaskExecutionResult {
 
-    public final boolean success;
+    // あえて大文字BooleanにしてRequiredにすることで、自動生成typeでoptionalが外れる。
+    // 自動生成ツール側でプリミティブだったら強制的にnon-optionalとしてもいいのかもだけど、
+    // publicフィールドのケースだとBooleanを使った方が良いというのはあるのでこれで。
+    /**
+     * 業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど。<br>
+     * システム的な失敗のケースは、そもそも例外がthrowされるのでHTTP statusが200ではない。
+     */
+    @Required
+    public final Boolean success;
 
-    public TaskExecutionResult(boolean success) {
+    public TaskExecutionResult(Boolean success) {
         this.success = success;
     }
 }

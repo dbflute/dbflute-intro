@@ -5667,13 +5667,226 @@
       "returnTypeDocMeta": {
         "name": null,
         "publicName": null,
-        "typeName": "org.lastaflute.web.response.JsonResponse\u003cjava.util.Map\u003cjava.lang.String, java.util.Map\u003c?, ?\u003e\u003e\u003e",
-        "simpleTypeName": "JsonResponse\u003cMap\u003cString, Map\u003c?, ?\u003e\u003e\u003e",
-        "value": "asJson(classificationMap)",
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.base.cls.result.BasicClassificationResult\u003e",
+        "simpleTypeName": "JsonResponse\u003cBasicClassificationResult\u003e",
+        "value": "asJson(introClsAssist.prepareClassificationResult()",
         "description": null,
         "comment": null,
         "annotationList": [],
-        "nestTypeDocMetaList": []
+        "nestTypeDocMetaList": [
+          {
+            "name": "targetDatabaseList",
+            "publicName": "targetDatabaseList",
+            "typeName": "java.util.List\u003corg.dbflute.intro.app.web.base.cls.result.DatabaseDefPart\u003e",
+            "simpleTypeName": "List\u003cDatabaseDefPart\u003e",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Required",
+              "Valid"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "databaseCode",
+                "publicName": "databaseCode",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "databaseName",
+                "publicName": "databaseName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "driverName",
+                "publicName": "driverName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "urlTemplate",
+                "publicName": "urlTemplate",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "defaultSchema",
+                "publicName": "defaultSchema",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "schemaRequired",
+                "publicName": "schemaRequired",
+                "typeName": "java.lang.Boolean",
+                "simpleTypeName": "Boolean",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "schemaUpperCase",
+                "publicName": "schemaUpperCase",
+                "typeName": "java.lang.Boolean",
+                "simpleTypeName": "Boolean",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "userInputAssist",
+                "publicName": "userInputAssist",
+                "typeName": "java.lang.Boolean",
+                "simpleTypeName": "Boolean",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "embeddedJar",
+                "publicName": "embeddedJar",
+                "typeName": "java.lang.Boolean",
+                "simpleTypeName": "Boolean",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              }
+            ]
+          },
+          {
+            "name": "targetLanguageList",
+            "publicName": "targetLanguageList",
+            "typeName": "java.util.List\u003corg.dbflute.intro.app.web.base.cls.result.LanguageDefPart\u003e",
+            "simpleTypeName": "List\u003cLanguageDefPart\u003e",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Required",
+              "Valid"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "languageCode",
+                "publicName": "languageCode",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "languageName",
+                "publicName": "languageName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              }
+            ]
+          },
+          {
+            "name": "targetContainerList",
+            "publicName": "targetContainerList",
+            "typeName": "java.util.List\u003corg.dbflute.intro.app.web.base.cls.result.ContainerDefPart\u003e",
+            "simpleTypeName": "List\u003cContainerDefPart\u003e",
+            "value": null,
+            "description": null,
+            "comment": null,
+            "annotationList": [
+              "Required",
+              "Valid"
+            ],
+            "nestTypeDocMetaList": [
+              {
+                "name": "containerCode",
+                "publicName": "containerCode",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              },
+              {
+                "name": "containerName",
+                "publicName": "containerName",
+                "typeName": "java.lang.String",
+                "simpleTypeName": "String",
+                "value": null,
+                "description": null,
+                "comment": null,
+                "annotationList": [
+                  "Required"
+                ],
+                "nestTypeDocMetaList": []
+              }
+            ]
+          }
+        ]
       },
       "fileLineCount": 53,
       "methodLineCount": 5
@@ -5814,9 +6027,9 @@
       "returnTypeDocMeta": {
         "name": null,
         "publicName": null,
-        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.log.LogBean\u003e",
-        "simpleTypeName": "JsonResponse\u003cLogBean\u003e",
-        "value": "logPhysicalLogic.findLogFile(logBody.project, logBody.fileName),asJson(new LogBean(file.getName()",
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.log.LogResult\u003e",
+        "simpleTypeName": "JsonResponse\u003cLogResult\u003e",
+        "value": "logPhysicalLogic.findLogFile(logBody.project, logBody.fileName),asJson(new LogResult(file.getName()",
         "description": null,
         "comment": null,
         "annotationList": [],
@@ -5827,8 +6040,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
-            "comment": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck.log\"",
+            "description": "ログのファイル名",
+            "comment": "ログのファイル名。(ディレクトリパスなし) \u003cbr\u003e\nLog files are under the dbflute_yourdb(DBFlute client)/log \u003cbr\u003e\ne.g. \"intro-last-execute-failure-alterCheck.log\"",
             "annotationList": [
               "Required"
             ],
@@ -5840,8 +6053,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
-            "comment": "long long texts in log file\ne.g. \"[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\"",
+            "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
+            "comment": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\"",
             "annotationList": [
               "Required"
             ],
@@ -5849,7 +6062,7 @@
           }
         ]
       },
-      "fileLineCount": 60,
+      "fileLineCount": 62,
       "methodLineCount": 9
     },
     {
@@ -5919,9 +6132,9 @@
       "returnTypeDocMeta": {
         "name": null,
         "publicName": null,
-        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.log.LogBean\u003e",
-        "simpleTypeName": "JsonResponse\u003cLogBean\u003e",
-        "value": "logPhysicalLogic.findLatestResultFile(clientName, task),JsonResponse.asEmptyBody(),asJson(new LogBean(file.getName()",
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003corg.dbflute.intro.app.web.log.LogResult\u003e",
+        "simpleTypeName": "JsonResponse\u003cLogResult\u003e",
+        "value": "logPhysicalLogic.findLatestResultFile(clientName, task),JsonResponse.asEmptyBody(),asJson(new LogResult(file.getName()",
         "description": null,
         "comment": null,
         "annotationList": [],
@@ -5932,8 +6145,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
-            "comment": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck.log\"",
+            "description": "ログのファイル名",
+            "comment": "ログのファイル名。(ディレクトリパスなし) \u003cbr\u003e\nLog files are under the dbflute_yourdb(DBFlute client)/log \u003cbr\u003e\ne.g. \"intro-last-execute-failure-alterCheck.log\"",
             "annotationList": [
               "Required"
             ],
@@ -5945,8 +6158,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
-            "comment": "long long texts in log file\ne.g. \"[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\"",
+            "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
+            "comment": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\"",
             "annotationList": [
               "Required"
             ],
@@ -5954,8 +6167,8 @@
           }
         ]
       },
-      "fileLineCount": 60,
-      "methodLineCount": 7
+      "fileLineCount": 62,
+      "methodLineCount": 9
     },
     {
       "url": "/log/list/{clientName}",
@@ -6013,8 +6226,8 @@
       "returnTypeDocMeta": {
         "name": null,
         "publicName": null,
-        "typeName": "org.lastaflute.web.response.JsonResponse\u003cjava.util.List\u003corg.dbflute.intro.app.web.log.LogBean\u003e\u003e",
-        "simpleTypeName": "JsonResponse\u003cList\u003cLogBean\u003e\u003e",
+        "typeName": "org.lastaflute.web.response.JsonResponse\u003cjava.util.List\u003corg.dbflute.intro.app.web.log.LogResult\u003e\u003e",
+        "simpleTypeName": "JsonResponse\u003cList\u003cLogResult\u003e\u003e",
         "value": "asJson(beans)",
         "description": null,
         "comment": null,
@@ -6026,8 +6239,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck",
-            "comment": "log file name\nLog files are under the dbflute_yourdb(DBFlute client)/log\ne.g. \"intro-last-execute-failure-alterCheck.log\"",
+            "description": "ログのファイル名",
+            "comment": "ログのファイル名。(ディレクトリパスなし) \u003cbr\u003e\nLog files are under the dbflute_yourdb(DBFlute client)/log \u003cbr\u003e\ne.g. \"intro-last-execute-failure-alterCheck.log\"",
             "annotationList": [
               "Required"
             ],
@@ -6039,8 +6252,8 @@
             "typeName": "java.lang.String",
             "simpleTypeName": "String",
             "value": null,
-            "description": "long long texts in log file\ne.g. \"[df-replace-schema] /",
-            "comment": "long long texts in log file\ne.g. \"[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\"",
+            "description": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /",
+            "comment": "long long texts in log file \u003cbr\u003e\ne.g. \"[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\"",
             "annotationList": [
               "Required"
             ],
@@ -6048,7 +6261,7 @@
           }
         ]
       },
-      "fileLineCount": 60,
+      "fileLineCount": 62,
       "methodLineCount": 7
     },
     {
@@ -6408,8 +6621,8 @@
             "typeName": "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$NgMarkFilePart",
             "simpleTypeName": "NgMarkFilePart",
             "value": null,
-            "description": "Alter Check Result (Enable Null)\ne.g. alter-NG",
-            "comment": "Alter Check Result (Enable Null)\ne.g. alter-NG",
+            "description": "Alter Check Result e.g. alter-NG (NullAllowed)",
+            "comment": "Alter Check Result e.g. alter-NG (NullAllowed)",
             "annotationList": [
               "Valid"
             ],
@@ -6433,8 +6646,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
-                "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
+                "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
                 "annotationList": [
                   "NotNull"
                 ],
@@ -6448,9 +6661,10 @@
             "typeName": "java.util.List\u003corg.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$SQLFilePart\u003e",
             "simpleTypeName": "List\u003cSQLFilePart\u003e",
             "value": null,
-            "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory",
-            "comment": "list of editing sql files in dbflute_client/playsql/migration/alter directory",
+            "description": "list of editing sql files in dbflute_client/playsql/migration/alter directory (NotNull, EmptyAllowed)",
+            "comment": "list of editing sql files in dbflute_client/playsql/migration/alter directory (NotNull, EmptyAllowed)",
             "annotationList": [
+              "NotNull",
               "Valid"
             ],
             "nestTypeDocMetaList": [
@@ -6461,9 +6675,9 @@
                 "simpleTypeName": "String",
                 "value": null,
                 "description": "file name e.g. alter-sql-SAMPLE",
-                "comment": "file name e.g. alter-sql-SAMPLE.sql",
+                "comment": "file name e.g. alter-sql-SAMPLE.sql (NotNull)",
                 "annotationList": [
-                  "NotNull"
+                  "Required"
                 ],
                 "nestTypeDocMetaList": []
               },
@@ -6473,8 +6687,8 @@
                 "typeName": "java.lang.String",
                 "simpleTypeName": "String",
                 "value": null,
-                "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
-                "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
+                "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
                 "annotationList": [
                   "NotNull"
                 ],
@@ -6488,8 +6702,8 @@
             "typeName": "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$CheckedZipPart",
             "simpleTypeName": "CheckedZipPart",
             "value": null,
-            "description": "checked sql zip file",
-            "comment": "checked sql zip file",
+            "description": "checked sql zip file (NullAllowed)",
+            "comment": "checked sql zip file (NullAllowed)",
             "annotationList": [
               "Valid"
             ],
@@ -6501,9 +6715,9 @@
                 "simpleTypeName": "String",
                 "value": null,
                 "description": "zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332",
-                "comment": "zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip",
+                "comment": "zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip (NotNull)",
                 "annotationList": [
-                  "NotNull"
+                  "Required"
                 ],
                 "nestTypeDocMetaList": []
               },
@@ -6513,9 +6727,10 @@
                 "typeName": "java.util.List\u003corg.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$SQLFilePart\u003e",
                 "simpleTypeName": "List\u003cSQLFilePart\u003e",
                 "value": null,
-                "description": "list of checked sql files",
-                "comment": "list of checked sql files",
+                "description": "list of checked sql files (NotNull, EmptyAllowed)",
+                "comment": "list of checked sql files (NotNull, EmptyAllowed)",
                 "annotationList": [
+                  "NotNull",
                   "Valid"
                 ],
                 "nestTypeDocMetaList": [
@@ -6526,9 +6741,9 @@
                     "simpleTypeName": "String",
                     "value": null,
                     "description": "file name e.g. alter-sql-SAMPLE",
-                    "comment": "file name e.g. alter-sql-SAMPLE.sql",
+                    "comment": "file name e.g. alter-sql-SAMPLE.sql (NotNull)",
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   },
@@ -6538,8 +6753,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
-                    "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                    "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
+                    "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
                     "annotationList": [
                       "NotNull"
                     ],
@@ -6555,8 +6770,8 @@
             "typeName": "org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$UnreleasedDirPart",
             "simpleTypeName": "UnreleasedDirPart",
             "value": null,
-            "description": "unreleased sql dir",
-            "comment": "unreleased sql dir",
+            "description": "unreleased sql dir (NullAllowed)",
+            "comment": "unreleased sql dir (NullAllowed)",
             "annotationList": [
               "Valid"
             ],
@@ -6567,9 +6782,10 @@
                 "typeName": "java.util.List\u003corg.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$SQLFilePart\u003e",
                 "simpleTypeName": "List\u003cSQLFilePart\u003e",
                 "value": null,
-                "description": "list of checked sql files",
-                "comment": "list of checked sql files",
+                "description": "list of checked sql files (NotNull, EmptyAllowed)",
+                "comment": "list of checked sql files (NotNull, EmptyAllowed)",
                 "annotationList": [
+                  "NotNull",
                   "Valid"
                 ],
                 "nestTypeDocMetaList": [
@@ -6580,9 +6796,9 @@
                     "simpleTypeName": "String",
                     "value": null,
                     "description": "file name e.g. alter-sql-SAMPLE",
-                    "comment": "file name e.g. alter-sql-SAMPLE.sql",
+                    "comment": "file name e.g. alter-sql-SAMPLE.sql (NotNull)",
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   },
@@ -6592,8 +6808,8 @@
                     "typeName": "java.lang.String",
                     "simpleTypeName": "String",
                     "value": null,
-                    "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
-                    "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3);",
+                    "description": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
+                    "comment": "file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed)",
                     "annotationList": [
                       "NotNull"
                     ],
@@ -7015,12 +7231,14 @@
           {
             "name": "success",
             "publicName": "success",
-            "typeName": "boolean",
-            "simpleTypeName": "boolean",
+            "typeName": "java.lang.Boolean",
+            "simpleTypeName": "Boolean",
             "value": null,
-            "description": null,
-            "comment": null,
-            "annotationList": [],
+            "description": "業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど",
+            "comment": "業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど。\u003cbr\u003e\nシステム的な失敗のケースは、そもそも例外がthrowされるのでHTTP statusが200ではない。",
+            "annotationList": [
+              "Required"
+            ],
             "nestTypeDocMetaList": []
           }
         ]
