@@ -18,7 +18,7 @@ import * as riot from 'riot'
 //  |-app-router.riot      // それぞれの画面のコンポーネントをimportしてcomponent化
 //  |  |
 //  |  |-import Main from './pages/main/main.riot'              // 大分類の画面
-//  |  |-import Client from './pages/client/client.riot'        // 大分類の画面
+//  |  |-import Client from './pages/client/client.riot'        // 大分類の画面 ( ここでいう Client は DBFlute Client のこと)
 //  |  |  |-import ClientRouter from './pages/client/client-router.riot'
 //  |  |     |
 //  |  |     | // 中分類の画面たち
