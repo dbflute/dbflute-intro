@@ -24,7 +24,7 @@ interface Create extends IntroRiotComponent<never, State> {
   defaultJdbcDriver: string
   defaultLanguageCode: string
   defaultContainerCode: string
-  databaseMap: { [key: string]: DatabaseDefBean }
+  databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
   engineVersions: DropdownItem[]
   targetDatabaseItems: DropdownItem[]
   targetLanguageItems: DropdownItem[]
@@ -42,7 +42,7 @@ interface Create extends IntroRiotComponent<never, State> {
   //                                                                             Private
   //                                                                             =======
   convertClassificationsForUI: (classifications: IntroClassificationsResult) => {
-    databaseMap: { [key: string]: DatabaseDefBean }
+    databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
     targetContainerItems: DropdownItem[]
     targetLanguageItems: DropdownItem[]
     targetDatabaseItems: DropdownItem[]
@@ -65,7 +65,7 @@ export default withIntroTypes<Create>({
   defaultJdbcDriver: '',
   defaultLanguageCode: '',
   defaultContainerCode: '',
-  databaseMap: {},
+  databaseMap: new Map(), // e.g. targetDatabase
   engineVersions: [],
   targetDatabaseItems: [],
   targetLanguageItems: [],
@@ -107,10 +107,15 @@ export default withIntroTypes<Create>({
         jdbcDriver: undefined,
       })
     } else {
-      const database = this.databaseMap[targetDatabase.value]
+      const database = this.databaseMap.get(targetDatabase.value)
+      if (!database) {
+        throw new Error('not found the database code: ' + targetDatabase.value)
+      }
       this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
       this.inputElementBy('[ref=url]').value = database.urlTemplate
-      this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      if (database.defaultSchema) {
+        this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      }
       this.update({
         // switch showing JDBCDriver select form
         needsJdbcDriver: !database.embeddedJar,
@@ -172,26 +177,29 @@ export default withIntroTypes<Create>({
   //                                                                             =======
   /**
    * 区分値情報をUI用のデータに整形する。
-   * @param {IntroClassificationsResult} classifications - APIで取得した区分値情報 (NotNull)
+   * @param classifications - APIで取得した区分値情報 (NotNull)
    */
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
+    const dbMap = new Map(classifications.targetDatabaseList.map((obj) => [obj.databaseCode, obj]))
+    const langMap = new Map(classifications.targetLanguageList.map((obj) => [obj.languageCode, obj]))
+    const contMap = new Map(classifications.targetContainerList.map((obj) => [obj.containerCode, obj]))
     return {
-      databaseMap: classifications.targetDatabaseMap,
+      databaseMap: dbMap,
       targetDatabaseItems: [
-        ...Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
+        ...Object.entries(Object.fromEntries(dbMap)).map(([key, value]) => {
           return { value: key, label: value.databaseName, default: false }
         }),
         defaultDropDownItem,
       ],
       targetLanguageItems: [
-        ...Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-          return { value: key, label: value, default: false }
+        ...Object.entries(Object.fromEntries(langMap)).map(([key, value]) => {
+          return { value: key, label: value.languageName, default: false }
         }),
         defaultDropDownItem,
       ],
       targetContainerItems: [
-        ...Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-          return { value: key, label: value, default: false }
+        ...Object.entries(Object.fromEntries(contMap)).map(([key, value]) => {
+          return { value: key, label: value.containerName, default: false }
         }),
         defaultDropDownItem,
       ],

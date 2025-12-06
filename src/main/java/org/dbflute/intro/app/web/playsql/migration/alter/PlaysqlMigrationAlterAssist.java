@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,10 +70,10 @@ public class PlaysqlMigrationAlterAssist {
     //                                       ---------------
     public AlterSQLResult mappingAlterSQLResult(PlaysqlMigrationDirReturn bean) {
         AlterSQLResult result = new AlterSQLResult();
-        result.ngMarkFile = mappingNgMarkFileResult(bean);
-        result.editingFiles = mappingAlterEditingFilePart(bean);
-        result.checkedZip = mappingCheckedZipPart(bean);
-        result.unreleasedDir = mappingUnreleasedDirPart(bean);
+        result.ngMarkFile = mappingNgMarkFileResult(bean); // null allowed
+        result.editingFiles = mappingAlterEditingFilePart(bean); // not null, empty allowed
+        result.checkedZip = mappingCheckedZipPart(bean); // null allowed
+        result.unreleasedDir = mappingUnreleasedDirPart(bean); // null allowed
         return result;
     }
 

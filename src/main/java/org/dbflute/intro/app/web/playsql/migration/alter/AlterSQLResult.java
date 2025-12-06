@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,28 +21,29 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.dbflute.intro.dbflute.allcommon.CDef;
+import org.lastaflute.core.util.Lato;
+import org.lastaflute.web.validation.Required;
 
 /**
  * @author cabos
+ * @author jflute
  */
 public class AlterSQLResult {
 
-    /**
-     * Alter Check Result (Enable Null)
-     * e.g. alter-NG
-     */
+    /** Alter Check Result e.g. alter-NG (NullAllowed) */
     @Valid
     public AlterSQLResult.NgMarkFilePart ngMarkFile;
 
-    /** list of editing sql files in dbflute_client/playsql/migration/alter directory */
+    /** list of editing sql files in dbflute_client/playsql/migration/alter directory (NotNull, EmptyAllowed) */
+    @NotNull
     @Valid
     public List<SQLFilePart> editingFiles;
 
-    /** checked sql zip file */
+    /** checked sql zip file (NullAllowed) */
     @Valid
     public CheckedZipPart checkedZip;
 
-    /** unreleased sql dir */
+    /** unreleased sql dir (NullAllowed) */
     @Valid
     public UnreleasedDirPart unreleasedDir;
 
@@ -57,30 +58,40 @@ public class AlterSQLResult {
 
     public static class SQLFilePart {
 
-        /** file name e.g. alter-sql-SAMPLE.sql */
-        @NotNull
+        /** file name e.g. alter-sql-SAMPLE.sql (NotNull) */
+        @Required
         public String fileName;
 
-        /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); */
+        /** file content e.g. ALTER TABLE MEMBER ADD MAIHAMA_VISITED VARCHAR(3); (NotNull, EmptyAllowed) */
         @NotNull
         public String content;
     }
 
     public static class CheckedZipPart {
 
-        /** zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip */
-        @NotNull
+        /** zip file name e.g. 20190831_2249/checked-alter-to-20190422-2332.zip (NotNull) */
+        @Required
         public String fileName;
 
-        /** list of checked sql files */
+        /** list of checked sql files (NotNull, EmptyAllowed) */
+        @NotNull
         @Valid
         public List<SQLFilePart> checkedFiles;
     }
 
     public static class UnreleasedDirPart {
 
-        /** list of checked sql files */
+        /** list of checked sql files (NotNull, EmptyAllowed) */
+        @NotNull
         @Valid
         public List<SQLFilePart> checkedFiles;
+    }
+
+    // ===================================================================================
+    //                                                                      Basic Override
+    //                                                                      ==============
+    @Override
+    public String toString() {
+        return Lato.string(this);
     }
 }

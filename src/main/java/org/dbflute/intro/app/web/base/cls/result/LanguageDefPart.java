@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,39 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.log;
+package org.dbflute.intro.app.web.base.cls.result;
 
+import org.dbflute.intro.dbflute.exentity.ClsTargetLanguage;
 import org.lastaflute.web.validation.Required;
 
 /**
- * @author deco
- * @author cabos
+ * 自動生成されるクラスのプログラミング言語に関する定義のレスポンスオブジェクト。
+ * @author jflute (2025/10/28 Tuesday at ichihara)
  */
-public class LogBean {
+public class LanguageDefPart {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    /**
-     * log file name
-     * Log files are under the dbflute_yourdb(DBFlute client)/log
-     * e.g. "intro-last-execute-failure-alterCheck.log"
-     */
     @Required
-    public final String fileName;
-
-    /**
-     * long long texts in log file
-     * e.g. "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
-     */
+    public final String languageCode; // PK, not null
     @Required
-    public final String content;
+    public final String languageName; // not null
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public LogBean(String fileName, String content) {
-        this.fileName = fileName;
-        this.content = content;
+    public LanguageDefPart(ClsTargetLanguage targetLanguage) {
+        this.languageCode = targetLanguage.getLanguageCode();
+        this.languageName = targetLanguage.getLanguageName();
     }
 }

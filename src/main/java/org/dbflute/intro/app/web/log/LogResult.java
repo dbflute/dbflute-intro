@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,39 +13,40 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.dbflute.intro.app.web.base.cls;
+package org.dbflute.intro.app.web.log;
 
-import org.dbflute.intro.dbflute.exentity.ClsTargetDatabase;
+import org.lastaflute.web.validation.Required;
 
 /**
- * @author p1us2er0
+ * @author deco
+ * @author cabos
  * @author jflute
  */
-public class DatabaseDefBean {
+public class LogResult {
 
     // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
-    public final String databaseName;
-    public final String driverName;
-    public final String urlTemplate;
-    public final String defaultSchema;
-    public final boolean schemaRequired;
-    public final boolean schemaUpperCase;
-    public final boolean userInputAssist;
-    public final boolean embeddedJar;
+    /**
+     * ログのファイル名。(ディレクトリパスなし) <br>
+     * Log files are under the dbflute_yourdb(DBFlute client)/log <br>
+     * e.g. "intro-last-execute-failure-alterCheck.log"
+     */
+    @Required
+    public final String fileName;
+
+    /**
+     * long long texts in log file <br>
+     * e.g. "[df-replace-schema] /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
+     */
+    @Required
+    public final String content;
 
     // ===================================================================================
     //                                                                         Constructor
     //                                                                         ===========
-    public DatabaseDefBean(ClsTargetDatabase databaseInfoDef) {
-        this.databaseName = databaseInfoDef.getDatabaseName();
-        this.driverName = databaseInfoDef.getJdbcDriverFqcn();
-        this.urlTemplate = databaseInfoDef.getUrlTemplate();
-        this.defaultSchema = databaseInfoDef.getDefaultSchema();
-        this.schemaRequired = databaseInfoDef.isSchemaRequiredFlgTrue();
-        this.schemaUpperCase = databaseInfoDef.isSchemaUpperCaseFlgTrue();
-        this.userInputAssist = databaseInfoDef.isUserInputAssistFlgTrue();
-        this.embeddedJar = databaseInfoDef.isEmbeddedJarFlgTrue();
+    public LogResult(String fileName, String content) {
+        this.fileName = fileName;
+        this.content = content;
     }
 }

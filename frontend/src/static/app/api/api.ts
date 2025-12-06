@@ -133,7 +133,7 @@ class Api {
   /**
    * Welcomeの気持ちでDBFluteクライアントを作成する。
    * @param body - DBFluteクライアントを作るための入力情報 (NotNull)
-   * @returns 業務的なレスポンスデータは特になし (NotNull)
+   * @returns 業務的なレスポンスデータは特になし
    */
   createWelcomeClient(body: WelcomeCreateBody): Promise<void> {
     // Docker起動でクライアント作成時はDBFluteEngineのunzipに1分以上かかる場合があるため、タイムアウト時間に余裕を持たせる
@@ -141,11 +141,8 @@ class Api {
   }
 
   // ===============================================================================
-  //                                                                          Client
-  //                                                                          ======
-  // -----------------------------------------------------
-  //                                                 Basic
-  //                                                 -----
+  //                                                                 Client :: Basic
+  //                                                                 ===============
   /**
    * Introが起動している環境にインストールされている、DBFluteクライアントのリストを取得する
    * @returns DBFluteクライアントのリスト (NotNull)
@@ -165,10 +162,10 @@ class Api {
 
   /**
    * DBFluteクライアントを作成する。
-   * @param {ClientCreateBody} body - DBFluteクライアントを作るための入力情報 (NotNull)
-   * @returns {Promise<void>} レスポンスは特になし (NotNull)
+   * @param body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @returns レスポンスは特になし (NotNull)
    */
-  createClient(body: ClientCreateBody) {
+  createClient(body: ClientCreateBody): Promise<void> {
     return apiClient.post('api/client/create', body)
   }
 
@@ -276,30 +273,68 @@ class Api {
   // ===============================================================================
   //                                                               Client :: playsql
   //                                                               =================
-  openAlterDir(projectName: string) {
-    return apiClient.get(`api/playsql/migration/alter/open/${projectName}`)
+  // -----------------------------------------------------
+  //                                         ReplaceSchema
+  //                                         -------------
+  /**
+   * ReplaceSchema の dataディレクトリをOSのエクスプローラーで開く。(MacならFinder)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  openDataDir(projectName: string): Promise<void> {
+    return apiClient.get(`api/playsql/data/open/${projectName}`)
   }
 
-  alter(projectName: string): Promise<AlterSQLResult> {
+  // #thinking jflute Javaでは、List<PlaysqlBean> で、tsでは Array<PlaysqlListResult> が名前的にうーむー (2025/10/21)
+  // 自動生成でrootのBeanの名前も取って使いたいかな？
+  /**
+   * ReplaceSchema の playsqlディレクトリ配下のファイル情報を取得する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns playsqlディレクトリのファイル情報のリスト (NotNull, EmptyAllowed)
+   */
+  playsqlBeanList(projectName: string): Promise<Array<PlaysqlListResult>> {
+    return apiClient.post(`api/playsql/list/${projectName}`)
+  }
+
+  // -----------------------------------------------------
+  //                                             Migration
+  //                                             ---------
+  /**
+   * AlterCheckの画面情報をロードする。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns 画面の表示情報を目一杯に積んだもの (NotNull)
+   */
+  alter(projectName: string): Promise<PlaysqlMigrationAlterResult> {
     return apiClient.get(`api/playsql/migration/alter/${projectName}/`)
   }
 
-  prepareAlterSql(projectName: string) {
+  /**
+   * AlterCheck の alterディレクトリをOSのエクスプローラーで開く。(MacならFinder)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  openAlterDir(projectName: string): Promise<void> {
+    return apiClient.get(`api/playsql/migration/alter/open/${projectName}`)
+  }
+
+  /**
+   * AlterCheck の alterディレクトリに、AlterDDLファイルを新規作成する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  prepareAlterSql(projectName: string): Promise<void> {
     return apiClient.post(`api/playsql/migration/alter/prepare/${projectName}/`)
   }
 
+  /**
+   * AlterCheck の alterディレクトリに、AlterDDLファイルを新規作成する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @returns 業務的なレスポンスデータは特になし
+   */
   createAlterSql(projectName: string, alterFileName: string): Promise<void> {
     return apiClient.post(`api/playsql/migration/alter/create/${projectName}/`, {
       alterFileName,
     })
-  }
-
-  openDataDir(projectName: string) {
-    return apiClient.get(`api/playsql/data/open/${projectName}`)
-  }
-
-  playsqlBeanList(projectName: string) {
-    return apiClient.post(`api/playsql/list/${projectName}`)
   }
 
   // ===============================================================================
@@ -318,7 +353,7 @@ class Api {
     })
   }
 
-  latestResult(projectName: string, task: string): Promise<LogBean | null> {
+  latestResult(projectName: string, task: string): Promise<LogLatestResult | null> {
     return apiClient.get(`api/log/latest/${projectName}/${task}`).then((body) => {
       // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
       // https://github.com/dbflute/dbflute-intro/issues/493

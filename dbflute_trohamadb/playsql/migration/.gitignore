@@ -1,0 +1,6 @@
+# AlterCheckの手動テストの結果ファイルはgitignoreとする
+/alter
+/history
+/schema
+/alter-NG.dfmark
+/whole-NG-state.dfmap

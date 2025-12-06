@@ -45,12 +45,13 @@ interface Welcome extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
+  // #thinking jflute databaseMap, 自動生成typeの都合でObjectからMapに変えたが、Objectで実現できる？ (2025/11/04)
   defaultDatabaseCode: string
   defaultJdbcDriver: string
   defaultJdbcUrl: string
   defaultLanguageCode: string
   defaultContainerCode: string
-  databaseMap: { [key: string]: DatabaseDefBean }
+  databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
   latestVersion: string | undefined
   targetDatabaseItems: DropdownItem[]
   targetLanguageItems: DropdownItem[]
@@ -69,10 +70,11 @@ interface Welcome extends IntroRiotComponent<never, State> {
   //                                                                             Private
   //                                                                             =======
   convertClassificationsForUI: (classifications: IntroClassificationsResult) => {
-    databaseMap: { [key: string]: DatabaseDefBean }
-    targetContainerItems: DropdownItem[]
-    targetLanguageItems: DropdownItem[]
+    databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
+
     targetDatabaseItems: DropdownItem[]
+    targetLanguageItems: DropdownItem[]
+    targetContainerItems: DropdownItem[]
   }
   showToast: (projectName: string) => void
 }
@@ -102,7 +104,7 @@ export default withIntroTypes<Welcome>({
   defaultJdbcUrl: '',
   defaultLanguageCode: 'java',
   defaultContainerCode: 'lasta_di',
-  databaseMap: {}, // e.g. targetDatabase
+  databaseMap: new Map(), // e.g. targetDatabase
   // DBFluteエンジンの最新バージョン e.g. 1.2.5
   latestVersion: undefined,
   targetDatabaseItems: [],
@@ -149,10 +151,15 @@ export default withIntroTypes<Welcome>({
       // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
       // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
       // そっか、こっちは embeddedJar も使うかありがとう。
-      const database = this.databaseMap[targetDatabase.value]
+      const database = this.databaseMap.get(targetDatabase.value)
+      if (!database) {
+        throw new Error('not found the database code: ' + targetDatabase.value)
+      }
       this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
       this.inputElementBy('[ref=url]').value = database.urlTemplate
-      this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      if (database.defaultSchema) {
+        this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      }
       this.update({
         // switch showing JDBCDriver select form
         needsJdbcDriver: !database.embeddedJar,
@@ -235,26 +242,30 @@ export default withIntroTypes<Welcome>({
   //                                                                             =======
   /**
    * 区分値情報をUI用のデータに整形する。
-   * @param {IntroClassificationsResult} classifications - APIで取得した区分値情報 (NotNull)
+   * @param classifications - APIで取得した区分値情報 (NotNull)
    */
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
+    const dbMap = new Map(classifications.targetDatabaseList.map((obj) => [obj.databaseCode, obj]))
+    const langMap = new Map(classifications.targetLanguageList.map((obj) => [obj.languageCode, obj]))
+    const contMap = new Map(classifications.targetContainerList.map((obj) => [obj.containerCode, obj]))
+
     return {
-      databaseMap: classifications.targetDatabaseMap,
+      databaseMap: dbMap,
       targetDatabaseItems: [
-        ...Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
+        ...Object.entries(Object.fromEntries(dbMap)).map(([key, value]) => {
           return { value: key, label: value.databaseName, default: false }
         }),
         defaultDropDownItem,
       ],
       targetLanguageItems: [
-        ...Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-          return { value: key, label: value, default: false }
+        ...Object.entries(Object.fromEntries(langMap)).map(([key, value]) => {
+          return { value: key, label: value.languageName, default: false }
         }),
         defaultDropDownItem,
       ],
       targetContainerItems: [
-        ...Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-          return { value: key, label: value, default: false }
+        ...Object.entries(Object.fromEntries(contMap)).map(([key, value]) => {
+          return { value: key, label: value.containerName, default: false }
         }),
         defaultDropDownItem,
       ],
