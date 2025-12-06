@@ -33,7 +33,7 @@ import org.lastaflute.di.exception.IORuntimeException;
  */
 public class LicenseManagementTest extends PlainTestCase {
 
-    private static final String COPYRIGHT = "Copyright 2014-2021 the original author or authors.";
+    private static final String COPYRIGHT = "Copyright 2014-2025 the original author or authors.";
 
     // ===================================================================================
     //                                                                      License Header
