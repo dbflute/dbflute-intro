@@ -1,0 +1,84 @@
+<schema-sync-check>
+  <!-- DBFlute の SchemaSyncCheck 機能をGUIで操作できるようにするタグ (written at 2022/04/07)
+   機能:
+    o DBFlute Client が管理しているDBとは別に、スキーマの差分を確認したいデータベースへの接続情報を設定する
+    o 上記の設定をもとに、SchemaSyncCheckを実行する
+    o 実行結果として、「sync-check-result.html」が出力されている場合、実行結果確認用リンクが表示される
+
+   作りの特徴:
+    o DBFlute Enginge が提供するドキュメント関連の機能のうち、SchemaSyncCheckで操作可能なものは、全てこの tag の中に記述されている
+    o 「window.open」によって、「sync-check-result.html」 を開くようになっている
+    o Modal で documentMap.dfprop の schemaSyncCheckMap を編集させる
+    o SchemaSyncCheck の実行中は、別の操作を抑制するための Modal を表示している
+    o SchemaSyncCheck の実行後は、結果を Modal で表示し、ログを改めて参照できるようにしている
+    o SchemaSyncCheck は管理しているデータベースに変更を加えないので、実行前の確認は行わない
+   -->
+
+  <div class="ui container">
+    <h2>Schema Sync Check</h2>
+    <!--  DBFlute Client が管理していない方のデータベースへの接続情報 -->
+    <p if="{ canCheckSchemaSetting() }">
+      for { state.syncSchemaSetting.url }<span show="{ state.syncSchemaSetting.schema != null }">, { state.syncSchemaSetting.schema }</span>, { state.syncSchemaSetting.user }
+    </p>
+    <!-- 各HTMLのドキュメントリンク -->
+    <!-- #thinking ex-document.tag に合わせて list にしているのかな？要素は一つしか無いけど by cabos (written at 2022/04/07) -->
+    <div class="ui list">
+      <div if="{ state.hasSchemaSyncCheckResultHtml }" class="item">
+        <a onclick="{ openSyncCheckResultHTML }">Open your SchemaSyncCheck result (HTML)</a>
+      </div>
+    </div>
+    <!-- DBFlute Client が管理していない方のデータベースへの接続情報を編集するための modal を表示するボタン  -->
+    <button class="ui positive button" onclick="{ showSyncSettingModal }">Edit check settings</button>
+
+    <!-- SchemaSyncCheck実行ボタン  -->
+    <button if="{ canCheckSchemaSetting() }" class="ui primary button" onclick="{ onclickSchemaSyncCheckTask }">
+      Execute SchemaSyncCheck
+    </button>
+
+    <!-- "SchemaSyncCheck" ってそもそもなんやねん？の説明 -->
+    <div class="ui info message">
+      <div class="header">What is <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/schemasynccheck.html" target="_blank">"SchemaSyncCheck"?</a></div>
+      <p>A checking tool for differences between the two schemas.</p>
+    </div>
+
+    <!-- 最後に SchemaSyncCheck を実行したときのログを表示するところ -->
+    <div class="latest-result" if="{ state.latestResult }">
+      <latest-result
+        project-name="{ props.projectName }"
+        task="schemaSyncCheck"
+        show-header="{ false }"
+        success="{ state.latestResult.success }"
+        result-title="{ 'Execution Result: ' + (state.latestResult.success ? 'Success' : 'Failure') }"
+        content="{ state.latestResult.content }"
+      ></latest-result>
+    </div>
+  </div>
+
+  <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
+  <schema-sync-check-form-modal
+    if="{ state.prepared }"
+    project-name="{ props.projectName }"
+    sync-schema-setting="{ state.syncSchemaSetting }"
+    show="{ state.showSyncSettingModal }"
+    on-modal-hide="{ onSettingSaved }"
+  ></schema-sync-check-form-modal>
+
+  <!-- SchemaSyncCheck 実行Modal -->
+  <task-execute-modal
+    status="{ state.executeStatus }"
+    message="{ state.executeResultMessage }"
+    on-modal-hide="{ onExecuteModalHide }"
+  ></task-execute-modal>
+
+  <!-- #thinking ex-document.tag にも同じスタイル調整が入ってる、共通化してもいいかも？ by cabos (written at 2022/04/07) -->
+  <style>
+    .latest-result {
+      margin-top: 1em;
+    }
+  </style>
+
+  <script>
+    import schemaSyncCheck from './schema-sync-check.ts'
+    export default schemaSyncCheck
+  </script>
+</schema-sync-check>

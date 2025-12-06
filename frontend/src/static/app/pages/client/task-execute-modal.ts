@@ -5,6 +5,7 @@ export type TaskExecuteStatus = 'None' | 'Executing' | 'Completed'
 interface Props {
   message: string
   status: TaskExecuteStatus
+  onModalHide?: () => void
 }
 
 interface State {
@@ -31,6 +32,11 @@ const COMPLETED_MODAL: SuModal = {
   ],
 }
 
+const EXECUTING_MODAL: SuModal = {
+  closable: false,
+  buttons: [],
+}
+
 interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
   onBeforeUpdate(): void
   show(): boolean
@@ -53,7 +59,7 @@ export default withIntroTypes<TaskExecuteModal>({
       case 'None':
         return undefined
       case 'Executing':
-        return undefined
+        return EXECUTING_MODAL
       case 'Completed':
         return COMPLETED_MODAL
     }
@@ -61,5 +67,8 @@ export default withIntroTypes<TaskExecuteModal>({
   onHide() {
     this.state.status = 'None'
     this.update()
+    if (this.props.onModalHide) {
+      this.props.onModalHide()
+    }
   },
 })

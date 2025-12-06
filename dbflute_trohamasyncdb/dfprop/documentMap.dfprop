@@ -200,7 +200,7 @@ map:{
     #
     ; schemaSyncCheckMap = map:{
         ; url = df:dfprop/db-syncdb-url.txt|jdbc:mysql://localhost:43316/trohamadb?characterEncoding=UTF-8
-        ; schema =
+        ; schema = 
         ; user = trohamadb
         ; password = trohamadb
         ; isSuppressCraftDiff = true

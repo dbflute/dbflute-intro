@@ -1,0 +1,52 @@
+<schema-sync-check-form-modal>
+  <!-- documentMap.dfprop の schemaSyncCheckMap を編集するための Modal -->
+  <su-modal show="{ state.show }" modal="{ modal() }" onhide="{ onHide }" onsave="{ saveSettings }" class="large">
+    <form class="ui form">
+      <div class="required field">
+        <label>URL</label>
+        <input
+          type="url"
+          placeholder="jdbc:mysql://localhost:3306/examplesyncdb"
+          value="{ state.syncSchemaSetting.url }"
+          onchange="{ onChangeUrl }">
+      </div>
+      <div class="field">
+        <label>Schema</label>
+        <input
+          type="text"
+          placeholder="EXAMPLESYNCDB"
+          value="{ state.syncSchemaSetting.schema }"
+          onchange="{ onChangeSchema }">
+      </div>
+      <div class="required field">
+        <label>User</label>
+        <input
+          type="text"
+          placeholder="examplesyncdb"
+          value="{ state.syncSchemaSetting.user }"
+          onchange="{ onChangeUser }">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input
+          type="text"
+          placeholder=""
+          value="{ state.syncSchemaSetting.password }"
+          onchange="{ onChangePassword }">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            type="checkbox"
+            checked="{ state.syncSchemaSetting.isSuppressCraftDiff }"
+            onchange="{ onChangeIsSuppressCraftDiff }">
+          <label>Suppress Craft Diff</label>
+        </div>
+      </div>
+    </form>
+  </su-modal>
+  <script>
+    import schemaSyncCheckFormModal from './schema-sync-check-form-modal.ts'
+    export default schemaSyncCheckFormModal
+  </script>
+</schema-sync-check-form-modal>

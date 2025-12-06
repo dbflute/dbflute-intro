@@ -151,7 +151,12 @@ class Api {
     return apiClient.post('api/client/list')
   }
 
-  clientPropbase(projectName: string) {
+  /**
+   * プロジェクトの基本プロパティを取得する
+   * @param projectName プロジェクト名
+   * @returns プロジェクトの基本情報 (NotNull)
+   */
+  clientPropbase(projectName: string): Promise<ClientPropbaseResult> {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
@@ -181,19 +186,17 @@ class Api {
   // -----------------------------------------------------
   //                                       SchemaSyncCheck
   //                                       ---------------
-  syncSchema(projectName: string) {
+  syncSchema(projectName: string): Promise<DfpropSchemasyncResult> {
     return apiClient.post(`api/dfprop/schemasync/${projectName}`)
   }
 
   editSyncSchema(projectName: string, syncSchemaSettingData: any) {
     return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
-      body: {
-        url: syncSchemaSettingData.url,
-        schema: syncSchemaSettingData.schema,
-        user: syncSchemaSettingData.user,
-        password: syncSchemaSettingData.password,
-        isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false, // need not null
-      },
+      url: syncSchemaSettingData.url,
+      schema: syncSchemaSettingData.schema,
+      user: syncSchemaSettingData.user,
+      password: syncSchemaSettingData.password,
+      isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false, // need not null
     })
   }
 
@@ -388,9 +391,9 @@ class Api {
   }
 
   // ===============================================================================
-  //                                                                           Task
-  //                                                                          ======
-  task(projectName: string, task: string): Promise<TaskExecuteResult> {
+  //                                                                            Task
+  //                                                                            ====
+  task(projectName: string, task: string): Promise<TaskExecutionResult> {
     return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
 }
