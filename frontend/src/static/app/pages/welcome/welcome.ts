@@ -14,6 +14,12 @@ const defaultDropDownItem = {
   default: true,
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface State {
   // JDBCドライバーのjarファイル情報を格納するオブジェクト
   // #thinking jflute こういう構造 { fileName: null, data: null } って書きたいけどスクリプト言語のお作法に反する？ (2022/03/17)
@@ -48,6 +54,12 @@ interface State {
   /** O/Rマッパー関連設定の表示/非表示 */
   oRMapperOptionsFlg: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface Welcome extends IntroRiotComponent<never, State> {
   // ===================================================================================
@@ -158,14 +170,20 @@ interface Welcome extends IntroRiotComponent<never, State> {
   showToast: (projectName: string) => void
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 export default withIntroTypes<Welcome>({
   components: {
     i18n,
   },
   state: {
-    jdbcDriver: undefined,
-    needsJdbcDriver: false,
-    oRMapperOptionsFlg: false,
+    jdbcDriver: undefined, // JDBCドライバーの設定が必要なので一部DBMSなのでデフォルト指定なし
+    needsJdbcDriver: false, // とりあえずデフォルトはDBMS未選択想定でfalse
+    oRMapperOptionsFlg: false, // Introのコンセプト的にO/Rマッパーオプションはデフォルト非表示
   },
 
   // ===================================================================================
