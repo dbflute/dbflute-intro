@@ -44,6 +44,12 @@ See docker-compose.yml for details
 using LastaFlute:
 https://github.com/lastaflute/lastaflute
 
+### How to generate request/response TypeScript type definition
+1. `make Java's request/response classes`
+2. `execute IntroLastaDocTest`
+3. `execute DBFlute FreeGen on introdb`
+
+
 ## Front-side Framework
 
 using Riot:
