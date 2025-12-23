@@ -198,12 +198,18 @@ export default withIntroTypes<Welcome>({
   //
   // #thiking jflute ↑もうTypeScriptなので、いずれTypeScriptのCDefを自動生成したい (2025/12/16)
   // _/_/_/_/_/_/_/_/_/_/
+  // -----------------------------------------------------
+  //                                      Static Reference
+  //                                      ----------------
   defaultDatabaseCode: '',
   defaultJdbcDriver: '',
   defaultJdbcUrl: '',
   defaultLanguageCode: 'java',
   defaultContainerCode: 'lasta_di',
 
+  // -----------------------------------------------------
+  //                                 Initialized Reference
+  //                                 ---------------------
   databaseMap: new Map(), // e.g. targetDatabase
   latestVersion: undefined,
   targetDatabaseItems: [],
