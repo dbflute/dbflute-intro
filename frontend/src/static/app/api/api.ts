@@ -245,7 +245,7 @@ class Api {
    * @param {string} projectName - DBFluteクライアントのプロジェクト名 (NotNull)
    * @returns {DfpropDocumentResult} - dfpropのドキュメントに関する情報 (NotNull)
    */
-  document(projectName: string) {
+  document(projectName: string): Promise<DfpropDocumentResult> {
     return apiClient.post(`api/dfprop/document/${projectName}`)
   }
 
