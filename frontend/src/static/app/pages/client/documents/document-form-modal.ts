@@ -43,12 +43,22 @@ interface DocumentFormModal extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
+  /**
+   * モーダルの定義を返す
+   * @returns フォームモーダルの定義
+   */
   modal(): SuModal
 
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
+  /**
+   * コンポーネントのマウント前に props から state を初期化する
+   */
   onBeforeMount(): void
+  /**
+   * コンポーネントの更新前に props から state を同期する
+   */
   onBeforeUpdate(): void
 
   // ===================================================================================
@@ -57,16 +67,48 @@ interface DocumentFormModal extends IntroRiotComponent<Props, State> {
   // -----------------------------------------------------
   //                                                 Modal
   //                                                 -----
+  /**
+   * モーダルを閉じる
+   * 親コンポーネントに onModalHide イベントを通知する
+   */
   onHide(): void
   // -----------------------------------------------------
   //                                                  Form
   //                                                  ----
+  /**
+   * aliasDelimiterInDbComment の入力値が変更されたとき、state を更新する
+   * @param e 入力イベント（input要素からの値変更イベント）
+   */
   onChangeAliasDelimiterInDbComment(e: InputEvent): void
+  /**
+   * upperCaseBasic のチェックボックスが変更されたとき、state を更新する
+   * @param e 入力イベント（checkbox要素からの値変更イベント）
+   */
   onChangeUpperCaseBasic(e: InputEvent): void
+  /**
+   * dbCommentOnAliasBasis のチェックボックスが変更されたとき、state を更新する
+   * @param e 入力イベント（checkbox要素からの値変更イベント）
+   */
   onChangeDbCommentOnAliasBasis(e: InputEvent): void
+  /**
+   * checkColumnDefOrderDiff のチェックボックスが変更されたとき、state を更新する
+   * @param e 入力イベント（checkbox要素からの値変更イベント）
+   */
   onChangeCheckColumnDefOrderDiff(e: InputEvent): void
+  /**
+   * checkDbCommentDiff のチェックボックスが変更されたとき、state を更新する
+   * @param e 入力イベント（checkbox要素からの値変更イベント）
+   */
   onChangeCheckDbCommentDiff(e: InputEvent): void
+  /**
+   * checkProcedureDiff のチェックボックスが変更されたとき、state を更新する
+   * @param e 入力イベント（checkbox要素からの値変更イベント）
+   */
   onChangeCheckProcedureDiff(e: InputEvent): void
+  /**
+   * Document 設定を保存する
+   * 保存成功時はモーダルを閉じる
+   */
   saveSettings(): Promise<void>
 }
 
@@ -79,10 +121,6 @@ export default withIntroTypes<DocumentFormModal>({
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
-  /**
-   * モーダルの定義を返す
-   * @returns フォームモーダルの定義
-   */
   modal(): SuModal {
     return FORM_MODAL
   },
@@ -90,16 +128,10 @@ export default withIntroTypes<DocumentFormModal>({
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
-  /**
-   * コンポーネントのマウント前に props から state を初期化する
-   */
   onBeforeMount() {
     this.state.documentSetting = this.props.documentSetting || {}
   },
 
-  /**
-   * コンポーネントの更新前に props から state を同期する
-   */
   onBeforeUpdate() {
     this.state.show = this.props.show
     // props.documentSetting が更新された場合のみ同期する（ユーザー入力を上書きしないため）
@@ -114,10 +146,6 @@ export default withIntroTypes<DocumentFormModal>({
   // -----------------------------------------------------
   //                                                 Modal
   //                                                 -----
-  /**
-   * モーダルを閉じる
-   * 親コンポーネントに onModalHide イベントを通知する
-   */
   onHide() {
     this.update({ show: false })
     if (this.props.onModalHide) {
@@ -128,10 +156,6 @@ export default withIntroTypes<DocumentFormModal>({
   // -----------------------------------------------------
   //                                                  Form
   //                                                  ----
-  /**
-   * aliasDelimiterInDbComment の入力値が変更されたとき、state を更新する
-   * @param e 入力イベント（input要素からの値変更イベント）
-   */
   onChangeAliasDelimiterInDbComment(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
     this.update({
@@ -139,10 +163,6 @@ export default withIntroTypes<DocumentFormModal>({
     })
   },
 
-  /**
-   * upperCaseBasic のチェックボックスが変更されたとき、state を更新する
-   * @param e 入力イベント（checkbox要素からの値変更イベント）
-   */
   onChangeUpperCaseBasic(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
     this.update({
@@ -150,10 +170,6 @@ export default withIntroTypes<DocumentFormModal>({
     })
   },
 
-  /**
-   * dbCommentOnAliasBasis のチェックボックスが変更されたとき、state を更新する
-   * @param e 入力イベント（checkbox要素からの値変更イベント）
-   */
   onChangeDbCommentOnAliasBasis(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
     this.update({
@@ -161,10 +177,6 @@ export default withIntroTypes<DocumentFormModal>({
     })
   },
 
-  /**
-   * checkColumnDefOrderDiff のチェックボックスが変更されたとき、state を更新する
-   * @param e 入力イベント（checkbox要素からの値変更イベント）
-   */
   onChangeCheckColumnDefOrderDiff(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
     this.update({
@@ -172,10 +184,6 @@ export default withIntroTypes<DocumentFormModal>({
     })
   },
 
-  /**
-   * checkDbCommentDiff のチェックボックスが変更されたとき、state を更新する
-   * @param e 入力イベント（checkbox要素からの値変更イベント）
-   */
   onChangeCheckDbCommentDiff(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
     this.update({
@@ -183,10 +191,6 @@ export default withIntroTypes<DocumentFormModal>({
     })
   },
 
-  /**
-   * checkProcedureDiff のチェックボックスが変更されたとき、state を更新する
-   * @param e 入力イベント（checkbox要素からの値変更イベント）
-   */
   onChangeCheckProcedureDiff(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
     this.update({
@@ -194,10 +198,6 @@ export default withIntroTypes<DocumentFormModal>({
     })
   },
 
-  /**
-   * Document 設定を保存する
-   * 保存成功時はモーダルを閉じる
-   */
   async saveSettings() {
     const projectName = this.props.projectName
     const formData = this.state.documentSetting
