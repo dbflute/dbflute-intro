@@ -256,14 +256,12 @@ class Api {
    */
   editDocument(projectName: string, documentSetting: any) {
     return apiClient.post(`api/dfprop/document/edit/${projectName}`, {
-      body: {
-        upperCaseBasic: documentSetting.upperCaseBasic,
-        aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-        dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
-        checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
-        checkDbCommentDiff: documentSetting.checkDbCommentDiff,
-        checkProcedureDiff: documentSetting.checkProcedureDiff,
-      },
+      upperCaseBasic: documentSetting.upperCaseBasic,
+      aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
+      dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
+      checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
+      checkDbCommentDiff: documentSetting.checkDbCommentDiff,
+      checkProcedureDiff: documentSetting.checkProcedureDiff,
     })
   }
 
