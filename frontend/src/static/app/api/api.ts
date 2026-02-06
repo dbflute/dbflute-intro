@@ -115,24 +115,37 @@ class Api {
   // ===============================================================================
   //                                                                           Intro
   //                                                                           =====
-  manifest() {
+  /**
+   * Introのjarファイルに同梱する MANIFEST.MF の内容を取得する。
+   * 起動状態の情報として、メイン画面で表示するために。
+   * @returns MANIFEST.MFの内容のMapオブジェクト (basically NotEmpty)
+   */
+  manifest(): Promise<any> {
+    // 単なるkey/valueでLasta側もただのMap
     return apiClient.post('api/intro/manifest')
   }
 
+  /**
+   * Introのサーバー区分値をすべて取得する。
+   * 区分値少ないので全部持ってきてしまっているfor now。
+   * @returns 区分値情報まんさいオブジェクト
+   */
   findClassifications(): Promise<IntroClassificationsResult> {
     return apiClient.post('api/intro/classifications')
   }
 
-  configuration() {
-    return apiClient.post('api/intro/configuration')
-  }
+  // #thinking jflute 誰からも呼ばれてない。Riot3版でも使われてないコメント書いてあった。 (2026/02/06)
+  // Lasta側のクラスを見ても使われない話があって、gitの履歴を見るとCORS対策？(BootingInternetDomain.java を参照)
+  //configuration(): Promise<any> {
+  //  return apiClient.post('api/intro/configuration')
+  //}
 
   // ===============================================================================
   //                                                                         Welcome
   //                                                                         =======
   /**
    * Welcomeの気持ちでDBFluteクライアントを作成する。
-   * @param body - DBFluteクライアントを作るための入力情報 (NotNull)
+   * @param body - DBFluteクライアントを作るための入力情報
    * @returns 業務的なレスポンスデータは特になし
    */
   createWelcomeClient(body: WelcomeCreateBody): Promise<void> {
@@ -145,7 +158,7 @@ class Api {
   //                                                                 ===============
   /**
    * Introが起動している環境にインストールされている、DBFluteクライアントのリストを取得する
-   * @returns DBFluteクライアントのリスト (NotNull)
+   * @returns DBFluteクライアントのリスト
    */
   clientList(): Promise<ClientListResult[]> {
     return apiClient.post('api/client/list')
@@ -153,8 +166,8 @@ class Api {
 
   /**
    * プロジェクトの基本プロパティを取得する
-   * @param projectName プロジェクト名
-   * @returns プロジェクトの基本情報 (NotNull)
+   * @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb
+   * @returns プロジェクトの基本情報 e.g. プロジェクト名、DBMSコード
    */
   clientPropbase(projectName: string): Promise<ClientPropbaseResult> {
     return apiClient.post(`api/client/propbase/${projectName}`)
@@ -162,16 +175,18 @@ class Api {
 
   /**
    * DBFluteクライアントを作成する。
-   * @param body - DBFluteクライアントを作るための入力情報 (NotNull)
-   * @returns レスポンスは特になし (NotNull)
+   * @param body - DBFluteクライアントを作るための入力情報
+   * @returns 業務的なレスポンスデータは特になし
    */
   createClient(body: ClientCreateBody): Promise<void> {
     return apiClient.post('api/client/create', body)
   }
 
-  removeClient(clientBody: any) {
-    return apiClient.post(`api/client/delete/${clientBody.project}`)
-  }
+  // #for_now jflute DBFluteクライアントの削除は元々UI的に用意されていないので呼ばれてない。 (2026/02/06)
+  // 削除はちょっと間違いが怖いから実装してないのかも。(わかる人がファイルシステム上で普通に削除すればいいだけだし)
+  //removeClient(clientBody: any): Promise<void> {
+  //  return apiClient.post(`api/client/delete/${clientBody.project}`)
+  //}
 
   // ===============================================================================
   //                                                                Client :: dfprop
@@ -179,18 +194,31 @@ class Api {
   // -----------------------------------------------------
   //                                                 Basic
   //                                                 -----
-  dfporpBeanList(clientBody: any) {
-    return apiClient.post(`api/dfprop/list/${clientBody.projectName}`)
-  }
+  // #for_now jflute dfpropの一覧を管理/閲覧するような画面を作るまでは出番がないかも (2026/02/06)
+  //dfporpBeanList(clientBody: any): Promise<DfpropListResult> {
+  //  return apiClient.post(`api/dfprop/list/${clientBody.projectName}`)
+  //}
 
   // -----------------------------------------------------
   //                                       SchemaSyncCheck
   //                                       ---------------
+  /**
+   * DBFluteクライアントを作成する。
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @returns 一つのSchemaSyncCheckの設定、主に比較相手スキーマのJDBC接続先
+   */
   syncSchema(projectName: string): Promise<DfpropSchemasyncResult> {
     return apiClient.post(`api/dfprop/schemasync/${projectName}`)
   }
 
-  editSyncSchema(projectName: string, syncSchemaSettingData: any) {
+  // #hope jflute 引数を DfpropSchemasyncEditBody にして、画面側でstateから詰め替えるようにしたいところ (2026/02/06)
+  /**
+   * DBFluteクライアントを作成する。
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param syncSchemaSettingData - SchemaSyncCheckの設定情報オブジェクト
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  editSyncSchema(projectName: string, syncSchemaSettingData: any): Promise<void> {
     return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
       url: syncSchemaSettingData.url,
       schema: syncSchemaSettingData.schema,

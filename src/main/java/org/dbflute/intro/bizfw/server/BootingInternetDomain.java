@@ -17,6 +17,7 @@ package org.dbflute.intro.bizfw.server;
 
 import org.dbflute.intro.IntroBoot;
 
+// #thinking jflute gitコメント見ると、最初CORS対策で作られたクラスっぽいけど、フロントでは実際には使ってない。 (2026/02/06)
 /**
  * @author jflute at showbase
  * @author subaru
