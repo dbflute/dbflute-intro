@@ -16,5 +16,11 @@
 
   // フォーマッターとしてPrettierを採用、ここを設定しないと自動フォーマットも効かない
   // (User設定の方で別のフォーマッターを定義してても、ここで上書きする)
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // Java用のEclipseフォーマッタ設定
+  "java.format.settings.url": "gradle/eclipse/code-formatter-profile.xml",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  }
 }
