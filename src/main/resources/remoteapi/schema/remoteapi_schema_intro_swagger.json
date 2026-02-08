@@ -2027,6 +2027,12 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyResult$Theme": {
       "type": "object",
+      "required": [
+        "name",
+        "description",
+        "typeCode",
+        "isActive"
+      ],
       "properties": {
         "name": {
           "type": "string"
@@ -2044,6 +2050,9 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyResult$WholeMap": {
       "type": "object",
+      "required": [
+        "themeList"
+      ],
       "properties": {
         "themeList": {
           "type": "array",
@@ -2055,6 +2064,10 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyResult$TableMap": {
       "type": "object",
+      "required": [
+        "themeList",
+        "statementList"
+      ],
       "properties": {
         "themeList": {
           "type": "array",
@@ -2072,6 +2085,10 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyResult$ColumnMap": {
       "type": "object",
+      "required": [
+        "themeList",
+        "statementList"
+      ],
       "properties": {
         "themeList": {
           "type": "array",
@@ -2089,6 +2106,11 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyResult": {
       "type": "object",
+      "required": [
+        "wholeMap",
+        "tableMap",
+        "columnMap"
+      ],
       "properties": {
         "wholeMap": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyResult%24WholeMap"
