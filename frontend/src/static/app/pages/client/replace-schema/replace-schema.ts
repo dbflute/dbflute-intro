@@ -1,13 +1,13 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import Raw from '../../../components/common/raw.riot'
-import { api } from '../../../api/api'
 
 import Prism from 'prismjs'
 import 'prismjs/components/prism-sql.min'
 import 'prismjs/themes/prism.css'
 import LatestResult from '../latest-result.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
+import { api } from '../../../api/api'
 import ReplaceSchema from './replace-schema'
 
 type PlaysqlDropdownItem = {
