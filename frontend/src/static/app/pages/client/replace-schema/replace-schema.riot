@@ -27,14 +27,14 @@
     </div>
 
     <!-- 実行結果の領域: Introのログとかが表示される -->
-    <div class="latest-result" if="{ state.latestResult}">
+    <div class="latest-result" if="{ state.latestResult }">
       <latest-result
         project-name="{ props.projectName }"
         task="replaceSchema"
         show-header="{ false }"
-        success="{ state.latestResult.success}"
+        success="{ state.latestResult.success }"
         result-title="{ 'Execution Result: ' + (state.latestResult.success ? 'Success' : 'Failure') }"
-        content="{ state.latestResult.content}"
+        content="{ state.latestResult.content }"
       ></latest-result>
     </div>
 
