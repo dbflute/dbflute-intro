@@ -44,6 +44,7 @@ interface Props {
 interface State {
   settings?: DfpropSettingsResult
   playsqlDropDownItems: PlaysqlDropdownItem[]
+  selectedSql: string
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
   latestResult?: ReplaceSchemaLatestResultState
@@ -57,6 +58,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   onMounted(): void
   onclickOpenDataDir(): void
   onclickReplaceSchemaTask(): void
+  onDropdownChange(event: any): void
 
   // ===================================================================================
   //                                                                             Private
@@ -89,6 +91,7 @@ export default withIntroTypes<ReplaceSchema>({
   state: {
     settings: undefined,
     playsqlDropDownItems: [{ label: '-', value: undefined }],
+    selectedSql: '',
     executeStatus: 'None',
   },
   // ===================================================================================
@@ -117,6 +120,13 @@ export default withIntroTypes<ReplaceSchema>({
     } catch (e) {
       this.update({ executeStatus: 'None' })
     }
+  },
+
+  onDropdownChange(event: any): void {
+    // su-dropdownの変更イベントから値を取得してstateを更新
+    this.update({
+      selectedSql: event.target.value,
+    })
   },
 
   // ===================================================================================
