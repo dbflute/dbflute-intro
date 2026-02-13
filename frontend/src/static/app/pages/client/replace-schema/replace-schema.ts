@@ -15,6 +15,7 @@
 // ロジックをimport
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import { TaskExecuteStatus } from '../task-execute-modal'
+import Raw from '../../../components/common/raw.riot'
 import { api } from '../../../api/api'
 
 // sqlにハイライトをつけるための設定
@@ -86,6 +87,7 @@ export default withIntroTypes<ReplaceSchema>({
   components: {
     LatestResult,
     TaskExecuteModal,
+    Raw,
   },
 
   state: {
@@ -130,7 +132,7 @@ export default withIntroTypes<ReplaceSchema>({
   onDropdownChange(event: any): void {
     // su-dropdownの変更イベントから値を取得してstateを更新
     this.update({
-      selectedSql: event.target.value,
+      selectedSql: event?.value || '',
     })
   },
 

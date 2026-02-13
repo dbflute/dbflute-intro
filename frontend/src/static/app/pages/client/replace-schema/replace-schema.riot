@@ -41,13 +41,14 @@
     <!-- playsqlの操作: DDLファイルを表示するなど -->
     <h3>Play SQL</h3>
         <div class="ui segment" title="PlaySQL">
-          <su-dropdown items="{ state.playsqlDropDownItems }" ref="dropdown"></su-dropdown>
+          <su-dropdown
+            items="{ state.playsqlDropDownItems }"
+            onchange="{ onDropdownChange }">
+          </su-dropdown>
           <div class="ui message message-area">
             <pre>
-              <!-- codeタグのclass定義は、prism.jsで用意されているSQLのハイライト -->
-              <code class="language-sql">
-                <raw content="{ state.selectedSql }"></raw>
-              </code>
+               <!-- codeタグのclass定義は、prism.jsで用意されているSQLのハイライト -->
+              <code class="language-sql"><raw content="{ state.selectedSql }"></raw></code>
             </pre>
           </div>
         </div>
