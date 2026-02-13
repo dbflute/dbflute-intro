@@ -111,9 +111,14 @@ export default withIntroTypes<ReplaceSchema>({
   },
 
   async onclickReplaceSchemaTask(): Promise<void> {
-    await this.suConfirm('Are you sure to execute Replace Schema task?')
-    this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
     try {
+      await this.suConfirm('Are you sure to execute Replace Schema task?')
+      this.update({ executeStatus: 'None', executeResultMessage: '' })
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
+      this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
       const data = await api.task(this.props.projectName, 'replaceSchema')
       const message = data.success ? 'Success' : 'Failure'
       this.update({ executeStatus: 'Completed', executeResultMessage: message })
