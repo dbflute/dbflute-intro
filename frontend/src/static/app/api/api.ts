@@ -5,6 +5,11 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 // ===================================================================================
 //                                                                          API Client
 //                                                                          ==========
+/**
+ * IntroサーバーAPIとやり取りするクラス。Axiosを利用。
+ *
+ * ここでは汎用的なリクエスト関数を装備し、それぞれの業務ごとのリクエスト関数がこれらを呼ぶ。
+ */
 class ApiClient {
   get(url: string, config?: AxiosRequestConfig) {
     return axios
@@ -39,6 +44,10 @@ class ApiClient {
 //                                                                      Error Handling
 //                                                                      ==============
 // see IntroApiFailureHook.java for failure response
+/**
+ * API ClientでAPIエラーを検知した時のコールバック関数。
+ * @param error - Axios のエラーオブジェクト。
+ */
 const handleError = (error: AxiosError) => {
   let header = undefined
   let messages = undefined
@@ -109,6 +118,7 @@ const handleError = (error: AxiosError) => {
   return Promise.reject(error)
 }
 
+// IntroサーバーAPIのインスタンス準備
 const apiClient = new ApiClient()
 
 class Api {
@@ -215,54 +225,94 @@ class Api {
   /**
    * DBFluteクライアントを作成する。
    * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param syncSchemaSettingData - SchemaSyncCheckの設定情報オブジェクト
+   * @param schemasyncEditBody - SchemaSyncCheckの設定情報オブジェクト
    * @returns 業務的なレスポンスデータは特になし
    */
-  editSyncSchema(projectName: string, syncSchemaSettingData: any): Promise<void> {
+  editSyncSchema(projectName: string, schemasyncEditBody: DfpropSchemasyncEditBody): Promise<void> {
     return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
-      url: syncSchemaSettingData.url,
-      schema: syncSchemaSettingData.schema,
-      user: syncSchemaSettingData.user,
-      password: syncSchemaSettingData.password,
-      isSuppressCraftDiff: syncSchemaSettingData.isSuppressCraftDiff || false, // need not null
+      url: schemasyncEditBody.url,
+      schema: schemasyncEditBody.schema,
+      user: schemasyncEditBody.user,
+      password: schemasyncEditBody.password,
+      isSuppressCraftDiff: schemasyncEditBody.isSuppressCraftDiff || false, // need not null
     })
   }
 
   // -----------------------------------------------------
   //                                     SchemaPolicyCheck
   //                                     -----------------
-  schemaPolicy(projectName: string) {
+  /**
+   * スキーマポリシーの設定情報を取得する。
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @returns スキーマポリシーの設定情報オブジェクト、wholeからcolumnまで、themeやstatementなどまるごと
+   */
+  schemaPolicy(projectName: string): Promise<DfpropSchemapolicyResult> {
     return apiClient.post(`api/dfprop/schemapolicy/${projectName}`)
   }
 
-  editSchemaPolicy(projectName: string, schemaPolicyData: any) {
+  // #thinking jflute なんかthemeだけの修正だったりする？DfpropSchemaPolicyEditBody を見るとそう。 (2026/02/13)
+  // statementは別途あるしね。であれば、URLも関数名もそれがわかるような名前にしたいかも。
+  /**
+   * スキーマポリシーの設定を編集する。(Themeのみ)
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param themeEditBody - 編集したtheme情報、wholeからcolumnまで全てのtheme
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  editSchemaPolicy(projectName: string, themeEditBody: DfpropSchemapolicyEditBody): Promise<void> {
     return apiClient.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
       body: {
-        wholeMap: schemaPolicyData.wholeMap,
-        tableMap: schemaPolicyData.tableMap,
-        columnMap: schemaPolicyData.columnMap,
+        wholeMap: themeEditBody.wholeMap,
+        tableMap: themeEditBody.tableMap,
+        columnMap: themeEditBody.columnMap,
       },
     })
   }
 
-  registerSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
+  /**
+   * スキーマポリシーの一つのstatement設定を登録する。
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param statementRegisterBody - 登録予定の one statement の構成要素を保持するオブジェクト
+   * @returns 個々の構成要素が連結されてdfprop上での表現になった文字列 e.g. if alias is $$tableName$$ then bad
+   */
+  registerSchemapolicyStatement(projectName: string, statementRegisterBody: DfpropSchemapolicyStatementRegisterBody): Promise<string> {
     return apiClient.post(`api/dfprop/schemapolicy/statement/register/${projectName}`, {
-      body: schemaPolicyData,
+      body: statementRegisterBody,
     })
   }
 
-  getSchemapolicyStatementSubject(mapType: string) {
+  // #thinking jflute 戻り値が List<String> だから自動生成クラスなし!? Array<string> で良い？ (2026/02/13)
+  /**
+   * スキーマポリシーのsubject候補の一覧を取得する。
+   * (dfpropの文法情報なのでプロジェクト名は不要)
+   * @param mapType - テーブルか？カラムか？
+   * @returns 個々の構成要素が連結されてdfprop上での表現になった文字列 e.g. if alias is $$tableName$$ then bad
+   */
+  getSchemapolicyStatementSubject(mapType: string): Promise<Array<string>> {
+    // #thiking jflute POST で queryパラメーター私は避けたい (2026/02/13)
+    // DfpropSchemapolicyStatementSubjectBody が自動生成されてるので、それを使ってできない？
     return apiClient.post(`api/dfprop/schemapolicy/statement/subject?maptype=${mapType}`)
   }
 
-  deleteSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
+  /**
+   * スキーマポリシーの一つのstatementを削除する。
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param statementDeleteBody - 削除予定の one statement を特定する情報オブジェクト
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  deleteSchemapolicyStatement(projectName: string, statementDeleteBody: DfpropSchemapolicyStatementDeleteBody): Promise<void> {
     return apiClient.post(`api/dfprop/schemapolicy/statement/delete/${projectName}`, {
-      body: schemaPolicyData,
+      body: statementDeleteBody,
     })
   }
 
-  moveSchemapolicyStatement(projectName: string, schemaPolicyData: any) {
-    return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, { body: schemaPolicyData })
+  /**
+   * スキーマポリシーの一つのstatementの定義位置を移動する。
+   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param statementMoveBody - one statement のどこからどこへ情報オブジェクト
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  moveSchemapolicyStatement(projectName: string, statementMoveBody: DfpropSchemapolicyStatementMoveBody) {
+    return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, { body: statementMoveBody })
   }
 
   // -----------------------------------------------------
