@@ -1,29 +1,11 @@
-// import で特定のtsファイルからinterfaceとfunctionをimport。ファイル内で使えるようにする。
-// {}で特定のinterfaceやfunctionを指定できる。
-// tsにおけるinterfaceとtypeの違いは？
-// 型エイリアスは既存の型や型の組み合わせに新しい名前をつける機能
-// typeは型エイリアス
-// type型では以下ができる
-// プリミティブ型に名前をつける
-// プリミティブ型は最小単位。オブジェクト型はプリミティブ型を組み合わせた集合体
-// UNION型
-
-// ./は現在のディレクトリ
-// ../は1つ上の階層
-// ../../は2つ上の階層
-
-// ロジックをimport
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import Raw from '../../../components/common/raw.riot'
 import { api } from '../../../api/api'
 
-// sqlにハイライトをつけるための設定
 import Prism from 'prismjs'
-//jsファイルをminで軽量化してimport
 import 'prismjs/components/prism-sql.min'
 import 'prismjs/themes/prism.css'
-//カスタムコンポーネントをimport
 import LatestResult from '../latest-result.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import ReplaceSchema from './replace-schema'
@@ -51,7 +33,6 @@ interface State {
   latestResult?: ReplaceSchemaLatestResultState
 }
 
-// IntroRiotComponentを継承
 interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                       Event Handler
@@ -69,20 +50,6 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   prepareComponents(projectName: string): void
 }
 
-// defaultつけると他ファイルでimportするときに好きな名前でimportできる
-// defaultは1ファイルに最大１つ
-// export function メソッド名<
-//   型A (中身のデータ),
-//   型B (組み立てガイド) = 型Aを元に自動計算された複雑な型
-// >(組み立て関数): () => 型A
-// (組み立て関数): 型Aだとメソッド実行実行時に型Aを返す
-// (組み立て関数): () =>型Aだとメソッド実行時に関数（引数なしで戻り値型A）を返す
-// riot.jsのconst componentAPI = callOrAssign(exports) || {};
-//  function callOrAssign(source) {
-//     return isFunction(source) ? source.prototype && source.prototype.constructor ? new source() : source() : source;
-//   }
-// ここで引数なしで実行される
-// ComponentFactoryはComponentが決まれば一意に決まるので、１つ目の型Componentだけ明示する
 export default withIntroTypes<ReplaceSchema>({
   components: {
     LatestResult,
