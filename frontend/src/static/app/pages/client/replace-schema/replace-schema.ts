@@ -41,6 +41,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   onclickOpenDataDir(): void
   onclickReplaceSchemaTask(): void
   onDropdownChange(event: any): void
+  onModalHide(): void
 
   // ===================================================================================
   //                                                                             Private
@@ -82,12 +83,7 @@ export default withIntroTypes<ReplaceSchema>({
   async onclickReplaceSchemaTask(): Promise<void> {
     try {
       await this.suConfirm('Are you sure to execute Replace Schema task?')
-      this.update({ executeStatus: 'None', executeResultMessage: '' })
-      await new Promise((resolve) => setTimeout(resolve, 0))
-
       this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
-      await new Promise((resolve) => setTimeout(resolve, 0))
-
       const data = await api.task(this.props.projectName, 'replaceSchema')
       const message = data.success ? 'Success' : 'Failure'
       this.update({ executeStatus: 'Completed', executeResultMessage: message })
@@ -101,6 +97,10 @@ export default withIntroTypes<ReplaceSchema>({
     this.update({
       selectedSql: event?.value || '',
     })
+  },
+
+  onModalHide(): void {
+    this.update({ executeStatus: 'None' })
   },
 
   // ===================================================================================
