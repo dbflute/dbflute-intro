@@ -1,0 +1,64 @@
+<document-form-modal>
+  <!-- documentMap.dfprop を編集するための Modal -->
+  <su-modal show="{ state.show }" modal="{ modal() }" onhide="{ onHide }" onsave="{ saveSettings }" class="large">
+    <form class="ui form">
+      <div class="field">
+        <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>
+        <input
+          type="text"
+          placeholder="e.g. :"
+          value="{ state.documentSetting.aliasDelimiterInDbComment }"
+          onchange="{ onChangeAliasDelimiterInDbComment }">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            type="checkbox"
+            checked="{ state.documentSetting.upperCaseBasic }"
+            onchange="{ onChangeUpperCaseBasic }">
+          <label>Upper case basis <span class="frm">(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase)</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            type="checkbox"
+            checked="{ state.documentSetting.dbCommentOnAliasBasis }"
+            onchange="{ onChangeDbCommentOnAliasBasis }">
+          <label>DB comment on alias basis <span class="frm">(isDbCommentOnAliasBasis)</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            type="checkbox"
+            checked="{ state.documentSetting.checkColumnDefOrderDiff }"
+            onchange="{ onChangeCheckColumnDefOrderDiff }">
+          <label>Check column definition order difference <span class="frm">(isCheckColumnDefOrderDiff)</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            type="checkbox"
+            checked="{ state.documentSetting.checkDbCommentDiff }"
+            onchange="{ onChangeCheckDbCommentDiff }">
+          <label>Check DB comment difference <span class="frm">(isCheckDbCommentDiff)</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input
+            type="checkbox"
+            checked="{ state.documentSetting.checkProcedureDiff }"
+            onchange="{ onChangeCheckProcedureDiff }">
+          <label>Check procedure difference <span class="frm">(isCheckProcedureDiff)</span></label>
+        </div>
+      </div>
+    </form>
+  </su-modal>
+  <script>
+    import documentFormModal from './document-form-modal.ts'
+    export default documentFormModal
+  </script>
+</document-form-modal>

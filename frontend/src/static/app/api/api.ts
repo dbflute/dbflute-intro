@@ -318,20 +318,28 @@ class Api {
   // -----------------------------------------------------
   //                                              Document
   //                                              --------
-  document(projectName: string) {
+  /**
+   * dfpropのドキュメントに関する情報を取得する。
+   * @param {string} projectName - DBFluteクライアントのプロジェクト名
+   * @returns {DfpropDocumentResult} - dfpropのドキュメントに関する情報
+   */
+  document(projectName: string): Promise<DfpropDocumentResult> {
     return apiClient.post(`api/dfprop/document/${projectName}`)
   }
 
+  /**
+   * dfpropのドキュメントに関する情報を編集する。
+   * @param {DfpropDocumentEditBody} body - DBFluteクライアントのプロジェクト名
+   * @returns {Promise<void>} レスポンスは特になし
+   */
   editDocument(projectName: string, documentSetting: any) {
     return apiClient.post(`api/dfprop/document/edit/${projectName}`, {
-      body: {
-        upperCaseBasic: documentSetting.upperCaseBasic,
-        aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-        dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
-        checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
-        checkDbCommentDiff: documentSetting.checkDbCommentDiff,
-        checkProcedureDiff: documentSetting.checkProcedureDiff,
-      },
+      upperCaseBasic: documentSetting.upperCaseBasic,
+      aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
+      dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
+      checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
+      checkDbCommentDiff: documentSetting.checkDbCommentDiff,
+      checkProcedureDiff: documentSetting.checkProcedureDiff,
     })
   }
 
@@ -356,7 +364,7 @@ class Api {
   //                                         -------------
   /**
    * ReplaceSchema の dataディレクトリをOSのエクスプローラーで開く。(MacならFinder)
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    * @returns 業務的なレスポンスデータは特になし
    */
   openDataDir(projectName: string): Promise<void> {
@@ -367,8 +375,8 @@ class Api {
   // 自動生成でrootのBeanの名前も取って使いたいかな？
   /**
    * ReplaceSchema の playsqlディレクトリ配下のファイル情報を取得する。
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
-   * @returns playsqlディレクトリのファイル情報のリスト (NotNull, EmptyAllowed)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   * @returns playsqlディレクトリのファイル情報のリスト (EmptyAllowed)
    */
   playsqlBeanList(projectName: string): Promise<Array<PlaysqlListResult>> {
     return apiClient.post(`api/playsql/list/${projectName}`)
@@ -379,8 +387,8 @@ class Api {
   //                                             ---------
   /**
    * AlterCheckの画面情報をロードする。
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
-   * @returns 画面の表示情報を目一杯に積んだもの (NotNull)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   * @returns 画面の表示情報を目一杯に積んだもの
    */
   alter(projectName: string): Promise<PlaysqlMigrationAlterResult> {
     return apiClient.get(`api/playsql/migration/alter/${projectName}/`)
@@ -388,7 +396,7 @@ class Api {
 
   /**
    * AlterCheck の alterディレクトリをOSのエクスプローラーで開く。(MacならFinder)
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    * @returns 業務的なレスポンスデータは特になし
    */
   openAlterDir(projectName: string): Promise<void> {
@@ -397,7 +405,7 @@ class Api {
 
   /**
    * AlterCheck の alterディレクトリに、AlterDDLファイルを新規作成する。
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    * @returns 業務的なレスポンスデータは特になし
    */
   prepareAlterSql(projectName: string): Promise<void> {
@@ -406,7 +414,7 @@ class Api {
 
   /**
    * AlterCheck の alterディレクトリに、AlterDDLファイルを新規作成する。
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    * @returns 業務的なレスポンスデータは特になし
    */
   createAlterSql(projectName: string, alterFileName: string): Promise<void> {
@@ -445,7 +453,7 @@ class Api {
   //                                                                          ======
   /**
    * 最新のDBFluteエンジンバージョンを取得する
-   * @returns 最新のDBFluteエンジンバージョン (NotNull)
+   * @returns 最新のDBFluteエンジンバージョン
    */
   findEngineLatest(): Promise<EngineLatestResult> {
     return apiClient.post('api/engine/latest')
@@ -453,7 +461,7 @@ class Api {
 
   /**
    * DBFluteエンジンの一覧を取得する
-   * @returns {Promise<string[]>} DBFluteエンジンのバージョン番号のリスト e.g. [ "1.2.6" ] (NotNull)
+   * @returns {Promise<string[]>} DBFluteエンジンのバージョン番号のリスト e.g. [ "1.2.6" ]
    */
   engineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
