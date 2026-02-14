@@ -110,13 +110,13 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
    * SQLファイルはシンタックスハイライトされた状態でセットする。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    */
-  preparePlaysql(projectName: string): void
+  preparePlaysql(projectName: string): Promise<void>
 
   /**
    * ReplaceSchemaの最新実行結果を取得してstateを更新する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    */
-  prepareComponents(projectName: string): void
+  prepareComponents(projectName: string): Promise<void>
 }
 
 export default withIntroTypes<ReplaceSchema>({
