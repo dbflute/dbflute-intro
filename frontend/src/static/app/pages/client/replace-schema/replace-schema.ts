@@ -38,16 +38,22 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   //                                                                       Event Handler
   //                                                                       =============
   onMounted(): void
+
   onclickOpenDataDir(): void
+
   onclickReplaceSchemaTask(): void
+
   onDropdownChange(event: any): void
+
   onModalHide(): void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
   prepareSettings(projectName: string): Promise<void>
+
   preparePlaysql(projectName: string): void
+
   prepareComponents(projectName: string): void
 }
 
@@ -126,12 +132,13 @@ export default withIntroTypes<ReplaceSchema>({
 
   async prepareComponents(projectName: string): Promise<void> {
     const body = await api.latestResult(projectName, 'replaceSchema')
-    if (body) {
-      const latestResult = {
-        success: body.fileName.includes('success'),
-        content: body.content,
-      }
-      this.update({ latestResult: latestResult })
+    if (!body) {
+      return
     }
+    const latestResult = {
+      success: body.fileName.includes('success'),
+      content: body.content,
+    }
+    this.update({ latestResult: latestResult })
   },
 })
