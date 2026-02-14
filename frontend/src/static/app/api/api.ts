@@ -138,7 +138,7 @@ class Api {
   /**
    * Introのサーバー区分値をすべて取得する。
    * 区分値少ないので全部持ってきてしまっているfor now。
-   * @returns 区分値情報まんさいオブジェクト
+   * @returns 区分値情報まんさいオブジェクト (自動生成クラス)
    */
   findClassifications(): Promise<IntroClassificationsResult> {
     return apiClient.post('api/intro/classifications')
@@ -155,7 +155,7 @@ class Api {
   //                                                                         =======
   /**
    * Welcomeの気持ちでDBFluteクライアントを作成する。
-   * @param body - DBFluteクライアントを作るための入力情報
+   * @param body - DBFluteクライアントを作るための入力情報オブジェクト (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
   createWelcomeClient(body: WelcomeCreateBody): Promise<void> {
@@ -168,7 +168,7 @@ class Api {
   //                                                                 ===============
   /**
    * Introが起動している環境にインストールされている、DBFluteクライアントのリストを取得する
-   * @returns DBFluteクライアントのリスト
+   * @returns DBFluteクライアント情報オブジェクトのリスト (自動生成クラス)
    */
   clientList(): Promise<ClientListResult[]> {
     return apiClient.post('api/client/list')
@@ -177,7 +177,7 @@ class Api {
   /**
    * プロジェクトの基本プロパティを取得する
    * @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb
-   * @returns プロジェクトの基本情報 e.g. プロジェクト名、DBMSコード
+   * @returns プロジェクトの基本情報オブジェクト e.g. プロジェクト名、DBMSコード (自動生成クラス)
    */
   clientPropbase(projectName: string): Promise<ClientPropbaseResult> {
     return apiClient.post(`api/client/propbase/${projectName}`)
@@ -185,7 +185,7 @@ class Api {
 
   /**
    * DBFluteクライアントを作成する。
-   * @param body - DBFluteクライアントを作るための入力情報
+   * @param body - DBFluteクライアントを作るための入力情報オブジェクト (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
   createClient(body: ClientCreateBody): Promise<void> {
@@ -214,8 +214,8 @@ class Api {
   //                                       ---------------
   /**
    * DBFluteクライアントを作成する。
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @returns 一つのSchemaSyncCheckの設定、主に比較相手スキーマのJDBC接続先
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @returns 一つのSchemaSyncCheckの設定オブジェクト、主に比較相手スキーマのJDBC接続先 (自動生成クラス)
    */
   syncSchema(projectName: string): Promise<DfpropSchemasyncResult> {
     return apiClient.post(`api/dfprop/schemasync/${projectName}`)
@@ -224,8 +224,8 @@ class Api {
   // #hope jflute 引数を DfpropSchemasyncEditBody にして、画面側でstateから詰め替えるようにしたいところ (2026/02/06)
   /**
    * DBFluteクライアントを作成する。
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param schemasyncEditBody - SchemaSyncCheckの設定情報オブジェクト
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param schemasyncEditBody - SchemaSyncCheckの設定情報オブジェクト (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
   editSyncSchema(projectName: string, schemasyncEditBody: DfpropSchemasyncEditBody): Promise<void> {
@@ -243,8 +243,8 @@ class Api {
   //                                     -----------------
   /**
    * スキーマポリシーの設定情報を取得する。
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @returns スキーマポリシーの設定情報オブジェクト、wholeからcolumnまで、themeやstatementなどまるごと
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @returns スキーマポリシーの設定情報オブジェクト、wholeからcolumnまで、themeやstatementなどまるごと (自動生成クラス)
    */
   schemaPolicy(projectName: string): Promise<DfpropSchemapolicyResult> {
     return apiClient.post(`api/dfprop/schemapolicy/${projectName}`)
@@ -254,8 +254,8 @@ class Api {
   // statementは別途あるしね。であれば、URLも関数名もそれがわかるような名前にしたいかも。
   /**
    * スキーマポリシーの設定を編集する。(Themeのみ)
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param themeEditBody - 編集したtheme情報、wholeからcolumnまで全てのtheme
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param themeEditBody - 編集したtheme情報オブジェクト、wholeからcolumnまで全てのtheme (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
   editSchemaPolicy(projectName: string, themeEditBody: DfpropSchemapolicyEditBody): Promise<void> {
@@ -270,8 +270,8 @@ class Api {
 
   /**
    * スキーマポリシーの一つのstatement設定を登録する。
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param statementRegisterBody - 登録予定の one statement の構成要素を保持するオブジェクト
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param statementRegisterBody - 登録予定の one statement の構成要素を保持するオブジェクト (自動生成クラス)
    * @returns 個々の構成要素が連結されてdfprop上での表現になった文字列 e.g. if alias is $$tableName$$ then bad
    */
   registerSchemapolicyStatement(projectName: string, statementRegisterBody: DfpropSchemapolicyStatementRegisterBody): Promise<string> {
@@ -295,8 +295,8 @@ class Api {
 
   /**
    * スキーマポリシーの一つのstatementを削除する。
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param statementDeleteBody - 削除予定の one statement を特定する情報オブジェクト
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param statementDeleteBody - 削除予定の one statement を特定する情報オブジェクト (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
   deleteSchemapolicyStatement(projectName: string, statementDeleteBody: DfpropSchemapolicyStatementDeleteBody): Promise<void> {
@@ -307,8 +307,8 @@ class Api {
 
   /**
    * スキーマポリシーの一つのstatementの定義位置を移動する。
-   * @param projectName - DBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param statementMoveBody - one statement のどこからどこへ情報オブジェクト
+   * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
+   * @param statementMoveBody - one statement のどこからどこへ情報オブジェクト (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
   moveSchemapolicyStatement(projectName: string, statementMoveBody: DfpropSchemapolicyStatementMoveBody) {
@@ -319,40 +319,54 @@ class Api {
   //                                              Document
   //                                              --------
   /**
-   * dfpropのドキュメントに関する情報を取得する。
-   * @param {string} projectName - DBFluteクライアントのプロジェクト名
-   * @returns {DfpropDocumentResult} - dfpropのドキュメントに関する情報
+   * ドキュメントに関するdfprop情報を取得する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
+   * @returns ドキュメントに関するdfprop情報オブジェクト、aliasDelimiterInDbComment など (自動生成クラス)
    */
   document(projectName: string): Promise<DfpropDocumentResult> {
     return apiClient.post(`api/dfprop/document/${projectName}`)
   }
 
   /**
-   * dfpropのドキュメントに関する情報を編集する。
-   * @param {DfpropDocumentEditBody} body - DBFluteクライアントのプロジェクト名
-   * @returns {Promise<void>} レスポンスは特になし
+   * ドキュメントに関するdfprop情報を編集する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
+   * @param documentEditBody - ドキュメント設定の編集情報オブジェクト (自動生成クラス)
+   * @returns 業務的なレスポンスデータは特になし
    */
-  editDocument(projectName: string, documentSetting: any) {
+  editDocument(projectName: string, documentEditBody: DfpropDocumentEditBody): Promise<void> {
+    // #thinking jflute documentEditBody をそのまま第二引数にbodyとして入れるでもいいんじゃないのかな？ (2026/02/14)
     return apiClient.post(`api/dfprop/document/edit/${projectName}`, {
-      upperCaseBasic: documentSetting.upperCaseBasic,
-      aliasDelimiterInDbComment: documentSetting.aliasDelimiterInDbComment,
-      dbCommentOnAliasBasis: documentSetting.dbCommentOnAliasBasis,
-      checkColumnDefOrderDiff: documentSetting.checkColumnDefOrderDiff,
-      checkDbCommentDiff: documentSetting.checkDbCommentDiff,
-      checkProcedureDiff: documentSetting.checkProcedureDiff,
+      upperCaseBasic: documentEditBody.upperCaseBasic,
+      aliasDelimiterInDbComment: documentEditBody.aliasDelimiterInDbComment,
+      dbCommentOnAliasBasis: documentEditBody.dbCommentOnAliasBasis,
+      checkColumnDefOrderDiff: documentEditBody.checkColumnDefOrderDiff,
+      checkDbCommentDiff: documentEditBody.checkDbCommentDiff,
+      checkProcedureDiff: documentEditBody.checkProcedureDiff,
     })
   }
 
   // -----------------------------------------------------
   //                                              Settings
   //                                              --------
-  settings(projectName: string) {
+  /**
+   * DBFluteクライアントの基本的なdfprop情報を取得する。(DBMSやDB接続情報など)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
+   * @returns 基本的なdfprop情報オブジェクト (自動生成クラス)
+   */
+  settings(projectName: string): Promise<DfpropSettingsResult> {
     return apiClient.post(`api/dfprop/settings/${projectName}`)
   }
 
-  updateSettings(clientBody: any) {
-    return apiClient.post(`api/dfprop/settings/edit/${clientBody.projectName}`, {
-      body: { client: clientBody },
+  // #for_now jflute 他みんな edit なのにここだけ update になっとる。URLもeditなんだけど (2026/02/14)
+  /**
+   * DBFluteクライアントの基本的なdfprop情報を更新する。(DBMSやDB接続情報など)
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
+   * @param settingsEditBody - 基本的なdfprop情報の編集情報オブジェクト (自動生成クラス)
+   * @returns 業務的なレスポンスデータは特になし
+   */
+  updateSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody) {
+    return apiClient.post(`api/dfprop/settings/edit/${projectName}`, {
+      body: settingsEditBody,
     })
   }
 
