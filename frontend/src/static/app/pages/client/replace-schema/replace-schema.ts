@@ -153,8 +153,7 @@ export default withIntroTypes<ReplaceSchema>({
       this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
       try {
         const data = await api.task(this.props.projectName, 'replaceSchema')
-        const message = data.success ? 'Success' : 'Failure'
-        this.update({ executeStatus: 'Completed', executeResultMessage: message })
+        this.update({ executeStatus: 'Completed', executeResultMessage: data.success ? 'Success' : 'Failure' })
       } catch (e) {
         this.update({ executeStatus: 'None' })
       }
