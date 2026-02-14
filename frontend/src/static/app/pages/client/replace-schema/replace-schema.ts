@@ -86,16 +86,17 @@ export default withIntroTypes<ReplaceSchema>({
     api.openDataDir(this.props.projectName)
   },
 
-  async onclickReplaceSchemaTask(): Promise<void> {
-    try {
-      await this.suConfirm('Are you sure to execute Replace Schema task?')
+  onclickReplaceSchemaTask(): void {
+    this.suConfirm('Are you sure to execute Replace Schema task?').then(async () => {
       this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
-      const data = await api.task(this.props.projectName, 'replaceSchema')
-      const message = data.success ? 'Success' : 'Failure'
-      this.update({ executeStatus: 'Completed', executeResultMessage: message })
-    } catch (e) {
-      this.update({ executeStatus: 'None' })
-    }
+      try {
+        const data = await api.task(this.props.projectName, 'replaceSchema')
+        const message = data.success ? 'Success' : 'Failure'
+        this.update({ executeStatus: 'Completed', executeResultMessage: message })
+      } catch (e) {
+        this.update({ executeStatus: 'None' })
+      }
+    })
   },
 
   /**
