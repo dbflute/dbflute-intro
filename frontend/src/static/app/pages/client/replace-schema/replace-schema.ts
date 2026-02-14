@@ -10,50 +10,112 @@ import TaskExecuteModal from '../task-execute-modal.riot'
 import { api } from '../../../api/api'
 import ReplaceSchema from './replace-schema'
 
+/**
+ * PlaySQLのドロップダウン項目
+ */
 type PlaysqlDropdownItem = {
+  /** ドロップダウンに表示されるラベル */
   label: string
-  value?: string // value =string | undifined と同じ。stringは任意という意味
+  /** SQLファイルの内容（シンタックスハイライト済み） (EmptyAllowed: デフォルト項目の場合) */
+  value?: string
 }
 
+/**
+ * ReplaceSchemaの最新実行結果の状態
+ */
 type ReplaceSchemaLatestResultState = {
+  /** 実行が成功したかどうか */
   success: boolean
+  /** 実行結果のログ内容 */
   content: string
 }
 
+/**
+ * ReplaceSchemaコンポーネントのProps
+ */
 interface Props {
+  /** 現在対象としているDBFluteクライアントのプロジェクト名 */
   projectName: string
 }
 
+/**
+ * ReplaceSchemaコンポーネントのState
+ */
 interface State {
+  /** DBFluteの設定情報 (undefined: 初期化前) */
   settings?: DfpropSettingsResult
+
+  /** PlaySQLのドロップダウン項目たち (NotEmpty: デフォルト項目が含まれる) */
   playsqlDropDownItems: PlaysqlDropdownItem[]
+
+  /** ドロップダウンで選択されたSQLファイルの内容（シンタックスハイライト済み） */
   selectedSql: string
+
+  /** タスク実行ステータス */
   executeStatus: TaskExecuteStatus
+
+  /** タスク実行結果メッセージ (EmptyAllowed: 実行前) */
   executeResultMessage?: string
+
+  /** ReplaceSchemaの最新実行結果 (undefined: 実行履歴なし) */
   latestResult?: ReplaceSchemaLatestResultState
 }
 
 interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   // ===================================================================================
-  //                                                                       Event Handler
-  //                                                                       =============
+  //                                                                           Lifecycle
+  //                                                                           =========
+  /**
+   * マウント完了時の処理。
+   */
   onMounted(): void
 
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  /**
+   * OSごとのファイルマネージャーでTestDataディレクトリを開く。
+   */
   onclickOpenDataDir(): void
 
+  /**
+   * ReplaceSchemaタスクをAPI経由で実行する。
+   * confirmを許可した場合のみ実行される。
+   */
   onclickReplaceSchemaTask(): void
 
+  /**
+   * su-dropdownの変更イベントから値を取得してstateを更新する。
+   * @param event - この関数を呼び出したイベントのオブジェクト
+   */
   onDropdownChange(event: any): void
 
+  /**
+   * タスク実行モーダルが閉じられた時の処理。
+   * 実行ステータスをリセットする。
+   */
   onModalHide(): void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  /**
+   * DBFluteの設定情報を取得してstateを更新する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   */
   prepareSettings(projectName: string): Promise<void>
 
+  /**
+   * PlaySQLファイルの一覧を取得してドロップダウン項目を準備する。
+   * SQLファイルはシンタックスハイライトされた状態でセットする。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   */
   preparePlaysql(projectName: string): void
 
+  /**
+   * ReplaceSchemaの最新実行結果を取得してstateを更新する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   */
   prepareComponents(projectName: string): void
 }
 
@@ -99,9 +161,6 @@ export default withIntroTypes<ReplaceSchema>({
     })
   },
 
-  /**
-   * su-dropdownの変更イベントから値を取得してstateを更新
-   */
   onDropdownChange(event: any): void {
     this.update({
       selectedSql: event?.value || '',
