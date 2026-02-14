@@ -1,5 +1,5 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
-import taskExecuteModal, { TaskExecuteStatus } from '../task-execute-modal'
+import { TaskExecuteStatus } from '../task-execute-modal'
 import Raw from '../../../components/common/raw.riot'
 
 import Prism from 'prismjs'
@@ -9,7 +9,6 @@ import LatestResult from '../latest-result.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { api } from '../../../api/api'
 import ReplaceSchema from './replace-schema'
-import { update } from 'riot'
 
 /**
  * PlaySQLのドロップダウン項目
