@@ -98,8 +98,10 @@ export default withIntroTypes<ReplaceSchema>({
     }
   },
 
+  /**
+   * su-dropdownの変更イベントから値を取得してstateを更新
+   */
   onDropdownChange(event: any): void {
-    // su-dropdownの変更イベントから値を取得してstateを更新
     this.update({
       selectedSql: event?.value || '',
     })
