@@ -1,5 +1,5 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
-import { TaskExecuteStatus } from '../task-execute-modal'
+import taskExecuteModal, { TaskExecuteStatus } from '../task-execute-modal'
 import Raw from '../../../components/common/raw.riot'
 
 import Prism from 'prismjs'
@@ -9,6 +9,7 @@ import LatestResult from '../latest-result.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { api } from '../../../api/api'
 import ReplaceSchema from './replace-schema'
+import { update } from 'riot'
 
 /**
  * PlaySQLのドロップダウン項目
@@ -117,6 +118,12 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    */
   prepareComponents(projectName: string): Promise<void>
+
+  /**
+   * ReplaceSchemaタスクを実行してAPIから結果を取得し、stateを更新する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   */
+  replaceSchemaTask(projectName: string): Promise<void>
 }
 
 export default withIntroTypes<ReplaceSchema>({
@@ -150,13 +157,11 @@ export default withIntroTypes<ReplaceSchema>({
 
   onclickReplaceSchemaTask(): void {
     this.suConfirm('Are you sure to execute Replace Schema task?').then(async () => {
-      this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
-      try {
-        const data = await api.task(this.props.projectName, 'replaceSchema')
-        this.update({ executeStatus: 'Completed', executeResultMessage: data.success ? 'Success' : 'Failure' })
-      } catch (e) {
-        this.update({ executeStatus: 'None' })
-      }
+      const state = { executeStatus: 'Executing' as TaskExecuteStatus, executeResultMessage: 'Executing...' }
+
+      this.update(state)
+
+      await this.replaceSchemaTask(this.props.projectName)
     })
   },
 
@@ -174,32 +179,50 @@ export default withIntroTypes<ReplaceSchema>({
   //                                                                             Private
   //                                                                             =======
   async prepareSettings(projectName: string): Promise<void> {
-    const settings = await api.settings(projectName)
-    this.update({
-      settings: settings,
-    })
+    const data = await api.settings(projectName)
+
+    const state = { settings: data }
+
+    this.update(state)
   },
 
   async preparePlaysql(projectName: string): Promise<void> {
-    const playsqlListResults = await api.playsqlBeanList(projectName)
-    const playsqlDropDownItems = playsqlListResults.map((obj) => ({
+    const data = await api.playsqlBeanList(projectName)
+
+    const items = data.map((obj) => ({
       label: obj.fileName,
       value: `<span style="display: none;">${obj.fileName}</span>` + Prism.highlight(obj.content || '', Prism.languages.sql, 'sql'),
     }))
-    this.update({
-      playsqlDropDownItems: this.state.playsqlDropDownItems.concat(playsqlDropDownItems),
-    })
+    const state = { playsqlDropDownItems: this.state.playsqlDropDownItems.concat(items) }
+
+    this.update(state)
   },
 
   async prepareComponents(projectName: string): Promise<void> {
-    const body = await api.latestResult(projectName, 'replaceSchema')
-    if (!body) {
+    const data = await api.latestResult(projectName, 'replaceSchema')
+    if (!data) {
       return
     }
-    const latestResult = {
-      success: body.fileName.includes('success'),
-      content: body.content,
+
+    const state = {
+      latestResult: {
+        success: data.fileName.includes('success'),
+        content: data.content,
+      },
     }
-    this.update({ latestResult: latestResult })
+
+    this.update(state)
+  },
+
+  async replaceSchemaTask(projectName: string): Promise<void> {
+    let state
+    try {
+      const data = await api.task(projectName, 'replaceSchema')
+      state = { executeStatus: 'Completed' as TaskExecuteStatus, executeResultMessage: data.success ? 'Success' : 'Failure' }
+    } catch (e) {
+      state = { executeStatus: 'None' as TaskExecuteStatus }
+    }
+
+    this.update(state)
   },
 })
