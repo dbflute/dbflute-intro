@@ -141,10 +141,12 @@ export default withIntroTypes<ReplaceSchema>({
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
-  onMounted(): void {
-    this.prepareSettings(this.props.projectName)
-    this.preparePlaysql(this.props.projectName)
-    this.prepareComponents(this.props.projectName)
+  async onMounted(): Promise<void> {
+    await Promise.all([
+      this.prepareSettings(this.props.projectName),
+      this.preparePlaysql(this.props.projectName),
+      this.prepareComponents(this.props.projectName),
+    ])
   },
 
   // ===================================================================================
