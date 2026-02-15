@@ -122,7 +122,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
    * ReplaceSchemaタスクを実行してAPIから結果を取得し、stateを更新する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    */
-  replaceSchemaTask(projectName: string): Promise<void>
+  replaceSchema(projectName: string): Promise<void>
 }
 
 export default withIntroTypes<ReplaceSchema>({
@@ -161,7 +161,7 @@ export default withIntroTypes<ReplaceSchema>({
       const state = { executeStatus: 'Executing' as TaskExecuteStatus, executeResultMessage: 'Executing...' }
       this.update(state)
 
-      await this.replaceSchemaTask(this.props.projectName)
+      await this.replaceSchema(this.props.projectName)
     })
   },
 
@@ -214,7 +214,7 @@ export default withIntroTypes<ReplaceSchema>({
     this.update(state)
   },
 
-  async replaceSchemaTask(projectName: string): Promise<void> {
+  async replaceSchema(projectName: string): Promise<void> {
     let state
     try {
       const data = await api.task(projectName, 'replaceSchema')
