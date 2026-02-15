@@ -330,18 +330,19 @@ class Api {
   /**
    * ドキュメントに関するdfprop情報を編集する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
-   * @param documentEditBody - ドキュメント設定の編集情報 (自動生成クラス)
+   * @param documentResult - ドキュメント設定の編集情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  editDocument(projectName: string, documentEditBody: DfpropDocumentEditBody): Promise<void> {
+  editDocument(projectName: string, documentResult: DfpropDocumentResult): Promise<void> {
+    // #for_now jflute DfpropDocumentResult を受け取ってるけど、DfpropDocumentEditBody で受け取りたい (2026/02/15)
     // #thinking jflute documentEditBody をそのまま第二引数にbodyとして入れるでもいいんじゃないのかな？ (2026/02/14)
     return apiClient.post(`api/dfprop/document/edit/${projectName}`, {
-      upperCaseBasic: documentEditBody.upperCaseBasic,
-      aliasDelimiterInDbComment: documentEditBody.aliasDelimiterInDbComment,
-      dbCommentOnAliasBasis: documentEditBody.dbCommentOnAliasBasis,
-      checkColumnDefOrderDiff: documentEditBody.checkColumnDefOrderDiff,
-      checkDbCommentDiff: documentEditBody.checkDbCommentDiff,
-      checkProcedureDiff: documentEditBody.checkProcedureDiff,
+      upperCaseBasic: documentResult.upperCaseBasic,
+      aliasDelimiterInDbComment: documentResult.aliasDelimiterInDbComment,
+      dbCommentOnAliasBasis: documentResult.dbCommentOnAliasBasis,
+      checkColumnDefOrderDiff: documentResult.checkColumnDefOrderDiff,
+      checkDbCommentDiff: documentResult.checkDbCommentDiff,
+      checkProcedureDiff: documentResult.checkProcedureDiff,
     })
   }
 
