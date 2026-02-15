@@ -159,7 +159,6 @@ export default withIntroTypes<ReplaceSchema>({
   onclickReplaceSchemaTask(): void {
     this.suConfirm('Are you sure to execute Replace Schema task?').then(async () => {
       const state = { executeStatus: 'Executing' as TaskExecuteStatus, executeResultMessage: 'Executing...' }
-
       this.update(state)
 
       await this.replaceSchemaTask(this.props.projectName)
