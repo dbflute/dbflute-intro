@@ -213,7 +213,7 @@ class Api {
   //                                       SchemaSyncCheck
   //                                       ---------------
   /**
-   * DBFluteクライアントを作成する。
+   * SchemaSyncCheckの設定情報を取得する。
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
    * @returns 一つのSchemaSyncCheckの設定情報、主に比較相手スキーマのJDBC接続先 (自動生成クラス)
    */
@@ -223,18 +223,18 @@ class Api {
 
   // #hope jflute 引数を DfpropSchemasyncEditBody にして、画面側でstateから詰め替えるようにしたいところ (2026/02/06)
   /**
-   * DBFluteクライアントを作成する。
+   * SchemaSyncCheckの設定情報を編集する。
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param schemasyncEditBody - SchemaSyncCheckの設定情報 (自動生成クラス)
+   * @param schemasyncResult - SchemaSyncCheckの設定情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  editSyncSchema(projectName: string, schemasyncEditBody: DfpropSchemasyncEditBody): Promise<void> {
+  editSyncSchema(projectName: string, schemasyncResult: DfpropSchemasyncResult): Promise<void> {
     return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
-      url: schemasyncEditBody.url,
-      schema: schemasyncEditBody.schema,
-      user: schemasyncEditBody.user,
-      password: schemasyncEditBody.password,
-      isSuppressCraftDiff: schemasyncEditBody.isSuppressCraftDiff || false, // need not null
+      url: schemasyncResult.url,
+      schema: schemasyncResult.schema,
+      user: schemasyncResult.user,
+      password: schemasyncResult.password,
+      isSuppressCraftDiff: schemasyncResult.isSuppressCraftDiff || false, // need not null
     })
   }
 
