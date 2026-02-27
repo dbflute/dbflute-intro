@@ -23,7 +23,7 @@ import * as riot from 'riot'
 //  |  |     |
 //  |  |     | // 中分類の画面たち
 //  |  |     |-import ExDocuments from './pages/client/documents/ex-documents.riot'
-//  |  |     |-import ExReplaceSchema from './pages/client/replace-schema/ex-replace-schema.riot'
+//  |  |     |-import ReplaceSchema from './pages/client/replace-schema/replace-schema.riot'
 //  |  |     |-import (その他、Clientの機能ごとの画面たち)
 //  |  |
 //  |  |-import Welcome from './pages/welcome/welcome.riot'     // 大分類の画面
