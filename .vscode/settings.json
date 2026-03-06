@@ -9,12 +9,28 @@
 //
 // 注2: EclipseにおけるWorkspace設定というのは存在しないことになる。
 // User設定はPC全体の設定になるので、Introだけ有効にする個人設定というのはできない(と思われる)。
-// _/_/_/_/_/_/_/_/_/_/
+// _/_/_/_/_/_/_/_/
 {
-  // 保存ボタンを押したら自動的にフォーマットが掛かるように
-  "editor.formatOnSave": true,
-
-  // フォーマッターとしてPrettierを採用、ここを設定しないと自動フォーマットも効かない
-  // (User設定の方で別のフォーマッターを定義してても、ここで上書きする)
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // 一つのプロジェクトに複数の言語が入っているので、フォーマッターの設定を言語ごとにスイッチ。
+  // _/_/_/_/_/_/_/_/
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true	
+  },
+  "[java]": {
+	"editor.defaultFormatter": "redhat.java",
+    "editor.formatOnSave": true
+  },
+  
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // 以下の設定は、java配下だと動作しなかったので独立。(元々java専用なのでjava配下に入れる必要ないのかな!?)
+  // _/_/_/_/_/_/_/_/
+  // settings.url はフォーマッター設定ファイルを直に見に行っている。
+  // 本来、settings.url を空っぽにすれば同プロジェクトのEclipse設定(.settings)を見てくれるはずだが、
+  // なぜか効かないのでそのようにした。(harborで試すと大丈夫なのに何が違うのか...)
+  // 一方で、元々Eclipse設定(.settings)はgitコミットせずに ./gradlew eclipse で自動生成しているので、
+  // VSCodeユーザーだとローカルに .settings は存在しないことになるので、直に見に行くで正解だった。
+  "java.format.settings.url": "./gradle/eclipse/code-formatter-profile.xml",
+  "java.saveActions.organizeImports": true
 }
