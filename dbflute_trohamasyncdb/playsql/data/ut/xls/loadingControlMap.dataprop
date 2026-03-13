@@ -1,0 +1,41 @@
+map:{
+    # ALL, NONE, PART
+    ; loggingInsertType = PART
+
+    # true or false
+    ; isSuppressBatchUpdate = false
+
+    # true or false
+    ; isSuppressColumnDefCheck = false
+
+    # dateAdjustmentMap = map:{
+    #     ; df:originDate = 2033/03/09
+    #     ; $$ALL$$ = map:{
+    #         ; $$ALL$$ = addDay($distance)
+    #     }
+    #     ; MEMBER = map:{ BIRTHDATE = addDay(0) }
+    # }
+    ; dateAdjustmentMap = map:{
+        ; df:originDate = 2008/01/01
+        ; df:millisColumnList = list:{
+            ; prefix:ADJUSTED_NAMED_
+            ; ADJUSTED_PINPOINT_STRING_LONG ; ADJUSTED_PINPOINT_TYPED_LONG
+        }
+        ; $$ALL$$ = map:{
+            ; $$ALL$$ = addDay($distance)
+            ; FORMALIZED_DATETIME = addDay(0)
+            ; LOGIN_DATETIME = addDay(0)
+            ; ADJUSTED_PINPOINT_STRING_LONG = addDay(30)
+            ; ADJUSTED_PINPOINT_TYPED_LONG = addDay(31)
+            ; ABC_DATETIME = addDay(0)
+        }
+        ; MEMBER = map:{ BIRTHDATE = addDay(0) }
+        ; MEMBER_ADDRESS = map:{ $$ALL$$ = addDay(0) }
+        ; WHITE_XLS_MAN = map:{ $$ALL$$ = addDay(0) }
+    }
+
+    # outside file for large text 
+    ; largeTextFileMap = map:{
+        ; WHITE_LARGE_TEXT_FILE = list:{ suffix:_TEXT }
+    }
+}

@@ -1,0 +1,22 @@
+map:{
+    # ALL, NONE, PART
+    ; loggingInsertType = PART
+
+    # true or false
+    ; isSuppressBatchUpdate = false
+
+    # true or false
+    ; isSuppressColumnDefCheck = false
+
+    # dateAdjustmentMap = map:{
+    #     ; df:originDate = 2013/03/09
+    #     ; $$ALL$$ = map:{
+    #         ; $$ALL$$ = addDay($distance)
+    #     }
+    #     ; MEMBER = map:{ BIRTHDATE = addDay(0) }
+    # }
+    ; dateAdjustmentMap = map:{
+        #; df:originDate = 2007/01/01
+        #; $$ALL$$ = addDay($distance)
+    }
+}

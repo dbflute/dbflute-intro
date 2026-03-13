@@ -1,0 +1,72 @@
+# /---------------------------------------------------------------------------
+# additionalTableMap: (NotRequired - Default 'map:{}')
+# 
+# This property is valid at only JDBC task.
+# You should use this when JDBC can not provide table information
+# and when you have no table but call stored procedures only.
+# 
+# The element 'columnMap' is only required in table elements. 
+# The element 'type' is only required in column elements. 
+# 
+# Specification:
+# map: {
+#     [table-name] = map:{
+#         columnMap = map:{
+#             [column-name] = map:{
+#                 type = [column JDBC type] ; dbType = [column DB type]
+#                 ; required = [true or false] ; size = [column size]
+#                 ; primaryKey = [true or false] ; pkName = [PK constraint name]
+#                 ; autoIncrement = [true or false]
+#                 ; default = [default value] ; comment = [column comment]
+#             }
+#         }
+#         ; comment = [table comment]
+#     }
+# }
+# 
+# *The line that starts with '#' means comment-out.
+#
+map:{
+    ; white_additional = map:{
+        ; columnMap = map:{
+            ; foo_id = map:{
+                ; type = INTEGER ; dbType = INTEGER ; required = true
+                ; primaryKey = true ; pkName = PK_WHITE_ADDITIONAL
+                ; autoIncrement = true
+            }
+            ; foo_name = map:{ type = VARCHAR ; required = true ; size = 123 ; comment = Mr.FOO's name: It's joke! }
+            ; foo_date = map:{ type = DATE }
+            ; register_datetime = map:{ type = TIMESTAMP ; dbType = DATETIME ; size = 19 ; default = CURRENT_TIMESTAMP }
+        }
+        ; comment = WXADD: test table for additionalTable
+    }
+}
+# ----------------/
+#
+# Reference for JDBC Type with Mapping as follows:
+# --------------------------------------------------------
+# | JDBC Type     | Java Native          | CSharp Native |
+# | ------------------------------------------------------
+# | CHAR          | java.lang.String     | String        |
+# | VARCHAR       | java.lang.String     | String        |
+# | LONGVARCHAR   | java.lang.String     | String        |
+# | NUMERIC       | java.math.BigDecimal | decimal?      |
+# | DECIMAL       | java.math.BigDecimal | decimal?      |
+# | BIT           | java.lang.Boolean    | bool?         |
+# | BOOLEAN       | java.lang.Boolean    | bool?         |
+# | TINYINT       | java.lang.Integer    | int?          |
+# | SMALLINT      | java.lang.Integer    | int?          |
+# | INTEGER       | java.lang.Integer    | int?          |
+# | BIGINT        | java.lang.Long       | long?         |
+# | REAL          | java.math.BigDecimal | decimal?      |
+# | FLOAT         | java.math.BigDecimal | decimal?      |
+# | DOUBLE        | java.math.BigDecimal | decimal?      |
+# | BINARY        | byte[]               | byte[]        |
+# | VARBINARY     | byte[]               | byte[]        |
+# | LONGVARBINARY | byte[]               | byte[]        |
+# | DATE          | java.util.Date       | DateTime?     |
+# | TIME          | java.sql.Time        | DateTime?     |
+# | TIMESTAMP     | java.sql.Timestamp   | DateTime?     |
+# | ARRAY         | *Unsupported         | *Unsupported  |
+# | UUID          | java.util.UUID       | *Unsupported  |
+# --------------------------------------------------------

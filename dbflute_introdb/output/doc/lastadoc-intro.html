@@ -927,7 +927,7 @@ table.child, table.child td, table.child th {
         <td class="rowcell">
         </td>
         <td class="rowcell">
-            <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.util.Map&lt;?,&nbsp;?&gt;&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Map&lt;?,&nbsp;?&gt;&gt;&gt;</span>
+            <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult&gt;">JsonResponse&lt;BasicClassificationResult&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
         <td class="rowcellnum">53</td>
@@ -964,10 +964,10 @@ table.child, table.child td, table.child th {
             <span title="org.dbflute.intro.app.web.log.LogBody">LogBody</span>
         </td>
         <td class="rowcell">
-            <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogBean&gt;">JsonResponse&lt;LogBean&gt;</span>
+            <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogResult&gt;">JsonResponse&lt;LogResult&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">60</td>
+        <td class="rowcellnum">62</td>
         <td class="rowcellnum">9</td>
     </tr>
     <tr>
@@ -982,11 +982,11 @@ table.child, table.child td, table.child th {
         <td class="rowcell">
         </td>
         <td class="rowcell">
-            <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogBean&gt;">JsonResponse&lt;LogBean&gt;</span>
+            <span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogResult&gt;">JsonResponse&lt;LogResult&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">60</td>
-        <td class="rowcellnum">7</td>
+        <td class="rowcellnum">62</td>
+        <td class="rowcellnum">9</td>
     </tr>
     <tr>
         <td class="rowcellnum">42</td>
@@ -1000,10 +1000,10 @@ table.child, table.child td, table.child th {
         <td class="rowcell">
         </td>
         <td class="rowcell">
-            <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.List&lt;org.dbflute.intro.app.web.log.LogBean&gt;&gt;">JsonResponse&lt;List&lt;LogBean&gt;&gt;</span>
+            <span title="org.lastaflute.web.response.JsonResponse&lt;java.util.List&lt;org.dbflute.intro.app.web.log.LogResult&gt;&gt;">JsonResponse&lt;List&lt;LogResult&gt;&gt;</span>
         </td>
         <td class="rowcellnum">2</td>
-        <td class="rowcellnum">60</td>
+        <td class="rowcellnum">62</td>
         <td class="rowcellnum">7</td>
     </tr>
     <tr>
@@ -5896,7 +5896,269 @@ table.child, table.child td, table.child th {
 </p>
 <p class="tablecomment" style="white-space:pre-wrap;">Intro全体で共有するようなリクエストを司るAction。<br><br>&#064;author&nbsp;p1us2er0<br>&#064;author&nbsp;jflute<br>&#064;author&nbsp;deco<br>&#064;author&nbsp;subaru</p>
 <p class="tablecomment" style="white-space:pre-wrap;">サーバーサイドの区分値の情報一括で戻す。<br><br>&#064;return&nbsp;map型のキーに対してそれぞれの区分値が定義されている&nbsp;(NotNull)</p>
-<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.Map&lt;java.lang.String,&nbsp;java.util.Map&lt;?,&nbsp;?&gt;&gt;&gt;">JsonResponse&lt;Map&lt;String,&nbsp;Map&lt;?,&nbsp;?&gt;&gt;&gt;</span></span>
+<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult&gt;">JsonResponse&lt;BasicClassificationResult&gt;</span></span>
+<table>
+    <thead>
+    <tr>
+        <th class="rownumhead">No.</th>
+        <th>name</th>
+        <th>type</th>
+        <th>comment</th>
+        <th>annotations</th>
+    </tr>
+    </thead>
+    <tr>
+        <td class="rowcellnum" rowspan="2">1</td>
+        <td>targetDatabaseList</td>
+        <td><p title="java.util.List&lt;org.dbflute.intro.app.web.base.cls.result.DatabaseDefPart&gt;">List&lt;DatabaseDefPart&gt;</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+,
+            &#64;Valid
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <div class="nestedbean">
+<table>
+    <thead>
+    <tr>
+        <th class="rownumhead">No.</th>
+        <th>name</th>
+        <th>type</th>
+        <th>comment</th>
+        <th>annotations</th>
+    </tr>
+    </thead>
+    <tr>
+        <td class="rowcellnum" rowspan="1">1</td>
+        <td>databaseCode</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">2</td>
+        <td>databaseName</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">3</td>
+        <td>driverName</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">4</td>
+        <td>urlTemplate</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">5</td>
+        <td>defaultSchema</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">6</td>
+        <td>schemaRequired</td>
+        <td><p title="java.lang.Boolean">Boolean</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">7</td>
+        <td>schemaUpperCase</td>
+        <td><p title="java.lang.Boolean">Boolean</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">8</td>
+        <td>userInputAssist</td>
+        <td><p title="java.lang.Boolean">Boolean</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">9</td>
+        <td>embeddedJar</td>
+        <td><p title="java.lang.Boolean">Boolean</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+</table>
+
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="2">2</td>
+        <td>targetLanguageList</td>
+        <td><p title="java.util.List&lt;org.dbflute.intro.app.web.base.cls.result.LanguageDefPart&gt;">List&lt;LanguageDefPart&gt;</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+,
+            &#64;Valid
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <div class="nestedbean">
+<table>
+    <thead>
+    <tr>
+        <th class="rownumhead">No.</th>
+        <th>name</th>
+        <th>type</th>
+        <th>comment</th>
+        <th>annotations</th>
+    </tr>
+    </thead>
+    <tr>
+        <td class="rowcellnum" rowspan="1">1</td>
+        <td>languageCode</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">2</td>
+        <td>languageName</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+</table>
+
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="2">3</td>
+        <td>targetContainerList</td>
+        <td><p title="java.util.List&lt;org.dbflute.intro.app.web.base.cls.result.ContainerDefPart&gt;">List&lt;ContainerDefPart&gt;</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+,
+            &#64;Valid
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4">
+            <div class="nestedbean">
+<table>
+    <thead>
+    <tr>
+        <th class="rownumhead">No.</th>
+        <th>name</th>
+        <th>type</th>
+        <th>comment</th>
+        <th>annotations</th>
+    </tr>
+    </thead>
+    <tr>
+        <td class="rowcellnum" rowspan="1">1</td>
+        <td>containerCode</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="1">2</td>
+        <td>containerName</td>
+        <td><p title="java.lang.String">String</p></td>
+        <td class="fieldcomment">
+            <p title=""></p>
+            <p></p>
+        </td>
+        <td class="fieldannotations">
+            &#64;Required
+        </td>
+    </tr>
+</table>
+
+            </div>
+        </td>
+    </tr>
+</table>
 
 <h3 id=".intro.configuration::configuration">
 /intro/configuration
@@ -5961,7 +6223,7 @@ table.child, table.child td, table.child th {
     </tr>
 </table>
 
-<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogBean&gt;">JsonResponse&lt;LogBean&gt;</span></span>
+<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogResult&gt;">JsonResponse&lt;LogResult&gt;</span></span>
 <table>
     <thead>
     <tr>
@@ -5977,7 +6239,7 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="log&nbsp;file&nbsp;name<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck.log"">log&nbsp;file&nbsp;name<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck</p>
+            <p title="ログのファイル名。(ディレクトリパスなし)&nbsp;&lt;br&gt;<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log&nbsp;&lt;br&gt;<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck.log"">ログのファイル名</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -5989,7 +6251,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*"">long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/</p>
+            <p title="long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file&nbsp;&lt;br&gt;<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*"">long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file&nbsp;&lt;br&gt;<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6044,7 +6306,7 @@ table.child, table.child td, table.child th {
     </tr>
 </table>
 
-<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogBean&gt;">JsonResponse&lt;LogBean&gt;</span></span>
+<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;org.dbflute.intro.app.web.log.LogResult&gt;">JsonResponse&lt;LogResult&gt;</span></span>
 <table>
     <thead>
     <tr>
@@ -6060,7 +6322,7 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="log&nbsp;file&nbsp;name<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck.log"">log&nbsp;file&nbsp;name<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck</p>
+            <p title="ログのファイル名。(ディレクトリパスなし)&nbsp;&lt;br&gt;<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log&nbsp;&lt;br&gt;<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck.log"">ログのファイル名</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6072,7 +6334,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*"">long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/</p>
+            <p title="long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file&nbsp;&lt;br&gt;<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*"">long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file&nbsp;&lt;br&gt;<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6116,7 +6378,7 @@ table.child, table.child td, table.child th {
     </tr>
 </table>
 
-<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.List&lt;org.dbflute.intro.app.web.log.LogBean&gt;&gt;">JsonResponse&lt;List&lt;LogBean&gt;&gt;</span></span>
+<span class="doctitle">Return as:</span> <span class="docsubvalue"><span title="org.lastaflute.web.response.JsonResponse&lt;java.util.List&lt;org.dbflute.intro.app.web.log.LogResult&gt;&gt;">JsonResponse&lt;List&lt;LogResult&gt;&gt;</span></span>
 <table>
     <thead>
     <tr>
@@ -6132,7 +6394,7 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="log&nbsp;file&nbsp;name<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck.log"">log&nbsp;file&nbsp;name<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck</p>
+            <p title="ログのファイル名。(ディレクトリパスなし)&nbsp;&lt;br&gt;<br>Log&nbsp;files&nbsp;are&nbsp;under&nbsp;the&nbsp;dbflute_yourdb(DBFlute&nbsp;client)/log&nbsp;&lt;br&gt;<br>e.g.&nbsp;"intro-last-execute-failure-alterCheck.log"">ログのファイル名</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6144,7 +6406,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*"">long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/</p>
+            <p title="long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file&nbsp;&lt;br&gt;<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*&nbsp;*"">long&nbsp;long&nbsp;texts&nbsp;in&nbsp;log&nbsp;file&nbsp;&lt;br&gt;<br>e.g.&nbsp;"[df-replace-schema]&nbsp;/</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6388,7 +6650,7 @@ table.child, table.child td, table.child th {
         <td>ngMarkFile</td>
         <td><p title="org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$NgMarkFilePart">NgMarkFilePart</p></td>
         <td class="fieldcomment">
-            <p title="Alter&nbsp;Check&nbsp;Result&nbsp;(Enable&nbsp;Null)<br>e.g.&nbsp;alter-NG">Alter&nbsp;Check&nbsp;Result&nbsp;(Enable&nbsp;Null)<br>e.g.&nbsp;alter-NG</p>
+            <p title="Alter&nbsp;Check&nbsp;Result&nbsp;e.g.&nbsp;alter-NG&nbsp;(NullAllowed)">Alter&nbsp;Check&nbsp;Result&nbsp;e.g.&nbsp;alter-NG&nbsp;(NullAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6425,7 +6687,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);</p>
+            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6442,10 +6704,12 @@ table.child, table.child td, table.child th {
         <td>editingFiles</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$SQLFilePart&gt;">List&lt;SQLFilePart&gt;</p></td>
         <td class="fieldcomment">
-            <p title="list&nbsp;of&nbsp;editing&nbsp;sql&nbsp;files&nbsp;in&nbsp;dbflute_client/playsql/migration/alter&nbsp;directory">list&nbsp;of&nbsp;editing&nbsp;sql&nbsp;files&nbsp;in&nbsp;dbflute_client/playsql/migration/alter&nbsp;directory</p>
+            <p title="list&nbsp;of&nbsp;editing&nbsp;sql&nbsp;files&nbsp;in&nbsp;dbflute_client/playsql/migration/alter&nbsp;directory&nbsp;(NotNull,&nbsp;EmptyAllowed)">list&nbsp;of&nbsp;editing&nbsp;sql&nbsp;files&nbsp;in&nbsp;dbflute_client/playsql/migration/alter&nbsp;directory&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
+            &#64;NotNull
+,
             &#64;Valid
         </td>
     </tr>
@@ -6467,11 +6731,11 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE.sql">file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE</p>
+            <p title="file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE.sql&nbsp;(NotNull)">file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE</p>
             <p></p>
         </td>
         <td class="fieldannotations">
-            &#64;NotNull
+            &#64;Required
         </td>
     </tr>
     <tr>
@@ -6479,7 +6743,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);</p>
+            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6496,7 +6760,7 @@ table.child, table.child td, table.child th {
         <td>checkedZip</td>
         <td><p title="org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$CheckedZipPart">CheckedZipPart</p></td>
         <td class="fieldcomment">
-            <p title="checked&nbsp;sql&nbsp;zip&nbsp;file">checked&nbsp;sql&nbsp;zip&nbsp;file</p>
+            <p title="checked&nbsp;sql&nbsp;zip&nbsp;file&nbsp;(NullAllowed)">checked&nbsp;sql&nbsp;zip&nbsp;file&nbsp;(NullAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6521,11 +6785,11 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="zip&nbsp;file&nbsp;name&nbsp;e.g.&nbsp;20190831_2249/checked-alter-to-20190422-2332.zip">zip&nbsp;file&nbsp;name&nbsp;e.g.&nbsp;20190831_2249/checked-alter-to-20190422-2332</p>
+            <p title="zip&nbsp;file&nbsp;name&nbsp;e.g.&nbsp;20190831_2249/checked-alter-to-20190422-2332.zip&nbsp;(NotNull)">zip&nbsp;file&nbsp;name&nbsp;e.g.&nbsp;20190831_2249/checked-alter-to-20190422-2332</p>
             <p></p>
         </td>
         <td class="fieldannotations">
-            &#64;NotNull
+            &#64;Required
         </td>
     </tr>
     <tr>
@@ -6533,10 +6797,12 @@ table.child, table.child td, table.child th {
         <td>checkedFiles</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$SQLFilePart&gt;">List&lt;SQLFilePart&gt;</p></td>
         <td class="fieldcomment">
-            <p title="list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files">list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files</p>
+            <p title="list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files&nbsp;(NotNull,&nbsp;EmptyAllowed)">list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
+            &#64;NotNull
+,
             &#64;Valid
         </td>
     </tr>
@@ -6558,11 +6824,11 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE.sql">file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE</p>
+            <p title="file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE.sql&nbsp;(NotNull)">file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE</p>
             <p></p>
         </td>
         <td class="fieldannotations">
-            &#64;NotNull
+            &#64;Required
         </td>
     </tr>
     <tr>
@@ -6570,7 +6836,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);</p>
+            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6592,7 +6858,7 @@ table.child, table.child td, table.child th {
         <td>unreleasedDir</td>
         <td><p title="org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$UnreleasedDirPart">UnreleasedDirPart</p></td>
         <td class="fieldcomment">
-            <p title="unreleased&nbsp;sql&nbsp;dir">unreleased&nbsp;sql&nbsp;dir</p>
+            <p title="unreleased&nbsp;sql&nbsp;dir&nbsp;(NullAllowed)">unreleased&nbsp;sql&nbsp;dir&nbsp;(NullAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6617,10 +6883,12 @@ table.child, table.child td, table.child th {
         <td>checkedFiles</td>
         <td><p title="java.util.List&lt;org.dbflute.intro.app.web.playsql.migration.alter.AlterSQLResult$SQLFilePart&gt;">List&lt;SQLFilePart&gt;</p></td>
         <td class="fieldcomment">
-            <p title="list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files">list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files</p>
+            <p title="list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files&nbsp;(NotNull,&nbsp;EmptyAllowed)">list&nbsp;of&nbsp;checked&nbsp;sql&nbsp;files&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
+            &#64;NotNull
+,
             &#64;Valid
         </td>
     </tr>
@@ -6642,11 +6910,11 @@ table.child, table.child td, table.child th {
         <td>fileName</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE.sql">file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE</p>
+            <p title="file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE.sql&nbsp;(NotNull)">file&nbsp;name&nbsp;e.g.&nbsp;alter-sql-SAMPLE</p>
             <p></p>
         </td>
         <td class="fieldannotations">
-            &#64;NotNull
+            &#64;Required
         </td>
     </tr>
     <tr>
@@ -6654,7 +6922,7 @@ table.child, table.child td, table.child th {
         <td>content</td>
         <td><p title="java.lang.String">String</p></td>
         <td class="fieldcomment">
-            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);</p>
+            <p title="file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)">file&nbsp;content&nbsp;e.g.&nbsp;ALTER&nbsp;TABLE&nbsp;MEMBER&nbsp;ADD&nbsp;MAIHAMA_VISITED&nbsp;VARCHAR(3);&nbsp;(NotNull,&nbsp;EmptyAllowed)</p>
             <p></p>
         </td>
         <td class="fieldannotations">
@@ -6873,12 +7141,13 @@ table.child, table.child td, table.child th {
     <tr>
         <td class="rowcellnum" rowspan="1">1</td>
         <td>success</td>
-        <td><p title="boolean">boolean</p></td>
+        <td><p title="java.lang.Boolean">Boolean</p></td>
         <td class="fieldcomment">
-            <p title=""></p>
+            <p title="業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど。&lt;br&gt;<br>システム的な失敗のケースは、そもそも例外がthrowされるのでHTTP&nbsp;statusが200ではない。">業務的に実行が成功したか？失敗は、SchemaPolicyのviolationなど</p>
             <p></p>
         </td>
         <td class="fieldannotations">
+            &#64;Required
         </td>
     </tr>
 </table>
@@ -9037,7 +9306,7 @@ table.child, table.child td, table.child th {
 <p>
 <span class="doctitle">Request Method:</span> <span class="docmainvalue">RemoteIntroIntroBhv#requestClassifications()</span>
 </p>
-<span class="doctitle">Return as:</span> <span class="docsubvalue">any</span>
+<span class="doctitle">Return as:</span> <span class="docsubvalue">IntroClassificationsResult</span>
 <table>
     <thead>
     <tr>
@@ -9046,6 +9315,21 @@ table.child, table.child td, table.child th {
         <th>type</th>
     </tr>
     </thead>
+    <tr>
+        <td class="rowcellnum" rowspan="$rowspan">1</td>
+        <td>targetDatabaseList</td>
+        <td>TODO</td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="$rowspan">2</td>
+        <td>targetLanguageList</td>
+        <td>TODO</td>
+    </tr>
+    <tr>
+        <td class="rowcellnum" rowspan="$rowspan">3</td>
+        <td>targetContainerList</td>
+        <td>TODO</td>
+    </tr>
 </table>
 
 <h3 id=".intro.configuration::get">

@@ -5,11 +5,20 @@ import { readFile } from '../../shared/io-utils'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import { DropdownItem } from '../../components/dropdown/dropdown'
 
+/**
+ * デフォルトで表示するドロップダウンの項目 (要は未選択)
+ */
 const defaultDropDownItem = {
   value: '',
   label: 'not selected',
   default: true,
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface State {
   // JDBCドライバーのjarファイル情報を格納するオブジェクト
@@ -33,58 +42,148 @@ interface State {
   // 話がそれますが、TypeScriptの界隈ではnullとundefinedのどちらを使うのか、使い分けるべきかみたいなところはいろいろ意見が分かれてるみたいです。
   // _/_/_/_/_/_/_/_/_/_/
   //
+  /** DBFluteが利用するJDBCドライバーに関する情報、主にはjarファイル */
   jdbcDriver: { fileName: string; data: string } | undefined
-  // JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
-  // (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
+
+  /**
+   * JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
+   * (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
+   */
   needsJdbcDriver: boolean
-  // O/Rマッパー関連設定の表示/非表示
+
+  /** O/Rマッパー関連設定の表示/非表示 */
   oRMapperOptionsFlg: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface Welcome extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // #thinking jflute databaseMap, 自動生成typeの都合でObjectからMapに変えたが、Objectで実現できる？ (2025/11/04)
+  // #thinking jflute Definition というタグコメント、もっと良い名前があったら修正したい (2025/12/16)
+  // #thinking jflute default...は完全な定数なので、違う形で表現してもいいかも (2025/12/16)
+  // _/_/_/_/_/_/_/_/
+  // -----------------------------------------------------
+  //                                      Static Reference
+  //                                      ----------------
+  /** ドロップダウンにてデフォルトで選択されるデータベースの区分値コード (EmptyAllowed: no selected) */
   defaultDatabaseCode: string
+
+  /** デフォルトで表示されるJDBCドライバーFQCN (EmptyAllowed: no use jar) */
   defaultJdbcDriver: string
+
+  /** デフォルトで表示されるJDBC接続URL (EmptyAllowed: no default) */
   defaultJdbcUrl: string
+
+  /** ドロップダウンにてデフォルトで選択されるプログラミング言語の区分値コード (EmptyAllowed: no selected) */
   defaultLanguageCode: string
+
+  /** ドロップダウンにてデフォルトで選択されるDIコンテナーの区分値コード (EmptyAllowed: no selected) */
   defaultContainerCode: string
-  databaseMap: { [key: string]: DatabaseDefBean }
+
+  // -----------------------------------------------------
+  //                                 Initialized Reference
+  //                                 ---------------------
+  /** DBMSごとの情報、区分値のコードがキー値 */
+  databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
+
+  /**
+   * DBFluteエンジンの最新バージョン、インターネットで公開されている最新バージョン e.g. 1.2.5
+   * (undefined: if onMounted()で初期化失敗の場合など)
+   */
   latestVersion: string | undefined
+
+  /** DBFluteクライアントで定義する対象データベースのドロップダウン項目たち (NotEmpty) */
   targetDatabaseItems: DropdownItem[]
+
+  /** DBFluteクライアントで定義する対象プログラミング言語のドロップダウン項目たち (NotEmpty) */
   targetLanguageItems: DropdownItem[]
+
+  /** DBFluteクライアントで定義する対象DIコンテナーのドロップダウン項目たち (NotEmpty) */
   targetContainerItems: DropdownItem[]
+
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
+  /**
+   * マウント完了時の処理。
+   */
+  onMounted(): void
 
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  onMounted(): void
-  onchangeDatabase: (databaseCode: DropdownItem) => void
+  /**
+   * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
+   * @param targetDatabase - 選択されたDBMSの区分値コード
+   */
+  onchangeDatabase: (targetDatabase: DropdownItem) => void
+
+  /**
+   * O/Rマッパー設定の表示/非表示をトグルする。
+   */
   onclickOrmSetting: () => void
+
+  /**
+   * DBFluteクライアントを作成する。(作成ボタンの処理)
+   */
   onclickCreate: () => void
+
+  /**
+   * JDBCドライバーのファイルが指定されたときの処理。
+   * @param event - この関数を呼び出したイベントのオブジェクト
+   */
   onchangeJarFile: (event: InputEvent) => void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  /**
+   * 区分値情報をUI用のデータに整形する。
+   * @param classifications - APIで取得した区分値情報
+   */
   convertClassificationsForUI: (classifications: IntroClassificationsResult) => {
-    databaseMap: { [key: string]: DatabaseDefBean }
-    targetContainerItems: DropdownItem[]
-    targetLanguageItems: DropdownItem[]
+    /** DBMSごとの情報、区分値のコードがキー値 (NotEmpty) */
+    databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
+
+    /** DBFluteクライアントで定義する対象データベースのドロップダウン項目たち (NotEmpty) */
     targetDatabaseItems: DropdownItem[]
+
+    /** DBFluteクライアントで定義する対象プログラミング言語のドロップダウン項目たち (NotEmpty) */
+    targetLanguageItems: DropdownItem[]
+
+    /** DBFluteクライアントで定義する対象DIコンテナーのドロップダウン項目たち (NotEmpty) */
+    targetContainerItems: DropdownItem[]
   }
+
+  /**
+   * DBFluteクライアントを作成したことを知らせるパンじゃなくてトースト。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名。
+   */
   showToast: (projectName: string) => void
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 export default withIntroTypes<Welcome>({
   components: {
     i18n,
   },
   state: {
-    jdbcDriver: undefined,
-    needsJdbcDriver: false,
-    oRMapperOptionsFlg: false,
+    jdbcDriver: undefined, // JDBCドライバーの設定が必要なので一部DBMSなのでデフォルト指定なし
+    needsJdbcDriver: false, // とりあえずデフォルトはDBMS未選択想定でfalse
+    oRMapperOptionsFlg: false, // Introのコンセプト的にO/Rマッパーオプションはデフォルト非表示
   },
 
   // ===================================================================================
@@ -96,14 +195,22 @@ export default withIntroTypes<Welcome>({
   //
   // とある現場では、TypeScript用の区分値CDefクラスを自動生成して、フロントとサーバーで同期してる。
   // IntroはTypeScriptじゃないけど、実験的にそういうのやってもいいかも（＾＾
+  //
+  // #thiking jflute ↑もうTypeScriptなので、いずれTypeScriptのCDefを自動生成したい (2025/12/16)
   // _/_/_/_/_/_/_/_/_/_/
+  // -----------------------------------------------------
+  //                                      Static Reference
+  //                                      ----------------
   defaultDatabaseCode: '',
   defaultJdbcDriver: '',
   defaultJdbcUrl: '',
   defaultLanguageCode: 'java',
   defaultContainerCode: 'lasta_di',
-  databaseMap: {}, // e.g. targetDatabase
-  // DBFluteエンジンの最新バージョン e.g. 1.2.5
+
+  // -----------------------------------------------------
+  //                                 Initialized Reference
+  //                                 ---------------------
+  databaseMap: new Map(), // e.g. targetDatabase
   latestVersion: undefined,
   targetDatabaseItems: [],
   targetLanguageItems: [],
@@ -112,9 +219,6 @@ export default withIntroTypes<Welcome>({
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
-  /**
-   * マウント完了時の処理。
-   */
   async onMounted() {
     const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
     const latestVersion = await api.findEngineLatest().then((data) => data.latestReleaseVersion)
@@ -129,10 +233,6 @@ export default withIntroTypes<Welcome>({
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  /**
-   * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
-   * @param {DropdownItem} targetDatabase - 選択されたDBMS (NotNull)
-   */
   onchangeDatabase(targetDatabase: DropdownItem) {
     // Dropdownでselectedを選択した場合はデフォルト値に戻す
     if (targetDatabase.default) {
@@ -149,10 +249,15 @@ export default withIntroTypes<Welcome>({
       // それはそれでいいんだけど、サーバー側のキー値に依存するコードを散らばせたくない気はする。
       // プルリクより: データベース名だけ持った配列に変換してて用途を満たしてないからかもですね
       // そっか、こっちは embeddedJar も使うかありがとう。
-      const database = this.databaseMap[targetDatabase.value]
+      const database = this.databaseMap.get(targetDatabase.value)
+      if (!database) {
+        throw new Error('not found the database code: ' + targetDatabase.value)
+      }
       this.inputElementBy('[ref=jdbcDriverFqcn]').value = database.driverName
       this.inputElementBy('[ref=url]').value = database.urlTemplate
-      this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      if (database.defaultSchema) {
+        this.inputElementBy('[ref=schema]').value = database.defaultSchema
+      }
       this.update({
         // switch showing JDBCDriver select form
         needsJdbcDriver: !database.embeddedJar,
@@ -162,18 +267,12 @@ export default withIntroTypes<Welcome>({
     }
   },
 
-  /**
-   * O/Rマッパー設定の表示/非表示をトグルする。
-   */
   onclickOrmSetting() {
     this.update({
       oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg,
     })
   },
 
-  /**
-   * DBFluteクライアントを作成する。(作成ボタンの処理)
-   */
   onclickCreate() {
     // TypeScriptのstrictモードを適用したのでnullチェックが必須になった
     if (!this.latestVersion) {
@@ -212,10 +311,6 @@ export default withIntroTypes<Welcome>({
       })
   },
 
-  /**
-   * JDBCドライバーのファイルが指定されたときの処理。
-   * @param {Event} event - この関数を呼び出したイベントのオブジェクト (NotNull)
-   */
   onchangeJarFile(event: InputEvent) {
     const eventTarget = event.target as HTMLInputElement // event.targetはイベント発生元のオブジェクト
     // TypeScriptのstrictモードを適用したのでnullチェックが必須になった
@@ -233,28 +328,28 @@ export default withIntroTypes<Welcome>({
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  /**
-   * 区分値情報をUI用のデータに整形する。
-   * @param {IntroClassificationsResult} classifications - APIで取得した区分値情報 (NotNull)
-   */
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
+    const dbMap = new Map(classifications.targetDatabaseList.map((obj) => [obj.databaseCode, obj]))
+    const langMap = new Map(classifications.targetLanguageList.map((obj) => [obj.languageCode, obj]))
+    const contMap = new Map(classifications.targetContainerList.map((obj) => [obj.containerCode, obj]))
+
     return {
-      databaseMap: classifications.targetDatabaseMap,
+      databaseMap: dbMap,
       targetDatabaseItems: [
-        ...Object.entries(classifications.targetDatabaseMap).map(([key, value]) => {
+        ...Object.entries(Object.fromEntries(dbMap)).map(([key, value]) => {
           return { value: key, label: value.databaseName, default: false }
         }),
         defaultDropDownItem,
       ],
       targetLanguageItems: [
-        ...Object.entries(classifications.targetLanguageMap).map(([key, value]) => {
-          return { value: key, label: value, default: false }
+        ...Object.entries(Object.fromEntries(langMap)).map(([key, value]) => {
+          return { value: key, label: value.languageName, default: false }
         }),
         defaultDropDownItem,
       ],
       targetContainerItems: [
-        ...Object.entries(classifications.targetContainerMap).map(([key, value]) => {
-          return { value: key, label: value, default: false }
+        ...Object.entries(Object.fromEntries(contMap)).map(([key, value]) => {
+          return { value: key, label: value.containerName, default: false }
         }),
         defaultDropDownItem,
       ],
@@ -274,10 +369,6 @@ export default withIntroTypes<Welcome>({
   // o 一方で、業務のコードだと2個目が出てきたとき、シンプルな方が置き去りにされやすい
   // o でも、ここはOSSの世界、2個目が出てきたときは既存も直そうポリシーで
   // _/_/_/_/_/_/_/_/_/_/
-  /**
-   * DBFluteクライアントを作成したことを知らせるパンじゃなくてトースト。
-   * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名. (NotNull)
-   */
   showToast(projectName: string) {
     this.successToast({
       title: 'Create task completed',

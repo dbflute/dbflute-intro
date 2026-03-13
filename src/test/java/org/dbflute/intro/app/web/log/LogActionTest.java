@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,11 +56,11 @@ public class LogActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
+        JsonResponse<List<LogResult>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        TestingJsonData<List<LogBean>> jsonData = validateJsonData(response);
-        List<LogBean> logList = jsonData.getJsonResult(); // might be empty
+        TestingJsonData<List<LogResult>> jsonData = validateJsonData(response);
+        List<LogResult> logList = jsonData.getJsonResult(); // might be empty
         logList.forEach(log -> { // show only
             log(log);
         });
@@ -79,11 +79,11 @@ public class LogActionTest extends UnitIntroTestCase {
         inject(action);
 
         // ## Act ##
-        JsonResponse<List<LogBean>> response = action.list(TEST_CLIENT_PROJECT);
+        JsonResponse<List<LogResult>> response = action.list(TEST_CLIENT_PROJECT);
 
         // ## Assert ##
-        TestingJsonData<List<LogBean>> jsonData = validateJsonData(response);
-        List<LogBean> jsonBean = jsonData.getJsonResult();
+        TestingJsonData<List<LogResult>> jsonData = validateJsonData(response);
+        List<LogResult> jsonBean = jsonData.getJsonResult();
         assertHasAnyElement(jsonBean);
         jsonBean.forEach(bean -> {
             assertTrue(bean.fileName.endsWith(".log"));

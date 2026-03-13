@@ -1,0 +1,4 @@
+SELECT	FROM
+801	foo from tsv
+802	bar from tsv
+803	baz from tsv

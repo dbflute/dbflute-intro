@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,23 @@
  */
 package org.dbflute.intro.app.web.base.cls;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.dbflute.intro.app.web.base.cls.result.BasicClassificationResult;
+import org.dbflute.intro.app.web.base.cls.result.ContainerDefPart;
+import org.dbflute.intro.app.web.base.cls.result.DatabaseDefPart;
+import org.dbflute.intro.app.web.base.cls.result.LanguageDefPart;
 import org.dbflute.intro.dbflute.allcommon.CDef;
 import org.dbflute.intro.dbflute.allcommon.CDef.TaskType;
+import org.dbflute.intro.dbflute.exbhv.ClsTargetContainerBhv;
 import org.dbflute.intro.dbflute.exbhv.ClsTargetDatabaseBhv;
+import org.dbflute.intro.dbflute.exbhv.ClsTargetLanguageBhv;
 import org.dbflute.intro.mylasta.appcls.AppCDef;
 import org.dbflute.intro.mylasta.direction.IntroConfig;
 import org.dbflute.util.DfStringUtil;
-
-import javax.annotation.Resource;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author jflute
@@ -40,34 +45,30 @@ public class IntroClsAssist {
     private IntroConfig introConfig;
     @Resource
     private ClsTargetDatabaseBhv databaseBhv;
+    @Resource
+    private ClsTargetLanguageBhv languageBhv;
+    @Resource
+    private ClsTargetContainerBhv containerBhv;
 
     // ===================================================================================
     //                                                                          Basic Info
     //                                                                          ==========
-    public Map<String, Map<?, ?>> getClassificationMap() {
-        Map<String, Map<?, ?>> clsMap = new LinkedHashMap<String, Map<?, ?>>();
-        clsMap.put("targetDatabaseMap", prepareTargetDatabaseMap());
-        clsMap.put("targetLanguageMap", prepareTargetLanguageMap());
-        clsMap.put("targetContainerMap", prepareTargetContainerMap());
-        return clsMap;
-    }
+    public BasicClassificationResult prepareClassificationResult() {
+        BasicClassificationResult result = new BasicClassificationResult();
 
-    private Map<String, DatabaseDefBean> prepareTargetDatabaseMap() {
-        return databaseBhv.selectList(cb -> {
+        result.targetDatabaseList = databaseBhv.selectList(cb -> {
             cb.query().addOrderBy_DisplayOrder_Asc();
-        }).stream().collect(Collectors.toMap(db -> db.getDatabaseCode(), db -> new DatabaseDefBean(db), (u, v) -> v, LinkedHashMap::new));
-    }
+        }).mappingList(database -> new DatabaseDefPart(database));
 
-    private Map<String, String> prepareTargetLanguageMap() {
-        return CDef.TargetLanguage.listAll()
-                .stream()
-                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.alias(), (u, v) -> v, LinkedHashMap::new));
-    }
+        result.targetLanguageList = languageBhv.selectList(cb -> {
+            cb.query().addOrderBy_DisplayOrder_Asc();
+        }).mappingList(language -> new LanguageDefPart(language));
 
-    private Map<String, String> prepareTargetContainerMap() {
-        return CDef.TargetContainer.listAll()
-                .stream()
-                .collect(Collectors.toMap(cls -> cls.code(), cls -> cls.alias(), (u, v) -> v, LinkedHashMap::new));
+        result.targetContainerList = containerBhv.selectList(cb -> {
+            cb.query().addOrderBy_DisplayOrder_Asc();
+        }).mappingList(container -> new ContainerDefPart(container));
+
+        return result;
     }
 
     // ===================================================================================

@@ -3,55 +3,10 @@
  * それぞれの項目の詳しい説明は、該当すうAPIのJava側のコメント、もしくはSwaggerを参照してください
  */
 
-type DatabaseDefBean = {
-  databaseName: string
-  driverName: string
-  urlTemplate: string
-  defaultSchema: string
-  schemaRequired: boolean
-  schemaUpperCase: boolean
-  userInputAssist: boolean
-  embeddedJar: boolean
-}
-type IntroClassificationsResult = {
-  targetDatabaseMap: { [key: string]: DatabaseDefBean }
-  targetLanguageMap: { [key: string]: string }
-  targetContainerMap: { [key: string]: string }
-}
-
-type NgMark = 'previous-NG' | 'alter-NG' | 'next-NG'
-
-type AlterSQLResultNgMarkFilePart = {
-  ngMark: NgMark
-  content: string
-}
-
-type AlterSQLResultSQLFilePart = {
-  fileName: string
-  content: string
-}
-
-type AlterSQLResultCheckedZipPart = {
-  fileName: string
-  checkedFiles: AlterSQLResultSQLFilePart[]
-}
-
-type AlterSQLResultUnreleasedDirPart = {
-  checkedFiles: AlterSQLResultSQLFilePart[]
-}
-
-type AlterSQLResult = {
-  ngMarkFile: AlterSQLResultNgMarkFilePart
-  editingFiles: AlterSQLResultSQLFilePart[]
-  checkedZip: AlterSQLResultCheckedZipPart
-  unreleasedDir: AlterSQLResultUnreleasedDirPart
-}
-
-type LogBean = {
-  fileName: string
-  content: string
-}
-
-type TaskExecutionResult = {
-  success: boolean
-}
+// _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// DBFluteのFreeGenで自動生成する「自動生成type」にすべて移行が完了。 (2025/11/11)
+// このファイルは削除してもいいが、それを伝えるためにもうちょっとしばらく残しておく。
+//
+// // [Riot7] 既存の移行済み画面にて自動生成クラスを使うように修正
+// https://github.com/dbflute/dbflute-intro/issues/498
+// _/_/_/_/

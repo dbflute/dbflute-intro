@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 the original author or authors.
+ * Copyright 2014-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.dbflute.intro.bizfw.server;
 
 import org.dbflute.intro.IntroBoot;
 
+// #thinking jflute gitコメント見ると、最初CORS対策で作られたクラスっぽいけど、フロントでは実際には使ってない。 (2026/02/06)
 /**
  * @author jflute at showbase
  * @author subaru

@@ -1,15 +1,37 @@
-# Copy from https://github.com/dbflute-test/dbflute-test-dbms-mysql/blob/master/docker-compose.yml by cabos (2022/07/03)
-version: "3.3"
+version: "3.9"
+
 services:
-  db:
-    image: mysql:8.0.22
+  torohamadb:
+    image: mysql:8.0
+    container_name: torohamadb
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_ROOT_PASSWORD: ''
-    volumes:
-      - ./localdb/my-docker.cnf:/etc/my.cnf:delegated
-      - db_volume:/var/lib/mysql:delegated
+      ################################# これらは DBFlute の ReplaceSchema で作成されます。
+      # MYSQL_DATABASE: trohamadb
+      # MYSQL_USER: trohamadb
+      # MYSQL_PASSWORD: trohamadb
     ports:
       - "43316:3306"
+    volumes:
+      - torohamadb:/var/lib/mysql:delegated
+      - ./localdb/my-docker.cnf:/etc/my.cnf:delegated
+  torohamasyncdb:
+    image: mysql:8.0
+    container_name: torohamasyncdb
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
+      ################################## これらは DBFlute の ReplaceSchema で作成されます。
+      # MYSQL_DATABASE: trohamadb
+      # MYSQL_USER: trohamadb
+      # MYSQL_PASSWORD: trohamadb
+    ports:
+      - "43317:3306"
+    volumes:
+      - torohamasyncdb:/var/lib/mysql:delegated
+      - ./localdb/my-docker.cnf:/etc/my.cnf:delegated
+
 volumes:
-  db_volume:
+  torohamadb:
+  torohamasyncdb:
