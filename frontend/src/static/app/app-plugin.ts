@@ -17,7 +17,7 @@ export interface DBFluteIntroPlugin {
    * Componentにclass名を動的に与えるためのオブジェクトを構築する
    * 具体例は [riotのマイグレーションガイド]{@link https://riot.js.org/ja/migration-guide/#%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E3%81%AE%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88}を参照
    * @param classes - class list as object (NotNull)
-   * @returns return only the classes having a truthy value (NotNull)
+   * @return return only the classes having a truthy value (NotNull)
    */
   classNames: (classes: { [key: string]: boolean }) => string
 
@@ -35,14 +35,14 @@ export interface DBFluteIntroPlugin {
    * - $関数で取得したElementに型を付与する際のヘルパー関数
    * - 複数のplugin関数で再利用するためglobalな関数として定義
    * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn] (NotNull)
-   * @returns 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
+   * @return 対象のタグのHTMLオブジェクト (NullAllowed: if not found)
    */
   elementAs: <EL extends HTMLElement>(selector: string) => EL | null
 
   /**
    * 指定されたselectorでinputのDOM要素を探す。(存在するはずのときに使う)
    * @param selector $関数に入れるselector文字列 e.g. [ref=jdbcDriverFqcn] (NotNull)
-   * @returns 対象のタグのHTMLオブジェクト (NotNull: exception if not found)
+   * @return 対象のタグのHTMLオブジェクト (NotNull: exception if not found)
    * @throws {ElementNotFoundError} 指定されたselectorに合致するinputのelementが存在しなかったら
    */
   inputElementBy: (selector: string) => HTMLInputElement

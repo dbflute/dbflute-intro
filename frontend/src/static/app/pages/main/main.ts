@@ -230,7 +230,7 @@ export default withIntroTypes<Main>({
 
   /**
    * ユーザがDBFluteエンジンをダウンロードするために表示する Modal を返す
-   * @returns ダウンロード時に表示する Modal
+   * @return ダウンロード時に表示する Modal
    */
   downloadModal(): DownloadModal {
     return this.downloadModalBase
@@ -239,7 +239,7 @@ export default withIntroTypes<Main>({
   /**
    * DBFlute Intro がバックグランドでプロセスを実行中に
    * ユーザが他の操作を抑制するための Modal を返す
-   * @returns 処理中に表示する Modal
+   * @return 処理中に表示する Modal
    */
   processModal(): ProcessModal {
     return this.processModalBase
