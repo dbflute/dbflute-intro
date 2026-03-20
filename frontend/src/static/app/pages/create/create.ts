@@ -1,70 +1,167 @@
 import i18n from '../../components/common/i18n.riot'
 import { api } from '../../api/api'
-import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
-import { DropdownItem } from '../../components/dropdown/dropdown'
 import { appRoutes } from '../../app-router'
 import { readFile } from '../../shared/io-utils'
+import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
+import { DropdownItem } from '../../components/dropdown/dropdown'
 
+/**
+ * デフォルトで表示するドロップダウンの項目 (要は未選択)
+ */
 const defaultDropDownItem = {
   value: '',
   label: 'not selected',
   default: true,
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface State {
+  /** DBFluteが利用するJDBCドライバーに関する情報、主にはjarファイル */
   jdbcDriver: { fileName: string; data: string } | undefined
+
+  /**
+   * JDBCドライバーのアップロードが必要なDBMSかどうか？サーバー側のDBMS定義より設定される
+   * (例えば、MySQLだとDBFlute Engineに組み込まれているので false となる)
+   */
   needsJdbcDriver: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface Create extends IntroRiotComponent<never, State> {
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
+  // -----------------------------------------------------
+  //                                      Static Reference
+  //                                      ----------------
+  /** ドロップダウンにてデフォルトで選択されるデータベースの区分値コード (EmptyAllowed: no selected) */
   defaultDatabaseCode: string
+
+  /** デフォルトで表示されるJDBCドライバーFQCN (EmptyAllowed: no use jar) */
   defaultJdbcDriver: string
+
+  /** デフォルトで表示されるJDBC接続URL (EmptyAllowed: no default) */
   defaultLanguageCode: string
+
+  /** ドロップダウンにてデフォルトで選択されるプログラミング言語の区分値コード (EmptyAllowed: no selected) */
   defaultContainerCode: string
+
+  // -----------------------------------------------------
+  //                                 Initialized Reference
+  //                                 ---------------------
+  /** ドロップダウンにてデフォルトで選択されるDIコンテナーの区分値コード (EmptyAllowed: no selected) */
   databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
+
+  /**
+   * DBFluteエンジンの最新バージョン、インターネットで公開されている最新バージョン e.g. 1.2.5
+   * (undefined: if onMounted()で初期化失敗の場合など)
+   */
   engineVersions: DropdownItem[]
+
+  /** DBFluteクライアントで定義する対象データベースのドロップダウン項目たち (NotEmpty) */
   targetDatabaseItems: DropdownItem[]
+
+  /** DBFluteクライアントで定義する対象プログラミング言語のドロップダウン項目たち (NotEmpty) */
   targetLanguageItems: DropdownItem[]
+
+  /** DBFluteクライアントで定義する対象DIコンテナーのドロップダウン項目たち (NotEmpty) */
   targetContainerItems: DropdownItem[]
+
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
+  /**
+   * マウント完了時の処理。
+   */
+  onMounted: () => void
 
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  onMounted: () => void
+  /**
+   * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する。
+   * @param targetDatabase - 選択されたDBMSの区分値コード
+   */
   onchangeDatabase: (databaseCode: DropdownItem) => void
+
+  /**
+   * DBFluteクライアントを作成する。(作成ボタンの処理)
+   */
   onclickCreate: () => void
+
+  /**
+   * JDBCドライバーのファイルが指定されたときの処理。
+   * @param event - この関数を呼び出したイベントのオブジェクト
+   */
   onchangeJarFile: (event: InputEvent) => void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  /**
+   * 区分値情報をUI用のデータに整形する。
+   * @param classifications - APIで取得した区分値情報
+   */
   convertClassificationsForUI: (classifications: IntroClassificationsResult) => {
+    /** DBMSごとの情報、区分値のコードがキー値 (NotEmpty) */
     databaseMap: Map<string, IntroClassificationsResult_DatabaseDefPart>
+
+    /** DBFluteクライアントで定義する対象データベースのドロップダウン項目たち (NotEmpty) */
     targetContainerItems: DropdownItem[]
+
+    /** DBFluteクライアントで定義する対象プログラミング言語のドロップダウン項目たち (NotEmpty) */
     targetLanguageItems: DropdownItem[]
+
+    /** DBFluteクライアントで定義する対象DIコンテナーのドロップダウン項目たち (NotEmpty) */
     targetDatabaseItems: DropdownItem[]
   }
+
+  /**
+   * DBFluteクライアントを作成したことを知らせるパンじゃなくてトースト。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名。
+   */
   showToast: (projectName: string) => void
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 export default withIntroTypes<Create>({
   components: {
     i18n,
   },
   state: {
-    jdbcDriver: undefined,
-    needsJdbcDriver: false,
+    jdbcDriver: undefined, // JDBCドライバーの設定が必要なので一部DBMSなのでデフォルト指定なし
+    needsJdbcDriver: false, // とりあえずデフォルトはDBMS未選択想定でfalse
   },
+
   // ===================================================================================
   //                                                                          Definition
   //                                                                          ==========
+  // -----------------------------------------------------
+  //                                      Static Reference
+  //                                      ----------------
   defaultDatabaseCode: '',
   defaultJdbcDriver: '',
   defaultLanguageCode: '',
   defaultContainerCode: '',
+
+  // -----------------------------------------------------
+  //                                 Initialized Reference
+  //                                 ---------------------
   databaseMap: new Map(), // e.g. targetDatabase
   engineVersions: [],
   targetDatabaseItems: [],
@@ -74,9 +171,6 @@ export default withIntroTypes<Create>({
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
-  /**
-   * マウント完了時の処理。
-   */
   async onMounted() {
     const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
     this.databaseMap = classifications.databaseMap
@@ -92,10 +186,6 @@ export default withIntroTypes<Create>({
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  /**
-   * DBMSの値が変わったときの処理、関連する項目の値を選択されたDBMSに合わせて更新する
-   * @param {DropdownItem} targetDatabase - 選択されたDBMS (NotNull)
-   */
   onchangeDatabase(targetDatabase: DropdownItem) {
     // Dropdownでselectedを選択した場合はデフォルト値に戻す
     if (targetDatabase.default) {
@@ -119,14 +209,12 @@ export default withIntroTypes<Create>({
       this.update({
         // switch showing JDBCDriver select form
         needsJdbcDriver: !database.embeddedJar,
+        // initialize JDBC Driver
         jdbcDriver: undefined,
       })
     }
   },
 
-  /**
-   * DBFluteクライアントを作成する。(作成ボタンの処理)
-   */
   onclickCreate() {
     const body: ClientCreateBody = {
       client: {
@@ -154,19 +242,15 @@ export default withIntroTypes<Create>({
     })
   },
 
-  /**
-   * JDBCファイルを読み込み、このタグのプロパティとして保持する
-   * フォームでJDBCドライバーのファイルを指定したときに呼び出される
-   * @param {Event} event - この関数を呼び出したイベントのオブジェクト (NotNull)
-   */
   onchangeJarFile(event: InputEvent) {
-    const eventTarget = event.target as HTMLInputElement
+    const eventTarget = event.target as HTMLInputElement // event.targetはイベント発生元のオブジェクト
     // TypeScriptのstrictモードを適用したのでnullチェックが必須になった
     if (!eventTarget.files) {
       throw new Error('not found any files')
     }
     const file = eventTarget.files[0]
     readFile(file).then((result) => {
+      // base64にencodeする: https://developer.mozilla.org/ja/docs/Web/API/btoa
       const encoded = window.btoa(result)
       this.state.jdbcDriver = { fileName: file.name, data: encoded }
     })
@@ -175,14 +259,11 @@ export default withIntroTypes<Create>({
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  /**
-   * 区分値情報をUI用のデータに整形する。
-   * @param classifications - APIで取得した区分値情報 (NotNull)
-   */
   convertClassificationsForUI(classifications: IntroClassificationsResult) {
     const dbMap = new Map(classifications.targetDatabaseList.map((obj) => [obj.databaseCode, obj]))
     const langMap = new Map(classifications.targetLanguageList.map((obj) => [obj.languageCode, obj]))
     const contMap = new Map(classifications.targetContainerList.map((obj) => [obj.containerCode, obj]))
+
     return {
       databaseMap: dbMap,
       targetDatabaseItems: [
@@ -206,10 +287,6 @@ export default withIntroTypes<Create>({
     }
   },
 
-  /**
-   * DBFluteクライアントが作成できたことを知らせるトーストを表示する
-   * @param {string} projectName - 現在対象としているDBFluteクライアントのプロジェクト名 (NotNull)
-   */
   showToast(projectName: string) {
     this.successToast({
       title: 'Create task completed',
