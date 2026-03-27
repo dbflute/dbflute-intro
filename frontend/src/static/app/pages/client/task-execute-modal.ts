@@ -20,28 +20,43 @@ interface Props {
   /** モーダルに表示するIntroユーザー向けメッセージ。 */
   message: string
 
-  /** DBFluteタスク実行ステータス。 */
+  /** DBFluteタスク実行ステータス。実際に実行した結果だったり、画面再初期化のためにNoneだったり。 */
   status: TaskExecuteStatus
 
   /** モーダルを閉じた時の処理のフック。呼び出し側が好きな処理を実行できるように。 (EmptyAllowed: 好きな処理なければ) */
   onModalHide?: () => void
 }
 
-// #thinking jflute onBeforeUpdate()にてstatusをPropsから受け取ってchangeさせてるけど、Propsのstatusを全部直接使うじゃダメなのかな？ (2026/03/20)
 interface State {
+  /**
+   * DBFluteタスク実行ステータス。
+   * コンポーネント更新前に Props の status の値を引き継ぐ。
+   * モーダル表示中は実際に実行した結果で、初期状態や隠れているときはNoneになる。
+   */
   status: TaskExecuteStatus
 }
 
+/**
+ * モーダル上のボタンオブジェクト
+ */
 type SuModalButton = {
+  /** ボタン表示名 */
   text: string
+  /** デフォルトでフォーカスが当たってるどうか？ (Enterですぐに押せるかどうか？でいいのかな？) */
   default: boolean
 }
 
+/**
+ * モーダル自体のオブジェクト
+ */
 type SuModal = {
+  /** モーダルダイアログをUIで閉じることができるかどうか？ */
   closable: boolean
+  /** モーダル上のボタンオブジェクトたち (EmptyAllowed) */
   buttons: SuModalButton[]
 }
 
+/** 完了を示すモーダルダイアログ。su-modalに引き渡すオブジェクト。 */
 const COMPLETED_MODAL: SuModal = {
   closable: true,
   buttons: [
@@ -52,6 +67,7 @@ const COMPLETED_MODAL: SuModal = {
   ],
 }
 
+/** 実行中を示すモーダルダイアログ。su-modalに引き渡すオブジェクト。 */
 const EXECUTING_MODAL: SuModal = {
   closable: false,
   buttons: [],
@@ -64,9 +80,29 @@ const EXECUTING_MODAL: SuModal = {
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
-  onBeforeUpdate(): void
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
+  onBeforeUpdate(): void // コンポーネントの更新前に呼ばれる
+
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  /**
+   * su-modal の show 相当。
+   * @return モーダルを表示するかどうか？
+   */
   show(): boolean
+
+  /**
+   * su-modal の modal 相当。
+   * @return 表示するモーダルオブジェクト (非表示 if undefined)
+   */
   modal(): SuModal | undefined
+
+  /**
+   * su-modal の onhide 相当。モーダルが隠れた時の処理。
+   */
   onHide(): void
 }
 
@@ -80,9 +116,17 @@ export default withIntroTypes<TaskExecuteModal>({
   state: {
     status: 'None',
   },
+
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
   onBeforeUpdate() {
     this.state.status = this.props.status
   },
+
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
   show(): boolean {
     return this.state.status !== 'None'
   },
