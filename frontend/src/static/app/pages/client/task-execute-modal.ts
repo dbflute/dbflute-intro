@@ -1,7 +1,8 @@
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 
-// #thinking jflute None はどういう状態を想定しているものなのか？モーダルを出さない便宜上のデフォルトの状態？ (2026/03/20)
+// done jflute None はどういう状態を想定しているものなのか？モーダルを出さない便宜上のデフォルトの状態？ (2026/03/20)
 // task-execute-modalタグは常に評価されるから、最初の画面描画時などタスク実行してない時はNoneで何も起きないようにしている？
+// → という解釈で良いと思う (2026/04/10)
 /**
  * DBFluteタスク実行ステータス。
  */
