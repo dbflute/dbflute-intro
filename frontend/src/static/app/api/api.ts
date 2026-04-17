@@ -365,7 +365,7 @@ class Api {
    * @param settingsEditBody - 基本的なdfprop情報の編集情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  updateSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody) {
+  editSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody) {
     return apiClient.post(`api/dfprop/settings/edit/${projectName}`, settingsEditBody)
   }
 

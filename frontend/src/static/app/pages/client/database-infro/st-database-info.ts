@@ -18,9 +18,6 @@ type DatabaseInfoForm = {
 }
 
 interface State {
-  /** DB接続情報の準備が完了しているか */
-  prepared: boolean
-
   /** DBFluteクライアントの基本設定情報 (undefined: 初期化前) */
   settings?: DfpropSettingsResult
 
@@ -91,6 +88,17 @@ interface StDatabaseInfo extends IntroRiotComponent<Props, State> {
   buildForm(settings?: DfpropSettingsResult): DatabaseInfoForm
 
   /**
+   * DB接続情報を保存する。
+   * @param settingsBody - 基本的なdfprop情報の編集情報
+   */
+  saveSettings(settingsBody: DfpropSettingsEditBody): Promise<void>
+
+  /**
+   * 保存後に最新の設定情報を再取得する。
+   */
+  refreshSettings(): Promise<void>
+
+  /**
    * 更新したことを知らせるトーストを表示する。
    */
   showToast(): void
@@ -104,7 +112,6 @@ interface StDatabaseInfo extends IntroRiotComponent<Props, State> {
 
 export default withIntroTypes<StDatabaseInfo>({
   state: {
-    prepared: false,
     settings: undefined,
     form: {
       url: '',
@@ -175,10 +182,9 @@ export default withIntroTypes<StDatabaseInfo>({
       },
     }
 
-    await api
-      .updateSettings(this.props.projectName, body)
+    await this.saveSettings(body)
       .then(async () => {
-        await this.prepareSettings(this.props.projectName)
+        await this.refreshSettings()
         this.showToast()
       })
       .catch((_) => {
@@ -192,7 +198,6 @@ export default withIntroTypes<StDatabaseInfo>({
   async prepareSettings(projectName: string): Promise<void> {
     const data = await api.settings(projectName)
     const state = {
-      prepared: true,
       settings: data,
       form: this.buildForm(data),
     }
@@ -207,6 +212,14 @@ export default withIntroTypes<StDatabaseInfo>({
       user: mainSchemaSettings?.user || '',
       password: mainSchemaSettings?.password || '',
     }
+  },
+
+  async saveSettings(settingsBody: DfpropSettingsEditBody): Promise<void> {
+    await api.editSettings(this.props.projectName, settingsBody)
+  },
+
+  async refreshSettings(): Promise<void> {
+    await this.prepareSettings(this.props.projectName)
   },
 
   showToast(): void {
