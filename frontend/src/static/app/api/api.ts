@@ -366,9 +366,7 @@ class Api {
    * @returns 業務的なレスポンスデータは特になし
    */
   updateSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody) {
-    return apiClient.post(`api/dfprop/settings/edit/${projectName}`, {
-      body: settingsEditBody,
-    })
+    return apiClient.post(`api/dfprop/settings/edit/${projectName}`, settingsEditBody)
   }
 
   // ===============================================================================
