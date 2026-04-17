@@ -2,33 +2,105 @@ import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types
 import { api } from '../../../api/api'
 
 interface Props {
+  /** 現在対象としているDBFluteクライアントのプロジェクト名 */
   projectName: string
 }
 
 type DatabaseInfoForm = {
+  /** JDBCの接続URL */
   url: string
+  /** JDBCの接続スキーマ */
   schema: string
+  /** JDBCの接続ユーザー */
   user: string
+  /** JDBCの接続パスワード */
   password: string
 }
 
 interface State {
+  /** DB接続情報の準備が完了しているか */
   prepared: boolean
+
+  /** DBFluteクライアントの基本設定情報 (undefined: 初期化前) */
   settings?: DfpropSettingsResult
+
+  /** 画面で編集するDB接続情報 */
   form: DatabaseInfoForm
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface StDatabaseInfo extends IntroRiotComponent<Props, State> {
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
+  /**
+   * マウント完了時の処理。
+   */
   onMounted(): void
+
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
+  /**
+   * URL の入力値が変更されたとき、state を更新する。
+   * @param e - 入力イベント
+   */
   onChangeUrl(e: InputEvent): void
+
+  /**
+   * Schema の入力値が変更されたとき、state を更新する。
+   * @param e - 入力イベント
+   */
   onChangeSchema(e: InputEvent): void
+
+  /**
+   * User の入力値が変更されたとき、state を更新する。
+   * @param e - 入力イベント
+   */
   onChangeUser(e: InputEvent): void
+
+  /**
+   * Password の入力値が変更されたとき、state を更新する。
+   * @param e - 入力イベント
+   */
   onChangePassword(e: InputEvent): void
+
+  /**
+   * 入力されたDB接続情報を実際のDBFluteクライアントに更新する。
+   */
   editClient(): Promise<void>
+
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
+  /**
+   * DBFluteクライアントの基本設定情報を取得して画面に反映する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   */
   prepareSettings(projectName: string): Promise<void>
+
+  /**
+   * APIで取得した設定情報から画面入力用のフォームデータを組み立てる。
+   * @param settings - DBFluteクライアントの基本設定情報
+   */
   buildForm(settings?: DfpropSettingsResult): DatabaseInfoForm
+
+  /**
+   * 更新したことを知らせるトーストを表示する。
+   */
   showToast(): void
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 export default withIntroTypes<StDatabaseInfo>({
   state: {
@@ -42,10 +114,16 @@ export default withIntroTypes<StDatabaseInfo>({
     },
   },
 
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
   async onMounted(): Promise<void> {
     await this.prepareSettings(this.props.projectName)
   },
 
+  // ===================================================================================
+  //                                                                       Event Handler
+  //                                                                       =============
   onChangeUrl(e: InputEvent): void {
     const value = (e.target as HTMLInputElement).value
     this.update({
@@ -108,13 +186,17 @@ export default withIntroTypes<StDatabaseInfo>({
       })
   },
 
+  // ===================================================================================
+  //                                                                             Private
+  //                                                                             =======
   async prepareSettings(projectName: string): Promise<void> {
     const data = await api.settings(projectName)
-    this.update({
+    const state = {
       prepared: true,
       settings: data,
       form: this.buildForm(data),
-    })
+    }
+    this.update(state)
   },
 
   buildForm(settings?: DfpropSettingsResult): DatabaseInfoForm {
