@@ -94,11 +94,6 @@ interface StDatabaseInfo extends IntroRiotComponent<Props, State> {
   saveSettings(settingsBody: DfpropSettingsEditBody): Promise<void>
 
   /**
-   * 保存後に最新の設定情報を再取得する。
-   */
-  refreshSettings(): Promise<void>
-
-  /**
    * 更新したことを知らせるトーストを表示する。
    */
   showToast(): void
@@ -184,10 +179,10 @@ export default withIntroTypes<StDatabaseInfo>({
 
     await this.saveSettings(body)
       .then(async () => {
-        await this.refreshSettings()
+        await this.prepareSettings(this.props.projectName)
         this.showToast()
       })
-      .catch((_) => {
+      .catch(() => {
         // API Client で modal 出す以上のハンドリングはしない
       })
   },
@@ -216,10 +211,6 @@ export default withIntroTypes<StDatabaseInfo>({
 
   async saveSettings(settingsBody: DfpropSettingsEditBody): Promise<void> {
     await api.editSettings(this.props.projectName, settingsBody)
-  },
-
-  async refreshSettings(): Promise<void> {
-    await this.prepareSettings(this.props.projectName)
   },
 
   showToast(): void {
