@@ -12,7 +12,7 @@ const DEFAULT_DROPDOWN_ITEM: DropdownItem = {
 }
 
 interface Props {
-  /** プロジェクト名 */
+  /** DBFluteクライアントのプロジェクト名 e.g. maihamadb */
   projectName: string
 }
 
@@ -44,7 +44,7 @@ export default withIntroTypes<Logs>({
     logDropDownItems: [DEFAULT_DROPDOWN_ITEM],
   },
 
-  //===================================================================================
+  // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted() {
@@ -61,7 +61,7 @@ export default withIntroTypes<Logs>({
 
   // ===================================================================================
   //                                                                       Event Handler
-  //
+  //                                                                       =============
   onSelectLog() {
     this.update()
   },
