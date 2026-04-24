@@ -19,32 +19,36 @@
 
                  catalogが必要になる場面はめったにないので、Introではひとまずサポートしていない。 -->
             <div class="required field">
-              <label>URL</label>
+              <label for="database-info-url">URL</label>
               <input
+                id="database-info-url"
                 type="text"
                 value="{ state.form.url }"
                 placeholder="jdbc:mysql://localhost:3306/maihamadb"
                 onchange="{ onChangeUrl }">
             </div>
             <div class="field">
-              <label>Schema</label>
+              <label for="database-info-schema">Schema</label>
               <input
+                id="database-info-schema"
                 type="text"
                 value="{ state.form.schema }"
                 placeholder="MAIHAMADB"
                 onchange="{ onChangeSchema }">
             </div>
             <div class="required field">
-              <label>User</label>
+              <label for="database-info-user">User</label>
               <input
+                id="database-info-user"
                 type="text"
                 value="{ state.form.user }"
                 placeholder="maihamadb"
                 onchange="{ onChangeUser }">
             </div>
             <div class="field">
-              <label>Password</label>
+              <label for="database-info-password">Password</label>
               <input
+                id="database-info-password"
                 type="text"
                 value="{ state.form.password }"
                 onchange="{ onChangePassword }">
