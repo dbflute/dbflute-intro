@@ -31,7 +31,7 @@ interface State {
 // ^                                                                                     v
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
-interface StDatabaseInfo extends IntroRiotComponent<Props, State> {
+interface DatabaseInfo extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
@@ -105,7 +105,7 @@ interface StDatabaseInfo extends IntroRiotComponent<Props, State> {
 // ^                                                                                     v
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
-export default withIntroTypes<StDatabaseInfo>({
+export default withIntroTypes<DatabaseInfo>({
   state: {
     settings: undefined,
     form: {
