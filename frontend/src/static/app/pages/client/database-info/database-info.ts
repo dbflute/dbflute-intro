@@ -89,7 +89,7 @@ interface DatabaseInfo extends IntroRiotComponent<Props, State> {
 
   /**
    * DB接続情報を保存する。
-   * @param settingsBody - 基本的なdfprop情報の編集情報
+   * @param settingsBody - 基本的なdfprop情報の編集情報(実際に更新されるのはDB情報だけ)
    */
   saveSettings(settingsBody: DfpropSettingsEditBody): Promise<void>
 
