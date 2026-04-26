@@ -19,14 +19,14 @@
  * @author FreeGen
  */
 type DfpropSchemapolicyResult = {
-  /** (NullAllowed) */
-  wholeMap?: DfpropSchemapolicyResult_WholeMapPart
+  /** (Required) */
+  wholeMap: DfpropSchemapolicyResult_WholeMapPart
 
-  /** (NullAllowed) */
-  tableMap?: DfpropSchemapolicyResult_TableMapPart
+  /** (Required) */
+  tableMap: DfpropSchemapolicyResult_TableMapPart
 
-  /** (NullAllowed) */
-  columnMap?: DfpropSchemapolicyResult_ColumnMapPart
+  /** (Required) */
+  columnMap: DfpropSchemapolicyResult_ColumnMapPart
 }
 
 /**
@@ -34,8 +34,8 @@ type DfpropSchemapolicyResult = {
  * @author FreeGen
  */
 type DfpropSchemapolicyResult_WholeMapPart = {
-  /** (NullAllowed) */
-  themeList?: Array<DfpropSchemapolicyResult_ThemePart>
+  /** (NotNull) */
+  themeList: Array<DfpropSchemapolicyResult_ThemePart>
 }
 
 /**
@@ -43,17 +43,17 @@ type DfpropSchemapolicyResult_WholeMapPart = {
  * @author FreeGen
  */
 type DfpropSchemapolicyResult_ThemePart = {
-  /** (NullAllowed) */
-  name?: string
+  /** (Required) */
+  name: string
 
-  /** (NullAllowed) */
-  description?: string
+  /** (Required) */
+  description: string
 
-  /** (NullAllowed) */
-  typeCode?: string
+  /** (Required) */
+  typeCode: string
 
-  /** (NullAllowed) */
-  isActive?: boolean
+  /** (Required) */
+  isActive: boolean
 }
 
 /**
@@ -61,11 +61,11 @@ type DfpropSchemapolicyResult_ThemePart = {
  * @author FreeGen
  */
 type DfpropSchemapolicyResult_TableMapPart = {
-  /** (NullAllowed) */
-  themeList?: Array<DfpropSchemapolicyResult_ThemePart>
+  /** (NotNull) */
+  themeList: Array<DfpropSchemapolicyResult_ThemePart>
 
-  /** (NullAllowed) */
-  statementList?: Array<string>
+  /** (NotNull) */
+  statementList: Array<string>
 }
 
 /**
@@ -73,9 +73,9 @@ type DfpropSchemapolicyResult_TableMapPart = {
  * @author FreeGen
  */
 type DfpropSchemapolicyResult_ColumnMapPart = {
-  /** (NullAllowed) */
-  themeList?: Array<DfpropSchemapolicyResult_ThemePart>
+  /** (NotNull) */
+  themeList: Array<DfpropSchemapolicyResult_ThemePart>
 
-  /** (NullAllowed) */
-  statementList?: Array<string>
+  /** (NotNull) */
+  statementList: Array<string>
 }
