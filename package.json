@@ -3,7 +3,7 @@
   "version": "0.6.0",
   "dependencies": {
     "sortablejs": "^1.14.0",
-    "uuid": "^8.3.2"
+    "uuid": "^14.0.0"
   },
   "scripts": {
     "start": "webpack-dev-server --mode development --inline --watch --hot --content-base ./src/static --port 3000 --open",
