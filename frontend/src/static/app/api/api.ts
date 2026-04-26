@@ -358,17 +358,14 @@ class Api {
     return apiClient.post(`api/dfprop/settings/${projectName}`)
   }
 
-  // #for_now jflute 他みんな edit なのにここだけ update になっとる。URLもeditなんだけど (2026/02/14)
   /**
    * DBFluteクライアントの基本的なdfprop情報を更新する。(DBMSやDB接続情報など)
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @param settingsEditBody - 基本的なdfprop情報の編集情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  updateSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody) {
-    return apiClient.post(`api/dfprop/settings/edit/${projectName}`, {
-      body: settingsEditBody,
-    })
+  editSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody): Promise<void> {
+    return apiClient.post(`api/dfprop/settings/edit/${projectName}`, settingsEditBody)
   }
 
   // ===============================================================================

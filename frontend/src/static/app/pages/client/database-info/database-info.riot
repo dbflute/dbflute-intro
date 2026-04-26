@@ -1,0 +1,68 @@
+<st-database-info>
+  <!-- ClientのDB接続設定画面 (written at 2022/02/10)
+     機能:
+      o DBFluteクライアントのDB接続情報を確認できる
+      o 〃を編集できる
+      (databaseInfoMap.dfprop)
+
+     作りの特徴:
+      o Introで意外と少ないテキスト入力による更新、バリデーションとか普通のことが珍しい
+      o Toast使って「ぴょこん」ってかわいく更新したことをお知らせする
+     -->
+  <div class="ui container">
+    <div if="{ state.settings }" class="ui form">
+      <div class="row">
+        <div class="column">
+          <div class="ui segment" title="Database info">
+            <!-- 必須かどうかは、databaseInfoMap.dfpropの仕様に合わせている
+                 https://dbflute.seasar.org/ja/manual/reference/dfprop/databaseinfo/index.html
+
+                 catalogが必要になる場面はめったにないので、Introではひとまずサポートしていない。 -->
+            <div class="required field">
+              <label for="database-info-url">URL</label>
+              <input
+                id="database-info-url"
+                type="text"
+                value="{ state.form.url }"
+                placeholder="jdbc:mysql://localhost:3306/maihamadb"
+                onchange="{ onChangeUrl }">
+            </div>
+            <div class="field">
+              <label for="database-info-schema">Schema</label>
+              <input
+                id="database-info-schema"
+                type="text"
+                value="{ state.form.schema }"
+                placeholder="MAIHAMADB"
+                onchange="{ onChangeSchema }">
+            </div>
+            <div class="required field">
+              <label for="database-info-user">User</label>
+              <input
+                id="database-info-user"
+                type="text"
+                value="{ state.form.user }"
+                placeholder="maihamadb"
+                onchange="{ onChangeUser }">
+            </div>
+            <div class="field">
+              <label for="database-info-password">Password</label>
+              <input
+                id="database-info-password"
+                type="text"
+                value="{ state.form.password }"
+                onchange="{ onChangePassword }">
+            </div>
+            <div class="field">
+              <button class="ui button primary" onclick="{ editClient }">Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    import stDatabaseInfo from './database-info.ts'
+    export default stDatabaseInfo
+  </script>
+</st-database-info>

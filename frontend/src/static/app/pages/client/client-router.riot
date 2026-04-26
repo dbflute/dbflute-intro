@@ -16,7 +16,7 @@
     <ex-schema-policy-check></ex-schema-policy-check>
   </route>
   <route path={ state.routes.settingsDatabaseInfo.path }>
-    <st-database-info></st-database-info>
+    <st-database-info project-name={ props.projectName }></st-database-info>
   </route>
   <route path={ state.routes.filesLogs.path }>
     <logs project-name={ props.projectName }></logs>
@@ -29,7 +29,7 @@
     import ReplaceSchema from './replace-schema/replace-schema.riot'
     import AlterCheck from './alter-check/alter-check.riot'
     import ExSchemaPolicyCheck from './schema-policy-check/ex-schema-policy-check.riot'
-    import StDatabaseInfo from './database-infro/st-database-info.riot'
+    import DatabaseInfo from './database-info/database-info.riot'
     import Logs from './logs/logs.riot'
     import { clientRoutes } from './client-router';
 
@@ -40,7 +40,7 @@
         ReplaceSchema,
         AlterCheck,
         ExSchemaPolicyCheck,
-        StDatabaseInfo,
+        DatabaseInfo,
         Logs,
         Route
       },
