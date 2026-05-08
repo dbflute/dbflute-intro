@@ -221,7 +221,7 @@ export default withIntroTypes<Welcome>({
   //                                                                           =========
   async onMounted() {
     const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
-    const latestVersion = await api.findEngineLatest().then((data) => data.latestReleaseVersion)
+    const latestVersion = await api.findEngineLatestVersion().then((data) => data.latestReleaseVersion)
     this.databaseMap = classifications.databaseMap
     this.targetDatabaseItems = classifications.targetDatabaseItems
     this.targetLanguageItems = classifications.targetLanguageItems

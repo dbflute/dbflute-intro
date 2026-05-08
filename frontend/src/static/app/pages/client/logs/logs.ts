@@ -48,10 +48,10 @@ export default withIntroTypes<Logs>({
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted() {
-    const logBeanList = await api.logBeanList(this.props.projectName)
-    const logDropDownItems: DropdownItem[] = logBeanList.map((logBean) => ({
-      label: logBean.fileName,
-      value: logBean.content,
+    const logFileList = await api.findLogFileList(this.props.projectName)
+    const logDropDownItems: DropdownItem[] = logFileList.map((logFile) => ({
+      label: logFile.fileName,
+      value: logFile.content,
       default: false,
     }))
     this.update({

@@ -191,7 +191,7 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
     const projectName = this.props.projectName
     const formData = this.state.syncSchemaSetting
     await api
-      .editSyncSchema(projectName, formData)
+      .editSyncSchemaDfprop(projectName, formData)
       .then(() => {
         this.onHide()
       })

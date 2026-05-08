@@ -179,19 +179,21 @@ export default withIntroTypes<ReplaceSchema>({
   //                                                                             Private
   //                                                                             =======
   async prepareSettings(projectName: string): Promise<void> {
-    const data = await api.settings(projectName)
+    const coreDfprop = await api.findCoreDfprop(projectName)
 
-    const state = { settings: data }
+    const state = { settings: coreDfprop }
 
     this.update(state)
   },
 
   async preparePlaysql(projectName: string): Promise<void> {
-    const data = await api.playsqlBeanList(projectName)
+    const playsqlFileList = await api.findPlaysqlFileList(projectName)
 
-    const items = data.map((obj) => ({
-      label: obj.fileName,
-      value: `<span style="display: none;">${obj.fileName}</span>` + Prism.highlight(obj.content || '', Prism.languages.sql, 'sql'),
+    const items = playsqlFileList.map((playsqlFile) => ({
+      label: playsqlFile.fileName,
+      value:
+        `<span style="display: none;">${playsqlFile.fileName}</span>` +
+        Prism.highlight(playsqlFile.content || '', Prism.languages.sql, 'sql'),
     }))
     const state = { playsqlDropDownItems: this.state.playsqlDropDownItems.concat(items) }
 

@@ -166,7 +166,7 @@ export default withIntroTypes<SchemaSyncCheck>({
    */
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
-    const syncSchemaSetting = await api.syncSchema(projectName)
+    const syncSchemaSetting = await api.findSchemaSyncDfprop(projectName)
     console.log('Fetched syncSchemaSetting:', syncSchemaSetting)
     const latestResult = await api.latestResult(projectName, 'schemaSyncCheck').then((body) => {
       if (body) {

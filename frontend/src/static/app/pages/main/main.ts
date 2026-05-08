@@ -274,13 +274,13 @@ export default withIntroTypes<Main>({
   },
 
   async engineVersions() {
-    await api.engineVersions().then((json) => {
+    await api.findExistingEngineVersions().then((json) => {
       this.update({ versions: json })
     })
   },
 
   async latestVersion() {
-    await api.findEngineLatest().then((json) => {
+    await api.findEngineLatestVersion().then((json) => {
       this.update({ latestVersion: json })
     })
   },

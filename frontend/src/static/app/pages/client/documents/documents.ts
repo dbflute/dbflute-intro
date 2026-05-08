@@ -169,7 +169,7 @@ export default withIntroTypes<Document>({
    */
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
-    const documentSetting = await api.document(projectName)
+    const documentSetting = await api.findDocumentDfprop(projectName)
     const latestResult = await api.latestResult(projectName, 'doc').then((body) => {
       if (body) {
         return {

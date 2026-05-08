@@ -172,7 +172,7 @@ export default withIntroTypes<AlterCheck>({
    * @param additionalState 一緒に更新したいstate. 指定しなくてもOK
    */
   updateContents(additionalState?: Partial<State>) {
-    api.alter(this.props.projectName).then((result) => {
+    api.alterInfra(this.props.projectName).then((result) => {
       api.clientPropbase(this.props.projectName).then(async (client) => {
         const editingSqls = result.editingFiles.map((file) => ({
           fileName: file.fileName,
