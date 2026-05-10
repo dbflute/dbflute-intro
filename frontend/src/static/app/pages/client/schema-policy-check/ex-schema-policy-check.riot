@@ -11,7 +11,7 @@
 
    tagの階層
     ex-schema-policy-check.riot
-    |- schema-policy-check-statement-list (Step3で追加予定)
+    |- schema-policy-check-statement-list
     |- schema-policy-check-statement-form-wrapper (Step4で追加予定)
    -->
   <div class="ui container">
@@ -87,7 +87,13 @@
               </div>
             </div>
             <h5 class="spolicy-category">Statement</h5>
-            <!-- Step3でschema-policy-check-statement-listを、Step4でschema-policy-check-statement-form-wrapperを追加予定 -->
+            <schema-policy-check-statement-list
+              project-name="{ props.projectName }"
+              map-type="tableMap"
+              statements="{ state.schemaPolicy.tableMap.statementList }"
+              on-changed="{ loadSchemaPolicy }"
+            ></schema-policy-check-statement-list>
+            <!-- Step4でschema-policy-check-statement-form-wrapperを追加予定 -->
           </su-tab>
 
           <!-- Column Schema Policy -->
@@ -109,7 +115,13 @@
               </div>
             </div>
             <h5 class="spolicy-category">Statement</h5>
-            <!-- Step3でschema-policy-check-statement-listを、Step4でschema-policy-check-statement-form-wrapperを追加予定 -->
+            <schema-policy-check-statement-list
+              project-name="{ props.projectName }"
+              map-type="columnMap"
+              statements="{ state.schemaPolicy.columnMap.statementList }"
+              on-changed="{ loadSchemaPolicy }"
+            ></schema-policy-check-statement-list>
+            <!-- Step4でschema-policy-check-statement-form-wrapperを追加予定 -->
           </su-tab>
         </su-tabset>
       </div>

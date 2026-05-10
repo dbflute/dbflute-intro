@@ -34,6 +34,7 @@
     "@riotjs/webpack-loader": "^6.0.0",
     "@types/jest": "^28.1.4",
     "@types/prismjs": "^1.26.0",
+    "@types/sortablejs": "^1.15.9",
     "@typescript-eslint/eslint-plugin": "5.33.0",
     "babel-jest": "^28.1.0",
     "babel-loader": "^8.2.5",

@@ -1,0 +1,50 @@
+<schema-policy-check-statement-list>
+  <!-- ClientのSchemaPolicyCheckのTableSchemaPolicy/ColumnSchemaPolicyのstatementの一覧 (migrated to Riot v7 at 2026/04/26)
+   機能:
+    o statementを一覧表示する。コメント部 (=>以降) は別のスタイルで表示する。
+    o ドラッグ&ドロップで順序を入れ替えるとサーバー側 dfprop も書き変わる。
+    o 削除アイコンクリックで確認ダイアログを表示し、サーバー側からも削除する。
+
+   作りの特徴:
+    o sortablejs による並び替えと Riot v7 の再描画の衝突を避けるため、表示用の items を local state に持つ。
+    o レガシーで共通利用していた ui-list は呼び出し箇所がここしかなかったため、本コンポーネントに統合した。
+   -->
+  <ul ref="items" class="ui divided items segment">
+    <li class="item" each="{ item in state.items }">
+      <div class="content">
+        <div class="header">{ removeComment(item) }</div>
+        <div if="{ hasComment(item) }">
+          <span class="frm">=> { extractComment(item) }</span>
+        </div>
+      </div>
+      <i class="delete link icon" onclick="{ () => onclickDelete(item) }"></i>
+    </li>
+  </ul>
+
+  <style>
+    schema-policy-check-statement-list[sortable] > ul.items > li.item:hover {
+      cursor: grab;
+    }
+
+    schema-policy-check-statement-list ul.items > li.item.sorted {
+      background: #c8ebfb;
+    }
+
+    schema-policy-check-statement-list ul.items > li.item.dragging {
+      background: #ffffff;
+    }
+
+    schema-policy-check-statement-list .delete.link.icon {
+      display: none;
+    }
+
+    schema-policy-check-statement-list .item:hover .delete.link.icon {
+      display: inline-block;
+    }
+  </style>
+
+  <script>
+    import schemaPolicyCheckStatementList from './schema-policy-check-statement-list.ts'
+    export default schemaPolicyCheckStatementList
+  </script>
+</schema-policy-check-statement-list>
