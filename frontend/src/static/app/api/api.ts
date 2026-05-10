@@ -260,11 +260,9 @@ class Api {
    */
   editSchemaPolicy(projectName: string, themeEditBody: DfpropSchemapolicyEditBody): Promise<void> {
     return apiClient.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
-      body: {
-        wholeMap: themeEditBody.wholeMap,
-        tableMap: themeEditBody.tableMap,
-        columnMap: themeEditBody.columnMap,
-      },
+      wholeMap: themeEditBody.wholeMap,
+      tableMap: themeEditBody.tableMap,
+      columnMap: themeEditBody.columnMap,
     })
   }
 
@@ -275,9 +273,7 @@ class Api {
    * @returns 個々の構成要素が連結されてdfprop上での表現になった文字列 e.g. if alias is $$tableName$$ then bad
    */
   registerSchemapolicyStatement(projectName: string, statementRegisterBody: DfpropSchemapolicyStatementRegisterBody): Promise<string> {
-    return apiClient.post(`api/dfprop/schemapolicy/statement/register/${projectName}`, {
-      body: statementRegisterBody,
-    })
+    return apiClient.post(`api/dfprop/schemapolicy/statement/register/${projectName}`, statementRegisterBody)
   }
 
   // #thinking jflute 戻り値が List<String> だから自動生成クラスなし!? Array<string> で良い？ (2026/02/13)
@@ -300,9 +296,7 @@ class Api {
    * @returns 業務的なレスポンスデータは特になし
    */
   deleteSchemapolicyStatement(projectName: string, statementDeleteBody: DfpropSchemapolicyStatementDeleteBody): Promise<void> {
-    return apiClient.post(`api/dfprop/schemapolicy/statement/delete/${projectName}`, {
-      body: statementDeleteBody,
-    })
+    return apiClient.post(`api/dfprop/schemapolicy/statement/delete/${projectName}`, statementDeleteBody)
   }
 
   /**
@@ -312,7 +306,7 @@ class Api {
    * @returns 業務的なレスポンスデータは特になし
    */
   moveSchemapolicyStatement(projectName: string, statementMoveBody: DfpropSchemapolicyStatementMoveBody) {
-    return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, { body: statementMoveBody })
+    return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, statementMoveBody)
   }
 
   // -----------------------------------------------------

@@ -13,7 +13,7 @@
     <alter-check project-name={ props.projectName }></alter-check>
   </route>
   <route path={ state.routes.executeSchemaPolicyCheck.path }>
-    <ex-schema-policy-check></ex-schema-policy-check>
+    <ex-schema-policy-check project-name={ props.projectName }></ex-schema-policy-check>
   </route>
   <route path={ state.routes.settingsDatabaseInfo.path }>
     <st-database-info project-name={ props.projectName }></st-database-info>
