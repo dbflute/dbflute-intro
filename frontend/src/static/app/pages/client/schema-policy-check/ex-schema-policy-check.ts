@@ -4,6 +4,7 @@ import LatestResult from '../latest-result.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import SchemaPolicyCheckStatementList from './schema-policy-check-statement-list.riot'
+import SchemaPolicyCheckStatementFormWrapper from './schema-policy-check-statement-form-wrapper.riot'
 
 /**
  * SchemaPolicyの3つのマップ種別。
@@ -102,6 +103,7 @@ export default withIntroTypes<ExSchemaPolicyCheck>({
     LatestResult,
     TaskExecuteModal,
     SchemaPolicyCheckStatementList,
+    SchemaPolicyCheckStatementFormWrapper,
   },
 
   state: {

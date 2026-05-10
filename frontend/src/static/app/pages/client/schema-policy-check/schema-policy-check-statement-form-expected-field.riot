@@ -1,0 +1,37 @@
+<schema-policy-check-statement-form-expected-field>
+  <!-- ClientのSchemaPolicyCheckのStatement追加のExpected項目のinput部分 (migrated to Riot v7 at 2026/04/26)
+   機能:
+    o Expectedの項目をドロップダウンやテキストフィールドで入力できる。
+
+   作りの特徴:
+    o ドロップダウンで選択したsubjectVerbによってcomplementのテキストフィールドの活性・非活性がされる。
+    o subjectVerbはExpectedの左のドロップダウンの値、complementはその右側のフリー入力の値
+   -->
+  <div class="fields">
+    <div class="six wide field">
+      <su-dropdown
+        ref="subjectVerb"
+        items="{ subjectItems() }"
+        value="{ props.subjectVerb }"
+        onchange="{ onChangeSubjectVerb }"
+      ></su-dropdown>
+    </div>
+    <div class="ten wide field">
+      <div class="ui icon input">
+        <input
+          type="text"
+          ref="complement"
+          name="expected"
+          onchange="{ onChangeComplement }"
+          disabled="{ !enableValueInput() }"
+        >
+        <i if="{ props.isDeletable() }" class="delete link icon" onclick="{ onclickDelete }"></i>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import schemaPolicyCheckStatementFormExpectedField from './schema-policy-check-statement-form-expected-field.ts'
+    export default schemaPolicyCheckStatementFormExpectedField
+  </script>
+</schema-policy-check-statement-form-expected-field>
