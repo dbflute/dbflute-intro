@@ -17,8 +17,8 @@ jest.mock('../src/static/app/app-router', () => {
     initialRoute: 'welcome',
   }
 })
-jest.spyOn(api, 'clientList').mockResolvedValue([])
-jest.spyOn(api, 'findEngineLatest')
+jest.spyOn(api, 'findClientList').mockResolvedValue([])
+jest.spyOn(api, 'findEngineLatestVersion')
 jest.spyOn(api, 'findClassifications')
 
 describe('Welcome', () => {
