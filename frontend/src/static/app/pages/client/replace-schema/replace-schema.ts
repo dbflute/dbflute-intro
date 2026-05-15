@@ -201,7 +201,7 @@ export default withIntroTypes<ReplaceSchema>({
   },
 
   async prepareComponents(projectName: string): Promise<void> {
-    const data = await api.latestResult(projectName, 'replaceSchema')
+    const data = await api.findLatestTaskLog(projectName, 'replaceSchema')
     if (!data) {
       return
     }
@@ -219,7 +219,7 @@ export default withIntroTypes<ReplaceSchema>({
   async replaceSchema(projectName: string): Promise<void> {
     let state
     try {
-      const data = await api.task(projectName, 'replaceSchema')
+      const data = await api.executeTask(projectName, 'replaceSchema')
       state = { executeStatus: 'Completed' as TaskExecuteStatus, executeResultMessage: data.success ? 'Success' : 'Failure' }
     } catch (e) {
       console.error('Failed ReplaceSchema:', e)

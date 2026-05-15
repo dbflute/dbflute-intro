@@ -37,7 +37,7 @@
       onBeforeMount() {
         // DBFluteクライアントが1件もない場合はwelcome画面へ遷移する
         // (DBFlute Introをまっさらな状態で最初に起動したときは、welcomeで環境構築してもらうため)
-        api.clientList().then((clients) => {
+        api.findClientList().then((clients) => {
           if (clients.length === 0) {
             appRoutes.welcome.open()
           }

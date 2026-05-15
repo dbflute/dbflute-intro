@@ -131,7 +131,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     }
     await this.updateContents({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
     await api
-      .task(this.props.projectName, 'schemaSyncCheck')
+      .executeTask(this.props.projectName, 'schemaSyncCheck')
       .then(async (data) => {
         const executeResultMessage = data.success ? 'Success' : 'Failure'
         await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
@@ -168,7 +168,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.findSchemaSyncDfprop(projectName)
     console.log('Fetched syncSchemaSetting:', syncSchemaSetting)
-    const latestResult = await api.latestResult(projectName, 'schemaSyncCheck').then((body) => {
+    const latestResult = await api.findLatestTaskLog(projectName, 'schemaSyncCheck').then((body) => {
       if (body) {
         return {
           success: body.fileName.includes('success'),
@@ -176,11 +176,11 @@ export default withIntroTypes<SchemaSyncCheck>({
         }
       }
     })
-    const client = await api.clientPropbase(projectName)
+    const clientPropbase = await api.findClientPropbase(projectName)
     this.update({
       syncSchemaSetting,
       latestResult,
-      hasSchemaSyncCheckResultHtml: client.hasSyncCheckResultHtml,
+      hasSchemaSyncCheckResultHtml: clientPropbase.hasSyncCheckResultHtml,
       ...additionalState,
     })
   },

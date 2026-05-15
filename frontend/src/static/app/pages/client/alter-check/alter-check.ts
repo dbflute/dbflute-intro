@@ -153,7 +153,7 @@ export default withIntroTypes<AlterCheck>({
     this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
       this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
       api
-        .task(this.props.projectName, 'alterCheck')
+        .executeTask(this.props.projectName, 'alterCheck')
         .then((data) => {
           const executeResultMessage = data.success ? 'Success' : 'Failure'
           this.updateContents({ executeStatus: 'Completed', executeResultMessage })
@@ -172,8 +172,8 @@ export default withIntroTypes<AlterCheck>({
    * @param additionalState 一緒に更新したいstate. 指定しなくてもOK
    */
   updateContents(additionalState?: Partial<State>) {
-    api.alterInfra(this.props.projectName).then((result) => {
-      api.clientPropbase(this.props.projectName).then(async (client) => {
+    api.findAlterInfra(this.props.projectName).then((result) => {
+      api.findClientPropbase(this.props.projectName).then(async (client) => {
         const editingSqls = result.editingFiles.map((file) => ({
           fileName: file.fileName,
           content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
@@ -251,7 +251,7 @@ export default withIntroTypes<AlterCheck>({
   async prepareLatestFailureResult(
     ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
   ): Promise<AlterLatestResultState | undefined> {
-    return api.latestResult(this.props.projectName, 'alterCheck').then((body) => {
+    return api.findLatestTaskLog(this.props.projectName, 'alterCheck').then((body) => {
       if (!body || body.fileName.includes('success')) {
         return
       }

@@ -134,7 +134,7 @@ export default withIntroTypes<Document>({
     }
     await this.updateContents({ executeStatus: 'Executing', executeResultMessage: 'Generating...' })
     await api
-      .task(this.props.projectName, 'doc')
+      .executeTask(this.props.projectName, 'doc')
       .then(async (data) => {
         const executeResultMessage = data.success ? 'Success' : 'Failure'
         await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
@@ -170,7 +170,7 @@ export default withIntroTypes<Document>({
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const documentSetting = await api.findDocumentDfprop(projectName)
-    const latestResult = await api.latestResult(projectName, 'doc').then((body) => {
+    const latestResult = await api.findLatestTaskLog(projectName, 'doc').then((body) => {
       if (body) {
         return {
           success: body.fileName.includes('success'),
@@ -178,7 +178,7 @@ export default withIntroTypes<Document>({
         }
       }
     })
-    const client = await api.clientPropbase(projectName)
+    const client = await api.findClientPropbase(projectName)
     this.update({
       documentSetting,
       latestResult,

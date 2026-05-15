@@ -130,7 +130,7 @@ class Api {
    * 起動状態の情報として、メイン画面で表示するために。
    * @returns MANIFEST.MFの内容のMapオブジェクト (basically NotEmpty)
    */
-  manifest(): Promise<any> {
+  findManifest(): Promise<any> {
     // 単なるkey/valueでLasta側もただのMap
     return apiClient.post('api/intro/manifest')
   }
@@ -170,7 +170,7 @@ class Api {
    * Introが起動している環境にインストールされている、DBFluteクライアントのリストを取得する
    * @returns DBFluteクライアント情報のリスト (自動生成クラス)
    */
-  clientList(): Promise<ClientListResult[]> {
+  findClientList(): Promise<ClientListResult[]> {
     return apiClient.post('api/client/list')
   }
 
@@ -179,7 +179,7 @@ class Api {
    * @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns プロジェクトの基本情報 e.g. プロジェクト名、DBMSコード (自動生成クラス)
    */
-  clientPropbase(projectName: string): Promise<ClientPropbaseResult> {
+  findClientPropbase(projectName: string): Promise<ClientPropbaseResult> {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
@@ -399,7 +399,7 @@ class Api {
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns 画面の表示情報を目一杯に積んだもの (自動生成クラス)
    */
-  alterInfra(projectName: string): Promise<PlaysqlMigrationAlterResult> {
+  findAlterInfra(projectName: string): Promise<PlaysqlMigrationAlterResult> {
     return apiClient.get(`api/playsql/migration/alter/${projectName}/`)
   }
 
@@ -464,7 +464,7 @@ class Api {
    * @param task - DBFluteタスクを特定する名前、TaskInstruction のコード e.g. alterCheck
    * @returns 該当のログファイル情報 (自動生成クラス)
    */
-  async latestResult(projectName: string, task: string): Promise<LogLatestResult | null> {
+  async findLatestTaskLog(projectName: string, task: string): Promise<LogLatestResult | null> {
     return apiClient.get(`api/log/latest/${projectName}/${task}`).then((body) => {
       // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
       // https://github.com/dbflute/dbflute-intro/issues/493
@@ -517,14 +517,13 @@ class Api {
   // ===============================================================================
   //                                                                           Task
   //                                                                          ======
-  // #hope jflute executeTask() にしたいけど、SchemaPolicyのriot7移行が終わってから (2026/05/08)
   /**
    * 指定されたDBFluteタスクを実行する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @param task - DBFluteタスクを特定する名前、TaskInstruction のコード e.g. alterCheck
    * @returns DBFluteタスクの実行結果 (自動生成クラス)
    */
-  task(projectName: string, task: string): Promise<TaskExecuteResult> {
+  executeTask(projectName: string, task: string): Promise<TaskExecuteResult> {
     return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
 }
