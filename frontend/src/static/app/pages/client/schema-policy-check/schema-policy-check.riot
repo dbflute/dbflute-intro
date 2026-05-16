@@ -38,7 +38,8 @@
       <latest-result
         project-name="{ props.projectName }"
         task="doc"
-        show-header="{ false }"
+        show-header="{ true }"
+        header-title="Execution Result"
         success="{ state.latestResult.success }"
         result-title="{ 'Result: ' + (state.latestResult.success ? 'Success' : 'Failure') }"
         content="{ state.latestResult.content }"
