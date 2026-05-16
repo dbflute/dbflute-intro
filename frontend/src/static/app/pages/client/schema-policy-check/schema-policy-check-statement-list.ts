@@ -122,7 +122,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementList>({
   },
 
   onBeforeUpdate(props, state) {
-    // 親 (ex-schema-policy-check) の state.schemaPolicy が再フェッチで更新された時に
+    // 親 (schema-policy-check) の state.schemaPolicy が再フェッチで更新された時に
     // ローカル items も同期する。
     // 注意: Riot v7 ではこの時点で this.props は既に新しい props を指す可能性があるため、
     // state 側に保持したスナップショット (syncedFromProps) と比較する。

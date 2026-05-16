@@ -1,4 +1,4 @@
-<ex-schema-policy-check>
+<schema-policy-check>
   <!-- ClientのSchemaPolicyCheckの実行画面 (written at 2022/02/20, migrated to Riot v7 at 2026/04/26)
    機能:
     o SchemaPolicyCheck (= doc task) を実行し、結果を表示する。
@@ -10,7 +10,7 @@
     o ポリシー設定のチェックボックスを変化させることでSchemaPolicyMapを編集することができる。
 
    tagの階層
-    ex-schema-policy-check.riot
+    schema-policy-check.riot
     |- schema-policy-check-statement-list
     |- schema-policy-check-statement-form-wrapper
        |- schema-policy-check-statement-form
@@ -154,7 +154,7 @@
   </style>
 
   <script>
-    import exSchemaPolicyCheck from './ex-schema-policy-check.ts'
-    export default exSchemaPolicyCheck
+    import schemaPolicyCheck from './schema-policy-check.ts'
+    export default schemaPolicyCheck
   </script>
-</ex-schema-policy-check>
+</schema-policy-check>

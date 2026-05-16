@@ -3,7 +3,7 @@ import * as riot from 'riot'
 import 'semantic-ui-riot'
 import introPlugin from '../src/static/app/app-plugin'
 import { api } from '../src/static/app/api/api'
-import ExSchemaPolicyCheck from '../src/static/app/pages/client/schema-policy-check/ex-schema-policy-check.riot'
+import SchemaPolicyCheck from '../src/static/app/pages/client/schema-policy-check/schema-policy-check.riot'
 
 // 全てのComponentで共通的に利用する処理を登録する
 riot.install(introPlugin)
@@ -50,10 +50,10 @@ const baseClientPropbase = {
  * テスト用に component を mount する補助関数。
  * 各テストで独立した DOM 領域に mount して、後始末する。
  */
-function mountExSchemaPolicyCheck(): { unmount: () => void; container: HTMLElement } {
+function mountSchemaPolicyCheck(): { unmount: () => void; container: HTMLElement } {
   const container = document.createElement('div')
   document.body.appendChild(container)
-  const mount = riot.component(ExSchemaPolicyCheck)
+  const mount = riot.component(SchemaPolicyCheck)
   const component = mount(container, { projectName: TEST_PROJECT })
   return {
     container,
@@ -94,7 +94,7 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                        --------------
   describe('初期描画', () => {
     it('schemaPolicy 取得後、3つのタブと各テーマが描画されること', async () => {
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const tabs = container.querySelectorAll('su-tab')
@@ -109,7 +109,7 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('Table タブのステートメント一覧がレンダリングされること', async () => {
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const text = container.textContent ?? ''
@@ -122,7 +122,7 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('登録フォームのトグルリンクは初期状態で "Add Statement" が表示されていること', async () => {
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const formWrappers = container.querySelectorAll('schema-policy-check-statement-form-wrapper')
@@ -142,7 +142,7 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                         -------------
   describe('最新実行結果', () => {
     it('実行履歴がない場合は latest-result が描画されないこと', async () => {
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const latestResult = container.querySelector('latest-result')
@@ -157,7 +157,7 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'doc task ok',
       } as LogLatestResult)
 
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const message = container.querySelector('.ui.positive.message')
@@ -173,7 +173,7 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'doc task ng',
       } as LogLatestResult)
 
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const message = container.querySelector('.ui.negative.message')
@@ -190,7 +190,7 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'violation content',
       } as LogLatestResult)
 
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const text = container.textContent ?? ''
@@ -205,7 +205,7 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'ok',
       } as LogLatestResult)
 
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const text = container.textContent ?? ''
@@ -221,7 +221,7 @@ describe('SchemaPolicyCheck 画面', () => {
   describe('テーマトグル', () => {
     it('Whole タブのテーマチェックボックス変更で editSchemaPolicy が呼ばれること', async () => {
       const editSpy = jest.spyOn(api, 'editSchemaPolicy')
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       // 最初の su-checkbox をクリック (Whole の最初のテーマ)
@@ -251,7 +251,7 @@ describe('SchemaPolicyCheck 画面', () => {
   describe('ステートメント削除', () => {
     it('削除アイコンクリックで suConfirm 後に deleteSchemapolicyStatement が呼ばれること', async () => {
       const deleteSpy = jest.spyOn(api, 'deleteSchemapolicyStatement')
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       // 最初の delete アイコンをクリック (suConfirm はファイル冒頭の plugin で即 resolve される)
@@ -279,7 +279,7 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                           -----------
   describe('登録フォームの開閉', () => {
     it('"Add Statement" クリックでフォームが開き、リンクが "Hide Form" に切り替わること', async () => {
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const wrapper = container.querySelector('schema-policy-check-statement-form-wrapper') as HTMLElement
@@ -300,7 +300,7 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('"Hide Form" クリックでフォームが閉じ、リンクが "Add Statement" に戻ること', async () => {
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const wrapper = container.querySelector('schema-policy-check-statement-form-wrapper') as HTMLElement
@@ -330,7 +330,7 @@ describe('SchemaPolicyCheck 画面', () => {
   describe('SchemaPolicyCheck (doc task) 実行', () => {
     it('"Execute SchemaPolicyCheck" ボタンで api.task("doc") が呼ばれること', async () => {
       const taskSpy = jest.spyOn(api, 'task')
-      const { container, unmount } = mountExSchemaPolicyCheck()
+      const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
       const executeButton = Array.from(container.querySelectorAll('button')).find((b) =>

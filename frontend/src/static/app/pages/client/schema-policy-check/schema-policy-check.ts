@@ -44,7 +44,7 @@ interface State {
   executeResultMessage?: string
 }
 
-interface ExSchemaPolicyCheck extends IntroRiotComponent<Props, State> {
+interface SchemaPolicyCheck extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
@@ -98,7 +98,7 @@ interface ExSchemaPolicyCheck extends IntroRiotComponent<Props, State> {
   loadSchemaPolicy(): Promise<void>
 }
 
-export default withIntroTypes<ExSchemaPolicyCheck>({
+export default withIntroTypes<SchemaPolicyCheck>({
   components: {
     LatestResult,
     TaskExecuteModal,

@@ -13,7 +13,7 @@
     <alter-check project-name={ props.projectName }></alter-check>
   </route>
   <route path={ state.routes.executeSchemaPolicyCheck.path }>
-    <ex-schema-policy-check project-name={ props.projectName }></ex-schema-policy-check>
+    <schema-policy-check project-name={ props.projectName }></schema-policy-check>
   </route>
   <route path={ state.routes.settingsDatabaseInfo.path }>
     <st-database-info project-name={ props.projectName }></st-database-info>
@@ -28,7 +28,7 @@
     import SchemaSyncCheck from './schema-sync-check/schema-sync-check.riot'
     import ReplaceSchema from './replace-schema/replace-schema.riot'
     import AlterCheck from './alter-check/alter-check.riot'
-    import ExSchemaPolicyCheck from './schema-policy-check/ex-schema-policy-check.riot'
+    import SchemaPolicyCheck from './schema-policy-check/schema-policy-check.riot'
     import DatabaseInfo from './database-info/database-info.riot'
     import Logs from './logs/logs.riot'
     import { clientRoutes } from './client-router';
@@ -39,7 +39,7 @@
         SchemaSyncCheck,
         ReplaceSchema,
         AlterCheck,
-        ExSchemaPolicyCheck,
+        SchemaPolicyCheck,
         DatabaseInfo,
         Logs,
         Route
