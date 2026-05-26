@@ -129,7 +129,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     if (this.state.executeStatus !== 'None') {
       return
     }
-    await this.updateContents({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
+    this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
     await api
       .executeTask(this.props.projectName, 'schemaSyncCheck')
       .then(async (data) => {
@@ -137,8 +137,7 @@ export default withIntroTypes<SchemaSyncCheck>({
         await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
       })
       .catch(async () => {
-        // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
-        await this.updateContents({ executeStatus: 'None' })
+        this.update({ executeStatus: 'Error', executeResultMessage: 'Unexpected error occurred.' })
       })
   },
 
@@ -167,7 +166,6 @@ export default withIntroTypes<SchemaSyncCheck>({
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.findSchemaSyncDfprop(projectName)
-    console.log('Fetched syncSchemaSetting:', syncSchemaSetting)
     const latestResult = await api.findLatestTaskLog(projectName, 'schemaSyncCheck').then((body) => {
       if (body) {
         return {

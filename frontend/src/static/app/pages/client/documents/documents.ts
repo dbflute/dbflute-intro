@@ -132,7 +132,7 @@ export default withIntroTypes<Document>({
     if (this.state.executeStatus !== 'None') {
       return
     }
-    await this.updateContents({ executeStatus: 'Executing', executeResultMessage: 'Generating...' })
+    this.update({ executeStatus: 'Executing', executeResultMessage: 'Generating...' })
     await api
       .executeTask(this.props.projectName, 'doc')
       .then(async (data) => {
@@ -140,8 +140,7 @@ export default withIntroTypes<Document>({
         await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
       })
       .catch(async () => {
-        // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
-        await this.updateContents({ executeStatus: 'None' })
+        this.update({ executeStatus: 'Error', executeResultMessage: 'Unexpected error occurred.' })
       })
   },
 

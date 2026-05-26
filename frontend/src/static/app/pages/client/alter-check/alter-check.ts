@@ -159,8 +159,7 @@ export default withIntroTypes<AlterCheck>({
           this.updateContents({ executeStatus: 'Completed', executeResultMessage })
         })
         .catch(() => {
-          // APIリクエストに失敗した際の情報も反映するため更新（一緒に実行モーダルは閉じる）
-          this.updateContents({ executeStatus: 'None' })
+          this.update({ executeStatus: 'Error', executeResultMessage: 'Unexpected error occurred.' })
         })
     })
   },

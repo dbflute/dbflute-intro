@@ -221,9 +221,8 @@ export default withIntroTypes<ReplaceSchema>({
     try {
       const data = await api.executeTask(projectName, 'replaceSchema')
       state = { executeStatus: 'Completed' as TaskExecuteStatus, executeResultMessage: data.success ? 'Success' : 'Failure' }
-    } catch (e) {
-      console.error('Failed ReplaceSchema:', e)
-      state = { executeStatus: 'None' as TaskExecuteStatus }
+    } catch {
+      state = { executeStatus: 'Error' as TaskExecuteStatus, executeResultMessage: 'Unexpected error occurred.' }
     }
 
     this.update(state)

@@ -6,7 +6,7 @@ import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 /**
  * DBFluteタスク実行ステータス。
  */
-export type TaskExecuteStatus = 'None' | 'Executing' | 'Completed'
+export type TaskExecuteStatus = 'None' | 'Executing' | 'Completed' | 'Error'
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 // ^                                                                                     v
@@ -59,6 +59,17 @@ type SuModal = {
 
 /** 完了を示すモーダルダイアログ。su-modalに引き渡すオブジェクト。 */
 const COMPLETED_MODAL: SuModal = {
+  closable: true,
+  buttons: [
+    {
+      text: 'CLOSE',
+      default: true,
+    },
+  ],
+}
+
+/** 例外発生を示すモーダルダイアログ。su-modalに引き渡すオブジェクト。 */
+const ERROR_MODAL: SuModal = {
   closable: true,
   buttons: [
     {
@@ -139,6 +150,8 @@ export default withIntroTypes<TaskExecuteModal>({
         return EXECUTING_MODAL
       case 'Completed':
         return COMPLETED_MODAL
+      case 'Error':
+        return ERROR_MODAL
     }
   },
   onHide() {
