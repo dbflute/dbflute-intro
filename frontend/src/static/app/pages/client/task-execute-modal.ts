@@ -73,7 +73,6 @@ const COMPLETED_MODAL: SuModal = {
 /** 例外発生を示すモーダルダイアログ。su-modalに引き渡すオブジェクト。 */
 const ERROR_MODAL: SuModal = {
   closable: true,
-  header: 'Unexpected Error',
   buttons: [
     {
       text: 'CLOSE',
@@ -110,12 +109,6 @@ interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
   show(): boolean
 
   /**
-   * モーダル全体の見た目に利用するclass属性値。
-   * @return 表示用のclass属性値
-   */
-  modalClass(): string
-
-  /**
    * su-modal の modal 相当。
    * @return 表示するモーダルオブジェクト (非表示 if undefined)
    */
@@ -150,9 +143,6 @@ export default withIntroTypes<TaskExecuteModal>({
   //                                                                       =============
   show(): boolean {
     return this.state.status !== 'None'
-  },
-  modalClass(): string {
-    return this.state.status === 'Error' ? 'architrave task-execute-error-modal' : ''
   },
   modal(): SuModal | undefined {
     switch (this.state.status) {
