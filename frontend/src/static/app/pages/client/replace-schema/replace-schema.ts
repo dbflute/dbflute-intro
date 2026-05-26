@@ -222,7 +222,7 @@ export default withIntroTypes<ReplaceSchema>({
       const data = await api.executeTask(projectName, 'replaceSchema')
       state = { executeStatus: 'Completed' as TaskExecuteStatus, executeResultMessage: data.success ? 'Success' : 'Failure' }
     } catch {
-      state = { executeStatus: 'Error' as TaskExecuteStatus, executeResultMessage: 'Could not complete the task.\nPlease try again.' }
+      state = { executeStatus: 'Error' as TaskExecuteStatus, executeResultMessage: 'Could not complete the task. Please try again.' }
     }
 
     this.update(state)

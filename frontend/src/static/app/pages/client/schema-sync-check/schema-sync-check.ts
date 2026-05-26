@@ -137,7 +137,7 @@ export default withIntroTypes<SchemaSyncCheck>({
         await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
       })
       .catch(async () => {
-        this.update({ executeStatus: 'Error', executeResultMessage: 'Could not complete the task.\nPlease try again.' })
+        this.update({ executeStatus: 'Error', executeResultMessage: 'Could not complete the task. Please try again.' })
       })
   },
 
