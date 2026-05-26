@@ -140,7 +140,7 @@ export default withIntroTypes<Document>({
         await this.updateContents({ executeStatus: 'Completed', executeResultMessage })
       })
       .catch(async () => {
-        this.update({ executeStatus: 'Error', executeResultMessage: 'Unexpected error occurred.' })
+        this.update({ executeStatus: 'Error', executeResultMessage: 'Could not complete the task.\nPlease try again.' })
       })
   },
 

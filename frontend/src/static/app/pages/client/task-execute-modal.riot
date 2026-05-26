@@ -1,9 +1,39 @@
 <result-modal>
-  <su-modal modal="{ modal() }" show="{ show() }" onhide="{ onHide }" class="large">
-    <div class="description">
+  <su-modal modal="{ modal() }" show="{ show() }" onhide="{ onHide }" class="large { modalClass() }">
+    <div class="description { modalClass() ? 'message-area' : '' }">
       { props.message }
     </div>
   </su-modal>
+
+  <style>
+    .ui.modal.architrave.task-execute-error-modal > .header,
+    .ui.modal.architrave.task-execute-error-modal > .actions {
+      background-color: #ffefef;
+    }
+
+    .ui.modal.architrave.task-execute-error-modal > .header {
+      border-radius: 0 0 50px 0 / 0 0 50px 0;
+      color: #aa4455;
+    }
+
+    .ui.modal.task-execute-error-modal > .content {
+      color: rgba(0, 0, 0, 0.87);
+    }
+
+    .ui.modal.architrave.task-execute-error-modal > .actions {
+      border-radius: 50px 0 0 0 / 50px 0 0 0;
+    }
+
+    .ui.modal.task-execute-error-modal .message-area {
+      font-size: 1.2em;
+      padding-left: 0.5em;
+      white-space: pre-line;
+    }
+
+    .ui.modal.task-execute-error-modal > .actions {
+      color: #9f3a38;
+    }
+  </style>
 
   <script>
     import resultModal from './task-execute-modal'

@@ -159,7 +159,7 @@ export default withIntroTypes<AlterCheck>({
           this.updateContents({ executeStatus: 'Completed', executeResultMessage })
         })
         .catch(() => {
-          this.update({ executeStatus: 'Error', executeResultMessage: 'Unexpected error occurred.' })
+          this.update({ executeStatus: 'Error', executeResultMessage: 'Could not complete the task.\nPlease try again.' })
         })
     })
   },
