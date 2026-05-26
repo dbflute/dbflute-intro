@@ -55,8 +55,6 @@ type SuModal = {
   closable: boolean
   /** モーダル上のボタンオブジェクトたち (EmptyAllowed) */
   buttons: SuModalButton[]
-  /** モーダルヘッダーに表示するタイトル。 */
-  header?: string
 }
 
 /** 完了を示すモーダルダイアログ。su-modalに引き渡すオブジェクト。 */
