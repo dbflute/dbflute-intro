@@ -191,10 +191,10 @@ export default withIntroTypes<DatabaseInfo>({
   //                                                                             Private
   //                                                                             =======
   async prepareSettings(projectName: string): Promise<void> {
-    const data = await api.settings(projectName)
+    const coreDfprop = await api.findCoreDfprop(projectName)
     const state = {
-      settings: data,
-      form: this.buildForm(data),
+      settings: coreDfprop,
+      form: this.buildForm(coreDfprop),
     }
     this.update(state)
   },
@@ -210,7 +210,7 @@ export default withIntroTypes<DatabaseInfo>({
   },
 
   async saveSettings(settingsBody: DfpropSettingsEditBody): Promise<void> {
-    await api.editSettings(this.props.projectName, settingsBody)
+    await api.editCoreDfprop(this.props.projectName, settingsBody)
   },
 
   showToast(): void {

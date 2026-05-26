@@ -258,12 +258,12 @@ export default withIntroTypes<Main>({
   //                                                                             =======
   async prepareClientList() {
     // #thinking jflute awaitしてないけど、onMounted()で本当にupdate()まで待ってるかな？ (2026/03/14)
-    api.clientList().then((json) => this.update({ clientList: json }))
+    api.findClientList().then((json) => this.update({ clientList: json }))
   },
 
   async introManifest() {
     // #thinking jflute こっちも同じく、awaitしてないけど... (2026/03/14)
-    api.manifest().then((json) => {
+    api.findManifest().then((json) => {
       this.update({
         manifest: [
           ['Implementation-Version', json['Implementation-Version']],
@@ -274,13 +274,13 @@ export default withIntroTypes<Main>({
   },
 
   async engineVersions() {
-    await api.engineVersions().then((json) => {
+    await api.findExistingEngineVersions().then((json) => {
       this.update({ versions: json })
     })
   },
 
   async latestVersion() {
-    await api.findEngineLatest().then((json) => {
+    await api.findEngineLatestVersion().then((json) => {
       this.update({ latestVersion: json })
     })
   },

@@ -130,7 +130,7 @@ class Api {
    * 起動状態の情報として、メイン画面で表示するために。
    * @returns MANIFEST.MFの内容のMapオブジェクト (basically NotEmpty)
    */
-  manifest(): Promise<any> {
+  findManifest(): Promise<any> {
     // 単なるkey/valueでLasta側もただのMap
     return apiClient.post('api/intro/manifest')
   }
@@ -170,7 +170,7 @@ class Api {
    * Introが起動している環境にインストールされている、DBFluteクライアントのリストを取得する
    * @returns DBFluteクライアント情報のリスト (自動生成クラス)
    */
-  clientList(): Promise<ClientListResult[]> {
+  findClientList(): Promise<ClientListResult[]> {
     return apiClient.post('api/client/list')
   }
 
@@ -179,7 +179,7 @@ class Api {
    * @param projectName DBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns プロジェクトの基本情報 e.g. プロジェクト名、DBMSコード (自動生成クラス)
    */
-  clientPropbase(projectName: string): Promise<ClientPropbaseResult> {
+  findClientPropbase(projectName: string): Promise<ClientPropbaseResult> {
     return apiClient.post(`api/client/propbase/${projectName}`)
   }
 
@@ -209,26 +209,26 @@ class Api {
   //  return apiClient.post(`api/dfprop/list/${clientBody.projectName}`)
   //}
 
-  // -----------------------------------------------------
-  //                                       SchemaSyncCheck
-  //                                       ---------------
+  // ===============================================================================
+  //                                                       Client :: SchemaSyncCheck
+  //                                                       =========================
   /**
-   * SchemaSyncCheckの設定情報を取得する。
+   * SchemaSyncCheckのdfprop設定情報を取得する。
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
    * @returns 一つのSchemaSyncCheckの設定情報、主に比較相手スキーマのJDBC接続先 (自動生成クラス)
    */
-  syncSchema(projectName: string): Promise<DfpropSchemasyncResult> {
+  findSchemaSyncDfprop(projectName: string): Promise<DfpropSchemasyncResult> {
     return apiClient.post(`api/dfprop/schemasync/${projectName}`)
   }
 
   // #hope jflute 引数を DfpropSchemasyncEditBody にして、画面側でstateから詰め替えるようにしたいところ (2026/02/06)
   /**
-   * SchemaSyncCheckの設定情報を編集する。
+   * SchemaSyncCheckのdfprop設定情報を編集する。
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
    * @param schemasyncResult - SchemaSyncCheckの設定情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  editSyncSchema(projectName: string, schemasyncResult: DfpropSchemasyncResult): Promise<void> {
+  editSyncSchemaDfprop(projectName: string, schemasyncResult: DfpropSchemasyncResult): Promise<void> {
     return apiClient.post(`api/dfprop/schemasync/edit/${projectName}/`, {
       url: schemasyncResult.url,
       schema: schemasyncResult.schema,
@@ -238,9 +238,9 @@ class Api {
     })
   }
 
-  // -----------------------------------------------------
-  //                                     SchemaPolicyCheck
-  //                                     -----------------
+  // ===============================================================================
+  //                                                     Client :: SchemaPolicyCheck
+  //                                                     ===========================
   /**
    * スキーマポリシーの設定情報を取得する。
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
@@ -315,15 +315,15 @@ class Api {
     return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, { body: statementMoveBody })
   }
 
-  // -----------------------------------------------------
-  //                                              Document
-  //                                              --------
+  // ===============================================================================
+  //                                                              Client :: Document
+  //                                                              ==================
   /**
    * ドキュメントに関するdfprop情報を取得する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns ドキュメントに関するdfprop情報、aliasDelimiterInDbComment など (自動生成クラス)
    */
-  document(projectName: string): Promise<DfpropDocumentResult> {
+  findDocumentDfprop(projectName: string): Promise<DfpropDocumentResult> {
     return apiClient.post(`api/dfprop/document/${projectName}`)
   }
 
@@ -346,34 +346,31 @@ class Api {
     })
   }
 
-  // -----------------------------------------------------
-  //                                              Settings
-  //                                              --------
+  // ===============================================================================
+  //                                                      Client :: General Settings
+  //                                                      ==========================
   /**
-   * DBFluteクライアントの基本的なdfprop情報を取得する。(DBMSやDB接続情報など)
+   * DBFluteクライアントのコアなdfprop情報を取得する。(DBMSやDB接続情報など)
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns 基本的なdfprop情報 (自動生成クラス)
    */
-  settings(projectName: string): Promise<DfpropSettingsResult> {
+  findCoreDfprop(projectName: string): Promise<DfpropSettingsResult> {
     return apiClient.post(`api/dfprop/settings/${projectName}`)
   }
 
   /**
-   * DBFluteクライアントの基本的なdfprop情報を更新する。(DBMSやDB接続情報など)
+   * DBFluteクライアントのコアなdfprop情報を更新する。(DBMSやDB接続情報など)
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @param settingsEditBody - 基本的なdfprop情報の編集情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  editSettings(projectName: string, settingsEditBody: DfpropSettingsEditBody): Promise<void> {
+  editCoreDfprop(projectName: string, settingsEditBody: DfpropSettingsEditBody): Promise<void> {
     return apiClient.post(`api/dfprop/settings/edit/${projectName}`, settingsEditBody)
   }
 
   // ===============================================================================
-  //                                                               Client :: playsql
-  //                                                               =================
-  // -----------------------------------------------------
-  //                                         ReplaceSchema
-  //                                         -------------
+  //                                                         Client :: ReplaceSchema
+  //                                                         =======================
   /**
    * ReplaceSchema の dataディレクトリをOSのエクスプローラーで開く。(MacならFinder)
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
@@ -390,19 +387,19 @@ class Api {
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns playsqlディレクトリのファイル情報のリスト (自動生成クラス) (EmptyAllowed)
    */
-  playsqlBeanList(projectName: string): Promise<Array<PlaysqlListResult>> {
+  findPlaysqlFileList(projectName: string): Promise<Array<PlaysqlListResult>> {
     return apiClient.post(`api/playsql/list/${projectName}`)
   }
 
-  // -----------------------------------------------------
-  //                                             Migration
-  //                                             ---------
+  // ===============================================================================
+  //                                                            Client :: AlterCheck
+  //                                                            ====================
   /**
-   * AlterCheckの画面情報をロードする。
+   * AlterCheckのインフラ情報(alterのファイルなど)をロードする。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns 画面の表示情報を目一杯に積んだもの (自動生成クラス)
    */
-  alter(projectName: string): Promise<PlaysqlMigrationAlterResult> {
+  findAlterInfra(projectName: string): Promise<PlaysqlMigrationAlterResult> {
     return apiClient.get(`api/playsql/migration/alter/${projectName}/`)
   }
 
@@ -440,25 +437,26 @@ class Api {
   //                                                                   =============
   // #thinking jflute Arrayだったり[]だったりブレてるのどうにかしたい (2026/02/15)
   /**
-   * ログファイルの一覧を取得する。
+   * DBFluteクライアントのログファイルの一覧を取得する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns ログファイル情報の一覧 (自動生成クラス)
    */
-  logBeanList(projectName: string): Promise<LogListResult[]> {
+  findLogFileList(projectName: string): Promise<LogListResult[]> {
     return apiClient.post(`api/log/list/${projectName}`)
   }
 
   // #thinking jflute そもそもサーバー側でプロジェクト名も取り方がBodyになってて統一感がない (2026/02/15)
-  /**
-   * 特定のログファイルの情報を取得する。
-   * @param logBody - 一つのログファイルを特定するもの (自動生成クラス)
-   * @returns 一つのログファイル情報 (自動生成クラス)
-   */
-  getLog(logBody: LogBody): Promise<LogResult> {
-    return apiClient.post('api/log', {
-      body: logBody,
-    })
-  }
+  // #thinking jflute 使われてないっぽい？とりあえずコメントアウトで、riot7リリースの動作確認でOKなら削除 (2026/05/08)
+  ///**
+  // * 特定のログファイルの情報を取得する。
+  // * @param logBody - 一つのログファイルを特定するもの (自動生成クラス)
+  // * @returns 一つのログファイル情報 (自動生成クラス)
+  // */
+  //getLog(logBody: LogBody): Promise<LogResult> {
+  //  return apiClient.post('api/log', {
+  //    body: logBody,
+  //  })
+  //}
 
   /**
    * 直近のDBFluteタスク実行のログファイルの情報を取得する。
@@ -466,7 +464,7 @@ class Api {
    * @param task - DBFluteタスクを特定する名前、TaskInstruction のコード e.g. alterCheck
    * @returns 該当のログファイル情報 (自動生成クラス)
    */
-  latestResult(projectName: string, task: string): Promise<LogLatestResult | null> {
+  async findLatestTaskLog(projectName: string, task: string): Promise<LogLatestResult | null> {
     return apiClient.get(`api/log/latest/${projectName}/${task}`).then((body) => {
       // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
       // https://github.com/dbflute/dbflute-intro/issues/493
@@ -482,7 +480,7 @@ class Api {
    * 最新のDBFluteエンジンバージョンを取得する。
    * @returns 最新のDBFluteエンジンバージョン情報 (自動生成クラス)
    */
-  findEngineLatest(): Promise<EngineLatestResult> {
+  findEngineLatestVersion(): Promise<EngineLatestResult> {
     return apiClient.post('api/engine/latest')
   }
 
@@ -490,7 +488,7 @@ class Api {
    * DBFluteエンジンの一覧を取得する。
    * @returns DBFluteエンジンのバージョン番号のリスト e.g. [ "1.2.6" ]
    */
-  engineVersions(): Promise<string[]> {
+  findExistingEngineVersions(): Promise<string[]> {
     return apiClient.post('api/engine/versions')
   }
 
@@ -517,15 +515,15 @@ class Api {
   }
 
   // ===============================================================================
-  //                                                                            Task
-  //                                                                            ====
+  //                                                                           Task
+  //                                                                          ======
   /**
    * 指定されたDBFluteタスクを実行する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @param task - DBFluteタスクを特定する名前、TaskInstruction のコード e.g. alterCheck
    * @returns DBFluteタスクの実行結果 (自動生成クラス)
    */
-  task(projectName: string, task: string): Promise<TaskExecuteResult> {
+  executeTask(projectName: string, task: string): Promise<TaskExecuteResult> {
     return apiClient.post(`api/task/execute/${projectName}/${task}`)
   }
 }
