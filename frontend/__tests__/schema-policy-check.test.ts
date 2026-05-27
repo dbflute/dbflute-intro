@@ -74,14 +74,14 @@ async function flush() {
 
 beforeEach(() => {
   jest.spyOn(api, 'schemaPolicy').mockResolvedValue(baseSchemaPolicyResult)
-  jest.spyOn(api, 'clientPropbase').mockResolvedValue(baseClientPropbase)
-  jest.spyOn(api, 'latestResult').mockResolvedValue(null)
+  jest.spyOn(api, 'findClientPropbase').mockResolvedValue(baseClientPropbase)
+  jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue(null)
   jest.spyOn(api, 'editSchemaPolicy').mockResolvedValue(undefined)
   jest.spyOn(api, 'deleteSchemapolicyStatement').mockResolvedValue(undefined)
   jest.spyOn(api, 'moveSchemapolicyStatement').mockResolvedValue(undefined)
   jest.spyOn(api, 'registerSchemapolicyStatement').mockResolvedValue('built statement')
   jest.spyOn(api, 'getSchemapolicyStatementSubject').mockResolvedValue(['tableName', 'alias', 'firstDate'])
-  jest.spyOn(api, 'task').mockResolvedValue({ success: true } as TaskExecuteResult)
+  jest.spyOn(api, 'executeTask').mockResolvedValue({ success: true } as TaskExecuteResult)
 })
 
 afterEach(() => {
@@ -152,7 +152,7 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('成功ログがある場合は "Result: Success" (positive) が描画されること', async () => {
-      jest.spyOn(api, 'latestResult').mockResolvedValue({
+      jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue({
         fileName: 'dbflute_intro_doc_success_20260510.log',
         content: 'doc task ok',
       } as LogLatestResult)
@@ -168,7 +168,7 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('失敗ログがある場合は "Result: Failure" (negative) が描画されること', async () => {
-      jest.spyOn(api, 'latestResult').mockResolvedValue({
+      jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue({
         fileName: 'dbflute_intro_doc_failure_20260510.log',
         content: 'doc task ng',
       } as LogLatestResult)
@@ -184,8 +184,8 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('違反ありのときは SchemaPolicy 結果 HTML へのリンクが描画されること', async () => {
-      jest.spyOn(api, 'clientPropbase').mockResolvedValue({ ...baseClientPropbase, violatesSchemaPolicy: true })
-      jest.spyOn(api, 'latestResult').mockResolvedValue({
+      jest.spyOn(api, 'findClientPropbase').mockResolvedValue({ ...baseClientPropbase, violatesSchemaPolicy: true })
+      jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue({
         fileName: 'dbflute_intro_doc_failure_20260510.log',
         content: 'violation content',
       } as LogLatestResult)
@@ -200,7 +200,7 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('違反なしのときは SchemaPolicy 結果 HTML へのリンクは描画されないこと', async () => {
-      jest.spyOn(api, 'latestResult').mockResolvedValue({
+      jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue({
         fileName: 'dbflute_intro_doc_success_20260510.log',
         content: 'ok',
       } as LogLatestResult)
@@ -328,8 +328,8 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                              Doc Task
   //                                              --------
   describe('SchemaPolicyCheck (doc task) 実行', () => {
-    it('"Execute SchemaPolicyCheck" ボタンで api.task("doc") が呼ばれること', async () => {
-      const taskSpy = jest.spyOn(api, 'task')
+    it('"Execute SchemaPolicyCheck" ボタンで api.executeTask("doc") が呼ばれること', async () => {
+      const taskSpy = jest.spyOn(api, 'executeTask')
       const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 

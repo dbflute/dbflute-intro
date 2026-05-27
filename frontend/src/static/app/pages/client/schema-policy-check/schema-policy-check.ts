@@ -130,7 +130,7 @@ export default withIntroTypes<SchemaPolicyCheck>({
     }
     this.update({ executeStatus: 'Executing', executeResultMessage: 'Checking...' })
     try {
-      const data = await api.task(this.props.projectName, 'doc')
+      const data = await api.executeTask(this.props.projectName, 'doc')
       // doc task 自体の成否はモーダルメッセージに反映するが、SchemaPolicy違反の最終判定は
       // この後の loadSchemaPolicy() で取得する clientPropbase.violatesSchemaPolicy で行う
       const message = data.success ? 'Success!!' : 'Failure: You need to check violation.'
@@ -195,8 +195,8 @@ export default withIntroTypes<SchemaPolicyCheck>({
     const projectName = this.props.projectName
     const [schemaPolicy, client, latestResultData] = await Promise.all([
       api.schemaPolicy(projectName),
-      api.clientPropbase(projectName),
-      api.latestResult(projectName, 'doc'),
+      api.findClientPropbase(projectName),
+      api.findLatestTaskLog(projectName, 'doc'),
     ])
     // doc task の成否はログファイル名 (success/failure) で判定する。
     // violatesSchemaPolicy は (success/failure とは別の信号として) 違反時に
