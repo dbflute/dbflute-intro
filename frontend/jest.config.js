@@ -14,5 +14,7 @@ module.exports = {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js',
     '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
   },
+  // ESM-only な node_modules (例: uuid v14) を babel で変換する
+  transformIgnorePatterns: ['/node_modules/(?!(uuid)/)'],
   setupFilesAfterEnv: ['./jest.setup-test.js'], // 各テストファイル実行前のsetup用script
 }

@@ -1,0 +1,27 @@
+<schema-policy-check-statement-form-wrapper>
+  <!-- ClientのSchemaPolicyCheckのStatement追加フォームのラッパー (migrated to Riot v7 at 2026/04/26)
+   機能:
+    o フォームを出したり閉じたりする
+
+   作りの特徴:
+    o フォーム本体は別tagに切り出し、ここではフォームの開閉の役割のみ担う
+   -->
+
+  <!-- フォームを開閉するボタン -->
+  <a if="{ !state.showForm }" onclick="{ toggleForm }">Add Statement</a>
+  <a if="{ state.showForm }" onclick="{ toggleForm }">Hide Form</a>
+
+  <!-- Statement追加フォーム本体 -->
+  <div if="{ state.showForm }" class="ui divided items segment">
+    <schema-policy-check-statement-form
+      project-name="{ props.projectName }"
+      map-type="{ props.formType }"
+      on-register-success="{ onRegisterSuccess }"
+    ></schema-policy-check-statement-form>
+  </div>
+
+  <script>
+    import schemaPolicyCheckStatementFormWrapper from './schema-policy-check-statement-form-wrapper.ts'
+    export default schemaPolicyCheckStatementFormWrapper
+  </script>
+</schema-policy-check-statement-form-wrapper>

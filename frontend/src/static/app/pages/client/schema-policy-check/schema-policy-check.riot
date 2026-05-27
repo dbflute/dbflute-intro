@@ -1,0 +1,161 @@
+<schema-policy-check>
+  <!-- ClientのSchemaPolicyCheckの実行画面 (written at 2022/02/20, migrated to Riot v7 at 2026/04/26)
+   機能:
+    o SchemaPolicyCheck (= doc task) を実行し、結果を表示する。
+    o Policy Settings の状態を表示する。
+    o チェックボックスのOn/Offでつどつどdfpropを修正しにいく。
+
+   作りの特徴:
+    o 実行中はモーダルを表示して他の操作をできなくしている。
+    o ポリシー設定のチェックボックスを変化させることでSchemaPolicyMapを編集することができる。
+
+   tagの階層
+    schema-policy-check.riot
+    |- schema-policy-check-statement-list
+    |- schema-policy-check-statement-form-wrapper
+       |- schema-policy-check-statement-form
+          |- schema-policy-check-statement-form-expected
+             |- schema-policy-check-statement-form-docuement-link
+             |- schema-policy-check-statement-form-expected-field
+   -->
+  <div class="ui container">
+    <h2>Schema Policy Check</h2>
+    <button class="ui primary button" onclick="{ onclickSchemaPolicyCheckTask }">
+      Execute SchemaPolicyCheck ( doc task )
+    </button>
+    <div class="ui info message">
+      <div class="header">
+        What is
+        <a href="http://dbflute.seasar.org/ja/manual/function/genbafit/implfit/schemapolicy/index.html" target="_blank">"SchemaPolicyCheck"?</a>
+      </div>
+      <p>A checking tool for DB design, embedded with
+        <a href="http://dbflute.seasar.org/ja/manual/function/generator/task/doc/index.html" target="_blank">Doc task</a>.
+      </p>
+    </div>
+
+    <!-- 最新の実行結果 -->
+    <div class="latest-result" if="{ state.latestResult }">
+      <latest-result
+        project-name="{ props.projectName }"
+        task="doc"
+        show-header="{ true }"
+        header-title="Execution Result"
+        success="{ state.latestResult.success }"
+        result-title="{ 'Result: ' + (state.latestResult.success ? 'Success' : 'Failure') }"
+        content="{ state.latestResult.content }"
+        link-title="{ failureLinkTitle() }"
+        on-click-link="{ failureOnClickLink() }"
+      ></latest-result>
+    </div>
+
+    <!-- Policy Settings -->
+    <h3>Policy Settings</h3>
+    <div class="ui segment" title="SchemaPolicy" if="{ state.schemaPolicy }">
+      <div class="ui form">
+        <su-tabset class="three column item">
+          <!-- Whole Schema Policy -->
+          <su-tab label="Whole Schema Policy">
+            <h5 class="spolicy-category">Theme</h5>
+            <div class="ui divided items segment">
+              <div class="item" each="{ theme in state.schemaPolicy.wholeMap.themeList }">
+                <div class="ui left floated">
+                  <su-checkbox
+                    class="toggle middle aligned"
+                    checked="{ theme.isActive }"
+                    onchange="{ () => onToggleTheme('wholeMap', theme.typeCode) }"
+                  ></su-checkbox>
+                </div>
+                <div class="content">
+                  <div class="header">{ theme.name }</div>
+                  <div class="description">{ theme.description }</div>
+                </div>
+              </div>
+            </div>
+          </su-tab>
+
+          <!-- Table Schema Policy -->
+          <su-tab label="Table Schema Policy">
+            <h5 class="spolicy-category">Theme</h5>
+            <div class="ui divided items segment">
+              <div class="item" each="{ theme in state.schemaPolicy.tableMap.themeList }">
+                <div class="ui left floated">
+                  <su-checkbox
+                    class="toggle middle aligned"
+                    checked="{ theme.isActive }"
+                    onchange="{ () => onToggleTheme('tableMap', theme.typeCode) }"
+                  ></su-checkbox>
+                </div>
+                <div class="content">
+                  <div class="header">{ theme.name }</div>
+                  <div class="description">{ theme.description }</div>
+                </div>
+              </div>
+            </div>
+            <h5 class="spolicy-category">Statement</h5>
+            <schema-policy-check-statement-list
+              project-name="{ props.projectName }"
+              map-type="tableMap"
+              statements="{ state.schemaPolicy.tableMap.statementList }"
+              on-changed="{ loadSchemaPolicy }"
+            ></schema-policy-check-statement-list>
+            <schema-policy-check-statement-form-wrapper
+              project-name="{ props.projectName }"
+              form-type="tableMap"
+              on-register-success="{ loadSchemaPolicy }"
+            ></schema-policy-check-statement-form-wrapper>
+          </su-tab>
+
+          <!-- Column Schema Policy -->
+          <su-tab label="Column Schema Policy">
+            <h5 class="spolicy-category">Theme</h5>
+            <div class="ui divided items segment">
+              <div class="item" each="{ theme in state.schemaPolicy.columnMap.themeList }">
+                <div class="ui left floated">
+                  <su-checkbox
+                    class="toggle middle aligned"
+                    checked="{ theme.isActive }"
+                    onchange="{ () => onToggleTheme('columnMap', theme.typeCode) }"
+                  ></su-checkbox>
+                </div>
+                <div class="content">
+                  <div class="header">{ theme.name }</div>
+                  <div class="description">{ theme.description }</div>
+                </div>
+              </div>
+            </div>
+            <h5 class="spolicy-category">Statement</h5>
+            <schema-policy-check-statement-list
+              project-name="{ props.projectName }"
+              map-type="columnMap"
+              statements="{ state.schemaPolicy.columnMap.statementList }"
+              on-changed="{ loadSchemaPolicy }"
+            ></schema-policy-check-statement-list>
+            <schema-policy-check-statement-form-wrapper
+              project-name="{ props.projectName }"
+              form-type="columnMap"
+              on-register-success="{ loadSchemaPolicy }"
+            ></schema-policy-check-statement-form-wrapper>
+          </su-tab>
+        </su-tabset>
+      </div>
+    </div>
+  </div>
+
+  <!-- doc task実行モーダル -->
+  <task-execute-modal
+    status="{ state.executeStatus }"
+    message="{ state.executeResultMessage }"
+    on-modal-hide="{ onExecuteModalHide }"
+  ></task-execute-modal>
+
+  <style>
+    .latest-result {
+      margin-top: 1em;
+    }
+  </style>
+
+  <script>
+    import schemaPolicyCheck from './schema-policy-check.ts'
+    export default schemaPolicyCheck
+  </script>
+</schema-policy-check>

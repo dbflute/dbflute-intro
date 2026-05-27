@@ -1,0 +1,17 @@
+<schema-policy-check-statement-form-docuement-link>
+  <!-- ClientのSchemaPolicyCheckのStatement追加のExpected項目のdocumentリンク (migrated to Riot v7 at 2026/04/26)
+   機能:
+    o tableMapとcolumnMapでそれぞれのドキュメントのリンクを出す
+
+   作りの特徴:
+    o propsのformTypeを受け取って、URLを出しわけしている。
+   -->
+  <span>
+    <a class="help link" href="{ buildDocumentUrl() }" target="_blank">document</a>
+  </span>
+
+  <script>
+    import schemaPolicyCheckStatementFormDocuementLink from './schema-policy-check-statement-form-docuement-link.ts'
+    export default schemaPolicyCheckStatementFormDocuementLink
+  </script>
+</schema-policy-check-statement-form-docuement-link>
