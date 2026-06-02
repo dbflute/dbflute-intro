@@ -84,19 +84,21 @@ if (root) {
   throw new Error('not found riot root element')
 }
 
-// フロントエンドのグローバルエラーの監視を開始
+// フロントエンドのグローバルエラーの監視を開始。
+// 'error' や 'unhandledrejection' の event がここに来てダイアログ表示される。
 subscribeGlobalError((msg) => {
   // エラーを拾った際、ダイアログでエラーを表示する
   triggerShowResult({ header: 'Unexpected Frontend Error', messages: [msg] })
 })
 
-// キャッチされなかったerrorを拾うためEventListenerを設定
+// キャッチされなかったerrorを拾うためEventListenerを設定。
+// 例えば、画面のtsのロジックの中でthrowされた例外とかがここに来る。
 window.addEventListener('error', (event) => {
   triggerGlobalError(event.error)
 })
 
-// Promiseの中でthrowされたエラーを拾うため、さらにunhandledrejectionにもEventListenerを設定
-// 例えば、api.ts の handleError の中でthrowされた例外とかはこれが捕捉する。
+// Promiseの中でthrowされたエラーを拾うため、さらにunhandledrejectionにもEventListenerを設定。
+// 例えば、api.ts の handleError の中でthrowされた例外とかはここに来る。
 window.addEventListener('unhandledrejection', (event) => {
   // type は固定で "unhandledrejection", reason に実際throwされた例外のメッセージが入っている
   triggerGlobalError('[' + event.type + '] ' + event.reason)
