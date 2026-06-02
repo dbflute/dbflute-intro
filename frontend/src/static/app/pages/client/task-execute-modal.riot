@@ -1,9 +1,20 @@
 <result-modal>
-  <su-modal modal="{ modal() }" show="{ show() }" onhide="{ onHide }" class="large">
+  <su-modal modal="{ modal() }" show="{ show() }" onhide="{ onHide }" class="large { errorClass() }">
     <div class="description">
       { props.message }
     </div>
   </su-modal>
+
+  <style>
+    .ui.modal.task-execute-error-tone > .content,
+    .ui.modal.task-execute-error-tone > .actions {
+      background-color: #FFEEEE;
+    }
+
+    .ui.modal.task-execute-error-tone > .content {
+      color: #AA4455;
+    }
+  </style>
 
   <script>
     import resultModal from './task-execute-modal'

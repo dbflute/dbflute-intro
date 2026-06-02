@@ -107,6 +107,12 @@ interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
   show(): boolean
 
   /**
+   * Error状態用のclass属性値。
+   * @return Error状態ならclass属性値
+   */
+  errorClass(): string
+
+  /**
    * su-modal の modal 相当。
    * @return 表示するモーダルオブジェクト (非表示 if undefined)
    */
@@ -141,6 +147,9 @@ export default withIntroTypes<TaskExecuteModal>({
   //                                                                       =============
   show(): boolean {
     return this.state.status !== 'None'
+  },
+  errorClass(): string {
+    return this.state.status === 'Error' ? 'task-execute-error-tone' : ''
   },
   modal(): SuModal | undefined {
     switch (this.state.status) {
