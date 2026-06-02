@@ -1,18 +1,22 @@
-const webpack = require('webpack');
+const webpack = require('webpack')
 const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
   entry: './src/static/app/index.ts',
   output: {
-    path: __dirname + '/dist/'
+    path: __dirname + '/dist/',
   },
   devServer: {
-    proxy: { // proxy URLs to backend development server
-      '/api': 'http://localhost:8925'
-    },
+    proxy: [
+      // proxy URLs to backend development server
+      {
+        context: ['/api'],
+        target: 'http://localhost:8925',
+      },
+    ],
     static: {
-      directory: './src/static'
-    }
+      directory: './src/static',
+    },
   },
   module: {
     rules: [
@@ -23,15 +27,15 @@ module.exports = {
           {
             loader: '@riotjs/webpack-loader',
             options: {
-              hot: true
-            }
-          }
-        ]
+              hot: true,
+            },
+          },
+        ],
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ['babel-loader'],
       },
       {
         test: /\.ts$/,
@@ -40,24 +44,24 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   resolve: {
     extensions: ['.ts', '.js'],
     // riot.route で出るエラー回避
-    fallback: { 'url': false }
+    fallback: { url: false },
   },
   devtool: 'source-map',
   plugins: [
-    new webpack.LoaderOptionsPlugin({options: {}}),
+    new webpack.LoaderOptionsPlugin({ options: {} }),
     new webpack.ProvidePlugin({
       riot: 'riot',
     }),
     new ESLintPlugin({
       fix: true,
       emitWarning: true,
-    })
-  ]
-};
+    }),
+  ],
+}
