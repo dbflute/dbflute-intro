@@ -89,11 +89,15 @@ subscribeGlobalError((msg) => {
   // エラーを拾った際、ダイアログでエラーを表示する
   triggerShowResult({ header: 'Unexpected Frontend Error', messages: [msg] })
 })
+
 // キャッチされなかったerrorを拾うためEventListenerを設定
 window.addEventListener('error', (event) => {
   triggerGlobalError(event.error)
 })
+
 // Promiseの中でthrowされたエラーを拾うため、さらにunhandledrejectionにもEventListenerを設定
+// 例えば、api.ts の handleError の中でthrowされた例外とかはこれが捕捉する。
 window.addEventListener('unhandledrejection', (event) => {
-  triggerGlobalError(event.type)
+  // type は固定で "unhandledrejection", reason に実際throwされた例外のメッセージが入っている
+  triggerGlobalError('[' + event.type + '] ' + event.reason)
 })
