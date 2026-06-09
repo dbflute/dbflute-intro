@@ -306,6 +306,9 @@ export default withIntroTypes<Welcome>({
         appRoutes.main.open()
         this.showToast(body.client.projectName)
       })
+      .catch((error) => {
+        // ApiClientのmodal表示に任せて画面固有の例外ハンドリングなし (throw終了のため空catchは必要)
+      })
       .finally(() => {
         this.suLoading(false)
       })

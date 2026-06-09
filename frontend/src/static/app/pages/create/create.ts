@@ -236,10 +236,15 @@ export default withIntroTypes<Create>({
       testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }
 
-    api.createClient(body).then(() => {
-      appRoutes.main.open()
-      this.showToast(body.client.projectName)
-    })
+    api
+      .createClient(body)
+      .then(() => {
+        appRoutes.main.open()
+        this.showToast(body.client.projectName)
+      })
+      .catch((error) => {
+        // ApiClientのmodal表示に任せて画面固有の例外ハンドリングなし (throw終了のため空catchは必要)
+      })
   },
 
   onchangeJarFile(event: InputEvent) {
