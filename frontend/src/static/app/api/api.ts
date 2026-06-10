@@ -115,7 +115,7 @@ const handleError = (error: AxiosError) => {
     const modalSize = validationError ? 'small' : 'large'
     triggerShowResult({ header, messages, modalSize })
   }
-  return Promise.reject(error)
+  return Promise.reject(error) // 画面固有の処理も付け足せるように、rejectで例外を継続
 }
 
 // IntroサーバーAPIのインスタンス準備

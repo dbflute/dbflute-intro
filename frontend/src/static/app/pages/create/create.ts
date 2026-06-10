@@ -172,14 +172,25 @@ export default withIntroTypes<Create>({
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted() {
-    const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
-    this.databaseMap = classifications.databaseMap
-    this.targetDatabaseItems = classifications.targetDatabaseItems
-    this.targetLanguageItems = classifications.targetLanguageItems
-    this.targetContainerItems = classifications.targetContainerItems
-    this.engineVersions = await api
-      .findExistingEngineVersions()
-      .then((data) => data.map((version) => ({ label: version, value: version, default: false })))
+    try {
+      const data = await api.findClassifications()
+      const classifications = this.convertClassificationsForUI(data)
+      this.databaseMap = classifications.databaseMap
+      this.targetDatabaseItems = classifications.targetDatabaseItems
+      this.targetLanguageItems = classifications.targetLanguageItems
+      this.targetContainerItems = classifications.targetContainerItems
+    } catch (_) {
+      // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
+      // 画面固有の例外ハンドリング特になし
+    }
+    try {
+      // then().catch()方式だと、catch()で void | ... の union型になってしまって型エラーになるから普通try/catch
+      const data = await api.findExistingEngineVersions()
+      this.engineVersions = data.map((version) => ({ label: version, value: version, default: false }))
+    } catch (_) {
+      // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
+      // 画面固有の例外ハンドリング特になし
+    }
     this.update()
   },
 
@@ -243,7 +254,8 @@ export default withIntroTypes<Create>({
         this.showToast(body.client.projectName)
       })
       .catch((error) => {
-        // ApiClientのmodal表示に任せて画面固有の例外ハンドリングなし (throw終了のため空catchは必要)
+        // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
+        // 画面固有の例外ハンドリング特になし
       })
   },
 

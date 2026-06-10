@@ -220,13 +220,24 @@ export default withIntroTypes<Welcome>({
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted() {
-    const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
-    const latestVersion = await api.findEngineLatestVersion().then((data) => data.latestReleaseVersion)
-    this.databaseMap = classifications.databaseMap
-    this.targetDatabaseItems = classifications.targetDatabaseItems
-    this.targetLanguageItems = classifications.targetLanguageItems
-    this.targetContainerItems = classifications.targetContainerItems
-    this.latestVersion = latestVersion
+    try {
+      const data = await api.findClassifications()
+      const classifications = this.convertClassificationsForUI(data)
+      this.databaseMap = classifications.databaseMap
+      this.targetDatabaseItems = classifications.targetDatabaseItems
+      this.targetLanguageItems = classifications.targetLanguageItems
+      this.targetContainerItems = classifications.targetContainerItems
+    } catch (_) {
+      // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
+      // 画面固有の例外ハンドリング特になし
+    }
+    try {
+      const data = await api.findEngineLatestVersion()
+      this.latestVersion = data.latestReleaseVersion
+    } catch (_) {
+      // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
+      // 画面固有の例外ハンドリング特になし
+    }
     this.update()
   },
 
@@ -307,7 +318,8 @@ export default withIntroTypes<Welcome>({
         this.showToast(body.client.projectName)
       })
       .catch((error) => {
-        // ApiClientのmodal表示に任せて画面固有の例外ハンドリングなし (throw終了のため空catchは必要)
+        // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
+        // 画面固有の例外ハンドリング特になし
       })
       .finally(() => {
         this.suLoading(false)
