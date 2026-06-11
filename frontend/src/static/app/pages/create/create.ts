@@ -173,23 +173,22 @@ export default withIntroTypes<Create>({
   //                                                                           =========
   async onMounted() {
     try {
-      const data = await api.findClassifications()
-      const classifications = this.convertClassificationsForUI(data)
+      const apiResult = await api.findClassifications()
+      const classifications = this.convertClassificationsForUI(apiResult)
       this.databaseMap = classifications.databaseMap
       this.targetDatabaseItems = classifications.targetDatabaseItems
       this.targetLanguageItems = classifications.targetLanguageItems
       this.targetContainerItems = classifications.targetContainerItems
     } catch (_) {
-      // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
-      // 画面固有の例外ハンドリング特になし
+      // ApiClientの例外ハンドリングで十分で何もなし。
+      // ただ、onMounted()としては後続処理をできるだけやっておきたいので空catchしておく。
     }
     try {
       // then().catch()方式だと、catch()で void | ... の union型になってしまって型エラーになるから普通try/catch
-      const data = await api.findExistingEngineVersions()
-      this.engineVersions = data.map((version) => ({ label: version, value: version, default: false }))
+      const apiResult = await api.findExistingEngineVersions()
+      this.engineVersions = apiResult.map((version) => ({ label: version, value: version, default: false }))
     } catch (_) {
-      // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
-      // 画面固有の例外ハンドリング特になし
+      // 同じく、後続処理をできるだけやっておきたいので空catchしておく。
     }
     this.update()
   },
@@ -247,16 +246,10 @@ export default withIntroTypes<Create>({
       testConnection: this.inputElementBy('[ref=testConnection]').checked,
     }
 
-    api
-      .createClient(body)
-      .then(() => {
-        appRoutes.main.open()
-        this.showToast(body.client.projectName)
-      })
-      .catch((error) => {
-        // ApiClientの例外ハンドリングをglobalで上書きしないよう(空でも)catch必須
-        // 画面固有の例外ハンドリング特になし
-      })
+    api.createClient(body).then(() => {
+      appRoutes.main.open()
+      this.showToast(body.client.projectName)
+    })
   },
 
   onchangeJarFile(event: InputEvent) {

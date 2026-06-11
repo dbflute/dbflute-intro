@@ -17,6 +17,18 @@ module.exports = {
     static: {
       directory: './src/static',
     },
+    client: {
+      overlay: {
+        // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+        // ApiClient呼び出しでcatch必須を避けるためunhandledrejectionで例外内容次第でmodal上書き回避しているが、
+        // (ローカル環境で)余計なエラーオーバーレイが出てしまうのでデフォルトではOFFにしておく。
+        // それ以外の不意の例外はunhandledrejectionでmodal表示されるので、オーバーレイがなくても問題ないはず。
+        // もしわからないエラーが出たら、一時的にtrueにしてオーバーレイを見るようにするくらいでOKかと。
+        //  by jflute (2026/06/11)
+        // _/_/_/_/_/_/_/_/
+        runtimeErrors: false,
+      },
+    },
   },
   module: {
     rules: [
