@@ -85,9 +85,14 @@ if (root) {
 }
 
 // フロントエンドのグローバルエラーの監視を開始。
-// 'error' や 'unhandledrejection' の event がここに来てダイアログ表示される。
 subscribeGlobalError((msg) => {
-  // エラーを拾った際、ダイアログでエラーを表示する
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // 'error' や 'unhandledrejection' の event がここに来てダイアログ表示される。
+  // (app-events.ts の triggerGlobalError() が呼ばれるとこのコールバックに来る)
+  //
+  // result-view.riot の表示領域(modal)を使うので、すでにダイアログ表示していたら上書きなるので注意。
+  // (アプリで例外発生 → アプリでcatchしてダイアログ表示 → 再throw(これがダメ) → ここに来て上書き表示)
+  // _/_/_/_/_/_/_/_/
   triggerShowResult({ header: 'Unexpected Frontend Error', messages: [msg] })
 })
 
@@ -109,7 +114,6 @@ window.addEventListener('unhandledrejection', (event) => {
   // _/_/_/_/_/_/_/_/
   // #for_now jflute AxiosErrorの判定、ちょっと曖昧なのでもっと確実にできないだろうか？ (2026/06/11)
   if (event.reason && event.reason.toString().includes('AxiosError')) {
-    // from ApiClient
     return
   }
   // 本当に例外ハンドリング何もされていない例外がここに来てmodal表示される。
