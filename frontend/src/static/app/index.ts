@@ -104,14 +104,12 @@ window.addEventListener('error', (event) => {
 
 // Promiseの中でthrowされたエラーを拾うため、さらにunhandledrejectionにもEventListenerを設定。
 // 例えば、api.ts の handleError の中でthrowされた例外とかはここに来る。
+//
+// webpackのアップグレードでエラーオーバーレイ (ローカル環境用) は出るようになったが、
+// ここでのmodal表示で役割が被って二重表示になるので webpack.config.js にてOFF (2026/06/11)
 window.addEventListener('unhandledrejection', (event) => {
-  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   // ApiClientの例外、すでにmodal表示されるのでここでは表示不要なので(というか上書きしないように)処理なし。
   // これにてApiClientの呼び出しでcatch必須じゃないようにできた。 (2026/06/11)
-  //
-  // それによりエラーオーバーレイ (webpackの機能、ローカル環境用) が出るようになっていたが、
-  // 本当に想定外の例外は unhandledrejection でmodal表示するので webpack.config.js にてOFF (2026/06/11)
-  // _/_/_/_/_/_/_/_/
   // #for_now jflute AxiosErrorの判定、ちょっと曖昧なのでもっと確実にできないだろうか？ (2026/06/11)
   if (event.reason && event.reason.toString().includes('AxiosError')) {
     return
