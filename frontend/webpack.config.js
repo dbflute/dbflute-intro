@@ -67,6 +67,7 @@ module.exports = {
   },
   devtool: 'source-map',
   plugins: [
+    new webpack.LoaderOptionsPlugin({ options: {} }),
     new webpack.ProvidePlugin({
       riot: 'riot',
     }),
