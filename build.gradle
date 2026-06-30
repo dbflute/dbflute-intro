@@ -32,7 +32,7 @@ ext {
             // Basic Resource
             jdk        : '1.8',
             gradle     : '4.2',
-            node       : '16.15.0',
+            node       : '22.23.1',
 
             // Main Framework
             dbflute    : '1.2.6',

@@ -5,7 +5,7 @@ The GUI Application for DBFlute Management
 # For Intro users
 ## How to use Intro
 1. download jar file
-2. execute this command 
+2. execute this command
    1. `$ java -jar dbflute-intro.jar`
    2. `$ java -jar -Dintro.decomment.server=true dbflute-intro.jar  # if you use decomment server mode`
 
@@ -16,9 +16,9 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
 1. git clone https://github.com/dbflute/dbflute-intro.git
 2. import as Gradle project on your IDE or `$ ./gradlew eclipse` (if Eclipse)
-3. install node v8.x.x (if non-existent in your computer)
-   1. `$ brew install node@8`  
-   
+3. install node v22.x.x (if non-existent in your computer)
+   1. `$ brew install node@22`
+
    or, it might be better to use nodebrew.
 4. install components of npm for application (at dbflute-intro directory)
    1. `$ npm ci`
@@ -32,7 +32,7 @@ http://dbflute.seasar.org/ja/manual/function/generator/intro/index.html
 
 ## How to build production ready jar file
 1. `$ ./gradlew release`
-1. `$ java -jar build/libs/dbflute-intro.jar # for jar file check` 
+1. `$ java -jar build/libs/dbflute-intro.jar # for jar file check`
 
 ## How to prepare containers
 1. `$ docker compose up -d`
@@ -79,7 +79,7 @@ dbflute-intro
           ├-- settings
           │   └-- settings.tag
           ├-- welcome
-          │   └-- welocome.tag
+          │   └-- welcome.tag
           ├-- index.css
           └-- index.js
 ```
@@ -100,7 +100,7 @@ dbflute-intro
 # latest version of DBFlute Intro, can be used as comparing version
 intro.latest.version = ????? # Edit this version
 
-# download URL of DBFlute Intro 
+# download URL of DBFlute Intro
 intro.download.url = https://github.com/dbflute/dbflute-intro/releases/download/dbflute-intro-$$version$$/dbflute-intro.jar
 ```
 
@@ -116,7 +116,7 @@ $ sh docker-build.sh && sh docker-push.sh ${release version} # input release ver
 1. Write release information at [here](https://github.com/dbflute/dbflute-document/blob/master/web/ja/manual/function/generator/intro/index.html#L61)
 2. Deploy the dbflute document
 
-### Send release notification 
+### Send release notification
 Notify all around the world!!
 - dbflute mailing list
 - dbflute slack
