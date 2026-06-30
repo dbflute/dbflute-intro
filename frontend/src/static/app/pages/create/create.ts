@@ -172,14 +172,24 @@ export default withIntroTypes<Create>({
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted() {
-    const classifications = await api.findClassifications().then((data) => this.convertClassificationsForUI(data))
-    this.databaseMap = classifications.databaseMap
-    this.targetDatabaseItems = classifications.targetDatabaseItems
-    this.targetLanguageItems = classifications.targetLanguageItems
-    this.targetContainerItems = classifications.targetContainerItems
-    this.engineVersions = await api
-      .findExistingEngineVersions()
-      .then((data) => data.map((version) => ({ label: version, value: version, default: false })))
+    try {
+      const apiResult = await api.findClassifications()
+      const classifications = this.convertClassificationsForUI(apiResult)
+      this.databaseMap = classifications.databaseMap
+      this.targetDatabaseItems = classifications.targetDatabaseItems
+      this.targetLanguageItems = classifications.targetLanguageItems
+      this.targetContainerItems = classifications.targetContainerItems
+    } catch (_) {
+      // ApiClientの例外ハンドリングで十分で何もなし。
+      // ただ、onMounted()としては後続処理をできるだけやっておきたいので空catchしておく。
+    }
+    try {
+      // then().catch()方式だと、catch()で void | ... の union型になってしまって型エラーになるから普通try/catch
+      const apiResult = await api.findExistingEngineVersions()
+      this.engineVersions = apiResult.map((version) => ({ label: version, value: version, default: false }))
+    } catch (_) {
+      // 同じく、後続処理をできるだけやっておきたいので空catchしておく。
+    }
     this.update()
   },
 

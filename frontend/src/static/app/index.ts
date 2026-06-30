@@ -85,9 +85,14 @@ if (root) {
 }
 
 // フロントエンドのグローバルエラーの監視を開始。
-// 'error' や 'unhandledrejection' の event がここに来てダイアログ表示される。
 subscribeGlobalError((msg) => {
-  // エラーを拾った際、ダイアログでエラーを表示する
+  // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+  // 'error' や 'unhandledrejection' の event がここに来てダイアログ表示される。
+  // (app-events.ts の triggerGlobalError() が呼ばれるとこのコールバックに来る)
+  //
+  // result-view.riot の表示領域(modal)を使うので、すでにダイアログ表示していたら上書きなるので注意。
+  // (アプリで例外発生 → アプリでcatchしてダイアログ表示 → 再throw(これがダメ) → ここに来て上書き表示)
+  // _/_/_/_/_/_/_/_/
   triggerShowResult({ header: 'Unexpected Frontend Error', messages: [msg] })
 })
 
@@ -99,7 +104,17 @@ window.addEventListener('error', (event) => {
 
 // Promiseの中でthrowされたエラーを拾うため、さらにunhandledrejectionにもEventListenerを設定。
 // 例えば、api.ts の handleError の中でthrowされた例外とかはここに来る。
+//
+// webpackのアップグレードでエラーオーバーレイ (ローカル環境用) は出るようになったが、
+// ここでのmodal表示で役割が被って二重表示になるので webpack.config.js にてOFF (2026/06/11)
 window.addEventListener('unhandledrejection', (event) => {
+  // ApiClientの例外、すでにmodal表示されるのでここでは表示不要なので(というか上書きしないように)処理なし。
+  // これにてApiClientの呼び出しでcatch必須じゃないようにできた。 (2026/06/11)
+  // #for_now jflute AxiosErrorの判定、ちょっと曖昧なのでもっと確実にできないだろうか？ (2026/06/11)
+  if (event.reason && event.reason.toString().includes('AxiosError')) {
+    return
+  }
+  // 本当に例外ハンドリング何もされていない例外がここに来てmodal表示される。
   // type は固定で "unhandledrejection", reason に実際throwされた例外のメッセージが入っている
   triggerGlobalError('[' + event.type + '] ' + event.reason)
 })

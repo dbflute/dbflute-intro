@@ -110,12 +110,25 @@ const handleError = (error: AxiosError) => {
   } else if (status >= 500) {
     header = '500 Server Error'
     messages = Object.values(response.data.messages)
+  } else if (status >= 400 && status <= 499) {
+    // Intro想定外のクライアントエラー
+    header = 'Unknown Client Error: ' + status
+    messages = Object.values(response.data.messages)
+  } else if (status >= 500 && status <= 599) {
+    // Intro想定外のサーバーエラー
+    header = 'Unknown Server Error: ' + status
+    messages = Object.values(response.data.messages)
+  } else {
+    // さらなる想定外のエラー (API呼び出しの例外ハンドリングはすべてApiClientで完結させるため)
+    header = 'Unknown Error: ' + status
+    messages = Object.values(response.data.messages)
   }
   if (header != null || messages != null) {
+    // 考慮漏れがなければ基本true
     const modalSize = validationError ? 'small' : 'large'
     triggerShowResult({ header, messages, modalSize })
   }
-  return Promise.reject(error)
+  return Promise.reject(error) // 画面固有の処理も付け足せるように、rejectで例外を継続
 }
 
 // IntroサーバーAPIのインスタンス準備
