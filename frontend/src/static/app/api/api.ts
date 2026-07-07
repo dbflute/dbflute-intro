@@ -119,8 +119,11 @@ const handleError = (error: AxiosError) => {
     header = '401 Not Authorized'
   } else if (status === 403) {
     header = '403 Forbidden'
-  } else if (status >= 500) {
+  } else if (status === 500) {
     header = '500 Server Error'
+    messages = extractMessages(response.data, 'Server error occurred')
+  } else if (status === 504) {
+    header = '504 Gateway Timeout'
     messages = extractMessages(response.data, 'Cannot access the server, retry later')
   } else if (status >= 400 && status <= 499) {
     // Intro想定外のクライアントエラー
