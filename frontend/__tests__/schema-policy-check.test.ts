@@ -73,10 +73,10 @@ async function flush() {
 }
 
 beforeEach(() => {
-  jest.spyOn(api, 'schemaPolicy').mockResolvedValue(baseSchemaPolicyResult)
+  jest.spyOn(api, 'findSchemaPolicyDfprop').mockResolvedValue(baseSchemaPolicyResult)
   jest.spyOn(api, 'findClientPropbase').mockResolvedValue(baseClientPropbase)
   jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue(null)
-  jest.spyOn(api, 'editSchemaPolicy').mockResolvedValue(undefined)
+  jest.spyOn(api, 'editSchemaPolicyDfprop').mockResolvedValue(undefined)
   jest.spyOn(api, 'deleteSchemapolicyStatement').mockResolvedValue(undefined)
   jest.spyOn(api, 'moveSchemapolicyStatement').mockResolvedValue(undefined)
   jest.spyOn(api, 'registerSchemapolicyStatement').mockResolvedValue('built statement')
@@ -220,7 +220,7 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                          ------------
   describe('テーマトグル', () => {
     it('Whole タブのテーマチェックボックス変更で editSchemaPolicy が呼ばれること', async () => {
-      const editSpy = jest.spyOn(api, 'editSchemaPolicy')
+      const editSpy = jest.spyOn(api, 'editSchemaPolicyDfprop')
       const { container, unmount } = mountSchemaPolicyCheck()
       await flush()
 
@@ -238,7 +238,7 @@ describe('SchemaPolicyCheck 画面', () => {
           wholeMap: { themeList: [{ typeCode: 'SAME_NAME', isActive: false }] },
           tableMap: { themeList: [] },
           columnMap: { themeList: [] },
-        })
+        }),
       )
 
       unmount()
@@ -267,7 +267,7 @@ describe('SchemaPolicyCheck 画面', () => {
         expect.objectContaining({
           mapType: 'tableMap',
           statement: 'if tableName is suffix:_HISTORY then bad => ヒストリー表のサフィックスはNG',
-        })
+        }),
       )
 
       unmount()
@@ -334,7 +334,7 @@ describe('SchemaPolicyCheck 画面', () => {
       await flush()
 
       const executeButton = Array.from(container.querySelectorAll('button')).find((b) =>
-        (b.textContent ?? '').includes('Execute SchemaPolicyCheck')
+        (b.textContent ?? '').includes('Execute SchemaPolicyCheck'),
       )
       expect(executeButton).toBeDefined()
       executeButton?.click()

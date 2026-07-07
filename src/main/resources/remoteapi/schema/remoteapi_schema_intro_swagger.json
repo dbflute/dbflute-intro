@@ -2140,6 +2140,9 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyEditBody$WholeMap": {
       "type": "object",
+      "required": [
+        "themeList"
+      ],
       "properties": {
         "themeList": {
           "type": "array",
@@ -2151,6 +2154,9 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyEditBody$TableMap": {
       "type": "object",
+      "required": [
+        "themeList"
+      ],
       "properties": {
         "themeList": {
           "type": "array",
@@ -2162,6 +2168,9 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyEditBody$ColumnMap": {
       "type": "object",
+      "required": [
+        "themeList"
+      ],
       "properties": {
         "themeList": {
           "type": "array",
@@ -2173,6 +2182,11 @@
     },
     "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyEditBody": {
       "type": "object",
+      "required": [
+        "wholeMap",
+        "tableMap",
+        "columnMap"
+      ],
       "properties": {
         "wholeMap": {
           "$ref": "#/definitions/org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyEditBody%24WholeMap"

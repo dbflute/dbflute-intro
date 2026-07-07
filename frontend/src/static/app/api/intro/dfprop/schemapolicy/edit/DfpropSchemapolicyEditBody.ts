@@ -19,14 +19,14 @@
  * @author FreeGen
  */
 type DfpropSchemapolicyEditBody = {
-  /** (NullAllowed) */
-  wholeMap?: DfpropSchemapolicyEditBody_WholeMapPart
+  /** (Required) */
+  wholeMap: DfpropSchemapolicyEditBody_WholeMapPart
 
-  /** (NullAllowed) */
-  tableMap?: DfpropSchemapolicyEditBody_TableMapPart
+  /** (Required) */
+  tableMap: DfpropSchemapolicyEditBody_TableMapPart
 
-  /** (NullAllowed) */
-  columnMap?: DfpropSchemapolicyEditBody_ColumnMapPart
+  /** (Required) */
+  columnMap: DfpropSchemapolicyEditBody_ColumnMapPart
 }
 
 /**
@@ -34,8 +34,8 @@ type DfpropSchemapolicyEditBody = {
  * @author FreeGen
  */
 type DfpropSchemapolicyEditBody_WholeMapPart = {
-  /** (NullAllowed) */
-  themeList?: Array<DfpropSchemapolicyEditBody_ThemePart>
+  /** (NotNull) */
+  themeList: Array<DfpropSchemapolicyEditBody_ThemePart>
 }
 
 /**
@@ -55,8 +55,8 @@ type DfpropSchemapolicyEditBody_ThemePart = {
  * @author FreeGen
  */
 type DfpropSchemapolicyEditBody_TableMapPart = {
-  /** (NullAllowed) */
-  themeList?: Array<DfpropSchemapolicyEditBody_ThemePart>
+  /** (NotNull) */
+  themeList: Array<DfpropSchemapolicyEditBody_ThemePart>
 }
 
 /**
@@ -64,6 +64,6 @@ type DfpropSchemapolicyEditBody_TableMapPart = {
  * @author FreeGen
  */
 type DfpropSchemapolicyEditBody_ColumnMapPart = {
-  /** (NullAllowed) */
-  themeList?: Array<DfpropSchemapolicyEditBody_ThemePart>
+  /** (NotNull) */
+  themeList: Array<DfpropSchemapolicyEditBody_ThemePart>
 }

@@ -255,23 +255,24 @@ class Api {
   //                                                     Client :: SchemaPolicyCheck
   //                                                     ===========================
   /**
-   * スキーマポリシーの設定情報を取得する。
+   * スキーマポリシーのdfprop設定情報を取得する。
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
    * @returns スキーマポリシーの設定情報、wholeからcolumnまで、themeやstatementなどまるごと (自動生成クラス)
    */
-  schemaPolicy(projectName: string): Promise<DfpropSchemapolicyResult> {
+  findSchemaPolicyDfprop(projectName: string): Promise<DfpropSchemapolicyResult> {
     return apiClient.post(`api/dfprop/schemapolicy/${projectName}`)
   }
 
-  // #thinking jflute なんかthemeだけの修正だったりする？DfpropSchemaPolicyEditBody を見るとそう。 (2026/02/13)
+  // done jflute なんかthemeだけの修正だったりする？DfpropSchemaPolicyEditBody を見るとそう。 (2026/02/13)
   // statementは別途あるしね。であれば、URLも関数名もそれがわかるような名前にしたいかも。
+  // #for_now jflute ↑現時点ではthemeのみ更新。将来的にはstatementも更新できるようにしたい (2026/07/07)
   /**
-   * スキーマポリシーの設定を編集する。(Themeのみ)
+   * スキーマポリシーのdfprop設定を編集する。(Themeのみ)
    * @param projectName - 現在対象としているDBFluteクライアントをプロジェクト名 e.g. maihamadb
-   * @param themeEditBody - 編集したtheme情報、wholeからcolumnまで全てのtheme (自動生成クラス)
+   * @param themeEditBody - 編集したtheme情報、更新対象のものだけ (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  editSchemaPolicy(projectName: string, themeEditBody: DfpropSchemapolicyEditBody): Promise<void> {
+  editSchemaPolicyDfprop(projectName: string, themeEditBody: DfpropSchemapolicyEditBody): Promise<void> {
     return apiClient.post(`api/dfprop/schemapolicy/edit/${projectName}`, {
       wholeMap: themeEditBody.wholeMap,
       tableMap: themeEditBody.tableMap,
@@ -289,16 +290,15 @@ class Api {
     return apiClient.post(`api/dfprop/schemapolicy/statement/register/${projectName}`, statementRegisterBody)
   }
 
-  // #thinking jflute 戻り値が List<String> だから自動生成クラスなし!? Array<string> で良い？ (2026/02/13)
   /**
    * スキーマポリシーのsubject候補の一覧を取得する。
    * (dfpropの文法情報なのでプロジェクト名は不要)
    * @param mapType - テーブルか？カラムか？
    * @returns 個々の構成要素が連結されてdfprop上での表現になった文字列 e.g. if alias is $$tableName$$ then bad
    */
-  getSchemapolicyStatementSubject(mapType: string): Promise<Array<string>> {
-    // #thiking jflute POST で queryパラメーター私は避けたい (2026/02/13)
-    // DfpropSchemapolicyStatementSubjectBody が自動生成されてるので、それを使ってできない？
+  getSchemapolicyStatementSubject(mapType: string): Promise<string[]> {
+    // #hope jflute POST で queryパラメーター渡しは避けたい。 (2026/07/07)
+    // DfpropSchemapolicyStatementSubjectBody が自動生成されてるので、そっちを使ってやり方に変えたい。
     return apiClient.post(`api/dfprop/schemapolicy/statement/subject?maptype=${mapType}`)
   }
 
@@ -340,7 +340,7 @@ class Api {
    * @param documentResult - ドキュメント設定の編集情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  editDocument(projectName: string, documentResult: DfpropDocumentResult): Promise<void> {
+  editDocumentDfprop(projectName: string, documentResult: DfpropDocumentResult): Promise<void> {
     // #for_now jflute DfpropDocumentResult を受け取ってるけど、DfpropDocumentEditBody で受け取りたい (2026/02/15)
     // #thinking jflute documentEditBody をそのまま第二引数にbodyとして入れるでもいいんじゃないのかな？ (2026/02/14)
     return apiClient.post(`api/dfprop/document/edit/${projectName}`, {

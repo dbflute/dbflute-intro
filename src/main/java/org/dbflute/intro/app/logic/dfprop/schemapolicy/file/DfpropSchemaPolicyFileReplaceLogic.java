@@ -79,9 +79,10 @@ public class DfpropSchemaPolicyFileReplaceLogic {
      * 引数で指定された差分のdfpropデータを既存のdfpropの内容とマージさせて置き換える。<br>
      * (ユーザーが入力した分を反映させる想定のメソッド)
      * @param dfpropFile SchemaPolicyのdfpropファイル (NotNull)
-     * @param input 差分の新しいdfpropデータ (NotNull)
+     * @param input 差分の新しいdfpropデータ、更新対象のものだけ入っている (NotNull)
      */
     public void replaceSchemaPolicyMapWithInput(File dfpropFile, SchemaPolicyMap input) {
+        // 既存のdfpropに対して、更新対象の差分を反映(マージ)させて、dfpropのまるごと置き換えをしている (2026/07/07)
         SchemaPolicyMap base = dfpropSchemaPolicyReadLogic.parseSchemePolicyMap(dfpropFile);
         SchemaPolicyMap merge = mergeSchemaPolicyMap(base, input);
         replaceSchemaPolicyMapDirectly(dfpropFile, merge);
@@ -136,8 +137,17 @@ public class DfpropSchemaPolicyFileReplaceLogic {
 
     private DfMapStyle createCommentingMapStyle(SchemaPolicyMap schemaPolicyMap) {
         return new DfMapStyle() {
-            private final List<String> SCOPE_LIST = Arrays.asList("tableExceptList", "tableTargetList", "columnExceptMap",
-                    "isMainSchemaOnly", "wholeMap", "tableMap", "columnMap");
+
+            // 時々、DBFlute本家の最新版の仕様を確認して同期しないとね by jflute (2026/07/07)
+            private final List<String> SCOPE_LIST = Arrays.asList( //
+                    "tableExceptList" //
+                    , "tableTargetList" //
+                    , "columnExceptMap" //
+                    , "isMainSchemaOnly" //
+                    , "wholeMap" //
+                    , "tableMap" //
+                    , "columnMap" //
+            );
 
             private String scope = "";
 

@@ -20,37 +20,58 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.lastaflute.web.validation.Required;
+
 /**
+ * SchemaPolicyのdfpropを編集するリクエストBody。 <br>
+ * 更新対象の項目だけ設定する。(サーバーサイド側で既存dfpropとマージされる)
  * @author hakiba
+ * @author jflute
  */
 public class DfpropSchemaPolicyEditBody {
 
+    @Required
+    @Valid
+    public WholeMap wholeMap;
+
+    @Required
+    @Valid
+    public TableMap tableMap;
+
+    @Required
+    @Valid
+    public ColumnMap columnMap;
+
     public static class WholeMap {
+
+        @NotNull
         @Valid
         public List<Theme> themeList;
     }
 
+    // #for_now jflute 現時点ではthemeのみ更新。将来的にはstatementも更新できるようにしたい (2026/07/07)
     public static class TableMap {
+
+        @NotNull
         @Valid
         public List<Theme> themeList;
     }
 
     public static class ColumnMap {
+
+        @NotNull
         @Valid
         public List<Theme> themeList;
     }
 
     public static class Theme {
-        @NotNull
+
+        // #thinking jflute uniqueTableAliasなどthemeの項目名をなんて呼ぶかDBFluteとしても決まってない。 (2026/07/07)
+        // まあ、themeNameかな？少なくとも typeCode だとピンと来ないので修正したいところだが、フロントエンドも一緒に修正が必要。
+        @Required
         public String typeCode;
-        @NotNull
+
+        @Required
         public Boolean isActive;
     }
-
-    @Valid
-    public WholeMap wholeMap;
-    @Valid
-    public TableMap tableMap;
-    @Valid
-    public ColumnMap columnMap;
 }

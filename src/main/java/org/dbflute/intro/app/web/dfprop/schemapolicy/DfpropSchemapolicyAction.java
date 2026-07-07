@@ -62,6 +62,7 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
     // -----------------------------------------------------
     //                                      EditSchemaPolicy
     //                                      ----------------
+    // #for_now jflute 現時点ではthemeのみ更新。将来的にはstatementも更新できるようにしたい (2026/07/07)
     @NotAvailableDecommentServer
     @Execute
     public JsonResponse<Void> edit(String clientName, DfpropSchemaPolicyEditBody body) {
@@ -76,10 +77,12 @@ public class DfpropSchemapolicyAction extends IntroBaseAction {
                 .map(theme -> new SchemaPolicyWholeMap.Theme(SchemaPolicyWholeMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());
         SchemaPolicyWholeMap wholeMap = new SchemaPolicyWholeMap(wholeMapThemeList);
+
         List<SchemaPolicyTableMap.Theme> tableMapThemeList = body.tableMap.themeList.stream()
                 .map(theme -> new SchemaPolicyTableMap.Theme(SchemaPolicyTableMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());
         SchemaPolicyTableMap tableMap = new SchemaPolicyTableMap(tableMapThemeList, Collections.emptyList());
+
         List<SchemaPolicyColumnMap.Theme> columnMapThemeList = body.columnMap.themeList.stream()
                 .map(theme -> new SchemaPolicyColumnMap.Theme(SchemaPolicyColumnMap.ThemeType.valueByCode(theme.typeCode), theme.isActive))
                 .collect(Collectors.toList());

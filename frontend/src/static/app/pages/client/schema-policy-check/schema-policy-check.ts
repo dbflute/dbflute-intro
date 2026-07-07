@@ -167,12 +167,12 @@ export default withIntroTypes<SchemaPolicyCheck>({
     }
     editBody[mapType] = { themeList: [{ typeCode, isActive: toggledIsActive }] }
 
-    await api.editSchemaPolicy(this.props.projectName, editBody)
+    await api.editSchemaPolicyDfprop(this.props.projectName, editBody)
     // state.schemaPolicy を mutate せず immutable に新オブジェクトで置き換える
     const updatedMap = {
       ...schemaPolicy[mapType],
       themeList: schemaPolicy[mapType].themeList.map((theme) =>
-        theme.typeCode === typeCode ? { ...theme, isActive: toggledIsActive } : theme
+        theme.typeCode === typeCode ? { ...theme, isActive: toggledIsActive } : theme,
       ),
     }
     this.update({
@@ -194,7 +194,7 @@ export default withIntroTypes<SchemaPolicyCheck>({
   async loadSchemaPolicy() {
     const projectName = this.props.projectName
     const [schemaPolicy, client, latestResultData] = await Promise.all([
-      api.schemaPolicy(projectName),
+      api.findSchemaPolicyDfprop(projectName),
       api.findClientPropbase(projectName),
       api.findLatestTaskLog(projectName, 'doc'),
     ])

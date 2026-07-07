@@ -202,7 +202,7 @@ export default withIntroTypes<DocumentFormModal>({
     const projectName = this.props.projectName
     const formData = this.state.documentSetting
     await api
-      .editDocument(projectName, formData)
+      .editDocumentDfprop(projectName, formData)
       .then(() => {
         this.onHide()
       })
