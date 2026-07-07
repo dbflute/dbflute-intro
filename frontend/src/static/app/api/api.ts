@@ -55,8 +55,20 @@ const handleError = (error: AxiosError) => {
   //let reload = false;
   let validationError = false
   const response: any = error.response
-  const status = response.status
-  if (status === 0) {
+  const status = response?.status
+  const extractMessages = (data: any, fallbackMessage = 'Unexpected error occurred'): string[] => {
+    if (data?.messages && typeof data.messages === 'object') {
+      const values = Object.values(data.messages)
+      return values.reduce<string[]>((messageList, value) => {
+        return messageList.concat(Array.isArray(value) ? value.map(String) : [String(value)])
+      }, [])
+    }
+    if (Array.isArray(data)) return data.map(String)
+    if (typeof data === 'string' && data.trim()) return [data]
+    if (data && typeof data === 'object') return [JSON.stringify(data)]
+    return [fallbackMessage]
+  }
+  if (!response || status === 0) {
     messages = ['Cannot access the server, retry later']
   }
   // #hope refactor: extract to method
@@ -101,7 +113,7 @@ const handleError = (error: AxiosError) => {
       }
       messages = messageList
     } else {
-      messages = Array.isArray(response.data) ? response.data : [response.data]
+      messages = extractMessages(response.data, 'Bad request')
     }
   } else if (status === 401) {
     header = '401 Not Authorized'
@@ -109,24 +121,24 @@ const handleError = (error: AxiosError) => {
     header = '403 Forbidden'
   } else if (status >= 500) {
     header = '500 Server Error'
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Cannot access the server, retry later')
   } else if (status >= 400 && status <= 499) {
     // Intro想定外のクライアントエラー
     header = 'Unknown Client Error: ' + status
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Unexpected client error occurred')
   } else if (status >= 500 && status <= 599) {
     // Intro想定外のサーバーエラー
     header = 'Unknown Server Error: ' + status
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Cannot access the server, retry later')
   } else {
     // さらなる想定外のエラー (API呼び出しの例外ハンドリングはすべてApiClientで完結させるため)
     header = 'Unknown Error: ' + status
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response?.data, 'Unexpected error occurred')
   }
   if (header != null || messages != null) {
     // 考慮漏れがなければ基本true
     const modalSize = validationError ? 'small' : 'large'
-    triggerShowResult({ header, messages, modalSize })
+    triggerShowResult({ header, messages: messages || [], modalSize })
   }
   return Promise.reject(error) // 画面固有の処理も付け足せるように、rejectで例外を継続
 }
