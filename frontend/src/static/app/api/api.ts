@@ -55,7 +55,7 @@ const handleError = (error: AxiosError) => {
   //let reload = false;
   let validationError = false
   const response: any = error.response
-  const status = response?.status
+  const status = response.status
   const extractMessages = (data: any, fallbackMessage = 'Unexpected error occurred'): string[] => {
     if (data?.messages && typeof data.messages === 'object') {
       const values = Object.values(data.messages)
@@ -68,7 +68,7 @@ const handleError = (error: AxiosError) => {
     if (data && typeof data === 'object') return [JSON.stringify(data)]
     return [fallbackMessage]
   }
-  if (!response || status === 0) {
+  if (status === 0) {
     messages = ['Cannot access the server, retry later']
   }
   // #hope refactor: extract to method
