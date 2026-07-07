@@ -1642,7 +1642,10 @@
             "value": null,
             "description": null,
             "comment": null,
-            "annotationList": [],
+            "annotationList": [
+              "Required",
+              "Valid"
+            ],
             "nestTypeDocMetaList": [
               {
                 "name": "themeList",
@@ -1652,7 +1655,10 @@
                 "value": null,
                 "description": null,
                 "comment": null,
-                "annotationList": [],
+                "annotationList": [
+                  "Required",
+                  "Valid"
+                ],
                 "nestTypeDocMetaList": [
                   {
                     "name": "name",
@@ -1662,7 +1668,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1673,7 +1681,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1684,7 +1694,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1695,7 +1707,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   }
                 ]
@@ -1710,7 +1724,10 @@
             "value": null,
             "description": null,
             "comment": null,
-            "annotationList": [],
+            "annotationList": [
+              "Required",
+              "Valid"
+            ],
             "nestTypeDocMetaList": [
               {
                 "name": "themeList",
@@ -1720,7 +1737,10 @@
                 "value": null,
                 "description": null,
                 "comment": null,
-                "annotationList": [],
+                "annotationList": [
+                  "Required",
+                  "Valid"
+                ],
                 "nestTypeDocMetaList": [
                   {
                     "name": "name",
@@ -1730,7 +1750,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1741,7 +1763,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1752,7 +1776,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1763,7 +1789,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   }
                 ]
@@ -1776,7 +1804,9 @@
                 "value": null,
                 "description": null,
                 "comment": null,
-                "annotationList": [],
+                "annotationList": [
+                  "NotNull"
+                ],
                 "nestTypeDocMetaList": []
               }
             ]
@@ -1789,7 +1819,10 @@
             "value": null,
             "description": null,
             "comment": null,
-            "annotationList": [],
+            "annotationList": [
+              "Required",
+              "Valid"
+            ],
             "nestTypeDocMetaList": [
               {
                 "name": "themeList",
@@ -1799,7 +1832,10 @@
                 "value": null,
                 "description": null,
                 "comment": null,
-                "annotationList": [],
+                "annotationList": [
+                  "Required",
+                  "Valid"
+                ],
                 "nestTypeDocMetaList": [
                   {
                     "name": "name",
@@ -1809,7 +1845,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1820,7 +1858,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1831,7 +1871,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   },
                   {
@@ -1842,7 +1884,9 @@
                     "value": null,
                     "description": null,
                     "comment": null,
-                    "annotationList": [],
+                    "annotationList": [
+                      "Required"
+                    ],
                     "nestTypeDocMetaList": []
                   }
                 ]
@@ -1855,14 +1899,16 @@
                 "value": null,
                 "description": null,
                 "comment": null,
-                "annotationList": [],
+                "annotationList": [
+                  "NotNull"
+                ],
                 "nestTypeDocMetaList": []
               }
             ]
           }
         ]
       },
-      "fileLineCount": 50,
+      "fileLineCount": 53,
       "methodLineCount": 4
     },
     {
@@ -1924,8 +1970,8 @@
         "typeName": "org.dbflute.intro.app.web.dfprop.schemapolicy.DfpropSchemaPolicyEditBody",
         "simpleTypeName": "DfpropSchemaPolicyEditBody",
         "value": null,
-        "description": "@author hakiba",
-        "comment": "@author hakiba",
+        "description": "SchemaPolicyのdfpropを編集するリクエストBody。 \u003cbr\u003e",
+        "comment": "SchemaPolicyのdfpropを編集するリクエストBody。 \u003cbr\u003e\n更新対象の項目だけ設定する。(サーバーサイド側で既存dfpropとマージされる)\n\n@author hakiba\n@author jflute",
         "annotationList": [],
         "nestTypeDocMetaList": [
           {
@@ -1937,6 +1983,7 @@
             "description": null,
             "comment": null,
             "annotationList": [
+              "Required",
               "Valid"
             ],
             "nestTypeDocMetaList": [
@@ -1949,6 +1996,7 @@
                 "description": null,
                 "comment": null,
                 "annotationList": [
+                  "NotNull",
                   "Valid"
                 ],
                 "nestTypeDocMetaList": [
@@ -1961,7 +2009,7 @@
                     "description": null,
                     "comment": null,
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   },
@@ -1974,7 +2022,7 @@
                     "description": null,
                     "comment": null,
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   }
@@ -1991,6 +2039,7 @@
             "description": null,
             "comment": null,
             "annotationList": [
+              "Required",
               "Valid"
             ],
             "nestTypeDocMetaList": [
@@ -2003,6 +2052,7 @@
                 "description": null,
                 "comment": null,
                 "annotationList": [
+                  "NotNull",
                   "Valid"
                 ],
                 "nestTypeDocMetaList": [
@@ -2015,7 +2065,7 @@
                     "description": null,
                     "comment": null,
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   },
@@ -2028,7 +2078,7 @@
                     "description": null,
                     "comment": null,
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   }
@@ -2045,6 +2095,7 @@
             "description": null,
             "comment": null,
             "annotationList": [
+              "Required",
               "Valid"
             ],
             "nestTypeDocMetaList": [
@@ -2057,6 +2108,7 @@
                 "description": null,
                 "comment": null,
                 "annotationList": [
+                  "NotNull",
                   "Valid"
                 ],
                 "nestTypeDocMetaList": [
@@ -2069,7 +2121,7 @@
                     "description": null,
                     "comment": null,
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   },
@@ -2082,7 +2134,7 @@
                     "description": null,
                     "comment": null,
                     "annotationList": [
-                      "NotNull"
+                      "Required"
                     ],
                     "nestTypeDocMetaList": []
                   }
@@ -2103,7 +2155,7 @@
         "annotationList": [],
         "nestTypeDocMetaList": []
       },
-      "fileLineCount": 50,
+      "fileLineCount": 53,
       "methodLineCount": 7
     },
     {
