@@ -23,7 +23,7 @@
     "editor.formatOnSave": true
   },
   // エディターが補完してに差分が出ないように行末の半角スペースはトリムしない
-  "files.trimTrailingWhitespace": true,
+  "files.trimTrailingWhitespace": false,
 
   // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   // 以下の設定は、java配下だと動作しなかったので独立。(元々java専用なのでjava配下に入れる必要ないのかな!?)
