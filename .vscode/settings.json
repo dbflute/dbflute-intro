@@ -16,13 +16,15 @@
   // _/_/_/_/_/_/_/_/
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true	
+    "editor.formatOnSave": true
   },
   "[java]": {
 	"editor.defaultFormatter": "redhat.java",
     "editor.formatOnSave": true
   },
-  
+  // エディターが補完してに差分が出ないように行末の半角スペースはトリムしない
+  "files.trimTrailingWhitespace": true,
+
   // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   // 以下の設定は、java配下だと動作しなかったので独立。(元々java専用なのでjava配下に入れる必要ないのかな!?)
   // _/_/_/_/_/_/_/_/
