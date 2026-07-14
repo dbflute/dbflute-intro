@@ -24,7 +24,7 @@ commands:
           name: install
           command: |
             cd frontend
-            npm install node@16
+            npm install node@22
       - run:
           name: run test
           command: |
@@ -84,4 +84,3 @@ workflows:
       #     type: approval
       #     requires:
       #       - test_and_build
-
