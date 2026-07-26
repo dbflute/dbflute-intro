@@ -32,7 +32,7 @@
     "vinyl-source-stream": "^2.0.0",
     "webpack": "^5.106.2",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^5.2.3"
+    "webpack-dev-server": "^5.2.6"
   },
   "engines": {
     "node": ">=6.7.0"
