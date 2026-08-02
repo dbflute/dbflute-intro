@@ -116,7 +116,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
    * ReplaceSchemaの最新実行結果を取得してstateを更新する。
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
    */
-  prepareComponents(projectName: string): Promise<void>
+  updateLatestResult(projectName: string): Promise<void>
 
   /**
    * ReplaceSchemaタスクを実行してAPIから結果を取得し、stateを更新する。
@@ -145,7 +145,7 @@ export default withIntroTypes<ReplaceSchema>({
     await Promise.all([
       this.prepareSettings(this.props.projectName),
       this.preparePlaysql(this.props.projectName),
-      this.prepareComponents(this.props.projectName),
+      this.updateLatestResult(this.props.projectName),
     ])
   },
 
@@ -200,17 +200,16 @@ export default withIntroTypes<ReplaceSchema>({
     this.update(state)
   },
 
-  async prepareComponents(projectName: string): Promise<void> {
+  async updateLatestResult(projectName: string): Promise<void> {
     const data = await api.findLatestTaskLog(projectName, 'replaceSchema')
-    if (!data) {
-      return
-    }
 
     const state = {
-      latestResult: {
-        success: data.fileName.includes('success'),
-        content: data.content,
-      },
+      latestResult: data
+        ? {
+            success: data.fileName.includes('success'),
+            content: data.content,
+          }
+        : undefined,
     }
 
     this.update(state)
@@ -225,6 +224,8 @@ export default withIntroTypes<ReplaceSchema>({
       console.error('Failed ReplaceSchema:', e)
       state = { executeStatus: 'None' as TaskExecuteStatus }
     }
+
+    await this.updateLatestResult(projectName)
 
     this.update(state)
   },
