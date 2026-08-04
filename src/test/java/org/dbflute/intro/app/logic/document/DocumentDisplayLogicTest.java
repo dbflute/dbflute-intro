@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import org.dbflute.intro.unit.UnitIntroTestCase;
-import org.junit.Test;
 
 /**
  * @author shiny
@@ -32,14 +31,13 @@ public class DocumentDisplayLogicTest extends UnitIntroTestCase {
         return true;
     }
 
-    @Test
     public void test_modifyHtmlForIntroOpening_schemaHtmlLinkWithFragment() throws Exception {
         // ## Arrange ##
         DocumentDisplayLogic logic = new DocumentDisplayLogic();
         inject(logic);
         File htmlFile = File.createTempFile("history-resortlinedb", ".html");
-        String html = "<a href=\"./schema-resortlinedb.html\">to SchemaHTML</a>\n"
-                + "<a href=\"./schema-resortlinedb.html#member\">MEMBER</a>\n";
+        String html = "<a href=\"./schema-resortlinedb.html\">to SchemaHTML</a>\n" // header link
+                + "<a href=\"./schema-resortlinedb.html#member\">MEMBER</a>\n"; // table link
         Files.write(htmlFile.toPath(), html.getBytes(StandardCharsets.UTF_8));
 
         try {
