@@ -79,9 +79,12 @@ public class DocumentDisplayLogic {
                 if (line.contains("<a href=\"./history-" + projectName + ".html\">to HistoryHTML</a>")) {
                     line = "<a href=\"/api/document/" + projectName + "/historyhtml\">to HistoryHTML</a>";
                 }
-                if (line.contains("<a href=\"./schema-" + projectName + ".html\">to SchemaHTML</a>")) {
-                    line = "<a href=\"/api/document/" + projectName + "/schemahtml\">to SchemaHTML</a>";
-                }
+
+                // 主に、SchemaHTML以外 (e.g. HistoryHTML) のSchemaHTMLへのリンク。
+                // HistoryHTMLであるようなテーブルリンクも一緒に制御できるようにしている。 (2026/08/04)
+                line = line.replace("href=\"./schema-" + projectName + ".html", // preserve fragment e.g. #member
+                        "href=\"/api/document/" + projectName + "/schemahtml");
+
                 if (line.contains("<a href=\"./properties-" + projectName + ".html\">to PropertiesHTML</a>")) {
                     line = "<a href=\"/api/document/" + projectName + "/propertieshtml\">to PropertiesHTML</a>";
                 }
