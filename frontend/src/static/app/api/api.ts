@@ -152,11 +152,8 @@ const handleError = (error: AxiosError) => {
     header = 'Unknown Error: ' + status
     messages = extractMessages(response.data, 'Unexpected error occurred')
   }
-  if (header != null || messages != null) {
-    // 考慮漏れがなければ基本true
-    const modalSize = validationError ? 'small' : 'large'
-    triggerShowResult({ header, messages: messages || [], modalSize })
-  }
+  const modalSize = validationError ? 'small' : 'large'
+  triggerShowResult({ header, messages: messages || [], modalSize })
   return Promise.reject(error) // 画面固有の処理も付け足せるように、rejectで例外を継続
 }
 
