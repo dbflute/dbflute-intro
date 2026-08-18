@@ -45,6 +45,27 @@ class ApiClient {
 //                                                                      ==============
 // see IntroApiFailureHook.java for failure response
 /**
+ * APIエラーレスポンスから表示用のメッセージ一覧を抽出する。
+ * @param data - APIエラーレスポンスのデータ。
+ * @param fallbackMessage - メッセージを抽出できない場合に表示する文言。
+ * @returns 表示するエラーメッセージの一覧。
+ */
+const extractMessages = (data: any, fallbackMessage: string): string[] => {
+  if (data?.messages && typeof data.messages === 'object') {
+    const values = Object.values(data.messages)
+    return values.reduce<string[]>((messageList, value) => {
+      return messageList.concat(
+        Array.isArray(value) ? value.map(String) : [typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value)],
+      )
+    }, [])
+  }
+  if (Array.isArray(data)) return data.map(String)
+  if (typeof data === 'string' && data.trim()) return [data]
+  if (data && typeof data === 'object') return [JSON.stringify(data)]
+  return [fallbackMessage]
+}
+
+/**
  * API ClientでAPIエラーを検知した時のコールバック関数。
  * @param error - Axios のエラーオブジェクト。
  */
@@ -64,18 +85,6 @@ const handleError = (error: AxiosError) => {
     return Promise.reject(error)
   }
   const status = response.status
-  const extractMessages = (data: any, fallbackMessage = 'Unexpected error occurred'): string[] => {
-    if (data?.messages && typeof data.messages === 'object') {
-      const values = Object.values(data.messages)
-      return values.reduce<string[]>((messageList, value) => {
-        return messageList.concat(Array.isArray(value) ? value.map(String) : [String(value)])
-      }, [])
-    }
-    if (Array.isArray(data)) return data.map(String)
-    if (typeof data === 'string' && data.trim()) return [data]
-    if (data && typeof data === 'object') return [JSON.stringify(data)]
-    return [fallbackMessage]
-  }
   // #hope refactor: extract to method
   if (status === 400) {
     header = '400 Bad Request'
