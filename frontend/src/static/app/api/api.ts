@@ -50,7 +50,7 @@ class ApiClient {
  * @param fallbackMessage - メッセージを抽出できない場合に表示する文言。
  * @returns 表示するエラーメッセージの一覧。
  */
-const extractMessages = (data: any, fallbackMessage: string): string[] => {
+export const extractMessages = (data: any, fallbackMessage: string): string[] => {
   if (data?.messages && typeof data.messages === 'object') {
     const values = Object.values(data.messages)
     return values.reduce<string[]>((messageList, value) => {
