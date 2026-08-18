@@ -150,7 +150,7 @@ const handleError = (error: AxiosError) => {
   } else {
     // さらなる想定外のエラー (API呼び出しの例外ハンドリングはすべてApiClientで完結させるため)
     header = 'Unknown Error: ' + status
-    messages = extractMessages(response?.data, 'Unexpected error occurred')
+    messages = extractMessages(response.data, 'Unexpected error occurred')
   }
   if (header != null || messages != null) {
     // 考慮漏れがなければ基本true
