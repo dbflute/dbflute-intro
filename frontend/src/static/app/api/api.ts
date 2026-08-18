@@ -55,6 +55,14 @@ const handleError = (error: AxiosError) => {
   //let reload = false;
   let validationError = false
   const response: any = error.response
+  if (!response) {
+    triggerShowResult({
+      header: 'Network Error',
+      messages: ['Cannot access the server, retry later'],
+      modalSize: 'large',
+    })
+    return Promise.reject(error)
+  }
   const status = response.status
   const extractMessages = (data: any, fallbackMessage = 'Unexpected error occurred'): string[] => {
     if (data?.messages && typeof data.messages === 'object') {
@@ -67,9 +75,6 @@ const handleError = (error: AxiosError) => {
     if (typeof data === 'string' && data.trim()) return [data]
     if (data && typeof data === 'object') return [JSON.stringify(data)]
     return [fallbackMessage]
-  }
-  if (status === 0) {
-    messages = ['Cannot access the server, retry later']
   }
   // #hope refactor: extract to method
   if (status === 400) {
