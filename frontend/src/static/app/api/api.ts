@@ -89,12 +89,12 @@ const handleError = (error: AxiosError) => {
   if (status === 400) {
     header = '400 Bad Request'
     // #hope improvement: formal validation error handling
-    if (response.data.failureType) {
+    if (response.data?.failureType) {
       // basically here (unified JSON if 400)
       header = header + ': ' + response.data.failureType
       validationError = response.data.failureType === 'VALIDATION_ERROR'
     }
-    if (response.data.messages) {
+    if (response.data?.messages) {
       // basically here (unified JSON if 400)
       const messageList = []
       for (let key in response.data.messages) {
