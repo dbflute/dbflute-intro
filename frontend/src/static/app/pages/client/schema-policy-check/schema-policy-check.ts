@@ -92,7 +92,7 @@ interface SchemaPolicyCheck extends IntroRiotComponent<Props, State> {
   /**
    * SchemaPolicyCheckの最新実行結果を取得する。
    */
-  fetchLatestResult(): Promise<LatestResultState | undefined>
+  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
 }
 
 export default withIntroTypes<SchemaPolicyCheck>({
@@ -193,7 +193,7 @@ export default withIntroTypes<SchemaPolicyCheck>({
     const [schemaPolicy, client, latestResult] = await Promise.all([
       api.findSchemaPolicyDfprop(projectName),
       api.findClientPropbase(projectName),
-      this.fetchLatestResult(),
+      this.fetchLatestResult(projectName),
     ])
     // violatesSchemaPolicy は (success/failure とは別の信号として) 違反時に
     // SchemaPolicy 結果HTMLへのリンクを出すかどうかにだけ使う。
@@ -201,8 +201,9 @@ export default withIntroTypes<SchemaPolicyCheck>({
     this.update({ schemaPolicy, latestResult, violatesSchemaPolicy })
   },
 
-  async fetchLatestResult() {
-    const data = await api.findLatestTaskLog(this.props.projectName, 'doc')
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'doc')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

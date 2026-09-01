@@ -29,6 +29,14 @@ describe.each(targets)('%s fetchLatestResult', (_name, component, task) => {
     expect(latestResult).toBeUndefined()
   })
 
+  it('指定されたプロジェクトの最新実行結果を取得すること', async () => {
+    const findLatestTaskLog = jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue(null)
+
+    await (component as any).fetchLatestResult.call({ props: { projectName: TEST_PROJECT } }, 'seaquensedb')
+
+    expect(findLatestTaskLog).toHaveBeenCalledWith('seaquensedb', task)
+  })
+
   it('成功ログを共通の最新実行結果へ変換すること', async () => {
     jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue({
       fileName: 'dbflute_intro_task_success_20260901.log',

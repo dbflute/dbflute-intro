@@ -64,7 +64,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   updateContents(additionalState?: Partial<State>): void
-  fetchLatestResult(): Promise<LatestResultState | undefined>
+  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
   prepareUnreleased(unreleased: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir
   prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
   prepareLatestFailureResult(
@@ -176,8 +176,9 @@ export default withIntroTypes<AlterCheck>({
    * @param additionalState 一緒に更新したいstate. 指定しなくてもOK
    */
   updateContents(additionalState?: Partial<State>) {
-    api.findAlterInfra(this.props.projectName).then((result) => {
-      api.findClientPropbase(this.props.projectName).then(async (client) => {
+    const projectName = this.props.projectName
+    api.findAlterInfra(projectName).then((result) => {
+      api.findClientPropbase(projectName).then(async (client) => {
         const editingSqls = result.editingFiles.map((file) => ({
           fileName: file.fileName,
           content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
@@ -185,7 +186,7 @@ export default withIntroTypes<AlterCheck>({
         }))
         const unreleasedDir = this.prepareUnreleased(result.unreleasedDir)
         const checkedZip = this.prepareChecked(result.checkedZip, unreleasedDir)
-        const latestTaskResult = await this.fetchLatestResult()
+        const latestTaskResult = await this.fetchLatestResult(projectName)
         const latestResult = this.prepareLatestFailureResult(latestTaskResult, result.ngMarkFile)
         this.update({
           hasAlterCheckResultHtml: client.hasAlterCheckResultHtml,
@@ -247,8 +248,9 @@ export default withIntroTypes<AlterCheck>({
         })),
     }
   },
-  async fetchLatestResult() {
-    const data = await api.findLatestTaskLog(this.props.projectName, 'alterCheck')
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'alterCheck')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
   /**

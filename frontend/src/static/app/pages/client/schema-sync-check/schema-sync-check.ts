@@ -50,7 +50,7 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   prepareComponents: () => void
-  fetchLatestResult: () => Promise<LatestResultState | undefined>
+  fetchLatestResult: (projectName?: string) => Promise<LatestResultState | undefined>
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
@@ -166,7 +166,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.findSchemaSyncDfprop(projectName)
     console.log('Fetched syncSchemaSetting:', syncSchemaSetting)
-    const latestResult = await this.fetchLatestResult()
+    const latestResult = await this.fetchLatestResult(projectName)
     const clientPropbase = await api.findClientPropbase(projectName)
     this.update({
       syncSchemaSetting,
@@ -176,8 +176,9 @@ export default withIntroTypes<SchemaSyncCheck>({
     })
   },
 
-  async fetchLatestResult() {
-    const data = await api.findLatestTaskLog(this.props.projectName, 'schemaSyncCheck')
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'schemaSyncCheck')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

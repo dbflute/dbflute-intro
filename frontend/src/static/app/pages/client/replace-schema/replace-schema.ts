@@ -107,7 +107,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   /**
    * ReplaceSchemaの最新実行結果を取得する。
    */
-  fetchLatestResult(): Promise<LatestResultState | undefined>
+  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
 
   /**
    * ReplaceSchemaタスクを実行してAPIから結果を取得し、stateを更新する。
@@ -133,12 +133,12 @@ export default withIntroTypes<ReplaceSchema>({
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted(): Promise<void> {
-    const [, , latestResult] = await Promise.all([
-      this.prepareSettings(this.props.projectName),
-      this.preparePlaysql(this.props.projectName),
-      this.fetchLatestResult(),
+    const projectName = this.props.projectName
+    await Promise.all([
+      this.prepareSettings(projectName),
+      this.preparePlaysql(projectName),
+      this.fetchLatestResult(projectName).then((latestResult) => this.update({ latestResult })),
     ])
-    this.update({ latestResult })
   },
 
   // ===================================================================================
@@ -192,8 +192,9 @@ export default withIntroTypes<ReplaceSchema>({
     this.update(state)
   },
 
-  async fetchLatestResult() {
-    const data = await api.findLatestTaskLog(this.props.projectName, 'replaceSchema')
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'replaceSchema')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 
@@ -207,7 +208,7 @@ export default withIntroTypes<ReplaceSchema>({
       state = { executeStatus: 'None' as TaskExecuteStatus }
     }
 
-    const latestResult = await this.fetchLatestResult()
+    const latestResult = await this.fetchLatestResult(projectName)
     this.update({ ...state, latestResult })
   },
 })

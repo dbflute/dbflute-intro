@@ -51,7 +51,7 @@ interface Document extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   prepareComponents: () => void
-  fetchLatestResult: () => Promise<LatestResultState | undefined>
+  fetchLatestResult: (projectName?: string) => Promise<LatestResultState | undefined>
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
@@ -168,7 +168,7 @@ export default withIntroTypes<Document>({
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const documentSetting = await api.findDocumentDfprop(projectName)
-    const latestResult = await this.fetchLatestResult()
+    const latestResult = await this.fetchLatestResult(projectName)
     const client = await api.findClientPropbase(projectName)
     this.update({
       documentSetting,
@@ -179,8 +179,9 @@ export default withIntroTypes<Document>({
     })
   },
 
-  async fetchLatestResult() {
-    const data = await api.findLatestTaskLog(this.props.projectName, 'doc')
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'doc')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

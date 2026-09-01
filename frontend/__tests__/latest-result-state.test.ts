@@ -58,7 +58,7 @@ describe('ReplaceSchema replaceSchema', () => {
 
     await (ReplaceSchema as any).replaceSchema.call({ fetchLatestResult, update }, 'maihamadb')
 
-    expect(fetchLatestResult).toHaveBeenCalledTimes(1)
+    expect(fetchLatestResult).toHaveBeenCalledWith('maihamadb')
     expect(update).toHaveBeenCalledTimes(1)
     expect(update).toHaveBeenCalledWith({
       executeStatus: 'Completed',
@@ -74,7 +74,7 @@ describe('ReplaceSchema replaceSchema', () => {
 
     await (ReplaceSchema as any).replaceSchema.call({ fetchLatestResult, update }, 'maihamadb')
 
-    expect(fetchLatestResult).toHaveBeenCalledTimes(1)
+    expect(fetchLatestResult).toHaveBeenCalledWith('maihamadb')
     expect(update).toHaveBeenCalledWith({
       executeStatus: 'Completed',
       executeResultMessage: 'Failure',
@@ -90,7 +90,41 @@ describe('ReplaceSchema replaceSchema', () => {
 
     await (ReplaceSchema as any).replaceSchema.call({ fetchLatestResult, update }, 'maihamadb')
 
-    expect(fetchLatestResult).toHaveBeenCalledTimes(1)
+    expect(fetchLatestResult).toHaveBeenCalledWith('maihamadb')
     expect(update).toHaveBeenCalledWith({ executeStatus: 'None', latestResult: undefined })
+  })
+})
+
+describe('ReplaceSchema onMounted', () => {
+  it('設定の初期化に失敗しても取得済みの最新実行結果を反映すること', async () => {
+    const update = jest.fn()
+    const context = {
+      props: { projectName: 'maihamadb' },
+      prepareSettings: jest.fn().mockRejectedValue(new Error('settings error')),
+      preparePlaysql: jest.fn().mockResolvedValue(undefined),
+      fetchLatestResult: jest.fn().mockResolvedValue({ success: true, content: 'latest log' }),
+      update,
+    }
+
+    await expect((ReplaceSchema as any).onMounted.call(context)).rejects.toThrow('settings error')
+    await Promise.resolve()
+
+    expect(update).toHaveBeenCalledWith({ latestResult: { success: true, content: 'latest log' } })
+  })
+
+  it('PlaySQLの初期化に失敗しても取得済みの最新実行結果を反映すること', async () => {
+    const update = jest.fn()
+    const context = {
+      props: { projectName: 'maihamadb' },
+      prepareSettings: jest.fn().mockResolvedValue(undefined),
+      preparePlaysql: jest.fn().mockRejectedValue(new Error('playsql error')),
+      fetchLatestResult: jest.fn().mockResolvedValue({ success: false, content: 'failure log' }),
+      update,
+    }
+
+    await expect((ReplaceSchema as any).onMounted.call(context)).rejects.toThrow('playsql error')
+    await Promise.resolve()
+
+    expect(update).toHaveBeenCalledWith({ latestResult: { success: false, content: 'failure log' } })
   })
 })
