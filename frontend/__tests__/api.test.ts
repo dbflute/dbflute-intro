@@ -1,4 +1,5 @@
 import { extractMessages } from '../src/static/app/api/api'
+import { isTaskLogSuccess } from '../src/static/app/api/task-log'
 
 describe('extractMessages', () => {
   test.each([
@@ -18,5 +19,14 @@ describe('extractMessages', () => {
     ['dataがないとき、フォールバックメッセージを返すこと', undefined, ['fallback message']],
   ])('%s', (_name, data, expected) => {
     expect(extractMessages(data, 'fallback message')).toEqual(expected)
+  })
+})
+
+describe('isTaskLogSuccess', () => {
+  test.each([
+    ['successを含むログファイル名なら成功と判定すること', 'dbflute_intro_doc_success_20260510.log', true],
+    ['failureを含むログファイル名なら失敗と判定すること', 'dbflute_intro_doc_failure_20260510.log', false],
+  ])('%s', (_name, fileName, expected) => {
+    expect(isTaskLogSuccess(fileName)).toBe(expected)
   })
 })

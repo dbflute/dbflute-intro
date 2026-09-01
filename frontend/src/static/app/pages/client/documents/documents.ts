@@ -4,11 +4,8 @@ import { api } from '../../../api/api'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import DocumentFormModal from './document-form-modal.riot'
-
-type DocumentLatestResult = {
-  success: boolean
-  content: string
-}
+import type { LatestResult as LatestResultState } from '../latest-result'
+import { isTaskLogSuccess } from '../../../api/task-log'
 
 interface Props {
   projectName: string
@@ -16,7 +13,7 @@ interface Props {
 
 interface State {
   documentSetting?: DfpropDocumentResult
-  latestResult?: DocumentLatestResult
+  latestResult?: LatestResultState
   hasSchemaHtml: boolean
   hasHistoryHtml: boolean
   executeStatus: TaskExecuteStatus
@@ -54,6 +51,7 @@ interface Document extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   prepareComponents: () => void
+  fetchLatestResult: () => Promise<LatestResultState | undefined>
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
@@ -170,14 +168,7 @@ export default withIntroTypes<Document>({
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const documentSetting = await api.findDocumentDfprop(projectName)
-    const latestResult = await api.findLatestTaskLog(projectName, 'doc').then((body) => {
-      if (body) {
-        return {
-          success: body.fileName.includes('success'),
-          content: body.content,
-        }
-      }
-    })
+    const latestResult = await this.fetchLatestResult()
     const client = await api.findClientPropbase(projectName)
     this.update({
       documentSetting,
@@ -186,5 +177,10 @@ export default withIntroTypes<Document>({
       hasHistoryHtml: client.hasHistoryHtml,
       ...additionalState,
     })
+  },
+
+  async fetchLatestResult() {
+    const data = await api.findLatestTaskLog(this.props.projectName, 'doc')
+    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

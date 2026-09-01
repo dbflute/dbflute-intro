@@ -5,22 +5,14 @@ import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import SchemaPolicyCheckStatementList from './schema-policy-check-statement-list.riot'
 import SchemaPolicyCheckStatementFormWrapper from './schema-policy-check-statement-form-wrapper.riot'
+import type { LatestResult as LatestResultState } from '../latest-result'
+import { isTaskLogSuccess } from '../../../api/task-log'
 
 /**
  * SchemaPolicyの3つのマップ種別。
  * dfpropのwholeMap/tableMap/columnMapに対応する。
  */
 type MapType = 'wholeMap' | 'tableMap' | 'columnMap'
-
-/**
- * SchemaPolicyCheck (= doc task) の最新実行結果。
- */
-type SchemaPolicyLatestResult = {
-  /** 実行が成功したかどうか (= violation がない) */
-  success: boolean
-  /** 実行結果のログ内容 */
-  content: string
-}
 
 interface Props {
   /** 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb */
@@ -32,7 +24,7 @@ interface State {
   schemaPolicy?: DfpropSchemapolicyResult
 
   /** SchemaPolicyCheckの最新実行結果 (undefined: 実行履歴なし) */
-  latestResult?: SchemaPolicyLatestResult
+  latestResult?: LatestResultState
 
   /** SchemaPolicy違反があるかどうか (clientPropbase.violatesSchemaPolicy) */
   violatesSchemaPolicy: boolean
@@ -96,6 +88,11 @@ interface SchemaPolicyCheck extends IntroRiotComponent<Props, State> {
    * 子コンポーネント (statement-list 等) からの onChanged コールバックでも呼ばれる。
    */
   loadSchemaPolicy(): Promise<void>
+
+  /**
+   * SchemaPolicyCheckの最新実行結果を取得する。
+   */
+  fetchLatestResult(): Promise<LatestResultState | undefined>
 }
 
 export default withIntroTypes<SchemaPolicyCheck>({
@@ -193,18 +190,19 @@ export default withIntroTypes<SchemaPolicyCheck>({
   //                                                                             =======
   async loadSchemaPolicy() {
     const projectName = this.props.projectName
-    const [schemaPolicy, client, latestResultData] = await Promise.all([
+    const [schemaPolicy, client, latestResult] = await Promise.all([
       api.findSchemaPolicyDfprop(projectName),
       api.findClientPropbase(projectName),
-      api.findLatestTaskLog(projectName, 'doc'),
+      this.fetchLatestResult(),
     ])
-    // doc task の成否はログファイル名 (success/failure) で判定する。
     // violatesSchemaPolicy は (success/failure とは別の信号として) 違反時に
     // SchemaPolicy 結果HTMLへのリンクを出すかどうかにだけ使う。
     const violatesSchemaPolicy = !!client.violatesSchemaPolicy
-    const latestResult: SchemaPolicyLatestResult | undefined = latestResultData
-      ? { success: latestResultData.fileName.includes('success'), content: latestResultData.content }
-      : undefined
     this.update({ schemaPolicy, latestResult, violatesSchemaPolicy })
+  },
+
+  async fetchLatestResult() {
+    const data = await api.findLatestTaskLog(this.props.projectName, 'doc')
+    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

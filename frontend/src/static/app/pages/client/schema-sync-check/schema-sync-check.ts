@@ -4,11 +4,8 @@ import { api } from '../../../api/api'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import SchemaSyncCheckFormModal from './schema-sync-check-form-modal.riot'
-
-type SchemaSyncCheckLatestResult = {
-  success: boolean
-  content: string
-}
+import type { LatestResult as LatestResultState } from '../latest-result'
+import { isTaskLogSuccess } from '../../../api/task-log'
 
 interface Props {
   projectName: string
@@ -16,7 +13,7 @@ interface Props {
 
 interface State {
   syncSchemaSetting?: DfpropSchemasyncResult
-  latestResult?: SchemaSyncCheckLatestResult
+  latestResult?: LatestResultState
   hasSchemaSyncCheckResultHtml: boolean
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
@@ -53,6 +50,7 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   prepareComponents: () => void
+  fetchLatestResult: () => Promise<LatestResultState | undefined>
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
@@ -168,14 +166,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.findSchemaSyncDfprop(projectName)
     console.log('Fetched syncSchemaSetting:', syncSchemaSetting)
-    const latestResult = await api.findLatestTaskLog(projectName, 'schemaSyncCheck').then((body) => {
-      if (body) {
-        return {
-          success: body.fileName.includes('success'),
-          content: body.content,
-        }
-      }
-    })
+    const latestResult = await this.fetchLatestResult()
     const clientPropbase = await api.findClientPropbase(projectName)
     this.update({
       syncSchemaSetting,
@@ -183,5 +174,10 @@ export default withIntroTypes<SchemaSyncCheck>({
       hasSchemaSyncCheckResultHtml: clientPropbase.hasSyncCheckResultHtml,
       ...additionalState,
     })
+  },
+
+  async fetchLatestResult() {
+    const data = await api.findLatestTaskLog(this.props.projectName, 'schemaSyncCheck')
+    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

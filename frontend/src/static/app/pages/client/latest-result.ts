@@ -1,6 +1,11 @@
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import Raw from '../../components/common/raw.riot'
 
+export type LatestResult = {
+  success: boolean
+  content: string
+}
+
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 // ^                                                                                     v
 // ^                                                                                     v
@@ -57,7 +62,7 @@ interface State {
 // ^                                                                                     v
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
-interface LatestResult extends IntroRiotComponent<Props, State> {
+interface LatestResultComponent extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
@@ -81,7 +86,7 @@ interface LatestResult extends IntroRiotComponent<Props, State> {
 // ^                                                                                     v
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
-export default withIntroTypes<LatestResult>({
+export default withIntroTypes<LatestResultComponent>({
   components: {
     Raw,
   },
