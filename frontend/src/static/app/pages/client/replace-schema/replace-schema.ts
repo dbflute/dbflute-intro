@@ -9,6 +9,8 @@ import LatestResult from '../latest-result.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import { api } from '../../../api/api'
 import ReplaceSchema from './replace-schema'
+import type { LatestResult as LatestResultState } from '../latest-result'
+import { isTaskLogSuccess } from '../../../api/task-log'
 
 /**
  * PlaySQLのドロップダウン項目
@@ -18,16 +20,6 @@ type PlaysqlDropdownItem = {
   label: string
   /** SQLファイルの内容（シンタックスハイライト済み） (EmptyAllowed: デフォルト項目の場合) */
   value?: string
-}
-
-/**
- * ReplaceSchemaの最新実行結果の状態
- */
-type ReplaceSchemaLatestResultState = {
-  /** 実行が成功したかどうか */
-  success: boolean
-  /** 実行結果のログ内容 */
-  content: string
 }
 
 /**
@@ -58,7 +50,7 @@ interface State {
   executeResultMessage?: string
 
   /** ReplaceSchemaの最新実行結果 (undefined: 実行履歴なし) */
-  latestResult?: ReplaceSchemaLatestResultState
+  latestResult?: LatestResultState
 }
 
 interface ReplaceSchema extends IntroRiotComponent<Props, State> {
@@ -113,10 +105,9 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   preparePlaysql(projectName: string): Promise<void>
 
   /**
-   * ReplaceSchemaの最新実行結果を取得してstateを更新する。
-   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名
+   * ReplaceSchemaの最新実行結果を取得する。
    */
-  updateLatestResult(projectName: string): Promise<void>
+  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
 
   /**
    * ReplaceSchemaタスクを実行してAPIから結果を取得し、stateを更新する。
@@ -142,10 +133,11 @@ export default withIntroTypes<ReplaceSchema>({
   //                                                                           Lifecycle
   //                                                                           =========
   async onMounted(): Promise<void> {
+    const projectName = this.props.projectName
     await Promise.all([
-      this.prepareSettings(this.props.projectName),
-      this.preparePlaysql(this.props.projectName),
-      this.updateLatestResult(this.props.projectName),
+      this.prepareSettings(projectName),
+      this.preparePlaysql(projectName),
+      this.fetchLatestResult(projectName).then((latestResult) => this.update({ latestResult })),
     ])
   },
 
@@ -200,19 +192,10 @@ export default withIntroTypes<ReplaceSchema>({
     this.update(state)
   },
 
-  async updateLatestResult(projectName: string): Promise<void> {
-    const data = await api.findLatestTaskLog(projectName, 'replaceSchema')
-
-    const state = {
-      latestResult: data
-        ? {
-            success: data.fileName.includes('success'),
-            content: data.content,
-          }
-        : undefined,
-    }
-
-    this.update(state)
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'replaceSchema')
+    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 
   async replaceSchema(projectName: string): Promise<void> {
@@ -225,8 +208,7 @@ export default withIntroTypes<ReplaceSchema>({
       state = { executeStatus: 'None' as TaskExecuteStatus }
     }
 
-    await this.updateLatestResult(projectName)
-
-    this.update(state)
+    const latestResult = await this.fetchLatestResult(projectName)
+    this.update({ ...state, latestResult })
   },
 })

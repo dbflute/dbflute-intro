@@ -10,6 +10,8 @@ import Raw from '../../../components/common/raw.riot'
 import TaskExecuteModal from '../task-execute-modal.riot'
 import LatestResult from '../latest-result.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
+import type { LatestResult as LatestResultState } from '../latest-result'
+import { isTaskLogSuccess } from '../../../api/task-log'
 
 type AlterLatestResultState = {
   title: string
@@ -62,11 +64,13 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   updateContents(additionalState?: Partial<State>): void
+  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
   prepareUnreleased(unreleased: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir
   prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
   prepareLatestFailureResult(
+    latestTaskResult: LatestResultState | undefined,
     ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
-  ): Promise<AlterLatestResultState | undefined>
+  ): AlterLatestResultState | undefined
 }
 
 export default withIntroTypes<AlterCheck>({
@@ -172,8 +176,9 @@ export default withIntroTypes<AlterCheck>({
    * @param additionalState 一緒に更新したいstate. 指定しなくてもOK
    */
   updateContents(additionalState?: Partial<State>) {
-    api.findAlterInfra(this.props.projectName).then((result) => {
-      api.findClientPropbase(this.props.projectName).then(async (client) => {
+    const projectName = this.props.projectName
+    api.findAlterInfra(projectName).then((result) => {
+      api.findClientPropbase(projectName).then(async (client) => {
         const editingSqls = result.editingFiles.map((file) => ({
           fileName: file.fileName,
           content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
@@ -181,7 +186,8 @@ export default withIntroTypes<AlterCheck>({
         }))
         const unreleasedDir = this.prepareUnreleased(result.unreleasedDir)
         const checkedZip = this.prepareChecked(result.checkedZip, unreleasedDir)
-        const latestResult = await this.prepareLatestFailureResult(result.ngMarkFile)
+        const latestTaskResult = await this.fetchLatestResult(projectName)
+        const latestResult = this.prepareLatestFailureResult(latestTaskResult, result.ngMarkFile)
         this.update({
           hasAlterCheckResultHtml: client.hasAlterCheckResultHtml,
           editingSqls,
@@ -242,44 +248,49 @@ export default withIntroTypes<AlterCheck>({
         })),
     }
   },
+  async fetchLatestResult(projectName?: string) {
+    const targetProjectName = projectName ?? this.props.projectName
+    const data = await api.findLatestTaskLog(targetProjectName, 'alterCheck')
+    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
+  },
   /**
-   * 最新の実行失敗結果を取得します
+   * 最新の実行結果をAlterCheck固有の失敗表示へ変換します
    * Step2（AlterCheck実行時）に最新の別のAlterCheckの成功結果を表示する必要がないため、現在実行中のAlterCheckの失敗結果を表示するようにしています
+   * @param latestTaskResult 最新のタスク実行結果 (Nullable)
    * @param ngMarkFile APIで取得したNgMarkFile情報 (Nullable)
    * @return 最新の実行失敗結果.最新が成功している場合はnull (Nullable)
    */
-  async prepareLatestFailureResult(
+  prepareLatestFailureResult(
+    latestTaskResult: LatestResultState | undefined,
     ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
-  ): Promise<AlterLatestResultState | undefined> {
-    return api.findLatestTaskLog(this.props.projectName, 'alterCheck').then((body) => {
-      if (!body || body.fileName.includes('success')) {
-        return
+  ): AlterLatestResultState | undefined {
+    if (!latestTaskResult || latestTaskResult.success) {
+      return
+    }
+    const content = latestTaskResult.content
+    if (!ngMarkFile) {
+      return {
+        title: 'Result: Failure',
+        content,
       }
-      const content = body.content
-      if (!ngMarkFile) {
-        return {
-          title: 'Result: Failure',
-          content,
-        }
-      } else if (ngMarkFile.ngMark === 'previous-NG') {
-        return {
-          title: 'Found problems on Previous DDL.',
-          message: 'Retry save previous.',
-          content,
-        }
-      } else if (ngMarkFile.ngMark === 'alter-NG') {
-        return {
-          title: 'Found problems on Alter DDL.',
-          message: ngMarkFile.content.split('\n')[0],
-          content,
-        }
-      } else if (ngMarkFile.ngMark === 'next-NG') {
-        return {
-          title: 'Found problems on Next DDL.',
-          message: 'Fix your DDL and data grammatically.',
-          content,
-        }
+    } else if (ngMarkFile.ngMark === 'previous-NG') {
+      return {
+        title: 'Found problems on Previous DDL.',
+        message: 'Retry save previous.',
+        content,
       }
-    })
+    } else if (ngMarkFile.ngMark === 'alter-NG') {
+      return {
+        title: 'Found problems on Alter DDL.',
+        message: ngMarkFile.content.split('\n')[0],
+        content,
+      }
+    } else if (ngMarkFile.ngMark === 'next-NG') {
+      return {
+        title: 'Found problems on Next DDL.',
+        message: 'Fix your DDL and data grammatically.',
+        content,
+      }
+    }
   },
 })
