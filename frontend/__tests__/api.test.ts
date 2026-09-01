@@ -22,7 +22,7 @@ describe('extractMessages', () => {
   })
 })
 
-describe('isTaskLogSuccess', () => {
+describe('ログファイル名によるタスク成否判定', () => {
   test.each([
     ['successを含むログファイル名なら成功と判定すること', 'dbflute_intro_doc_success_20260510.log', true],
     ['failureを含むログファイル名なら失敗と判定すること', 'dbflute_intro_doc_failure_20260510.log', false],

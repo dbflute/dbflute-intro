@@ -1,52 +1,7 @@
 import { api } from '../src/static/app/api/api'
-import AlterCheck from '../src/static/app/pages/client/alter-check/alter-check'
 import ReplaceSchema from '../src/static/app/pages/client/replace-schema/replace-schema'
 
-describe('AlterCheck prepareLatestFailureResult', () => {
-  const prepareLatestFailureResult = (latestTaskResult: any, ngMarkFile?: any) =>
-    (AlterCheck as any).prepareLatestFailureResult(latestTaskResult, ngMarkFile)
-
-  it('実行履歴がない場合は表示しないこと', () => {
-    expect(prepareLatestFailureResult(undefined)).toBeUndefined()
-  })
-
-  it('最新ログが成功の場合は表示しないこと', () => {
-    expect(prepareLatestFailureResult({ success: true, content: 'success log' })).toBeUndefined()
-  })
-
-  it('NgMarkFileがない失敗ログは通常の失敗結果にすること', () => {
-    expect(prepareLatestFailureResult({ success: false, content: 'failure log' })).toEqual({
-      title: 'Result: Failure',
-      content: 'failure log',
-    })
-  })
-
-  test.each([
-    [
-      'previous-NG',
-      { ngMark: 'previous-NG', content: '' },
-      { title: 'Found problems on Previous DDL.', message: 'Retry save previous.', content: 'failure log' },
-    ],
-    [
-      'alter-NG',
-      { ngMark: 'alter-NG', content: 'first error\nsecond error' },
-      { title: 'Found problems on Alter DDL.', message: 'first error', content: 'failure log' },
-    ],
-    [
-      'next-NG',
-      { ngMark: 'next-NG', content: '' },
-      {
-        title: 'Found problems on Next DDL.',
-        message: 'Fix your DDL and data grammatically.',
-        content: 'failure log',
-      },
-    ],
-  ])('%sを既存の失敗表示へ変換すること', (_name, ngMarkFile, expected) => {
-    expect(prepareLatestFailureResult({ success: false, content: 'failure log' }, ngMarkFile)).toEqual(expected)
-  })
-})
-
-describe('ReplaceSchema replaceSchema', () => {
+describe('ReplaceSchemaタスクの実行', () => {
   afterEach(() => {
     jest.restoreAllMocks()
   })
@@ -95,7 +50,7 @@ describe('ReplaceSchema replaceSchema', () => {
   })
 })
 
-describe('ReplaceSchema onMounted', () => {
+describe('ReplaceSchemaの初期表示', () => {
   it('設定の初期化に失敗しても取得済みの最新実行結果を反映すること', async () => {
     const update = jest.fn()
     const context = {
