@@ -45,6 +45,27 @@ class ApiClient {
 //                                                                      ==============
 // see IntroApiFailureHook.java for failure response
 /**
+ * APIエラーレスポンスから表示用のメッセージ一覧を抽出する。
+ * @param data - APIエラーレスポンスのデータ。
+ * @param fallbackMessage - メッセージを抽出できない場合に表示する文言。
+ * @returns 表示するエラーメッセージの一覧。
+ */
+export const extractMessages = (data: any, fallbackMessage: string): string[] => {
+  if (data?.messages && typeof data.messages === 'object') {
+    const values = Object.values(data.messages)
+    return values.reduce<string[]>((messageList, value) => {
+      return messageList.concat(
+        Array.isArray(value) ? value.map(String) : [typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value)],
+      )
+    }, [])
+  }
+  if (Array.isArray(data)) return data.map(String)
+  if (typeof data === 'string' && data.trim()) return [data]
+  if (data && typeof data === 'object') return [JSON.stringify(data)]
+  return [fallbackMessage]
+}
+
+/**
  * API ClientでAPIエラーを検知した時のコールバック関数。
  * @param error - Axios のエラーオブジェクト。
  */
@@ -55,20 +76,25 @@ const handleError = (error: AxiosError) => {
   //let reload = false;
   let validationError = false
   const response: any = error.response
-  const status = response.status
-  if (status === 0) {
-    messages = ['Cannot access the server, retry later']
+  if (!response) {
+    triggerShowResult({
+      header: 'Network Error',
+      messages: ['Cannot access the server, retry later'],
+      modalSize: 'large',
+    })
+    return Promise.reject(error)
   }
+  const status = response.status
   // #hope refactor: extract to method
   if (status === 400) {
     header = '400 Bad Request'
     // #hope improvement: formal validation error handling
-    if (response.data.failureType) {
+    if (response.data?.failureType) {
       // basically here (unified JSON if 400)
       header = header + ': ' + response.data.failureType
       validationError = response.data.failureType === 'VALIDATION_ERROR'
     }
-    if (response.data.messages) {
+    if (response.data?.messages) {
       // basically here (unified JSON if 400)
       const messageList = []
       for (let key in response.data.messages) {
@@ -101,33 +127,33 @@ const handleError = (error: AxiosError) => {
       }
       messages = messageList
     } else {
-      messages = Array.isArray(response.data) ? response.data : [response.data]
+      messages = extractMessages(response.data, 'Bad request')
     }
   } else if (status === 401) {
     header = '401 Not Authorized'
   } else if (status === 403) {
     header = '403 Forbidden'
-  } else if (status >= 500) {
+  } else if (status === 500) {
     header = '500 Server Error'
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Server error occurred')
+  } else if (status === 504) {
+    header = '504 Gateway Timeout'
+    messages = extractMessages(response.data, 'Cannot access the server, retry later')
   } else if (status >= 400 && status <= 499) {
     // Intro想定外のクライアントエラー
     header = 'Unknown Client Error: ' + status
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Unexpected client error occurred')
   } else if (status >= 500 && status <= 599) {
     // Intro想定外のサーバーエラー
     header = 'Unknown Server Error: ' + status
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Cannot access the server, retry later')
   } else {
     // さらなる想定外のエラー (API呼び出しの例外ハンドリングはすべてApiClientで完結させるため)
     header = 'Unknown Error: ' + status
-    messages = Object.values(response.data.messages)
+    messages = extractMessages(response.data, 'Unexpected error occurred')
   }
-  if (header != null || messages != null) {
-    // 考慮漏れがなければ基本true
-    const modalSize = validationError ? 'small' : 'large'
-    triggerShowResult({ header, messages, modalSize })
-  }
+  const modalSize = validationError ? 'small' : 'large'
+  triggerShowResult({ header, messages: messages || [], modalSize })
   return Promise.reject(error) // 画面固有の処理も付け足せるように、rejectで例外を継続
 }
 
