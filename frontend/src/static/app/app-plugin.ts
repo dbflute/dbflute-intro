@@ -16,8 +16,8 @@ export interface DBFluteIntroPlugin {
   /**
    * Componentにclass名を動的に与えるためのオブジェクトを構築する
    * 具体例は [riotのマイグレーションガイド]{@link https://riot.js.org/ja/migration-guide/#%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E3%81%AE%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88}を参照
-   * @param classes - class list as object (NotNull)
-   * @return return only the classes having a truthy value (NotNull)
+   * @param classes - class list as object (EmptyAllowed)
+   * @return return only the classes having a truthy value e.g. "active disabled" (EmptyAllowed)
    */
   classNames: (classes: { [key: string]: boolean }) => string
 
