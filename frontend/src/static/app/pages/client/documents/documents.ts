@@ -51,7 +51,7 @@ interface Document extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   prepareComponents: () => void
-  fetchLatestResult: (projectName?: string) => Promise<LatestResultState | undefined>
+  fetchLatestResult: (projectName: string) => Promise<LatestResultState | undefined>
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
@@ -179,9 +179,8 @@ export default withIntroTypes<Document>({
     })
   },
 
-  async fetchLatestResult(projectName?: string) {
-    const targetProjectName = projectName ?? this.props.projectName
-    const data = await api.findLatestTaskLog(targetProjectName, 'doc')
+  async fetchLatestResult(projectName: string) {
+    const data = await api.findLatestTaskLog(projectName, 'doc')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 })

@@ -64,7 +64,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                             Private
   //                                                                             =======
   updateContents(additionalState?: Partial<State>): void
-  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
+  fetchLatestResult(projectName: string): Promise<LatestResultState | undefined>
   prepareUnreleased(unreleased: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir
   prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
   prepareLatestFailureResult(
@@ -248,9 +248,8 @@ export default withIntroTypes<AlterCheck>({
         })),
     }
   },
-  async fetchLatestResult(projectName?: string) {
-    const targetProjectName = projectName ?? this.props.projectName
-    const data = await api.findLatestTaskLog(targetProjectName, 'alterCheck')
+  async fetchLatestResult(projectName: string) {
+    const data = await api.findLatestTaskLog(projectName, 'alterCheck')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
   /**

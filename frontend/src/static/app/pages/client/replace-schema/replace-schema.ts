@@ -107,7 +107,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
   /**
    * ReplaceSchemaの最新実行結果を取得する。
    */
-  fetchLatestResult(projectName?: string): Promise<LatestResultState | undefined>
+  fetchLatestResult(projectName: string): Promise<LatestResultState | undefined>
 
   /**
    * ReplaceSchemaタスクを実行してAPIから結果を取得し、stateを更新する。
@@ -192,9 +192,8 @@ export default withIntroTypes<ReplaceSchema>({
     this.update(state)
   },
 
-  async fetchLatestResult(projectName?: string) {
-    const targetProjectName = projectName ?? this.props.projectName
-    const data = await api.findLatestTaskLog(targetProjectName, 'replaceSchema')
+  async fetchLatestResult(projectName: string) {
+    const data = await api.findLatestTaskLog(projectName, 'replaceSchema')
     return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
   },
 
