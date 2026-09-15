@@ -1,8 +1,14 @@
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import Raw from '../../components/common/raw.riot'
 
+/**
+ * 最新のDBFluteタスク実行結果。
+ * 各画面が取得した最新ログを表示用に正規化した共通の型。
+ */
 export type LatestResult = {
+  /** 最新のタスク実行が成功しているか */
   success: boolean
+  /** 最新のタスク実行ログの内容 */
   content: string
 }
 
