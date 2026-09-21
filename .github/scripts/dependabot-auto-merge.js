@@ -43,10 +43,12 @@ const detectUpdateType = (title) => {
  * @param context actions/github-script が渡す実行コンテキスト (NotNull)
  * @param core actions/github-script が渡す @actions/core ツールキット (NotNull)
  * @param closeComment 対象外 PR をクローズする際に投稿するコメント本文 (NotNull: workflow から渡す)
+ * @param dryRun true の場合、読み取りは行うがマージ/クローズ/ブランチ削除は実行せずログのみ出す (NullAllowed: 既定 false)
  * @return {Promise<void>}
  */
-module.exports = async ({ github, context, core, closeComment }) => {
+module.exports = async ({ github, context, core, closeComment, dryRun = false }) => {
   const { owner, repo } = context.repo;
+  if (dryRun) core.info('*** DRY RUN mode: no merge/close/delete will be performed ***');
 
   /**
    * ブランチを削除する。削除に失敗しても致命的にはせず info ログに留める。
@@ -78,6 +80,10 @@ module.exports = async ({ github, context, core, closeComment }) => {
    * @return {Promise<void>}
    */
   const closePr = async (num, branch) => {
+    if (dryRun) {
+      core.info(`[dry-run] would comment & close #${num}, then delete branch ${branch}`);
+      return;
+    }
     await github.rest.issues.createComment({
       owner,
       repo,
@@ -95,6 +101,10 @@ module.exports = async ({ github, context, core, closeComment }) => {
    * @return {Promise<void>}
    */
   const mergePr = async (num, branch) => {
+    if (dryRun) {
+      core.info(`[dry-run] would merge #${num}, then delete branch ${branch}`);
+      return;
+    }
     await github.rest.pulls.merge({ owner, repo, pull_number: num, merge_method: 'merge' });
     await deleteBranch(branch);
   };

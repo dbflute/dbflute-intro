@@ -7,6 +7,7 @@
 //   B: detectUpdateType(title)   — semver の更新種別 (major/minor/patch/null) 判定
 //   C: run(...)                  — 全体オーケストレーション (モック octokit で分岐を検証)
 //   D: 補助挙動                  — deleteRef 失敗時のフォールバックなど
+//   E: dry-run モード            — 読み取りは行うが merge/close/deleteRef を実行しない
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -197,5 +198,21 @@ test('D1: deleteRef が失敗してもマージ自体は成功扱い (例外を�
   await run({ github, context, core, closeComment: CLOSE_MSG });
 
   assert.deepEqual(actions, ['merge #1']); // merge は行われ、deleteRef の例外で全体が落ちない
+  assert.equal(warnings.length, 0);
+});
+
+test('E: dry-run では merge/close/deleteRef を一切行わない', async () => {
+  const prs = [
+    dbPr(1, { title: 'bump a from 1.0.0 to 1.0.1', ref: 'db/a', sha: 'sha1' }), // 通常なら merge
+    dbPr(2, { title: 'bump c from 1.0.0 to 1.1.0', ref: 'db/c', sha: 'sha2' }), // 通常なら close
+  ];
+  const filesByPr = { 1: ['frontend/package.json'], 2: ['package.json'] };
+  const ciBySha = { sha1: 'success' };
+
+  const { github, context, core, actions, warnings, commentBodies } = buildMock({ prs, filesByPr, ciBySha });
+  await run({ github, context, core, closeComment: CLOSE_MSG, dryRun: true });
+
+  assert.deepEqual(actions, []); // 変更系 API は一切呼ばれない
+  assert.deepEqual(commentBodies, []); // クローズコメントも投稿しない
   assert.equal(warnings.length, 0);
 });
