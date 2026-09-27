@@ -420,7 +420,7 @@ class Api {
   }
 
   /**
-   * AlterCheck の alterディレクトリに、AlterDDLファイルを新規作成する。
+   * 既存のAlterDDLがある場合はalterディレクトリに復元する。(checkedZip や unreleasedDir など)
    * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb
    * @returns 業務的なレスポンスデータは特になし
    */
