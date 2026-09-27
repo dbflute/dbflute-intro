@@ -8,6 +8,7 @@
 //   C: run(...)                  — 全体オーケストレーション (モック octokit で分岐を検証)
 //   D: 補助挙動                  — deleteRef 失敗時のフォールバックなど
 //   E: dry-run モード            — 読み取りは行うが merge/close/deleteRef を実行しない
+//   F: head sha ガード           — CI 確認済みの sha を指定してマージ / head 移動時は 409 で安全に失敗
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -61,9 +62,10 @@ test('detectUpdateType', async (t) => {
 // PR ごとの変更ファイルと CI ステータスを設定できるモックを組み立てる。
 const CLOSE_MSG = 'テスト用クローズメッセージ';
 
-function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set() }) {
+function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set(), headMoved = new Set() }) {
   const actions = [];
   const commentBodies = [];
+  const mergeCalls = [];
   const github = {
     paginate: async (fn, opts) => {
       if (fn === github.rest.pulls.list) return prs;
@@ -76,8 +78,11 @@ function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set()
       pulls: {
         list: Symbol('pulls.list'),
         listFiles: Symbol('pulls.listFiles'),
-        merge: async ({ pull_number }) => {
+        merge: async ({ pull_number, sha }) => {
+          mergeCalls.push({ num: pull_number, sha });
           if (throwOnMerge.has(pull_number)) throw new Error('merge boom');
+          // head が動いていた場合 GitHub は 409 を返す挙動を模倣
+          if (headMoved.has(pull_number)) throw new Error('Head branch was modified. (409)');
           actions.push(`merge #${pull_number}`);
         },
         update: async ({ pull_number, state }) => {
@@ -112,7 +117,7 @@ function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set()
     startGroup: () => {},
     endGroup: () => {},
   };
-  return { github, context, core, actions, warnings, commentBodies };
+  return { github, context, core, actions, warnings, commentBodies, mergeCalls };
 }
 
 const dbPr = (number, { title, ref, sha, login = 'dependabot[bot]' }) => ({
@@ -199,6 +204,40 @@ test('D1: deleteRef が失敗してもマージ自体は成功扱い (例外を�
 
   assert.deepEqual(actions, ['merge #1']); // merge は行われ、deleteRef の例外で全体が落ちない
   assert.equal(warnings.length, 0);
+});
+
+test('F1: merge は CI を確認した head sha を指定して呼ぶ', async () => {
+  const prs = [dbPr(1, { title: 'bump a from 1.0.0 to 1.0.1', ref: 'db/a', sha: 'sha1' })];
+  const { github, context, core, actions, mergeCalls } = buildMock({
+    prs,
+    filesByPr: { 1: ['frontend/package.json'] },
+    ciBySha: { sha1: 'success' },
+  });
+
+  await run({ github, context, core, closeComment: CLOSE_MSG });
+
+  assert.deepEqual(actions, ['merge #1', 'deleteRef heads/db/a']);
+  assert.deepEqual(mergeCalls, [{ num: 1, sha: 'sha1' }]); // CI 確認済みの sha を渡している
+});
+
+test('F2: マージ直前に head が動いていたら 409 で安全に失敗し後続へ影響しない', async () => {
+  const prs = [
+    dbPr(1, { title: 'bump a from 1.0.0 to 1.0.1', ref: 'db/a', sha: 'sha1' }), // head 移動 -> 409
+    dbPr(2, { title: 'bump b from 1.0.0 to 1.0.1', ref: 'db/b', sha: 'sha2' }), // 正常に merge
+  ];
+  const { github, context, core, actions, warnings } = buildMock({
+    prs,
+    filesByPr: { 1: ['frontend/package.json'], 2: ['frontend/package.json'] },
+    ciBySha: { sha1: 'success', sha2: 'success' },
+    headMoved: new Set([1]),
+  });
+
+  await run({ github, context, core, closeComment: CLOSE_MSG });
+
+  // #1 は 409 で warning、ブランチ削除もされず、#2 は正常にマージされる
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /#1/);
+  assert.deepEqual(actions, ['merge #2', 'deleteRef heads/db/b']);
 });
 
 test('E: dry-run では merge/close/deleteRef を一切行わない', async () => {

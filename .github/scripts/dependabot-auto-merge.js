@@ -96,16 +96,19 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
 
   /**
    * PR をマージ (merge commit) し、ブランチを削除する。
+   * - sha を渡すことで、CI を確認した時点の head から動いていた場合はマージを弾く (409)。
+   *   一覧取得〜マージの間に Dependabot が rebase/force-push しても、CI 未確認のコミットをマージしない。
    * @param num PR 番号 (NotNull)
    * @param branch PR のヘッドブランチ名 (NotNull)
+   * @param sha CI を確認した head コミットの SHA。head がこれと一致する場合のみマージする (NotNull)
    * @return {Promise<void>}
    */
-  const mergePr = async (num, branch) => {
+  const mergePr = async (num, branch, sha) => {
     if (dryRun) {
-      core.info(`[dry-run] would merge #${num}, then delete branch ${branch}`);
+      core.info(`[dry-run] would merge #${num} (sha=${sha}), then delete branch ${branch}`);
       return;
     }
-    await github.rest.pulls.merge({ owner, repo, pull_number: num, merge_method: 'merge' });
+    await github.rest.pulls.merge({ owner, repo, pull_number: num, sha, merge_method: 'merge' });
     await deleteBranch(branch);
   };
 
@@ -117,6 +120,7 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
   const processPr = async (pr) => {
     const { number: num, title } = pr;
     const branch = pr.head.ref;
+    const sha = pr.head.sha;
 
     const files = await github.paginate(github.rest.pulls.listFiles, {
       owner,
@@ -143,7 +147,7 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
       return;
     }
 
-    const ciState = await getCiState(pr.head.sha);
+    const ciState = await getCiState(sha);
     core.info(`ci_state(${CI_CONTEXT})=${ciState}`);
     if (ciState !== 'success') {
       core.info('CI is not success -> skip (not merging)');
@@ -151,7 +155,7 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
     }
 
     core.info(`CI success + ${updateType} -> merge`);
-    await mergePr(num, branch);
+    await mergePr(num, branch, sha);
   };
 
   const prs = await github.paginate(github.rest.pulls.list, {
