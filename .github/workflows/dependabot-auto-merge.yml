@@ -30,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # require でスクリプトを読み込むため checkout が必要
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Process Dependabot PRs
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         # schedule 起動時は inputs が無いので dry_run は false 扱い (= 実際に処理する)
         env:
           DRY_RUN: ${{ inputs.dry_run || false }}
