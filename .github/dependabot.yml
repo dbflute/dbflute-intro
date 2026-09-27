@@ -1,0 +1,8 @@
+# Issue #649: /frontend の依存更新を有効化 (自動マージ等は dependabot-auto-merge ワークフロー)
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+    rebase-strategy: "auto"
