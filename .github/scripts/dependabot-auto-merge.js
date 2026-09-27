@@ -103,9 +103,24 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
   };
 
   /**
+   * PR に @dependabot rebase コメントを投稿し、Dependabot に base への追従(rebase)を促す。
+   * @param num PR 番号 (NotNull)
+   * @return {Promise<void>}
+   */
+  const requestRebase = async (num) => {
+    if (dryRun) {
+      core.info(`[dry-run] would comment "@dependabot rebase" on #${num}`);
+      return;
+    }
+    await github.rest.issues.createComment({ owner, repo, issue_number: num, body: '@dependabot rebase' });
+  };
+
+  /**
    * PR をマージ (merge commit) し、ブランチを削除する。
    * - sha を渡すことで、CI を確認した時点の head から動いていた場合はマージを弾く (409)。
    *   一覧取得〜マージの間に Dependabot が rebase/force-push しても、CI 未確認のコミットをマージしない。
+   * - コンフリクト等でマージ不可(405)の場合は @dependabot rebase を促す。rebase 後に CI が
+   *   回り直し、翌日以降の実行でマージ可能になる想定。
    * @param num PR 番号 (NotNull)
    * @param branch PR のヘッドブランチ名 (NotNull)
    * @param sha CI を確認した head コミットの SHA。head がこれと一致する場合のみマージする (NotNull)
@@ -116,7 +131,18 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
       core.info(`[dry-run] would merge #${num} (sha=${sha}), then delete branch ${branch}`);
       return;
     }
-    await github.rest.pulls.merge({ owner, repo, pull_number: num, sha, merge_method: 'merge' });
+    try {
+      await github.rest.pulls.merge({ owner, repo, pull_number: num, sha, merge_method: 'merge' });
+    } catch (e) {
+      // 405 = マージ不可 (コンフリクトなど)。Dependabot に rebase を促して次回に委ねる。
+      // 409 (head 移動) 等はそのまま上位に投げて warning にする。
+      if (e.status === 405) {
+        core.info(`#${num} is not mergeable (${e.message}) -> request @dependabot rebase`);
+        await requestRebase(num);
+        return;
+      }
+      throw e;
+    }
     await deleteBranch(branch);
   };
 
