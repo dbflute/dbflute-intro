@@ -8,6 +8,14 @@
 //       - CircleCI (test_and_build) が success -> マージ
 //       - それ以外 (failure/pending/欠如)       -> 何もしない
 //   - バージョンを一意に解釈できない PR (複数依存の group 更新など) -> 何もしない
+//
+// #hope 直列マージ時の base 追従について
+//   複数 PR を順にマージすると、先の PR がマージされた時点で base(develop) が変わるため、
+//   後続 PR の green は「新しい base での保証」ではなくなる。厳密には merge queue や
+//   branch protection + update branch での直列化が望ましい。
+//   ただし今はカジュアルに開発できることを優先し branch protection を入れない方針のため、
+//   一旦この対応は見送る。壊れても翌日以降の CI で検知できる想定。後ほど検討する。
+//   参考: https://github.com/dbflute/dbflute-intro/pull/661#discussion_r4114327339
 
 // CircleCI がコミットステータスとして出すコンテキスト名
 const CI_CONTEXT = 'ci/circleci: test_and_build';
