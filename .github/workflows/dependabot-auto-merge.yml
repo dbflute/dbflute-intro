@@ -15,7 +15,7 @@ on:
       dry_run:
         description: 'Dry run (マージ/クローズ/ブランチ削除を実行せずログのみ)'
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: write
