@@ -9,6 +9,7 @@
 //   D: 補助挙動                  — deleteRef 失敗時のフォールバックなど
 //   E: dry-run モード            — 読み取りは行うが merge/close/deleteRef を実行しない
 //   F: head sha ガード           — CI 確認済みの sha を指定してマージ / head 移動時は 409 で安全に失敗
+//   G: コンフリクト時 rebase 促し — マージ不可(405)なら @dependabot rebase をコメントして次回に委ねる
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -62,7 +63,14 @@ test('detectUpdateType', async (t) => {
 // PR ごとの変更ファイルと CI ステータスを設定できるモックを組み立てる。
 const CLOSE_MSG = 'テスト用クローズメッセージ';
 
-function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set(), headMoved = new Set() }) {
+function buildMock({
+  prs,
+  filesByPr = {},
+  ciBySha = {},
+  throwOnMerge = new Set(),
+  headMoved = new Set(),
+  conflictOnMerge = new Set(),
+}) {
   const actions = [];
   const commentBodies = [];
   const mergeCalls = [];
@@ -82,7 +90,17 @@ function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set()
           mergeCalls.push({ num: pull_number, sha });
           if (throwOnMerge.has(pull_number)) throw new Error('merge boom');
           // head が動いていた場合 GitHub は 409 を返す挙動を模倣
-          if (headMoved.has(pull_number)) throw new Error('Head branch was modified. (409)');
+          if (headMoved.has(pull_number)) {
+            const e = new Error('Head branch was modified. (409)');
+            e.status = 409;
+            throw e;
+          }
+          // コンフリクトなどマージ不可の場合 GitHub は 405 を返す挙動を模倣
+          if (conflictOnMerge.has(pull_number)) {
+            const e = new Error('Pull Request has merge conflicts');
+            e.status = 405;
+            throw e;
+          }
           actions.push(`merge #${pull_number}`);
         },
         update: async ({ pull_number, state }) => {
@@ -238,6 +256,26 @@ test('F2: マージ直前に head が動いていたら 409 で安全に失敗�
   assert.equal(warnings.length, 1);
   assert.match(warnings[0], /#1/);
   assert.deepEqual(actions, ['merge #2', 'deleteRef heads/db/b']);
+});
+
+test('G1: マージがコンフリクト(405)なら @dependabot rebase をコメントする', async () => {
+  const prs = [
+    dbPr(1, { title: 'bump a from 1.0.0 to 1.1.0', ref: 'db/a', sha: 'sha1' }), // コンフリクト -> rebase 促し
+    dbPr(2, { title: 'bump b from 1.0.0 to 1.0.1', ref: 'db/b', sha: 'sha2' }), // 正常に merge
+  ];
+  const { github, context, core, actions, warnings, commentBodies } = buildMock({
+    prs,
+    filesByPr: { 1: ['frontend/package.json'], 2: ['frontend/package.json'] },
+    ciBySha: { sha1: 'success', sha2: 'success' },
+    conflictOnMerge: new Set([1]),
+  });
+
+  await run({ github, context, core, closeComment: CLOSE_MSG });
+
+  // #1 はマージされず rebase コメント・ブランチ削除なし、#2 は正常にマージされる
+  assert.deepEqual(actions, ['comment #1', 'merge #2', 'deleteRef heads/db/b']);
+  assert.deepEqual(commentBodies, ['@dependabot rebase']);
+  assert.equal(warnings.length, 0); // コンフリクトは想定内なので warning にしない
 });
 
 test('E: dry-run では merge/close/deleteRef を一切行わない', async () => {
