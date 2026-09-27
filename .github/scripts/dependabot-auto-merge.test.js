@@ -9,6 +9,7 @@
 //   D: 補助挙動                  — deleteRef 失敗時のフォールバックなど
 //   E: dry-run モード            — 読み取りは行うが merge/close/deleteRef を実行しない
 //   F: head sha ガード           — CI 確認済みの sha を指定してマージ / head 移動時は 409 で安全に失敗
+//   G: コンフリクト時 rebase 促し — マージ不可(405)なら PAT で @dependabot rebase / token 無ければ warning
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -62,10 +63,19 @@ test('detectUpdateType', async (t) => {
 // PR ごとの変更ファイルと CI ステータスを設定できるモックを組み立てる。
 const CLOSE_MSG = 'テスト用クローズメッセージ';
 
-function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set(), headMoved = new Set() }) {
+function buildMock({
+  prs,
+  filesByPr = {},
+  ciBySha = {},
+  throwOnMerge = new Set(),
+  headMoved = new Set(),
+  conflictOnMerge = new Set(),
+  withRebaseToken = true,
+}) {
   const actions = [];
   const commentBodies = [];
   const mergeCalls = [];
+  const rebaseComments = [];
   const github = {
     paginate: async (fn, opts) => {
       if (fn === github.rest.pulls.list) return prs;
@@ -82,7 +92,17 @@ function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set()
           mergeCalls.push({ num: pull_number, sha });
           if (throwOnMerge.has(pull_number)) throw new Error('merge boom');
           // head が動いていた場合 GitHub は 409 を返す挙動を模倣
-          if (headMoved.has(pull_number)) throw new Error('Head branch was modified. (409)');
+          if (headMoved.has(pull_number)) {
+            const e = new Error('Head branch was modified. (409)');
+            e.status = 409;
+            throw e;
+          }
+          // コンフリクトなどマージ不可の場合 GitHub は 405 を返す挙動を模倣
+          if (conflictOnMerge.has(pull_number)) {
+            const e = new Error('Pull Request has merge conflicts');
+            e.status = 405;
+            throw e;
+          }
           actions.push(`merge #${pull_number}`);
         },
         update: async ({ pull_number, state }) => {
@@ -109,6 +129,18 @@ function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set()
       },
     },
   };
+  // @dependabot rebase 投稿用の PAT 認証クライアント (本番では別トークンの octokit)
+  const rebaseGithub = withRebaseToken
+    ? {
+        rest: {
+          issues: {
+            createComment: async ({ issue_number, body }) => {
+              rebaseComments.push({ num: issue_number, body });
+            },
+          },
+        },
+      }
+    : null;
   const context = { repo: { owner: 'dbflute', repo: 'dbflute-intro' } };
   const warnings = [];
   const core = {
@@ -117,7 +149,7 @@ function buildMock({ prs, filesByPr = {}, ciBySha = {}, throwOnMerge = new Set()
     startGroup: () => {},
     endGroup: () => {},
   };
-  return { github, context, core, actions, warnings, commentBodies, mergeCalls };
+  return { github, rebaseGithub, context, core, actions, warnings, commentBodies, mergeCalls, rebaseComments };
 }
 
 const dbPr = (number, { title, ref, sha, login = 'dependabot[bot]' }) => ({
@@ -238,6 +270,43 @@ test('F2: マージ直前に head が動いていたら 409 で安全に失敗�
   assert.equal(warnings.length, 1);
   assert.match(warnings[0], /#1/);
   assert.deepEqual(actions, ['merge #2', 'deleteRef heads/db/b']);
+});
+
+test('G1: マージがコンフリクト(405)なら PAT クライアントで @dependabot rebase をコメントする', async () => {
+  const prs = [
+    dbPr(1, { title: 'bump a from 1.0.0 to 1.1.0', ref: 'db/a', sha: 'sha1' }), // コンフリクト -> rebase 促し
+    dbPr(2, { title: 'bump b from 1.0.0 to 1.0.1', ref: 'db/b', sha: 'sha2' }), // 正常に merge
+  ];
+  const { github, rebaseGithub, context, core, actions, warnings, rebaseComments } = buildMock({
+    prs,
+    filesByPr: { 1: ['frontend/package.json'], 2: ['frontend/package.json'] },
+    ciBySha: { sha1: 'success', sha2: 'success' },
+    conflictOnMerge: new Set([1]),
+  });
+
+  await run({ github, rebaseGithub, context, core, closeComment: CLOSE_MSG });
+
+  // #1 はマージ/ブランチ削除なし、rebase は PAT クライアント側で投稿、#2 は正常にマージ
+  assert.deepEqual(actions, ['merge #2', 'deleteRef heads/db/b']);
+  assert.deepEqual(rebaseComments, [{ num: 1, body: '@dependabot rebase' }]);
+  assert.equal(warnings.length, 0); // コンフリクトは想定内なので warning にしない
+});
+
+test('G2: rebase トークン未設定ならコメントせず warning にフォールバックする', async () => {
+  const prs = [dbPr(1, { title: 'bump a from 1.0.0 to 1.1.0', ref: 'db/a', sha: 'sha1' })];
+  const { github, rebaseGithub, context, core, actions, warnings } = buildMock({
+    prs,
+    filesByPr: { 1: ['frontend/package.json'] },
+    ciBySha: { sha1: 'success' },
+    conflictOnMerge: new Set([1]),
+    withRebaseToken: false, // rebaseGithub = null
+  });
+
+  await run({ github, rebaseGithub, context, core, closeComment: CLOSE_MSG });
+
+  assert.deepEqual(actions, []); // マージもコメントもされない
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /#1/);
 });
 
 test('E: dry-run では merge/close/deleteRef を一切行わない', async () => {

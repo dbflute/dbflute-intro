@@ -52,9 +52,11 @@ const detectUpdateType = (title) => {
  * @param core actions/github-script が渡す @actions/core ツールキット (NotNull)
  * @param closeComment 対象外 PR をクローズする際に投稿するコメント本文 (NotNull: workflow から渡す)
  * @param dryRun true の場合、読み取りは行うがマージ/クローズ/ブランチ削除は実行せずログのみ出す (NullAllowed: 既定 false)
+ * @param rebaseGithub @dependabot rebase コメント投稿用の octokit。push 権限を持つ PAT で認証したもの
+ *   (NullAllowed: 未設定なら rebase 促しはスキップして warning。GITHUB_TOKEN では Dependabot に拒否されるため使わない)
  * @return {Promise<void>}
  */
-module.exports = async ({ github, context, core, closeComment, dryRun = false }) => {
+module.exports = async ({ github, context, core, closeComment, dryRun = false, rebaseGithub = null }) => {
   const { owner, repo } = context.repo;
   if (dryRun) core.info('*** DRY RUN mode: no merge/close/delete will be performed ***');
 
@@ -103,9 +105,32 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
   };
 
   /**
+   * PR に @dependabot rebase コメントを投稿し、Dependabot に base への追従(rebase)を促す。
+   * - Dependabot は push 権限を持つユーザーからのコマンドのみ受理するため、PAT 認証の rebaseGithub を使う。
+   *   GITHUB_TOKEN(github-actions[bot]) では "only users with push access can use that command" で拒否される。
+   * - rebaseGithub が未設定なら投稿せず warning に留める。
+   * @param num PR 番号 (NotNull)
+   * @return {Promise<void>}
+   */
+  const requestRebase = async (num) => {
+    if (dryRun) {
+      core.info(`[dry-run] would comment "@dependabot rebase" on #${num}`);
+      return;
+    }
+    if (!rebaseGithub) {
+      core.warning(`#${num} is not mergeable, but no rebase token is configured; skip @dependabot rebase`);
+      return;
+    }
+    await rebaseGithub.rest.issues.createComment({ owner, repo, issue_number: num, body: '@dependabot rebase' });
+    core.info(`#${num}: commented @dependabot rebase`);
+  };
+
+  /**
    * PR をマージ (merge commit) し、ブランチを削除する。
    * - sha を渡すことで、CI を確認した時点の head から動いていた場合はマージを弾く (409)。
    *   一覧取得〜マージの間に Dependabot が rebase/force-push しても、CI 未確認のコミットをマージしない。
+   * - コンフリクト等でマージ不可(405)の場合は @dependabot rebase を促す。rebase 後に CI が
+   *   回り直し、翌日以降の実行でマージ可能になる想定。
    * @param num PR 番号 (NotNull)
    * @param branch PR のヘッドブランチ名 (NotNull)
    * @param sha CI を確認した head コミットの SHA。head がこれと一致する場合のみマージする (NotNull)
@@ -116,7 +141,18 @@ module.exports = async ({ github, context, core, closeComment, dryRun = false })
       core.info(`[dry-run] would merge #${num} (sha=${sha}), then delete branch ${branch}`);
       return;
     }
-    await github.rest.pulls.merge({ owner, repo, pull_number: num, sha, merge_method: 'merge' });
+    try {
+      await github.rest.pulls.merge({ owner, repo, pull_number: num, sha, merge_method: 'merge' });
+    } catch (e) {
+      // 405 = マージ不可 (コンフリクトなど)。Dependabot に rebase を促して次回に委ねる。
+      // 409 (head 移動) 等はそのまま上位に投げて warning にする。
+      if (e.status === 405) {
+        core.info(`#${num} is not mergeable (${e.message}) -> request @dependabot rebase`);
+        await requestRebase(num);
+        return;
+      }
+      throw e;
+    }
     await deleteBranch(branch);
   };
 

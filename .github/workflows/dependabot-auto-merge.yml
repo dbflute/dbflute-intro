@@ -36,13 +36,19 @@ jobs:
         # schedule 起動時は inputs が無いので dry_run は false 扱い (= 実際に処理する)
         env:
           DRY_RUN: ${{ inputs.dry_run || false }}
+          # @dependabot rebase 用の PAT (push 権限を持つアカウントのもの)。未設定なら rebase 促しはスキップ。
+          REBASE_TOKEN: ${{ secrets.DEPENDABOT_REBASE_TOKEN }}
         with:
           script: |
             const run = require('./.github/scripts/dependabot-auto-merge.js');
+            // rebase コメントは GITHUB_TOKEN では拒否されるため、PAT 認証の octokit を別に用意する
+            const rebaseToken = process.env.REBASE_TOKEN;
+            const rebaseGithub = rebaseToken ? require('@actions/github').getOctokit(rebaseToken) : null;
             await run({
               github,
               context,
               core,
+              rebaseGithub,
               closeComment: '自動クローズ: dependabot-auto-merge は /frontend 配下のみを対象としています (Issue #649)。',
               dryRun: process.env.DRY_RUN === 'true',
             });
