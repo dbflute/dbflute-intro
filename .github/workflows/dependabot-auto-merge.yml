@@ -1,0 +1,48 @@
+name: dependabot-auto-merge
+
+# Dependabot の PR を日次でまとめて処理するワークフロー。
+#
+# ポーリング / status イベント駆動ではなく schedule で日次稼働させる方針。
+# 実行時点では各 PR の CircleCI は完了済みのため、CI 完了待ちが一切不要になる。
+# 判定・処理の本体は .github/scripts/dependabot-auto-merge.js を参照。
+
+on:
+  schedule:
+    # 毎日 00:00 UTC (= 09:00 JST)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (マージ/クローズ/ブランチ削除を実行せずログのみ)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependabot-auto-merge
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      # require でスクリプトを読み込むため checkout が必要
+      - uses: actions/checkout@v4
+      - name: Process Dependabot PRs
+        uses: actions/github-script@v7
+        # schedule 起動時は inputs が無いので dry_run は false 扱い (= 実際に処理する)
+        env:
+          DRY_RUN: ${{ inputs.dry_run || false }}
+        with:
+          script: |
+            const run = require('./.github/scripts/dependabot-auto-merge.js');
+            await run({
+              github,
+              context,
+              core,
+              closeComment: '自動クローズ: dependabot-auto-merge は /frontend 配下のみを対象としています (Issue #649)。',
+              dryRun: process.env.DRY_RUN === 'true',
+            });
