@@ -6,7 +6,7 @@ import Prism from 'prismjs'
 import 'prismjs/components/prism-sql.min'
 import 'prismjs/themes/prism.css'
 
-import { AlterDir, AlterFile, AlterZip } from './types'
+import { AlterDDLFile, CheckedAlterToZip, UnreleasedCheckedAlterDir } from './types-alter'
 import AlterCheckChecked from './alter-check-checked.riot'
 import AlterCheckForm from './alter-check-form.riot'
 import Raw from '../../../components/common/raw.riot'
@@ -41,14 +41,14 @@ interface State {
   /** Step1（AlterCheckの準備）で入力されたファイル名 e.g. alter-schema-SEA.sql */
   inputFileName?: string
 
-  /** AlterCheck用SQLファイル */
-  editingSqls: AlterFile[]
-
-  /** 未リリースチェック済みのAlterDDLのディレクトリ (unreleased-checked-alter) */
-  unreleasedDir: AlterDir
+  /** 編集中(alterディレクトリ配下)のAlterDDLファイルたち */
+  editingDDLFiles: AlterDDLFile[]
 
   /** チェック済み(未リリース)のAlterDDL zip (checked-alter-to-...zip) */
-  checkedZip: AlterZip
+  checkedZip: CheckedAlterToZip
+
+  /** 未リリースチェック済みのAlterDDLのディレクトリ (unreleased-checked-alter) */
+  unreleasedDir: UnreleasedCheckedAlterDir
 
   /** 最新のタスク実行結果 */
   latestResult?: AlterLatestResultState
@@ -94,9 +94,9 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                       =============
   /**
    * AlterDDLの表示・非表示を切り替えます
-   * @param alterFile - クリックされたAlterDDLのファイル
+   * @param ddlFile - クリックされたAlterDDLのファイル
    */
-  onclickAlterSql(alterFile: AlterFile): void
+  onclickAlterDDL(ddlFile: AlterDDLFile): void
 
   /**
    * AlterSqlの用意が完了した際に呼ばれます
@@ -135,10 +135,10 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
    * 未リリースチェック済みのAlterDDLディレクトリの情報を用意します（sqlファイルのみ）。
    * DBFlute-1.2.1 からの unreleasedDir 方式のための対応。
    * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param unreleasedDir - APIで取得した未リリースディレクトリ情報
+   * @param unreleasedDirPart - APIで取得した未リリースディレクトリ情報
    * @return 未リリースAlterディレクトリのState情報 (EmptyAllowed: チェック済みファイルがまだない場合)
    */
-  prepareUnreleasedDir(unreleased: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir
+  prepareUnreleasedDir(unreleasedDirPart: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): UnreleasedCheckedAlterDir
 
   /**
    * チェック済みのAlterDDL zip (未リリース) の情報を用意します。
@@ -148,7 +148,10 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
    * @param unreleasedDir - 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
    * @return 未リリースチェック済みのAlterDDL zipファイル情報 (EmptyAllowed: チェック済みzipがなければ)
    */
-  prepareCheckedZip(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
+  prepareCheckedZip(
+    checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined,
+    unreleasedDir: UnreleasedCheckedAlterDir,
+  ): CheckedAlterToZip
 
   /**
    * 最新の実行失敗結果を取得します
@@ -177,13 +180,13 @@ export default withIntroTypes<AlterCheck>({
   },
   state: {
     hasAlterCheckResultHtml: false,
-    editingSqls: [],
+    editingDDLFiles: [],
     checkedZip: {
       fileName: '',
-      checkedFiles: [],
+      checkedDDLFiles: [],
     },
     unreleasedDir: {
-      checkedFiles: [],
+      checkedDDLFiles: [],
     },
     executeStatus: 'None',
   },
@@ -199,7 +202,7 @@ export default withIntroTypes<AlterCheck>({
   //                                                                           UI Helper
   //                                                                           =========
   isEditing(): boolean {
-    return this.state.editingSqls !== undefined && this.state.editingSqls.length > 0
+    return this.state.editingDDLFiles !== undefined && this.state.editingDDLFiles.length > 0
   },
 
   nowPrepared(fileName: string): boolean {
@@ -209,8 +212,8 @@ export default withIntroTypes<AlterCheck>({
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  onclickAlterSql(alterFile: AlterFile) {
-    alterFile.show = !alterFile.show
+  onclickAlterDDL(ddlFile: AlterDDLFile) {
+    ddlFile.show = !ddlFile.show
     this.update()
   },
 
@@ -247,7 +250,7 @@ export default withIntroTypes<AlterCheck>({
   updateContents(additionalState?: Partial<State>) {
     api.findAlterInfra(this.props.projectName).then((result) => {
       api.findClientPropbase(this.props.projectName).then(async (client) => {
-        const editingSqls = result.editingFiles.map((file) => ({
+        const editingDDLFiles = result.editingFiles.map((file) => ({
           fileName: file.fileName,
           content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
@@ -257,9 +260,9 @@ export default withIntroTypes<AlterCheck>({
         const latestResult = await this.prepareLatestFailureResult(result.ngMarkFile)
         this.update({
           hasAlterCheckResultHtml: client.hasAlterCheckResultHtml,
-          editingSqls,
-          unreleasedDir,
+          editingDDLFiles,
           checkedZip,
+          unreleasedDir,
           latestResult,
           ...additionalState,
         })
@@ -267,12 +270,12 @@ export default withIntroTypes<AlterCheck>({
     })
   },
 
-  prepareUnreleasedDir(unreleasedDir: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir {
-    if (!unreleasedDir) {
-      return { checkedFiles: [] }
+  prepareUnreleasedDir(unreleasedDirPart: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): UnreleasedCheckedAlterDir {
+    if (!unreleasedDirPart) {
+      return { checkedDDLFiles: [] }
     }
     return {
-      checkedFiles: unreleasedDir.checkedFiles
+      checkedDDLFiles: unreleasedDirPart.checkedFiles
         .filter((file) => file.fileName.includes('.sql'))
         .map((file) => ({
           fileName: file.fileName,
@@ -283,11 +286,14 @@ export default withIntroTypes<AlterCheck>({
     }
   },
 
-  prepareCheckedZip(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip {
-    if (!checkedZip) {
+  prepareCheckedZip(
+    checkedZipPart: PlaysqlMigrationAlterResult_CheckedZipPart | undefined,
+    unreleasedDir: UnreleasedCheckedAlterDir,
+  ): CheckedAlterToZip {
+    if (!checkedZipPart) {
       return {
         fileName: '',
-        checkedFiles: [],
+        checkedDDLFiles: [],
       }
     }
 
@@ -296,10 +302,10 @@ export default withIntroTypes<AlterCheck>({
     // checkedZip は DBFlute-1.2.0 までの機能で、DBFlute-1.2.1 から unreleasedDir に移行される。
     // 一瞬、マージとかで同居することはあるかもしれないが、自動で unreleasedDir に移行される。
     // そのときの何かの紛れで、同名ファイルが両方に入っちゃった時のための回避処理という感じかな!? by jflute (2026/09/01)
-    const excludeFileNames = unreleasedDir.checkedFiles.map((file) => file.fileName.replace('READONLY_', ''))
+    const excludeFileNames = unreleasedDir.checkedDDLFiles.map((file) => file.fileName.replace('READONLY_', ''))
     return {
-      fileName: checkedZip.fileName,
-      checkedFiles: checkedZip.checkedFiles
+      fileName: checkedZipPart.fileName,
+      checkedDDLFiles: checkedZipPart.checkedFiles
         // for hybrid state 0.2.0, 0.2.1
         .filter((file) => !excludeFileNames.includes(file.fileName))
         .map((file) => ({
@@ -312,31 +318,31 @@ export default withIntroTypes<AlterCheck>({
   },
 
   async prepareLatestFailureResult(
-    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
+    ngMarkFilePart: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
   ): Promise<AlterLatestResultState | undefined> {
     return api.findLatestTaskLog(this.props.projectName, 'alterCheck').then((body) => {
       if (!body || body.fileName.includes('success')) {
         return
       }
       const content = body.content
-      if (!ngMarkFile) {
+      if (!ngMarkFilePart) {
         return {
           title: 'Result: Failure',
           content,
         }
-      } else if (ngMarkFile.ngMark === 'previous-NG') {
+      } else if (ngMarkFilePart.ngMark === 'previous-NG') {
         return {
           title: 'Found problems on Previous DDL.',
           message: 'Retry save previous.',
           content,
         }
-      } else if (ngMarkFile.ngMark === 'alter-NG') {
+      } else if (ngMarkFilePart.ngMark === 'alter-NG') {
         return {
           title: 'Found problems on Alter DDL.',
-          message: ngMarkFile.content.split('\n')[0],
+          message: ngMarkFilePart.content.split('\n')[0],
           content,
         }
-      } else if (ngMarkFile.ngMark === 'next-NG') {
+      } else if (ngMarkFilePart.ngMark === 'next-NG') {
         return {
           title: 'Found problems on Next DDL.',
           message: 'Fix your DDL and data grammatically.',

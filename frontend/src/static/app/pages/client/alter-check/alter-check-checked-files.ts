@@ -1,7 +1,7 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 
 import Raw from '../../../components/common/raw.riot'
-import { AlterFile } from './types'
+import { AlterDDLFile } from './types-alter'
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 // ^                                                                                     v
@@ -11,7 +11,7 @@ import { AlterFile } from './types'
 
 interface Props {
   /** チェック済みのAlterDDL */
-  checkedFiles: AlterFile[]
+  checkedDDLFiles: AlterDDLFile[]
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -25,15 +25,15 @@ interface AlterCheckCheckedFiles extends IntroRiotComponent<Props, never> {
    * ファイルの表示・非表示を切り替えます
    * @param file クリックされたファイルのオブジェクト
    */
-  clickFileName(file: AlterFile): void
+  clickFileName(ddlFile: AlterDDLFile): void
 }
 
 export default withIntroTypes<AlterCheckCheckedFiles>({
   components: {
     Raw,
   },
-  clickFileName(file: AlterFile) {
-    file.show = !file.show
+  clickFileName(ddlFile: AlterDDLFile) {
+    ddlFile.show = !ddlFile.show
     this.update()
   },
 })
