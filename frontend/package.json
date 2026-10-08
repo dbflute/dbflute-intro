@@ -13,7 +13,7 @@
     "**/*.ts": "npx prettier --write"
   },
   "dependencies": {
-    "@riotjs/route": "^8.0.1",
+    "@riotjs/route": "^10.0.0",
     "axios": "^0.34.0",
     "ffetch": "^0.1.1",
     "i18next": "^21.6.16",
