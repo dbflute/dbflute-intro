@@ -10,7 +10,7 @@ import TaskExecuteModal from '../task-execute-modal.riot'
 import { api } from '../../../api/api'
 import ReplaceSchema from './replace-schema'
 import type { LatestResult as LatestResultState } from '../latest-result'
-import { isTaskLogSuccess } from '../../../api/task-log'
+import { isTaskLogSuccessful } from '../../../api/task-log'
 
 /**
  * PlaySQLのドロップダウン項目
@@ -194,7 +194,7 @@ export default withIntroTypes<ReplaceSchema>({
 
   async fetchLatestResult(projectName: string) {
     const data = await api.findLatestTaskLog(projectName, 'replaceSchema')
-    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
+    return data ? { success: isTaskLogSuccessful(data.fileName), content: data.content } : undefined
   },
 
   async replaceSchema(projectName: string): Promise<void> {

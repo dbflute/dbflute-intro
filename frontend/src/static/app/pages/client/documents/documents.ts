@@ -5,7 +5,7 @@ import TaskExecuteModal from '../task-execute-modal.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import DocumentFormModal from './document-form-modal.riot'
 import type { LatestResult as LatestResultState } from '../latest-result'
-import { isTaskLogSuccess } from '../../../api/task-log'
+import { isTaskLogSuccessful } from '../../../api/task-log'
 
 interface Props {
   projectName: string
@@ -181,6 +181,6 @@ export default withIntroTypes<Document>({
 
   async fetchLatestResult(projectName: string) {
     const data = await api.findLatestTaskLog(projectName, 'doc')
-    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
+    return data ? { success: isTaskLogSuccessful(data.fileName), content: data.content } : undefined
   },
 })

@@ -4,4 +4,4 @@
  * @param fileName ログファイル名
  * @returns ログファイルが成功結果を表す場合はtrue
  */
-export const isTaskLogSuccess = (fileName: string): boolean => fileName.includes('success')
+export const isTaskLogSuccessful = (fileName: string): boolean => fileName.includes('success')

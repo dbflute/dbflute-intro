@@ -6,7 +6,7 @@ import { TaskExecuteStatus } from '../task-execute-modal'
 import SchemaPolicyCheckStatementList from './schema-policy-check-statement-list.riot'
 import SchemaPolicyCheckStatementFormWrapper from './schema-policy-check-statement-form-wrapper.riot'
 import type { LatestResult as LatestResultState } from '../latest-result'
-import { isTaskLogSuccess } from '../../../api/task-log'
+import { isTaskLogSuccessful } from '../../../api/task-log'
 
 /**
  * SchemaPolicyの3つのマップ種別。
@@ -203,6 +203,6 @@ export default withIntroTypes<SchemaPolicyCheck>({
 
   async fetchLatestResult(projectName: string) {
     const data = await api.findLatestTaskLog(projectName, 'doc')
-    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
+    return data ? { success: isTaskLogSuccessful(data.fileName), content: data.content } : undefined
   },
 })

@@ -11,7 +11,7 @@ import TaskExecuteModal from '../task-execute-modal.riot'
 import LatestResult from '../latest-result.riot'
 import { TaskExecuteStatus } from '../task-execute-modal'
 import type { LatestResult as LatestResultState } from '../latest-result'
-import { isTaskLogSuccess } from '../../../api/task-log'
+import { isTaskLogSuccessful } from '../../../api/task-log'
 
 type AlterLatestResultState = {
   title: string
@@ -250,7 +250,7 @@ export default withIntroTypes<AlterCheck>({
   },
   async fetchLatestResult(projectName: string) {
     const data = await api.findLatestTaskLog(projectName, 'alterCheck')
-    return data ? { success: isTaskLogSuccess(data.fileName), content: data.content } : undefined
+    return data ? { success: isTaskLogSuccessful(data.fileName), content: data.content } : undefined
   },
   /**
    * 最新の実行結果をAlterCheck固有の失敗表示へ変換します
