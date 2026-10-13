@@ -1,5 +1,12 @@
+import * as riot from 'riot'
+
+import 'semantic-ui-riot'
+import introPlugin from '../src/static/app/app-plugin'
 import { api } from '../src/static/app/api/api'
+import ReplaceSchemaRiot from '../src/static/app/pages/client/replace-schema/replace-schema.riot'
 import ReplaceSchema from '../src/static/app/pages/client/replace-schema/replace-schema'
+
+riot.install(introPlugin)
 
 describe('ReplaceSchemaタスクの実行', () => {
   afterEach(() => {
@@ -51,6 +58,35 @@ describe('ReplaceSchemaタスクの実行', () => {
 })
 
 describe('ReplaceSchemaの初期表示', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test.each([
+    ['実行履歴がない場合', null, undefined],
+    ['最新のタスクが成功している場合', { fileName: 'task_success.log', content: 'success log' }, { success: true, content: 'success log' }],
+    [
+      '最新のタスクが失敗している場合',
+      { fileName: 'task_failure.log', content: 'failure log' },
+      { success: false, content: 'failure log' },
+    ],
+  ])('%sは取得して初期表示に反映すること', async (_name, latestLog, latestResult) => {
+    jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue(latestLog)
+    const update = jest.fn()
+    const context = {
+      props: { projectName: 'maihamadb' },
+      prepareSettings: jest.fn().mockResolvedValue(undefined),
+      preparePlaysql: jest.fn().mockResolvedValue(undefined),
+      fetchLatestResult: (ReplaceSchema as any).fetchLatestResult,
+      update,
+    }
+
+    await (ReplaceSchema as any).onMounted.call(context)
+
+    expect(api.findLatestTaskLog).toHaveBeenCalledWith('maihamadb', 'replaceSchema')
+    expect(update).toHaveBeenCalledWith({ latestResult })
+  })
+
   it('設定の初期化に失敗しても取得済みの最新実行結果を反映すること', async () => {
     const update = jest.fn()
     const context = {
@@ -81,5 +117,21 @@ describe('ReplaceSchemaの初期表示', () => {
     await Promise.resolve()
 
     expect(update).toHaveBeenCalledWith({ latestResult: { success: false, content: 'failure log' } })
+  })
+
+  it('実行履歴がない state では Latest Result を描画しない', () => {
+    jest.spyOn(api, 'findCoreDfprop').mockResolvedValue({} as DfpropSettingsResult)
+    jest.spyOn(api, 'findPlaysqlFileList').mockResolvedValue([])
+    jest.spyOn(api, 'findLatestTaskLog').mockResolvedValue(null)
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const mounted = riot.component(ReplaceSchemaRiot)(container, { projectName: 'maihamadb' })
+
+    mounted.update({ latestResult: undefined } as any)
+
+    expect(container.querySelector('latest-result')).toBeNull()
+
+    mounted.unmount()
+    container.remove()
   })
 })

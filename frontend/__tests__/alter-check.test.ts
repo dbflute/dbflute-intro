@@ -11,22 +11,30 @@ const TEST_PROJECT = 'maihamadb'
 
 type LatestLog = LogLatestResult | null
 
-function mountAlterCheck() {
+type MountedAlterCheck = {
+  container: HTMLElement
+  updated: Promise<void>
+  unmount: () => void
+}
+
+function mountAlterCheck(): MountedAlterCheck {
   const container = document.createElement('div')
   document.body.appendChild(container)
   const mounted = riot.component(AlterCheck)(container, { projectName: TEST_PROJECT })
+  const updated = new Promise<void>((resolve) => {
+    const onUpdated = mounted.onUpdated
+    mounted.onUpdated = (...args) => {
+      onUpdated?.(...args)
+      resolve()
+    }
+  })
   return {
     container,
+    updated,
     unmount: () => {
       mounted.unmount()
       container.remove()
     },
-  }
-}
-
-async function flush() {
-  for (let i = 0; i < 10; i++) {
-    await Promise.resolve()
   }
 }
 
@@ -53,7 +61,7 @@ describe('AlterCheckの実行結果表示', () => {
   it('実行履歴がない場合は結果を表示しない', async () => {
     setupAlterCheck(null)
     const mounted = mountAlterCheck()
-    await flush()
+    await mounted.updated
 
     expect(mounted.container.querySelector('latest-result')).toBeNull()
 
@@ -63,7 +71,7 @@ describe('AlterCheckの実行結果表示', () => {
   it('最新のAlterCheckが成功している場合は過去の成功ログを表示しない', async () => {
     setupAlterCheck({ fileName: 'dbflute_intro_alterCheck_success_20260901.log', content: 'success log' })
     const mounted = mountAlterCheck()
-    await flush()
+    await mounted.updated
 
     expect(mounted.container.querySelector('latest-result')).toBeNull()
 
@@ -73,7 +81,7 @@ describe('AlterCheckの実行結果表示', () => {
   it('NgMarkがない失敗の場合は通常の失敗結果を表示する', async () => {
     setupAlterCheck({ fileName: 'dbflute_intro_alterCheck_failure_20260901.log', content: 'failure log' })
     const mounted = mountAlterCheck()
-    await flush()
+    await mounted.updated
 
     const result = mounted.container.querySelector('.ui.negative.message')
     expect(result?.textContent).toContain('Result: Failure')
@@ -91,7 +99,7 @@ describe('AlterCheckの実行結果表示', () => {
       { ngMark, content: 'first error\nsecond error' },
     )
     const mounted = mountAlterCheck()
-    await flush()
+    await mounted.updated
 
     const resultText = mounted.container.querySelector('.ui.negative.message')?.textContent ?? ''
     expect(resultText).toContain(title)
