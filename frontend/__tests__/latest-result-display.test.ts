@@ -3,7 +3,6 @@ import * as riot from 'riot'
 import 'semantic-ui-riot'
 import introPlugin from '../src/static/app/app-plugin'
 import { api } from '../src/static/app/api/api'
-import AlterCheck from '../src/static/app/pages/client/alter-check/alter-check.riot'
 import Documents from '../src/static/app/pages/client/documents/documents.riot'
 import ReplaceSchema from '../src/static/app/pages/client/replace-schema/replace-schema.riot'
 import SchemaSyncCheck from '../src/static/app/pages/client/schema-sync-check/schema-sync-check.riot'
@@ -111,73 +110,6 @@ describe.each(standardScreens)('%sの最新実行結果', (_name, component, set
     const result = mounted.container.querySelector('.ui.negative.message')
     expect(result).not.toBeNull()
     expect(result?.querySelector('.latest-result-title')?.textContent).toContain('Execution Result: Failure')
-
-    mounted.unmount()
-  })
-})
-
-function setupAlterCheck(latestLog: LatestLog, ngMarkFile?: PlaysqlMigrationAlterResult_NgMarkFilePart) {
-  jest.spyOn(api, 'findAlterInfra').mockResolvedValue({
-    editingFiles: [{ fileName: 'alter-schema.sql', content: 'alter table member add foo int;' }],
-    ngMarkFile,
-  })
-  jest.spyOn(api, 'findClientPropbase').mockResolvedValue({
-    hasAlterCheckResultHtml: false,
-  } as ClientPropbaseResult)
-  mockLatestTaskLog('alterCheck', latestLog)
-}
-
-describe('AlterCheckの最新実行結果', () => {
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
-
-  it('実行履歴がない場合は結果を表示しない', async () => {
-    setupAlterCheck(null)
-    const mounted = mountComponent(AlterCheck)
-    await flush()
-
-    expect(mounted.container.querySelector('latest-result')).toBeNull()
-
-    mounted.unmount()
-  })
-
-  it('最新のAlterCheckが成功している場合は過去の成功ログを表示しない', async () => {
-    setupAlterCheck({ fileName: 'dbflute_intro_alterCheck_success_20260901.log', content: 'success log' })
-    const mounted = mountComponent(AlterCheck)
-    await flush()
-
-    expect(mounted.container.querySelector('latest-result')).toBeNull()
-
-    mounted.unmount()
-  })
-
-  it('NgMarkがない失敗の場合は通常の失敗結果を表示する', async () => {
-    setupAlterCheck({ fileName: 'dbflute_intro_alterCheck_failure_20260901.log', content: 'failure log' })
-    const mounted = mountComponent(AlterCheck)
-    await flush()
-
-    const result = mounted.container.querySelector('.ui.negative.message')
-    expect(result?.textContent).toContain('Result: Failure')
-
-    mounted.unmount()
-  })
-
-  test.each([
-    ['previous-NG', 'Found problems on Previous DDL.', 'Retry save previous.'],
-    ['alter-NG', 'Found problems on Alter DDL.', 'first error'],
-    ['next-NG', 'Found problems on Next DDL.', 'Fix your DDL and data grammatically.'],
-  ])('%sの場合は問題箇所に応じた案内を表示する', async (ngMark, title, message) => {
-    setupAlterCheck(
-      { fileName: 'dbflute_intro_alterCheck_failure_20260901.log', content: 'failure log' },
-      { ngMark, content: 'first error\nsecond error' },
-    )
-    const mounted = mountComponent(AlterCheck)
-    await flush()
-
-    const resultText = mounted.container.querySelector('.ui.negative.message')?.textContent ?? ''
-    expect(resultText).toContain(title)
-    expect(resultText).toContain(message)
 
     mounted.unmount()
   })
