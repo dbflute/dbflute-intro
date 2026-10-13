@@ -10,8 +10,10 @@ import { AlterDDLFile } from './types-alter'
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface Props {
-  /** チェック済みのAlterDDL */
-  checkedDDLFiles: AlterDDLFile[]
+  // 注: checkedDDLFiles みたいに変数名に大文字続き入れると、.riot側で checkedDdlFiles にしないとヒットしない。
+  // #thinking jflute でも state.editingDDLFiles で参照できてるとこもあるが何が違うんだろう？ props と stateで 違う？ (2026/10/13)
+  /** チェック済みのAlterDDLたち */
+  checkedFiles: AlterDDLFile[]
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -23,17 +25,17 @@ interface Props {
 interface AlterCheckCheckedFiles extends IntroRiotComponent<Props, never> {
   /**
    * ファイルの表示・非表示を切り替えます
-   * @param file クリックされたファイルのオブジェクト
+   * @param checkedFile クリックされたファイルのオブジェクト
    */
-  clickFileName(ddlFile: AlterDDLFile): void
+  clickFileName(checkedFile: AlterDDLFile): void
 }
 
 export default withIntroTypes<AlterCheckCheckedFiles>({
   components: {
     Raw,
   },
-  clickFileName(ddlFile: AlterDDLFile) {
-    ddlFile.show = !ddlFile.show
+  clickFileName(checkedFile: AlterDDLFile) {
+    checkedFile.show = !checkedFile.show
     this.update()
   },
 })
