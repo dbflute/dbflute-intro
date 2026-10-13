@@ -32,6 +32,16 @@
 #
 map:{
     # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # checkedZipモードでAlterCheckの動作確認をするときは一時的にtrueにしてテストしよう by jflute (2026/10/13)
+    #
+    # trueの状態でAlterCheck成功すると、AlterDDLがunreleasedに入るのではなく、checkedZipに入る。
+    # ただ、unreleasedが自動的に消えるわけではないので、unreleasedが存在する状態で途中でtrueにすると、
+    # checkedZip と unreleased の両方で同名ファイルが存在することになる。(その状態の動作確認をするならこの手順で)
+    # そこでFixボタンなどで復元させると、両方から復元されるが、同名ファイルは unreleased の方が優先される。
+    #; isCompatibleMigrationHistoryCheckedZip = true
+    # - - - - - - - - - -/
+
+    # /- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # o repsEnvType: (NotRequired - Default inherits or 'ut')
     #  The environment type of ReplaceSchema.
     #   e.g. if ut, data files in './playsql/data/ut/...' are loaded
