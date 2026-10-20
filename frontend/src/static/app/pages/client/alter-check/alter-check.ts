@@ -1,9 +1,12 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import { api } from '../../../api/api'
+
+// SQLファイルの表示ハイライトのため
 import Prism from 'prismjs'
 import 'prismjs/components/prism-sql.min'
 import 'prismjs/themes/prism.css'
-import { AlterDir, AlterFile, AlterZip } from './types'
+
+import { AlterDDLFile, CheckedAlterToZip, UnreleasedCheckedAlterDir } from './types-alter'
 import AlterCheckChecked from './alter-check-checked.riot'
 import AlterCheckForm from './alter-check-form.riot'
 import Raw from '../../../components/common/raw.riot'
@@ -13,65 +16,166 @@ import { TaskExecuteStatus } from '../task-execute-modal'
 import type { LatestResult as LatestResultState } from '../latest-result'
 import { isTaskLogSuccessful } from '../../../api/task-log'
 
+/**
+ * 最新のタスク実行結果
+ */
 type AlterLatestResultState = {
   title: string
   message?: string
   content?: string
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
-  /** プロジェクト名 */
+  /** DBFluteクライアントプロジェクト名 e.g. maihamadb */
   projectName: string
 }
 
 interface State {
   /** AlterCheckの結果HTMLが存在するか */
   hasAlterCheckResultHtml: boolean
-  /** Step1（AlterCheckの準備）で入力されたファイル名 */
+
+  /** Step1（AlterCheckの準備）で入力されたファイル名 e.g. alter-schema-SEA.sql */
   inputFileName?: string
-  /** AlterCheck用SQLファイル */
-  editingSqls: AlterFile[]
-  /** チェック済みのAlterDDL zip */
-  checkedZip: AlterZip
-  /** 未リリースチェック済みのAlterDDL */
-  unreleasedDir: AlterDir
+
+  /** 編集中(alterディレクトリ配下)のAlterDDLファイルたち */
+  editingDDLFiles: AlterDDLFile[]
+
+  /** チェック済み(未リリース)のAlterDDL zip (checked-alter-to-...zip) */
+  checkedZip: CheckedAlterToZip
+
+  /** 未リリースチェック済みのAlterDDLのディレクトリ (unreleased-checked-alter) */
+  unreleasedDir: UnreleasedCheckedAlterDir
+
   /** 最新のタスク実行結果 */
   latestResult?: AlterLatestResultState
+
   /** タスク実行ステータス */
   executeStatus: TaskExecuteStatus
+
   /** タスク実行結果メッセージ */
   executeResultMessage?: string
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface AlterCheck extends IntroRiotComponent<Props, State> {
+  // ===================================================================================
+  //                                                                           Lifecycle
+  //                                                                           =========
+  onMounted(): void
+
   // ===================================================================================
   //                                                                           UI Helper
   //                                                                           =========
+  /**
+   * 編集中のAlterDDLが存在するか？
+   * @return true:存在する,false:存在しない
+   */
   isEditing(): boolean
-  nowPrepared(fileName: string): void
+
+  /**
+   * 作成直後のファイルであるか？
+   * リロードするとこのチェックはfalseになります
+   * @param fileName - DDLファイル名
+   * @return true:作成直後である,false:作成直後でない
+   */
+  nowPrepared(fileName: string): boolean
 
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  onMounted(): void
-  onclickAlterSql(alterFile: AlterFile): void
+  /**
+   * AlterDDLの表示・非表示を切り替えます
+   * @param ddlFile - クリックされたAlterDDLのファイル
+   */
+  onclickAlterDDL(ddlFile: AlterDDLFile): void
+
+  /**
+   * AlterSqlの用意が完了した際に呼ばれます
+   * 画面から作成直後のファイルであるかをチェックするためにファイル名を保存し、画面全体を更新します
+   * @param inputFileName - クリックされたAlterDDLのファイル
+   */
   onCompletePrepareAlterSql(inputFileName?: string): void
+
+  /**
+   * OSごとのファイルマネージャーでalterディレクトリを開きます
+   */
   onclickOpenAlterDir(): void
+
+  /**
+   * AlterCheckの実行結果htmlを表示します
+   */
   onclickOpenAlterCheckResultHTML(): void
+
+  /**
+   * AlterCheckをAPI経由で実行します
+   * confirmを許可した場合のみ実行されます
+   */
   onclickAlterCheckTask(): void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  // #thiking jflute Partialにしている理由を明文化したい (2026/09/01)
+  /**
+   * 画面全体を更新します
+   * @param additionalState - 一緒に更新したいstate. 指定しなくてもOK
+   */
   updateContents(additionalState?: Partial<State>): void
+
+  /** 最新のタスク実行結果を取得する。 */
   fetchLatestResult(projectName: string): Promise<LatestResultState | undefined>
-  prepareUnreleased(unreleased: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir
-  prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip
+
+  /**
+   * 未リリースチェック済みのAlterDDLディレクトリの情報を用意します（sqlファイルのみ）。
+   * DBFlute-1.2.1 からの unreleasedDir 方式のための対応。
+   * sqlファイルはシンタックスハイライトされた状態でセットします
+   * @param unreleasedDirPart - APIで取得した未リリースディレクトリ情報
+   * @return 未リリースAlterディレクトリのState情報 (EmptyAllowed: チェック済みファイルがまだない場合)
+   */
+  prepareUnreleasedDir(unreleasedDirPart: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): UnreleasedCheckedAlterDir
+
+  /**
+   * チェック済みのAlterDDL zip (未リリース) の情報を用意します。
+   * DBFlute-1.2.0 までの checkedZip 方式のための対応。
+   * sqlファイルはシンタックスハイライトされた状態でセットします。
+   * @param checkedZip - APIで取得したチェック済みのAlterDDL zip情報
+   * @param unreleasedDir - 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
+   * @return 未リリースチェック済みのAlterDDL zipファイル情報 (EmptyAllowed: チェック済みzipがなければ)
+   */
+  prepareCheckedZip(
+    checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined,
+    unreleasedDir: UnreleasedCheckedAlterDir,
+  ): CheckedAlterToZip
+
+  /**
+   * 最新の実行失敗結果を表示用に変換します。
+   * Step2（AlterCheck実行時）に最新の別のAlterCheckの成功結果を表示する必要がないため、現在実行中のAlterCheckの失敗結果を表示するようにしています
+   * @param latestTaskResult - APIで取得した最新実行結果 (Nullable)
+   * @param ngMarkFile - APIで取得したNgMarkFile情報 (Nullable)
+   * @return 最新の実行失敗結果.最新が成功している場合はnull (Nullable)
+   */
   prepareLatestFailureResult(
     latestTaskResult: LatestResultState | undefined,
     ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
   ): AlterLatestResultState | undefined
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 export default withIntroTypes<AlterCheck>({
   components: {
@@ -83,13 +187,13 @@ export default withIntroTypes<AlterCheck>({
   },
   state: {
     hasAlterCheckResultHtml: false,
-    editingSqls: [],
+    editingDDLFiles: [],
     checkedZip: {
       fileName: '',
-      checkedFiles: [],
+      checkedDDLFiles: [],
     },
     unreleasedDir: {
-      checkedFiles: [],
+      checkedDDLFiles: [],
     },
     executeStatus: 'None',
   },
@@ -104,55 +208,34 @@ export default withIntroTypes<AlterCheck>({
   // ===================================================================================
   //                                                                           UI Helper
   //                                                                           =========
-  /**
-   * 編集中のAlterDDLが存在するかチェックします
-   * @return {boolean} true:存在する,false:存在しない
-   */
   isEditing(): boolean {
-    return this.state.editingSqls !== undefined && this.state.editingSqls.length > 0
+    return this.state.editingDDLFiles !== undefined && this.state.editingDDLFiles.length > 0
   },
-  /**
-   * 画面から作成直後のファイルであるかチェックします
-   * リロードするとこのチェックはfalseになります
-   * @param fileName DDLファイル名
-   * @return {boolean} true:作成直後である,false:作成直後でない
-   */
-  nowPrepared(fileName: string) {
+
+  nowPrepared(fileName: string): boolean {
     return this.state.inputFileName === fileName
   },
+
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  /**
-   * AlterSqlの用意が完了した際に呼ばれます
-   * 画面から作成直後のファイルであるかをチェックするためにファイル名を保存し、画面全体を更新します
-   */
+  onclickAlterDDL(ddlFile: AlterDDLFile) {
+    ddlFile.show = !ddlFile.show
+    this.update()
+  },
+
   onCompletePrepareAlterSql(inputFileName?: string) {
     this.updateContents({ inputFileName })
   },
-  /**
-   * AlterDDLの表示・非表示を切り替えます
-   */
-  onclickAlterSql(alterFile: AlterFile) {
-    alterFile.show = !alterFile.show
-    this.update()
-  },
-  /**
-   * OSごとのファイルマネージャーでalterディレクトリを開きます
-   */
+
   onclickOpenAlterDir() {
     api.openAlterDir(this.props.projectName)
   },
-  /**
-   * AlterCheckの実行結果htmlを表示します
-   */
+
   onclickOpenAlterCheckResultHTML() {
     window.open('api/document/' + this.props.projectName + '/altercheckresulthtml/')
   },
-  /**
-   * AlterCheckをAPI経由で実行します
-   * confirmを許可した場合のみ実行されます
-   */
+
   onclickAlterCheckTask() {
     this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
       this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })
@@ -171,46 +254,37 @@ export default withIntroTypes<AlterCheck>({
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  /**
-   * 画面全体を更新します
-   * @param additionalState 一緒に更新したいstate. 指定しなくてもOK
-   */
   updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     api.findAlterInfra(projectName).then((result) => {
       api.findClientPropbase(projectName).then(async (client) => {
-        const editingSqls = result.editingFiles.map((file) => ({
+        const editingDDLFiles = result.editingFiles.map((file) => ({
           fileName: file.fileName,
           content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
           show: false,
         }))
-        const unreleasedDir = this.prepareUnreleased(result.unreleasedDir)
-        const checkedZip = this.prepareChecked(result.checkedZip, unreleasedDir)
+        const unreleasedDir = this.prepareUnreleasedDir(result.unreleasedDir)
+        const checkedZip = this.prepareCheckedZip(result.checkedZip, unreleasedDir)
         const latestTaskResult = await this.fetchLatestResult(projectName)
         const latestResult = this.prepareLatestFailureResult(latestTaskResult, result.ngMarkFile)
         this.update({
           hasAlterCheckResultHtml: client.hasAlterCheckResultHtml,
-          editingSqls,
-          unreleasedDir,
+          editingDDLFiles,
           checkedZip,
+          unreleasedDir,
           latestResult,
           ...additionalState,
         })
       })
     })
   },
-  /**
-   * 未リリースチェック済みのAlterDDLを用意します（sqlファイルのみ）
-   * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param unreleasedDir APIで取得した未リリースディレクトリ情報
-   * @return 未リリースAlterディレクトリのState情報 (EmptyAllowed)
-   */
-  prepareUnreleased(unreleasedDir: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): AlterDir {
-    if (!unreleasedDir) {
-      return { checkedFiles: [] }
+
+  prepareUnreleasedDir(unreleasedDirPart: PlaysqlMigrationAlterResult_UnreleasedDirPart | undefined): UnreleasedCheckedAlterDir {
+    if (!unreleasedDirPart) {
+      return { checkedDDLFiles: [] }
     }
     return {
-      checkedFiles: unreleasedDir.checkedFiles
+      checkedDDLFiles: unreleasedDirPart.checkedFiles
         .filter((file) => file.fileName.includes('.sql'))
         .map((file) => ({
           fileName: file.fileName,
@@ -220,24 +294,27 @@ export default withIntroTypes<AlterCheck>({
         })),
     }
   },
-  /**
-   * チェック済みのAlterDDL zipを用意します
-   * sqlファイルはシンタックスハイライトされた状態でセットします
-   * @param checkedZip APIで取得したチェック済みのAlterDDL zip情報 (Nullable)
-   * @param unreleasedDir 未リリースAlterディレクトリのState情報. zipから未リリースディレクトリでチェック済みのReadOnlyファイルを除外するために使用 (NotNull)
-   * @return 未リリースAlterディレクトリのState情報
-   */
-  prepareChecked(checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined, unreleasedDir: AlterDir): AlterZip {
-    if (!checkedZip) {
+
+  prepareCheckedZip(
+    checkedZipPart: PlaysqlMigrationAlterResult_CheckedZipPart | undefined,
+    unreleasedDir: UnreleasedCheckedAlterDir,
+  ): CheckedAlterToZip {
+    if (!checkedZipPart) {
       return {
         fileName: '',
-        checkedFiles: [],
+        checkedDDLFiles: [],
       }
     }
-    const excludeFileNames = unreleasedDir.checkedFiles.map((file) => file.fileName.replace('READONLY_', ''))
+
+    // unreleasedDir のファイルと同名のものが checkedZip の中に入ってたら除外する。
+    // 通常そういうことはありえないはず!? そもそも unreleasedDir と checkedZip は同時に発生しないはず。
+    // checkedZip は DBFlute-1.2.0 までの機能で、DBFlute-1.2.1 から unreleasedDir に移行される。
+    // 一瞬、マージとかで同居することはあるかもしれないが、自動で unreleasedDir に移行される。
+    // そのときの何かの紛れで、同名ファイルが両方に入っちゃった時のための回避処理という感じかな!? by jflute (2026/09/01)
+    const excludeFileNames = unreleasedDir.checkedDDLFiles.map((file) => file.fileName.replace('READONLY_', ''))
     return {
-      fileName: checkedZip.fileName,
-      checkedFiles: checkedZip.checkedFiles
+      fileName: checkedZipPart.fileName,
+      checkedDDLFiles: checkedZipPart.checkedFiles
         // for hybrid state 0.2.0, 0.2.1
         .filter((file) => !excludeFileNames.includes(file.fileName))
         .map((file) => ({
@@ -252,6 +329,7 @@ export default withIntroTypes<AlterCheck>({
     const data = await api.findLatestTaskLog(projectName, 'alterCheck')
     return data ? { success: isTaskLogSuccessful(data.fileName), content: data.content } : undefined
   },
+
   /**
    * 最新の実行結果をAlterCheck固有の失敗表示へ変換します
    * Step2（AlterCheck実行時）に最新の別のAlterCheckの成功結果を表示する必要がないため、現在実行中のAlterCheckの失敗結果を表示するようにしています

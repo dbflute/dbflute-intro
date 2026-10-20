@@ -73,6 +73,8 @@ public class PlaysqlMigrationAlterAction extends IntroBaseAction {
         return JsonResponse.asEmptyBody();
     }
 
+    // #thinking jflute prepare()というよりかは、"既存alterの復元" というニュアンスの方が直感的かも (2026/09/27)
+    // 確かに準備っちゃ準備なんだけど、準備だと広いので...
     @Execute
     @NotAvailableDecommentServer
     public JsonResponse<Void> prepare(String projectName) {

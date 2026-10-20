@@ -1,6 +1,12 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import { api } from '../../../api/api'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** プロジェクト名 */
   projectName: string
@@ -8,7 +14,16 @@ interface Props {
   onCompleteOpenDir(inputFileName?: string): void
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface AlterCheckFixForm extends IntroRiotComponent<Props, never> {
+  /**
+   * 既存AlterDDLを修正する準備をする。(既存AlterDDLをalterディレクトリの復元する)
+   */
   prepareAlterCheck(): void
 }
 
