@@ -35,7 +35,7 @@ export default withIntroTypes<AlterCheckCheckedFiles>({
     Raw,
   },
   clickFileName(checkedFile: AlterDDLFile) {
-    checkedFile.show = !checkedFile.show
+    checkedFile.showsContent = !checkedFile.showsContent
     this.update()
   },
 })

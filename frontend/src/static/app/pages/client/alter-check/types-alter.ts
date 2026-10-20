@@ -8,9 +8,8 @@ export type AlterDDLFile = {
   /** ファイルの中身テキスト (SQL文字列のはず) */
   content: string
 
-  // #thinking jflute さすがにshowだけだとものたらない。showingDDL とかどうだろう？ (2026/09/29)
-  /** ファイルの中身(SQL)を表示している状態か？ */
-  show: boolean
+  /** ファイルの中身(SQL)を表示するかどうか？ */
+  showsContent: boolean
 }
 
 // done jflute クラス名、CheckedZip の方が良い!? (2026/09/01)

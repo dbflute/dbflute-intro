@@ -76,7 +76,8 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
   //                                                                           UI Helper
   //                                                                           =========
   /**
-   * 編集中のAlterDDLが存在するか？
+   * AlterDDLの編集中ステップかどうか？
+   * (つまり「Step 2: AlterCheck」の実行を表示する状態か？)
    * @return true:存在する,false:存在しない
    */
   isEditing(): boolean
@@ -213,7 +214,7 @@ export default withIntroTypes<AlterCheck>({
   //                                                                       Event Handler
   //                                                                       =============
   onclickAlterDDL(ddlFile: AlterDDLFile) {
-    ddlFile.show = !ddlFile.show
+    ddlFile.showsContent = !ddlFile.showsContent
     this.update()
   },
 
@@ -253,7 +254,7 @@ export default withIntroTypes<AlterCheck>({
         const editingDDLFiles = result.editingFiles.map((file) => ({
           fileName: file.fileName,
           content: Prism.highlight(file.content.trim(), Prism.languages.sql, 'sql'),
-          show: false,
+          showsContent: false,
         }))
         const unreleasedDir = this.prepareUnreleasedDir(result.unreleasedDir)
         const checkedZip = this.prepareCheckedZip(result.checkedZip, unreleasedDir)
@@ -281,7 +282,7 @@ export default withIntroTypes<AlterCheck>({
           fileName: file.fileName,
           // sqlファイル表示時に余白を用意するために改行(\n)を予め入れておく（多分そういう目的）
           content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
-          show: false,
+          showsContent: false,
         })),
     }
   },
@@ -312,7 +313,7 @@ export default withIntroTypes<AlterCheck>({
           fileName: file.fileName,
           // sqlファイル表示時に余白を用意するために改行(\n)を予め入れておく（多分そういう目的）
           content: Prism.highlight('\n' + file.content.trim(), Prism.languages.sql, 'sql'),
-          show: false,
+          showsContent: false,
         })),
     }
   },

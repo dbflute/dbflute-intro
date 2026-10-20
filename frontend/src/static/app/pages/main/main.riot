@@ -89,7 +89,7 @@
 
   <!-- DBFluteエンジンのダウンロード処理のためのモーダル -->
   <su-modal modal="{ downloadModal() }"
-            show="{ state.showDownloadModal }"
+            show="{ state.showsDownloadModal }"
             onhide="{ onDownloadModalHide }"
             ondownload-engine="{ onDownloadEngine }"
             ref="downloadModal">
@@ -107,7 +107,7 @@
 
   <!-- ちと待ってなさいモーダル -->
   <su-modal modal="{ processModal() }"
-            show="{ state.showProcessModal }"
+            show="{ state.showsProcessModal }"
             onhide="{ onProcessModalHide }"
             ref="processModal">
 

@@ -23,10 +23,10 @@ interface State {
   latestVersion: EngineLatestResult
 
   /** downloadModal を見せるかどうか */
-  showDownloadModal: boolean
+  showsDownloadModal: boolean
 
   /** processModal を見せるかどうか */
-  showProcessModal: boolean
+  showsProcessModal: boolean
 }
 
 type DownloadModalBase = {
@@ -179,8 +179,8 @@ export default withIntroTypes<Main>({
       latestReleaseVersion: '',
       latestSnapshotVersion: '',
     },
-    showDownloadModal: false,
-    showProcessModal: false,
+    showsDownloadModal: false,
+    showsProcessModal: false,
   },
 
   // ===================================================================================
@@ -215,16 +215,16 @@ export default withIntroTypes<Main>({
   //                                                                       Event Handler
   //                                                                       =============
   onclickDownload() {
-    this.state.showDownloadModal = true
+    this.state.showsDownloadModal = true
     this.update()
   },
 
   onDownloadEngine() {
-    this.state.showProcessModal = true
+    this.state.showsProcessModal = true
     this.update()
     const version = this.inputElementBy('[ref=version]').value
     api.downloadEngine({ version }).then(() => {
-      this.state.showProcessModal = false
+      this.state.showsProcessModal = false
       this.engineVersions()
     })
   },
@@ -244,12 +244,12 @@ export default withIntroTypes<Main>({
   },
 
   onDownloadModalHide() {
-    this.state.showDownloadModal = false
+    this.state.showsDownloadModal = false
     this.update()
   },
 
   onProcessModalHide() {
-    this.state.showProcessModal = false
+    this.state.showsProcessModal = false
     this.update()
   },
 

@@ -15,13 +15,13 @@ interface Props {
 }
 
 interface State {
-  documentSetting?: DfpropDocumentResult
+  documentSettings?: DfpropDocumentResult
   latestResult?: DocumentLatestResult
   hasSchemaHtml: boolean
   hasHistoryHtml: boolean
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
-  showDocumentSettingModal: boolean
+  showsDocumentSettingModal: boolean
   prepared: boolean
 }
 
@@ -64,13 +64,13 @@ export default withIntroTypes<Document>({
     DocumentFormModal,
   },
   state: {
-    documentSetting: undefined,
+    documentSettings: undefined,
     latestResult: undefined,
     hasSchemaHtml: false,
     hasHistoryHtml: false,
     executeStatus: 'None',
     executeResultMessage: undefined,
-    showDocumentSettingModal: false,
+    showsDocumentSettingModal: false,
     prepared: false,
   },
 
@@ -111,14 +111,14 @@ export default withIntroTypes<Document>({
    * Document 設定モーダルを表示する
    */
   showDocumentSettingModal() {
-    this.update({ showDocumentSettingModal: true })
+    this.update({ showsDocumentSettingModal: true })
   },
 
   /**
    * Document 設定を保存するとき、画面の状態を最新化する
    */
   async onSettingSaved() {
-    await this.updateContents({ showDocumentSettingModal: false })
+    await this.updateContents({ showsDocumentSettingModal: false })
   },
 
   // -----------------------------------------------------
@@ -169,7 +169,7 @@ export default withIntroTypes<Document>({
    */
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
-    const documentSetting = await api.findDocumentDfprop(projectName)
+    const documentSettings = await api.findDocumentDfprop(projectName)
     const latestResult = await api.findLatestTaskLog(projectName, 'doc').then((body) => {
       if (body) {
         return {
@@ -180,7 +180,7 @@ export default withIntroTypes<Document>({
     })
     const client = await api.findClientPropbase(projectName)
     this.update({
-      documentSetting,
+      documentSettings,
       latestResult,
       hasSchemaHtml: client.hasSchemaHtml,
       hasHistoryHtml: client.hasHistoryHtml,
