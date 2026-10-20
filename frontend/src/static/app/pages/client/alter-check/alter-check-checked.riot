@@ -5,13 +5,13 @@
       <div if="{ existsCheckedFiles() }">
         <!-- Clientのチェック済みAlterDDL zipファイルを表示する画面 (written at 2022/03/13) -->
         <h5>Checked Alter SQL Files ( { props.checkedZip.fileName } )</h5>
-        <alter-check-checked-files checked-files="{ props.checkedZip.checkedFiles }" />
+        <alter-check-checked-files checked-files="{ props.checkedZip.checkedDDLFiles }" />
       </div>
     </div>
     <div class="item">
       <div if="{ existsUnreleasedFiles() }">
         <h5>Unreleased Alter SQL Files</h5>
-        <alter-check-checked-files checked-files="{ props.unreleasedDir.checkedFiles }" />
+        <alter-check-checked-files checked-files="{ props.unreleasedDir.checkedDDLFiles }" />
       </div>
     </div>
   </div>

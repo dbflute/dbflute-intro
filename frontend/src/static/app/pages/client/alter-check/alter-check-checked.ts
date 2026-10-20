@@ -1,6 +1,6 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
 import AlterCheckCheckedFiles from './alter-check-checked-files.riot'
-import { AlterDir, AlterZip } from './types'
+import { CheckedAlterToZip, UnreleasedCheckedAlterDir } from './types-alter'
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
 // ^                                                                                     v
@@ -10,9 +10,9 @@ import { AlterDir, AlterZip } from './types'
 
 interface AlterCheckCheckedProps {
   /** チェック済みのAlterDDL zip */
-  checkedZip: AlterZip
+  checkedZip: CheckedAlterToZip
   /** 未リリースチェック済みのAlterDDL */
-  unreleasedDir: AlterDir
+  unreleasedDir: UnreleasedCheckedAlterDir
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -42,9 +42,9 @@ export default withIntroTypes<AlterCheckChecked>({
     AlterCheckCheckedFiles,
   },
   existsCheckedFiles(): boolean {
-    return this.props.checkedZip.checkedFiles.length > 0
+    return this.props.checkedZip.checkedDDLFiles.length > 0
   },
   existsUnreleasedFiles(): boolean {
-    return this.props.unreleasedDir.checkedFiles.length > 0
+    return this.props.unreleasedDir.checkedDDLFiles.length > 0
   },
 })
