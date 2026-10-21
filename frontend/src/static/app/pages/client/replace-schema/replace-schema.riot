@@ -46,10 +46,8 @@
             onchange="{ onDropdownChange }">
           </su-dropdown>
           <div class="ui message message-area">
-            <pre>
-               <!-- codeタグのclass定義は、prism.jsで用意されているSQLのハイライト -->
-              <code class="language-sql"><raw content="{ state.selectedSql }"></raw></code>
-            </pre>
+            <!-- codeタグのclass定義は、prism.jsで用意されているSQLのハイライト -->
+            <pre><code class="language-sql"><raw content="{ state.selectedSql }"></raw></code></pre>
           </div>
         </div>
   </div>
