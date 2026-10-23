@@ -50,13 +50,31 @@ const baseClientPropbase = {
  * テスト用に component を mount する補助関数。
  * 各テストで独立した DOM 領域に mount して、後始末する。
  */
-function mountSchemaPolicyCheck(): { unmount: () => void; container: HTMLElement } {
+type MountedSchemaPolicyCheck = {
+  container: HTMLElement
+  initialUpdate: Promise<void>
+  waitForNextUpdate: () => Promise<void>
+  unmount: () => void
+}
+
+function mountSchemaPolicyCheck(): MountedSchemaPolicyCheck {
   const container = document.createElement('div')
   document.body.appendChild(container)
   const mount = riot.component(SchemaPolicyCheck)
   const component = mount(container, { projectName: TEST_PROJECT })
+  const waitForNextUpdate = () =>
+    new Promise<void>((resolve) => {
+      const onUpdated = component.onUpdated
+      component.onUpdated = (...args) => {
+        onUpdated?.(...args)
+        component.onUpdated = onUpdated
+        resolve()
+      }
+    })
   return {
     container,
+    initialUpdate: waitForNextUpdate(),
+    waitForNextUpdate,
     unmount: () => {
       component.unmount()
       container.remove()
@@ -64,12 +82,20 @@ function mountSchemaPolicyCheck(): { unmount: () => void; container: HTMLElement
   }
 }
 
-/** マウント後に Promise resolve と Riot 再描画を待つ。 */
-async function flush() {
-  // 数回 microtask を流して Promise.all 完了 → state 更新 → 再描画 を待つ
-  for (let i = 0; i < 5; i++) {
-    await Promise.resolve()
-  }
+function waitForDomCondition(container: HTMLElement, predicate: () => boolean): Promise<void> {
+  return new Promise((resolve) => {
+    if (predicate()) {
+      resolve()
+      return
+    }
+    const observer = new MutationObserver(() => {
+      if (predicate()) {
+        observer.disconnect()
+        resolve()
+      }
+    })
+    observer.observe(container, { childList: true, subtree: true, characterData: true, attributes: true })
+  })
 }
 
 beforeEach(() => {
@@ -94,8 +120,8 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                        --------------
   describe('初期描画', () => {
     it('schemaPolicy 取得後、3つのタブと各テーマが描画されること', async () => {
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const tabs = container.querySelectorAll('su-tab')
       expect(tabs).toHaveLength(3)
@@ -109,8 +135,8 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('Table タブのステートメント一覧がレンダリングされること', async () => {
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const text = container.textContent ?? ''
       // statement 本体 (=> でコメントを除いた部分) が出ている
@@ -122,8 +148,8 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('登録フォームのトグルリンクは初期状態で "Add Statement" が表示されていること', async () => {
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const formWrappers = container.querySelectorAll('schema-policy-check-statement-form-wrapper')
       // Table と Column の2タブにラッパーがある
@@ -142,8 +168,8 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                         -------------
   describe('最新実行結果', () => {
     it('実行履歴がない場合は latest-result が描画されないこと', async () => {
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const latestResult = container.querySelector('latest-result')
       expect(latestResult).toBeNull()
@@ -157,8 +183,8 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'doc task ok',
       } as LogLatestResult)
 
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const message = container.querySelector('.ui.positive.message')
       expect(message).not.toBeNull()
@@ -173,8 +199,8 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'doc task ng',
       } as LogLatestResult)
 
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const message = container.querySelector('.ui.negative.message')
       expect(message).not.toBeNull()
@@ -190,8 +216,8 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'violation content',
       } as LogLatestResult)
 
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const text = container.textContent ?? ''
       expect(text).toContain('Open your SchemaPolicyCheck result (HTML)')
@@ -205,8 +231,8 @@ describe('SchemaPolicyCheck 画面', () => {
         content: 'ok',
       } as LogLatestResult)
 
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const text = container.textContent ?? ''
       expect(text).not.toContain('Open your SchemaPolicyCheck result (HTML)')
@@ -221,16 +247,17 @@ describe('SchemaPolicyCheck 画面', () => {
   describe('テーマトグル', () => {
     it('Whole タブのテーマチェックボックス変更で editSchemaPolicy が呼ばれること', async () => {
       const editSpy = jest.spyOn(api, 'editSchemaPolicyDfprop')
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, waitForNextUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       // 最初の su-checkbox をクリック (Whole の最初のテーマ)
       const checkbox = container.querySelector('su-checkbox') as HTMLElement | null
       expect(checkbox).not.toBeNull()
       // su-checkbox は内部で input を持つので click イベントを発火
       const input = checkbox?.querySelector('input[type=checkbox]') as HTMLInputElement | null
+      const themeUpdated = waitForNextUpdate()
       input?.click()
-      await flush()
+      await themeUpdated
 
       expect(editSpy).toHaveBeenCalledWith(
         TEST_PROJECT,
@@ -251,16 +278,17 @@ describe('SchemaPolicyCheck 画面', () => {
   describe('ステートメント削除', () => {
     it('削除アイコンクリックで suConfirm 後に deleteSchemapolicyStatement が呼ばれること', async () => {
       const deleteSpy = jest.spyOn(api, 'deleteSchemapolicyStatement')
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, waitForNextUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       // 最初の delete アイコンをクリック (suConfirm はファイル冒頭の plugin で即 resolve される)
       const list = container.querySelector('schema-policy-check-statement-list')
       expect(list).not.toBeNull()
       const deleteIcon = list?.querySelector('.delete.link.icon') as HTMLElement | null
       expect(deleteIcon).not.toBeNull()
+      const deleteUpdated = waitForNextUpdate()
       deleteIcon?.click()
-      await flush()
+      await deleteUpdated
 
       expect(deleteSpy).toHaveBeenCalledWith(
         TEST_PROJECT,
@@ -279,16 +307,17 @@ describe('SchemaPolicyCheck 画面', () => {
   //                                           -----------
   describe('登録フォームの開閉', () => {
     it('"Add Statement" クリックでフォームが開き、リンクが "Hide Form" に切り替わること', async () => {
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const wrapper = container.querySelector('schema-policy-check-statement-form-wrapper') as HTMLElement
       // "Add Statement" リンクを取得 (a要素)
       const links = wrapper.querySelectorAll('a')
       const addLink = Array.from(links).find((a) => (a.textContent ?? '').trim() === 'Add Statement')
       expect(addLink).toBeDefined()
+      const formOpened = waitForDomCondition(wrapper, () => (wrapper.textContent ?? '').includes('Hide Form'))
       addLink?.click()
-      await flush()
+      await formOpened
 
       const linksAfter = wrapper.querySelectorAll('a')
       const hideLink = Array.from(linksAfter).find((a) => (a.textContent ?? '').trim() === 'Hide Form')
@@ -300,18 +329,20 @@ describe('SchemaPolicyCheck 画面', () => {
     })
 
     it('"Hide Form" クリックでフォームが閉じ、リンクが "Add Statement" に戻ること', async () => {
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const wrapper = container.querySelector('schema-policy-check-statement-form-wrapper') as HTMLElement
       // 一度開く
       const addLink = Array.from(wrapper.querySelectorAll('a')).find((a) => (a.textContent ?? '').trim() === 'Add Statement')
+      const formOpened = waitForDomCondition(wrapper, () => (wrapper.textContent ?? '').includes('Hide Form'))
       addLink?.click()
-      await flush()
+      await formOpened
       // 閉じる
       const hideLink = Array.from(wrapper.querySelectorAll('a')).find((a) => (a.textContent ?? '').trim() === 'Hide Form')
+      const formClosed = waitForDomCondition(wrapper, () => !(wrapper.textContent ?? '').includes('Hide Form'))
       hideLink?.click()
-      await flush()
+      await formClosed
 
       // 再び "Add Statement" のみ
       const finalLinks = Array.from(wrapper.querySelectorAll('a')).map((a) => (a.textContent ?? '').trim())
@@ -330,15 +361,16 @@ describe('SchemaPolicyCheck 画面', () => {
   describe('SchemaPolicyCheck (doc task) 実行', () => {
     it('"Execute SchemaPolicyCheck" ボタンで api.executeTask("doc") が呼ばれること', async () => {
       const taskSpy = jest.spyOn(api, 'executeTask')
-      const { container, unmount } = mountSchemaPolicyCheck()
-      await flush()
+      const { container, initialUpdate, waitForNextUpdate, unmount } = mountSchemaPolicyCheck()
+      await initialUpdate
 
       const executeButton = Array.from(container.querySelectorAll('button')).find((b) =>
         (b.textContent ?? '').includes('Execute SchemaPolicyCheck'),
       )
       expect(executeButton).toBeDefined()
+      const taskStarted = waitForNextUpdate()
       executeButton?.click()
-      await flush()
+      await taskStarted
 
       expect(taskSpy).toHaveBeenCalledWith(TEST_PROJECT, 'doc')
 
