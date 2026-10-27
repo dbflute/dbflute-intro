@@ -7,6 +7,12 @@ import SchemaSyncCheckFormModal from './schema-sync-check-form-modal.riot'
 import type { LatestResult as LatestResultState } from '../latest-result'
 import { isTaskLogSuccessful } from '../../../api/task-log'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   projectName: string
 }
@@ -17,9 +23,15 @@ interface State {
   hasSchemaSyncCheckResultHtml: boolean
   executeStatus: TaskExecuteStatus
   executeResultMessage?: string
-  showSyncSettingModal: boolean
+  showsSyncSettingModal: boolean
   prepared: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -35,11 +47,13 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   //                                           -----------
   openSyncCheckResultHTML: () => void
   canCheckSchemaSetting: () => boolean
+
   // -----------------------------------------------------
   //                                         Setting Modal
   //                                         -------------
   showSyncSettingModal: () => void
   onSettingSaved: () => void
+
   // -----------------------------------------------------
   //                                             Execution
   //                                             ---------
@@ -54,6 +68,12 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   updateContents: (additionalState?: Partial<State>) => Promise<void>
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 export default withIntroTypes<SchemaSyncCheck>({
   components: {
     LatestResult,
@@ -66,7 +86,7 @@ export default withIntroTypes<SchemaSyncCheck>({
     hasSchemaSyncCheckResultHtml: false,
     executeStatus: 'None',
     executeResultMessage: undefined,
-    showSyncSettingModal: false,
+    showsSyncSettingModal: false,
     prepared: false,
   },
 
@@ -106,14 +126,14 @@ export default withIntroTypes<SchemaSyncCheck>({
    * SchemaSyncCheck 設定モーダルを表示する
    */
   showSyncSettingModal() {
-    this.update({ showSyncSettingModal: true })
+    this.update({ showsSyncSettingModal: true })
   },
 
   /**
    * SchemaSyncCheck 設定を保存するとき、画面の状態を最新化する
    */
   async onSettingSaved() {
-    await this.updateContents({ showSyncSettingModal: false })
+    await this.updateContents({ showsSyncSettingModal: false })
   },
 
   // -----------------------------------------------------
