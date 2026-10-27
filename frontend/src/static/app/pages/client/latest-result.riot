@@ -1,14 +1,14 @@
 <latest-result>
   <div if="{ state.loaded }">
-    <h3 if="{ props.showHeader }">{ props.headerTitle }</h3>
+    <h3 if="{ props.showsHeader }">{ props.headerTitle }</h3>
     <div class="ui { props.success ? 'positive' : 'negative' } message">
       <h4 class="latest-result-title">{ props.resultTitle }</h4>
       <p if="{ props.resultMessage }">{ props.resultMessage }</p>
       <p if="{ props.linkTitle && props.onClickLink }" >
         <a onclick="{ props.onClickLink }">{ props.linkTitle }</a>
       </p>
-      <a onclick="{ toggleLatestResult }">{ state.showContent ? 'hide latest log' : 'show latest log' }</a>
-      <div if="{ state.showContent }" class="ui message message-area">
+      <a onclick="{ toggleLatestResult }">{ state.showsContent ? 'hide latest log' : 'show latest log' }</a>
+      <div if="{ state.showsContent }" class="ui message message-area">
         <pre><code><raw content="{ props.content }"></raw></code></pre>
       </div>
     </div>

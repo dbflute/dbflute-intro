@@ -29,7 +29,7 @@ interface Props {
   success: boolean
 
   /** 表示領域のヘッダー (タイトル表示) を表示するかどうか？ */
-  showHeader: boolean
+  showsHeader: boolean
 
   // #thinking jflute 使ってる人がいないような？ (2026/04/25)
   /** 表示領域のヘッダーに表示するタイトル文字列 */
@@ -59,7 +59,7 @@ interface State {
   loaded: boolean
 
   /** 大量メッセージのcontent領域を表示するかどうか？ (toggleでhide/show制御するためのもの) */
-  showContent: boolean
+  showsContent: boolean
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -98,14 +98,14 @@ export default withIntroTypes<LatestResultComponent>({
   },
   state: {
     loaded: false,
-    showContent: false,
+    showsContent: false,
   },
   onMounted() {
     this.state.loaded = true
     this.update()
   },
   toggleLatestResult() {
-    this.state.showContent = !this.state.showContent
+    this.state.showsContent = !this.state.showsContent
     this.update()
   },
 })
