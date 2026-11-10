@@ -237,6 +237,7 @@ export default withIntroTypes<AlterCheck>({
     window.open('api/document/' + this.props.projectName + '/altercheckresulthtml/')
   },
 
+  // #thiking jflute 他と比べるとasyncしてないんだけど、いいのかな？どう変わるのかな？ (2026/11/10)
   onclickAlterCheckTask() {
     this.suConfirm('Are you sure to execute AlterCheck task?').then(() => {
       this.update({ executeStatus: 'Executing', executeResultMessage: 'Executing...' })

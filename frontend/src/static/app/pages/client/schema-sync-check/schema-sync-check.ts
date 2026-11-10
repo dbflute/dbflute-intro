@@ -37,6 +37,9 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
+  /**
+   * マウント完了時の処理。
+   */
   onMounted: () => void
 
   // ===================================================================================
@@ -45,27 +48,64 @@ interface SchemaSyncCheck extends IntroRiotComponent<Props, State> {
   // -----------------------------------------------------
   //                                           Result HTML
   //                                           -----------
+  /**
+   * SchemaSyncCheck の結果HTMLを新しいタブで開く
+   */
   openSyncCheckResultHTML: () => void
+
+  /**
+   * SchemaSyncCheck の設定が確認可能か、つまり SchemaSyncCheckの設定が存在するかを確認する
+   * @returns 要はdfpropでSchemaSyncCheckの設定がされているならtrue
+   */
   canCheckSchemaSetting: () => boolean
 
   // -----------------------------------------------------
   //                                         Setting Modal
   //                                         -------------
+  /**
+   * SchemaSyncCheck 設定モーダルを表示する
+   */
   showSyncSettingModal: () => void
+
+  /**
+   * SchemaSyncCheck 設定を保存するとき、画面の状態を最新化する
+   */
   onSettingSaved: () => void
 
   // -----------------------------------------------------
   //                                             Execution
   //                                             ---------
+  /**
+   * SchemaSyncCheck タスクを実行する
+   * すでに実行されている状態であれば何もしない
+   */
   onclickSchemaSyncCheckTask: () => void
+
+  /**
+   * タスク実行モーダルを閉じるとき、画面の状態を最新化する
+   */
   onExecuteModalHide: () => void
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
+  /**
+   * コンポーネントの初期化を完了した状態にし、画面を最新化する
+   */
   prepareComponents: () => void
-  fetchLatestResult: (projectName: string) => Promise<LatestResultState | undefined>
+
+  /**
+   * 引数で受け取った state を更新しつつ、画面を最新化する
+   * @param additionalState 更新する state の値
+   */
   updateContents: (additionalState?: Partial<State>) => Promise<void>
+
+  /**
+   * 最新のDBFluteタスク実行結果を取得する。
+   * @param projectName - 現在対象としているDBFluteクライアントのプロジェクト名。
+   * @returns 最新のDBFluteタスク実行結果オブジェクト
+   */
+  fetchLatestResult: (projectName: string) => Promise<LatestResultState | undefined>
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -93,9 +133,6 @@ export default withIntroTypes<SchemaSyncCheck>({
   // ===================================================================================
   //                                                                           Lifecycle
   //                                                                           =========
-  /**
-   * マウント完了時の処理。
-   */
   onMounted() {
     this.prepareComponents()
   },
@@ -107,13 +144,9 @@ export default withIntroTypes<SchemaSyncCheck>({
   //                                           Result HTML
   //                                           -----------
   openSyncCheckResultHTML() {
-    // SchemaSyncCheck の結果HTMLを新しいタブで開く
     window.open('/api/document/' + this.props.projectName + '/synccheckresulthtml/')
   },
 
-  /**
-   * SchemaSyncCheck の設定が確認可能か、つまり SchemaSyncCheckの設定が存在するかを確認する
-   */
   canCheckSchemaSetting() {
     const setting = this.state.syncSchemaSetting
     return !!setting && !!setting.url && !!setting.user
@@ -122,16 +155,10 @@ export default withIntroTypes<SchemaSyncCheck>({
   // -----------------------------------------------------
   //                                         Setting Modal
   //                                         -------------
-  /**
-   * SchemaSyncCheck 設定モーダルを表示する
-   */
   showSyncSettingModal() {
     this.update({ showsSyncSettingModal: true })
   },
 
-  /**
-   * SchemaSyncCheck 設定を保存するとき、画面の状態を最新化する
-   */
   async onSettingSaved() {
     await this.updateContents({ showsSyncSettingModal: false })
   },
@@ -139,10 +166,6 @@ export default withIntroTypes<SchemaSyncCheck>({
   // -----------------------------------------------------
   //                                             Execution
   //                                             ---------
-  /**
-   * SchemaSyncCheck タスクを実行する
-   * すでに実行されている状態であれば何もしない
-   */
   async onclickSchemaSyncCheckTask() {
     if (this.state.executeStatus !== 'None') {
       return
@@ -160,9 +183,6 @@ export default withIntroTypes<SchemaSyncCheck>({
       })
   },
 
-  /**
-   * タスク実行モーダルを閉じるとき、画面の状態を最新化する
-   */
   onExecuteModalHide() {
     // タスク実行モーダルが閉じられたときに executeStatus をリセット
     this.update({ executeStatus: 'None' })
@@ -171,17 +191,10 @@ export default withIntroTypes<SchemaSyncCheck>({
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
-  /**
-   * コンポーネントの初期化を完了した状態にし、画面を最新化する
-   */
   prepareComponents() {
     this.updateContents({ prepared: true })
   },
 
-  /**
-   * 引数で受け取った state を更新しつつ、画面を最新化する
-   * @param additionalState 更新する state の値
-   */
   async updateContents(additionalState?: Partial<State>) {
     const projectName = this.props.projectName
     const syncSchemaSetting = await api.findSchemaSyncDfprop(projectName)
