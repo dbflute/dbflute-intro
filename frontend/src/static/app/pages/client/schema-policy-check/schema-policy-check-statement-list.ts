@@ -7,6 +7,12 @@ import { api } from '../../../api/api'
  */
 type StatementMapType = 'tableMap' | 'columnMap'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** 現在対象としているDBFluteクライアントのプロジェクト名 */
   projectName: string
@@ -39,6 +45,12 @@ interface State {
    */
   sortable?: Sortable
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheckStatementList extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -75,6 +87,12 @@ interface SchemaPolicyCheckStatementList extends IntroRiotComponent<Props, State
    */
   extractComment(statement: string): string
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 /** ステートメント本文とコメントのセパレータ。 */
 const COMMENT_SEPARATOR = '=>'

@@ -21,6 +21,12 @@ export type ExpectedField = {
  */
 export type ExpectedCondition = 'and' | 'or'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** 対象とするマップ種別 (tableMap / columnMap) */
   formType: StatementMapType
@@ -42,6 +48,12 @@ interface State {
   /** sample領域を開いているかどうか */
   showSample: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheckStatementFormExpected extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -70,6 +82,12 @@ interface SchemaPolicyCheckStatementFormExpected extends IntroRiotComponent<Prop
   /** 結合演算子の表示が必要か返す。複数行のとき必要。 */
   needsCondition(): boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 /** ラジオボタンの ref 名。 */
 const REF_AND = 'isAnd'

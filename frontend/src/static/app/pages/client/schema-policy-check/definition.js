@@ -1,3 +1,13 @@
+// done jflute 定数名expectedSubjectItems が ifの主語(Subject)と少々紛らわしいので... (2026/11/17)
+// expectedCandidateItems (Expectedの候補項目) とかぼかした方が無難かも。(nonIsも含まれているわけだし)
+// 本来ifのSubjectとthen(Expected)のSubjectって対照的なんだけど、UI的にはifの主語の方を強くSubjectとして打ち出しているというのもあり。
+// あーいやでも、tsの方見ると onChangeSubjectVerb() とかもう (Expectedの) Subject って前面に押し出してるから、
+// これはこのままの方がいいか。っていうコメントを残すことでおしまいにする。
+/**
+ * Expected (thenのtheme) の主語の候補項目。(isなし表現も含む)
+ * 現時点(2026/11/17)ではlabelとvalueは一致するが、内部制御変更の可能性のために区別している。
+ * typeは "isあり表現" と "isなし表現" の区別。
+ */
 export const expectedSubjectItems = [
   {
     label: '',

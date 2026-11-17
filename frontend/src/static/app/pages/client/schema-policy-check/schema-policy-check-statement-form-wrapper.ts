@@ -3,6 +3,12 @@ import SchemaPolicyCheckStatementForm from './schema-policy-check-statement-form
 
 type StatementMapType = 'tableMap' | 'columnMap'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** 現在対象としているDBFluteクライアントのプロジェクト名 */
   projectName: string
@@ -17,6 +23,12 @@ interface State {
   showForm: boolean
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface SchemaPolicyCheckStatementFormWrapper extends IntroRiotComponent<Props, State> {
   // ===================================================================================
   //                                                                       Event Handler
@@ -26,6 +38,12 @@ interface SchemaPolicyCheckStatementFormWrapper extends IntroRiotComponent<Props
   /** 子フォームから登録成功通知を受けた時の処理。フォームを閉じてトーストを表示し親へ通知。 */
   onRegisterSuccess(): Promise<void>
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 export default withIntroTypes<SchemaPolicyCheckStatementFormWrapper>({
   components: {

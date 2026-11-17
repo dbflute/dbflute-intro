@@ -11,6 +11,12 @@ type ExpectedSubjectItem = {
   type: 'hasIs' | 'nonIs'
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** Expected fieldを一意に特定するキー */
   id: string
@@ -30,6 +36,12 @@ interface State {
   /** 現在選択中のSubjectVerb (complement入力の活性判定に利用) */
   currentSubjectVerb: string | null
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -78,6 +90,12 @@ interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent
    */
   isHasIs(subjectVerb: string | null): boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 /** SubjectVerbドロップダウンの選択肢 (definition.jsより) */
 const SUBJECT_ITEMS = expectedSubjectItems as ExpectedSubjectItem[]

@@ -16,6 +16,12 @@ type SubjectDropdownItem = {
   default?: boolean
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** 現在対象としているDBFluteクライアントのプロジェクト名 */
   projectName: string
@@ -47,6 +53,12 @@ interface State {
   /** マウント完了フラグ (Previewの初期表示判定に利用) */
   mounted: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheckStatementForm extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -90,6 +102,12 @@ interface SchemaPolicyCheckStatementForm extends IntroRiotComponent<Props, State
   /** Previewの文字列を組み立てる。 */
   buildPreview(): string
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 const DEFAULT_SUBJECT_ITEM: SubjectDropdownItem = { label: 'Select subject', value: null, default: true }
 
@@ -202,7 +220,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementForm>({
 
   onChangeExpectedField(id, subjectVerb, complement) {
     const expectedFields = this.state.expectedFields.map((field) =>
-      field.id === id ? { ...field, subjectVerb, complement: complement ?? '' } : field
+      field.id === id ? { ...field, subjectVerb, complement: complement ?? '' } : field,
     )
     this.update({ expectedFields })
   },
