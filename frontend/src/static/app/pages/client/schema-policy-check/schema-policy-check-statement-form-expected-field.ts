@@ -1,5 +1,5 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
-import { expectedSubjectItems } from './definition.js'
+import { expectedSubjectVerbItems } from './definitions-spolicy.js'
 
 /**
  * Expected項目のSubjectVerb (左ドロップダウン) の選択肢。
@@ -79,7 +79,7 @@ interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent
   /**
    * SubjectVerbドロップダウンの選択肢を返す。
    */
-  subjectItems(): ExpectedSubjectItem[]
+  subjectVerbItems(): ExpectedSubjectItem[]
 
   // ===================================================================================
   //                                                                             Private
@@ -97,8 +97,8 @@ interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent
 // ^                                                                                     v
 // < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
-/** SubjectVerbドロップダウンの選択肢 (definition.jsより) */
-const SUBJECT_ITEMS = expectedSubjectItems as ExpectedSubjectItem[]
+/** SubjectVerbドロップダウンの選択肢 */
+const SUBJECT_VERB_ITEMS = expectedSubjectVerbItems as ExpectedSubjectItem[]
 
 export default withIntroTypes<SchemaPolicyCheckStatementFormExpectedField>({
   state: {
@@ -145,15 +145,15 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpectedField>({
     return this.isHasIs(this.state.currentSubjectVerb)
   },
 
-  subjectItems() {
-    return SUBJECT_ITEMS
+  subjectVerbItems() {
+    return SUBJECT_VERB_ITEMS
   },
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
   isHasIs(subjectVerb) {
-    const item = SUBJECT_ITEMS.find((it) => it.value === subjectVerb)
+    const item = SUBJECT_VERB_ITEMS.find((it) => it.value === subjectVerb)
     return !!item && item.type === 'hasIs'
   },
 })
