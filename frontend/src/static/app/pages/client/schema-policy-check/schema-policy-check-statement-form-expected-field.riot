@@ -23,7 +23,7 @@
           ref="complement"
           name="expected"
           onchange="{ onChangeComplement }"
-          disabled="{ !enableValueInput() }"
+          disabled="{ !determineComplementInputEnabled() }"
         >
         <i if="{ props.isDeletable() }" class="delete link icon" onclick="{ onclickDelete }"></i>
       </div>

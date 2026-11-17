@@ -8,11 +8,11 @@
    -->
 
   <!-- フォームを開閉するボタン -->
-  <a if="{ !state.showForm }" onclick="{ toggleForm }">Add Statement</a>
-  <a if="{ state.showForm }" onclick="{ toggleForm }">Hide Form</a>
+  <a if="{ !state.showsForm }" onclick="{ toggleForm }">Add Statement</a>
+  <a if="{ state.showsForm }" onclick="{ toggleForm }">Hide Form</a>
 
   <!-- Statement追加フォーム本体 -->
-  <div if="{ state.showForm }" class="ui divided items segment">
+  <div if="{ state.showsForm }" class="ui divided items segment">
     <schema-policy-check-statement-form
       project-name="{ props.projectName }"
       map-type="{ props.formType }"

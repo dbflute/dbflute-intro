@@ -46,7 +46,7 @@ interface Props {
 
 interface State {
   /** sample領域を開いているかどうか */
-  showSample: boolean
+  showsSample: boolean
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -100,7 +100,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpected>({
   },
 
   state: {
-    showSample: false,
+    showsSample: false,
   },
 
   // ===================================================================================
@@ -119,7 +119,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpected>({
   //                                                                       Event Handler
   //                                                                       =============
   toggleSample() {
-    this.update({ showSample: !this.state.showSample })
+    this.update({ showsSample: !this.state.showsSample })
   },
 
   onclickAddField() {

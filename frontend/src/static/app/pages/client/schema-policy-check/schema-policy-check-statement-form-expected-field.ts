@@ -74,7 +74,7 @@ interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent
   /**
    * complement入力フィールドを活性化するかを返す。SubjectVerbがhasIs型のときに活性。
    */
-  enableValueInput(): boolean
+  determineComplementInputEnabled(): boolean
 
   /**
    * SubjectVerbドロップダウンの選択肢を返す。
@@ -141,7 +141,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpectedField>({
   // ===================================================================================
   //                                                                              Helper
   //                                                                              ======
-  enableValueInput() {
+  determineComplementInputEnabled() {
     return this.isHasIs(this.state.currentSubjectVerb)
   },
 

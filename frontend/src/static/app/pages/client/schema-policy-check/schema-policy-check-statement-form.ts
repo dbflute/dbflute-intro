@@ -5,6 +5,7 @@ import SchemaPolicyCheckStatementFormExpected from './schema-policy-check-statem
 import { ExpectedCondition, ExpectedField } from './schema-policy-check-statement-form-expected'
 import { DropdownItem } from '../../../components/dropdown/dropdown'
 
+/** statementの定義できる map の種別 (例えば、wholeMap は statement 定義できない) */
 type StatementMapType = 'tableMap' | 'columnMap'
 
 /**
@@ -47,9 +48,9 @@ interface State {
   /** Supplementary Comment テキスト入力の値 */
   comment: string
   /** Subject用ヘルプ領域を開いているかどうか */
-  showSubjectHelp: boolean
+  showsSubjectHelp: boolean
   /** Condition用ヘルプ領域を開いているかどうか */
-  showConditionHelp: boolean
+  showsConditionHelp: boolean
   /** マウント完了フラグ (Previewの初期表示判定に利用) */
   mounted: boolean
 }
@@ -111,6 +112,9 @@ interface SchemaPolicyCheckStatementForm extends IntroRiotComponent<Props, State
 
 const DEFAULT_SUBJECT_ITEM: SubjectDropdownItem = { label: 'Select subject', value: null, default: true }
 
+// #thinking jflute withIntroTypes内で使う内部関数を前に定義するか？後ろに定義するか？の判断は？ (2026/11/17)
+// 例えばここのケース、文法的には後ろに定義するやり方に変更することも可能なのか？(可能であればコードデザインの話でいいのかな？)
+
 /**
  * 初期Expectedフィールドを生成する。
  */
@@ -126,7 +130,14 @@ const buildEmptyExpectedField = (): ExpectedField => ({
  */
 const buildResetState = (): Pick<
   State,
-  'subject' | 'conditions' | 'conditionMode' | 'expectedFields' | 'expectedCondition' | 'comment' | 'showSubjectHelp' | 'showConditionHelp'
+  | 'subject'
+  | 'conditions'
+  | 'conditionMode'
+  | 'expectedFields'
+  | 'expectedCondition'
+  | 'comment'
+  | 'showsSubjectHelp'
+  | 'showsConditionHelp'
 > => ({
   subject: '',
   conditions: [''],
@@ -134,8 +145,8 @@ const buildResetState = (): Pick<
   expectedFields: [buildEmptyExpectedField()],
   expectedCondition: 'and',
   comment: '',
-  showSubjectHelp: false,
-  showConditionHelp: false,
+  showsSubjectHelp: false,
+  showsConditionHelp: false,
 })
 
 /**
@@ -239,11 +250,11 @@ export default withIntroTypes<SchemaPolicyCheckStatementForm>({
   },
 
   toggleSubjectHelp() {
-    this.update({ showSubjectHelp: !this.state.showSubjectHelp })
+    this.update({ showsSubjectHelp: !this.state.showsSubjectHelp })
   },
 
   toggleConditionHelp() {
-    this.update({ showConditionHelp: !this.state.showConditionHelp })
+    this.update({ showsConditionHelp: !this.state.showsConditionHelp })
   },
 
   async onclickRegister() {

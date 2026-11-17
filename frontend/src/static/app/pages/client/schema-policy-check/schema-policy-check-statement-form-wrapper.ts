@@ -20,7 +20,7 @@ interface Props {
 
 interface State {
   /** フォームを表示中かどうか */
-  showForm: boolean
+  showsForm: boolean
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -51,15 +51,15 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormWrapper>({
   },
 
   state: {
-    showForm: false,
+    showsForm: false,
   },
 
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
   toggleForm() {
-    const next = !this.state.showForm
-    this.update({ showForm: next })
+    const next = !this.state.showsForm
+    this.update({ showsForm: next })
     if (next) {
       // 開いた時はフォーム位置までスクロールする。
       // this.$() は DOM 要素を返すので、子コンポーネント内の <form> 要素を直接取得して
@@ -73,7 +73,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormWrapper>({
   },
 
   async onRegisterSuccess() {
-    this.update({ showForm: false })
+    this.update({ showsForm: false })
     this.successToast({
       title: 'Create statement completed',
       message: 'statement was successfully created!!',
