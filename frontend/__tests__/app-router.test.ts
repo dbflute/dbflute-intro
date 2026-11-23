@@ -35,9 +35,9 @@ describe('AppRouter', () => {
     expect(query('content[is=client]')).toBeNull()
   })
 
-  it('サイドメニューと本文が横並び用の要素 (.route-content) 直下に配置されること', () => {
-    expect(query('.route-content > side-menu[is=common-menu]')).not.toBeNull()
-    expect(query('.route-content > content[is=main]')).not.toBeNull()
+  it('サイドメニューと本文が横並び用の要素 (.fixed-user-area) 直下に配置されること', () => {
+    expect(document.querySelector('.fixed-user-area > side-menu[is=common-menu]')).not.toBeNull()
+    expect(document.querySelector('.fixed-user-area > content[is=main]')).not.toBeNull()
   })
 
   it('ウェルカム画面に遷移できること', async () => {

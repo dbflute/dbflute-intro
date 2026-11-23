@@ -62,7 +62,7 @@ span.frm {
 =======================================================*/
 
 /* means side-menu and content, to move menu to left side */
-.fixed-user-area .route-content {
+.fixed-user-area {
   display: flex;
   flex-direction: row;
 }
