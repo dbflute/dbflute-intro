@@ -41,7 +41,7 @@ describe('Documentsの最新実行結果', () => {
     expect(update).toHaveBeenCalledWith(
       expect.objectContaining({
         latestResult,
-      }),
+      })
     )
   })
 

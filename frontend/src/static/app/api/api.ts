@@ -55,7 +55,7 @@ export const extractMessages = (data: any, fallbackMessage: string): string[] =>
     const values = Object.values(data.messages)
     return values.reduce<string[]>((messageList, value) => {
       return messageList.concat(
-        Array.isArray(value) ? value.map(String) : [typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value)],
+        Array.isArray(value) ? value.map(String) : [typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value)]
       )
     }, [])
   }

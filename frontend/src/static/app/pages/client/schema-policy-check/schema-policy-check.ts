@@ -169,7 +169,7 @@ export default withIntroTypes<SchemaPolicyCheck>({
     const updatedMap = {
       ...schemaPolicy[mapType],
       themeList: schemaPolicy[mapType].themeList.map((theme) =>
-        theme.typeCode === typeCode ? { ...theme, isActive: toggledIsActive } : theme,
+        theme.typeCode === typeCode ? { ...theme, isActive: toggledIsActive } : theme
       ),
     }
     this.update({
