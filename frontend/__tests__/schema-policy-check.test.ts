@@ -265,7 +265,7 @@ describe('SchemaPolicyCheck 画面', () => {
           wholeMap: { themeList: [{ typeCode: 'SAME_NAME', isActive: false }] },
           tableMap: { themeList: [] },
           columnMap: { themeList: [] },
-        }),
+        })
       )
 
       unmount()
@@ -295,7 +295,7 @@ describe('SchemaPolicyCheck 画面', () => {
         expect.objectContaining({
           mapType: 'tableMap',
           statement: 'if tableName is suffix:_HISTORY then bad => ヒストリー表のサフィックスはNG',
-        }),
+        })
       )
 
       unmount()
@@ -365,7 +365,7 @@ describe('SchemaPolicyCheck 画面', () => {
       await initialUpdate
 
       const executeButton = Array.from(container.querySelectorAll('button')).find((b) =>
-        (b.textContent ?? '').includes('Execute SchemaPolicyCheck'),
+        (b.textContent ?? '').includes('Execute SchemaPolicyCheck')
       )
       expect(executeButton).toBeDefined()
       const taskStarted = waitForNextUpdate()

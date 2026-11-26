@@ -46,25 +46,25 @@ export type IntroRiotComponentWithoutInternalsAndInitialState<Component extends 
 
 export function withIntroTypes<
   Component extends IntroRiotComponent,
-  ComponentFactory = RiotComponentFactoryFunction<AutobindObjectMethods<IntroRiotComponentWithoutInternals<Component>, Component>>,
+  ComponentFactory = RiotComponentFactoryFunction<AutobindObjectMethods<IntroRiotComponentWithoutInternals<Component>, Component>>
 >(fn: ComponentFactory): () => Component
 export function withIntroTypes<
   Component extends IntroRiotComponent,
   ComponentFactory = RiotComponentFactoryFunction<
     AutobindObjectMethods<IntroRiotComponentWithoutInternalsAndInitialState<Component>, Component>
-  >,
+  >
 >(fn: ComponentFactory): () => Component
 export function withIntroTypes<
   Component extends IntroRiotComponent,
-  ComponentObjectWithInitialState = IntroRiotComponentWithoutInternals<Component>,
+  ComponentObjectWithInitialState = IntroRiotComponentWithoutInternals<Component>
 >(component: AutobindObjectMethods<ComponentObjectWithInitialState, Component>): Component
 export function withIntroTypes<
   Component extends IntroRiotComponent,
-  ComponentObjectWithoutInitialState = IntroRiotComponentWithoutInternalsAndInitialState<Component>,
+  ComponentObjectWithoutInitialState = IntroRiotComponentWithoutInternalsAndInitialState<Component>
 >(component: AutobindObjectMethods<ComponentObjectWithoutInitialState, Component>): Component
 export function withIntroTypes<
   Component extends IntroRiotComponent,
-  ComponentObjectWithoutInitialState = IntroRiotComponentWithoutInternalsAndInitialState<Component>,
+  ComponentObjectWithoutInitialState = IntroRiotComponentWithoutInternalsAndInitialState<Component>
 >(component: AutobindObjectMethods<ComponentObjectWithoutInitialState, Component>): Component {
   return component as any
 }

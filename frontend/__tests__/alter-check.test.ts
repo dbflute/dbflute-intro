@@ -96,7 +96,7 @@ describe('AlterCheckの実行結果表示', () => {
   ])('%sの場合は問題箇所に応じた案内を表示する', async (ngMark, title, message) => {
     setupAlterCheck(
       { fileName: 'dbflute_intro_alterCheck_failure_20260901.log', content: 'failure log' },
-      { ngMark, content: 'first error\nsecond error' },
+      { ngMark, content: 'first error\nsecond error' }
     )
     const mounted = mountAlterCheck()
     await mounted.updated
