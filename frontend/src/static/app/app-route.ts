@@ -45,7 +45,7 @@ export function createRouting(definition: RoutesDefinition): Routes {
         subscribe: (callback: any) => ensureRouteStream(route.path).on.value(callback),
       }
       return newRoutes
-    }, {} as Routes),
+    }, {} as Routes)
   )
 }
 
