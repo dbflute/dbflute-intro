@@ -73,7 +73,7 @@ const routeStreams = new Map()
 function ensureRouteStream(path: string): any {
   // #thinking jflute Riot側でJSのみのコードで型が指定できない(!?)ので苦肉のany (2024/01/07)
   if (!routeStreams.get(path)) {
-    routeStreams.set(path, riotRoute(path, {}))
+    routeStreams.set(path, riotRoute(path))
   }
   return routeStreams.get(path)
 }

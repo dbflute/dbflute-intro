@@ -11,28 +11,20 @@
   <router base={ state.base } initial-route={ state.initialRoute }>
     <div class="fixed-user-area">
       <route path={ state.routes.main.path }>
-        <div class="route-content">
-          <side-menu is="common-menu"></side-menu>
-          <content is="main"></content>
-        </div>
+        <side-menu is="common-menu"></side-menu>
+        <content is="main"></content>
       </route>
       <route path={ state.routes.client.path }>
-        <div class="route-content">
-          <side-menu is="client-menu" route={ route }></side-menu>
-          <content is="client"></content>
-        </div>
+        <side-menu is="client-menu" route={ route }></side-menu>
+        <content is="client"></content>
       </route>
       <route path={ state.routes.welcome.path }>
-        <div class="route-content">
-          <side-menu is="common-menu"></side-menu>
-          <content is="welcome"></content>
-        </div>
+        <side-menu is="common-menu"></side-menu>
+        <content is="welcome"></content>
       </route>
       <route path={ state.routes.create.path }>
-        <div class="route-content">
-          <side-menu is="common-menu"></side-menu>
-          <content is="create"></content>
-        </div>
+        <side-menu is="common-menu"></side-menu>
+        <content is="create"></content>
       </route>
     </div>
   </router>
