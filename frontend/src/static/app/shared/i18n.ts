@@ -11,10 +11,10 @@ i18next.init({
   debug: false,
   resources: {
     en: {
-      translation: i18n_en
+      translation: i18n_en,
     },
     ja: {
-      translation: i18n_ja
+      translation: i18n_ja,
     },
-  }
+  },
 })

@@ -155,7 +155,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
    */
   prepareCheckedZip(
     checkedZip: PlaysqlMigrationAlterResult_CheckedZipPart | undefined,
-    unreleasedDir: UnreleasedCheckedAlterDir,
+    unreleasedDir: UnreleasedCheckedAlterDir
   ): CheckedAlterToZip
 
   /**
@@ -167,7 +167,7 @@ interface AlterCheck extends IntroRiotComponent<Props, State> {
    */
   prepareLatestFailureResult(
     latestTaskResult: LatestResultState | undefined,
-    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
+    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined
   ): AlterLatestResultState | undefined
 }
 
@@ -297,7 +297,7 @@ export default withIntroTypes<AlterCheck>({
 
   prepareCheckedZip(
     checkedZipPart: PlaysqlMigrationAlterResult_CheckedZipPart | undefined,
-    unreleasedDir: UnreleasedCheckedAlterDir,
+    unreleasedDir: UnreleasedCheckedAlterDir
   ): CheckedAlterToZip {
     if (!checkedZipPart) {
       return {
@@ -339,7 +339,7 @@ export default withIntroTypes<AlterCheck>({
    */
   prepareLatestFailureResult(
     latestTaskResult: LatestResultState | undefined,
-    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined,
+    ngMarkFile: PlaysqlMigrationAlterResult_NgMarkFilePart | undefined
   ): AlterLatestResultState | undefined {
     if (!latestTaskResult || latestTaskResult.success) {
       return
