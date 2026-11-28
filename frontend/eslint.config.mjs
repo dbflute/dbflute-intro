@@ -41,6 +41,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/*.riot', '**/*.js'],
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'off',
+    },
+  },
+  {
     files: ['src/static/app/api/intro/**/*.ts'],
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',

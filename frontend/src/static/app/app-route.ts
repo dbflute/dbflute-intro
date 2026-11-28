@@ -42,7 +42,7 @@ export function createRouting(definition: RoutesDefinition): Routes {
         path: route.path,
         children: route.children,
         open: route.open,
-        subscribe: (callback: any) => ensureRouteStream(route.path).on.value(callback),
+        subscribe: (callback: (route: SubscribedRoute) => void): void => ensureRouteStream(route.path).on.value(callback),
       }
       return newRoutes
     }, {} as Routes)

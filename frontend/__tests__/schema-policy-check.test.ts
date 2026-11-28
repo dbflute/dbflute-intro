@@ -11,9 +11,9 @@ riot.install(introPlugin)
 // テスト用に即時 resolve する関数で上書きする (suToast も最低限のスタブを入れておく)
 riot.install((component) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ;(component as any).suConfirm = () => Promise.resolve()
+  ;(component as any).suConfirm = (): Promise<void> => Promise.resolve()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ;(component as any).suToast = () => undefined
+  ;(component as any).suToast = (): undefined => undefined
   return component
 })
 
@@ -62,10 +62,10 @@ function mountSchemaPolicyCheck(): MountedSchemaPolicyCheck {
   document.body.appendChild(container)
   const mount = riot.component(SchemaPolicyCheck)
   const component = mount(container, { projectName: TEST_PROJECT })
-  const waitForNextUpdate = () =>
+  const waitForNextUpdate = (): Promise<void> =>
     new Promise<void>((resolve) => {
       const onUpdated = component.onUpdated
-      component.onUpdated = (...args) => {
+      component.onUpdated = (...args): void => {
         onUpdated?.(...args)
         component.onUpdated = onUpdated
         resolve()
@@ -75,7 +75,7 @@ function mountSchemaPolicyCheck(): MountedSchemaPolicyCheck {
     container,
     initialUpdate: waitForNextUpdate(),
     waitForNextUpdate,
-    unmount: () => {
+    unmount: (): void => {
       component.unmount()
       container.remove()
     },

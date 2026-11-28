@@ -11,30 +11,30 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios'
  * ここでは汎用的なリクエスト関数を装備し、それぞれの業務ごとのリクエスト関数がこれらを呼ぶ。
  */
 class ApiClient {
-  get(url: string, config?: AxiosRequestConfig) {
+  get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return axios
-      .get(url, config)
+      .get<T>(url, config)
       .then((res) => res.data)
       .catch(handleError)
   }
 
-  post(url: string, data?: any, config?: AxiosRequestConfig) {
+  post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     return axios
-      .post(url, data, config)
+      .post<T>(url, data, config)
       .then((res) => res.data)
       .catch(handleError)
   }
 
-  put(url: string, data?: any, config?: AxiosRequestConfig) {
+  put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     return axios
-      .put(url, data, config)
+      .put<T>(url, data, config)
       .then((res) => res.data)
       .catch(handleError)
   }
 
-  del(url: string, config?: AxiosRequestConfig) {
+  del<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return axios
-      .delete(url, config)
+      .delete<T>(url, config)
       .then((res) => res.data)
       .catch(handleError)
   }
@@ -69,7 +69,7 @@ export const extractMessages = (data: any, fallbackMessage: string): string[] =>
  * API ClientでAPIエラーを検知した時のコールバック関数。
  * @param error - Axios のエラーオブジェクト。
  */
-const handleError = (error: AxiosError) => {
+const handleError = (error: AxiosError): Promise<never> => {
   let header: string
   let messages = undefined
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
@@ -344,7 +344,7 @@ class Api {
    * @param statementMoveBody - one statement のどこからどこへ情報 (自動生成クラス)
    * @returns 業務的なレスポンスデータは特になし
    */
-  moveSchemapolicyStatement(projectName: string, statementMoveBody: DfpropSchemapolicyStatementMoveBody) {
+  moveSchemapolicyStatement(projectName: string, statementMoveBody: DfpropSchemapolicyStatementMoveBody): Promise<void> {
     return apiClient.post(`api/dfprop/schemapolicy/statement/move/${projectName}`, statementMoveBody)
   }
 
@@ -498,7 +498,7 @@ class Api {
    * @returns 該当のログファイル情報 (自動生成クラス)
    */
   async findLatestTaskLog(projectName: string, task: string): Promise<LogLatestResult | null> {
-    return apiClient.get(`api/log/latest/${projectName}/${task}`).then((body) => {
+    return apiClient.get<LogLatestResult>(`api/log/latest/${projectName}/${task}`).then((body) => {
       // TODO cabos レスポンスの形式が変わる実装になっているので、変わらないように修正する (2023-01-07 at Roppongi)
       // https://github.com/dbflute/dbflute-intro/issues/493
       if (Object.keys(body).length === 0) return null

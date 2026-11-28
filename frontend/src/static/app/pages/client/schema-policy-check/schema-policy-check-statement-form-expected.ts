@@ -137,7 +137,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpected>({
 })
 
 // 結合演算子のラジオボタン状態を props.condition に同期する
-function syncConditionRadio(component: SchemaPolicyCheckStatementFormExpected) {
+function syncConditionRadio(component: SchemaPolicyCheckStatementFormExpected): void {
   const isAnd = component.$(`[ref=${REF_AND}]`) as HTMLInputElement | null
   const isOr = component.$(`[ref=${REF_OR}]`) as HTMLInputElement | null
   if (!isAnd || !isOr) {

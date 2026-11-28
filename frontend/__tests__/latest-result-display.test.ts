@@ -18,7 +18,7 @@ function mountLatestResult(props: { success: boolean; resultTitle: string; conte
   })
   return {
     container,
-    unmount: () => {
+    unmount: (): void => {
       mounted.unmount()
       container.remove()
     },
