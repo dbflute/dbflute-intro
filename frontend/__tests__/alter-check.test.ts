@@ -23,7 +23,7 @@ function mountAlterCheck(): MountedAlterCheck {
   const mounted = riot.component(AlterCheck)(container, { projectName: TEST_PROJECT })
   const updated = new Promise<void>((resolve) => {
     const onUpdated = mounted.onUpdated
-    mounted.onUpdated = (...args) => {
+    mounted.onUpdated = (...args): void => {
       onUpdated?.(...args)
       resolve()
     }
@@ -31,14 +31,14 @@ function mountAlterCheck(): MountedAlterCheck {
   return {
     container,
     updated,
-    unmount: () => {
+    unmount: (): void => {
       mounted.unmount()
       container.remove()
     },
   }
 }
 
-function setupAlterCheck(latestLog: LatestLog, ngMarkFile?: PlaysqlMigrationAlterResult_NgMarkFilePart) {
+function setupAlterCheck(latestLog: LatestLog, ngMarkFile?: PlaysqlMigrationAlterResult_NgMarkFilePart): void {
   jest.spyOn(api, 'findAlterInfra').mockResolvedValue({
     editingFiles: [{ fileName: 'alter-schema.sql', content: 'alter table member add foo int;' }],
     ngMarkFile,

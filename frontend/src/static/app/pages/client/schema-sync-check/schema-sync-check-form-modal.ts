@@ -129,7 +129,6 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
    */
   onChangeUrl(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
-    console.log('onChangeUrl called:', value)
     this.update({
       syncSchemaSetting: { ...this.state.syncSchemaSetting, url: value },
     })
@@ -141,7 +140,6 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
    */
   onChangeSchema(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
-    console.log('onChangeSchema called:', value)
     this.update({
       syncSchemaSetting: { ...this.state.syncSchemaSetting, schema: value },
     })
@@ -153,7 +151,6 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
    */
   onChangeUser(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
-    console.log('onChangeUser called:', value)
     this.update({
       syncSchemaSetting: { ...this.state.syncSchemaSetting, user: value },
     })
@@ -165,7 +162,6 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
    */
   onChangePassword(e: InputEvent) {
     const value = (e.target as HTMLInputElement).value
-    console.log('onChangePassword called:', value)
     this.update({
       syncSchemaSetting: { ...this.state.syncSchemaSetting, password: value },
     })
@@ -177,7 +173,6 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
    */
   onChangeIsSuppressCraftDiff(e: InputEvent) {
     const checked = (e.target as HTMLInputElement).checked
-    console.log('onChangeIsSuppressCraftDiff called:', checked)
     this.update({
       syncSchemaSetting: { ...this.state.syncSchemaSetting, isSuppressCraftDiff: checked },
     })
@@ -195,7 +190,7 @@ export default withIntroTypes<SchemaSyncCheckFormModal>({
       .then(() => {
         this.onHide()
       })
-      .catch((_) => {
+      .catch(() => {
         // API Client で modal 出す以上のハンドリングはしない
       })
   },

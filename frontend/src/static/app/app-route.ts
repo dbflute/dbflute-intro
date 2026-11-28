@@ -42,7 +42,9 @@ export function createRouting(definition: RoutesDefinition): Routes {
         path: route.path,
         children: route.children,
         open: route.open,
-        subscribe: (callback: any) => ensureRouteStream(route.path).on.value(callback),
+        subscribe: (callback: (route: SubscribedRoute) => void): void => {
+          ensureRouteStream(route.path).on.value(callback)
+        },
       }
       return newRoutes
     }, {} as Routes)
@@ -64,16 +66,17 @@ export function endRouting(): void {
  * 各routeのstreamを格納しておくMap
  * - キャッシュとして利用するのでpathをkeyにstreamを保持する
  */
-const routeStreams = new Map()
+const routeStreams = new Map<string, ReturnType<typeof riotRoute>>()
 
 /**
  * 指定されたパスのstreamを取得する
  * - なければ作成し、キャッシュする
  */
-function ensureRouteStream(path: string): any {
-  // #thinking jflute Riot側でJSのみのコードで型が指定できない(!?)ので苦肉のany (2024/01/07)
-  if (!routeStreams.get(path)) {
-    routeStreams.set(path, riotRoute(path))
+function ensureRouteStream(path: string): ReturnType<typeof riotRoute> {
+  let stream = routeStreams.get(path)
+  if (!stream) {
+    stream = riotRoute(path)
+    routeStreams.set(path, stream)
   }
-  return routeStreams.get(path)
+  return stream
 }

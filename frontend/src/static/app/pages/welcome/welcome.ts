@@ -227,7 +227,7 @@ export default withIntroTypes<Welcome>({
       this.targetDatabaseItems = classifications.targetDatabaseItems
       this.targetLanguageItems = classifications.targetLanguageItems
       this.targetContainerItems = classifications.targetContainerItems
-    } catch (_) {
+    } catch {
       // ApiClientの例外ハンドリングで十分で何もなし。
       // ただ、onMounted()としては後続処理をできるだけやっておきたいので空catchしておく。
     }
@@ -235,7 +235,7 @@ export default withIntroTypes<Welcome>({
       // then().catch()方式だと、catch()で void | ... の union型になってしまって型エラーになるから普通try/catch
       const data = await api.findEngineLatestVersion()
       this.latestVersion = data.latestReleaseVersion
-    } catch (_) {
+    } catch {
       // 同じく、後続処理をできるだけやっておきたいので空catchしておく。
     }
     this.update()

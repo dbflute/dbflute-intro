@@ -1,5 +1,4 @@
 const webpack = require('webpack')
-const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
   entry: './src/static/app/index.ts',
@@ -70,10 +69,6 @@ module.exports = {
     new webpack.LoaderOptionsPlugin({ options: {} }),
     new webpack.ProvidePlugin({
       riot: 'riot',
-    }),
-    new ESLintPlugin({
-      fix: true,
-      emitWarning: true,
     }),
   ],
 }

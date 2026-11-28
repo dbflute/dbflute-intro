@@ -11,15 +11,15 @@ import { clientRoutes, getCurrentClientRoute } from '../src/static/app/pages/cli
 riot.install(introPlugin)
 
 // ルーティングの検証が目的なので、API は応答しない (ローディング状態のまま) にしておく
-const pending = () => new Promise(() => {})
+const pending = (): Promise<never> => new Promise(() => {})
 jest.spyOn(axios, 'get').mockImplementation(pending)
 jest.spyOn(axios, 'post').mockImplementation(pending)
 jest.spyOn(axios, 'put').mockImplementation(pending)
 jest.spyOn(axios, 'delete').mockImplementation(pending)
 
-const flush = () => new Promise((resolve) => setTimeout(resolve, 0))
+const flush = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0))
 
-const query = (selector: string) => document.querySelector(`.fixed-user-area ${selector}`)
+const query = (selector: string): Element | null => document.querySelector(`.fixed-user-area ${selector}`)
 
 describe('AppRouter', () => {
   beforeAll(async () => {
