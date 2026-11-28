@@ -70,7 +70,7 @@ export const extractMessages = (data: any, fallbackMessage: string): string[] =>
  * @param error - Axios のエラーオブジェクト。
  */
 const handleError = (error: AxiosError) => {
-  let header = undefined
+  let header: string
   let messages = undefined
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
   //let reload = false;
