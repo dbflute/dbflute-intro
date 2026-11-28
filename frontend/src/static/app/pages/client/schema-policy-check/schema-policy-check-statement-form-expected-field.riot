@@ -11,7 +11,7 @@
     <div class="six wide field">
       <su-dropdown
         ref="subjectVerb"
-        items="{ subjectItems() }"
+        items="{ subjectVerbItems() }"
         value="{ props.subjectVerb }"
         onchange="{ onChangeSubjectVerb }"
       ></su-dropdown>
@@ -23,7 +23,7 @@
           ref="complement"
           name="expected"
           onchange="{ onChangeComplement }"
-          disabled="{ !enableValueInput() }"
+          disabled="{ !determineComplementInputEnabled() }"
         >
         <i if="{ props.isDeletable() }" class="delete link icon" onclick="{ onclickDelete }"></i>
       </div>

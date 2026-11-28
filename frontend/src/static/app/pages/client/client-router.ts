@@ -50,19 +50,29 @@ export const clientRoutes = createRouting({
 })
 
 type ClientRouteParams = {
+  /** 現在対象としているDBFluteクライアントのプロジェクト名。 */
   projectName?: string
+
+  /** URLで指定されるメニュータイプ。 e.g. "execute", "settings", "files" */
   clientMenuType?: string
+
+  /** URLで指定されるメニュー名。 e.g. "documents", "schema-policy-check", and so on... */
   clientMenuName?: string
 }
 
 type ClientRoute = {
+  /** それぞれのクライアント画面の相対URL。 e.g. client/trohamadb/execute/documents */
   path: string
+
+  /** URLのパスパラメーター部分をバラけて持たせたオブジェクト。単品で使いたくなった時のために。 */
   params: ClientRouteParams
 }
 
 export function getCurrentClientRoute(): ClientRoute {
   const currentRoute = getCurrentRoute()
   const paths = currentRoute.split('/')
+
+  // #thinking jflute "paths.length === 4" じゃないとき {} だけど、これってレアでもあり得ることかな？ (2026/10/27)
   const params =
     paths.length === 4
       ? {

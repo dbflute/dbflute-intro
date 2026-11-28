@@ -1,20 +1,20 @@
 <document-form-modal>
   <!-- documentMap.dfprop を編集するための Modal -->
-  <su-modal show="{ state.show }" modal="{ modal() }" onhide="{ onHide }" onsave="{ saveSettings }" class="large">
+  <su-modal show="{ state.showsModal }" modal="{ modal() }" onhide="{ onHide }" onsave="{ saveSettings }" class="large">
     <form class="ui form">
       <div class="field">
         <label>Alias delimiter in DB comment <span class="frm">(aliasDelimiterInDbComment)</span></label>
         <input
           type="text"
           placeholder="e.g. :"
-          value="{ state.documentSetting.aliasDelimiterInDbComment }"
+          value="{ state.documentSettings.aliasDelimiterInDbComment }"
           onchange="{ onChangeAliasDelimiterInDbComment }">
       </div>
       <div class="field">
         <div class="ui checkbox">
           <input
             type="checkbox"
-            checked="{ state.documentSetting.upperCaseBasic }"
+            checked="{ state.documentSettings.upperCaseBasic }"
             onchange="{ onChangeUpperCaseBasic }">
           <label>Upper case basis <span class="frm">(isTableDispNameUpperCase, isTableSqlNameUpperCase, isColumnSqlNameUpperCase)</span></label>
         </div>
@@ -23,7 +23,7 @@
         <div class="ui checkbox">
           <input
             type="checkbox"
-            checked="{ state.documentSetting.dbCommentOnAliasBasis }"
+            checked="{ state.documentSettings.dbCommentOnAliasBasis }"
             onchange="{ onChangeDbCommentOnAliasBasis }">
           <label>DB comment on alias basis <span class="frm">(isDbCommentOnAliasBasis)</span></label>
         </div>
@@ -32,7 +32,7 @@
         <div class="ui checkbox">
           <input
             type="checkbox"
-            checked="{ state.documentSetting.checkColumnDefOrderDiff }"
+            checked="{ state.documentSettings.checkColumnDefOrderDiff }"
             onchange="{ onChangeCheckColumnDefOrderDiff }">
           <label>Check column definition order difference <span class="frm">(isCheckColumnDefOrderDiff)</span></label>
         </div>
@@ -41,7 +41,7 @@
         <div class="ui checkbox">
           <input
             type="checkbox"
-            checked="{ state.documentSetting.checkDbCommentDiff }"
+            checked="{ state.documentSettings.checkDbCommentDiff }"
             onchange="{ onChangeCheckDbCommentDiff }">
           <label>Check DB comment difference <span class="frm">(isCheckDbCommentDiff)</span></label>
         </div>
@@ -50,7 +50,7 @@
         <div class="ui checkbox">
           <input
             type="checkbox"
-            checked="{ state.documentSetting.checkProcedureDiff }"
+            checked="{ state.documentSettings.checkProcedureDiff }"
             onchange="{ onChangeCheckProcedureDiff }">
           <label>Check procedure difference <span class="frm">(isCheckProcedureDiff)</span></label>
         </div>

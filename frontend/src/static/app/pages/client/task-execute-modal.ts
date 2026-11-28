@@ -93,7 +93,7 @@ interface TaskExecuteModal extends IntroRiotComponent<Props, State> {
    * su-modal の show 相当。
    * @return モーダルを表示するかどうか？
    */
-  show(): boolean
+  showsModal(): boolean
 
   /**
    * su-modal の modal 相当。
@@ -128,7 +128,7 @@ export default withIntroTypes<TaskExecuteModal>({
   // ===================================================================================
   //                                                                       Event Handler
   //                                                                       =============
-  show(): boolean {
+  showsModal(): boolean {
     return this.state.status !== 'None'
   },
   modal(): SuModal | undefined {

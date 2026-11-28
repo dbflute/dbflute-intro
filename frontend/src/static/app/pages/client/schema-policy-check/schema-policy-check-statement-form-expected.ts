@@ -21,6 +21,12 @@ export type ExpectedField = {
  */
 export type ExpectedCondition = 'and' | 'or'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** 対象とするマップ種別 (tableMap / columnMap) */
   formType: StatementMapType
@@ -40,8 +46,14 @@ interface Props {
 
 interface State {
   /** sample領域を開いているかどうか */
-  showSample: boolean
+  showsSample: boolean
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheckStatementFormExpected extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -71,6 +83,12 @@ interface SchemaPolicyCheckStatementFormExpected extends IntroRiotComponent<Prop
   needsCondition(): boolean
 }
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 /** ラジオボタンの ref 名。 */
 const REF_AND = 'isAnd'
 const REF_OR = 'isOr'
@@ -82,7 +100,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpected>({
   },
 
   state: {
-    showSample: false,
+    showsSample: false,
   },
 
   // ===================================================================================
@@ -101,7 +119,7 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpected>({
   //                                                                       Event Handler
   //                                                                       =============
   toggleSample() {
-    this.update({ showSample: !this.state.showSample })
+    this.update({ showsSample: !this.state.showsSample })
   },
 
   onclickAddField() {

@@ -1,3 +1,6 @@
 # for decomment/hacomment random test
 /decomment
 /hacomment
+
+# for SchemaSyncCheck random test 
+project-sync-check.diffmap

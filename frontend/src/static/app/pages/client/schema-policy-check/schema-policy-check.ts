@@ -14,6 +14,12 @@ import { isTaskLogSuccessful } from '../../../api/task-log'
  */
 type MapType = 'wholeMap' | 'tableMap' | 'columnMap'
 
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
 interface Props {
   /** 現在対象としているDBFluteクライアントのプロジェクト名 e.g. maihamadb */
   projectName: string
@@ -35,6 +41,12 @@ interface State {
   /** タスク実行結果メッセージ (EmptyAllowed: 実行前) */
   executeResultMessage?: string
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheck extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -94,6 +106,12 @@ interface SchemaPolicyCheck extends IntroRiotComponent<Props, State> {
    */
   fetchLatestResult(projectName: string): Promise<LatestResultState | undefined>
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 export default withIntroTypes<SchemaPolicyCheck>({
   components: {

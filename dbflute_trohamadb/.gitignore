@@ -1,2 +1,5 @@
+# for DBFlute Doc task random test
 /output/doc/*.html
+
+# for DBFlute JDBC task random test
 /schema/*.xml

@@ -5,6 +5,8 @@ import { readFile } from '../../shared/io-utils'
 import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 import { DropdownItem } from '../../components/dropdown/dropdown'
 
+// #thinking jflute これ自体をdropdown.tsに定義したりして再利用できないかな？ (2026/10/20)
+// (現時点でwelcomeとcreateだけではあるけど、今後のことを考えると)
 /**
  * デフォルトで表示するドロップダウンの項目 (要は未選択)
  */
@@ -52,7 +54,7 @@ interface State {
   needsJdbcDriver: boolean
 
   /** O/Rマッパー関連設定の表示/非表示 */
-  oRMapperOptionsFlg: boolean
+  showsORMapperOptions: boolean
 }
 
 // > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
@@ -183,7 +185,7 @@ export default withIntroTypes<Welcome>({
   state: {
     jdbcDriver: undefined, // JDBCドライバーの設定が必要なので一部DBMSなのでデフォルト指定なし
     needsJdbcDriver: false, // とりあえずデフォルトはDBMS未選択想定でfalse
-    oRMapperOptionsFlg: false, // Introのコンセプト的にO/Rマッパーオプションはデフォルト非表示
+    showsORMapperOptions: false, // Introのコンセプト的にO/Rマッパーオプションはデフォルト非表示
   },
 
   // ===================================================================================
@@ -280,7 +282,7 @@ export default withIntroTypes<Welcome>({
 
   onclickOrmSetting() {
     this.update({
-      oRMapperOptionsFlg: !this.state.oRMapperOptionsFlg,
+      showsORMapperOptions: !this.state.showsORMapperOptions,
     })
   },
 

@@ -93,10 +93,19 @@
         MenuHome
       },
       state: {
+        /** 現在対象としているDBFluteクライアントのプロジェクト名。 */
         projectName: undefined,
+
+        /** URLで指定されるメニュータイプ。 e.g. "execute", "settings", "files" */
         clientMenuType: undefined,
+
+        /** URLで指定されるメニュー名。 e.g. "documents", "schema-policy-check", and so on... */
         clientMenuName: undefined,
       },
+
+      /**
+       * マウント直前の処理。
+       */
       onBeforeMount() {
         // マウント直前のURLに合わせて、適切なメニューを初期値として設定する（本当はpropsでroute.paramsを渡したいが、riot/routeの仕様上、空になってしまう模様）
         const currentRoute = getCurrentClientRoute()
@@ -112,8 +121,9 @@
           })
         })
       },
+
       /**
-       * 親から選択されている clientMenuType, clientMenuName を受け取り、メニューの行が、active かどうかを判断している
+       * 親から選択されている clientMenuType, clientMenuName を受け取り、メニューの行が、active かどうかを判断している。
        * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
        * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
        * @return {boolean} 現在選択されているメニューであれば true (NotNull)
@@ -121,14 +131,21 @@
       isActiveItem(menuType, menuName) {
         return menuType === this.state.clientMenuType && menuName === this.state.clientMenuName
       },
+
       /**
-       * URLを変更する
+       * URLを変更する。
        * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
        * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
        */
       goToMenuItem(menuType, menuName) {
         appRoutes.client.open(this.state.projectName, menuType, menuName)
       },
+
+      /**
+       * メニューリンクのclass属性を取得する。
+       * @param menuType {string} URLで指定されるメニュータイプ e.g. "execute", "settings", "files" (NotNull)
+       * @param menuName {string} URLで指定されるメニュー名 e.g. "documents", "schema-policy-check", and so on... (NotNull)
+       */
       getLinkClasses(menuType, menuName) {
         return this.classNames({ active: this.isActiveItem(menuType, menuName) })
       }

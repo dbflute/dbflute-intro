@@ -1,5 +1,5 @@
 import { IntroRiotComponent, withIntroTypes } from '../../../app-component-types'
-import { expectedSubjectItems } from './definition.js'
+import { expectedSubjectVerbItems } from './definitions-spolicy.js'
 
 /**
  * Expected項目のSubjectVerb (左ドロップダウン) の選択肢。
@@ -10,6 +10,12 @@ type ExpectedSubjectItem = {
   value: string | null
   type: 'hasIs' | 'nonIs'
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface Props {
   /** Expected fieldを一意に特定するキー */
@@ -30,6 +36,12 @@ interface State {
   /** 現在選択中のSubjectVerb (complement入力の活性判定に利用) */
   currentSubjectVerb: string | null
 }
+
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
 
 interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent<Props, State> {
   // ===================================================================================
@@ -62,12 +74,12 @@ interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent
   /**
    * complement入力フィールドを活性化するかを返す。SubjectVerbがhasIs型のときに活性。
    */
-  enableValueInput(): boolean
+  determineComplementInputEnabled(): boolean
 
   /**
    * SubjectVerbドロップダウンの選択肢を返す。
    */
-  subjectItems(): ExpectedSubjectItem[]
+  subjectVerbItems(): ExpectedSubjectItem[]
 
   // ===================================================================================
   //                                                                             Private
@@ -79,8 +91,14 @@ interface SchemaPolicyCheckStatementFormExpectedField extends IntroRiotComponent
   isHasIs(subjectVerb: string | null): boolean
 }
 
-/** SubjectVerbドロップダウンの選択肢 (definition.jsより) */
-const SUBJECT_ITEMS = expectedSubjectItems as ExpectedSubjectItem[]
+// > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > >
+// ^                                                                                     v
+// ^                                                                                     v
+// ^                                                                                     v
+// < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < <
+
+/** SubjectVerbドロップダウンの選択肢 */
+const SUBJECT_VERB_ITEMS = expectedSubjectVerbItems as ExpectedSubjectItem[]
 
 export default withIntroTypes<SchemaPolicyCheckStatementFormExpectedField>({
   state: {
@@ -123,19 +141,19 @@ export default withIntroTypes<SchemaPolicyCheckStatementFormExpectedField>({
   // ===================================================================================
   //                                                                              Helper
   //                                                                              ======
-  enableValueInput() {
+  determineComplementInputEnabled() {
     return this.isHasIs(this.state.currentSubjectVerb)
   },
 
-  subjectItems() {
-    return SUBJECT_ITEMS
+  subjectVerbItems() {
+    return SUBJECT_VERB_ITEMS
   },
 
   // ===================================================================================
   //                                                                             Private
   //                                                                             =======
   isHasIs(subjectVerb) {
-    const item = SUBJECT_ITEMS.find((it) => it.value === subjectVerb)
+    const item = SUBJECT_VERB_ITEMS.find((it) => it.value === subjectVerb)
     return !!item && item.type === 'hasIs'
   },
 })
