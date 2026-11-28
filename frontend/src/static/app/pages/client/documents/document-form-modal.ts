@@ -206,7 +206,7 @@ export default withIntroTypes<DocumentFormModal>({
       .then(() => {
         this.onHide()
       })
-      .catch((_) => {
+      .catch(() => {
         // API Client で modal 出す以上のハンドリングはしない
       })
   },

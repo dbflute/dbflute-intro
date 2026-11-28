@@ -40,4 +40,10 @@ export default defineConfig([
       '@typescript-eslint/explicit-function-return-type': 'error',
     },
   },
+  {
+    files: ['src/static/app/api/intro/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
 ])

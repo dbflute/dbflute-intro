@@ -179,7 +179,7 @@ export default withIntroTypes<Create>({
       this.targetDatabaseItems = classifications.targetDatabaseItems
       this.targetLanguageItems = classifications.targetLanguageItems
       this.targetContainerItems = classifications.targetContainerItems
-    } catch (_) {
+    } catch {
       // ApiClientの例外ハンドリングで十分で何もなし。
       // ただ、onMounted()としては後続処理をできるだけやっておきたいので空catchしておく。
     }
@@ -187,7 +187,7 @@ export default withIntroTypes<Create>({
       // then().catch()方式だと、catch()で void | ... の union型になってしまって型エラーになるから普通try/catch
       const apiResult = await api.findExistingEngineVersions()
       this.engineVersions = apiResult.map((version) => ({ label: version, value: version, default: false }))
-    } catch (_) {
+    } catch {
       // 同じく、後続処理をできるだけやっておきたいので空catchしておく。
     }
     this.update()
