@@ -15,7 +15,7 @@
   "dependencies": {
     "@riotjs/route": "^10.0.0",
     "axios": "^0.34.0",
-    "i18next": "^21.6.16",
+    "i18next": "^26.3.4",
     "prismjs": "^1.30.0",
     "riot": "^7.0.3",
     "riot-observable": "^3.0.0",
