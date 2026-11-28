@@ -4,11 +4,12 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "module": "esnext",
+    "target": "es2020",
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node", "jest"]
   }
 }
