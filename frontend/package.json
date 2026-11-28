@@ -6,7 +6,8 @@
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "test": "jest --config jest.config.js --no-cache",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "prepare": "cd .. && husky install frontend/.husky",
+    "lint": "eslint src __tests__"
   },
   "lint-staged": {
     "**/*.js": "npx prettier --write",
