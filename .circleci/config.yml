@@ -30,6 +30,11 @@ commands:
           command: |
             cd frontend
             npm run test
+      - run:
+          name: run lint
+          command: |
+            cd frontend
+            npm run lint
   restore-npm:
     steps:
       - restore_cache:
