@@ -11,7 +11,7 @@ import { IntroRiotComponent, withIntroTypes } from '../../app-component-types'
 
 interface State {
   /** Implementation-Versionなど、System Infoに載せるオブジェクト */
-  manifest: Array<Array<object>>
+  manifest: Array<[string, string]>
 
   /** DBFluteエンジンのバージョン一覧 (実質的にDBFluteエンジンの一覧と考えて良い) */
   versions: string[]

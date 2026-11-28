@@ -18,14 +18,14 @@ class ApiClient {
       .catch(handleError)
   }
 
-  post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return axios
       .post<T>(url, data, config)
       .then((res) => res.data)
       .catch(handleError)
   }
 
-  put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return axios
       .put<T>(url, data, config)
       .then((res) => res.data)
@@ -44,14 +44,19 @@ class ApiClient {
 //                                                                      Error Handling
 //                                                                      ==============
 // see IntroApiFailureHook.java for failure response
+type UnifiedFailureBean = {
+  failureType?: string
+  messages?: Record<string, string[]>
+}
+
 /**
  * APIエラーレスポンスから表示用のメッセージ一覧を抽出する。
  * @param data - APIエラーレスポンスのデータ。
  * @param fallbackMessage - メッセージを抽出できない場合に表示する文言。
  * @returns 表示するエラーメッセージの一覧。
  */
-export const extractMessages = (data: any, fallbackMessage: string): string[] => {
-  if (data?.messages && typeof data.messages === 'object') {
+export const extractMessages = (data: unknown, fallbackMessage: string): string[] => {
+  if (data && typeof data === 'object' && 'messages' in data && data.messages && typeof data.messages === 'object') {
     const values = Object.values(data.messages)
     return values.reduce<string[]>((messageList, value) => {
       return messageList.concat(
@@ -69,13 +74,13 @@ export const extractMessages = (data: any, fallbackMessage: string): string[] =>
  * API ClientでAPIエラーを検知した時のコールバック関数。
  * @param error - Axios のエラーオブジェクト。
  */
-const handleError = (error: AxiosError): Promise<never> => {
+const handleError = (error: AxiosError<UnifiedFailureBean>): Promise<never> => {
   let header: string
   let messages = undefined
   // #thinking improvement: does it need to reload screen when status=0, 401? (implemented until 0.2.x)
   //let reload = false;
   let validationError = false
-  const response: any = error.response
+  const response = error.response
   if (!response) {
     triggerShowResult({
       header: 'Network Error',
@@ -169,7 +174,7 @@ class Api {
    * 起動状態の情報として、メイン画面で表示するために。
    * @returns MANIFEST.MFの内容のMapオブジェクト (basically NotEmpty)
    */
-  findManifest(): Promise<any> {
+  findManifest(): Promise<Record<string, string>> {
     // 単なるkey/valueでLasta側もただのMap
     return apiClient.post('api/intro/manifest')
   }
@@ -531,7 +536,7 @@ class Api {
    * @param params バージョン情報を積んだオブジェクト e.g. "1.2.6"
    * @returns 業務的なレスポンスデータは特になし
    */
-  downloadEngine(params: any): Promise<void> {
+  downloadEngine(params: { version: string }): Promise<void> {
     // needs trailing slash if URL parameter contains dot
     return apiClient.post(`api/engine/download/${params.version}/`)
   }
@@ -542,7 +547,7 @@ class Api {
    * @param params バージョン情報を積んだオブジェクト e.g. "1.2.6"
    * @returns 業務的なレスポンスデータは特になし
    */
-  removeEngine(params: any): Promise<void> {
+  removeEngine(params: { version: string }): Promise<void> {
     // needs trailing slash if URL parameter contains dot
     return apiClient.post(`api/engine/remove/${params.version}/`)
   }

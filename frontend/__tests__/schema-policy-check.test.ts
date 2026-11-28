@@ -10,9 +10,7 @@ riot.install(introPlugin)
 // jsdom 上では semantic-ui-riot の suConfirm はモーダル UI が動かず Promise が resolve しないため、
 // テスト用に即時 resolve する関数で上書きする (suToast も最低限のスタブを入れておく)
 riot.install((component) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(component as any).suConfirm = (): Promise<void> => Promise.resolve()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(component as any).suToast = (): undefined => undefined
   return component
 })

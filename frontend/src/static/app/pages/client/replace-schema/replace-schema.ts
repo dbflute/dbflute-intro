@@ -80,7 +80,7 @@ interface ReplaceSchema extends IntroRiotComponent<Props, State> {
    * su-dropdownの変更イベントから値を取得してstateを更新する。
    * @param event - この関数を呼び出したイベントのオブジェクト
    */
-  onDropdownChange(event: any): void
+  onDropdownChange(event: PlaysqlDropdownItem): void
 
   /**
    * タスク実行モーダルが閉じられた時の処理。
@@ -157,7 +157,7 @@ export default withIntroTypes<ReplaceSchema>({
     })
   },
 
-  onDropdownChange(event: any): void {
+  onDropdownChange(event: PlaysqlDropdownItem): void {
     this.update({
       selectedSql: event?.value || '',
     })
