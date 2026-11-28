@@ -33,7 +33,7 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-console': 'error',
+      'no-console': ['error', { allow: ['warn', 'error'] }],
       'linebreak-style': ['error', 'unix'],
       'no-var': 'error',
       'prefer-arrow-callback': 'error',
