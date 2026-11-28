@@ -11,7 +11,8 @@
   },
   "lint-staged": {
     "**/*.js": "npx prettier --write",
-    "**/*.ts": "npx prettier --write"
+    "**/*.ts": "npx prettier --write",
+    "{src,__tests__}/**/*.{js,ts,riot}": "npx eslint --no-warn-ignored"
   },
   "dependencies": {
     "@riotjs/route": "^10.0.0",
