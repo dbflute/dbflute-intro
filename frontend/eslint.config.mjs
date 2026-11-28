@@ -7,7 +7,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  globalIgnores(['dist/']),
+  globalIgnores(['dist/', 'src/static/app/api/intro/']),
   js.configs.recommended,
   tseslint.configs.recommended,
   prettier,
@@ -44,12 +44,6 @@ export default defineConfig([
     files: ['**/*.riot', '**/*.js'],
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'off',
-    },
-  },
-  {
-    files: ['src/static/app/api/intro/**/*.ts'],
-    rules: {
-      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ])
